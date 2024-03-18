@@ -1,0 +1,351 @@
+﻿<template>
+	<teleport
+		v-if="menuModalIsReady"
+		:to="`#${uiContainersId.body}`"
+		:disabled="!menuInfo.isPopup">
+		<form
+			class="form-horizontal"
+			@submit.prevent>
+			<q-row-container>
+				<q-table
+					v-if="componentOnLoadProc.loaded"
+					v-bind="model.menu"
+					v-on="model.menu.handlers">
+				</q-table>
+
+				<q-table-extra-extension
+					:list-ctrl="model.menu"
+					v-on="model.menu.handlers" />
+			</q-row-container>
+		</form>
+	</teleport>
+
+	<teleport
+		v-if="menuModalIsReady && hasButtons"
+		:to="`#${uiContainersId.footer}`"
+		:disabled="!menuInfo.isPopup">
+		<q-row-container>
+			<div id="footer-action-btns">
+				<template
+					v-for="btn in menuButtons"
+					:key="btn.id">
+					<q-button
+						v-if="btn.isVisible"
+						:id="btn.id"
+						:label="btn.text"
+						:b-style="btn.style"
+						:disabled="btn.disabled"
+						:icon-on-right="btn.iconOnRight"
+						:class="btn.classes"
+						@click="btn.action">
+						<q-icon
+							v-if="btn.icon"
+							v-bind="btn.icon" />
+					</q-button>
+				</template>
+			</div>
+		</q-row-container>
+	</teleport>
+</template>
+
+<script>
+	/* eslint-disable no-unused-vars */
+	import { computed, readonly } from 'vue'
+
+	import MenuHandlers from '@/mixins/menuHandlers.js'
+	import controlClass from '@/mixins/fieldControl.js'
+	import listFunctions from '@/mixins/listFunctions.js'
+	import genericFunctions from '@/mixins/genericFunctions.js'
+	import listColumnTypes from '@/mixins/listColumnTypes.js'
+
+	import { loadResources } from '@/plugins/i18n.js'
+	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
+
+	import hardcodedTexts from '@/hardcodedTexts'
+	import netAPI from '@/api/network'
+	import qApi from '@/api/genio/quidgestFunctions.js'
+	import qFunctions from '@/api/genio/projectFunctions.js'
+	import qProjArrays from '@/api/genio/projectArrays.js'
+	import qEnums from '@/mixins/quidgest.mainEnums.js'
+	/* eslint-enable no-unused-vars */
+
+	const requiredTextResources = ['QMenuPTN_15311', 'hardcoded', 'messages']
+
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FORM_INCLUDEJS PTN_MENU_15311]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+	export default {
+		name: 'QMenuPtn15311',
+
+		mixins: [
+			MenuHandlers
+		],
+
+		inheritAttrs: false,
+
+		props: {
+			/**
+			 * Whether or not the menu is used as a homepage.
+			 */
+			isHomePage: {
+				type: Boolean,
+				default: false
+			}
+		},
+
+		expose: [
+			'navigationId',
+			'onBeforeRouteLeave',
+			'updateMenuNavigation'
+		],
+
+		data()
+		{
+			// eslint-disable-next-line
+			const vm = this
+			return {
+				componentOnLoadProc: asyncProcM.getProcListMonitor('QMenuPTN_15311', false),
+
+				interfaceMetadata: {
+					id: 'QMenuPTN_15311', // Used for resources
+					requiredTextResources
+				},
+
+				menuInfo: {
+					id: '15311',
+					isMenuList: true,
+					acronym: 'PTN_15311',
+					name: 'ROIGF',
+					route: 'menu-PTN_15311',
+					order: '15311',
+					controller: 'ROIGF',
+					action: 'PTN_Menu_15311',
+					isPopup: false
+				},
+
+				model: {
+					menu: new controlClass.TableListControl({
+						controller: 'ROIGF',
+						action: 'PTN_Menu_15311',
+						hasDependencies: false,
+						isInCollapsible: false,
+						columnsOriginal: [
+							new listColumnTypes.NumericColumn({
+								order: 1,
+								name: 'ValOrder',
+								area: 'ROIGF',
+								field: 'ORDER',
+								label: computed(() => this.Resources.ORDER39632),
+								scrollData: 10,
+								maxDigits: 8,
+								decimalPlaces: 1,
+								isOrderingColumn: true,
+							}),
+							new listColumnTypes.TextColumn({
+								order: 2,
+								name: 'ValTitle',
+								area: 'ROIGF',
+								field: 'TITLE',
+								label: computed(() => this.Resources.TITLE21885),
+								dataLength: 50,
+								scrollData: 30,
+							}),
+							new listColumnTypes.TextColumn({
+								order: 3,
+								name: 'Rogl1.ValTitle',
+								area: 'ROGL1',
+								field: 'TITLE',
+								label: computed(() => this.Resources.TITLE21885),
+								dataLength: 50,
+								scrollData: 30,
+								pkColumn: 'ValCodrogl1',
+							}),
+						],
+						config: {
+							name: 'PTN_Menu_15311',
+							serverMode: true,
+							pkColumn: 'ValCodroigf',
+							tableAlias: 'ROIGF',
+							tableNamePlural: computed(() => this.Resources.ORDERS_IN_GROUP___FL17142),
+							viewManagement: 'U',
+							sortByField: true,
+							showRowDragAndDropOption: true,
+							showLimitsInfo: true,
+							tableTitle: computed(() => this.Resources.ORDERS_IN_GROUP___FL17142),
+							showAlternatePagination: true,
+							permissions: {
+							},
+							globalSearch: {
+								visibility: true,
+								searchOnPressEnter: true
+							},
+							filtersVisible: true,
+							allowColumnFilters: true,
+							allowColumnSort: true,
+							crudActions: [
+								{
+									id: 'show',
+									name: 'show',
+									title: computed(() => this.Resources.CONSULTAR57388),
+									icon: {
+										icon: 'view'
+									},
+									isInReadOnly: true,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'ROIGF',
+										mode: 'SHOW',
+										isControlled: true
+									}
+								},
+								{
+									id: 'edit',
+									name: 'edit',
+									title: computed(() => this.Resources.EDITAR11616),
+									icon: {
+										icon: 'pencil'
+									},
+									isInReadOnly: true,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'ROIGF',
+										mode: 'EDIT',
+										isControlled: true
+									}
+								},
+								{
+									id: 'duplicate',
+									name: 'duplicate',
+									title: computed(() => this.Resources.DUPLICAR09748),
+									icon: {
+										icon: 'duplicate'
+									},
+									isInReadOnly: true,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'ROIGF',
+										mode: 'DUPLICATE',
+										isControlled: true
+									}
+								},
+								{
+									id: 'delete',
+									name: 'delete',
+									title: computed(() => this.Resources.ELIMINAR21155),
+									icon: {
+										icon: 'delete'
+									},
+									isInReadOnly: true,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'ROIGF',
+										mode: 'DELETE',
+										isControlled: true
+									}
+								}
+							],
+							generalActions: [
+								{
+									id: 'insert',
+									name: 'insert',
+									title: computed(() => this.Resources.INSERIR43365),
+									icon: {
+										icon: 'add'
+									},
+									isInReadOnly: true,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'ROIGF',
+										mode: 'NEW',
+										repeatInsertion: false,
+										isControlled: true
+									}
+								},
+							],
+							generalCustomActions: [
+							],
+							groupActions: [
+							],
+							customActions: [
+							],
+							MCActions: [
+							],
+							rowClickAction: {
+								id: 'RCA_PTN_153111',
+								name: 'form-ROIGF',
+								params: {
+									limits: [
+										{
+											identifier: 'id',
+											fnValueSelector: (row) => row.ValCodroigf
+										},
+									],
+									isControlled: true,
+									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'ROIGF',
+								}
+							},
+							formsDefinition: {
+								'ROIGF': {
+									fnKeySelector: (row) => row.Fields.ValCodroigf,
+									isPopup: false
+								},
+							},
+							rowValidation: {
+								fnValidate: (row) => row.Fields.ValZzstate === 0,
+								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
+								class: 'c-table__row--pending'
+							},
+							// The list support form: ROIGF
+							crudConditions: {
+							},
+							defaultSearchColumnName: 'ValOrder',
+							defaultSearchColumnNameOriginal: 'ValOrder',
+							initialSortColumnName: 'ValOrder',
+							initialSortColumnOrder: 'asc'
+						},
+						changeEvents: ['changed-ROIGF', 'changed-ROGL1'],
+						uuid: '89d29d5f-c51e-40ab-9b60-aef9f71c56ab',
+						allSelectedRows: 'false',
+						headerLevel: 1
+					}, this)
+				}
+			}
+		},
+
+		beforeRouteEnter(to, _, next)
+		{
+			// called before the route that renders this component is confirmed.
+			// does NOT have access to `this` component instance,
+			// because it has not been created yet when this guard is called!
+
+			next((vm) => vm.updateMenuNavigation(to))
+		},
+
+		beforeRouteLeave(to, _, next)
+		{
+			this.onBeforeRouteLeave(to, next)
+		},
+
+		mounted()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FORM_CODEJS PTN_MENU_15311]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT LISTING_CODEJS PTN_MENU_15311]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		}
+	}
+</script>

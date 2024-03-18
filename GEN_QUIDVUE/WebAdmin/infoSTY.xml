@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Projecto>
+	<Definicoes>
+		<Sistema>GQT</Sistema>
+		<Cliente>QUIDVUE</Cliente>
+		<Versao>3510</Versao>
+	</Definicoes>
+	<Modulos>
+		<Modulo ID="STY">
+			<PROG>Style</PROG>
+			<PLATAFOR>VUE</PLATAFOR>
+		</Modulo>
+	</Modulos>
+</Projecto>

@@ -1,0 +1,606 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Data;
+using System.Data.Entity;
+using System.Linq;
+using System.Reflection;
+
+using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using CSGenio.reporting;
+using GenioMVC.Helpers;
+using GenioMVC.Models;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
+using GenioMVC.Resources;
+using GenioMVC.ViewModels.Photo;
+using Quidgest.Persistence.GenericQuery;
+
+// USE /[MANUAL GQT INCLUDE_CONTROLLER PHOTO]/
+
+namespace GenioMVC.Controllers
+{
+	public partial class PhotoController : ControllerBase
+	{
+		#region NavigationLocation Names
+
+		private static readonly NavigationLocation ACTION_FOTOS_CANCEL = new NavigationLocation("PHOTO51874", "Fotos_Cancel", "Photo") { vueRouteName = "form-FOTOS", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_FOTOS_SHOW = new NavigationLocation("PHOTO51874", "Fotos_Show", "Photo") { vueRouteName = "form-FOTOS", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_FOTOS_NEW = new NavigationLocation("PHOTO51874", "Fotos_New", "Photo") { vueRouteName = "form-FOTOS", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_FOTOS_EDIT = new NavigationLocation("PHOTO51874", "Fotos_Edit", "Photo") { vueRouteName = "form-FOTOS", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_FOTOS_DUPLICATE = new NavigationLocation("PHOTO51874", "Fotos_Duplicate", "Photo") { vueRouteName = "form-FOTOS", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_FOTOS_DELETE = new NavigationLocation("PHOTO51874", "Fotos_Delete", "Photo") { vueRouteName = "form-FOTOS", mode = "DELETE" };
+
+		#endregion
+
+		#region Fotos private
+
+		private void FormHistoryLimits_Fotos()
+		{
+
+		}
+
+		#endregion
+
+		public ActionResult Fotos_ModalDBEdit()
+		{
+			Fotos_ViewModel model = new Fotos_ViewModel(UserContext.Current);
+			model.setModes(Request.Query["m"].ToString());
+			var values = new NameValueCollection();
+			values.AddRange(Request.Form);
+			model.Load(values, true, Request.IsAjaxRequest());
+
+			return JsonOK(model);
+		}
+
+		#region Fotos_Show
+
+// USE /[MANUAL GQT CONTROLLER_SHOW FOTOS]/
+
+		[HttpPost]
+		public ActionResult Fotos_Show_GET([FromBody]RequestIdModel requestModel)
+		{
+			var id = requestModel.Id;
+			var model = new Fotos_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
+			{
+				MethodName = "Fotos_Show_GET",
+				AreaName = "photo",
+				Location = ACTION_FOTOS_SHOW,
+				BeforeOp = (sink, sp) =>
+				{
+					FormHistoryLimits_Fotos();
+// USE /[MANUAL GQT BEFORE_LOAD_SHOW FOTOS]/
+				},
+				AfterOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT AFTER_LOAD_SHOW FOTOS]/
+				}
+			};
+
+			return GenericHandleGetFormShow(eventSink, model, id);
+		}
+
+		#endregion
+
+		#region Fotos_New
+
+// USE /[MANUAL GQT CONTROLLER_NEW_GET FOTOS]/
+		[HttpPost]
+		public ActionResult Fotos_New_GET([FromBody]RequestNewGetModel requestModel)
+		{
+			var id = requestModel.Id;
+			var isNewLocation = requestModel.IsNewLocation;
+			var prefillValues = requestModel.PrefillValues;
+
+			var model = new Fotos_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
+			{
+				MethodName = "Fotos_New_GET",
+				AreaName = "photo",
+				FormName = "FOTOS",
+				Location = ACTION_FOTOS_NEW,
+				BeforeAll = (sink, sp) =>
+				{
+					FormHistoryLimits_Fotos();
+				},
+				BeforeOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT BEFORE_LOAD_NEW FOTOS]/
+				},
+				AfterOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT AFTER_LOAD_NEW FOTOS]/
+				}
+			};
+
+			return GenericHandleGetFormNew(eventSink, model, id, isNewLocation, prefillValues);
+		}
+
+		//
+		// POST: /Photo/Fotos_New
+// USE /[MANUAL GQT CONTROLLER_NEW_POST FOTOS]/
+		[HttpPost]
+		public ActionResult Fotos_New([FromBody]Fotos_ViewModel model, [FromQuery]bool redirect = true)
+		{
+			var eventSink = new EventSink()
+			{
+				MethodName = "Fotos_New",
+				ViewName = "Fotos",
+				AreaName = "photo",
+				Location = ACTION_FOTOS_NEW,
+				Redirect = redirect,
+				BeforeOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT BEFORE_SAVE_NEW FOTOS]/
+				},
+				AfterOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT AFTER_SAVE_NEW FOTOS]/
+				},
+				BeforeException = (sink, sp) =>
+				{
+// USE /[MANUAL GQT BEFORE_LOAD_NEW_EX FOTOS]/
+				},
+				AfterException = (sink, sp) =>
+				{
+// USE /[MANUAL GQT AFTER_LOAD_NEW_EX FOTOS]/
+				}
+			};
+
+			return GenericHandlePostFormNew(eventSink, model);
+		}
+
+		#endregion
+
+		#region Fotos_Edit
+
+// USE /[MANUAL GQT CONTROLLER_EDIT_GET FOTOS]/
+		[HttpPost]
+		public ActionResult Fotos_Edit_GET([FromBody]RequestIdModel requestModel)
+		{
+			var id = requestModel.Id;
+			var model = new Fotos_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
+			{
+				MethodName = "Fotos_Edit_GET",
+				AreaName = "photo",
+				FormName = "FOTOS",
+				Location = ACTION_FOTOS_EDIT,
+				BeforeOp = (sink, sp) =>
+				{
+					FormHistoryLimits_Fotos();
+// USE /[MANUAL GQT BEFORE_LOAD_EDIT FOTOS]/
+				},
+				AfterOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT AFTER_LOAD_EDIT FOTOS]/
+				}
+			};
+
+			return GenericHandleGetFormEdit(eventSink, model, id);
+		}
+
+		//
+		// POST: /Photo/Fotos_Edit
+// USE /[MANUAL GQT CONTROLLER_EDIT_POST FOTOS]/
+		[HttpPost]
+		public ActionResult Fotos_Edit([FromBody]Fotos_ViewModel model, [FromQuery]bool redirect)
+		{
+			var eventSink = new EventSink()
+			{
+				MethodName = "Fotos_Edit",
+				ViewName = "Fotos",
+				AreaName = "photo",
+				Location = ACTION_FOTOS_EDIT,
+				Redirect = redirect,
+				BeforeOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT BEFORE_SAVE_EDIT FOTOS]/
+				},
+				AfterOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT AFTER_SAVE_EDIT FOTOS]/
+				},
+				BeforeException = (sink, sp) =>
+				{
+// USE /[MANUAL GQT BEFORE_LOAD_EDIT_EX FOTOS]/
+				},
+				AfterException = (sink, sp) =>
+				{
+// USE /[MANUAL GQT AFTER_LOAD_EDIT_EX FOTOS]/
+				}
+			};
+
+			return GenericHandlePostFormEdit(eventSink, model);
+		}
+
+		#endregion
+
+		#region Fotos_Delete
+
+// USE /[MANUAL GQT CONTROLLER_DELETE_GET FOTOS]/
+		[HttpPost]
+		public ActionResult Fotos_Delete_GET([FromBody]RequestIdModel requestModel)
+		{
+			var id = requestModel.Id;
+			var model = new Fotos_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
+			{
+				MethodName = "Fotos_Delete_GET",
+				AreaName = "photo",
+				FormName = "FOTOS",
+				Location = ACTION_FOTOS_DELETE,
+				BeforeOp = (sink, sp) =>
+				{
+					FormHistoryLimits_Fotos();
+// USE /[MANUAL GQT BEFORE_LOAD_DELETE FOTOS]/
+				},
+				AfterOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT AFTER_LOAD_DELETE FOTOS]/
+				}
+			};
+
+			return GenericHandleGetFormDelete(eventSink, model, id);
+		}
+
+		//
+		// POST: /Photo/Fotos_Delete
+// USE /[MANUAL GQT CONTROLLER_DELETE_POST FOTOS]/
+		[HttpPost]
+		public ActionResult Fotos_Delete([FromBody]RequestIdModel requestModel)
+		{
+			var id = requestModel.Id;
+			var model = new Fotos_ViewModel (UserContext.Current, id);
+			model.MapFromModel();
+
+			var eventSink = new EventSink()
+			{
+				MethodName = "Fotos_Delete",
+				ViewName = "Fotos",
+				AreaName = "photo",
+				Location = ACTION_FOTOS_DELETE,
+				BeforeOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT BEFORE_DESTROY_DELETE FOTOS]/
+				},
+				AfterOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT AFTER_DESTROY_DELETE FOTOS]/
+				}
+			};
+
+			return GenericHandlePostFormDelete(eventSink, model);
+		}
+
+		public ActionResult Fotos_Delete_Redirect()
+		{
+			//FOR: FORM MENU GO BACK
+			return RedirectToFormMenuGoBack("FOTOS");
+		}
+
+		#endregion
+
+		#region Fotos_Duplicate
+
+// USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET FOTOS]/
+
+		[HttpPost]
+		public ActionResult Fotos_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		{
+			var id = requestModel.Id;
+			var isNewLocation = requestModel.IsNewLocation;
+
+			var model = new Fotos_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
+			{
+				MethodName = "Fotos_Duplicate_GET",
+				AreaName = "photo",
+				FormName = "FOTOS",
+				Location = ACTION_FOTOS_DUPLICATE,
+				BeforeOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT BEFORE_LOAD_DUPLICATE FOTOS]/
+				},
+				AfterOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT AFTER_LOAD_DUPLICATE FOTOS]/
+				}
+			};
+
+			return GenericHandleGetFormDuplicate(eventSink, model, id, isNewLocation);
+		}
+
+		//
+		// POST: /Photo/Fotos_Duplicate
+// USE /[MANUAL GQT CONTROLLER_DUPLICATE_POST FOTOS]/
+		[HttpPost]
+		public ActionResult Fotos_Duplicate([FromBody]Fotos_ViewModel model, [FromQuery]bool redirect = true)
+		{
+			var eventSink = new EventSink()
+			{
+				MethodName = "Fotos_Duplicate",
+				ViewName = "Fotos",
+				AreaName = "photo",
+				Location = ACTION_FOTOS_DUPLICATE,
+				Redirect = redirect,
+				BeforeOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT BEFORE_SAVE_DUPLICATE FOTOS]/
+				},
+				AfterOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT AFTER_SAVE_DUPLICATE FOTOS]/
+				},
+				BeforeException = (sink, sp) =>
+				{
+// USE /[MANUAL GQT BEFORE_LOAD_DUPLICATE_EX FOTOS]/
+				},
+				AfterException = (sink, sp) =>
+				{
+// USE /[MANUAL GQT AFTER_LOAD_DUPLICATE_EX FOTOS]/
+				}
+			};
+
+			return GenericHandlePostFormDuplicate(eventSink, model);
+		}
+
+		#endregion
+
+		#region Fotos_Cancel
+
+		//
+		// GET: /Photo/Fotos_Cancel
+// USE /[MANUAL GQT CONTROLLER_CANCEL_GET FOTOS]/
+		public ActionResult Fotos_Cancel()
+		{
+			if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
+			{
+				PersistentSupport sp = UserContext.Current.PersistentSupport;
+				try
+				{
+					var model = new GenioMVC.Models.Photo(UserContext.Current);
+					model.klass.QPrimaryKey = Navigation.GetStrValue("photo");
+
+// USE /[MANUAL GQT BEFORE_CANCEL FOTOS]/
+
+					sp.openTransaction();
+					model.Destroy();
+					sp.closeTransaction();
+
+// USE /[MANUAL GQT AFTER_CANCEL FOTOS]/
+
+				}
+				catch (Exception e)
+				{
+					sp.rollbackTransaction();
+					sp.closeConnection();
+					ClearMessages();
+
+					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
+					if (e is GenioException && (e as GenioException).UserMessage != null)
+						exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
+					return JsonERROR(exceptionUserMessage);
+				}
+
+				Navigation.SetValue("ForcePrimaryRead_photo", "true", true);
+			}
+
+			Navigation.ClearValue("photo");
+
+			return JsonOK(new { Success = true, currentNavigationLevel = Navigation.CurrentLevel.Level });
+		}
+
+		#endregion
+
+		#region Fotos Multiform actions
+
+		//
+		// GET /Photo/MFFotos_New
+		[HttpGet]
+		[ActionName("MFFotos_New")]
+		public ActionResult MFFotos_New()
+		{
+			var model = new Fotos_ViewModel(UserContext.Current, true);
+			model.setModes(Request.Query["m"].ToString());
+			PersistentSupport sp = UserContext.Current.PersistentSupport;
+			var navigationLocationAction = ACTION_FOTOS_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
+
+			try
+			{
+				sp.openTransaction();
+				model.New();
+				sp.closeTransaction();
+
+				Navigation.SetValue("photo", model.ValCodphoto);
+
+				sp.openConnection();
+				model.NewLoad();
+				sp.closeConnection();
+			}
+			catch (Exception)
+			{
+				sp.rollbackTransaction();
+				sp.closeConnection();
+			}
+
+			return JsonOK(model);
+		}
+
+		[HttpPost]
+		public ActionResult MFFotos_New_GET()
+		{
+			return MFFotos_New();
+		}
+
+		//
+		// GET /Photo/MFFotos_Edit
+		[HttpGet]
+		[ActionName("MFFotos_Edit")]
+		public ActionResult MFFotos_Edit([FromBody]RequestIdModel requestModel)
+		{
+			var id = requestModel.Id;
+			return RedirectToFormAction("FOTOS", "EDIT", new { id = id, partialView = "MFFotos", nestedForm = "true", multiForm = "true" });
+		}
+
+		[HttpPost]
+		public ActionResult MFFotos_Edit_GET([FromBody]RequestIdModel requestModel)
+		{
+			return MFFotos_Edit(requestModel);
+		}
+
+		//
+		// GET /Photo/MFFotos_Cancel
+		[ActionName("MFFotos_Cancel")]
+		public ActionResult MFFotos_Cancel([FromBody]RequestIdModel requestModel)
+		{
+			var id = requestModel.Id;
+			if (string.IsNullOrEmpty(id))
+				return JsonOK(new { Success = false });
+
+			PersistentSupport sp = UserContext.Current.PersistentSupport;
+			try
+			{
+				var model = new GenioMVC.Models.Photo(UserContext.Current);
+				model.klass.QPrimaryKey = id;
+
+				sp.openTransaction();
+				model.Destroy();
+				sp.closeTransaction();
+			}
+			catch (Exception e)
+			{
+				sp.rollbackTransaction();
+				sp.closeConnection();
+				ClearMessages();
+
+				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
+				if (e is GenioException && (e as GenioException).UserMessage != null)
+					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
+
+				return JsonERROR(exceptionUserMessage);
+			}
+
+			return JsonOK(new { Success = true });
+		}
+
+		//
+		// POST /Photo/MFFotos_Save
+		[HttpPost]
+		[ActionName("MFFotos_Save")]
+		public JsonResult MFFotos_Save(Fotos_ViewModel model, string mode)
+		{
+			var eventSink = new EventSink()
+			{
+				MethodName = "MFFotos_Save",
+				ViewName = "MFFotos",
+				AreaName = "photo"
+			};
+
+			return GenericHandleMultiFormSave(eventSink, model, mode);
+		}
+
+		//
+		// POST /Photo/MFFotos_Delete
+		[HttpPost]
+		[ActionName("MFFotos_Delete")]
+		public JsonResult MFFotos_Delete([FromBody]RequestIdModel requestModel)
+		{
+			var id = requestModel.Id;
+			var eventSink = new EventSink()
+			{
+				MethodName = "MFFotos_Delete",
+				ViewName = "MFFotos",
+				AreaName = "photo",
+				Location = ACTION_FOTOS_EDIT
+			};
+
+			var model = new Fotos_ViewModel(UserContext.Current, id);
+			model.MapFromModel();
+
+			return GenericHandlePostMultiFormDelete(eventSink, model);
+		}
+
+		#endregion
+
+		//
+		// GET: /Photo/Fotos_EquipValRegistnr
+		// POST: /Photo/Fotos_EquipValRegistnr
+		[ActionName("Fotos_EquipValRegistnr")]
+		public ActionResult Fotos_EquipValRegistnr([FromBody]RequestLookupModel requestModel)
+		{
+			var queryParams = requestModel.QueryParams;
+
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+
+			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_equip")))
+				UserContext.Current.SetPersistenceReadOnly(true);
+			else
+			{
+				Navigation.DestroyEntry("ForcePrimaryRead_equip");
+				UserContext.Current.SetPersistenceReadOnly(false);
+			}
+
+			var requestValues = new NameValueCollection();
+			if (queryParams != null)
+			{
+				// Set configuration name to use in view model
+				if (queryParams.ContainsKey("UserTableConfigName"))
+				{
+					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
+						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
+					else
+						Navigation.SetValue("UserTableConfigName", "");
+				}
+				else
+					Navigation.SetValue("UserTableConfigName", "");
+
+				// Set rows per page
+				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
+					perPage = Convert.ToInt32(queryParams["perPage"]);
+
+				// Add to request values
+				foreach (var kv in queryParams)
+					requestValues.Add(kv.Key, kv.Value);
+			}
+
+			IsStateReadonly = true;
+			Fotos_EquipValRegistnr_ViewModel model = new Fotos_EquipValRegistnr_ViewModel(UserContext.Current);
+			model.setModes(Request.Query["m"].ToString());
+			model.ValCodphoto = requestModel.Id;
+			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+
+			return JsonOK(model);
+		}
+
+		// POST: /Photo/Fotos_SaveEdit
+		[HttpPost]
+		public ActionResult Fotos_SaveEdit([FromBody]Fotos_ViewModel model)
+		{
+			var eventSink = new EventSink()
+			{
+				MethodName = "Fotos_SaveEdit",
+				ViewName = "Fotos",
+				AreaName = "photo",
+				BeforeOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT BEFORE_APPLY_EDIT FOTOS]/
+				},
+				AfterOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT AFTER_APPLY_EDIT FOTOS]/
+				}
+			};
+
+			return GenericHandlePostFormApply(eventSink, model);
+		}
+	}
+}

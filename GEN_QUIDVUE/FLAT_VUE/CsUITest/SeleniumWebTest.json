@@ -1,0 +1,7 @@
+{
+    "Browser": "chrome",
+    "BaseUrl": "http://localhost:59464/",
+    "Headless": false,
+    "ImplicitWait": 100,
+    "ExplicitWait": 5000
+}

@@ -1,0 +1,18 @@
+﻿.btn-popover {
+	border: hidden;
+	background-color: transparent;
+	display: flex;
+	gap: 0.25rem;
+	align-items: center;
+	font-size: 0.75rem;
+	padding: 0;
+	border-radius: 50%;
+
+	.q-icon__svg {
+		fill: $gray;
+	}
+
+	&:focus {
+		outline: 2px solid rgb($info-rgb / 0.5);
+	}
+}

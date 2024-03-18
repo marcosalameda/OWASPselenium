@@ -1,0 +1,179 @@
+﻿/* eslint-disable no-unused-vars */
+import { computed, reactive, watch } from 'vue'
+import _merge from 'lodash-es/merge'
+
+import ViewModelBase from '@/mixins/formViewModelBase.js'
+import genericFunctions from '@/mixins/genericFunctions.js'
+import modelFieldType from '@/mixins/formModelFieldTypes.js'
+
+import hardcodedTexts from '@/hardcodedTexts.js'
+import netAPI from '@/api/network'
+import qApi from '@/api/genio/quidgestFunctions.js'
+import qFunctions from '@/api/genio/projectFunctions.js'
+import qProjArrays from '@/api/genio/projectArrays.js'
+/* eslint-enable no-unused-vars */
+
+/**
+ * Represents a ViewModel class.
+ * @extends ViewModelBase
+ */
+export default class ViewModel extends ViewModelBase
+{
+	/**
+	 * Creates a new instance of the ViewModel.
+	 * @param {object} vueContext - The Vue context
+	 * @param {object} options - The options for the ViewModel
+	 * @param {object} values - A ViewModel instance to copy values from
+	 */
+	// eslint-disable-next-line no-unused-vars
+	constructor(vueContext, options, values)
+	{
+		super(vueContext, options)
+		// eslint-disable-next-line no-unused-vars
+		const vm = this.vueContext
+
+		/** The view model metadata */
+		_merge(this.modelInfo, {
+			name: 'ARTIGEXT',
+			area: 'ITEM',
+			actions: {
+				recalculateFormulas: 'RecalculateFormulas_ARTIGEXT'
+			}
+		})
+
+		/** The primary key. */
+		this.ValCoditem = reactive(new modelFieldType.PrimaryKey({
+			id: 'ValCoditem',
+			originId: 'ValCoditem',
+			area: 'ITEM',
+			field: 'CODITEM',
+			description: '',
+		}).cloneFrom(values?.ValCoditem))
+		watch(() => this.ValCoditem.value, (newValue, oldValue) => this.onUpdate('item.coditem', this.ValCoditem, newValue, oldValue))
+
+		/** The used foreign keys. */
+		this.ValCodwareh = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCodwareh',
+			originId: 'ValCodwareh',
+			area: 'ITEM',
+			field: 'CODWAREH',
+			relatedArea: 'WAREH',
+			description: computed(() => this.Resources._WAREHOUSE19861),
+		}).cloneFrom(values?.ValCodwareh))
+		watch(() => this.ValCodwareh.value, (newValue, oldValue) => this.onUpdate('item.codwareh', this.ValCodwareh, newValue, oldValue))
+
+		this.ValCodgitem = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCodgitem',
+			originId: 'ValCodgitem',
+			area: 'ITEM',
+			field: 'CODGITEM',
+			relatedArea: 'GITEM',
+			description: computed(() => this.Resources._GLOBAL_ARTICLE51116),
+		}).cloneFrom(values?.ValCodgitem))
+		watch(() => this.ValCodgitem.value, (newValue, oldValue) => this.onUpdate('item.codgitem', this.ValCodgitem, newValue, oldValue))
+
+		/** The remaining form fields. */
+		this.TableWarehWarehdes = reactive(new modelFieldType.String({
+			type: 'Lookup',
+			id: 'TableWarehWarehdes',
+			originId: 'ValWarehdes',
+			area: 'WAREH',
+			field: 'WAREHDES',
+			maxLength: 85,
+			description: computed(() => this.Resources.WAREHOUSE51864),
+		}).cloneFrom(values?.TableWarehWarehdes))
+		watch(() => this.TableWarehWarehdes.value, (newValue, oldValue) => this.onUpdate('wareh.warehdes', this.TableWarehWarehdes, newValue, oldValue))
+
+		this.TableGitemItemdes = reactive(new modelFieldType.String({
+			type: 'Lookup',
+			id: 'TableGitemItemdes',
+			originId: 'ValItemdes',
+			area: 'GITEM',
+			field: 'ITEMDES',
+			maxLength: 85,
+			description: computed(() => this.Resources.GLOBAL_ARTICLE63861),
+		}).cloneFrom(values?.TableGitemItemdes))
+		watch(() => this.TableGitemItemdes.value, (newValue, oldValue) => this.onUpdate('gitem.itemdes', this.TableGitemItemdes, newValue, oldValue))
+
+		this.GitemValItemgcod = reactive(new modelFieldType.String({
+			id: 'GitemValItemgcod',
+			originId: 'ValItemgcod',
+			area: 'GITEM',
+			field: 'ITEMGCOD',
+			maxLength: 15,
+			description: computed(() => this.Resources.CODE49225),
+		}).cloneFrom(values?.GitemValItemgcod))
+		watch(() => this.GitemValItemgcod.value, (newValue, oldValue) => this.onUpdate('gitem.itemgcod', this.GitemValItemgcod, newValue, oldValue))
+
+		this.ValItemdes = reactive(new modelFieldType.String({
+			id: 'ValItemdes',
+			originId: 'ValItemdes',
+			area: 'ITEM',
+			field: 'ITEMDES',
+			maxLength: 85,
+			description: computed(() => this.Resources.ARTICLE60065),
+			valueFormula: {
+				stopRecalcCondition() { return false },
+				// eslint-disable-next-line no-unused-vars
+				fnFormula(params)
+				{
+					// Formula: [GITEM->ITEMDES]
+					// eslint-disable-next-line eqeqeq
+					return this.TableGitemItemdes.value
+				},
+				dependencyEvents: ['fieldChange:gitem.itemdes'],
+				isServerRecalc: false,
+				isServerFormula: false,
+				isEmpty: qApi.emptyC,
+			},
+		}).cloneFrom(values?.ValItemdes))
+		watch(() => this.ValItemdes.value, (newValue, oldValue) => this.onUpdate('item.itemdes', this.ValItemdes, newValue, oldValue))
+
+		this.ValItemcod = reactive(new modelFieldType.String({
+			id: 'ValItemcod',
+			originId: 'ValItemcod',
+			area: 'ITEM',
+			field: 'ITEMCOD',
+			maxLength: 15,
+			description: computed(() => this.Resources.CODE49225),
+			valueFormula: {
+				stopRecalcCondition() { return false },
+				// eslint-disable-next-line no-unused-vars
+				fnFormula(params)
+				{
+					// Formula: [GITEM->ITEMGCOD]
+					// eslint-disable-next-line eqeqeq
+					return this.GitemValItemgcod.value
+				},
+				dependencyEvents: ['fieldChange:gitem.itemgcod'],
+				isServerRecalc: false,
+				isServerFormula: false,
+				isEmpty: qApi.emptyC,
+			},
+		}).cloneFrom(values?.ValItemcod))
+		watch(() => this.ValItemcod.value, (newValue, oldValue) => this.onUpdate('item.itemcod', this.ValItemcod, newValue, oldValue))
+
+		this.ValImage = reactive(new modelFieldType.Image({
+			id: 'ValImage',
+			originId: 'ValImage',
+			area: 'ITEM',
+			field: 'IMAGE',
+			description: computed(() => this.Resources.IMAGE65174),
+		}).cloneFrom(values?.ValImage))
+		watch(() => this.ValImage.value, (newValue, oldValue) => this.onUpdate('item.image', this.ValImage, newValue, oldValue))
+	}
+
+	/**
+	 * Creates a clone of the current QFormArtigextViewModel instance.
+	 * @returns {QFormArtigextViewModel} A new instance of QFormArtigextViewModel
+	 */
+	clone()
+	{
+		return new ViewModel(this.vueContext, { callbacks: this.externalCallbacks }, this)
+	}
+
+	static QPrimaryKeyName = 'ValCoditem'
+
+	get QPrimaryKey() { return this.ValCoditem.value }
+	set QPrimaryKey(value) { this.ValCoditem.value = value }
+}

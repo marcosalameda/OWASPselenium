@@ -1,0 +1,149 @@
+{
+	"DbEditActionPlacement": {
+		"values": [
+			"left",
+			"right"
+		],
+		"default": "left"
+	},
+	"FormAnchorsPosition": {
+		"values": [
+			"form-header",
+			"sidebar"
+		],
+		"chosen": "form-header",
+		"default": "sidebar"
+	},
+	"DbEditPagerPlacement": {
+		"values": [
+			"left",
+			"right"
+		],
+		"default": "left"
+	},
+	"DbEditMultipleActionPlacement": {
+		"values": [
+			"left",
+			"right"
+		],
+		"default": "left"
+	},
+	"LoginStyle": {
+		"values": [
+			"single_page",
+			"embeded_page"
+		],
+		"chosen": "single_page",
+		"default": "single_page"
+	},
+	"LanguagePlacement": {
+		"values": [
+			"in_header",
+			"in_footer"
+		],
+		"default": "in_footer"
+	},
+	"UserRegisterStyle": {
+		"values": [
+			"button",
+			"hyperlink"
+		],
+		"default": "button"
+	},
+	"FooterEnable": {
+		"values": [
+			true,
+			false
+		],
+		"default": true
+	},
+	"BreadcrumbsContent": {
+		"values": [
+			"simplified",
+			"detailed",
+			"hidden"
+		],
+		"default": "detailed"
+	},
+	"RowActionDisplay": {
+		"values": [
+			"inline",
+			"dropdown"
+		],
+		"default": "dropdown"
+	},
+	"DefaultSidebarState": {
+		"values": [
+			"opened",
+			"closed"
+		],
+		"default": "opened"
+	},
+	"HeaderPlacement": {
+		"values": [
+			"in_contentPanel",
+			"in_menuPanel"
+		],
+		"default": "in_menuPanel"
+	},
+	"ModulesStyle": {
+		"values": [
+			"list",
+			"dropdown",
+			"collapsible"
+		],
+		"chosen": "collapsible",
+		"default": "list"
+	},
+	"MenuSearchEnable": {
+		"values": [
+			true,
+			false
+		],
+		"default": true
+	},
+	"BookmarkEnable": {
+		"values": [
+			true,
+			false
+		],
+		"default": true
+	},
+	"HelpStyle": {
+		"values": [
+			"tooltip",
+			"popover"
+		],
+		"chosen": "popover",
+		"default": "tooltip"
+	},
+	"MenuBackgroundColor": {
+		"values": [
+			"dark",
+			"light"
+		],
+		"default": "dark"
+	},
+	"MenuBrand": {
+		"values": [
+			"Image",
+			"Text"
+		],
+		"default": "Text"
+	},
+	"ShowPasswordToggle": {
+		"values": [
+			true,
+			false
+		],
+		"default": true
+	},
+	"AuthenticationStyle": {
+		"values": [
+			"default",
+			"light",
+			"secondary"
+		],
+		"default": "default"
+	}
+}

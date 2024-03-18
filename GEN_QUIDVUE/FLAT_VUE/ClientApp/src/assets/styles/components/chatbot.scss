@@ -1,0 +1,114 @@
+﻿.q-chatbot {
+	width: 100%;
+	height: 100%;
+	padding: 1rem;
+
+	& .q-input-group .i-text__field {
+		border-radius: 0;
+		flex: 1;
+	}
+
+	&__input {
+		flex: 1;
+	}
+
+	&__content {
+		background-color: $white;
+		border: 1px solid $light;
+		height: 100%;
+		width: 100%;
+		padding: 2rem 1rem;
+		display: flex;
+		flex-direction: column;
+		overflow: auto;
+		gap: 1.5rem;
+	}
+
+	&__message-wrapper {
+		display: flex;
+		max-width: 100%;
+		gap: 0.2rem;
+	}
+
+	&__message-wrapper_right {
+		justify-content: flex-end;
+	}
+
+	&__profile {
+		border-radius: 50%;
+		height: 2rem;
+		width: 2rem;
+	}
+
+	&__message {
+		position: relative;
+		margin: 0rem 0.5rem;
+		max-width: 75%;
+		display: flex;
+		align-items: center;
+		padding: 0.3rem 0.5rem;
+		background-color: $light;
+		white-space: normal;
+	}
+
+	&__message-wrapper_right .q-chatbot__message {
+		background-color: $primary-light;
+	}
+
+	&__sender {
+		white-space: nowrap;
+		position: absolute;
+		color: $gray;
+		font-size: 0.7rem;
+		left: 0;
+		top: -1rem;
+	}
+
+	&__timestamp {
+		white-space: nowrap;
+		position: absolute;
+		color: $gray;
+		font-size: 0.7rem;
+		right: 0;
+		top: -1rem;
+	}
+
+	&__message-loading {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 0.3rem;
+
+		div {
+			background-color: $primary-light;
+			border-radius: 50%;
+			width: 0.5rem;
+			height: 0.5rem;
+			animation: dotPulse 1.5s infinite;
+
+			&:nth-child(1) {
+				animation-delay: 0s;
+			}
+
+			&:nth-child(2) {
+				animation-delay: 0.5s;
+			}
+
+			&:nth-child(3) {
+				animation-delay: 1s;
+			}
+		}
+	}
+}
+
+@keyframes dotPulse {
+	0% {
+		opacity: 0.5;
+	}
+	50% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0.5;
+	}
+}

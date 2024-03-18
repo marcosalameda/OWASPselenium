@@ -1,0 +1,211 @@
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Data;
+using System.Data.Entity;
+using System.Linq;
+
+using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using CSGenio.reporting;
+using GenioMVC.Helpers;
+using GenioMVC.Models;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
+using GenioMVC.Resources;
+using GenioMVC.ViewModels.Tradu;
+using GenioServer.business;
+using Quidgest.Persistence.GenericQuery;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Primitives;
+
+// USE /[MANUAL GQT INCLUDE_CONTROLLER TRADU]/
+
+namespace GenioMVC.Controllers
+{
+	public partial class TraduController : ControllerBase
+	{
+		public TraduController(UserContextService userContext): base(userContext) { }
+// USE /[MANUAL GQT CONTROLLER_NAVIGATION TRADU]/
+
+
+
+		private List<string> GetActionIds(CriteriaSet crs, CSGenio.persistence.PersistentSupport sp = null)
+		{
+			CSGenio.business.Area area = CSGenio.business.Area.createArea<CSGenioAtradu>(UserContext.Current.User, UserContext.Current.User.CurrentModule);
+			return base.GetActionIds(crs, sp, area);
+		}
+
+// USE /[MANUAL GQT MANUAL_CONTROLLER TRADU]/
+
+
+		[HttpPost]
+		public JsonResult ReloadDBEdit([FromBody]RequestReloadDBEditModel requestModel)
+		{
+			var Identifier = requestModel.Identifier ?? "";
+			var qs = new NameValueCollection();
+			qs.AddRange(Request.Query);
+			// The value of the lookup search field comes in 'Values'
+			if (requestModel.Values != null)
+				qs.AddRange(requestModel.Values);
+			this.IsStateReadonly = true;
+
+			dynamic result = null;
+			Models.Tradu row = null;
+
+			try
+			{
+				row = Models.Tradu.Find(Navigation.GetStrValue("tradu"), UserContext.Current);
+			}
+			catch (Exception)
+			{
+				CSGenio.framework.Log.Error("ReloadDBEdit - " + Identifier + " Not found Model tradu");
+			}
+
+			if (row == null)
+			{
+				row = new Models.Tradu(UserContext.Current);
+				row.klass.QPrimaryKey = Navigation.GetStrValue("tradu");
+			}
+
+			// Only the last reload request is accepted.
+			var requestNumber = Request.Headers["ReloadDBEditRequestNumber"];
+			if (requestNumber != StringValues.Empty)
+				Response.Headers["ReloadDBEditRequestNumber"] = requestNumber.First();
+
+			try
+			{
+				switch (string.IsNullOrEmpty(Identifier) ? "" : Identifier)
+				{
+					case "TRADU___LANG1LANGUA__":	// Field (DB)
+						{
+							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Tradu_ViewModel(UserContext.Current) { editable = false };
+							model.MapFromModel(row);
+							model.Load_Tradu___lang1langua__(qs);
+							result = model.TableLang1Langua;
+						}
+						break;
+					case "TRADU___LANG2LANGUA__":	// Field (DB)
+						{
+							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Tradu_ViewModel(UserContext.Current) { editable = false };
+							model.MapFromModel(row);
+							model.Load_Tradu___lang2langua__(qs);
+							result = model.TableLang2Langua;
+						}
+						break;
+					default: break;
+				}
+			}
+			catch (Exception)
+			{
+				return JsonERROR("On Reload form field: " + Identifier);
+			}
+
+			if (result != null)
+				return JsonOK(new { List = result.List, TotalRows = result.Pagination.TotalRows, Selected = result.Selected, Value = result.Value });
+			return JsonERROR("Not found any valid result");
+		}
+
+		[HttpPost]
+		public JsonResult GetDependants([FromBody]RequestDependantsModel requestModel)
+		{
+			var Identifier = requestModel.Identifier;
+			var Selected = requestModel.Selected;
+
+			ConcurrentDictionary<string, object> values = null;
+			this.IsStateReadonly = true;
+
+			try
+			{
+				// Only the last reload request is accepted.
+				var requestNumber = Request.Headers["GetDependantsRequestNumber"];
+				if (requestNumber != StringValues.Empty)
+					Response.Headers["GetDependantsRequestNumber"] = requestNumber.First();
+
+				UserContext.Current.PersistentSupport.openConnection();
+				switch (string.IsNullOrEmpty(Identifier) ? "" : Identifier)
+				{
+					case "TRADU___LANG1LANGUA__":	// Field (DB)
+						values = new Tradu_ViewModel(UserContext.Current).GetDependant_TraduTableLang1Langua(Selected);
+						break;
+					case "TRADU___LANG2LANGUA__":	// Field (DB)
+						values = new Tradu_ViewModel(UserContext.Current).GetDependant_TraduTableLang2Langua(Selected);
+						break;
+					default: break;
+				}
+
+				if (values == null || !values.Any())
+					return JsonERROR("List is empty");
+
+				// Remove DateTime.MinValue
+				foreach (KeyValuePair<string, object> field in values)
+					if (field.Value is DateTime && (DateTime)field.Value == DateTime.MinValue)
+						values.TryUpdate(field.Key, "", DateTime.MinValue);
+
+				return JsonOK(values);
+			}
+			catch (Exception)
+			{
+				return JsonERROR("On Get Dependants - " + Identifier );
+			}
+			finally
+			{
+				UserContext.Current.PersistentSupport.closeConnection();
+			}
+		}
+
+
+
+		/// <summary>
+		/// Recalculate formulas of the "Tradu" form. (++, CT, SR, CL and U1)
+		/// </summary>
+		/// <param name="form_data">Current form data</param>
+		/// <returns></returns>
+		[HttpPost]
+		public JsonResult RecalculateFormulas_Tradu([FromBody]Tradu_ViewModel form_data)
+		{
+			return GenericRecalculateFormulas(form_data, "tradu",
+				(primaryKey) => Models.Tradu.Find(primaryKey, UserContext.Current, "FTRADU"),
+				(model) => form_data.MapToModel(model as Models.Tradu)
+			);
+		}
+
+
+
+		/// <summary>
+		/// Get "See more..." tree structure
+		/// </summary>
+		/// <returns></returns>
+		public JsonResult GetTreeSeeMore([FromBody]RequestLookupModel requestModel)
+		{
+			var Identifier = requestModel.Id;
+			var queryParams = requestModel.QueryParams;
+
+			try
+			{
+				// We need the request values to apply filters
+				var requestValues = new NameValueCollection();
+				if (queryParams != null)
+					foreach (var kv in queryParams)
+						requestValues.Add(kv.Key, kv.Value);
+
+				switch (string.IsNullOrEmpty(Identifier) ? "" : Identifier)
+				{
+					default:
+						break;
+				}
+			}
+			catch (Exception)
+			{
+				return Json(new { Success = false, Message = "Error" });
+			}
+
+			return Json(new { Success = false, Message = "Error" });
+		}
+	}
+}

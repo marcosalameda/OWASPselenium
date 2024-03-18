@@ -1,0 +1,606 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Data;
+using System.Data.Entity;
+using System.Linq;
+using System.Reflection;
+
+using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using CSGenio.reporting;
+using GenioMVC.Helpers;
+using GenioMVC.Models;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
+using GenioMVC.Resources;
+using GenioMVC.ViewModels.Feeca;
+using Quidgest.Persistence.GenericQuery;
+
+// USE /[MANUAL GQT INCLUDE_CONTROLLER FEECA]/
+
+namespace GenioMVC.Controllers
+{
+	public partial class FeecaController : ControllerBase
+	{
+		#region NavigationLocation Names
+
+		private static readonly NavigationLocation ACTION_FEECA_CANCEL = new NavigationLocation("FEEDBACK_CAMPO42437", "Feeca_Cancel", "Feeca") { vueRouteName = "form-FEECA", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_FEECA_SHOW = new NavigationLocation("FEEDBACK_CAMPO42437", "Feeca_Show", "Feeca") { vueRouteName = "form-FEECA", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_FEECA_NEW = new NavigationLocation("FEEDBACK_CAMPO42437", "Feeca_New", "Feeca") { vueRouteName = "form-FEECA", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_FEECA_EDIT = new NavigationLocation("FEEDBACK_CAMPO42437", "Feeca_Edit", "Feeca") { vueRouteName = "form-FEECA", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_FEECA_DUPLICATE = new NavigationLocation("FEEDBACK_CAMPO42437", "Feeca_Duplicate", "Feeca") { vueRouteName = "form-FEECA", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_FEECA_DELETE = new NavigationLocation("FEEDBACK_CAMPO42437", "Feeca_Delete", "Feeca") { vueRouteName = "form-FEECA", mode = "DELETE" };
+
+		#endregion
+
+		#region Feeca private
+
+		private void FormHistoryLimits_Feeca()
+		{
+
+		}
+
+		#endregion
+
+		public ActionResult Feeca_ModalDBEdit()
+		{
+			Feeca_ViewModel model = new Feeca_ViewModel(UserContext.Current);
+			model.setModes(Request.Query["m"].ToString());
+			var values = new NameValueCollection();
+			values.AddRange(Request.Form);
+			model.Load(values, true, Request.IsAjaxRequest());
+
+			return JsonOK(model);
+		}
+
+		#region Feeca_Show
+
+// USE /[MANUAL GQT CONTROLLER_SHOW FEECA]/
+
+		[HttpPost]
+		public ActionResult Feeca_Show_GET([FromBody]RequestIdModel requestModel)
+		{
+			var id = requestModel.Id;
+			var model = new Feeca_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
+			{
+				MethodName = "Feeca_Show_GET",
+				AreaName = "feeca",
+				Location = ACTION_FEECA_SHOW,
+				BeforeOp = (sink, sp) =>
+				{
+					FormHistoryLimits_Feeca();
+// USE /[MANUAL GQT BEFORE_LOAD_SHOW FEECA]/
+				},
+				AfterOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT AFTER_LOAD_SHOW FEECA]/
+				}
+			};
+
+			return GenericHandleGetFormShow(eventSink, model, id);
+		}
+
+		#endregion
+
+		#region Feeca_New
+
+// USE /[MANUAL GQT CONTROLLER_NEW_GET FEECA]/
+		[HttpPost]
+		public ActionResult Feeca_New_GET([FromBody]RequestNewGetModel requestModel)
+		{
+			var id = requestModel.Id;
+			var isNewLocation = requestModel.IsNewLocation;
+			var prefillValues = requestModel.PrefillValues;
+
+			var model = new Feeca_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
+			{
+				MethodName = "Feeca_New_GET",
+				AreaName = "feeca",
+				FormName = "FEECA",
+				Location = ACTION_FEECA_NEW,
+				BeforeAll = (sink, sp) =>
+				{
+					FormHistoryLimits_Feeca();
+				},
+				BeforeOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT BEFORE_LOAD_NEW FEECA]/
+				},
+				AfterOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT AFTER_LOAD_NEW FEECA]/
+				}
+			};
+
+			return GenericHandleGetFormNew(eventSink, model, id, isNewLocation, prefillValues);
+		}
+
+		//
+		// POST: /Feeca/Feeca_New
+// USE /[MANUAL GQT CONTROLLER_NEW_POST FEECA]/
+		[HttpPost]
+		public ActionResult Feeca_New([FromBody]Feeca_ViewModel model, [FromQuery]bool redirect = true)
+		{
+			var eventSink = new EventSink()
+			{
+				MethodName = "Feeca_New",
+				ViewName = "Feeca",
+				AreaName = "feeca",
+				Location = ACTION_FEECA_NEW,
+				Redirect = redirect,
+				BeforeOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT BEFORE_SAVE_NEW FEECA]/
+				},
+				AfterOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT AFTER_SAVE_NEW FEECA]/
+				},
+				BeforeException = (sink, sp) =>
+				{
+// USE /[MANUAL GQT BEFORE_LOAD_NEW_EX FEECA]/
+				},
+				AfterException = (sink, sp) =>
+				{
+// USE /[MANUAL GQT AFTER_LOAD_NEW_EX FEECA]/
+				}
+			};
+
+			return GenericHandlePostFormNew(eventSink, model);
+		}
+
+		#endregion
+
+		#region Feeca_Edit
+
+// USE /[MANUAL GQT CONTROLLER_EDIT_GET FEECA]/
+		[HttpPost]
+		public ActionResult Feeca_Edit_GET([FromBody]RequestIdModel requestModel)
+		{
+			var id = requestModel.Id;
+			var model = new Feeca_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
+			{
+				MethodName = "Feeca_Edit_GET",
+				AreaName = "feeca",
+				FormName = "FEECA",
+				Location = ACTION_FEECA_EDIT,
+				BeforeOp = (sink, sp) =>
+				{
+					FormHistoryLimits_Feeca();
+// USE /[MANUAL GQT BEFORE_LOAD_EDIT FEECA]/
+				},
+				AfterOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT AFTER_LOAD_EDIT FEECA]/
+				}
+			};
+
+			return GenericHandleGetFormEdit(eventSink, model, id);
+		}
+
+		//
+		// POST: /Feeca/Feeca_Edit
+// USE /[MANUAL GQT CONTROLLER_EDIT_POST FEECA]/
+		[HttpPost]
+		public ActionResult Feeca_Edit([FromBody]Feeca_ViewModel model, [FromQuery]bool redirect)
+		{
+			var eventSink = new EventSink()
+			{
+				MethodName = "Feeca_Edit",
+				ViewName = "Feeca",
+				AreaName = "feeca",
+				Location = ACTION_FEECA_EDIT,
+				Redirect = redirect,
+				BeforeOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT BEFORE_SAVE_EDIT FEECA]/
+				},
+				AfterOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT AFTER_SAVE_EDIT FEECA]/
+				},
+				BeforeException = (sink, sp) =>
+				{
+// USE /[MANUAL GQT BEFORE_LOAD_EDIT_EX FEECA]/
+				},
+				AfterException = (sink, sp) =>
+				{
+// USE /[MANUAL GQT AFTER_LOAD_EDIT_EX FEECA]/
+				}
+			};
+
+			return GenericHandlePostFormEdit(eventSink, model);
+		}
+
+		#endregion
+
+		#region Feeca_Delete
+
+// USE /[MANUAL GQT CONTROLLER_DELETE_GET FEECA]/
+		[HttpPost]
+		public ActionResult Feeca_Delete_GET([FromBody]RequestIdModel requestModel)
+		{
+			var id = requestModel.Id;
+			var model = new Feeca_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
+			{
+				MethodName = "Feeca_Delete_GET",
+				AreaName = "feeca",
+				FormName = "FEECA",
+				Location = ACTION_FEECA_DELETE,
+				BeforeOp = (sink, sp) =>
+				{
+					FormHistoryLimits_Feeca();
+// USE /[MANUAL GQT BEFORE_LOAD_DELETE FEECA]/
+				},
+				AfterOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT AFTER_LOAD_DELETE FEECA]/
+				}
+			};
+
+			return GenericHandleGetFormDelete(eventSink, model, id);
+		}
+
+		//
+		// POST: /Feeca/Feeca_Delete
+// USE /[MANUAL GQT CONTROLLER_DELETE_POST FEECA]/
+		[HttpPost]
+		public ActionResult Feeca_Delete([FromBody]RequestIdModel requestModel)
+		{
+			var id = requestModel.Id;
+			var model = new Feeca_ViewModel (UserContext.Current, id);
+			model.MapFromModel();
+
+			var eventSink = new EventSink()
+			{
+				MethodName = "Feeca_Delete",
+				ViewName = "Feeca",
+				AreaName = "feeca",
+				Location = ACTION_FEECA_DELETE,
+				BeforeOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT BEFORE_DESTROY_DELETE FEECA]/
+				},
+				AfterOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT AFTER_DESTROY_DELETE FEECA]/
+				}
+			};
+
+			return GenericHandlePostFormDelete(eventSink, model);
+		}
+
+		public ActionResult Feeca_Delete_Redirect()
+		{
+			//FOR: FORM MENU GO BACK
+			return RedirectToFormMenuGoBack("FEECA");
+		}
+
+		#endregion
+
+		#region Feeca_Duplicate
+
+// USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET FEECA]/
+
+		[HttpPost]
+		public ActionResult Feeca_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		{
+			var id = requestModel.Id;
+			var isNewLocation = requestModel.IsNewLocation;
+
+			var model = new Feeca_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
+			{
+				MethodName = "Feeca_Duplicate_GET",
+				AreaName = "feeca",
+				FormName = "FEECA",
+				Location = ACTION_FEECA_DUPLICATE,
+				BeforeOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT BEFORE_LOAD_DUPLICATE FEECA]/
+				},
+				AfterOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT AFTER_LOAD_DUPLICATE FEECA]/
+				}
+			};
+
+			return GenericHandleGetFormDuplicate(eventSink, model, id, isNewLocation);
+		}
+
+		//
+		// POST: /Feeca/Feeca_Duplicate
+// USE /[MANUAL GQT CONTROLLER_DUPLICATE_POST FEECA]/
+		[HttpPost]
+		public ActionResult Feeca_Duplicate([FromBody]Feeca_ViewModel model, [FromQuery]bool redirect = true)
+		{
+			var eventSink = new EventSink()
+			{
+				MethodName = "Feeca_Duplicate",
+				ViewName = "Feeca",
+				AreaName = "feeca",
+				Location = ACTION_FEECA_DUPLICATE,
+				Redirect = redirect,
+				BeforeOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT BEFORE_SAVE_DUPLICATE FEECA]/
+				},
+				AfterOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT AFTER_SAVE_DUPLICATE FEECA]/
+				},
+				BeforeException = (sink, sp) =>
+				{
+// USE /[MANUAL GQT BEFORE_LOAD_DUPLICATE_EX FEECA]/
+				},
+				AfterException = (sink, sp) =>
+				{
+// USE /[MANUAL GQT AFTER_LOAD_DUPLICATE_EX FEECA]/
+				}
+			};
+
+			return GenericHandlePostFormDuplicate(eventSink, model);
+		}
+
+		#endregion
+
+		#region Feeca_Cancel
+
+		//
+		// GET: /Feeca/Feeca_Cancel
+// USE /[MANUAL GQT CONTROLLER_CANCEL_GET FEECA]/
+		public ActionResult Feeca_Cancel()
+		{
+			if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
+			{
+				PersistentSupport sp = UserContext.Current.PersistentSupport;
+				try
+				{
+					var model = new GenioMVC.Models.Feeca(UserContext.Current);
+					model.klass.QPrimaryKey = Navigation.GetStrValue("feeca");
+
+// USE /[MANUAL GQT BEFORE_CANCEL FEECA]/
+
+					sp.openTransaction();
+					model.Destroy();
+					sp.closeTransaction();
+
+// USE /[MANUAL GQT AFTER_CANCEL FEECA]/
+
+				}
+				catch (Exception e)
+				{
+					sp.rollbackTransaction();
+					sp.closeConnection();
+					ClearMessages();
+
+					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
+					if (e is GenioException && (e as GenioException).UserMessage != null)
+						exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
+					return JsonERROR(exceptionUserMessage);
+				}
+
+				Navigation.SetValue("ForcePrimaryRead_feeca", "true", true);
+			}
+
+			Navigation.ClearValue("feeca");
+
+			return JsonOK(new { Success = true, currentNavigationLevel = Navigation.CurrentLevel.Level });
+		}
+
+		#endregion
+
+		#region Feeca Multiform actions
+
+		//
+		// GET /Feeca/MFFeeca_New
+		[HttpGet]
+		[ActionName("MFFeeca_New")]
+		public ActionResult MFFeeca_New()
+		{
+			var model = new Feeca_ViewModel(UserContext.Current, true);
+			model.setModes(Request.Query["m"].ToString());
+			PersistentSupport sp = UserContext.Current.PersistentSupport;
+			var navigationLocationAction = ACTION_FEECA_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
+
+			try
+			{
+				sp.openTransaction();
+				model.New();
+				sp.closeTransaction();
+
+				Navigation.SetValue("feeca", model.ValCodfeeca);
+
+				sp.openConnection();
+				model.NewLoad();
+				sp.closeConnection();
+			}
+			catch (Exception)
+			{
+				sp.rollbackTransaction();
+				sp.closeConnection();
+			}
+
+			return JsonOK(model);
+		}
+
+		[HttpPost]
+		public ActionResult MFFeeca_New_GET()
+		{
+			return MFFeeca_New();
+		}
+
+		//
+		// GET /Feeca/MFFeeca_Edit
+		[HttpGet]
+		[ActionName("MFFeeca_Edit")]
+		public ActionResult MFFeeca_Edit([FromBody]RequestIdModel requestModel)
+		{
+			var id = requestModel.Id;
+			return RedirectToFormAction("FEECA", "EDIT", new { id = id, partialView = "MFFeeca", nestedForm = "true", multiForm = "true" });
+		}
+
+		[HttpPost]
+		public ActionResult MFFeeca_Edit_GET([FromBody]RequestIdModel requestModel)
+		{
+			return MFFeeca_Edit(requestModel);
+		}
+
+		//
+		// GET /Feeca/MFFeeca_Cancel
+		[ActionName("MFFeeca_Cancel")]
+		public ActionResult MFFeeca_Cancel([FromBody]RequestIdModel requestModel)
+		{
+			var id = requestModel.Id;
+			if (string.IsNullOrEmpty(id))
+				return JsonOK(new { Success = false });
+
+			PersistentSupport sp = UserContext.Current.PersistentSupport;
+			try
+			{
+				var model = new GenioMVC.Models.Feeca(UserContext.Current);
+				model.klass.QPrimaryKey = id;
+
+				sp.openTransaction();
+				model.Destroy();
+				sp.closeTransaction();
+			}
+			catch (Exception e)
+			{
+				sp.rollbackTransaction();
+				sp.closeConnection();
+				ClearMessages();
+
+				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
+				if (e is GenioException && (e as GenioException).UserMessage != null)
+					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
+
+				return JsonERROR(exceptionUserMessage);
+			}
+
+			return JsonOK(new { Success = true });
+		}
+
+		//
+		// POST /Feeca/MFFeeca_Save
+		[HttpPost]
+		[ActionName("MFFeeca_Save")]
+		public JsonResult MFFeeca_Save(Feeca_ViewModel model, string mode)
+		{
+			var eventSink = new EventSink()
+			{
+				MethodName = "MFFeeca_Save",
+				ViewName = "MFFeeca",
+				AreaName = "feeca"
+			};
+
+			return GenericHandleMultiFormSave(eventSink, model, mode);
+		}
+
+		//
+		// POST /Feeca/MFFeeca_Delete
+		[HttpPost]
+		[ActionName("MFFeeca_Delete")]
+		public JsonResult MFFeeca_Delete([FromBody]RequestIdModel requestModel)
+		{
+			var id = requestModel.Id;
+			var eventSink = new EventSink()
+			{
+				MethodName = "MFFeeca_Delete",
+				ViewName = "MFFeeca",
+				AreaName = "feeca",
+				Location = ACTION_FEECA_EDIT
+			};
+
+			var model = new Feeca_ViewModel(UserContext.Current, id);
+			model.MapFromModel();
+
+			return GenericHandlePostMultiFormDelete(eventSink, model);
+		}
+
+		#endregion
+
+		//
+		// GET: /Feeca/Feeca_FldsValDescrip
+		// POST: /Feeca/Feeca_FldsValDescrip
+		[ActionName("Feeca_FldsValDescrip")]
+		public ActionResult Feeca_FldsValDescrip([FromBody]RequestLookupModel requestModel)
+		{
+			var queryParams = requestModel.QueryParams;
+
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+
+			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_flds")))
+				UserContext.Current.SetPersistenceReadOnly(true);
+			else
+			{
+				Navigation.DestroyEntry("ForcePrimaryRead_flds");
+				UserContext.Current.SetPersistenceReadOnly(false);
+			}
+
+			var requestValues = new NameValueCollection();
+			if (queryParams != null)
+			{
+				// Set configuration name to use in view model
+				if (queryParams.ContainsKey("UserTableConfigName"))
+				{
+					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
+						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
+					else
+						Navigation.SetValue("UserTableConfigName", "");
+				}
+				else
+					Navigation.SetValue("UserTableConfigName", "");
+
+				// Set rows per page
+				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
+					perPage = Convert.ToInt32(queryParams["perPage"]);
+
+				// Add to request values
+				foreach (var kv in queryParams)
+					requestValues.Add(kv.Key, kv.Value);
+			}
+
+			IsStateReadonly = true;
+			Feeca_FldsValDescrip_ViewModel model = new Feeca_FldsValDescrip_ViewModel(UserContext.Current);
+			model.setModes(Request.Query["m"].ToString());
+			model.ValCodfeeca = requestModel.Id;
+			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+
+			return JsonOK(model);
+		}
+
+		// POST: /Feeca/Feeca_SaveEdit
+		[HttpPost]
+		public ActionResult Feeca_SaveEdit([FromBody]Feeca_ViewModel model)
+		{
+			var eventSink = new EventSink()
+			{
+				MethodName = "Feeca_SaveEdit",
+				ViewName = "Feeca",
+				AreaName = "feeca",
+				BeforeOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT BEFORE_APPLY_EDIT FEECA]/
+				},
+				AfterOp = (sink, sp) =>
+				{
+// USE /[MANUAL GQT AFTER_APPLY_EDIT FEECA]/
+				}
+			};
+
+			return GenericHandlePostFormApply(eventSink, model);
+		}
+	}
+}

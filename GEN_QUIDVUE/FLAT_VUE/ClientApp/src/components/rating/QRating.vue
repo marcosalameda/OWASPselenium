@@ -1,0 +1,362 @@
+﻿<template>
+	<div
+		:id="controlId"
+		:class="['q-rating', { 'q-rating--inline': inline }]">
+		<span
+			v-for="n in maxRating"
+			:key="n"
+			:class="[{ 'q-rating--read-only': readonly }, 'q-rating__shape']"
+			:style="{ 'margin-right': `${margin}px` }"
+			:aria-label="`${texts.ratingLabel} ${formattedRating} ${texts.totalRating} ${maxRating}`">
+			<input
+				:id="n"
+				type="radio"
+				@keydown.stop="changeRating"
+				checked />
+
+			<q-rating-shape
+				data-testid="shape"
+				:fill="fillLevel[n - 1]"
+				:size="shapeSize"
+				:shape-id="n"
+				:step="step"
+				:active-color="activeColor"
+				:inactive-color="inactiveColor"
+				:border-color="borderColor"
+				:border-width="borderWidth"
+				:rounded-corners="roundedCorners"
+				@shape-selected="setRating($event, true)" />
+		</span>
+
+		<span
+			v-if="showRating"
+			data-testid="numericValue"
+			:class="['q-rating__value', textClass]"
+			:data-rating="formattedRating">
+			{{ formattedRating }}
+		</span>
+	</div>
+</template>
+
+<script>
+	import { validateTexts } from '@/mixins/genericFunctions.js'
+
+	import QRatingShape from './QRatingShape.vue'
+
+	// The texts needed by the component.
+	const DEFAULT_TEXTS = {
+		ratingLabel: 'Rating',
+		totalRating: 'of'
+	}
+
+	/**
+	 * Rating component which provides an alternative interaction with a numeric field for use cases where the business interpretation of that number is a quality rating.
+	 */
+	export default {
+		name: 'QRating',
+
+		emits: [
+			'update:rating'
+		],
+
+		components: {
+			QRatingShape
+		},
+
+		inheritAttrs: false,
+
+		props: {
+			/**
+			 * Unique identifier for the control.
+			 */
+			id: String,
+
+			/**
+			 * Configures the increment of rating.
+			 */
+			increment: {
+				type: Number,
+				default: 1
+			},
+
+			/**
+			 * The current rating value.
+			 */
+			rating: {
+				type: Number,
+				default: 0
+			},
+
+			/**
+			 * Configures the active color of rating.
+			 */
+			activeColor: {
+				type: String,
+				default: '#4268F1'
+			},
+
+			/**
+			 * Configures the Inactive color of rating.
+			 */
+			inactiveColor: {
+				type: String,
+				default: '#D8D8D8'
+			},
+
+			/**
+			 * Configures the max rating.
+			 */
+			maxRating: {
+				type: Number,
+				default: 5
+			},
+
+			/**
+			 * Configures the size of the rating shape.
+			 */
+			shapeSize: {
+				type: Number,
+				default: 40
+			},
+
+			/**
+			 * Configures if the rating is shown to the user.
+			 */
+			showRating: {
+				type: Boolean,
+				default: true
+			},
+
+			/**
+			 * Configures if the rating is read only.
+			 */
+			readonly: {
+				type: Boolean,
+				default: false
+			},
+
+			/**
+			 * Necessary strings to be used in labels and headers.
+			 */
+			texts: {
+				type: Object,
+				validator: (value) => validateTexts(DEFAULT_TEXTS, value),
+				default: () => DEFAULT_TEXTS
+			},
+
+			/**
+			 * The class used for texts.
+			 */
+			textClass: {
+				type: String,
+				default: ''
+			},
+
+			/**
+			 * Whether or not it's an inline rating.
+			 */
+			inline: {
+				type: Boolean,
+				default: false
+			},
+
+			/**
+			 * Configures the border color of the shape.
+			 */
+			borderColor: {
+				type: String,
+				default: '#999'
+			},
+
+			/**
+			 * Configures if the rating border is rounded or not.
+			 */
+			roundedCorners: {
+				type: Boolean,
+				default: false
+			},
+
+			/**
+			 * Configures the padding of rating.
+			 */
+			padding: {
+				type: Number,
+				default: 0
+			},
+
+			/**
+			 * Configures the border-width of the shape.
+			 */
+			borderWidth: {
+				type: Number,
+				default: 0
+			},
+
+			/**
+			 * Configures up to how much decimal point rating value should be displayed.
+			 */
+			fixedPoints: {
+				type: Number,
+				default: -1,
+				validator: (value) => {
+					return value >= -1
+				}
+			},
+
+			/**
+			 * Whether or not the component is clearable.
+			 */
+			clearable: {
+				type: Boolean,
+				default: false
+			}
+		},
+
+		expose: [],
+
+		data()
+		{
+			return {
+				controlId: this.id || `rating-${this._.uid}`,
+				step: this.increment * 100,
+				currentRating: this.rating,
+				selectedRating: this.rating,
+				ratingSelected: false,
+				fillLevel: []
+			}
+		},
+
+		computed: {
+			/**
+			 * The rating value in the right format.
+			 */
+			formattedRating()
+			{
+				return Number(this.fixedPoints < 0 ? this.currentRating : this.currentRating.toFixed(this.fixedPoints))
+			},
+
+			/**
+			 * Whether or not the rating value should be rounded.
+			 */
+			shouldRound()
+			{
+				return this.ratingSelected
+			},
+
+			/**
+			 * The margin of the component.
+			 */
+			margin()
+			{
+				return this.padding + this.borderWidth
+			}
+		},
+
+		methods: {
+			/**
+			 * Sets and emits the current rating value.
+			 * @param {object} event The triggered change event
+			 */
+			changeRating(event)
+			{
+				if (this.readonly)
+					return
+
+				if (event.which === 39)
+				{
+					this.currentRating += this.increment
+					this.createShapes()
+					this.selectedRating = this.currentRating
+				}
+				else if (event.which === 37)
+				{
+					if (this.currentRating - this.increment >= 0)
+						this.currentRating -= this.increment
+					this.createShapes()
+					this.selectedRating = this.currentRating
+				}
+
+				this.$emit('update:rating', this.selectedRating)
+				this.ratingSelected = true
+			},
+
+			/**
+			 * Sets and emits the current rating value.
+			 * @param {object} event The triggered change event
+			 * @param {boolean} persist Whether or not the value change should be persisted
+			 */
+			setRating(event, persist)
+			{
+				if (this.readonly)
+					return
+
+				const position = event.position / 100
+				this.currentRating = (event.id + position - 1).toFixed(2)
+				this.currentRating = this.currentRating > this.maxRating ? this.maxRating : this.currentRating
+				this.createShapes()
+				if (persist)
+				{
+					if (this.clearable && this.currentRating === this.selectedRating)
+						this.selectedRating = 0
+					else
+						this.selectedRating = this.currentRating
+
+					this.changeRating(event)
+				}
+			},
+
+			/**
+			 * Resets the rating value.
+			 */
+			resetRating()
+			{
+				if (!this.readonly)
+				{
+					this.currentRating = this.selectedRating
+					this.createShapes(this.shouldRound)
+				}
+			},
+
+			/**
+			 * Creates the shapes to be displayed.
+			 * @param {boolean} round Whether or not to round the rating value
+			 */
+			createShapes(round = true)
+			{
+				if (round)
+					this.round()
+
+				for (let i = 0; i < this.maxRating; i++)
+				{
+					let level = 0
+					if (i < this.currentRating)
+						level = this.currentRating - i > 1 ? 100 : (this.currentRating - i) * 100
+					this.fillLevel[i] = Math.round(level)
+				}
+			},
+
+			/**
+			 * Rounds the current rating value.
+			 */
+			round()
+			{
+				var inv = 1.0 / this.increment
+				this.currentRating = Math.min(this.maxRating, Math.ceil(this.currentRating * inv) / inv)
+			}
+		},
+
+		watch: {
+			rating(val)
+			{
+				this.currentRating = val
+				this.selectedRating = val
+				this.createShapes(this.shouldRound)
+			},
+
+			maxRating(val)
+			{
+				this.currentRating = val < this.selectedRating ? val : this.selectedRating
+			}
+		}
+	}
+</script>

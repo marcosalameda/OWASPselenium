@@ -106,8 +106,6 @@ builder.WebHost.ConfigureKestrel(options =>
     options.AddServerHeader = false;
 });
 
-// USE /[MANUAL GQT APP_INIT]/
-
 var app = builder.Build();
 
 // Log unhandled exceptions and detail the error details in http 500 responses

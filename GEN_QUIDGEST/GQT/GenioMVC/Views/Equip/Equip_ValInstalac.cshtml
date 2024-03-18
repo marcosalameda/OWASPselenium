@@ -1,0 +1,147 @@
+﻿@model GenioMVC.ViewModels.Equip.Equip_ValInstalac_ViewModel
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@using Newtonsoft.Json;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@*List properties DBEDIT BUTTONS*@
+<div class="row">
+	<div class="col">
+		<div elem-identifier="List"  help-id="IFF_EQUIP___PSEUDINSTALAC" style="padding-top: 0.5rem;"><label class = "i-text__label table-title c-table__title" > <h2>@Resources.FACILITIES_23844</h2> </label></div>
+	</div>
+	<div class="col-auto search">
+	</div>
+	@{
+		var listBtnCssClass = Model.IsViewModeHidden("LIST") ? "b-icon--secondary" : "b-icon--primary";
+		var alternativeViewBtnCssClass = Model.IsViewModeHidden("LIST") ? "b-icon--primary" : "b-icon--secondary";
+		
+		<div class="col-auto" style="padding: 0; padding-right: 15px">
+			<div class="b-btn-group">
+				<button class="b-btn b-icon @listBtnCssClass" type="button" onclick="window.ValInstalac.ToggleViewMode('Equip_ValInstalac', 'Equip', 'Insta', codlista ='', 1)" title="@Resources.MUDAR_PARA_VISTA_EM_03626"><i class="glyphicons glyphicons-show-lines e-icon"></i></button>
+				<button class="b-btn b-icon @alternativeViewBtnCssClass" type="button" onclick="window.ValInstalac.ToggleViewMode('Equip_ValInstalac', 'Equip', 'Insta', codlista ='', 2)" title="@Resources.MUDAR_PARA_VISTA_ALT46064"><i class="glyphicons glyphicons-show-big-thumbnails e-icon"></i></button>
+			</div>
+		</div>
+	}
+</div>
+
+@* USE /[MANUAL GQT TABLE_FOR EQUIP_INSTALAC]/ *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@{
+    var data = Html.GoogleMaps<GenioMVC.Models.Insta>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodinsta, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN EQUIP_INSTALAC_INSTA_SINCE]/
+		column.Expression(p => p.ValSince).Title(@Resources.SINCE47259).Field("ValSince").Size(16);
+// USE /[MANUAL GQT CUSTOM_COLUMN EQUIP_INSTALAC_INSTA_UNTIL]/
+		column.Expression(p => p.ValUntil).Title(@Resources.UNTIL39173).Field("ValUntil").Size(16);
+// USE /[MANUAL GQT CUSTOM_COLUMN EQUIP_INSTALAC_INSTA_HOURS]/
+		column.Expression(p => p.ValHours).Title(@Resources.QTD_HOURS28684).Field("ValHours").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN EQUIP_INSTALAC_INSTA_PRECOHOR]/
+		column.Expression(p => p.ValPrecohor).Title(@Resources.HOURLY_PRICE48005).Field("ValPrecohor").Size(12);
+// USE /[MANUAL GQT CUSTOM_COLUMN EQUIP_INSTALAC_INSTA_VALUE]/
+		column.Expression(p => p.ValValue).Title(@Resources.VALUE10285).Field("ValValue").Size(12);
+// USE /[MANUAL GQT CUSTOM_COLUMN EQUIP_INSTALAC_INSTA_COORDGEO]/
+		column.Expression(p => p.ValCoordgeo).Title(@Resources.GEOGRAPHIC_COORDINAT21394).Field("ValCoordgeo").Size(30);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Insta")
+        .Id("ValInstalac")
+        .AjaxRequest("Equip_ValInstalac")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+		// Temporary hack
+        .ToGoogleMaps(hasFilters: false)
+        .RequestLink(@Url.Action("Equip_ValInstalac", new { id = Model.ValCodequip, partialView = "Equip_ValInstalac"}))
+        .Permissions(canView: false, canInsert: false, canEdit: false, canDelete: false, canDuplicate: false)
+        // Temporary hack
+        .ToGoogleMaps(hasFilters: false)
+		;
+        
+    var map = data
+        .ToSpecialRendering()
+		.SetSpecialRendering(this.Model.ViewModesCfg.SpecialRenderings.FirstOrDefault(sr => sr.Id == "MAP"))
+        .RequestLink(@Url.Action("Equip_ValInstalac", new { id = Model.ValCodequip, partialView = "Equip_ValInstalac"}))
+        .Permissions(canView: false, canInsert: false, canEdit: false, canDelete: false, canDuplicate: false)
+		;
+        
+}
+
+@{ renderings.Clear(); }
+@{ renderings.Add(Model.GetViewModePosition("LIST"), @tbl.ToGoogleMapsHtml()); }
+@{ renderings.Add(Model.GetViewModePosition("MAP"), map.ToSpecialRenderingHtml(hidden: Model.IsViewModeHidden("MAP"))); }
+
+
+@foreach (var render in renderings.ToList().OrderBy(r => r.Key))
+{
+    @Html.Raw(render.Value.ToHtmlString());
+}
+
+<script>
+
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qValInstalac, #ValInstalac_complex_filter th input, #ValInstalac_filters input").change(function() {
+                    $("#pValInstalac").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#ValInstalac_tableFilters').val(false);")
+                    @Html.Raw("$('#ValInstalac_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#ValInstalac_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $('#ValInstalac_complex_filter button#applyComplexFilter').click();
+                    @:      event.preventDefault();
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#ValInstalac_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_ValInstalac').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+
+
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='ValInstalac']"));
+                    InitSpecialControls($('#ValInstalac'));
+                    $('#ValInstalac').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS EQUIP_VALINSTALAC]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+</script>

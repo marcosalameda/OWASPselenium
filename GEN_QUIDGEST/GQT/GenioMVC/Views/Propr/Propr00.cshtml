@@ -1,0 +1,319 @@
+﻿@model GenioMVC.ViewModels.Propr.Propr00_ViewModel
+@using GenioMVC.Models.Navigation;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Form = "Propr00";
+	ViewBag.Title = string.Format(@Resources._PROPR__NAME_39336, this.Model.ValName);
+	Model.Navigation.CurrentLevel.redefineLocName(ViewBag.Title);
+    ViewBag.formmode = Model.GetFormMode;
+	ViewBag.ClassForFormLayout = "form-flow";
+}
+
+
+@if (!Model.NestedForm) {
+    if(Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+    {
+        using (Html.BeginForm("Action", "Propr", FormMethod.Post, new { @class = "form-horizontal", area="Propr", data_form="Propr00" }))
+        {
+            @form_content_alert()
+            @Html.QValidationSummary()
+	        @LoadDefault()
+        }
+    }
+    else
+    {
+        <div class="form-horizontal" id="Propr00" area="Propr" data-form="Propr00">
+	        @LoadDefault()
+        </div>
+    }
+}
+else {
+    <div class="c-card nested-form" id="Propr00_well" area="Propr" data-form="Propr00">
+        @Html.QValidationSummary()
+		@LoadDefault()
+    </div>
+}
+
+@helper form_content_body() {
+			<div class="row">
+				<div class="col-12">
+					<div class="row-large-control">
+						<div class="row-line-group" id="CONTAINER_IFF_PROPR00_PSEUDNOVOGR04">
+                            <div class="c-groupbox " id="GROUPBOX_PROPR00_NOVOGR04">
+                                <div class="row-fluid form-flow">
+									<div class="span6 row-large-control">
+										<div class="row-line-group"  help-id="IFF_PROPR00_PSEUDNOVOGR02" id="CONTAINER_IFF_PROPR00_PSEUDNOVOGR02">
+                            <div class="c-groupbox zone-no-border ">
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_PROPR00_PROPRNAME____">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValName, new { label_id="LED_PROPR00_PROPRNAME____", @class = " i-text__label", id="LABEL_LED_PROPR00_PROPRNAME____"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PROPR00_PROPRNAME____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValName, new {help_id = "LED_PROPR00_PROPRNAME____", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_PROPR00_PROPRNAME____", @pers_cs_area = "Propr", @pers_cs_field = "ValName", @db_field = "ValName", title = @Resources.REAL_ESTATE24996, maxlength = "85", rows = "85" })
+													@Html.ValidationMessageFor(model => model.ValName)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_PROPR00_PROPRPRECOEST">
+													<div class="d-inline-flex">
+													@Html.LabelFor(model => model.ValPrecoest, new { label_id="LED_PROPR00_PROPRPRECOEST", @class = " i-text__label", id="LABEL_LED_PROPR00_PROPRPRECOEST"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PROPR00_PROPRPRECOEST','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValPrecoest, new {help_id = "LED_PROPR00_PROPRPRECOEST", @class = "i-input-group__field text-right i-text__field i-text input-medium", data_identifier = "LED_PROPR00_PROPRPRECOEST", @pers_cs_area = "Propr", @pers_cs_field = "ValPrecoest", @db_field = "ValPrecoest", title = @Resources.ESTIMATED_PRICE02986, data_currency = "True", data_number_integer = "9", data_number_decimals = "2", data_number_format = "999999999.99" })
+													@Html.ValidationMessageFor(model => model.ValPrecoest)
+													</div>
+												<div class="i-dbedit draggable " id="CONTAINER_IFF_PROPR00_TPPROTPPROPRI">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.TableTpproTppropri, new { label_id="IFF_PROPR00_TPPROTPPROPRI", @class = " i-text__label", id="LABEL_IFF_PROPR00_TPPROTPPROPRI"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('IFF_PROPR00_TPPROTPPROPRI','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DropDownListFor(model => model.ValCodtppro, Model.TableTpproTppropri.List , "", new {help_id = "IFF_PROPR00_TPPROTPPROPRI", @class = "i-select chosen-dropdown input-large", data_identifier = "IFF_PROPR00_TPPROTPPROPRI", @pers_cs_area = "Tppro", @pers_cs_field = "ValCodtppro", @db_field = "ValCodtppro", @db_full_field_name = "propr.codtppro", data_has_more = Model.TableTpproTppropri.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableTpproTppropri.Selected, data_dbedit_value = Model.TableTpproTppropri.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodpropr, @data_see_more = "Propr00_TpproValTppropri", title = @Resources.PROPERTY_TYPE33991, data_see_more_url = @Url.Action("Propr00_TpproValTppropri","Propr"), data_is_dbedit = "true", data_support_form = @Url.Action("TPPRO_New", "TPPRO"), data_fields = "tppro.codtppro,tppro.tppropri", data_main_field = "Tppro.ValTppropri", data_elements = 0, data_filled_by_history = Model.TableTpproTppropri.FilledByHistory, @dependant_fields = "tppro.codtppro,tppro.tppropri" })
+													@Html.ValidationMessageFor(model => model.TableTpproTppropri)
+													</div>
+												</div>
+												<div class="control-join-group row-group-checkbox">
+												<div class="i-checkbox draggable " id="CONTAINER_LED_PROPR00_PROPRMOBILADA">
+													@Html.CheckBoxFor(model => model.ValMobilada, new {help_id = "LED_PROPR00_PROPRMOBILADA", @class = "i-checkbox__field i-checkbox input-small", data_identifier = "LED_PROPR00_PROPRMOBILADA", @pers_cs_area = "Propr", @pers_cs_field = "ValMobilada", @db_field = "ValMobilada", title = @Resources.FURNISHED37431 }, @Model.IsEditableMode, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													@Html.ValidationMessageFor(model => model.ValMobilada)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 										</div>
+									</div>
+									<div class="span6 row-controls">
+										<div class="control-join-group"  help-id="IFF_PROPR00_PESSONAME____" id="CONTAINER_IFF_PROPR00_PESSONAME____">
+												<div class="d-flex">
+												@Html.LabelFor(model => model.TablePessoName, new { label_id="IFF_PROPR00_PESSONAME____", @class = " i-text__label", id="LABEL_IFF_PROPR00_PESSONAME____"}, true, false)
+												<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+												<a href="javascript:OpenSuggestion('IFF_PROPR00_PESSONAME____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+												@Html.DropDownListFor(model => model.ValCodpesso, Model.TablePessoName.List , "", new {help_id = "IFF_PROPR00_PESSONAME____", @class = "i-select chosen-dropdown input-xlarge", data_identifier = "IFF_PROPR00_PESSONAME____", @pers_cs_area = "Pesso", @pers_cs_field = "ValCodpesso", @db_field = "ValCodpesso", @db_full_field_name = "propr.codpesso", data_has_more = Model.TablePessoName.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TablePessoName.Selected, data_dbedit_value = Model.TablePessoName.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodpropr, @data_see_more = "Propr00_PessoValName", title = @Resources.SELLER36870, data_see_more_url = @Url.Action("Propr00_PessoValName","Propr"), data_is_dbedit = "true", data_fields = "pesso.codpesso,pesso.name", data_main_field = "Pesso.ValName", data_elements = 0, data_filled_by_history = Model.TablePessoName.FilledByHistory, @dependant_fields = "pesso.codpesso,pesso.name,cntry.codcntry,cntry.country" })
+												@Html.ValidationMessageFor(model => model.TablePessoName)
+										</div>
+									</div>
+							</div>
+							<div class="row form-flow">
+									<div class="span6 row-large-control">
+										<div class="row-line-group"  help-id="IFF_PROPR00_PSEUDNOVOGR01" id="CONTAINER_IFF_PROPR00_PSEUDNOVOGR01">
+                            <div class="c-groupbox zone-no-border ">
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-image draggable " id="CONTAINER_LED_PROPR00_PROPRPHOTOGRA">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValPhotogra, new { label_id="LED_PROPR00_PROPRPHOTOGRA", @class = " i-text__label", id="LABEL_LED_PROPR00_PROPRPHOTOGRA"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PROPR00_PROPRPHOTOGRA','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													<div data-identifier="LED_PROPR00_PROPRPHOTOGRA" pers-cs-area="Propr" pers-cs-field="ValPhotogra" class="image-control-wrapper" >
+													@if(Model.IsEditableMode) {
+														@Html.EditorFor(m => m.ValPhotogra, new {help_id = "LED_PROPR00_PROPRPHOTOGRA", @class = "col-auto ", data_identifier = "LED_PROPR00_PROPRPHOTOGRA", title = @Resources.PHOTO51874, guid = @Model.ValCodpropr, controller = "Propr", fldname = "ValPhotogra", identifier = "FPROPR00", style = "height: 47pt; display: inline-block;" })
+													} else {
+														@Html.DisplayFor(m => m.ValPhotogra, new {help_id = "LED_PROPR00_PROPRPHOTOGRA", @class = "col-auto ", data_identifier = "LED_PROPR00_PROPRPHOTOGRA", title = @Resources.PHOTO51874, guid = @Model.ValCodpropr, controller = "Propr", fldname = "ValPhotogra", identifier = "FPROPR00", style = "height: 47pt; display: inline-block;" })
+													}
+													</div>
+													@Html.ValidationMessageFor(model => model.ValPhotogra)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 										</div>
+									</div>
+								</div>
+                            </div>
+ 						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="row-large-control">
+						<div class="row-line-group" id="CONTAINER_IFF_PROPR00_PSEUDPROPR02_">
+								<div id="Propr00_Tabs">
+									@{ Html.RenderPartial("~/Views/Propr/Propr00_Tabs.cshtml"); }
+								</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+			@Html.HiddenFor(model => model.ValCodpais1, new { @pers_cs_field="ValCodpais1", @pers_cs_area="Propr", @data_value = Model.ValCodpais1, @db_field="ValCodpais1", @trelate="Pais1", @tfrelate="Codcntry", @data_identifier="LED_PROPR00_PAIS1CODCNTRY" })
+
+			@Html.HiddenFor(model => model.ValCodpropr, new { @pers_cs_field="ValCodpropr", @pers_cs_area="Propr", data_refresh = "true", @form_area="true", @data_value = Model.ValCodpropr, @data_identifier = "LED_PROPR00_PROPRCODPROPR" })
+
+            @Html.Hidden("IgnoreWarnings", "false", new { id = "IgnoreWarnings" })
+
+			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Propr00" })
+            @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Propr00" })
+            @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Propr00" })
+			if (!Model.NestedForm)
+            {
+                @Html.AntiForgeryToken()
+            }
+}
+
+@helper form_content_alert() {
+	if(Model.FormMode == FormMode.Delete) {
+		<div class="c-alert c-alert--warning">
+			<i class="glyphicons glyphicons-alert c-alert__icon" aria-hidden="true"></i>
+			<div class="c-alert__text">
+				&ensp;@Resources.DESEJA_ELIMINAR_ESTA24564
+			</div>
+		<!--Ao confirmar esta ficha irá ser eliminada da base de dados. Cancele caso não tenha a certeza.-->
+		</div>
+	}
+}
+
+@helper form_content_buttons() {
+
+
+
+
+    @* Extended support form *@
+    if (Model.NestedForm)
+    {
+        if (Model.IsEditableMode)
+        {
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("Propr00", Model.FormMode).ToString(), "Propr")", "Propr00_well")' qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>
+                    @Resources.SAVE04165
+            </button>
+            <button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Propr00_Delete", "Propr", new {id = @Model.ValCodpropr} )", "Propr00_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+
+            <script type="application/javascript">
+                $(document).ready(function () { loaded($("#Propr00_well")); });
+            </script>
+        }
+
+        @* javascript code_javascript *@
+        @*@codeJavascript()*@
+    }
+    @* Normal mode *@
+    else
+    {
+        if (Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+        {
+            if (Model.FormMode == FormMode.New && Convert.ToBoolean(Model.Navigation.CurrentLevel.GetEntry("repeatInsertion")))
+            {
+            <button type="button" data-end-pers="true" name="Propr00_repete_insertion" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitPropr00(event, true)" qbutton="ok_new">@Resources.GRAVAR_E_CRIAR_NOVA17771</button>
+            }
+            if(Model.FormMode == FormMode.Delete)
+            {
+				<button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Propr00", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitDeletePropr00(event)" qbutton="delete">
+                    <i class="glyphicons glyphicons-check e-icon" aria-hidden="true"></i>@Resources.CONFIRMAR09808
+                </button>
+            }
+            else
+            {
+                <button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Propr00", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitPropr00(event)" title="@Resources.SAVE04165" data-selector="true" qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>@Resources.SAVE04165
+                </button>
+            }
+
+            <button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-href="@Url.Action("Propr00_Cancel", "Propr", new { niv = Model.Navigation.CurrentLevel.Level })" onclick="javascript:window.Form_Propr00.Cancel()" title="@Resources.CANCEL65428" data-selector="true" qbutton="cancel">
+                <i class="glyphicons glyphicons-ban-circle e-icon" aria-hidden="true"></i>@Resources.CANCEL65428
+            </button>
+        }
+        else if (!(ViewBag.isHomePage ?? false))
+        {
+            @Html.ActionLinkWithIcon(@Resources.RETROCEDER16633, "Propr00_Cancel","Propr","glyphicons glyphicons-arrow-left e-icon", null, new { @class = "b-icon-text b-icon-text--secondary", @data_end_pers = "true", @title = @Resources.RETROCEDER16633, qbutton = "cancel" })
+        }
+    }
+}
+
+@helper LoadDefault() {
+    if (Model.NestedForm)
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div class="c-card__header">
+                    <div class="c-card__header-tag">
+						<span class="form-header" style="padding:0;">
+							<i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+						</span>
+                    </div>
+                </div>
+                <div class="c-card__body">
+                    @form_content_body()
+                    <div elem-identifier="FormActions" class="form-actions" data-form-actions="Propr00">
+                        @form_content_buttons()
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    }
+    else
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div id="c-stickyHeader">
+                    <div class="c-action-bar d-flex">
+                        <span class="form-header">
+                            <i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+                        </span>
+                        <div data-parent-form="Propr00" data-q-ref="form-btns-main_container"></div>
+                    </div>
+                </div>
+
+                @form_content_body()
+                <div elem-identifier="FormActions" class="form-actions" data-form-actions="Propr00">
+                @form_content_buttons()
+                </div>
+            </div>
+        </fieldset>
+    }
+}
+
+@helper LoadFromLayout()
+{
+}
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT PROPR00]/ *@
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_PROPR00" data-form-javascript="true">
+@Html.Partial("Propr00_JavaScript", Model, ViewData)
+</div>
+}
+
+@section code_javascript
+{
+	@codeJavascript()
+}
+
+@if (Request.IsAjaxRequest())
+{
+    @codeJavascript()
+    @includeStylesheets()
+}
+
+@helper includeStylesheets()
+{
+
+ }
+
+@section include_stylesheets {
+    @includeStylesheets()
+}

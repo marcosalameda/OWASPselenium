@@ -1,0 +1,124 @@
+﻿@model GenioMVC.ViewModels.Equip.Fullcale_ValFullcale_ViewModel
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@using Newtonsoft.Json;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@*List properties DBEDIT BUTTONS*@
+<div class="row">
+	<div class="col">
+		<div elem-identifier="List"  help-id="IFF_FULLCALEPSEUDFULLCALE" style="padding-top: 0.5rem;"><label class = "i-text__label table-title c-table__title" > <h2>@Resources.VISITS33669</h2> </label></div>
+	</div>
+</div>
+
+@* USE /[MANUAL GQT TABLE_FOR FULLCALE_FULLCALE]/ *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@using GenioMVC.ViewModels.Visit;    
+@{
+    var data = Html.FullCalendar<GenioMVC.Models.Visit>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodvisit, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN FULLCALE_FULLCALE_VISIT_TITLE]/
+		column.Expression(p => p.ValTitle).Title(@Resources.TITLE21885).Field("ValTitle").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN FULLCALE_FULLCALE_VISIT_STARTDT]/
+		column.Expression(p => p.ValStartdt).Title(@Resources.BEGINNING18124).Field("ValStartdt").Size(16);
+// USE /[MANUAL GQT CUSTOM_COLUMN FULLCALE_FULLCALE_VISIT_DTFIM]/
+		column.Expression(p => p.ValDtfim).Title(@Resources.END47577).Field("ValDtfim").Size(16);
+// USE /[MANUAL GQT CUSTOM_COLUMN FULLCALE_FULLCALE_VISIT_DESCRIPT]/
+		column.Expression(p => p.ValDescript).Title(@Resources.DESCRIPTION07383).Field("ValDescript").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN FULLCALE_FULLCALE_VISIT_TODOODIA]/
+		column.Expression(p => p.ValTodoodia).Title(@Resources.DAY27593).Field("ValTodoodia").Size(1);
+// USE /[MANUAL GQT CUSTOM_COLUMN FULLCALE_FULLCALE_VISIT_COLOR]/
+		column.Expression(p => p.ValColor).Title(@Resources.COR09431).Field("ValColor").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN FULLCALE_FULLCALE_VISIT_BACK]/
+		column.Expression(p => p.ValBack).Title(@Resources.BACKGROUND45121).Field("ValBack").Size(1);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Visit")
+        .Id("ValFullcale")
+        .AjaxRequest("Fullcale_ValFullcale")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+		// Temporary hack
+        .ToFullCalendar(hasFilters: false)
+        .RequestLink(@Url.Action("Fullcale_ValFullcale", new { id = Model.ValCodequip, partialView = "Fullcale_ValFullcale"}))
+        .Form("Visit2", true, false)
+        .SetFollowUp("Visit2_Show", "Visit" , (Func<GenioMVC.Models.Visit, object>)(item => new { id = item.ValCodvisit }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: true)
+        .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
+        // Temporary hack
+        .ToFullCalendar(hasFilters: false)
+		;
+        
+}
+
+@tbl.ToFullCalendarHtml()
+
+<script>
+
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qValFullcale, #ValFullcale_complex_filter th input, #ValFullcale_filters input").change(function() {
+                    $("#pValFullcale").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#ValFullcale_tableFilters').val(false);")
+                    @Html.Raw("$('#ValFullcale_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#ValFullcale_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $('#ValFullcale_complex_filter button#applyComplexFilter').click();
+                    @:      event.preventDefault();
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#ValFullcale_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_ValFullcale').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+
+
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='ValFullcale']"));
+                    InitSpecialControls($('#ValFullcale'));
+                    $('#ValFullcale').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS FULLCALE_VALFULLCALE]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+</script>

@@ -1,0 +1,166 @@
+﻿@using GenioMVC.Models.Navigation;
+@using GenioMVC.Helpers.Menus;
+<li class="dropdown n-menu__aside-item">
+  <div class="d-flex align-items-center">
+    @{
+      var navigation = UserContext.Current.CurrentNavigation;
+      var hasAlerts = true;
+      var isForm = navigation != null && navigation.CurrentLevel.Level != 0 && navigation.CurrentLevel.FormMode != FormMode.List;
+      if (hasAlerts)
+      {
+        <a class="nav-link n-menu__aside-link" elem-identifier="sidebarCollapse" href="#" role="button" aria-haspopup="true" aria-expanded="true" aria-label="@Resources.OPCOES10204">
+
+            <span id="usravt-notifications-bell" class="" data-toggle="tooltip" data-placement="left" title="" data-original-title="@Resources.NOTIFICACOES03935">
+              <i class="glyphicons glyphicons-bell n-menu__aside-icon" ></i>
+            </span>
+
+          @if (hasAlerts)
+          {
+            <span class="e-badge e-badge--dark c-notification__counter c-notification__counter--dark" aria-hidden="true">0</span>
+          }
+          <span class="hidden-elem">@Resources.OPCOES10204</span>
+        </a>
+      }
+    }
+	  <!-- Avatar image loaded from LoadAvatar() function in _Layout.cshtml.vm -->
+    <button data-id="UserAvatar" name="UserAvatar" title="@Resources.AVATAR_DO_UTILIZADOR11051" elem-identifier="UserAvatar" class="nav-link dropdown-toggle n-menu__aside-link removecaret UserAvatar" style="border-width:0;background-color:transparent;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    </button>
+    <div class="dropdown-menu dropdown-menu-right c-user__dropdown" aria-labelledby="navbarDropdown">
+      <div class="c-card n-module__container">
+        <div class="c-card__header">
+          <div data-id="fullname" class="c-card__title n-module__title">@GenioMVC.Models.Navigation.UserContext.Current.User.Name</div>
+          <div data-id="titleposition" class="c-card__subtitle n-module__subtitle" style="padding-bottom:0;">@Resources.UTILIZADOR52387</div>
+        </div>
+      </div>
+      <ul class="c-sidebar__list">
+        @* EPH user avatar menu items *@
+        @if (UserContext.Current.CurrentNavigation != null)
+        {
+          foreach (EPHUserAvatarMenu menu in EPHUserAvatarMenu.GetMenus())
+          {
+            <li class="c-sidebar__list-item" id="@("ephavatar" + menu.MenuID)">
+              <a href="@Url.Action(menu.Action, menu.Controller)" data-toggle="tooltip" data-placement="top" class="c-sidebar__list-link" title="@Helpers.GetTextFromResources(menu.Title)">
+                @if (!String.IsNullOrEmpty(menu.Font))
+                {
+                  <i class="@menu.Font nav-icon n-sidebar__icon"></i>
+                }
+                else if (!String.IsNullOrEmpty(Model.Icon) && !String.IsNullOrEmpty(menu.Image))
+                {
+                  var imgIcon = menu.Image;
+                  if (menu.MenuID.Equals(Model.CurrentModule) && imgIcon.Contains("."))
+                  {
+                    imgIcon = imgIcon.Insert(imgIcon.LastIndexOf("."), "_over");
+                  }
+
+                  <img src="@Url.Content(imgIcon)" title="@Helpers.GetTextFromResources(menu.Title)" />
+                }
+
+                  @Helpers.GetTextFromResources(menu.Title)
+
+              </a>
+            </li>
+          }
+        }
+        @* Custom user avatar menu items *@
+        @foreach (UserAvatarMenu menu in UserAvatarMenu.GetMenus(UserContext.Current.PersistentSupport, UserContext.Current.User))
+        {
+          string menuURL;
+          if (string.IsNullOrEmpty(menu.RecordID))
+          {
+            menuURL = Url.Action(menu.Action, menu.Controller);
+          }
+          else
+          {
+            menuURL = Url.Action(menu.Action, menu.Controller, new { id = menu.RecordID });
+          }
+
+          <li class="c-sidebar__list-item" id="@("userAvatarMenu" + menu.Title)">
+            <a href="@(menuURL)" data-toggle="tooltip" data-placement="top" class="c-sidebar__list-link" title="@Helpers.GetTextFromResources(menu.Title)">
+
+              @if (!String.IsNullOrEmpty(menu.Font))
+              {
+                <i class="glyphicons glyphicons-@menu.Font c-header__icon"></i>
+                @Helpers.GetTextFromResources(menu.Title)
+              }
+              else if (!String.IsNullOrEmpty(Model.Icon) && !String.IsNullOrEmpty(menu.Image))
+              {
+                <img src="@Url.Content(menu.Image)" title="@Helpers.GetTextFromResources(menu.Title)" />
+              }
+              else
+              {
+                @Helpers.GetTextFromResources(menu.Title)
+              }
+            </a>
+          </li>
+        }
+
+        @if(Model.CurrentModule == "GQT")
+        {
+          <li class="c-sidebar__list-item">
+            <a href="@Url.Content("~/Content/Manual/GQTManual.pdf")" data-toggle="tooltip" class="c-sidebar__list-link" data-placement="top" title="@Resources.AJUDA_AO_UTILIZADOR_37116">
+              <i class="glyphicons glyphicons-disk-save c-header__icon"></i>
+              @Resources.AJUDA_AO_UTILIZADOR_37116
+            </a>
+          </li>
+        }
+        @if(Model.CurrentModule == "PTN")
+        {
+          <li class="c-sidebar__list-item">
+            <a href="@Url.Content("~/Content/Manual/PTNManual.pdf")" data-toggle="tooltip" class="c-sidebar__list-link" data-placement="top" title="@Resources.AJUDA_AO_UTILIZADOR_37116">
+              <i class="glyphicons glyphicons-disk-save c-header__icon"></i>
+              @Resources.AJUDA_AO_UTILIZADOR_37116
+            </a>
+          </li>
+        }
+        @if(Model.CurrentModule == "TBS")
+        {
+          <li class="c-sidebar__list-item">
+            <a href="@Url.Content("~/Content/Manual/TBSManual.pdf")" data-toggle="tooltip" class="c-sidebar__list-link" data-placement="top" title="@Resources.AJUDA_AO_UTILIZADOR_37116">
+              <i class="glyphicons glyphicons-disk-save c-header__icon"></i>
+              @Resources.AJUDA_AO_UTILIZADOR_37116
+            </a>
+          </li>
+        }
+        @if(Model.CurrentModule == "REG")
+        {
+          <li class="c-sidebar__list-item">
+            <a href="@Url.Content("~/Content/Manual/REGManual.pdf")" data-toggle="tooltip" class="c-sidebar__list-link" data-placement="top" title="@Resources.AJUDA_AO_UTILIZADOR_37116">
+              <i class="glyphicons glyphicons-disk-save c-header__icon"></i>
+              @Resources.AJUDA_AO_UTILIZADOR_37116
+            </a>
+          </li>
+        }
+        @if(Model.CurrentModule == "STY")
+        {
+          <li class="c-sidebar__list-item">
+            <a href="@Url.Content("~/Content/Manual/STYManual.pdf")" data-toggle="tooltip" class="c-sidebar__list-link" data-placement="top" title="@Resources.AJUDA_AO_UTILIZADOR_37116">
+              <i class="glyphicons glyphicons-disk-save c-header__icon"></i>
+              @Resources.AJUDA_AO_UTILIZADOR_37116
+            </a>
+          </li>
+        }
+
+        @if(GenioServer.security.SecurityFactory.HasPasswordManagement())
+        {
+          <li class="c-sidebar__list-item">
+            <a href="@Url.Action("Profile", "Home", new { })" data-toggle="tooltip" class="c-sidebar__list-link" data-placement="top" title="@Resources.ALTERAR_PASSWORD32166">
+              <i class="glyphicons glyphicons-user c-header__icon"></i>
+              @Resources.ALTERAR_PASSWORD32166
+            </a>
+          </li>
+        }
+        @if (CSGenio.framework.Configuration.LoginType != CSGenio.framework.Configuration.LoginTypes.AD)
+        {
+          <li class="c-sidebar__list-item">
+            <a href="@Url.Action("LogOff", "Account", new { })" data-toggle="tooltip" data-placement="top" class="c-sidebar__list-link" title="@Resources.SAIR20169">
+              <i class="glyphicons glyphicons-log-out c-header__icon"></i>
+              @Resources.SAIR20169
+            </a>
+          </li>
+
+          @*<label>@GenioMVC.Models.Navigation.UserContext.Current.User.Name</label>*@
+        }
+      </ul>
+    </div>
+  </div>
+</li>

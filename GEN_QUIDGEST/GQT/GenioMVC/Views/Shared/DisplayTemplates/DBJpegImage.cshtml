@@ -1,0 +1,14 @@
+﻿@model byte[]
+
+@using System.Web.Mvc;
+
+@{
+    string guid = ViewData["guid"] == null ? "" : ViewData["guid"].ToString();
+    string controller = ViewData["controller"] == null ? "" : ViewData["controller"].ToString();
+    string fldname = ViewData["fldname"] == null ? "" : ViewData["fldname"].ToString();
+    string cssClass = ViewData["class"] == null ? "" : ViewData["class"].ToString();
+    string formIdentifier = ViewData["identifier"] == null ? "" : ViewData["identifier"].ToString();
+    var style = (ViewData["style"] ?? "").ToString();
+}
+
+@Html.ShowImage(@Model, guid, controller, fldname, formIdentifier, new { @class = cssClass, style })

@@ -1,0 +1,156 @@
+﻿@model GenioMVC.ViewModels.Cmpny.TBS_Menu_111_ViewModel
+@using GenioMVC.Resources
+@using System.Web.Script.Serialization
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Title = Model.DBEditTitle;
+	//Layout = "~/Views/Shared/Layouts/TopMenu_BT4/_Layout.cshtml";
+}
+
+@{
+	GenioMVC.ViewModels.Cmpny.TBS_Menu_111_ViewModel modelTBS_Menu_111 = new GenioMVC.ViewModels.Cmpny.TBS_Menu_111_ViewModel(Navigation);
+	var columns = modelTBS_Menu_111.GetSearchColumns();
+
+	Dictionary<string, TableFilterField> fields = new Dictionary<string, TableFilterField>();
+
+
+	foreach (var col in columns)
+	{
+		var areaField = col.AreaField;
+		if (areaField.Area == "cmpny" && areaField.Field == "designat")
+		{
+			fields.Add("CMPNY.DESIGNAT", new TableFilterField("CMPNY", "DESIGNAT", Resources.DESIGNATION35876, "text", defaultSearch : true));
+		}
+		if (areaField.Area == "cmpny" && areaField.Field == "acronym")
+		{
+			fields.Add("CMPNY.ACRONYM", new TableFilterField("CMPNY", "ACRONYM", Resources.ACRONYM00872, "text"));
+		}
+		if (areaField.Area == "cmpny" && areaField.Field == "nif")
+		{
+			fields.Add("CMPNY.NIF", new TableFilterField("CMPNY", "NIF", Resources.TAX_IDENTIFICATION51190, "text"));
+		}
+		if (areaField.Area == "cmpny" && areaField.Field == "telephon")
+		{
+			fields.Add("CMPNY.TELEPHON", new TableFilterField("CMPNY", "TELEPHON", Resources.PHONE56703, "text"));
+		}
+		if (areaField.Area == "cmpny" && areaField.Field == "email")
+		{
+			fields.Add("CMPNY.EMAIL", new TableFilterField("CMPNY", "EMAIL", Resources.EMAIL25170, "text"));
+		}
+	}
+
+	JavaScriptSerializer serializer = new JavaScriptSerializer();
+	string fieldsStr = serializer.Serialize(fields);
+}
+
+<script>
+	//Fields with information for search filters
+	var fields = @Html.Raw(fieldsStr);
+	//Table List Search Filters
+	var searchFilterGroups = [];
+</script>
+
+
+@using (Ajax.BeginForm("TBS_Menu_111", "Cmpny", new AjaxOptions
+{
+	HttpMethod= "POST",
+	InsertionMode = InsertionMode.Replace,
+	UpdateTargetId = "Menu",
+	OnSuccess = "InitMenuSpecialControls"
+}, new { @class = "form-horizontal", area="Cmpny", data_form="TBS_Menu_111" }))
+{
+		<input id="SearchFilters" type="hidden" value="" />
+
+		<div class="page-header row" style="align-items:center">
+		   <div class="col">
+<div class="table-title c-table__title">
+					<h1>@ViewBag.Title</h1>
+				</div>
+
+		   </div>
+		   <div class="col-auto search">
+				<div class="i-input-group input-xxlarge" id="TBS_Menu_111_simple_filter">
+					<div data-search-filter-menu-elem="filter-box-list"></div>
+					@Html.TextBox("qTBS_Menu_111", Navigation.GetStrValue("qTBS_Menu_111"), new { @class="i-input-group__field input-xxlarge dropdown-toggle", @title=@Resources.CAIXA_DE_PESQUISA53870, @onfocus="ToggleSearchFilterBox('TBS_Menu_111');" ,@onkeydown = "ListSearchEnter(event)", @autocomplete = "off" ,@data_toggle = "dropdown",@data_search_field_menu_elem = "show", @onblur = "HideSearchFieldMenuOnUnfocus('TBS_Menu_111');",@placeholder = Resources.PESQUISAR34506 + " " + Resources.DESIGNATION35876})
+					<button id="qTBS_Menu_111-clearBtn" class="clear-search d-none" type="button">
+						<i class="glyphicons glyphicons-remove mr-1"></i>
+					</button>
+					@Html.SearchFieldMenu("TBS_Menu_111", fields, "CMPNY")
+					<div class="b-btn-group i-input-group--right">
+						<button type="button" elem-identifier="ListSearchButton" class="btn b-icon b-icon--secondary i-input-group__button--secondary  listSearchButton" title="@Resources.PESQUISAR34506" onclick="AddSearchFieldFilter('TBS_Menu_111', 'CMPNY', 'CMPNY.DESIGNAT');"><i class="glyphicons glyphicons-search i-input-group__tag-icon i-input-group__button-icon"></i></button>
+						@{
+						var advancedSearchIcon = @Model.Menu.Filters.ShowTableFilters ? "glyphicons-zoom-out" : "glyphicons-zoom-in";
+						<button id="TBS_Menu_111_extra" class="btn b-icon b-icon--secondary i-input-group__button--secondary" type="button" onclick="changeFilters('#TBS_Menu_111_complex_filter', 'TBS_Menu_111_tableFilters');applyComplexFilterIDs();" title="@Resources.PESQUISA_AVANCADA06198"><span class="glyphicons @advancedSearchIcon i-input-group__tag-icon i-input-group__button-icon"></span></button>
+						}
+						@Html.SearchFilterMenu("TBS_Menu_111")
+					</div>
+				</div>
+			</div>
+			<div class="col-auto float-right" style="padding: 0; padding-right: 15px">
+				<div class="b-btn-group float-right" style="height: 32.625px">
+					@Html.ExportListMenu("TBS_Menu_111")
+					@*List properties LISTS*@
+					@if(!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest())
+					{
+						<button class="b-btn b-icon b-icon--secondary" type="button" data-modal-form="Lstusr" data-modal-id="lstusr-edit-modal" data-table="TBS_Menu_111" data-modal-url="@Url.Action("ChangeListProperties", "Lstusr", new { idlist = "TBS_Menu_111", idlistController = "Cmpny", idlistArea = "Cmpny", codlista ="3a33592d-582d-4485-8cd5-f73311b6c28b" })" title="@Resources.ALTERAR_A_APRESENTAC58401"><i class="glyphicons glyphicons-list e-icon"></i></button>
+					}
+				</div>
+			</div>
+		</div>
+ 	<div id="Menu" element-identifier="List">
+		@{ Html.RenderPartial("TBS_Menu_111_Partial"); }
+	</div>
+	@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "TBS_Menu_111" })
+	@Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId)
+	@Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock())
+	@Html.AntiForgeryToken()
+}
+
+
+
+<script>
+	$(document).ready(function () {
+		window.Form_TBS_Menu_111 = new QMenuForm($('[data-form="TBS_Menu_111"]'), "Form_TBS_Menu_111");
+		window.Form_TBS_Menu_111.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_TBS_Menu_111.Init();
+
+		//Initialize search field menu for search bar
+		InitSearchFieldMenu("qTBS_Menu_111");
+		RegisterClearEvents("TBS_Menu_111")
+
+		// TVC - added code to load advanced filters after returning from a form
+		@{
+			string advFil = "";
+			if (!String.IsNullOrEmpty(Navigation.GetStrValue("AdvancedFilters")))
+			{
+				advFil = Navigation.GetStrValue("AdvancedFilters");
+			}
+		}
+
+		SearchFilters.value = '@Html.Raw(advFil)';
+		if (typeof SearchFilters.value === 'string' && SearchFilters.value.length > 0)
+			UpdateSearchFilterStatus("TBS_Menu_111", JSON.parse(SearchFilters.value))
+	});
+</script>
+
+@helper codeJavascript()
+{
+<script>
+	QLocalStorage.remLocalStorage("savedInfo");
+	$(document).ready(function (e) {
+		InitSpecialControls($('[data-form="TBS_Menu_111"]'));
+
+
+ 	});
+
+	function InitMenuSpecialControls() {
+		InitSpecialControls($('[data-form="TBS_Menu_111"]'));
+	}
+
+</script>
+}
+
+@section code_javascript {
+	@codeJavascript()
+}

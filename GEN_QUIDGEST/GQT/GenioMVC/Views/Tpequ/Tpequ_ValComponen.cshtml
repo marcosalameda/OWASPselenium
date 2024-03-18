@@ -1,0 +1,119 @@
+﻿@model GenioMVC.ViewModels.Tpequ.Tpequ_ValComponen_ViewModel
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@using Newtonsoft.Json;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@*List properties DBEDIT BUTTONS*@
+<div class="row">
+	<div class="col">
+		<div elem-identifier="List"  help-id="IFF_TPEQU___PSEUDCOMPONEN" style="padding-top: 0.5rem;"><label class = "i-text__label table-title c-table__title" > <h2>@Resources.COMPONENTES_DO_KIT59823</h2> </label></div>
+	</div>
+</div>
+
+@* USE /[MANUAL GQT TABLE_FOR TPEQU_COMPONEN]/ *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@using GenioMVC.ViewModels.Cmpki;    
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Cmpki>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodcmpki, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN TPEQU_COMPONEN_CMPKI_ORDER]/
+		column.Expression(p => p.ValOrder).Title(@Resources.ORDER39632).Field("ValOrder").Size(5);
+// USE /[MANUAL GQT CUSTOM_COLUMN TPEQU_COMPONEN_TPEQ1_TIPOEQUI]/
+		column.Expression(p => p.Tpeq1.ValTipoequi).Title(@Resources.TYPE_OF_EQUIPMENT18080).Field("Tpeq1.ValTipoequi").Size(50);
+// USE /[MANUAL GQT CUSTOM_COLUMN TPEQU_COMPONEN_CMPKI_QUANTIDA]/
+		column.Expression(p => p.ValQuantida).Title(@Resources.AMOUNT46885).Field("ValQuantida").Size(3);
+// USE /[MANUAL GQT CUSTOM_COLUMN TPEQU_COMPONEN_CMPKI_DESCRIPT]/
+		column.Expression(p => p.ValDescript).Title(@Resources.DESCRIPTION07383).Field("ValDescript").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN TPEQU_COMPONEN_CMPKI_CODE]/
+		column.Expression(p => p.ValCode).Title(@Resources.CODE49225).Field("ValCode").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN TPEQU_COMPONEN_CMPKI_URL]/
+		column.Expression(p => p.ValUrl).Title(@Resources.SITE06486).Field("ValUrl").Size(30);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Cmpki")
+        .Id("ValComponen")
+        .AjaxRequest("Tpequ_ValComponen")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .TableList(hasFilters: false)
+        .RequestLink(@Url.Action("Tpequ_ValComponen", new { id = Model.ValCodtpequ, partialView = "Tpequ_ValComponen"}))
+        .Form("Cmpki", false, true)
+        .SetFollowUp("Cmpki_Show", "Cmpki" , (Func<GenioMVC.Models.Cmpki, object>)(item => new { id = item.ValCodcmpki }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
+        .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
+		;
+        
+}
+
+@tbl.ToHtml()
+
+<script>
+
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qValComponen, #ValComponen_complex_filter th input, #ValComponen_filters input").change(function() {
+                    $("#pValComponen").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#ValComponen_tableFilters').val(false);")
+                    @Html.Raw("$('#ValComponen_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#ValComponen_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $('#ValComponen_complex_filter button#applyComplexFilter').click();
+                    @:      event.preventDefault();
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#ValComponen_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_ValComponen').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+
+
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='ValComponen']"));
+                    InitSpecialControls($('#ValComponen'));
+                    $('#ValComponen').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS TPEQU_VALCOMPONEN]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+</script>

@@ -1,0 +1,271 @@
+﻿@model GenioMVC.ViewModels.Feeca.Feeca_ViewModel
+@using GenioMVC.Models.Navigation;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Form = "Feeca";
+	ViewBag.Title = @Resources.FEEDBACK_CAMPO42437;
+    ViewBag.formmode = Model.GetFormMode;
+	ViewBag.ClassForFormLayout = "form-flow";
+}
+
+
+@if (!Model.NestedForm) {
+    if(Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+    {
+        using (Html.BeginForm("Action", "Feeca", FormMethod.Post, new { enctype="multipart/form-data", @class = "form-horizontal", area="Feeca", data_form="Feeca" }))
+        {
+            @form_content_alert()
+            @Html.QValidationSummary()
+	        @LoadDefault()
+        }
+    }
+    else
+    {
+        <div class="form-horizontal" id="Feeca" area="Feeca" data-form="Feeca">
+	        @LoadDefault()
+        </div>
+    }
+}
+else {
+    <div class="c-card nested-form" id="Feeca_well" area="Feeca" data-form="Feeca">
+        @Html.QValidationSummary()
+		@LoadDefault()
+    </div>
+}
+
+@helper form_content_body() {
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-dbedit draggable " id="CONTAINER_IFF_FEECA___FLDS_DESCRIP_">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.TableFldsDescrip, new { label_id="IFF_FEECA___FLDS_DESCRIP_", @class = " i-text__label", id="LABEL_IFF_FEECA___FLDS_DESCRIP_"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('IFF_FEECA___FLDS_DESCRIP_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DropDownListFor(model => model.ValCodflds, Model.TableFldsDescrip.List , "", new {help_id = "IFF_FEECA___FLDS_DESCRIP_", @class = "i-select chosen-dropdown input-xxlarge", data_identifier = "IFF_FEECA___FLDS_DESCRIP_", @pers_cs_area = "Flds", @pers_cs_field = "ValCodflds", @db_field = "ValCodflds", @db_full_field_name = "feeca.codflds", data_has_more = Model.TableFldsDescrip.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableFldsDescrip.Selected, data_dbedit_value = Model.TableFldsDescrip.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodfeeca, @data_see_more = "Feeca_FldsValDescrip", title = @Resources.DESCRIPTION07383, data_see_more_url = @Url.Action("Feeca_FldsValDescrip","Feeca"), data_is_dbedit = "true", data_fields = "flds.codflds,flds.descrip", data_main_field = "Flds.ValDescrip", data_elements = 0, data_filled_by_history = Model.TableFldsDescrip.FilledByHistory, @dependant_fields = "flds.codflds,flds.descrip,flds.attach,flds.npassage" })
+								@Html.ValidationMessageFor(model => model.TableFldsDescrip)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_FEECA___FEECAFEEDBACK">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValFeedback, new { label_id="LED_FEECA___FEECAFEEDBACK", @class = " i-text__label", id="LABEL_LED_FEECA___FEECAFEEDBACK"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_FEECA___FEECAFEEDBACK','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextBoxFor(model => model.ValFeedback, new {help_id = "LED_FEECA___FEECAFEEDBACK", @class = "i-text__field i-text input-xlarge", data_identifier = "LED_FEECA___FEECAFEEDBACK", @pers_cs_area = "Feeca", @pers_cs_field = "ValFeedback", @db_field = "ValFeedback", title = @Resources.FEEDBACK52855, maxlength = "50", rows = "50" })
+								@Html.ValidationMessageFor(model => model.ValFeedback)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-document draggable " id="CONTAINER_LED_FEECA___FLDS_ATTACH__">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.FldsValAttach, new { label_id="LED_FEECA___FLDS_ATTACH__", @class = " i-text__label", id="LABEL_LED_FEECA___FLDS_ATTACH__"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_FEECA___FLDS_ATTACH__','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@if (Model.IsEditableMode) {
+									@Html.DisplayFor(model => model.FldsValAttach, new { fieldFk = Model.FldsValAttachfk, docProperties = Model.FldsValAttachPropertiesVM, baseArea = "Flds", baseAreaKey = Model.ValCodflds, useTemplates =  false, data_identifier="LED_FEECA___FLDS_ATTACH__", identifier = "FFEECA", fieldSize = "input-large", isRequired = false, maxSize = "null", allowedTypes = "null", htmlAttributes = new {help_id = "LED_FEECA___FLDS_ATTACH__", title = @Resources.ATTACHMENTS19612 }})
+								} else {
+									@Html.DisplayFor(model => model.FldsValAttach, new { fieldFk = Model.FldsValAttachfk, docProperties = Model.FldsValAttachPropertiesVM, baseArea = "Flds", baseAreaKey = Model.ValCodflds, useTemplates =  false, data_identifier="LED_FEECA___FLDS_ATTACH__", identifier = "FFEECA", fieldSize = "input-large", htmlAttributes = new {help_id = "LED_FEECA___FLDS_ATTACH__", title = @Resources.ATTACHMENTS19612 }})
+								}
+								@Html.ValidationMessageFor(model => model.FldsValAttach)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_FEECA___FLDS_NPASSAGE">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.FldsValNpassage, new { label_id="LED_FEECA___FLDS_NPASSAGE", @class = " i-text__label", id="LABEL_LED_FEECA___FLDS_NPASSAGE"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_FEECA___FLDS_NPASSAGE','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.FldsValNpassage, new {help_id = "LED_FEECA___FLDS_NPASSAGE", @class = "Number text-right i-text__field i-text input-large", data_identifier = "LED_FEECA___FLDS_NPASSAGE", @pers_cs_area = "Flds", @pers_cs_field = "ValNpassage", @db_field = "ValNpassage", fixed_field = "true", @readonly = "readonly", dependant = "ValCodflds", key_field = "ValCodflds", dependant_area = "Flds", title = @Resources.PASSENGER_CAPACITY_O45867, data_number_integer = "3", data_number_decimals = "0", data_number_format = "999" })
+								@Html.ValidationMessageFor(model => model.FldsValNpassage)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			@Html.HiddenFor(model => model.ValCodfeeca, new { @pers_cs_field="ValCodfeeca", @pers_cs_area="Feeca", data_refresh = "true", @form_area="true", @data_value = Model.ValCodfeeca, @data_identifier = "LED_FEECA___FEECACODFEECA" })
+
+            @Html.Hidden("IgnoreWarnings", "false", new { id = "IgnoreWarnings" })
+
+			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Feeca" })
+            @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Feeca" })
+            @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Feeca" })
+			if (!Model.NestedForm)
+            {
+                @Html.AntiForgeryToken()
+            }
+}
+
+@helper form_content_alert() {
+	if(Model.FormMode == FormMode.Delete) {
+		<div class="c-alert c-alert--warning">
+			<i class="glyphicons glyphicons-alert c-alert__icon" aria-hidden="true"></i>
+			<div class="c-alert__text">
+				&ensp;@Resources.DESEJA_ELIMINAR_ESTA24564
+			</div>
+		<!--Ao confirmar esta ficha irá ser eliminada da base de dados. Cancele caso não tenha a certeza.-->
+		</div>
+	}
+}
+
+@helper form_content_buttons() {
+
+
+
+
+    @* Extended support form *@
+    if (Model.NestedForm)
+    {
+        if (Model.IsEditableMode)
+        {
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("Feeca", Model.FormMode).ToString(), "Feeca")", "Feeca_well")' qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>
+                    @Resources.SAVE04165
+            </button>
+            <button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Feeca_Delete", "Feeca", new {id = @Model.ValCodfeeca} )", "Feeca_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+
+            <script type="application/javascript">
+                $(document).ready(function () { loaded($("#Feeca_well")); });
+            </script>
+        }
+
+        @* javascript code_javascript *@
+        @*@codeJavascript()*@
+    }
+    @* Normal mode *@
+    else
+    {
+        if (Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+        {
+            if (Model.FormMode == FormMode.New && Convert.ToBoolean(Model.Navigation.CurrentLevel.GetEntry("repeatInsertion")))
+            {
+            <button type="button" data-end-pers="true" name="Feeca_repete_insertion" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitFeeca(event, true)" qbutton="ok_new">@Resources.GRAVAR_E_CRIAR_NOVA17771</button>
+            }
+            if(Model.FormMode == FormMode.Delete)
+            {
+				<button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Feeca", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitDeleteFeeca(event)" qbutton="delete">
+                    <i class="glyphicons glyphicons-check e-icon" aria-hidden="true"></i>@Resources.CONFIRMAR09808
+                </button>
+            }
+            else
+            {
+                <button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Feeca", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitFeeca(event)" title="@Resources.SAVE04165" data-selector="true" qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>@Resources.SAVE04165
+                </button>
+            }
+
+            <button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-href="@Url.Action("Feeca_Cancel", "Feeca", new { niv = Model.Navigation.CurrentLevel.Level })" onclick="javascript:window.Form_Feeca.Cancel()" title="@Resources.CANCEL65428" data-selector="true" qbutton="cancel">
+                <i class="glyphicons glyphicons-ban-circle e-icon" aria-hidden="true"></i>@Resources.CANCEL65428
+            </button>
+        }
+        else if (!(ViewBag.isHomePage ?? false))
+        {
+            @Html.ActionLinkWithIcon(@Resources.RETROCEDER16633, "Feeca_Cancel","Feeca","glyphicons glyphicons-arrow-left e-icon", null, new { @class = "b-icon-text b-icon-text--secondary", @data_end_pers = "true", @title = @Resources.RETROCEDER16633, qbutton = "cancel" })
+        }
+    }
+}
+
+@helper LoadDefault() {
+    if (Model.NestedForm)
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div class="c-card__header">
+                    <div class="c-card__header-tag">
+						<span class="form-header" style="padding:0;">
+							<i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+						</span>
+                    </div>
+                </div>
+                <div class="c-card__body">
+                    @form_content_body()
+                    <div elem-identifier="FormActions" class="form-actions" data-form-actions="Feeca">
+                        @form_content_buttons()
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    }
+    else
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div id="c-stickyHeader">
+                    <div class="c-action-bar d-flex">
+                        <span class="form-header">
+                            <i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+                        </span>
+                        <div data-parent-form="Feeca" data-q-ref="form-btns-main_container"></div>
+                    </div>
+                </div>
+
+                @form_content_body()
+                <div elem-identifier="FormActions" class="form-actions" data-form-actions="Feeca">
+                @form_content_buttons()
+                </div>
+            </div>
+        </fieldset>
+    }
+}
+
+@helper LoadFromLayout()
+{
+}
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT FEECA]/ *@
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_FEECA" data-form-javascript="true">
+@Html.Partial("Feeca_JavaScript", Model, ViewData)
+</div>
+}
+
+@section code_javascript
+{
+	@codeJavascript()
+}
+
+@if (Request.IsAjaxRequest())
+{
+    @codeJavascript()
+    @includeStylesheets()
+}
+
+@helper includeStylesheets()
+{
+
+ }
+
+@section include_stylesheets {
+    @includeStylesheets()
+}

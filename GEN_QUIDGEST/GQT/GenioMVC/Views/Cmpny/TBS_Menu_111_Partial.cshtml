@@ -1,0 +1,119 @@
+﻿@model GenioMVC.ViewModels.Cmpny.TBS_Menu_111_ViewModel
+@using Newtonsoft.Json;
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@using GenioMVC.ViewModels.Cmpny;    
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Cmpny>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodempre, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN TBS_MENU_111_CMPNY_DESIGNAT]/
+		column.Expression(p => p.ValDesignat).Title(@Resources.DESIGNATION35876).Field("ValDesignat").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN TBS_MENU_111_CMPNY_ACRONYM]/
+		column.Expression(p => p.ValAcronym).Title(@Resources.ACRONYM00872).Field("ValAcronym").Size(15);
+// USE /[MANUAL GQT CUSTOM_COLUMN TBS_MENU_111_CMPNY_NIF]/
+		column.Expression(p => p.ValNif).Title(@Resources.TAX_IDENTIFICATION51190).Field("ValNif").Size(15);
+// USE /[MANUAL GQT CUSTOM_COLUMN TBS_MENU_111_CMPNY_TELEPHON]/
+		column.Expression(p => p.ValTelephon).Title(@Resources.PHONE56703).Field("ValTelephon").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN TBS_MENU_111_CMPNY_EMAIL]/
+		column.Expression(p => p.ValEmail).Title(@Resources.EMAIL25170).Field("ValEmail").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN TBS_MENU_111_CMPNY_LOGO]/
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValLogo, new {alt=@Resources.LOGO62483,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCodempre, modelname = "Cmpny", fldname = "ValLogo" }))).Title(@Resources.LOGO62483).Field("ValLogo").Size(30);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Cmpny")
+        .Id("TBS_Menu_111")
+        .AjaxRequest("Menu")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .DBEdit()
+        .Filters(this.Model.Menu.Filters)
+        .Form("Empre", true, false)
+        .SetFollowUp("Empre_Show", "Cmpny" , (Func<GenioMVC.Models.Cmpny, object>)(item => new { id = item.ValCodempre }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: true)
+        .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
+		;
+        
+}
+
+@tbl.ToHtml()
+
+
+<script>
+ 
+ 
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qTBS_Menu_111, #TBS_Menu_111_complex_filter th input, #TBS_Menu_111_filters input").change(function() {
+                    $("#pTBS_Menu_111").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#TBS_Menu_111_tableFilters').val(false);")
+                    @Html.Raw("$('#TBS_Menu_111_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#TBS_Menu_111_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $("[data-form='TBS_Menu_111']").submit();
+                    @:      event.preventDefault();
+                    @:      ClearSearchBox('qTBS_Menu_111');
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#TBS_Menu_111_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_TBS_Menu_111').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+                 @if (this.Model.Menu.Filters.FiltersValues.Count >= 1) {
+                    var activeFields = Newtonsoft.Json.JsonConvert.SerializeObject(this.Model.Menu.Filters.FiltersValues);
+                    @: SetActiveFilters('TBS_Menu_111', 'EMPRE', @Html.Raw(activeFields))
+                  }
+
+
+                setupHistoryClicks()
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='Menu']"));
+                    InitSpecialControls($('#Menu'));
+                    $('#Menu').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS TBS_MENU_111]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+// USE /[MANUAL GQT LISTING_CODEJS TBS_MENU_111]/
+</script>

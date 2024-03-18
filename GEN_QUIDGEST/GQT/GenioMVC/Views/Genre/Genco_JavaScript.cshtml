@@ -1,0 +1,297 @@
+﻿@model GenioMVC.ViewModels.Genre.Genco_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+<script src="@Url.Content("~/Scripts/bootstrap-colorpicker.min.js")" type="application/javascript"></script>
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS GENCO]/ *@
+<script  type="text/javascript">
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Genco !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Genco = new QForm($('[data-form="Genco"]'), "Form_Genco");
+		}
+		window.Form_Genco.baseArea = "genre";
+		window.Form_Genco.FormMode = '@Model.GetFormMode';
+		window.Form_Genco.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Genco.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Genre")',
+			GetDependants:		'@Url.Action("GetDependants", "Genre")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Genco", "Genre")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Genco", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Genre", "Genre")',
+		};
+		window.Form_Genco.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Genco.formSaveEdit = '@Url.Action("Genco_SaveEdit", "Genre")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Genco.formAction = 'Genco_New';
+		window.Form_Genco.formRedirectURL = '@Url.Action("Genco_New_Redirect", "Genre")';
+		window.Form_Genco.formSubmitURL = '@Url.Action("Genco_New", "Genre")';
+		window.Form_Genco.formRedirectURL_repeatInsertion = '@Url.Action("Genco_New_Redirect", "Genre", new { repeatInsertion = true})';
+		window.Form_Genco.formSubmitURL_repeatInsertion = '@Url.Action("Genco_New", "Genre", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Genco.formAction = 'Genco_Edit';
+		window.Form_Genco.formRedirectURL = '@Url.Action("Genco_Edit_Redirect", "Genre")';
+		window.Form_Genco.formSubmitURL = '@Url.Action("Genco_Edit", "Genre")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Genco.formAction = 'Genco_Duplicate';
+		window.Form_Genco.formRedirectURL = '@Url.Action("Genco_Duplicate_Redirect", "Genre")';
+		window.Form_Genco.formSubmitURL = '@Url.Action("Genco_Duplicate", "Genre")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Genco.formAction = 'Genco_Delete';
+		window.Form_Genco.formRedirectURL = '@Url.Action("Genco_Delete_Redirect", "Genre")';
+		window.Form_Genco.formSubmitURL = '@Url.Action("Genco_Delete", "Genre")';
+	</text>
+}
+		window.Form_Genco.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.LED_GENCO___GENREAGENCONT = new QArrayControl($('[data-identifier="LED_GENCO___GENREAGENCONT"]', this.element), window.Form_Genco);
+
+			this.Controls.LED_GENCO___GENREGENDER__ = new QTextControl($('[data-identifier="LED_GENCO___GENREGENDER__"]', this.element), window.Form_Genco);
+
+			this.Controls.LED_GENCO___GENREBACKCOLO = new QTextControl($('[data-identifier="LED_GENCO___GENREBACKCOLO"]', this.element), window.Form_Genco);
+
+			this.Controls.LED_GENCO___GENRETEXTCOLO = new QTextControl($('[data-identifier="LED_GENCO___GENRETEXTCOLO"]', this.element), window.Form_Genco);
+
+
+
+
+			this.Controls.LED_GENCO___GENRECODGENRE = new QHiddenControl($('[data-identifier="LED_GENCO___GENRECODGENRE"]', this.element), window.Form_Genco);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	</text>
+}
+
+		window.Form_Genco.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Genco.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI GENCO]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Genco.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS GENCO]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Genco.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS GENCO]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Genco.Data.RelationKeysSelector = {
+		};
+
+		window.Form_Genco.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Genco.Data.RelationKeys = {
+			get formContext() { return window.Form_Genco; },
+		};
+	</text>
+}
+
+	window.Form_Genco.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Genco.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitGenco(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Genco.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeleteGenco(event) {
+			event.preventDefault();
+			window.Form_Genco.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+    var ajaxCallsRemaining = $(".flash object embed").length;
+    $('form [elem-identifier="ButtonPrimary"]').click(function() {
+        var flashObjects = $(".flash object embed");
+        ajaxCallsRemaining = flashObjects.length;
+        if(flashObjects.length == 0)
+            return true;
+        else {
+            flashObjects.each(function() {
+               var flashObj = GetFlash($(this).attr('id'));
+               flashObj.UsedFlash.TriggerSave(flashObj);
+            });
+            return false;
+        }
+    });
+    </text>
+}
+// USE /[MANUAL GQT FORM_CODEJS GENCO]/
+
+
+
+ 
+
+    $($('[elem-identifier="FormActions"]'), $('[data-form="Genco"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

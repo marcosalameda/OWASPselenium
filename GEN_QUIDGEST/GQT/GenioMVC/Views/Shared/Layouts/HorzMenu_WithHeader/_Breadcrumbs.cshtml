@@ -1,0 +1,149 @@
+﻿@model GenioMVC.ViewModels.Breadcrumbs_ViewModel
+
+@helper GetImage(GenioMVC.Models.Navigation.FormMode mode)
+{
+    switch (mode)
+    {
+        case GenioMVC.Models.Navigation.FormMode.List:
+            <i class="glyphicons glyphicons-list n-breadcrumb__icon" aria-hidden="true"></i>
+            break;
+        case GenioMVC.Models.Navigation.FormMode.FullTextSearch:
+            <i class="glyphicons glyphicons-search n-breadcrumb__icon" aria-hidden="true"></i>
+            break;
+        case GenioMVC.Models.Navigation.FormMode.Show:
+            <i class="glyphicons glyphicons-eye-open n-breadcrumb__icon" aria-hidden="true"></i>
+            break;
+        case GenioMVC.Models.Navigation.FormMode.New:
+            <i class="glyphicons glyphicons-plus n-breadcrumb__icon" aria-hidden="true"></i>
+            break;
+        case GenioMVC.Models.Navigation.FormMode.Edit:
+            <i class="glyphicons glyphicons-pencil n-breadcrumb__icon" aria-hidden="true"></i>
+            break;
+        case GenioMVC.Models.Navigation.FormMode.Duplicate:
+            <i class="glyphicons glyphicons-retweet n-breadcrumb__icon" aria-hidden="true"></i>
+            break;
+        case GenioMVC.Models.Navigation.FormMode.Delete:
+            <i class="glyphicons glyphicons-remove n-breadcrumb__icon" aria-hidden="true"></i>
+            break;
+        default:
+            break;
+    }
+}
+
+@if (Model.Items != null && Model.Items.Count > 0 && GenioMVC.LayoutConfig.config.breadcrumbsContent != GenioMVC.BreadcrumbsContent.hidden)
+{
+    var containerClass = GenioMVC.LayoutConfig.config.containerWidth.Equals(GenioMVC.ContainerWidth.whole_page) ? "container-fluid" : "container";
+    <div id="breadcrumbs" class="@containerClass">
+        <nav aria-label="breadcrumb">
+            <ol class="n-breadcrumb">
+                <li class="n-breadcrumb__item">
+                    <a href="@Url.Action("Index", "Home", new { id = string.Empty })">
+                        <i class="glyphicons glyphicons-home n-breadcrumb__icon" aria-hidden="true"></i>
+                        <span class="hidden-elem">@Resources.PAGINA_INICIAL55004</span>
+                    </a>
+                </li>
+
+                @if (Model.Items.Count > 1)
+                {
+                    var item = Model.Items.First();
+                    <li class="n-breadcrumb__item">
+                        <a class="n-breadcrumb__link" href="@Url.Action(item.Location.Action, item.Location.Controller, item.Location.getRoutes(new { bc = true }))">
+                            <i class="@item.MenuFont e-icon"></i> @GenioMVC.Models.Navigation.UserContext.Current.User.CurrentModule >
+                            @if (Model.PathToMenu != "")
+                            {
+                                <text>
+                                    <i class="glyphicons glyphicons-menu-hamburger n-breadcrumb__icon" aria-hidden="true"></i>
+                                </text>
+                            }
+                            else
+                            {
+                                @GetImage(item.Mode)
+                            }
+                            @(Model.PathToMenu != "" ? Model.PathToMenu : item.Location.Name)
+                        </a>
+                    </li>
+
+                    if (Model.Items.Count > 2)
+                    {
+                        <li class="n-breadcrumb__item">
+                            <a class="dropdown-toggle dropdown n-breadcrumb__link" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="glyphicons glyphicons-option-horizontal n-breadcrumb__icon" aria-hidden="true"></i>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+
+                                @for (int i = Model.Items.Count - 2; i >= 0; i--)
+                                {
+                                    item = Model.Items[i];
+
+                                    <a class="n-breadcrumb__link dropdown-item" href="@Url.Action(item.Location.Action, item.Location.Controller, item.Location.getRoutes(new { bc = true }))">
+                                         @GetImage(item.Mode)
+                                        <span>@item.Location.Name 
+                                    
+                                            @if (GenioMVC.LayoutConfig.config.breadcrumbsContent.Equals(GenioMVC.BreadcrumbsContent.detailed))
+                                            {
+                                                
+                                                <text>                                    
+                                                        > <b>@item.HumanKeyValues</b> 
+                                                </text>
+                                            }
+                                        </span>
+                                    </a>
+                                }
+
+                            </div>
+                        </li>
+                    }
+                    else
+                    {
+                        for (int i = 0; i < Model.Items.Count - 1; i++)
+                        {
+                            item = Model.Items[i];
+                            <li class="n-breadcrumb__item">
+                                <a class="n-breadcrumb__link" href="@Url.Action(item.Location.Action, item.Location.Controller, item.Location.getRoutes(new { bc = true }))">
+                                    @GetImage(item.Mode)
+                                    <span>@item.Location.Name
+                                        @if (GenioMVC.LayoutConfig.config.breadcrumbsContent.Equals(GenioMVC.BreadcrumbsContent.detailed))
+                                        {            
+                                            <text>                                    
+                                                    > <b>@item.HumanKeyValues</b> 
+                                            </text>
+                                        }
+                                    </span>
+                                </a>
+                            </li>
+                       }
+                    }
+
+                    item = Model.Items[Model.Items.Count - 1];
+                    <li class="n-breadcrumb__item active">
+                        <span>
+                            @GetImage(item.Mode)@item.Location.Name
+
+                            @if (GenioMVC.LayoutConfig.config.breadcrumbsContent.Equals(GenioMVC.BreadcrumbsContent.detailed))
+                            {
+                                if (item.HumanKeyValues.Trim() != "")
+                                {
+                                    <text>
+                                        > <b>@item.HumanKeyValues</b>
+                                    </text>
+                                }
+
+                            }
+                        </span>
+                    </li>
+                }
+                else if (Model.Items.Count == 1)
+                {
+                    var item = Model.Items.First();
+                    <text>
+                        <li class="n-breadcrumb__item active">
+                            <span>
+                                <i class="@item.MenuFont e-icon"></i> @GenioMVC.Models.Navigation.UserContext.Current.User.CurrentModule > @GetImage(item.Mode)@(Model.PathToMenu != "" ? Model.PathToMenu : item.Location.Name)
+                            </span>
+                        </li>
+                    </text>
+                }
+            </ol>
+        </nav>
+    </div>
+}

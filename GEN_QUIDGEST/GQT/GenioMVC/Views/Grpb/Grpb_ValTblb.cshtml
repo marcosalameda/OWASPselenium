@@ -1,0 +1,112 @@
+﻿@model GenioMVC.ViewModels.Grpb.Grpb_ValTblb_ViewModel
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@using Newtonsoft.Json;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@*List properties DBEDIT BUTTONS*@
+<div class="row">
+	<div class="col">
+	</div>
+</div>
+
+@* USE /[MANUAL GQT TABLE_FOR GRPB_TBLB]/ *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Tblb>(edit: Model.IsEditableMode, canPage: true, canSort: false, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodtblb, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN GRPB_TBLB_TBLB_TEXT]/
+		column.Expression(p => p.ValText).Title(@Resources.TEXT04938).Field("ValText").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN GRPB_TBLB_TBLB_TEXTML]/
+		column.Expression(p => p.ValTextml).Title(@Resources.MULTILINE_TEXT38013).Field("ValTextml").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN GRPB_TBLB_TBLB_NUMINT]/
+		column.Expression(p => p.ValNumint).Title(@Resources.NUMERIC__INTEGER_50289).Field("ValNumint").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN GRPB_TBLB_TBLB_NUMDEC]/
+		column.Expression(p => p.ValNumdec).Title(@Resources.NUMERIC__DECIMAL_36157).Field("ValNumdec").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN GRPB_TBLB_TBLB_CURINT]/
+		column.Expression(p => p.ValCurint).Title(@Resources.CURRENCY__INTERGER_21437).Field("ValCurint").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN GRPB_TBLB_TBLB_CURDEC]/
+		column.Expression(p => p.ValCurdec).Title(@Resources.CURRENCY__DECIMAL_11718).Field("ValCurdec").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN GRPB_TBLB_TBLB_BOOL]/
+		column.Expression(p => p.ValBool).Title(@Resources.BOOLEAN45002).Field("ValBool").Size(1);
+// USE /[MANUAL GQT CUSTOM_COLUMN GRPB_TBLB_TBLB_DATE]/
+		column.Expression(p => p.ValDate).Title(@Resources.DATE18475).Field("ValDate").Size(8).Format("{0:d}");
+// USE /[MANUAL GQT CUSTOM_COLUMN GRPB_TBLB_TBLB_DATETM]/
+		column.Expression(p => p.ValDatetm).Title(@Resources.DATETIME__MINUTES_59352).Field("ValDatetm").Size(16);
+// USE /[MANUAL GQT CUSTOM_COLUMN GRPB_TBLB_TBLB_DATETS]/
+		column.Expression(p => p.ValDatets).Title(@Resources.DATETIME__SECONDS_49861).Field("ValDatets").Size(19);
+// USE /[MANUAL GQT CUSTOM_COLUMN GRPB_TBLB_TBLB_TIMEHM]/
+		column.Expression(p => p.ValTimehm).Title(@Resources.TIME__HOURS_MINUTES_01660).Field("ValTimehm").Size(5);
+// USE /[MANUAL GQT CUSTOM_COLUMN GRPB_TBLB_TBLB_ENUMT]/
+		column.Expression(p => p.ArrayValenumt).Title(@Resources.ENUMERATION__TEXT_15855).Field("ValEnumt", "ArrayTypet").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN GRPB_TBLB_TBLB_ENUMN]/
+		column.Expression(p => p.ArrayValenumn).Title(@Resources.ENUMERATION__NUMERIC44708).Field("ValEnumn", "ArrayTypen").Size(10);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Tblb")
+        .Id("ValTblb")
+        .AjaxRequest("Grpb_ValTblb")
+        .DataSource(this.Model.Menu.Elements)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .GridTableList()
+        .RequestLink(@Url.Action("Grpb_ValTblb", new { id = Model.ValCodgrpb, partialView = "Grpb_ValTblb"}))
+        .Form<GenioMVC.ViewModels.Tblb.Grpb____pseudtblb_____ViewModel>("../Tblb/Grpb____pseudtblb____")
+        .DataKeyName("ValCodtblb")
+        .ForeignKeyData("ValCodgrpb", Model.ValCodgrpb)
+        .SaveActionLink(@Url.Action("Grpb____pseudtblb_____Edit", "Tblb"))
+        .DeleteActionLink(@Url.Action("Grpb____pseudtblb_____Delete", "Tblb"))
+        .InsertActionLink(@Url.Action("Grpb____pseudtblb_____New", "Tblb"))
+		;
+        
+}
+
+@tbl.ToHtml()
+
+<script>
+
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qValTblb, #ValTblb_complex_filter th input, #ValTblb_filters input").change(function() {
+                    $("#pValTblb").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='ValTblb']"));
+                    InitSpecialControls($('#ValTblb'));
+                    $('#ValTblb').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS GRPB_VALTBLB]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+</script>

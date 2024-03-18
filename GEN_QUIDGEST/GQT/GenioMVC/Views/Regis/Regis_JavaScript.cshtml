@@ -1,0 +1,302 @@
+﻿@model GenioMVC.ViewModels.Regis.Regis_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS REGIS]/ *@
+<script  type="text/javascript">
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Regis !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Regis = new QForm($('[data-form="Regis"]'), "Form_Regis");
+		}
+		window.Form_Regis.baseArea = "regis";
+		window.Form_Regis.FormMode = '@Model.GetFormMode';
+		window.Form_Regis.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Regis.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Regis")',
+			GetDependants:		'@Url.Action("GetDependants", "Regis")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Regis", "Regis")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Regis", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Regis", "Regis")',
+		};
+		window.Form_Regis.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Regis.formSaveEdit = '@Url.Action("Regis_SaveEdit", "Regis")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Regis.formAction = 'Regis_New';
+		window.Form_Regis.formRedirectURL = '@Url.Action("Regis_New_Redirect", "Regis")';
+		window.Form_Regis.formSubmitURL = '@Url.Action("Regis_New", "Regis")';
+		window.Form_Regis.formRedirectURL_repeatInsertion = '@Url.Action("Regis_New_Redirect", "Regis", new { repeatInsertion = true})';
+		window.Form_Regis.formSubmitURL_repeatInsertion = '@Url.Action("Regis_New", "Regis", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Regis.formAction = 'Regis_Edit';
+		window.Form_Regis.formRedirectURL = '@Url.Action("Regis_Edit_Redirect", "Regis")';
+		window.Form_Regis.formSubmitURL = '@Url.Action("Regis_Edit", "Regis")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Regis.formAction = 'Regis_Duplicate';
+		window.Form_Regis.formRedirectURL = '@Url.Action("Regis_Duplicate_Redirect", "Regis")';
+		window.Form_Regis.formSubmitURL = '@Url.Action("Regis_Duplicate", "Regis")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Regis.formAction = 'Regis_Delete';
+		window.Form_Regis.formRedirectURL = '@Url.Action("Regis_Delete_Redirect", "Regis")';
+		window.Form_Regis.formSubmitURL = '@Url.Action("Regis_Delete", "Regis")';
+	</text>
+}
+		window.Form_Regis.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.IFF_REGIS___PSEUDNOVOGR01 = new QGenericControl($('[data-identifier="IFF_REGIS___PSEUDNOVOGR01"]', this.element), window.Form_Regis);
+
+			this.Controls.LED_REGIS___REGISNAME____ = new QTextControl($('[data-identifier="LED_REGIS___REGISNAME____"]', this.element), window.Form_Regis);
+
+			this.Controls.LED_REGIS___REGISNIF_____ = new QTextControl($('[data-identifier="LED_REGIS___REGISNIF_____"]', this.element), window.Form_Regis);
+
+			this.Controls.LED_REGIS___REGISTELEPHON = new QTextControl($('[data-identifier="LED_REGIS___REGISTELEPHON"]', this.element), window.Form_Regis);
+
+			this.Controls.LED_REGIS___REGISEMAIL1__ = new QTextControl($('[data-identifier="LED_REGIS___REGISEMAIL1__"]', this.element), window.Form_Regis);
+
+			this.Controls.LED_REGIS___REGISEMAIL2__ = new QTextControl($('[data-identifier="LED_REGIS___REGISEMAIL2__"]', this.element), window.Form_Regis);
+
+			this.Controls.IFF_REGIS___PSEUDOBRIGATO = new QTextControl($('[data-identifier="IFF_REGIS___PSEUDOBRIGATO"]', this.element), window.Form_Regis);
+
+
+
+
+			this.Controls.LED_REGIS___REGISCODREGIS = new QHiddenControl($('[data-identifier="LED_REGIS___REGISCODREGIS"]', this.element), window.Form_Regis);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	</text>
+}
+
+		window.Form_Regis.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Regis.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI REGIS]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Regis.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS REGIS]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Regis.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS REGIS]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Regis.Data.RelationKeysSelector = {
+		};
+
+		window.Form_Regis.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Regis.Data.RelationKeys = {
+			get formContext() { return window.Form_Regis; },
+		};
+	</text>
+}
+
+	window.Form_Regis.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Regis.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitRegis(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Regis.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeleteRegis(event) {
+			event.preventDefault();
+			window.Form_Regis.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+    var ajaxCallsRemaining = $(".flash object embed").length;
+    $('form [elem-identifier="ButtonPrimary"]').click(function() {
+        var flashObjects = $(".flash object embed");
+        ajaxCallsRemaining = flashObjects.length;
+        if(flashObjects.length == 0)
+            return true;
+        else {
+            flashObjects.each(function() {
+               var flashObj = GetFlash($(this).attr('id'));
+               flashObj.UsedFlash.TriggerSave(flashObj);
+            });
+            return false;
+        }
+    });
+    </text>
+}
+// USE /[MANUAL GQT FORM_CODEJS REGIS]/
+
+
+
+ 
+
+    $($('[elem-identifier="FormActions"]'), $('[data-form="Regis"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

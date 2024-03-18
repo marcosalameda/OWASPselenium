@@ -1,0 +1,64 @@
+﻿@model GenioMVC.ViewModels.Wareh.Mltform_ValMltform1_ViewModel
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@using Newtonsoft.Json;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@*List properties DBEDIT BUTTONS*@
+<div class="row">
+</div>
+
+@* USE /[MANUAL GQT TABLE_FOR MLTFORM_MLTFORM1]/ *@
+@{ 
+
+
+    
+    var tblPermission = Model.IsEditableMode;
+	var tbl = Html.MultiformFor<GenioMVC.ViewModels.Wpess.Armapess_ViewModel>(edit: Model.IsEditableMode, canPage: true)
+        .Id("ValMltform1")
+        .DataSource(this.Model.Menu.Elements)
+        .RequestLink(@Url.Action("Mltform_ValMltform1", new { id = Model.ValCodwareh }))
+        .InsertLink(@Url.Action("MFArmapess_New", "Wpess"))
+        .BuilderForm("../Wpess/MFArmapess")
+        .AjaxRequest("Mltform_ValMltform1")
+        .Pager(this.Model.Menu.Pagination)
+        .BaseQuery(this.Model.Menu.Query)
+		.Permissions(true, true, tblPermission, tblPermission)
+;}
+@tbl.ToHtml()
+<script>
+
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qValMltform1, #ValMltform1_complex_filter th input, #ValMltform1_filters input").change(function() {
+                    $("#pValMltform1").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='ValMltform1']"));
+                    InitSpecialControls($('#ValMltform1'));
+                    $('#ValMltform1').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+</script>

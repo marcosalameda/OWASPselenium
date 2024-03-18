@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Projecto>
+	<Definicoes>
+		<Sistema>GQT</Sistema>
+		<Cliente>QUIDGEST</Cliente>
+		<Versao>3510</Versao>
+	</Definicoes>
+	<Modulos>
+		<Modulo ID="REG">
+			<PROG>Registration</PROG>
+			<PLATAFOR>MVC</PLATAFOR>
+		</Modulo>
+	</Modulos>
+</Projecto>

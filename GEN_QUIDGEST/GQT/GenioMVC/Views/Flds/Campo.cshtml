@@ -1,0 +1,524 @@
+﻿@model GenioMVC.ViewModels.Flds.Campo_ViewModel
+@using GenioMVC.Models.Navigation;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Form = "Campo";
+	ViewBag.Title = @Resources.LISTA_DE_CAMPO62169;
+    ViewBag.formmode = Model.GetFormMode;
+	ViewBag.ClassForFormLayout = "form-flow";
+}
+
+
+@if (!Model.NestedForm) {
+    if(Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+    {
+        using (Html.BeginForm("Action", "Flds", FormMethod.Post, new { enctype="multipart/form-data", @class = "form-horizontal", area="Flds", data_form="Campo" }))
+        {
+            @form_content_alert()
+            @Html.QValidationSummary()
+	        @LoadDefault()
+        }
+    }
+    else
+    {
+        <div class="form-horizontal" id="Campo" area="Flds" data-form="Campo">
+	        @LoadDefault()
+        </div>
+    }
+}
+else {
+    <div class="c-card nested-form" id="Campo_well" area="Flds" data-form="Campo">
+        @Html.QValidationSummary()
+		@LoadDefault()
+    </div>
+}
+
+@helper form_content_body() {
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-dbedit draggable " id="CONTAINER_IFF_CAMPO___AERO_NAME____">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.TableAeroName, new { label_id="IFF_CAMPO___AERO_NAME____", @class = " i-text__label", id="LABEL_IFF_CAMPO___AERO_NAME____"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('IFF_CAMPO___AERO_NAME____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DropDownListFor(model => model.ValCodaero, Model.TableAeroName.List , "", new {help_id = "IFF_CAMPO___AERO_NAME____", @class = "i-select chosen-dropdown input-xxlarge", data_identifier = "IFF_CAMPO___AERO_NAME____", @pers_cs_area = "Aero", @pers_cs_field = "ValCodaero", @db_field = "ValCodaero", @db_full_field_name = "flds.codaero", data_has_more = Model.TableAeroName.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableAeroName.Selected, data_dbedit_value = Model.TableAeroName.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodflds, @data_see_more = "Campo_AeroValName", title = @Resources.AIRLINE57868, data_see_more_url = @Url.Action("Campo_AeroValName","Flds"), data_is_dbedit = "true", data_fields = "aero.codaero,aero.name", data_main_field = "Aero.ValName", data_elements = 0, data_filled_by_history = Model.TableAeroName.FilledByHistory, @dependant_fields = "aero.codaero,aero.name" })
+								@Html.ValidationMessageFor(model => model.TableAeroName)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-textarea draggable " id="CONTAINER_LED_CAMPO___FLDS_DESCRIP_">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValDescrip, new { label_id="LED_CAMPO___FLDS_DESCRIP_", @class = " i-text__label", id="LABEL_LED_CAMPO___FLDS_DESCRIP_"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_CAMPO___FLDS_DESCRIP_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextAreaFor(model => model.ValDescrip, 1, 99, new {help_id = "LED_CAMPO___FLDS_DESCRIP_", @class = "i-textarea__field i-textarea input-xxlarge", data_identifier = "LED_CAMPO___FLDS_DESCRIP_", @pers_cs_area = "Flds", @pers_cs_field = "ValDescrip", @db_field = "ValDescrip", title = @Resources.DESCRIPTION07383 })
+								@Html.ValidationMessageFor(model => model.ValDescrip)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_CAMPO___FLDS_NPASSAGE">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValNpassage, new { label_id="LED_CAMPO___FLDS_NPASSAGE", @class = " i-text__label", id="LABEL_LED_CAMPO___FLDS_NPASSAGE"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_CAMPO___FLDS_NPASSAGE','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValNpassage, new {help_id = "LED_CAMPO___FLDS_NPASSAGE", @class = "Number text-right i-text__field i-text input-large", data_identifier = "LED_CAMPO___FLDS_NPASSAGE", @pers_cs_area = "Flds", @pers_cs_field = "ValNpassage", @db_field = "ValNpassage", title = @Resources.PASSENGER_CAPACITY_O45867, data_number_integer = "3", data_number_decimals = "0", data_number_format = "999" })
+								@Html.ValidationMessageFor(model => model.ValNpassage)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_CAMPO___FLDS_DURATION">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValDuration, new { label_id="LED_CAMPO___FLDS_DURATION", @class = " i-text__label", id="LABEL_LED_CAMPO___FLDS_DURATION"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_CAMPO___FLDS_DURATION','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValDuration, new {help_id = "LED_CAMPO___FLDS_DURATION", @class = "Number text-right i-text__field i-text input-small", data_identifier = "LED_CAMPO___FLDS_DURATION", @pers_cs_area = "Flds", @pers_cs_field = "ValDuration", @db_field = "ValDuration", title = @Resources.TRIP_DURATION54761, data_number_integer = "2", data_number_decimals = "2", data_number_format = "99.99" })
+								@Html.ValidationMessageFor(model => model.ValDuration)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_CAMPO___FLDS_PRICE___">
+								<div class="d-inline-flex">
+								@Html.LabelFor(model => model.ValPrice, new { label_id="LED_CAMPO___FLDS_PRICE___", @class = " i-text__label", id="LABEL_LED_CAMPO___FLDS_PRICE___"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_CAMPO___FLDS_PRICE___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValPrice, new {help_id = "LED_CAMPO___FLDS_PRICE___", @class = "i-input-group__field text-right i-text__field i-text input-medium", data_identifier = "LED_CAMPO___FLDS_PRICE___", @pers_cs_area = "Flds", @pers_cs_field = "ValPrice", @db_field = "ValPrice", title = @Resources.ROUNDED_TICKET_PRICE02323, data_currency = "True", data_number_integer = "3", data_number_decimals = "2", data_number_format = "999.99" })
+								@Html.ValidationMessageFor(model => model.ValPrice)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_CAMPO___FLDS_PRECOBIL">
+								<div class="d-inline-flex">
+								@Html.LabelFor(model => model.ValPrecobil, new { label_id="LED_CAMPO___FLDS_PRECOBIL", @class = " i-text__label", id="LABEL_LED_CAMPO___FLDS_PRECOBIL"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_CAMPO___FLDS_PRECOBIL','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValPrecobil, new {help_id = "LED_CAMPO___FLDS_PRECOBIL", @class = "i-input-group__field text-right i-text__field i-text input-medium", data_identifier = "LED_CAMPO___FLDS_PRECOBIL", @pers_cs_area = "Flds", @pers_cs_field = "ValPrecobil", @db_field = "ValPrecobil", title = @Resources.TICKET_PRICE_AT_TENT46319, data_currency = "True", data_number_integer = "3", data_number_decimals = "2", data_number_format = "999.99" })
+								@Html.ValidationMessageFor(model => model.ValPrecobil)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-date-picker draggable " id="CONTAINER_LED_CAMPO___FLDS_DATE____">
+								<div class="d-inline-flex">
+								@Html.LabelFor(model => model.ValDate, new { label_id="LED_CAMPO___FLDS_DATE____", @class = " i-text__label", id="LABEL_LED_CAMPO___FLDS_DATE____"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_CAMPO___FLDS_DATE____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DateFor(model => model.ValDate, new {help_id = "LED_CAMPO___FLDS_DATE____", @class = "i-input-group__field b-icon-text input-small", data_identifier = "LED_CAMPO___FLDS_DATE____", @pers_cs_area = "Flds", @pers_cs_field = "ValDate", @db_field = "ValDate", title = @Resources.DEPARTURE_DATE__DD_M27418 })
+								@Html.ValidationMessageFor(model => model.ValDate)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-date-picker draggable " id="CONTAINER_LED_CAMPO___FLDS_DATETIME">
+								<div class="d-inline-flex">
+								@Html.LabelFor(model => model.ValDatetime, new { label_id="LED_CAMPO___FLDS_DATETIME", @class = " i-text__label", id="LABEL_LED_CAMPO___FLDS_DATETIME"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_CAMPO___FLDS_DATETIME','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DateFor(model => model.ValDatetime, new {help_id = "LED_CAMPO___FLDS_DATETIME", @class = "i-input-group__field b-icon-text input-medium", data_identifier = "LED_CAMPO___FLDS_DATETIME", @pers_cs_area = "Flds", @pers_cs_field = "ValDatetime", @db_field = "ValDatetime", title = @Resources.DEPARTURE_DATE__HOUR17284 })
+								@Html.ValidationMessageFor(model => model.ValDatetime)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-date-picker draggable " id="CONTAINER_LED_CAMPO___FLDS_DATESECO">
+								<div class="d-inline-flex">
+								@Html.LabelFor(model => model.ValDateseco, new { label_id="LED_CAMPO___FLDS_DATESECO", @class = " i-text__label", id="LABEL_LED_CAMPO___FLDS_DATESECO"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_CAMPO___FLDS_DATESECO','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DateFor(model => model.ValDateseco, new {help_id = "LED_CAMPO___FLDS_DATESECO", @class = "i-input-group__field b-icon-text input-medium", data_identifier = "LED_CAMPO___FLDS_DATESECO", @pers_cs_area = "Flds", @pers_cs_field = "ValDateseco", @db_field = "ValDateseco", title = @Resources.DEPARTURE_DATE__SECO42491 })
+								@Html.ValidationMessageFor(model => model.ValDateseco)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-date-picker draggable " id="CONTAINER_LED_CAMPO___FLDS_TIME____">
+								<div class="d-inline-flex">
+								@Html.LabelFor(model => model.ValTime, new { label_id="LED_CAMPO___FLDS_TIME____", @class = " i-text__label", id="LABEL_LED_CAMPO___FLDS_TIME____"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_CAMPO___FLDS_TIME____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DateFor(model => model.ValTime, new {help_id = "LED_CAMPO___FLDS_TIME____", @class = "i-input-group__field b-icon-text input-mini", data_identifier = "LED_CAMPO___FLDS_TIME____", @pers_cs_area = "Flds", @pers_cs_field = "ValTime", @db_field = "ValTime", title = @Resources.DEPARTURE_HOUR28390 })
+								@Html.ValidationMessageFor(model => model.ValTime)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_CAMPO___FLDS_YEAR____">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValYear, new { label_id="LED_CAMPO___FLDS_YEAR____", @class = " i-text__label", id="LABEL_LED_CAMPO___FLDS_YEAR____"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_CAMPO___FLDS_YEAR____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValYear, new {help_id = "LED_CAMPO___FLDS_YEAR____", @class = "Number text-right i-text__field i-text input-medium", data_identifier = "LED_CAMPO___FLDS_YEAR____", @pers_cs_area = "Flds", @pers_cs_field = "ValYear", @db_field = "ValYear", title = @Resources.CREATION_YEAR_OF_THE06011, data_number_integer = "4", data_number_decimals = "0", data_number_format = "9999" })
+								@Html.ValidationMessageFor(model => model.ValYear)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group row-group-checkbox">
+						<div class="i-checkbox draggable " id="CONTAINER_LED_CAMPO___FLDS_PRIMVIAG">
+								@Html.CheckBoxFor(model => model.ValPrimviag, new {help_id = "LED_CAMPO___FLDS_PRIMVIAG", @class = "i-checkbox__field i-checkbox input-small", data_identifier = "LED_CAMPO___FLDS_PRIMVIAG", @pers_cs_area = "Flds", @pers_cs_field = "ValPrimviag", @db_field = "ValPrimviag", title = @Resources._1AVIAGEM10982 }, @Model.IsEditableMode, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								@Html.ValidationMessageFor(model => model.ValPrimviag)
+							</div>
+						</div>
+						<div class="control-join-group row-group-checkbox">
+						<div class="i-checkbox draggable " id="CONTAINER_LED_CAMPO___FLDS_CONDITIO">
+								@Html.CheckBoxFor(model => model.ValConditio, new {help_id = "LED_CAMPO___FLDS_CONDITIO", @class = "i-checkbox__field i-checkbox input-large", data_identifier = "LED_CAMPO___FLDS_CONDITIO", @pers_cs_area = "Flds", @pers_cs_field = "ValConditio", @db_field = "ValConditio", title = @Resources.HAVE_YOU_TRAVELED_BE53808 }, @Model.IsEditableMode, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								@Html.ValidationMessageFor(model => model.ValConditio)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-dbedit draggable " id="CONTAINER_LED_CAMPO___FLDS_CLASS___">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValClass, new { label_id="LED_CAMPO___FLDS_CLASS___", @class = " i-text__label", id="LABEL_LED_CAMPO___FLDS_CLASS___"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_CAMPO___FLDS_CLASS___','Class')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.ArrayDropDownListFor(model => model.ValClass, Model.List_ValClass, CSGenio.business.ArrayClass.GetElement, "", new {help_id = "LED_CAMPO___FLDS_CLASS___", @class = "i-select chosen-dropdown input-medium", data_identifier = "LED_CAMPO___FLDS_CLASS___", @pers_cs_area = "Flds", @pers_cs_field = "ValClass", @db_field = "ValClass", title = @Resources.CLASS__ENUMERACAO_DE17340, data_array_type = "AC", data_placeholder = @Resources.ESCOLHA___40245, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_value = Model.List_ValClass.SelectedValue, data_is_array = "true" })
+								@Html.ValidationMessageFor(model => model.ValClass)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-dbedit draggable " id="CONTAINER_LED_CAMPO___FLDS_CLASSNUM">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValClassnum, new { label_id="LED_CAMPO___FLDS_CLASSNUM", @class = " i-text__label", id="LABEL_LED_CAMPO___FLDS_CLASSNUM"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_CAMPO___FLDS_CLASSNUM','Classnum')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.ArrayDropDownListFor(model => model.ValClassnum, Model.List_ValClassnum, CSGenio.business.ArrayClassnum.GetElement, "", new {help_id = "LED_CAMPO___FLDS_CLASSNUM", @class = "i-select chosen-dropdown input-large", data_identifier = "LED_CAMPO___FLDS_CLASSNUM", @pers_cs_area = "Flds", @pers_cs_field = "ValClassnum", @db_field = "ValClassnum", title = @Resources.CLASSE__ENUMERACAO_N29443, data_array_type = "AN", data_placeholder = @Resources.ESCOLHA___40245, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_value = Model.List_ValClassnum.SelectedValue, data_is_array = "true" })
+								@Html.ValidationMessageFor(model => model.ValClassnum)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-dbedit draggable " id="CONTAINER_LED_CAMPO___FLDS_LOGICENU">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValLogicenu, new { label_id="LED_CAMPO___FLDS_LOGICENU", @class = " i-text__label", id="LABEL_LED_CAMPO___FLDS_LOGICENU"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_CAMPO___FLDS_LOGICENU','Primviag')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.ArrayLogicalFor(model => model.ValLogicenu, Model.List_ValLogicenu, CSGenio.business.ArrayPrimviag.GetElement, false, new {help_id = "LED_CAMPO___FLDS_LOGICENU", @class = "input-medium", data_identifier = "LED_CAMPO___FLDS_LOGICENU", @pers_cs_area = "Flds", @pers_cs_field = "ValLogicenu", @db_field = "ValLogicenu", title = @Resources._1ST_TRIP__LOGICAL_E36923 })
+								@Html.ValidationMessageFor(model => model.ValLogicenu)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-image draggable " id="CONTAINER_LED_CAMPO___FLDS_LOGO____">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValLogo, new { label_id="LED_CAMPO___FLDS_LOGO____", @class = " i-text__label", id="LABEL_LED_CAMPO___FLDS_LOGO____"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_CAMPO___FLDS_LOGO____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								<div data-identifier="LED_CAMPO___FLDS_LOGO____" pers-cs-area="Flds" pers-cs-field="ValLogo" class="image-control-wrapper" >
+								@if(Model.IsEditableMode) {
+									@Html.EditorFor(m => m.ValLogo, new {help_id = "LED_CAMPO___FLDS_LOGO____", @class = "col-auto ", data_identifier = "LED_CAMPO___FLDS_LOGO____", title = @Resources.LOGO62483, guid = @Model.ValCodflds, controller = "Flds", fldname = "ValLogo", identifier = "FCAMPO", style = "height: 47pt; display: inline-block;" })
+								} else {
+									@Html.DisplayFor(m => m.ValLogo, new {help_id = "LED_CAMPO___FLDS_LOGO____", @class = "col-auto ", data_identifier = "LED_CAMPO___FLDS_LOGO____", title = @Resources.LOGO62483, guid = @Model.ValCodflds, controller = "Flds", fldname = "ValLogo", identifier = "FCAMPO", style = "height: 47pt; display: inline-block;" })
+								}
+								</div>
+								@Html.ValidationMessageFor(model => model.ValLogo)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-document draggable " id="CONTAINER_LED_CAMPO___FLDS_ATTACH__">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValAttach, new { label_id="LED_CAMPO___FLDS_ATTACH__", @class = " i-text__label", id="LABEL_LED_CAMPO___FLDS_ATTACH__"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_CAMPO___FLDS_ATTACH__','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@if (Model.IsEditableMode) {
+									@Html.EditorFor(model => model.ValAttach, new { fieldFk = Model.ValAttachfk, docProperties = Model.ValAttachPropertiesVM, baseArea = "Flds", baseAreaKey = Model.ValCodflds, useTemplates =  false, data_identifier="LED_CAMPO___FLDS_ATTACH__", identifier = "FCAMPO", fieldSize = "input-xxlarge", isRequired = false, maxSize = "null", allowedTypes = "null", htmlAttributes = new {help_id = "LED_CAMPO___FLDS_ATTACH__", title = @Resources.ATTACHMENTS19612 }})
+								} else {
+									@Html.DisplayFor(model => model.ValAttach, new { fieldFk = Model.ValAttachfk, docProperties = Model.ValAttachPropertiesVM, baseArea = "Flds", baseAreaKey = Model.ValCodflds, useTemplates =  false, data_identifier="LED_CAMPO___FLDS_ATTACH__", identifier = "FCAMPO", fieldSize = "input-xxlarge", htmlAttributes = new {help_id = "LED_CAMPO___FLDS_ATTACH__", title = @Resources.ATTACHMENTS19612 }})
+								}
+								@Html.ValidationMessageFor(model => model.ValAttach)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_CAMPO___FLDS_CREATUSE">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValCreatuse, new { label_id="LED_CAMPO___FLDS_CREATUSE", @class = " i-text__label", id="LABEL_LED_CAMPO___FLDS_CREATUSE"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_CAMPO___FLDS_CREATUSE','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextBoxFor(model => model.ValCreatuse, new {help_id = "LED_CAMPO___FLDS_CREATUSE", @class = "i-text__field i-text input-medium", data_identifier = "LED_CAMPO___FLDS_CREATUSE", @pers_cs_area = "Flds", @pers_cs_field = "ValCreatuse", @db_field = "ValCreatuse", fixed_field = "true", @readonly = "readonly", title = @Resources.CREATED_BY12292 })
+								@Html.ValidationMessageFor(model => model.ValCreatuse)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-date-picker draggable " id="CONTAINER_LED_CAMPO___FLDS_CREATDAT">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValCreatdat, new { label_id="LED_CAMPO___FLDS_CREATDAT", @class = " i-text__label", id="LABEL_LED_CAMPO___FLDS_CREATDAT"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_CAMPO___FLDS_CREATDAT','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DateFor(model => model.ValCreatdat, new {help_id = "LED_CAMPO___FLDS_CREATDAT", @class = "i-input-group__field b-icon-text input-medium", data_identifier = "LED_CAMPO___FLDS_CREATDAT", @pers_cs_area = "Flds", @pers_cs_field = "ValCreatdat", @db_field = "ValCreatdat", fixed_field = "true", @readonly = "readonly", title = @Resources.CREATION_DATE__DD_MM48834 })
+								@Html.ValidationMessageFor(model => model.ValCreatdat)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-date-picker draggable " id="CONTAINER_LED_CAMPO___FLDS_CREATHOU">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValCreathou, new { label_id="LED_CAMPO___FLDS_CREATHOU", @class = " i-text__label", id="LABEL_LED_CAMPO___FLDS_CREATHOU"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_CAMPO___FLDS_CREATHOU','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DateFor(model => model.ValCreathou, new {help_id = "LED_CAMPO___FLDS_CREATHOU", @class = "i-input-group__field b-icon-text input-small", data_identifier = "LED_CAMPO___FLDS_CREATHOU", @pers_cs_area = "Flds", @pers_cs_field = "ValCreathou", @db_field = "ValCreathou", fixed_field = "true", @readonly = "readonly", title = @Resources.CREATION_DATE32161 })
+								@Html.ValidationMessageFor(model => model.ValCreathou)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-date-picker draggable " id="CONTAINER_LED_CAMPO___FLDS_CREATINS">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValCreatins, new { label_id="LED_CAMPO___FLDS_CREATINS", @class = " i-text__label", id="LABEL_LED_CAMPO___FLDS_CREATINS"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_CAMPO___FLDS_CREATINS','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DateFor(model => model.ValCreatins, new {help_id = "LED_CAMPO___FLDS_CREATINS", @class = "i-input-group__field b-icon-text input-medium", data_identifier = "LED_CAMPO___FLDS_CREATINS", @pers_cs_area = "Flds", @pers_cs_field = "ValCreatins", @db_field = "ValCreatins", fixed_field = "true", @readonly = "readonly", title = @Resources.COMPLETE_CREATION_DA42963 })
+								@Html.ValidationMessageFor(model => model.ValCreatins)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+			@Html.HiddenFor(model => model.ValCodequip, new { @pers_cs_field="ValCodequip", @pers_cs_area="Flds", @data_value = Model.ValCodequip, @db_field="ValCodequip", @trelate="Equip", @tfrelate="Codequip", @data_identifier="LED_CAMPO___EQUIPCODEQUIP" })
+
+			@Html.HiddenFor(model => model.ValCodflds, new { @pers_cs_field="ValCodflds", @pers_cs_area="Flds", data_refresh = "true", @form_area="true", @data_value = Model.ValCodflds, @data_identifier = "LED_CAMPO___FLDS_CODFLDS_" })
+
+            @Html.Hidden("IgnoreWarnings", "false", new { id = "IgnoreWarnings" })
+
+			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Campo" })
+            @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Campo" })
+            @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Campo" })
+			if (!Model.NestedForm)
+            {
+                @Html.AntiForgeryToken()
+            }
+}
+
+@helper form_content_alert() {
+	if(Model.FormMode == FormMode.Delete) {
+		<div class="c-alert c-alert--warning">
+			<i class="glyphicons glyphicons-alert c-alert__icon" aria-hidden="true"></i>
+			<div class="c-alert__text">
+				&ensp;@Resources.DESEJA_ELIMINAR_ESTA24564
+			</div>
+		<!--Ao confirmar esta ficha irá ser eliminada da base de dados. Cancele caso não tenha a certeza.-->
+		</div>
+	}
+}
+
+@helper form_content_buttons() {
+
+
+
+
+    @* Extended support form *@
+    if (Model.NestedForm)
+    {
+        if (Model.IsEditableMode)
+        {
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("Campo", Model.FormMode).ToString(), "Flds")", "Campo_well")' qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>
+                    @Resources.SAVE04165
+            </button>
+            <button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Campo_Delete", "Flds", new {id = @Model.ValCodflds} )", "Campo_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+
+            <script type="application/javascript">
+                $(document).ready(function () { loaded($("#Campo_well")); });
+            </script>
+        }
+
+        @* javascript code_javascript *@
+        @*@codeJavascript()*@
+    }
+    @* Normal mode *@
+    else
+    {
+        if (Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+        {
+            if (Model.FormMode == FormMode.New && Convert.ToBoolean(Model.Navigation.CurrentLevel.GetEntry("repeatInsertion")))
+            {
+            <button type="button" data-end-pers="true" name="Campo_repete_insertion" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitCampo(event, true)" qbutton="ok_new">@Resources.GRAVAR_E_CRIAR_NOVA17771</button>
+            }
+            if(Model.FormMode == FormMode.Delete)
+            {
+				<button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Campo", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitDeleteCampo(event)" qbutton="delete">
+                    <i class="glyphicons glyphicons-check e-icon" aria-hidden="true"></i>@Resources.CONFIRMAR09808
+                </button>
+            }
+            else
+            {
+                <button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Campo", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitCampo(event)" title="@Resources.SAVE04165" data-selector="true" qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>@Resources.SAVE04165
+                </button>
+            }
+
+            <button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-href="@Url.Action("Campo_Cancel", "Flds", new { niv = Model.Navigation.CurrentLevel.Level })" onclick="javascript:window.Form_Campo.Cancel()" title="@Resources.CANCEL65428" data-selector="true" qbutton="cancel">
+                <i class="glyphicons glyphicons-ban-circle e-icon" aria-hidden="true"></i>@Resources.CANCEL65428
+            </button>
+        }
+        else if (!(ViewBag.isHomePage ?? false))
+        {
+            @Html.ActionLinkWithIcon(@Resources.RETROCEDER16633, "Campo_Cancel","Flds","glyphicons glyphicons-arrow-left e-icon", null, new { @class = "b-icon-text b-icon-text--secondary", @data_end_pers = "true", @title = @Resources.RETROCEDER16633, qbutton = "cancel" })
+        }
+    }
+}
+
+@helper LoadDefault() {
+    if (Model.NestedForm)
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div class="c-card__header">
+                    <div class="c-card__header-tag">
+						<span class="form-header" style="padding:0;">
+							<i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+						</span>
+                    </div>
+                </div>
+                <div class="c-card__body">
+                    @form_content_body()
+                    <div elem-identifier="FormActions" class="form-actions" data-form-actions="Campo">
+                        @form_content_buttons()
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    }
+    else
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div id="c-stickyHeader">
+                    <div class="c-action-bar d-flex">
+                        <span class="form-header">
+                            <i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+                        </span>
+                        <div data-parent-form="Campo" data-q-ref="form-btns-main_container"></div>
+                    </div>
+                </div>
+
+                @form_content_body()
+                <div elem-identifier="FormActions" class="form-actions" data-form-actions="Campo">
+                @form_content_buttons()
+                </div>
+            </div>
+        </fieldset>
+    }
+}
+
+@helper LoadFromLayout()
+{
+}
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT CAMPO]/ *@
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_CAMPO" data-form-javascript="true">
+@Html.Partial("Campo_JavaScript", Model, ViewData)
+</div>
+}
+
+@section code_javascript
+{
+	@codeJavascript()
+}
+
+@if (Request.IsAjaxRequest())
+{
+    @codeJavascript()
+    @includeStylesheets()
+}
+
+@helper includeStylesheets()
+{
+
+ }
+
+@section include_stylesheets {
+    @includeStylesheets()
+}

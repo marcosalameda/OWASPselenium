@@ -1,0 +1,41 @@
+﻿@model GenioMVC.ViewModels.Equip.Equip_ViewModel
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@* USE /[MANUAL GQT TABLE_FOR EQUIP_MOVIMEVV]/ *@
+	<div class="input-xlarge checkList">
+		@(Html.CheckListFor<GenioMVC.Models.Rooms>(edit: Model.IsEditableMode)
+			.Columns(column =>
+			{
+				column.Expression(p => p.ValCodrooms, true).Hidden();
+						column.Expression(p => p.ValRoomnr).Title(@Resources.N_R__ROOM43805).Field("ValRoomnr").Size(10);
+						column.Expression(p => p.ValDesignat).Title(@Resources.ROOM_DESIGNATION37895).Field("ValDesignat").Size(30);
+			})
+			.DataSource(this.Model.List_Movimevv)
+			.Name("List_Movimevv_Ids")
+			.SelectedIds(this.Model.List_Movimevv_SelectedIds)
+			.Extended("List_Roomsmve_Extended")
+			.ToHtml()
+		)
+	</div>
+
+
+<script>
+$(document).ready(function() {
+    try {
+        if (jQuery) {
+            try {
+                $(document).ready(function () {
+                    loaded($("[id='List_Movimevv']"));
+                    InitSpecialControls($('#List_Movimevv'));
+                });
+
+// USE /[MANUAL GQT LISTING_JS EQUIP_MOVIMEVV]/
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+</script>

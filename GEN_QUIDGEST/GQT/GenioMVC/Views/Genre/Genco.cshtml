@@ -1,0 +1,261 @@
+﻿@model GenioMVC.ViewModels.Genre.Genco_ViewModel
+@using GenioMVC.Models.Navigation;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Form = "Genco";
+	ViewBag.Title = @Resources.CONTACT_TYPE65233;
+    ViewBag.formmode = Model.GetFormMode;
+	ViewBag.ClassForFormLayout = "form-flow";
+}
+
+
+@if (!Model.NestedForm) {
+    if(Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+    {
+        using (Html.BeginForm("Action", "Genre", FormMethod.Post, new { @class = "form-horizontal", area="Genre", data_form="Genco" }))
+        {
+            @form_content_alert()
+            @Html.QValidationSummary()
+	        @LoadDefault()
+        }
+    }
+    else
+    {
+        <div class="form-horizontal" id="Genco" area="Genre" data-form="Genco">
+	        @LoadDefault()
+        </div>
+    }
+}
+else {
+    <div class="c-card nested-form" id="Genco_well" area="Genre" data-form="Genco">
+        @Html.QValidationSummary()
+		@LoadDefault()
+    </div>
+}
+
+@helper form_content_body() {
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-dbedit draggable " id="CONTAINER_LED_GENCO___GENREAGENCONT">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValAgencont, new { label_id="LED_GENCO___GENREAGENCONT", @class = " i-text__label", id="LABEL_LED_GENCO___GENREAGENCONT"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_GENCO___GENREAGENCONT','Genconta')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.ArrayDropDownListFor(model => model.ValAgencont, Model.List_ValAgencont, CSGenio.business.ArrayGenconta.GetElement, "", new {help_id = "LED_GENCO___GENREAGENCONT", @class = "i-select chosen-dropdown input-small", data_identifier = "LED_GENCO___GENREAGENCONT", @pers_cs_area = "Genre", @pers_cs_field = "ValAgencont", @db_field = "ValAgencont", title = @Resources.CONTACT_GENRE31604, data_array_type = "AC", data_placeholder = @Resources.ESCOLHA___40245, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_value = Model.List_ValAgencont.SelectedValue, data_is_array = "true" })
+								@Html.ValidationMessageFor(model => model.ValAgencont)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_GENCO___GENREBACKCOLO">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValBackcolo, new { label_id="LED_GENCO___GENREBACKCOLO", @class = " i-text__label", id="LABEL_LED_GENCO___GENREBACKCOLO"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_GENCO___GENREBACKCOLO','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.ColorPicker(model => model.ValBackcolo, new {help_id = "LED_GENCO___GENREBACKCOLO", @class = "input-xlarge", data_identifier = "LED_GENCO___GENREBACKCOLO", @pers_cs_area = "Genre", @pers_cs_field = "ValBackcolo", @db_field = "ValBackcolo", title = @Resources.BACKGROUND_COLOR07511, maxlength = "50", rows = "50" })
+								@Html.ValidationMessageFor(model => model.ValBackcolo)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_GENCO___GENRETEXTCOLO">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValTextcolo, new { label_id="LED_GENCO___GENRETEXTCOLO", @class = " i-text__label", id="LABEL_LED_GENCO___GENRETEXTCOLO"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_GENCO___GENRETEXTCOLO','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.ColorPicker(model => model.ValTextcolo, new {help_id = "LED_GENCO___GENRETEXTCOLO", @class = "input-xlarge", data_identifier = "LED_GENCO___GENRETEXTCOLO", @pers_cs_area = "Genre", @pers_cs_field = "ValTextcolo", @db_field = "ValTextcolo", title = @Resources.TEXT_COLOR63426, maxlength = "50", rows = "50" })
+								@Html.ValidationMessageFor(model => model.ValTextcolo)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row hidden">
+				<div class="col-12 hidden">
+					<div class="control-row-group hidden">
+						<div>
+								@Html.TextBoxFor(model => model.ValGender, new {help_id = "LED_GENCO___GENREGENDER__", @class = "i-text__field i-text input-medium", data_identifier = "LED_GENCO___GENREGENDER__", @pers_cs_area = "Genre", @pers_cs_field = "ValGender", @db_field = "ValGender", maxlength = "20", rows = "20" })
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			@Html.HiddenFor(model => model.ValCodgenre, new { @pers_cs_field="ValCodgenre", @pers_cs_area="Genre", data_refresh = "true", @form_area="true", @data_value = Model.ValCodgenre, @data_identifier = "LED_GENCO___GENRECODGENRE" })
+
+            @Html.Hidden("IgnoreWarnings", "false", new { id = "IgnoreWarnings" })
+
+			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Genco" })
+            @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Genco" })
+            @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Genco" })
+			if (!Model.NestedForm)
+            {
+                @Html.AntiForgeryToken()
+            }
+}
+
+@helper form_content_alert() {
+	if(Model.FormMode == FormMode.Delete) {
+		<div class="c-alert c-alert--warning">
+			<i class="glyphicons glyphicons-alert c-alert__icon" aria-hidden="true"></i>
+			<div class="c-alert__text">
+				&ensp;@Resources.DESEJA_ELIMINAR_ESTA24564
+			</div>
+		<!--Ao confirmar esta ficha irá ser eliminada da base de dados. Cancele caso não tenha a certeza.-->
+		</div>
+	}
+}
+
+@helper form_content_buttons() {
+
+
+
+
+    @* Extended support form *@
+    if (Model.NestedForm)
+    {
+        if (Model.IsEditableMode)
+        {
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("Genco", Model.FormMode).ToString(), "Genre")", "Genco_well")' qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>
+                    @Resources.SAVE04165
+            </button>
+            <button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Genco_Delete", "Genre", new {id = @Model.ValCodgenre} )", "Genco_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+
+            <script type="application/javascript">
+                $(document).ready(function () { loaded($("#Genco_well")); });
+            </script>
+        }
+
+        @* javascript code_javascript *@
+        @*@codeJavascript()*@
+    }
+    @* Normal mode *@
+    else
+    {
+        if (Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+        {
+            if (Model.FormMode == FormMode.New && Convert.ToBoolean(Model.Navigation.CurrentLevel.GetEntry("repeatInsertion")))
+            {
+            <button type="button" data-end-pers="true" name="Genco_repete_insertion" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitGenco(event, true)" qbutton="ok_new">@Resources.GRAVAR_E_CRIAR_NOVA17771</button>
+            }
+            if(Model.FormMode == FormMode.Delete)
+            {
+				<button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Genco", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitDeleteGenco(event)" qbutton="delete">
+                    <i class="glyphicons glyphicons-check e-icon" aria-hidden="true"></i>@Resources.CONFIRMAR09808
+                </button>
+            }
+            else
+            {
+                <button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Genco", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitGenco(event)" title="@Resources.SAVE04165" data-selector="true" qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>@Resources.SAVE04165
+                </button>
+            }
+
+            <button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-href="@Url.Action("Genco_Cancel", "Genre", new { niv = Model.Navigation.CurrentLevel.Level })" onclick="javascript:window.Form_Genco.Cancel()" title="@Resources.CANCEL65428" data-selector="true" qbutton="cancel">
+                <i class="glyphicons glyphicons-ban-circle e-icon" aria-hidden="true"></i>@Resources.CANCEL65428
+            </button>
+        }
+        else if (!(ViewBag.isHomePage ?? false))
+        {
+            @Html.ActionLinkWithIcon(@Resources.RETROCEDER16633, "Genco_Cancel","Genre","glyphicons glyphicons-arrow-left e-icon", null, new { @class = "b-icon-text b-icon-text--secondary", @data_end_pers = "true", @title = @Resources.RETROCEDER16633, qbutton = "cancel" })
+        }
+    }
+}
+
+@helper LoadDefault() {
+    if (Model.NestedForm)
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div class="c-card__header">
+                    <div class="c-card__header-tag">
+						<span class="form-header" style="padding:0;">
+							<i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+						</span>
+                    </div>
+                </div>
+                <div class="c-card__body">
+                    @form_content_body()
+                    <div elem-identifier="FormActions" class="form-actions" data-form-actions="Genco">
+                        @form_content_buttons()
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    }
+    else
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div id="c-stickyHeader">
+                    <div class="c-action-bar d-flex">
+                        <span class="form-header">
+                            <i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+                        </span>
+                        <div data-parent-form="Genco" data-q-ref="form-btns-main_container"></div>
+                    </div>
+                </div>
+
+                @form_content_body()
+                <div elem-identifier="FormActions" class="form-actions" data-form-actions="Genco">
+                @form_content_buttons()
+                </div>
+            </div>
+        </fieldset>
+    }
+}
+
+@helper LoadFromLayout()
+{
+}
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT GENCO]/ *@
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_GENCO" data-form-javascript="true">
+@Html.Partial("Genco_JavaScript", Model, ViewData)
+</div>
+}
+
+@section code_javascript
+{
+	@codeJavascript()
+}
+
+@if (Request.IsAjaxRequest())
+{
+    @codeJavascript()
+    @includeStylesheets()
+}
+
+@helper includeStylesheets()
+{
+<link href="@Url.Content("~/Content/stylesheets/bootstrap-colorpicker.min.css")" rel="stylesheet" type="text/css" />
+
+ }
+
+@section include_stylesheets {
+    @includeStylesheets()
+}

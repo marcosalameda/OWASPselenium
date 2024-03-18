@@ -1,0 +1,111 @@
+﻿@model GenioMVC.ViewModels.Pesso.Pesso_ValEspecitl_ViewModel
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@using Newtonsoft.Json;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@*List properties DBEDIT BUTTONS*@
+<div class="row">
+	<div class="col">
+		<div elem-identifier="List"  help-id="IFF_PESSO___PSEUDESPECITL" style="padding-top: 0.5rem;"><label class = "i-text__label table-title c-table__title" > <h2>@Resources.SPECIALTIES08113</h2> </label></div>
+	</div>
+</div>
+
+@* USE /[MANUAL GQT TABLE_FOR PESSO_ESPECITL]/ *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@using GenioMVC.ViewModels.Esppe;    
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Esppe>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodesppe, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN PESSO_ESPECITL_SPECI_ESPECIAL]/
+		column.Expression(p => p.Speci.ValEspecial).Title(@Resources.SPECIALTY09304).Field("Speci.ValEspecial").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN PESSO_ESPECITL_SPECI_AREATECN]/
+		column.Expression(p => p.Speci.ArrayValareatecn).Title(@Resources.TECHNICAL_AREA50773).Field("Speci.ValAreatecn", "ArrayAreatecn").Size(1);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Esppe")
+        .Id("ValEspecitl")
+        .AjaxRequest("Pesso_ValEspecitl")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .TableList(hasFilters: false)
+        .RequestLink(@Url.Action("Pesso_ValEspecitl", new { id = Model.ValCodpesso, partialView = "Pesso_ValEspecitl"}))
+        .Form("Esppe", false, false)
+        .SetFollowUp("Esppe_Show", "Esppe" , (Func<GenioMVC.Models.Esppe, object>)(item => new { id = item.ValCodesppe }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
+        .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
+		;
+        
+}
+
+@tbl.ToHtml()
+
+<script>
+
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qValEspecitl, #ValEspecitl_complex_filter th input, #ValEspecitl_filters input").change(function() {
+                    $("#pValEspecitl").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#ValEspecitl_tableFilters').val(false);")
+                    @Html.Raw("$('#ValEspecitl_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#ValEspecitl_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $('#ValEspecitl_complex_filter button#applyComplexFilter').click();
+                    @:      event.preventDefault();
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#ValEspecitl_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_ValEspecitl').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+
+
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='ValEspecitl']"));
+                    InitSpecialControls($('#ValEspecitl'));
+                    $('#ValEspecitl').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS PESSO_VALESPECITL]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+</script>

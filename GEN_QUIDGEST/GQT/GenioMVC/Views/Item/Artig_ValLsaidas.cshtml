@@ -1,0 +1,128 @@
+﻿@model GenioMVC.ViewModels.Item.Artig_ValLsaidas_ViewModel
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@using Newtonsoft.Json;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@*List properties DBEDIT BUTTONS*@
+<div class="row">
+	<div class="col">
+		<div elem-identifier="List"  help-id="IFF_ARTIG___PSEUDLSAIDAS_" style="padding-top: 0.5rem;"><label class = "i-text__label table-title c-table__title" > <h2>@Resources.OUTPUT_10769</h2> </label></div>
+	</div>
+	<div class="col-auto search">
+	<div id="ValLsaidas_simple_filter">
+		<div class="i-input-group input-xxlarge">
+			@Html.TextBox("qValLsaidas", Model.Menu.Query, new { @class="i-input-group__field ", @onkeydown = "ListSearchEnter(event)", @style="height: inherit" } )
+			<div class="i-input-group--right">
+				<button type="button" class="b-icon--secondary i-input-group__button--secondary listSearchButton" elem-identifier="ListSearchButton" onclick="window.ValLsaidas.Search();"><i class="glyphicons glyphicons-search i-input-group__tag-icon i-input-group__button-icon"></i></button>
+				<button id="ValLsaidas_extra" class="b-icon--secondary i-input-group__button--secondary" type="button" onclick="changeFilters('#ValLsaidas_complex_filter', 'ValLsaidas_tableFilters')" title="@Resources.PESQUISA_AVANCADA06198"><span class="glyphicons glyphicons-zoom-in i-input-group__tag-icon i-input-group__button-icon"></span></button>
+			</div>
+		</div>
+	</div>
+	</div>
+</div>
+
+@* USE /[MANUAL GQT TABLE_FOR ARTIG_LSAIDAS]/ *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@using GenioMVC.ViewModels.Outpu;    
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Outpu>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodoutpu, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN ARTIG_LSAIDAS_OUTPU_EXITDT]/
+		column.Expression(p => p.ValExitdt).Title(@Resources.EXIT_INSTANT27038).Field("ValExitdt").Size(16);
+// USE /[MANUAL GQT CUSTOM_COLUMN ARTIG_LSAIDAS_OUTPT_DOCUMENR]/
+		column.Expression(p => p.Outpt.ValDocumenr).Title(@Resources.DOCUMENT_NO_30174).Form("Dsaid_Show","Outpt",p => p.Outpt.ValCodoutpt, false, false).Field("Outpt.ValDocumenr").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN ARTIG_LSAIDAS_OUTPU_LINE]/
+		column.Expression(p => p.ValLine).Title(@Resources.LINE27983).Field("ValLine").Size(5);
+// USE /[MANUAL GQT CUSTOM_COLUMN ARTIG_LSAIDAS_OUTPU_EXITQNTY]/
+		column.Expression(p => p.ValExitqnty).Title(@Resources.QTD_OUTPUT12876).Field("ValExitqnty").Size(10);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Outpu")
+        .Id("ValLsaidas")
+        .AjaxRequest("Artig_ValLsaidas")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .TableList(hasFilters: true)
+        .RequestLink(@Url.Action("Artig_ValLsaidas", new { id = Model.ValCoditem, partialView = "Artig_ValLsaidas"}))
+        .Filters(this.Model.Menu.Filters)
+        .ForegroundColourOnCondition(p => p.ValZzstate != 0 ? "" : "RGB(255,190,158)")
+        .Form("Ldsai", false, false)
+        .SetFollowUp("Ldsai_Show", "Outpu" , (Func<GenioMVC.Models.Outpu, object>)(item => new { id = item.ValCodoutpu }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
+        .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
+		;
+        
+}
+
+@tbl.ToHtml()
+
+<script>
+
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qValLsaidas, #ValLsaidas_complex_filter th input, #ValLsaidas_filters input").change(function() {
+                    $("#pValLsaidas").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#ValLsaidas_tableFilters').val(false);")
+                    @Html.Raw("$('#ValLsaidas_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#ValLsaidas_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $('#ValLsaidas_complex_filter button#applyComplexFilter').click();
+                    @:      event.preventDefault();
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#ValLsaidas_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_ValLsaidas').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+
+
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='ValLsaidas']"));
+                    InitSpecialControls($('#ValLsaidas'));
+                    $('#ValLsaidas').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS ARTIG_VALLSAIDAS]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+</script>

@@ -1,0 +1,113 @@
+﻿@model GenioMVC.ViewModels.Feeca.TBS_Menu_1931_ViewModel
+@using Newtonsoft.Json;
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@using GenioMVC.ViewModels.Feeca;    
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Feeca>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodfeeca, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN TBS_MENU_1931_FLDS_DESCRIP]/
+		column.Expression(p => p.Flds.ValDescrip).Title(@Resources.DESCRICAO51618).Field("Flds.ValDescrip").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN TBS_MENU_1931_FEECA_FEEDBACK]/
+		column.Expression(p => p.ValFeedback).Title(@Resources.FEEDBACK52855).Field("ValFeedback").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN TBS_MENU_1931_FLDS_ATTACH]/
+		column.Expression(p => p.Flds.ValAttach).Title(@Resources.ANEXOS65235).Field("Flds.ValAttach").Size(30).Document(p => Url.Action("GetFile", "Flds", new { ticket = p.Flds.GetTicketForDocField("ValAttach"), viewType = (int)CSGenio.framework.DocumentViewTypeMode.Print}));
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Feeca")
+        .Id("TBS_Menu_1931")
+        .AjaxRequest("Menu")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .DBEdit()
+        .Filters(this.Model.Menu.Filters)
+        .Form("Feeca", false, false)
+        .SetFollowUp("Feeca_Show", "Feeca" , (Func<GenioMVC.Models.Feeca, object>)(item => new { id = item.ValCodfeeca }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
+        .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
+		;
+        
+}
+
+@tbl.ToHtml()
+
+
+<script>
+ 
+ 
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qTBS_Menu_1931, #TBS_Menu_1931_complex_filter th input, #TBS_Menu_1931_filters input").change(function() {
+                    $("#pTBS_Menu_1931").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#TBS_Menu_1931_tableFilters').val(false);")
+                    @Html.Raw("$('#TBS_Menu_1931_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#TBS_Menu_1931_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $("[data-form='TBS_Menu_1931']").submit();
+                    @:      event.preventDefault();
+                    @:      ClearSearchBox('qTBS_Menu_1931');
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#TBS_Menu_1931_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_TBS_Menu_1931').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+                 @if (this.Model.Menu.Filters.FiltersValues.Count >= 1) {
+                    var activeFields = Newtonsoft.Json.JsonConvert.SerializeObject(this.Model.Menu.Filters.FiltersValues);
+                    @: SetActiveFilters('TBS_Menu_1931', 'FEECA', @Html.Raw(activeFields))
+                  }
+
+
+                setupHistoryClicks()
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='Menu']"));
+                    InitSpecialControls($('#Menu'));
+                    $('#Menu').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS TBS_MENU_1931]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+// USE /[MANUAL GQT LISTING_CODEJS TBS_MENU_1931]/
+</script>

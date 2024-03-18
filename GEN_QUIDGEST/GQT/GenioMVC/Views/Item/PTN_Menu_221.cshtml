@@ -1,0 +1,157 @@
+﻿@model GenioMVC.ViewModels.Item.PTN_Menu_221_ViewModel
+@using GenioMVC.Resources
+@using System.Web.Script.Serialization
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Title = Model.DBEditTitle;
+	//Layout = "~/Views/Shared/Layouts/TopMenu_BT4/_Layout.cshtml";
+}
+
+@{
+	GenioMVC.ViewModels.Item.PTN_Menu_221_ViewModel modelPTN_Menu_221 = new GenioMVC.ViewModels.Item.PTN_Menu_221_ViewModel(Navigation);
+	var columns = modelPTN_Menu_221.GetSearchColumns();
+
+	Dictionary<string, TableFilterField> fields = new Dictionary<string, TableFilterField>();
+
+	Dictionary<string, string> arrTipoarti = new Dictionary<string, string>();
+	foreach(var elem in CSGenio.business.ArrayTipoarti.GetDictionary())
+	{
+		arrTipoarti.Add(elem.Key.ToString(), GenioMVC.Resources.Resources.ResourceManager.GetString(elem.Value.ToString()));
+	}
+
+	foreach (var col in columns)
+	{
+		var areaField = col.AreaField;
+		if (areaField.Area == "item" && areaField.Field == "itemdes")
+		{
+			fields.Add("ITEM.ITEMDES", new TableFilterField("ITEM", "ITEMDES", Resources.ARTICLE60065, "text", defaultSearch : true));
+		}
+		if (areaField.Area == "item" && areaField.Field == "itemcod")
+		{
+			fields.Add("ITEM.ITEMCOD", new TableFilterField("ITEM", "ITEMCOD", Resources.CODE49225, "text"));
+		}
+		if (areaField.Area == "item" && areaField.Field == "valid")
+		{
+			fields.Add("ITEM.VALID", new TableFilterField("ITEM", "VALID", Resources.IN_USE42606, "bool"));
+		}
+		if (areaField.Area == "item" && areaField.Field == "itemtype")
+		{
+			fields.Add("ITEM.ITEMTYPE", new TableFilterField("ITEM", "ITEMTYPE", Resources.TYPE00312, "enum", array : arrTipoarti));
+		}
+	}
+
+	JavaScriptSerializer serializer = new JavaScriptSerializer();
+	string fieldsStr = serializer.Serialize(fields);
+}
+
+<script>
+	//Fields with information for search filters
+	var fields = @Html.Raw(fieldsStr);
+	//Table List Search Filters
+	var searchFilterGroups = [];
+</script>
+
+
+@using (Ajax.BeginForm("PTN_Menu_221", "Item", new AjaxOptions
+{
+	HttpMethod= "POST",
+	InsertionMode = InsertionMode.Replace,
+	UpdateTargetId = "Menu",
+	OnSuccess = "InitMenuSpecialControls"
+}, new { @class = "form-horizontal", area="Item", data_form="PTN_Menu_221" }))
+{
+		<input id="SearchFilters" type="hidden" value="" />
+
+		<div class="page-header row" style="align-items:center">
+		   <div class="col">
+<div class="table-title c-table__title">
+					<h1>@ViewBag.Title</h1>
+				</div>
+
+		   </div>
+		   <div class="col-auto search">
+				<div class="i-input-group input-xxlarge" id="PTN_Menu_221_simple_filter">
+					<div data-search-filter-menu-elem="filter-box-list"></div>
+					@Html.TextBox("qPTN_Menu_221", Navigation.GetStrValue("qPTN_Menu_221"), new { @class="i-input-group__field input-xxlarge dropdown-toggle", @title=@Resources.CAIXA_DE_PESQUISA53870, @onfocus="ToggleSearchFilterBox('PTN_Menu_221');" ,@onkeydown = "ListSearchEnter(event)", @autocomplete = "off" ,@data_toggle = "dropdown",@data_search_field_menu_elem = "show", @onblur = "HideSearchFieldMenuOnUnfocus('PTN_Menu_221');",@placeholder = Resources.PESQUISAR34506 + " " + Resources.ARTICLE60065})
+					<button id="qPTN_Menu_221-clearBtn" class="clear-search d-none" type="button">
+						<i class="glyphicons glyphicons-remove mr-1"></i>
+					</button>
+					@Html.SearchFieldMenu("PTN_Menu_221", fields, "ITEM")
+					<div class="b-btn-group i-input-group--right">
+						<button type="button" elem-identifier="ListSearchButton" class="btn b-icon b-icon--secondary i-input-group__button--secondary  listSearchButton" title="@Resources.PESQUISAR34506" onclick="AddSearchFieldFilter('PTN_Menu_221', 'ITEM', 'ITEM.ITEMDES');"><i class="glyphicons glyphicons-search i-input-group__tag-icon i-input-group__button-icon"></i></button>
+						@{
+						var advancedSearchIcon = @Model.Menu.Filters.ShowTableFilters ? "glyphicons-zoom-out" : "glyphicons-zoom-in";
+						<button id="PTN_Menu_221_extra" class="btn b-icon b-icon--secondary i-input-group__button--secondary" type="button" onclick="changeFilters('#PTN_Menu_221_complex_filter', 'PTN_Menu_221_tableFilters');applyComplexFilterIDs();" title="@Resources.PESQUISA_AVANCADA06198"><span class="glyphicons @advancedSearchIcon i-input-group__tag-icon i-input-group__button-icon"></span></button>
+						}
+						@Html.SearchFilterMenu("PTN_Menu_221")
+					</div>
+				</div>
+			</div>
+			<div class="col-auto float-right" style="padding: 0; padding-right: 15px">
+				<div class="b-btn-group float-right" style="height: 32.625px">
+					@Html.ExportListMenu("PTN_Menu_221")
+					@*List properties LISTS*@
+					@if(!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest())
+					{
+						<button class="b-btn b-icon b-icon--secondary" type="button" data-modal-form="Lstusr" data-modal-id="lstusr-edit-modal" data-table="PTN_Menu_221" data-modal-url="@Url.Action("ChangeListProperties", "Lstusr", new { idlist = "PTN_Menu_221", idlistController = "Item", idlistArea = "Item", codlista ="eb3397a7-f7a5-4956-8630-eb249d2c952a" })" title="@Resources.ALTERAR_A_APRESENTAC58401"><i class="glyphicons glyphicons-list e-icon"></i></button>
+					}
+				</div>
+			</div>
+		</div>
+ 	<div id="Menu" element-identifier="List">
+		@{ Html.RenderPartial("PTN_Menu_221_Partial"); }
+	</div>
+	@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "PTN_Menu_221" })
+	@Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId)
+	@Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock())
+	@Html.AntiForgeryToken()
+}
+
+
+
+<script>
+	$(document).ready(function () {
+		window.Form_PTN_Menu_221 = new QMenuForm($('[data-form="PTN_Menu_221"]'), "Form_PTN_Menu_221");
+		window.Form_PTN_Menu_221.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_PTN_Menu_221.Init();
+
+		//Initialize search field menu for search bar
+		InitSearchFieldMenu("qPTN_Menu_221");
+		RegisterClearEvents("PTN_Menu_221")
+
+		// TVC - added code to load advanced filters after returning from a form
+		@{
+			string advFil = "";
+			if (!String.IsNullOrEmpty(Navigation.GetStrValue("AdvancedFilters")))
+			{
+				advFil = Navigation.GetStrValue("AdvancedFilters");
+			}
+		}
+
+		SearchFilters.value = '@Html.Raw(advFil)';
+		if (typeof SearchFilters.value === 'string' && SearchFilters.value.length > 0)
+			UpdateSearchFilterStatus("PTN_Menu_221", JSON.parse(SearchFilters.value))
+	});
+</script>
+
+@helper codeJavascript()
+{
+<script>
+	QLocalStorage.remLocalStorage("savedInfo");
+	$(document).ready(function (e) {
+		InitSpecialControls($('[data-form="PTN_Menu_221"]'));
+
+
+ 	});
+
+	function InitMenuSpecialControls() {
+		InitSpecialControls($('[data-form="PTN_Menu_221"]'));
+	}
+
+</script>
+}
+
+@section code_javascript {
+	@codeJavascript()
+}

@@ -1,0 +1,156 @@
+﻿@model GenioMVC.Models.LogOnModel
+
+@{
+	ViewBag.Title = @Resources.AREA_DE_AUTENTICACAO12342;
+    var RegisterBtnClasses = GenioMVC.LayoutConfig.config.userRegisterStyle.Equals(GenioMVC.UserRegisterStyle.button) ? "b-icon-text b-btn--full-width text-uppercase col-auto" : "f-login__link text-uppercase";
+}
+<script src="@Url.Content(UrlNames.QuidgestWebAuth)" type="application/javascript"></script>
+@* USE /[MANUAL GQT CUSTOM_LOGON_VIEW]/ *@
+<div class="f-login">
+    <div class="f-login__container">
+        <div class="f-login__background">
+            <div class="f-login__brand">
+                <img src="@Url.Content("~/Content/img/f-login__brand.png")" alt="">
+                <p>@Resources.GENIO_QUALITY_TESTS30896</p>
+            </div>
+            <div id="loginContain">
+                @using (Ajax.BeginForm("LogOn", "Account", new { ReturnUrl = Request.QueryString["ReturnUrl"] }, new AjaxOptions { OnBegin="startLoading" , OnSuccess = "loginSuccess", OnFailure="endLoading" }))
+                {
+                    <div id="loginFormx">
+                        <fieldset>
+                            <div class="form-flow">
+								@if ((Model.OpenIdConnAuthMethods != null && Model.OpenIdConnAuthMethods.Count != 0) || (Model.CASAuthMethods != null && Model.CASAuthMethods.Count != 0) || (Model.CMDAuthMethods != null && Model.CMDAuthMethods.Count != 0) )
+								{
+									foreach (string idMethod in Model.OpenIdConnAuthMethods)
+									{
+										@Html.ActionLink(String.IsNullOrEmpty(idMethod) ? "OpenId Connect Auth" : idMethod, "OpenIdLoginRedirect", "Account", new { id = idMethod }, new { @class = "b-icon-text b-btn--full-width b-icon-text--primary b-icon-text--login b-openid-" + CSGenio.framework.StringUtils.RemoveDiacritics(idMethod) })
+									}
+									foreach (string idMethod in Model.CASAuthMethods)
+									{
+										@Html.ActionLink(String.IsNullOrEmpty(idMethod) ? "CAS Protocol" : idMethod, "CASLoginRedirect", "Account", new { id = idMethod }, new { @class = "b-icon-text b-btn--full-width b-icon-text--primary b-icon-text--login b-openid-" + CSGenio.framework.StringUtils.RemoveDiacritics(idMethod) })
+									}
+                                    foreach (string idMethod in Model.CMDAuthMethods)
+                                    {
+                                        @Html.ActionLink(String.IsNullOrEmpty(idMethod) ? "CMD Protocol" : idMethod, "CMDLoginRedirect", "Account", new { id = idMethod }, new { @class = "b-icon-text b-btn--full-width b-icon-text--primary b-icon-text--login b-openid-" + CSGenio.framework.StringUtils.RemoveDiacritics(idMethod) })
+                                    }
+									<hr />
+								}
+                                <div class="input-group f-login__input-group">
+                                    <div class="i-input-group--left">
+                                        <span class="i-input-group__tag f-login__input-tag">
+                                            <i class="glyphicons glyphicons-user f-login__input-icon"></i>
+                                        </span>
+                                    </div>
+                                    @Html.TextBoxFor(m => m.UserName, new { placeholder = @Resources.UTILIZADOR52387, @class = "form-control f-login__input-field" })
+                                </div>
+                                <div class="input-group f-login__input-group">
+                                    <div class="i-input-group--left">
+                                        <span class="i-input-group__tag f-login__input-tag">
+                                            <i class="glyphicons glyphicons-lock f-login__input-icon"></i>
+                                        </span>
+                                    </div>
+                                    @Html.PasswordFor(m => m.Password, new { autocomplete = "off" , @class = "form-control f-login__input-field" , placeholder = @Resources.PALAVRA_CHAVE39832 })
+									@if (GenioMVC.LayoutConfig.config.showPasswordToggle)
+									{
+										<div class="i-input-group--right">
+											<span class="i-input-group__tag f-login__input-tag">
+												<i class="glyphicons glyphicons-eye-open f-login__input-icon" id="passwordtoggle" onclick="togglePassword()"></i>
+											</span>
+										</div>
+									}
+                                </div>
+                                <button type="submit" class="b-icon-text b-btn--full-width b-icon-text--primary b-icon-text--login text-uppercase">@Resources.ENTRAR16118</button>
+                                <div class="validation-summary-valid" id="formLoginValidation"></div>
+                                <div>
+                                    <div>
+                                        <div>
+                                            <div id="register-btn">
+                                                <a class="@RegisterBtnClasses" id="linkRegister" href="@Url.Action("Register",new { form = "Pess1",  Pswform = "Defaultpsw", Id = "b19bed66-a6e9-4494-92e5-78deac2ba837"})" aria-expanded="false">
+                                                   @Resources.REGISTAR62252
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @if (Model.HasPasswordRecovery)
+                            {
+                                <div class="col-auto">
+                                    <a class="f-login__link" id="linkPasswordRecovery" href="@Url.Action("RecoverPassword")">@Resources.FORGOT_PASSWORD_30473</a>
+                                </div>
+                            }
+                            @Html.AntiForgeryToken()
+                        </fieldset>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="myModal" class="modal container hide">
+    <div class="c-modal__dialog c-modal--lg">
+        <div class = "c-modal__content">
+            <div class="c-modal__header-title">
+                <h4 class="c-modal__header-title">Registos</h4>
+            </div>
+
+            <div elem-identifier="ModalBody" class="c-modal__body">
+                <a class="btn btn-block " rel="popover" href="@Url.Action("Register",new { form = "Pess1"})" data-original-title="A Title" data-container="body">
+                    REGISTO DE NOVO UTILIZADOR
+                </a>
+            </div>
+
+            <div class="c-modal__footer">
+                <div class="actions">
+                    <a href="#" class="b-icon-text b-icon-text--primary" data-dismiss="modal"> @Resources.FECHAR32496</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function startLoading() {
+        QAnimation.addLoading(500);
+    }
+
+    function endLoading() {
+        QAnimation.removeLoading();
+    }
+
+	function loginSuccess(data) {
+        QAnimation.removeLoading();
+		if (data.Success) {
+            if (data.Auth2FA && !data.Val2FA) {
+                if (data.User.Auth2FATp == "TOTP")
+                    bootbox2FA(data);
+                else if (data.User.Auth2FATp == "WebAuth")
+                    handleSignInWebAuth(data);
+            }
+            else
+				window.location = data.Redirect;
+		}
+		else
+        {
+            var message = (data && data.Message) ? data.Message : '@Html.Raw(@Resources.PEDIMOS_DESCULPA__OC63848)';
+            $("#formLoginValidation").html('<i class="glyphicons glyphicons-light-beacon e-icon"></i> ' + message);
+            $("#formLoginValidation").addClass("i-text__error");
+        }
+	}
+	
+	function togglePassword() {
+        if ($('#Password').attr('type') == 'text') {
+            $('#Password').attr('type', 'password');
+            $('#passwordtoggle').removeClass('glyphicons glyphicons-eye-close')
+            $('#passwordtoggle').addClass('glyphicons glyphicons-eye-open')
+        }
+        else {
+            $('#Password').attr('type', 'password');        
+            $('#Password').attr('type', 'text');
+            $('#passwordtoggle').removeClass('glyphicons glyphicons-eye-open')
+            $('#passwordtoggle').addClass('glyphicons glyphicons-eye-close')
+        }            
+    }
+</script>

@@ -1,0 +1,85 @@
+﻿@model GenioMVC.ViewModels.Dashboard.DashboardViewModel
+
+<div id="dashboard">
+	<div class="c-action-bar d-flex">
+		<span class="form-header">
+			<i class="icon- ViewMode-show"></i><h1>@ViewBag.Title</h1>
+		</span>
+		<div class="dashboard-controls">
+			<div id="dashboard-view-mode-controls" class="b-btn-group">
+				<button id="dashboard-edit-btn" class="b-btn b-icon b-icon--secondary" title="@Resources.EDITAR11616" type="button">
+					<i class="glyphicons glyphicons-pencil e-icon"></i>
+				</button>
+			</div>
+			<div id="dashboard-edit-mode-controls" class="b-btn-group" style="display: none">
+				<button id="dashboard-compact-btn" class="b-btn b-icon b-icon--secondary" title="@Resources.COMPACTAR38838" type="button">
+					<i class="glyphicons glyphicons-fit-frame-to-image e-icon"></i>
+				</button>
+				<button id="dashboard-save-btn" class="b-btn b-icon b-icon--secondary" title="@Resources.GRAVAR45301" type="button">
+					<i class="glyphicons glyphicons-floppy-disk e-icon"></i>
+				</button>
+				<button id="dashboard-cancel-btn" class="b-btn b-icon b-icon--secondary" title="@Resources.CANCELAR49513" type="button">
+					<i class="glyphicons glyphicons-ban-circle e-icon"></i>
+				</button>
+			</div>
+		</div>
+	</div>
+	<div class="grid-stack grid-stack-disabled">
+		<div id="no-widgets">
+			<img style="width: 18rem"
+				 src="~/Content/img/NoWidgets.png"
+				 alt="@Model.Texts["NO_DATA"]" />
+
+			<h5 style="font-weight: bold">@Model.Texts["NO_DATA"]</h5>
+
+			<button class="b-btn b-icon b-icon--primary" type="button">
+				<i class="glyphicons glyphicons-pencil e-icon"></i>
+                @Model.Texts["ADD_WIDGET"]
+			</button>
+		</div>
+	</div>
+</div>
+
+@Scripts.Render("~/Scripts/gridstack/gridstack-h5.js")
+
+<script>
+	// Init gridstack
+	let grid = GridStack.init({
+		cellHeight: '90px',
+		animate: true,
+		disableOneColumnMode: true,
+		float: true,
+		disableDrag: true,
+		disableResize: true,
+	});
+		
+	$(document).ready(function () {
+		const dashboard = new QDashboard({
+			grid: grid,
+			uuid: "@Model.uuid",
+			widgets: @Html.Raw(Json.Encode(Model.Widgets)),
+			groups: @Html.Raw(Json.Encode(Model.WidgetGroups)),
+			urlActions: {
+				RenderWidget: "@Url.Action(Model.Action + "_Widget_", "Dashboard")",
+				RenderAlertWidget: "@Url.Action("RenderAlertWidget", "Dashboard")",
+				RenderMenuWidget: "@Url.Action(Model.Action + "_RenderMenuWidget", "Dashboard")",
+				GetWidgetData: "@Url.Action(Model.Action + "_GetWidgetData", "Dashboard")",
+				SaveConfiguration: "@Url.Action("Save", "Dashboard")"
+			},
+			texts: @Html.Raw(Json.Encode(Model.Texts)),
+		});
+
+		window.addEventListener("beforeunload", function (e) {
+			if (!dashboard.InEditMode)
+				return undefined;
+
+			// If we haven't been passed the event get the window.event
+			e = e || window.event;
+			var message = quidgestGlobals.Resources.FORMLOCK;
+			// For IE6-8 and Firefox prior to version 4
+			if (e) { e.returnValue = message; }
+			// For Chrome, Safari, IE8+ and Opera 12+
+			return message;
+		});
+	});
+</script>

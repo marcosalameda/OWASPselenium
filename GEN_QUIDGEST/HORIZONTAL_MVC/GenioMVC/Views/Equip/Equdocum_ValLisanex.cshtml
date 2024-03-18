@@ -1,0 +1,117 @@
+﻿@model GenioMVC.ViewModels.Equip.Equdocum_ValLisanex_ViewModel
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@using Newtonsoft.Json;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@*List properties DBEDIT BUTTONS*@
+<div class="row">
+	<div class="col">
+		<div elem-identifier="List" data-toggle="tooltip" help-id="IFF_EQUDOCUMPSEUDLISANEX_" data-placement="top" title="@Resources._112342843" description="@Resources._1123_VERBOSE41412"  style="padding-top: 0.5rem;"><label class = "i-text__label table-title c-table__title" > <h2>@Resources.DIGITAL_ATTACHEMENTS44886</h2> </label></div>
+	</div>
+</div>
+
+@* USE /[MANUAL GQT TABLE_FOR EQUDOCUM_LISANEX]/ *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@using GenioMVC.ViewModels.Anexd;    
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Anexd>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodanexd, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN EQUDOCUM_LISANEX_ANEXD_DTHRANEX]/
+		column.Expression(p => p.ValDthranex).Title(@Resources.ATTACHED26247).Field("ValDthranex").Size(16);
+// USE /[MANUAL GQT CUSTOM_COLUMN EQUDOCUM_LISANEX_ANEXD_TITLE]/
+		column.Expression(p => p.ValTitle).Title(@Resources.TITLE21885).Field("ValTitle").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN EQUDOCUM_LISANEX_ANEXD_DOCUMENT]/
+		column.Expression(p => p.ValDocument).Title(@Resources.DOCUMENT00695).Field("ValDocument").Size(30).Document(p => Url.Action("GetFile", "Anexd", new { ticket = p.GetTicketForDocField("ValDocument"), viewType = (int)CSGenio.framework.DocumentViewTypeMode.Print}));
+// USE /[MANUAL GQT CUSTOM_COLUMN EQUDOCUM_LISANEX_ANEXD_TITTRADU]/
+		column.Expression(p => p.ValTittradu).Title(@Resources.TRANSLATED_TITLE58577).Field("ValTittradu").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN EQUDOCUM_LISANEX_ANEXD_REFERENC]/
+		column.Expression(p => p.ValReferenc).Title(@Resources.REFERENCE28402).Field("ValReferenc").Size(30);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Anexd")
+        .Id("ValLisanex")
+        .AjaxRequest("Equdocum_ValLisanex")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .TableList(hasFilters: false)
+        .RequestLink(@Url.Action("Equdocum_ValLisanex", new { id = Model.ValCodequip, partialView = "Equdocum_ValLisanex"}))
+        .Form("Anexd", false, false)
+        .SetFollowUp("Anexd_Show", "Anexd" , (Func<GenioMVC.Models.Anexd, object>)(item => new { id = item.ValCodanexd }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
+        .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
+		;
+        
+}
+
+@tbl.ToHtml()
+
+<script>
+
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qValLisanex, #ValLisanex_complex_filter th input, #ValLisanex_filters input").change(function() {
+                    $("#pValLisanex").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#ValLisanex_tableFilters').val(false);")
+                    @Html.Raw("$('#ValLisanex_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#ValLisanex_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $('#ValLisanex_complex_filter button#applyComplexFilter').click();
+                    @:      event.preventDefault();
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#ValLisanex_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_ValLisanex').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+
+
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='ValLisanex']"));
+                    InitSpecialControls($('#ValLisanex'));
+                    $('#ValLisanex').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS EQUDOCUM_VALLISANEX]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+</script>

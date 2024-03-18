@@ -1,0 +1,53 @@
+/* Google Maps
+-----------------------------------------------------------*/
+$google_maps_height: 400px;
+$google_maps_search_width: 30%;
+$google_maps_search_height: 35px;
+
+.gmaps {
+    height: $google_maps_height;
+}
+
+.map_container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 24%;
+
+    & .map_canvas {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        margin: 0;
+        padding: 0;
+        max-height: $google_maps_height;
+
+        & .controls {
+            margin-top: 16px;
+            border: 1px solid transparent;
+            border-radius: 2px 0 0 2px;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            height: 30px;
+            outline: none;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        & #pac-input {
+            background-color: #fff;
+            font-family: Roboto;
+            font-size: 15px;
+            font-weight: 300;
+            margin-left: 12px;
+            padding: 0 11px 0 13px;
+            text-overflow: ellipsis;
+            width: $google_maps_search_width;
+            height: $google_maps_search_height;
+
+            &:focus {
+                border-color: #4d90fe;
+            }
+        }
+    }
+}

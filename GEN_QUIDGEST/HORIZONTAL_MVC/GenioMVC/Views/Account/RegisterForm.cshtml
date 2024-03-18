@@ -1,0 +1,66 @@
+﻿@model GenioMVC.Models.RegisterModel
+
+@{
+    ViewBag.Form = "Registro";
+    ViewBag.Title = @Resources.REGISTE_SE48908;
+    ViewBag.formmode = "Registro";
+    ViewBag.ClassForFormLayout = "form-flow";
+}
+
+    <div class="well nested-form" id="Registro_well" area="Registro" data-form="Registro">        
+        @LoadDefault()
+    </div>
+
+@helper form_content_body()
+{
+    <div>
+        <fieldset>
+            <legend>@Resources.INFORMACOES_DE_CONTA48032</legend>
+            <div>
+                @Html.LabelFor(m => m.UserName)
+                <div class="input">
+                    @Html.TextBoxFor(m => m.UserName)
+                    @Html.ValidationMessageFor(m => m.UserName)
+                </div>
+            </div>
+            <div>
+                @Html.LabelFor(m => m.Email)
+                <div class="input">
+                    @Html.TextBoxFor(m => m.Email)
+                    @Html.ValidationMessageFor(m => m.Email)
+                </div>
+            </div>
+            <div>
+                @Html.LabelFor(m => m.Password)
+                <div class="input">
+                    @Html.PasswordFor(m => m.Password, new { autocomplete = "off" })
+                    @Html.ValidationMessageFor(m => m.Password)
+                </div>
+            </div>
+            <div>
+                @Html.LabelFor(m => m.ConfirmPassword)
+                <div class="input">
+                    @Html.PasswordFor(m => m.ConfirmPassword, new { autocomplete = "off" })
+                    @Html.ValidationMessageFor(m => m.ConfirmPassword)
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="row-fluid">
+                    @Html.PasswordMeter(m => m.Password)
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    
+    //@Html.AntiForgeryToken()
+}
+
+
+@helper LoadDefault()
+{
+    <fieldset>
+        <div class="@ViewBag.ClassForFormLayout">
+            @form_content_body()
+        </div>
+    </fieldset>
+}

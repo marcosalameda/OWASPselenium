@@ -1,0 +1,243 @@
+﻿@model GenioMVC.ViewModels.Menu_ViewModel
+
+@helper MakeLink(GenioMVC.Helpers.Menus.MenuEntry menu, string module, bool firstLevel = false)
+{
+var innerHtml = "";
+
+object htmlProperties = null;
+if (firstLevel)
+{
+    htmlProperties = new { @class = "nav-link dropdown-toggle", data_toggle = "dropdown" };
+}
+
+if (menu.Action != null && menu.Action.Contains("Menu") && menu.TreeLevel == 1)
+{
+    htmlProperties = new { @class = "nav-link" };
+}
+else if (menu.Action != null && !menu.Action.Contains("Menu") && menu.TreeLevel > 1)
+{
+    htmlProperties = new { @class = "dropdown-submenu" };
+}
+else if (menu.TreeLevel > 1)
+{
+    htmlProperties = new { @class = "dropdown-item" };
+}
+
+if (!String.IsNullOrEmpty(menu.Image))
+{
+    TagBuilder i = new TagBuilder("i");
+    i.AddCssClass("icon-custom");
+
+    TagBuilder img = new TagBuilder("img");
+    img.MergeAttribute("src", Url.Content(menu.Image));
+    img.MergeAttribute("style", "vertical-align:text-top;");
+    img.MergeAttribute("height", "14");
+
+    try { img.MergeAttribute("alt", "icon-" + Helpers.GetTextFromResources(menu.Title)); }
+    catch (Exception) { img.MergeAttribute("alt", "icon-" + menu.Title); }
+
+    i.InnerHtml += img;
+
+    innerHtml += i + " ";
+}
+else if (!String.IsNullOrEmpty(menu.Font))
+{
+    TagBuilder i = new TagBuilder("i");
+    i.AddCssClass(menu.Font + " dropdown__icon");
+    innerHtml += i;
+}
+try
+{
+    innerHtml += Helpers.GetTextFromResources(menu.Title);
+    if(menu.Count > 0)
+    {
+        //a.InnerHtml += " (<u>" + menu.Count + "</u>)";
+        innerHtml += " <span class=\"e-badge e-badge--dark\" title=\"(" + menu.Count + " " + @Resources.REGISTOS53981 + ")\"><span aria-hidden=\"true\">" + menu.Count + "</span></span>";
+    }
+}
+catch (Exception) { innerHtml += menu.Title; }
+@Html.MenuAction(menu, Url, module, innerHtml, htmlProperties);
+}
+
+@helper ShowSubItems(GenioMVC.Helpers.Menus.MenuEntry menu, string module, int level, bool root)
+{
+    string extra = root ? "dropdown" : "dropdown-submenu";
+    extra = menu.Children.Count > 0 ? extra : "";
+    if (menu.Separates && !root)
+    {
+        <li class='dropdown-divider'></li>
+    }
+    <li class='@extra'>
+        @if (menu.Children.Count > 0)
+        {
+            @MakeLink(menu, module, level == 0)
+
+            string sMenu = "dropdown-menu";
+
+            <ul class="@sMenu">
+                @foreach (GenioMVC.Helpers.Menus.MenuEntry subMenu in menu.Children)
+                {
+                    if (subMenu.Type == "ITEM")
+                    {
+                        @ShowSubItems(subMenu, module, level + 1, false)
+                    }
+                    else if (subMenu.Type == "LIST")
+                    {
+                        Html.RenderAction(subMenu.Action_MVC, subMenu.Controller);
+                    }
+                    else if (subMenu.Type == "REPORT")
+                    {
+                        <li>
+                            @MakeLink(subMenu, module)
+                        </li>
+                    }
+                }
+            </ul>
+
+        }
+        else
+        {
+            @MakeLink(menu, module)
+            // @Html.ActionLink(menu.Title, menu.Action_MVC, menu.Controller, new { module = module }, null);
+        }
+    </li>
+}
+
+@helper SearchBox()
+{
+    <div class="d-flex nav-item w-100 align-items-center flex-row-reverse">
+        <div id="MenuSearchGroup" class="float-right menu-search__group">
+
+            <div class="i-input-group">
+				@* Added to allow closing searchbar and setting focus back to search toggle when tabbing off *@
+				<button class="hidden-btn" onfocus="ToggleSearchMenuOff();document.getElementById('ToggleMenuSearchButton').focus();" aria-hidden="true"><span class="hidden-elem">X</span></button>
+
+				<input class="i-input-group__field" id="MenuSearchInput" name="menuSearchInput" onkeyup="SearchMenu()" title="@Resources.PESQUISA_DE_MENUS30314" type="text" value="">
+                <div class="i-input-group--right">
+                    <button type="button" id= "MenuSearchButton" elem-identifier="MenuSearchButton" class="b-icon--secondary i-input-group__button--secondary " title="@Resources.PESQUISAR34506" onclick="SearchMenu()"><i class="glyphicons glyphicons-search i-input-group__tag-icon i-input-group__button-icon"></i></button>
+                </div>
+
+				@* Added to allow closing searchbar and setting focus back to search toggle when tabbing off *@
+				<button class="hidden-btn" onfocus="ToggleSearchMenuOff();document.getElementById('ToggleMenuSearchButton').focus();" aria-hidden="true"><span class="hidden-elem">X</span></button>
+            </div>
+
+            <div class="w-100 position-relative">
+                <div id="SearchMenuArea" class="menu-search__area position-absolute w-100"></div>
+            </div>
+        </div>
+    </div>
+}
+
+@helper DrawMenu()
+{
+    string menuAlignClass = "navbar-nav nav mr-auto w-100";
+    if (GenioMVC.LayoutConfig.config.menuAlign.Equals(GenioMVC.MenuAlign.right))
+    {
+        menuAlignClass = "navbar-nav nav ml-auto";
+    }
+    <ul id="menuNavbar" class="@menuAlignClass">
+        @{
+            int x = 0;
+
+            foreach (GenioMVC.Helpers.Menus.MenuEntry menu in Model.MenuList)
+            {
+                @ShowSubItems(@menu, @Model.CurrentModule, x, true)
+            }
+            if (GenioMVC.LayoutConfig.config.MenuSearchEnable)
+            {
+                @SearchBox()
+            }
+        }
+    </ul>
+    if(GenioMVC.LayoutConfig.config.MenuSearchEnable)
+    {
+    <a id="ToggleMenuSearchButton" title="@Resources.PROCURAR15982" href="javascript:ToggleSearchMenuOn()" style="border: 0; background-color: transparent;"><i class="b-btn glyphicons glyphicons-search n-menu__aside-icon"></i><span class="hidden-elem">@Resources.PROCURAR15982</span></a>
+    }
+}
+
+@{
+    @DrawMenu()
+}
+
+
+<script type="text/javascript">
+    var currentSearchRequest = null;
+
+    function SearchMenu() {
+        var searchText = $("#MenuSearchInput").val();
+        if (!searchText) {
+            var area = $("#SearchMenuArea");
+            area.empty();
+            area.parent().previous().show();
+            return;
+        }
+        currentSearchRequest = $.ajax({
+            url: '@Url.Action("Search", "MenuSearch")',
+            data: { searchString: searchText },
+            //Abort previous request
+            beforeSend: function () {
+                if(currentSearchRequest != null) {
+                    currentSearchRequest.abort();
+                    currentSearchRequest = null;
+                }
+            },
+            success: function (data) {
+                var area = $("#SearchMenuArea");
+                area.html(data);
+                $.SpecialMenus();
+
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        $("#MenuSearchGroup").hide();
+        $("#ExitMenuSearch").hide();
+
+		$(".dropdown").on("hide.bs.dropdown", function () {
+            $(this).find(".dropdown-submenu").removeClass('left');
+            $(this).find('.dropdown-submenu ul.dropdown-menu').css("display", "none");
+		});
+
+        $('.dropdown-submenu .dropdown-item').click(function (e) {
+            $('.dropdown-submenu ul.dropdown-menu', $(this).closest('.dropdown-menu')).css("display", "none");
+            $(this).next('ul.dropdown-menu').css("display", "block");
+
+            var scrWidth = $(document).width();
+			if (scrWidth > 768) {
+				var scrWindow = $("body").prop("clientWidth");
+				if (scrWidth > scrWindow) {
+					$(this).addClass('left');
+					$(this).find(".dropdown-submenu").addClass('left');
+					$(this).closest(".dropdown-submenu").addClass('left');
+				}
+			}
+
+            e.stopPropagation();
+        });
+    });
+
+    var offHandler = function (event) {
+        if ($(event.target).closest("#MenuSearchGroup").length === 0) {
+            $(document).unbind('click', offHandler);
+            ToggleSearchMenuOff();
+        }
+    }
+
+
+    function ToggleSearchMenuOn() {
+        $("#MenuSearchGroup").show();
+        $("#ToggleMenuSearchButton").hide();
+        $("#menuNavbar > li").hide();
+        $("#ExitMenuSearch").show();
+        $("#MenuSearchInput").focus();
+        $(document).bind('click', offHandler);
+    }
+
+    function ToggleSearchMenuOff() {
+        $("#MenuSearchGroup").hide();
+        $("#ToggleMenuSearchButton").show();
+        $("#menuNavbar > li").show();
+        $("#ExitMenuSearch").hide();
+    }
+</script>

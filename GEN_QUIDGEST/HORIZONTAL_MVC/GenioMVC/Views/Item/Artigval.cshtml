@@ -1,0 +1,307 @@
+﻿@model GenioMVC.ViewModels.Item.Artigval_ViewModel
+@using GenioMVC.Models.Navigation;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Title = @Resources.ITEM40802;
+	ViewBag.formmode = Model.GetFormMode;
+}
+
+<div class="c-modal__dialog c-modal--lg">
+	@using (Ajax.BeginForm("Action", "Item", null, new AjaxOptions { UpdateTargetId = "form-modal" }, new { @class = "c-modal__content", area = "Item", data_form = "Artigval" }))
+	{
+		<div class="c-modal__content">
+			<div class="c-modal__header" elem-identifier="modal-header">
+				@form_header()
+			</div>
+			<div elem-identifier="ModalBody" class="c-modal__body">
+				<div class="form-flow">
+					@form_body()
+				</div>
+			</div>
+			<div class="c-modal__footer">
+				<div elem-identifier="Actions" class="actions" data-form-actions="Artigval">
+					@form_footer()
+				</div>
+			</div>
+		</div>
+	}
+</div>
+
+@helper form_header() {
+	@* BEGIN MVC Flash messages *@
+	@Html.Action("Index", "Messages")
+	@* END MVC Flash messages *@
+		<div class="c-modal__header-title">
+			<div class="d-flex">
+				<div class="c-action-bar d-flex">
+					<i class="form-popup-header-legend icon-@ViewBag.formmode ViewMode-@ViewBag.formmode"></i><h2>@ViewBag.Title</h2>
+					<div data-parent-form="Artigval" data-q-ref="form-btns-main_container"></div>
+				</div>
+			</div>
+		</div>
+}
+
+@helper form_body() {
+	@form_content_alert()
+	@Html.QValidationSummary()
+	<fieldset>
+		<legend class="hidden-elem">@ViewBag.Title</legend>
+		<div class="form-flow">
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-image draggable " id="CONTAINER_LED_ARTIGVALITEM_IMAGE___">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValImage, new { label_id="LED_ARTIGVALITEM_IMAGE___", @class = " i-text__label", id="LABEL_LED_ARTIGVALITEM_IMAGE___"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_ARTIGVALITEM_IMAGE___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								<div data-identifier="LED_ARTIGVALITEM_IMAGE___" pers-cs-area="Item" pers-cs-field="ValImage" class="image-control-wrapper" >
+								@if(Model.IsEditableMode) {
+									@Html.EditorFor(m => m.ValImage, new {help_id = "LED_ARTIGVALITEM_IMAGE___", @class = "col-auto ", data_identifier = "LED_ARTIGVALITEM_IMAGE___", title = @Resources.IMAGE65174, guid = @Model.ValCoditem, controller = "Item", fldname = "ValImage", identifier = "FARTIGVAL", style = "height: 47pt; display: inline-block;" })
+								} else {
+									@Html.DisplayFor(m => m.ValImage, new {help_id = "LED_ARTIGVALITEM_IMAGE___", @class = "col-auto ", data_identifier = "LED_ARTIGVALITEM_IMAGE___", title = @Resources.IMAGE65174, guid = @Model.ValCoditem, controller = "Item", fldname = "ValImage", identifier = "FARTIGVAL", style = "height: 47pt; display: inline-block;" })
+								}
+								</div>
+								@Html.ValidationMessageFor(model => model.ValImage)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-dbedit draggable " id="CONTAINER_IFF_ARTIGVALGITEMITEMDES_">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.TableGitemItemdes, new { label_id="IFF_ARTIGVALGITEMITEMDES_", @class = " i-text__label", id="LABEL_IFF_ARTIGVALGITEMITEMDES_"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('IFF_ARTIGVALGITEMITEMDES_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DropDownListFor(model => model.ValCodgitem, Model.TableGitemItemdes.List , "", new {help_id = "IFF_ARTIGVALGITEMITEMDES_", @class = "i-select chosen-dropdown input-xxlarge", data_identifier = "IFF_ARTIGVALGITEMITEMDES_", @pers_cs_area = "Gitem", @pers_cs_field = "ValCodgitem", @db_field = "ValCodgitem", @db_full_field_name = "item.codgitem", data_has_more = Model.TableGitemItemdes.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableGitemItemdes.Selected, data_dbedit_value = Model.TableGitemItemdes.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCoditem, @data_see_more = "Artigval_GitemValItemdes", title = @Resources.GLOBAL_ITEM49586, data_see_more_url = @Url.Action("Artigval_GitemValItemdes","Item"), data_is_dbedit = "true", data_fields = "gitem.codgitem,gitem.itemdes", data_main_field = "Gitem.ValItemdes", data_elements = 0, data_filled_by_history = Model.TableGitemItemdes.FilledByHistory, @dependant_fields = "gitem.codgitem,gitem.itemdes,gitem.itemgcod" })
+								@Html.ValidationMessageFor(model => model.TableGitemItemdes)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-dbedit draggable " id="CONTAINER_IFF_ARTIGVALWAREHWAREHDES">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.TableWarehWarehdes, new { label_id="IFF_ARTIGVALWAREHWAREHDES", @class = " i-text__label", id="LABEL_IFF_ARTIGVALWAREHWAREHDES"}, true, true)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('IFF_ARTIGVALWAREHWAREHDES','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DropDownListFor(model => model.ValCodwareh, Model.TableWarehWarehdes.List , "", new {help_id = "IFF_ARTIGVALWAREHWAREHDES", @class = "i-select chosen-dropdown input-xxlarge", data_identifier = "IFF_ARTIGVALWAREHWAREHDES", @pers_cs_area = "Wareh", @pers_cs_field = "ValCodwareh", @db_field = "ValCodwareh", @db_full_field_name = "item.codwareh", data_has_more = Model.TableWarehWarehdes.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableWarehWarehdes.Selected, data_dbedit_value = Model.TableWarehWarehdes.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCoditem, @data_see_more = "Artigval_WarehValWarehdes", title = @Resources.WAREHOUSE51864, data_see_more_url = @Url.Action("Artigval_WarehValWarehdes","Item"), data_is_dbedit = "true", data_fields = "wareh.codwareh,wareh.warehdes", data_main_field = "Wareh.ValWarehdes", data_elements = 0, data_filled_by_history = Model.TableWarehWarehdes.FilledByHistory, @dependant_fields = "wareh.codwareh,wareh.warehdes" })
+								@Html.ValidationMessageFor(model => model.TableWarehWarehdes)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-dbedit draggable " id="CONTAINER_LED_ARTIGVALITEM_ITEMTYPE">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValItemtype, new { label_id="LED_ARTIGVALITEM_ITEMTYPE", @class = " i-text__label", id="LABEL_LED_ARTIGVALITEM_ITEMTYPE"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_ARTIGVALITEM_ITEMTYPE','Tipoarti')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.ArrayDropDownListFor(model => model.ValItemtype, Model.List_ValItemtype, CSGenio.business.ArrayTipoarti.GetElement, "", new {help_id = "LED_ARTIGVALITEM_ITEMTYPE", @class = "i-select chosen-dropdown input-small", data_identifier = "LED_ARTIGVALITEM_ITEMTYPE", @pers_cs_area = "Item", @pers_cs_field = "ValItemtype", @db_field = "ValItemtype", title = @Resources.TIPO55111, data_array_type = "AC", data_placeholder = @Resources.ESCOLHA___40245, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_value = Model.List_ValItemtype.SelectedValue, data_is_array = "true" })
+								@Html.ValidationMessageFor(model => model.ValItemtype)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_ARTIGVALITEM_ITEMCOD_">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValItemcod, new { label_id="LED_ARTIGVALITEM_ITEMCOD_", @class = " i-text__label", id="LABEL_LED_ARTIGVALITEM_ITEMCOD_"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_ARTIGVALITEM_ITEMCOD_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextBoxFor(model => model.ValItemcod, new {help_id = "LED_ARTIGVALITEM_ITEMCOD_", @class = "i-text__field i-text input-medium", data_refresh = "true", data_tipoform = "DF", data_identifier = "LED_ARTIGVALITEM_ITEMCOD_", @pers_cs_area = "Item", @pers_cs_field = "ValItemcod", @db_field = "ValItemcod", title = @Resources.CODE49225, maxlength = "15", rows = "15" })
+								@Html.ValidationMessageFor(model => model.ValItemcod)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_ARTIGVALITEM_ITEMDES_">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValItemdes, new { label_id="LED_ARTIGVALITEM_ITEMDES_", @class = " i-text__label", id="LABEL_LED_ARTIGVALITEM_ITEMDES_"}, true, true)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_ARTIGVALITEM_ITEMDES_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextBoxFor(model => model.ValItemdes, new {help_id = "LED_ARTIGVALITEM_ITEMDES_", @class = "i-text__field i-text input-xxlarge", data_refresh = "true", data_tipoform = "DF", data_identifier = "LED_ARTIGVALITEM_ITEMDES_", @pers_cs_area = "Item", @pers_cs_field = "ValItemdes", @db_field = "ValItemdes", title = @Resources.ITEM40802, maxlength = "85", rows = "85" })
+								@Html.ValidationMessageFor(model => model.ValItemdes)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-date-picker draggable " id="CONTAINER_LED_ARTIGVALITEM_DATE____">
+								<div class="d-inline-flex">
+								@Html.LabelFor(model => model.ValDate, new { label_id="LED_ARTIGVALITEM_DATE____", @class = " i-text__label", id="LABEL_LED_ARTIGVALITEM_DATE____"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_ARTIGVALITEM_DATE____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DateFor(model => model.ValDate, new {help_id = "LED_ARTIGVALITEM_DATE____", @class = "i-input-group__field b-icon-text input-small", data_identifier = "LED_ARTIGVALITEM_DATE____", @pers_cs_area = "Item", @pers_cs_field = "ValDate", @db_field = "ValDate", title = @Resources.DATE18475 })
+								@Html.ValidationMessageFor(model => model.ValDate)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_ARTIGVALITEM_ENTRIES_">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValEntries, new { label_id="LED_ARTIGVALITEM_ENTRIES_", @class = " i-text__label", id="LABEL_LED_ARTIGVALITEM_ENTRIES_"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_ARTIGVALITEM_ENTRIES_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValEntries, new {help_id = "LED_ARTIGVALITEM_ENTRIES_", @class = "Number text-right i-text__field i-text input-small", data_refresh = "true", data_tipoform = "SR", data_identifier = "LED_ARTIGVALITEM_ENTRIES_", @pers_cs_area = "Item", @pers_cs_field = "ValEntries", @db_field = "ValEntries", fixed_field = "true", @readonly = "readonly", title = @Resources.ENTRIES32319, data_number_integer = "10", data_number_decimals = "0", data_number_format = "9999999999" })
+								@Html.ValidationMessageFor(model => model.ValEntries)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_ARTIGVALITEM_EXITS___">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValExits, new { label_id="LED_ARTIGVALITEM_EXITS___", @class = " i-text__label", id="LABEL_LED_ARTIGVALITEM_EXITS___"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_ARTIGVALITEM_EXITS___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValExits, new {help_id = "LED_ARTIGVALITEM_EXITS___", @class = "Number text-right i-text__field i-text input-small", data_refresh = "true", data_tipoform = "SR", data_identifier = "LED_ARTIGVALITEM_EXITS___", @pers_cs_area = "Item", @pers_cs_field = "ValExits", @db_field = "ValExits", fixed_field = "true", @readonly = "readonly", title = @Resources.OUTPUT_10769, data_number_integer = "10", data_number_decimals = "0", data_number_format = "9999999999" })
+								@Html.ValidationMessageFor(model => model.ValExits)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_ARTIGVALITEM_EXISTENC">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValExistenc, new { label_id="LED_ARTIGVALITEM_EXISTENC", @class = " i-text__label", id="LABEL_LED_ARTIGVALITEM_EXISTENC"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_ARTIGVALITEM_EXISTENC','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValExistenc, new {help_id = "LED_ARTIGVALITEM_EXISTENC", @class = "Number text-right i-text__field i-text input-small", data_refresh = "true", data_tipoform = "SR", data_identifier = "LED_ARTIGVALITEM_EXISTENC", @pers_cs_area = "Item", @pers_cs_field = "ValExistenc", @db_field = "ValExistenc", fixed_field = "true", @readonly = "readonly", title = @Resources.EXISTENCE30081, data_number_integer = "10", data_number_decimals = "0", data_number_format = "9999999999" })
+								@Html.ValidationMessageFor(model => model.ValExistenc)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-textarea draggable " id="CONTAINER_LED_ARTIGVALITEM_CATEGORY">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValCategory, new { label_id="LED_ARTIGVALITEM_CATEGORY", @class = " i-text__label", id="LABEL_LED_ARTIGVALITEM_CATEGORY"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_ARTIGVALITEM_CATEGORY','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextAreaFor(model => model.ValCategory, 2, 85, new {help_id = "LED_ARTIGVALITEM_CATEGORY", @class = "i-textarea__field i-textarea input-xxlarge", data_refresh = "true", data_tipoform = "CL", data_identifier = "LED_ARTIGVALITEM_CATEGORY", @pers_cs_area = "Item", @pers_cs_field = "ValCategory", @db_field = "ValCategory", fixed_field = "true", @readonly = "readonly", title = @Resources.CATEGORIZATION17554 })
+								@Html.ValidationMessageFor(model => model.ValCategory)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-dbedit draggable " id="CONTAINER_LED_ARTIGVALITEM_DISPONIB">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValDisponib, new { label_id="LED_ARTIGVALITEM_DISPONIB", @class = " i-text__label", id="LABEL_LED_ARTIGVALITEM_DISPONIB"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_ARTIGVALITEM_DISPONIB','Dsiponib')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.ArrayDropDownListFor(model => model.ValDisponib, Model.List_ValDisponib, CSGenio.business.ArrayDsiponib.GetElement, "", new {help_id = "LED_ARTIGVALITEM_DISPONIB", @class = "i-select chosen-dropdown input-medium", data_refresh = "true", data_tipoform = "+", data_identifier = "LED_ARTIGVALITEM_DISPONIB", @pers_cs_area = "Item", @pers_cs_field = "ValDisponib", @db_field = "ValDisponib", fixed_field = "true", @readonly = "readonly", title = @Resources.AVAILABILITY56489, data_array_type = "AC", data_placeholder = @Resources.ESCOLHA___40245, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_value = Model.List_ValDisponib.SelectedValue, data_is_array = "true" })
+								@Html.ValidationMessageFor(model => model.ValDisponib)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+		@Html.HiddenFor(model=> model.GitemValItemgcod, new { @pers_cs_area = "Gitem", @pers_cs_field = "ValItemgcod", @data_identifier = "LED_ARTIGVALGITEMITEMGCOD" })
+
+
+			@Html.HiddenFor(model => model.ValCoditem, new { @pers_cs_field="ValCoditem", @pers_cs_area="Item", @form_area="true", @data_value = Model.ValCoditem, @data_identifier = "LED_ARTIGVALITEM_CODITEM_" })
+
+			@Html.Hidden("IgnoreWarnings", "false", new { id = "IgnoreWarnings" })
+
+			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Artigval" })
+			@Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Artigval" })
+			@Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Artigval" })
+			@Html.AntiForgeryToken()
+		</div>
+	</fieldset>
+}
+
+@helper form_content_alert(){
+	if(Model.FormMode == FormMode.Delete) {
+		<div class="c-alert c-alert--warning">
+			<i class="glyphicons glyphicons-alert c-alert__icon" aria-hidden="true"></i>
+			<div class="c-alert__text">
+				&ensp;@Resources.DESEJA_ELIMINAR_ESTA24564
+			</div>
+		<!--Ao confirmar esta ficha irá ser eliminada da base de dados. Cancele caso não tenha a certeza.-->
+		</div>
+	}
+}
+
+@helper form_footer() {
+
+
+
+			if (Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+			{
+
+				if(Model.FormMode == FormMode.New && Convert.ToBoolean(Request.QueryString.Get("repeatInsertion")))
+				{
+				<button type="button" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" data-end-pers="true" data-modal-close="true" data-modal-form="true" data-modal-repeat-insertion="true" name="@(Helpers.FormModeActionName("Artigval", Model.FormMode))" data-modal-url='@Url.Action(Helpers.FormModeActionName("Artigval", Model.FormMode).ToString())' qbutton="ok_new"><i class="SaveIcon e-icon" aria-hidden="true"></i>@Resources.GRAVAR_E_CRIAR_NOVA17771</button>
+				}
+				<button type="button" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" data-end-pers="true" data-modal-close="true" data-modal-form="true" name="@(Helpers.FormModeActionName("Artigval", Model.FormMode))" data-modal-url='@Url.Action(Helpers.FormModeActionName("Artigval", Model.FormMode).ToString(), "Item")' qbutton="ok">
+				@if(Model.FormMode == FormMode.Delete)
+				{
+					<i class="glyphicons glyphicons-glyphicons-check e-icon" aria-hidden="true"></i>
+					@Resources.CONFIRMAR09808
+				}
+				else
+				{
+					<i class="SaveIcon e-icon" aria-hidden="true"></i>
+					@Resources.SAVE04165
+				}
+				</button>
+			}
+		   <button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-modal-close="true" data-modal-form="true" data-modal-cancel="true" data-modal-url='@Url.Action("Artigval_Cancel")' qbutton="cancel"><i class="glyphicons glyphicons-ban-circle e-icon" aria-hidden="true"></i>@Resources.CANCEL65428</button>
+}
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT ARTIGVAL]/ *@
+
+@if (Request.IsAjaxRequest())
+{
+	@codeJavascript()
+	@includeStylesheets()
+}
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_ARTIGVAL" data-form-javascript="true">
+@Html.Partial("Artigval_JavaScript", Model, ViewData)
+</div>
+}
+
+@section code_javascript {
+	@codeJavascript()
+}
+
+@helper includeStylesheets()
+{
+
+ }
+
+@section include_stylesheets {
+	@includeStylesheets()
+}

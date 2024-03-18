@@ -1,0 +1,115 @@
+﻿@model GenioMVC.ViewModels.Equip.Equip_ItemValItemdes_ViewModel
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+    var searchStyle =  string.Empty;
+}
+<div class="search" @searchStyle>
+    <div class="row">
+        <div class="col">
+            <h2 class="table-title c-table__title">@Resources.ARTICLES59822</h2>
+        </div>
+        <div class="col-auto normal-view" id="Equip_ItemValItemdes_simple_filter">
+            <div class="i-input-group" style="width:21rem; height: inherit;">
+                @Html.TextBox("qEquip_ItemValItemdes", this.Model.Menu.Query, new { @class = "i-input-group__field", @onkeydown = "ListSearchEnter(event)" })
+                <div class="i-input-group--right">
+                    <button type="button" elem-identifier="ListSearchButton" class="b-icon--secondary i-input-group__button--secondary" onclick="window.Equip_ItemValItemdes.Search()"><i class="glyphicons glyphicons-search i-input-group__tag-icon i-input-group__button-icon"></i></button>
+
+                    <button id="Equip_ItemValItemdes_extra" class="b-icon--secondary i-input-group__button--secondary" type="button" onclick="changeFilters('#Equip_ItemValItemdes_complex_filter', 'Equip_ItemValItemdes_tableFilters')" title="@Resources.PESQUISA_AVANCADA06198"><span class="glyphicons glyphicons-zoom-in i-input-group__tag-icon i-input-group__button-icon"></span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="normal-view">
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Item>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCoditem, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN EQUIP_ITEMDES_ITEM_ITEMDES]/
+		column.Expression(p => p.ValItemdes).Title(@Resources.ARTICLE60065).Field("ValItemdes").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN EQUIP_ITEMDES_ITEM_ITEMCOD]/
+		column.Expression(p => p.ValItemcod).Title(@Resources.CODE49225).Field("ValItemcod").Size(15);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+			//Hidden field used in JavaScript for return selected row text value
+			column.Expression(p => p.ValItemdes).Field("ValItemdes").AddInlineStyle("display", "none", true).UsedForFilter(false);
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Item")
+        .Id("Equip_ItemValItemdes")
+        .AjaxRequest("Equip_ItemValItemdes")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .TableList(hasFilters: true)
+        .RequestLink(@Url.Action("Equip_ItemValItemdes", new { id = Model.ValCodequip, partialView = "Equip_ItemValItemdes", WarehValCodwareh = Model.ValCodwareh}))
+        .Filters(this.Model.Menu.Filters)
+        .Permissions(canView: false, canInsert: false, canEdit: false, canDelete: false, canDuplicate: false)
+		;
+        
+}
+
+@tbl.ToHtml()
+</div>
+<script>
+    try {
+        if (jQuery) {
+            try {
+                $("#qEquip_ItemValItemdes, #TableItemItemdes_complex_filter th input").change(function() {
+                    var context = $("#TableItemItemdes").parent();
+                    $("#table-inputs input", context).val("");
+                });
+
+                var row = $("#Equip_ItemValItemdes table tbody tr");
+                row.mouseenter(function () {
+                    $(this).addClass("highlighted");
+                });
+                row.mouseleave(function () {
+                    $(this).removeClass("highlighted");
+                });
+
+                $('td:not([elem-identifier="RowActions"])', row).click(function () {
+                    var row = $(this).parent();
+                    var key = row.data("key");
+                    var selectList = $('[data-identifier="IFF_EQUIP___ITEM_ITEMDES_"]');
+
+                    selectList.trigger("DBEditSetValue", key);
+
+                    $('#modal-dbedit').modal('hide');
+                });
+
+                $("td a").click(function (event) {
+                    event.stopPropagation()
+                });
+                $('#Equip_ItemValItemdes_complex_filter input').keypress(function (event) {
+                    var keycode = (event.keyCode ? event.keyCode : event.which);
+                    if(keycode == '13' || keycode == '10'){
+                        $('#Equip_ItemValItemdes_complex_filter button#applyComplexFilter').click();
+                        event.preventDefault();
+                    }
+                });
+@if(Model.Menu.Elements.Count() == 0 && !Model.Menu.Filters.ShowTableFilters)
+{
+<text>
+                $('#Equip_ItemValItemdes_extra').prop("disabled", true);
+</text>
+}
+
+
+// USE /[MANUAL GQT LISTING_JS EQUIP_MENU]/
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+</script>

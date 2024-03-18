@@ -1,0 +1,58 @@
+﻿@model GenioMVC.ViewModels.UserAdmin.UserAdminViewModel
+
+@{
+    ViewBag.Title = @Resources.UTILIZADORES39761;
+}
+
+@using (Ajax.BeginForm("Index", "Psw", new AjaxOptions
+{
+    HttpMethod= "POST",
+    InsertionMode = InsertionMode.Replace,
+    UpdateTargetId = "Menu"
+}, new { @class = "form-horizontal", area="Psw", data_form="Index" }))
+{
+    <div class="row">
+        @{ var style = !@Model.Menu.Filters.ShowTableFilters ? "" : "display:none"; }
+        <div class="col">
+            <div class="table-title c-table__title">
+                <h1>@ViewBag.Title</h1>
+            </div>
+        </div>
+
+	    <div class="col-auto search" style="@style">
+            <div class="i-input-group input-xxlarge" id="Index_simple_filter">
+                @Html.TextBox("qIndex", null, new { @class="i-input-group__field input-xxlarge", @title=@Resources.CAIXA_DE_PESQUISA53870} )
+                <div class="i-input-group--right">
+                    <button type="submit" class="b-icon--secondary i-input-group__button--secondary"title="@Resources.PESQUISAR34506"><i class="glyphicons glyphicons-search i-input-group__tag-icon i-input-group__button-icon"></i></button>
+    				<button id="Index_extra" class="b-icon--secondary i-input-group__button--secondary" type="button" onclick="changeFilters( '#Index_complex_filter', 'Index_tableFilters')" title="@Resources.PESQUISA_AVANCADA06198"><span class="glyphicons glyphicons-zoom-in i-input-group__tag-icon i-input-group__button-icon"></span></button>
+                </div>
+            </div>
+        </div>
+		<div class="col-auto float-right">
+            @Html.ExportListMenu("Index")
+        </div>
+    </div>    
+    
+    
+    <div class="row">
+        <div class="col-12">
+            <div id="Index_filters">
+             </div>
+        </div>
+    </div>
+	
+    <div id="Menu">
+        @{ Html.RenderPartial("Index_Partial"); } 
+    </div>
+    @Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "user-admin-index" })
+    @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "user-admin-index" })
+    @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "user-admin-index" })
+    @Html.AntiForgeryToken()
+}
+
+@section code_javascript
+{
+<script>
+    QLocalStorage.remLocalStorage("savedInfo");
+</script>
+}

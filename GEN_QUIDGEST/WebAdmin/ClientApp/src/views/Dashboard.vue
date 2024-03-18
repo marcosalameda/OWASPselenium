@@ -92,7 +92,7 @@
               <dt v-bind:class="style.dtClass">{{ Resources.SISTEMA05814 }}</dt>
               <dd v-bind:class="style.ddClass">GQT</dd>
               <dt v-bind:class="style.dtClass">{{ Resources.VERSAO_DE_SISTEMA07287 }}</dt>
-              <dd v-bind:class="style.ddClass">2674</dd>
+              <dd v-bind:class="style.ddClass">2675</dd>
               <dt v-bind:class="style.dtClass">{{ Resources.VERSAO_DE_BASE_DE_DA46937 }}</dt>
               <dd v-bind:class="style.ddClass">{{ Model.VersionDbGen }}</dd>
               <dt v-bind:class="style.dtClass">{{ Resources.APP_MIGRATION_VERSIO41495 }}</dt>
@@ -100,9 +100,9 @@
               <dt v-bind:class="style.dtClass">{{ Resources.VERSAO_DOS_INDICES49454 }}</dt>
               <dd v-bind:class="style.ddClass">{{ Model.VersionIdxDbGen }}</dd>
               <dt v-bind:class="style.dtClass">{{ Resources.VERSAO_DE_GENIO44840 }}</dt>
-              <dd v-bind:class="style.ddClass">340.48</dd>
+              <dd v-bind:class="style.ddClass">341.06</dd>
               <dt v-bind:class="style.dtClass">{{ Resources.GERADO_EM27272 }}</dt>
-              <dd v-bind:class="style.ddClass">02/21/2024</dd>
+              <dd v-bind:class="style.ddClass">03/18/2024</dd>
             </dl>
           </div>
         </div>

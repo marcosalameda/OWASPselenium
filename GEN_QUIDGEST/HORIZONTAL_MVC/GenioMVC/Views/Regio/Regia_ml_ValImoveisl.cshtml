@@ -1,0 +1,121 @@
+﻿@model GenioMVC.ViewModels.Regio.Regia_ml_ValImoveisl_ViewModel
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@using Newtonsoft.Json;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@*List properties DBEDIT BUTTONS*@
+<div class="row">
+	<div class="col">
+		<div elem-identifier="List"  help-id="IFF_REGIA_MLPSEUDIMOVEISL" style="padding-top: 0.5rem;"><label class = "i-text__label table-title c-table__title" > <h2>@Resources.IMOVEIS09219</h2> </label></div>
+	</div>
+</div>
+
+@* USE /[MANUAL GQT TABLE_FOR REGIA_ML_IMOVEISL]/ *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@using GenioMVC.ViewModels.Propr;    
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Propr>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodpropr, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN REGIA_ML_IMOVEISL_PROPR_NAME]/
+		column.Expression(p => p.ValName).Title(@Resources.PROPERTY_NAME18934).Field("ValName").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN REGIA_ML_IMOVEISL_PROPR_PRECOEST]/
+		column.Expression(p => p.ValPrecoest).Title(@Resources.ESTIMATED_PRICE02986).Field("ValPrecoest").Size(12);
+// USE /[MANUAL GQT CUSTOM_COLUMN REGIA_ML_IMOVEISL_PROPR_PHOTOGRA]/
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValPhotogra, new {alt=@Resources.PHOTO51874,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCodpropr, modelname = "Propr", fldname = "ValPhotogra" }))).Title(@Resources.PHOTO51874).Field("ValPhotogra").Size(3);
+// USE /[MANUAL GQT CUSTOM_COLUMN REGIA_ML_IMOVEISL_PROPR_DESCRIPT]/
+		column.Expression(p => p.ValDescript).Title(@Resources.DESCRIPTION07383).Field("ValDescript").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN REGIA_ML_IMOVEISL_PROPR_COORDGEO]/
+		column.Expression(p => p.ValCoordgeo).Title(@Resources.GEOGRAPHIC_COORDINAT21394).Field("ValCoordgeo").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN REGIA_ML_IMOVEISL_PAIS1_COUNTRY]/
+		column.Expression(p => p.Pais1.ValCountry).Title(@Resources.PAIS_PESSOA61621).Field("Pais1.ValCountry").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN REGIA_ML_IMOVEISL_CNTRY_COUNTRY]/
+		column.Expression(p => p.Cntry.ValCountry).Title(@Resources.COUNTRY64133).Field("Cntry.ValCountry").Size(30);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Propr")
+        .Id("ValImoveisl")
+        .AjaxRequest("Regia_ml_ValImoveisl")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .TableList(hasFilters: false)
+        .RequestLink(@Url.Action("Regia_ml_ValImoveisl", new { id = Model.ValCodregia, partialView = "Regia_ml_ValImoveisl"}))
+        .Form("Proprall", false, false)
+        .Permissions(canView: true, canInsert: false, canEdit: false, canDelete: false, canDuplicate: false)
+        .MultipleSelection()
+		;
+        
+}
+
+@tbl.ToHtml()
+
+<script>
+
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qValImoveisl, #ValImoveisl_complex_filter th input, #ValImoveisl_filters input").change(function() {
+                    $("#pValImoveisl").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#ValImoveisl_tableFilters').val(false);")
+                    @Html.Raw("$('#ValImoveisl_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#ValImoveisl_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $('#ValImoveisl_complex_filter button#applyComplexFilter').click();
+                    @:      event.preventDefault();
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#ValImoveisl_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_ValImoveisl').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+
+
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='ValImoveisl']"));
+                    InitSpecialControls($('#ValImoveisl'));
+                    $('#ValImoveisl').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS REGIA_ML_VALIMOVEISL]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+</script>

@@ -1,0 +1,113 @@
+﻿@model GenioMVC.ViewModels.Item.PTN_Menu_141_ViewModel
+@using Newtonsoft.Json;
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Item>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCoditem, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_141_ITEM_IMAGE]/
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValImage, new {alt=@Resources.IMAGE65174,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCoditem, modelname = "Item", fldname = "ValImage" }))).Title(@Resources.IMAGE65174).Field("ValImage").Size(3);
+// USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_141_ITEM_DATE]/
+		column.Expression(p => p.ValDate).Title(@Resources.DATE18475).Field("ValDate").Size(8).Format("{0:d}");
+// USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_141_ITEM_DISPONIB]/
+		column.Expression(p => p.ArrayValdisponib).Title(@Resources.AVAILABILITY56489).Field("ValDisponib", "ArrayDsiponib").Size(1);
+// USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_141_ITEM_VALID]/
+		column.Expression(p => p.ValValid).Title(@Resources.IN_USE42606).Field("ValValid").Size(1);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Item")
+        .Id("PTN_Menu_141")
+        .AjaxRequest("Menu")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .DBEdit()
+        .Filters(this.Model.Menu.Filters)
+        .AddTableAction("PTN_MenuMC_1411", "Item" , (Func<GenioMVC.Models.Item, object>)(item => new { id = item.ValCoditem }), "", @Resources.EDITAR11616, isRoutine: false, isAjaxAction: false, htmlAttributes: new { }, accesslevel: GenioMVC.Models.Navigation.UserContext.Current.User.VerifyAccess(CSGenio.framework.Role.ROLE_1), openInPopup: true, isBootStrapIcon: false)
+        .Permissions(canView: false, canInsert: false, canEdit: false, canDelete: false, canDuplicate: false)
+		;
+        
+}
+
+@tbl.ToHtml()
+
+
+<script>
+ 
+ 
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qPTN_Menu_141, #PTN_Menu_141_complex_filter th input, #PTN_Menu_141_filters input").change(function() {
+                    $("#pPTN_Menu_141").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#PTN_Menu_141_tableFilters').val(false);")
+                    @Html.Raw("$('#PTN_Menu_141_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#PTN_Menu_141_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $("[data-form='PTN_Menu_141']").submit();
+                    @:      event.preventDefault();
+                    @:      ClearSearchBox('qPTN_Menu_141');
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#PTN_Menu_141_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_PTN_Menu_141').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+                 @if (this.Model.Menu.Filters.FiltersValues.Count >= 1) {
+                    var activeFields = Newtonsoft.Json.JsonConvert.SerializeObject(this.Model.Menu.Filters.FiltersValues);
+                    @: SetActiveFilters('PTN_Menu_141', 'ARTIG', @Html.Raw(activeFields))
+                  }
+
+
+                setupHistoryClicks()
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='Menu']"));
+                    InitSpecialControls($('#Menu'));
+                    $('#Menu').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS PTN_MENU_141]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+// USE /[MANUAL GQT LISTING_CODEJS PTN_MENU_141]/
+</script>

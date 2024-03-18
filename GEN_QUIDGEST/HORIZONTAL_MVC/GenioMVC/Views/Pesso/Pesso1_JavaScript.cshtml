@@ -1,0 +1,403 @@
+﻿@model GenioMVC.ViewModels.Pesso.Pesso1_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS PESSO1]/ *@
+<script  type="text/javascript">
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Pesso1 !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Pesso1 = new QForm($('[data-form="Pesso1"]'), "Form_Pesso1");
+		}
+		window.Form_Pesso1.baseArea = "pesso";
+		window.Form_Pesso1.FormMode = '@Model.GetFormMode';
+		window.Form_Pesso1.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Pesso1.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Pesso")',
+			GetDependants:		'@Url.Action("GetDependants", "Pesso")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Pesso1", "Pesso")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Pesso1", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Pesso", "Pesso")',
+		};
+		window.Form_Pesso1.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Pesso1.formSaveEdit = '@Url.Action("Pesso1_SaveEdit", "Pesso")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Pesso1.formAction = 'Pesso1_New';
+		window.Form_Pesso1.formRedirectURL = '@Url.Action("Pesso1_New_Redirect", "Pesso")';
+		window.Form_Pesso1.formSubmitURL = '@Url.Action("Pesso1_New", "Pesso")';
+		window.Form_Pesso1.formRedirectURL_repeatInsertion = '@Url.Action("Pesso1_New_Redirect", "Pesso", new { repeatInsertion = true})';
+		window.Form_Pesso1.formSubmitURL_repeatInsertion = '@Url.Action("Pesso1_New", "Pesso", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Pesso1.formAction = 'Pesso1_Edit';
+		window.Form_Pesso1.formRedirectURL = '@Url.Action("Pesso1_Edit_Redirect", "Pesso")';
+		window.Form_Pesso1.formSubmitURL = '@Url.Action("Pesso1_Edit", "Pesso")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Pesso1.formAction = 'Pesso1_Duplicate';
+		window.Form_Pesso1.formRedirectURL = '@Url.Action("Pesso1_Duplicate_Redirect", "Pesso")';
+		window.Form_Pesso1.formSubmitURL = '@Url.Action("Pesso1_Duplicate", "Pesso")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Pesso1.formAction = 'Pesso1_Delete';
+		window.Form_Pesso1.formRedirectURL = '@Url.Action("Pesso1_Delete_Redirect", "Pesso")';
+		window.Form_Pesso1.formSubmitURL = '@Url.Action("Pesso1_Delete", "Pesso")';
+	</text>
+}
+		window.Form_Pesso1.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.IFF_PESSO1__PSEUDNOVOGR08 = new QGenericControl($('[data-identifier="IFF_PESSO1__PSEUDNOVOGR08"]', this.element), window.Form_Pesso1);
+
+			this.Controls.IFF_PESSO1__PSEUDNOVOGR04 = new QGenericControl($('[data-identifier="IFF_PESSO1__PSEUDNOVOGR04"]', this.element), window.Form_Pesso1);
+
+			this.Controls.LED_PESSO1__PESSOPHOTOGRA = new QImageControl($('[data-identifier="LED_PESSO1__PESSOPHOTOGRA"]', this.element), window.Form_Pesso1, '@Html.Raw(Url.Action("ImageDelete", "Pesso", new { id=Model.ValCodpesso, modelname="Pesso", fldname="ValPhotogra" }))', '@Html.Raw(Url.Action("ImageCropper", "Pesso", new { key=Model.ValCodpesso, modelname= "Pesso", fldname= "ValPhotogra", identifier= "FPESSO1", FormName= "Pesso1", FieldId= "LED_PESSO1__PESSOPHOTOGRA" }))',@Html.IsImageEmpty(Model.ValPhotogra));
+
+			this.Controls.IFF_PESSO1__PSEUDNOVOGR02 = new QGenericControl($('[data-identifier="IFF_PESSO1__PSEUDNOVOGR02"]', this.element), window.Form_Pesso1);
+
+			this.Controls.LED_PESSO1__PESSOIDFUNCIO = new QNumericControl($('[data-identifier="LED_PESSO1__PESSOIDFUNCIO"]', this.element), window.Form_Pesso1);
+
+			this.Controls.LED_PESSO1__PESSONAME____ = new QTextControl($('[data-identifier="LED_PESSO1__PESSONAME____"]', this.element), window.Form_Pesso1);
+
+			this.Controls.LED_PESSO1__PESSODTNASCIM = new QDateControl($('[data-identifier="LED_PESSO1__PESSODTNASCIM"]', this.element), window.Form_Pesso1);
+
+			this.Controls.LED_PESSO1__PESSOIDADE___ = new QNumericControl($('[data-identifier="LED_PESSO1__PESSOIDADE___"]', this.element), window.Form_Pesso1);
+
+			this.Controls.IFF_PESSO1__PESSOGENDER__ = new QArrayControl($('[data-identifier="IFF_PESSO1__PESSOGENDER__"]', this.element), window.Form_Pesso1);
+
+			this.Controls.LED_PESSO1__PESSOINTERNA_ = new QCheckBoxControl($('[data-identifier="LED_PESSO1__PESSOINTERNA_"]', this.element), window.Form_Pesso1);
+
+			this.Controls.LED_PESSO1__PESSOEXTERNA_ = new QCheckBoxControl($('[data-identifier="LED_PESSO1__PESSOEXTERNA_"]', this.element), window.Form_Pesso1);
+
+			this.Controls.IFF_PESSO1__CATEGCATEGORY = new QDbeditControl($('[data-identifier="IFF_PESSO1__CATEGCATEGORY"]', this.element), window.Form_Pesso1);
+
+			this.Controls.LED_PESSO1__PESSODTULTCAT = new QDateControl($('[data-identifier="LED_PESSO1__PESSODTULTCAT"]', this.element), window.Form_Pesso1);
+
+			this.Controls.IFF_PESSO1__PSEUDNOVOGR06 = new QGenericControl($('[data-identifier="IFF_PESSO1__PSEUDNOVOGR06"]', this.element), window.Form_Pesso1);
+
+			this.Controls.IFF_PESSO1__PSEUDNOVOGR07 = new QGenericControl($('[data-identifier="IFF_PESSO1__PSEUDNOVOGR07"]', this.element), window.Form_Pesso1);
+
+			this.Controls.IFF_PESSO1__PSEUDNOVOGR03 = new QGenericControl($('[data-identifier="IFF_PESSO1__PSEUDNOVOGR03"]', this.element), window.Form_Pesso1);
+
+			this.Controls.LED_PESSO1__PESSOTELEPHON = new QTextControl($('[data-identifier="LED_PESSO1__PESSOTELEPHON"]', this.element), window.Form_Pesso1);
+
+			this.Controls.LED_PESSO1__PESSOEMAIL___ = new QTextControl($('[data-identifier="LED_PESSO1__PESSOEMAIL___"]', this.element), window.Form_Pesso1);
+
+			this.Controls.IFF_PESSO1__PSEUDNOVOGR09 = new QGenericControl($('[data-identifier="IFF_PESSO1__PSEUDNOVOGR09"]', this.element), window.Form_Pesso1);
+
+			this.Controls.IFF_PESSO1__PSEUDCONTACTO = new QTableListControl($('[data-identifier="IFF_PESSO1__PSEUDCONTACTO"]', this.element), window.Form_Pesso1);
+
+			this.Controls.IFF_PESSO1__PSEUDNOVOGR05 = new QGenericControl($('[data-identifier="IFF_PESSO1__PSEUDNOVOGR05"]', this.element), window.Form_Pesso1);
+
+			this.Controls.IFF_PESSO1__PSEUDNOVOGR01 = new QGenericControl($('[data-identifier="IFF_PESSO1__PSEUDNOVOGR01"]', this.element), window.Form_Pesso1);
+
+			this.Controls.IFF_PESSO1__CMPNYDESIGNAT = new QDbeditControl($('[data-identifier="IFF_PESSO1__CMPNYDESIGNAT"]', this.element), window.Form_Pesso1);
+
+			this.Controls.LED_PESSO1__CNTRYCOUNTRY_ = new QTextControl($('[data-identifier="LED_PESSO1__CNTRYCOUNTRY_"]', this.element), window.Form_Pesso1);
+
+			this.Controls.IFF_PESSO1__PSEUDNOVOGR10 = new QGenericControl($('[data-identifier="IFF_PESSO1__PSEUDNOVOGR10"]', this.element), window.Form_Pesso1);
+
+			this.Controls.IFF_PESSO1__PSEUDEVOLUCAO = new QTableListControl($('[data-identifier="IFF_PESSO1__PSEUDEVOLUCAO"]', this.element), window.Form_Pesso1);
+
+			this.Controls.IFF_PESSO1__PSEUDOBRIGATO = new QTextControl($('[data-identifier="IFF_PESSO1__PSEUDOBRIGATO"]', this.element), window.Form_Pesso1);
+
+			this.Controls.IFF_PESSO1__PSEUDNOVOGR11 = new QGenericControl($('[data-identifier="IFF_PESSO1__PSEUDNOVOGR11"]', this.element), window.Form_Pesso1);
+
+			this.Controls.IFF_PESSO1__REGI1REGIAO__ = new QDbeditControl($('[data-identifier="IFF_PESSO1__REGI1REGIAO__"]', this.element), window.Form_Pesso1);
+
+			this.Controls.LED_PESSO1__PAIS1COUNTRY_ = new QTextControl($('[data-identifier="LED_PESSO1__PAIS1COUNTRY_"]', this.element), window.Form_Pesso1);
+
+
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	@*Hidden Foreign Keys Controls*@
+			this.Controls.LED_PESSO1__CNTRYCODCNTRY = new QHiddenControl($('[data-identifier="LED_PESSO1__CNTRYCODCNTRY"]', this.element), window.Form_Pesso1);
+			this.Controls.LED_PESSO1__PAIS1CODCNTRY = new QHiddenControl($('[data-identifier="LED_PESSO1__PAIS1CODCNTRY"]', this.element), window.Form_Pesso1);
+	</text>
+}
+			this.Controls.LED_PESSO1__PESSOCODPESSO = new QHiddenControl($('[data-identifier="LED_PESSO1__PESSOCODPESSO"]', this.element), window.Form_Pesso1);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	</text>
+}
+
+		window.Form_Pesso1.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Pesso1.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI PESSO1]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Pesso1.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS PESSO1]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Pesso1.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS PESSO1]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Pesso1.Data.RelationKeysSelector = {
+				get cntry() { return $(':not([elem-identifier="Multiform"]) > #ValCodpaise', $('[data-form="Pesso1"]')); /* Hidden */ },
+				get pais1() { return $(':not([elem-identifier="Multiform"]) > #ValCodcntry', $('[data-form="Pesso1"]')); /* Hidden */ },
+				get categ() { return $(':not([elem-identifier="Multiform"]) > #ValCodcateg[pers-cs-area="Categ"]', $('[data-form="Pesso1"]')); /* DBEdit */ },
+				get cmpny() { return $(':not([elem-identifier="Multiform"]) > #ValCodempre[pers-cs-area="Cmpny"]', $('[data-form="Pesso1"]')); /* DBEdit */ },
+				get regi1() { return $(':not([elem-identifier="Multiform"]) > #ValCodregia[pers-cs-area="Regi1"]', $('[data-form="Pesso1"]')); /* DBEdit */ },
+		};
+
+		window.Form_Pesso1.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Pesso1.Data.RelationKeys = {
+			get formContext() { return window.Form_Pesso1; },
+			get cntry() { return (this.formContext.Data.RelationKeysSelector.cntry.getQControl() || {}).Value; /* Hidden FK */ },
+			set cntry(newValue) { (this.formContext.Data.RelationKeysSelector.cntry.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+			get pais1() { return (this.formContext.Data.RelationKeysSelector.pais1.getQControl() || {}).Value; /* Hidden FK */ },
+			set pais1(newValue) { (this.formContext.Data.RelationKeysSelector.pais1.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+			get categ() { return (this.formContext.Data.RelationKeysSelector.categ.getQControl() || {}).Value; /* DBEdit */ },
+			set categ(newValue) { (this.formContext.Data.RelationKeysSelector.categ.getQControl() || {}).Value = newValue; /* DBEdit */ },
+			get cmpny() { return (this.formContext.Data.RelationKeysSelector.cmpny.getQControl() || {}).Value; /* DBEdit */ },
+			set cmpny(newValue) { (this.formContext.Data.RelationKeysSelector.cmpny.getQControl() || {}).Value = newValue; /* DBEdit */ },
+			get regi1() { return (this.formContext.Data.RelationKeysSelector.regi1.getQControl() || {}).Value; /* DBEdit */ },
+			set regi1(newValue) { (this.formContext.Data.RelationKeysSelector.regi1.getQControl() || {}).Value = newValue; /* DBEdit */ },
+		};
+	</text>
+}
+
+	window.Form_Pesso1.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+		@* Formula of the 'ValIdade' field *@
+		$(qForm).bind('VALDTNASCIM_CHANGE', function(event, eTarget) {
+				try {
+						var newValue = (Idade( getFieldValue($(':not([elem-identifier="Multiform"]) > #ValDtnascim', $('[data-form="Pesso1"]'))),qApi.Today()));
+						$.when(newValue).done(function (result) {
+								setFieldValue($(':not([elem-identifier="Multiform"]) > #ValIdade', $('[data-form="Pesso1"]')), result);
+								if($(':not([elem-identifier="Multiform"]) > #ValIdade', $('[data-form="Pesso1"]')).data('QObject') === undefined) $(':not([elem-identifier="Multiform"]) > #ValIdade', $('[data-form="Pesso1"]')).change(); //TODO: Remove this later...
+						});
+				} catch (err) { QError.AppendError('Formula of field ValIdade: ' + err.message, err.stack, window.location.href); }
+		});
+		
+		@* Recalculate formulas (server side) *@
+		$(qForm).bind('Pesso1_ValEvolucao_RELOADED', function(event, eTarget) {
+				window.Form_Pesso1.RecalculateFormulas();
+		});
+		
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+		@* Binding dos eventos que vão despoletar o Mostra Quando do campo ValCodcateg *@
+		$(qForm).bind('FORM_LOADED VALINTERNA_CHANGE', function(event, eTarget) {
+				var conditionRes = ( getFieldValue($(':not([elem-identifier="Multiform"]) > #ValInterna', $('[data-form="Pesso1"]')))==1);
+				$.when(conditionRes).done(function (condition) {
+						ShowWhen($(':not([elem-identifier="Multiform"]) > #ValCodcateg', $('[data-form="Pesso1"]')), condition, false, 'IFF_PESSO1__CATEGCATEGORY');
+				});
+		});
+		
+		@* Binding dos eventos que vão despoletar o Mostra Quando do campo ValDtultcat *@
+		$(qForm).bind('FORM_LOADED VALINTERNA_CHANGE', function(event, eTarget) {
+				var conditionRes = ( getFieldValue($(':not([elem-identifier="Multiform"]) > #ValInterna', $('[data-form="Pesso1"]')))==1);
+				$.when(conditionRes).done(function (condition) {
+						ShowWhen($(':not([elem-identifier="Multiform"]) > #ValDtultcat', $('[data-form="Pesso1"]')), condition, false, 'LED_PESSO1__PESSODTULTCAT');
+				});
+		});
+		
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Pesso1.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitPesso1(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Pesso1.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeletePesso1(event) {
+			event.preventDefault();
+			window.Form_Pesso1.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+    var ajaxCallsRemaining = $(".flash object embed").length;
+    $('form [elem-identifier="ButtonPrimary"]').click(function() {
+        var flashObjects = $(".flash object embed");
+        ajaxCallsRemaining = flashObjects.length;
+        if(flashObjects.length == 0)
+            return true;
+        else {
+            flashObjects.each(function() {
+               var flashObj = GetFlash($(this).attr('id'));
+               flashObj.UsedFlash.TriggerSave(flashObj);
+            });
+            return false;
+        }
+    });
+    </text>
+}
+// USE /[MANUAL GQT FORM_CODEJS PESSO1]/
+
+
+
+ 
+
+    $($('[elem-identifier="FormActions"]'), $('[data-form="Pesso1"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

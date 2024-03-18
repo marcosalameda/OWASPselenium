@@ -1,0 +1,425 @@
+@using System.Collections.Generic;
+@{
+    #region Properties
+
+    var containerId = (string)ViewData["container-id"];
+    var rows = (List<Dictionary<string, object>>)ViewData["rows"];
+    var style = (Dictionary<string, string>)ViewData["style-vars"];
+
+    // Data (default values)
+    var chartType = "line";
+    var firstColor = "undefined";
+    var xaxisType = "linear";
+    var yaxisType = "linear";
+    var graphTitle = "";
+    var description = "";
+    var alignDescription = "left";
+    var yaxisName = "YAxis";
+    var xaxisName = "XAxis";
+    var inverted = "false";
+    var showLabels = "true";
+    var showLegend = "true";
+    var showPieLabel = "outside";
+    var heightPx = "400";
+    var pieInnerSizePercentage = "0";
+    var enableHover = "true";
+    var zoomType = "x";
+    var legendLayout = "horizontal";
+    var legendXPosition = "0";
+    var showLastN = "-1";
+    var legendYPosition = "0";
+    var legendFloating = "false";
+    var legendAlign = "center";
+    var legendVerticalAlign = "bottom";
+    var stackingType = "undefined";
+    var valuesDecimals = "0";
+    var lineMarker = false;
+
+    // Init configuration
+    if (style.ContainsKey("chart-type")) { chartType = style["chart-type"]; }
+    if (style.ContainsKey("first-color")) { firstColor = style["first-color"]; }
+    if (style.ContainsKey("xaxis-type")) { xaxisType = style["xaxis-type"]; }
+    if (style.ContainsKey("yaxis-type")) { yaxisType = style["yaxis-type"]; }
+    if (style.ContainsKey("graph-title")) { graphTitle = style["graph-title"]; }
+    if (style.ContainsKey("description")) { description = style["description"]; }
+    if (style.ContainsKey("align-description")) { alignDescription = style["align-description"]; }
+    if (style.ContainsKey("yaxis-name")) { yaxisName = style["yaxis-name"]; }
+    if (style.ContainsKey("xaxis-name")) { xaxisName = style["xaxis-name"]; }
+    if (style.ContainsKey("inverted")) { inverted = style["inverted"]; }
+    if (style.ContainsKey("show-labels")) { showLabels = style["show-labels"]; }
+    if (style.ContainsKey("show-legend")) { showLegend = style["show-legend"]; }
+    if (style.ContainsKey("show-pie-label")) { showPieLabel = style["show-pie-label"]; }
+    if (style.ContainsKey("height-px")) { heightPx = style["height-px"]; }
+    if (style.ContainsKey("pie-inner-size-percentage")) { pieInnerSizePercentage = style["pie-inner-size-percentage"]; }
+    if (style.ContainsKey("enable-hover")) { enableHover = style["enable-hover"]; }
+    if (style.ContainsKey("zoom-type")) { zoomType = style["zoom-type"]; }
+    if (style.ContainsKey("legend-layout")) { legendLayout = style["legend-layout"]; }
+    if (style.ContainsKey("legend-x-position")) { legendXPosition = style["legend-x-position"]; }
+    if (style.ContainsKey("show-last-n")) { showLastN = style["show-last-n"]; }
+    if (style.ContainsKey("legend-y-position")) { legendYPosition = style["legend-y-position"]; }
+    if (style.ContainsKey("legend-floating")) { legendFloating = style["legend-floating"]; }
+    if (style.ContainsKey("legend-align")) { legendAlign = style["legend-align"]; }
+    if (style.ContainsKey("legend-vertical-align")) { legendVerticalAlign = style["legend-vertical-align"]; }
+    if (style.ContainsKey("stacking-type")) { stackingType = style["stacking-type"]; }
+    if (style.ContainsKey("values-decimals")) { valuesDecimals = style["values-decimals"]; }
+    if (style.ContainsKey("line-marker")) { lineMarker = style["line-marker"]=="enabled"; }
+
+    // Series from HighCharts master template:
+    var allSeriesJS = ViewData["allSeries"];
+    var distinctxaxisJS = ViewData["distinctxaxis"];
+    var distinctyaxisJS = ViewData["distinctyaxis"];
+    var colorArray = ViewData["colorArray"];
+    var followups = rows.Select(row => row["followup"]);
+
+    // Special cases, might need improvement
+    string stack = "";
+    string color = "#058DC7";
+    if (firstColor != null && !firstColor.Equals("undefined")) { color = firstColor.Substring(firstColor.IndexOf("(") + 1, firstColor.IndexOf(")") - 1 - firstColor.IndexOf("(")); }
+    bool semiPie = false;
+    if (stackingType != null) { if (!stackingType.Equals("undefined")) { stack = stackingType; } }
+    if (chartType.Equals("semi-pie")) { chartType = "pie"; semiPie = true; }
+
+    #endregion
+}
+
+<div class="q-graph g-graph">
+    @{
+        foreach (var url in followups)
+        {
+            @Html.Raw(url);
+        }
+    }
+    <div class="g-graph__body">
+        <figure class="highcharts-figure">
+            <div id="@containerId">
+                <script>
+                
+                    // small changes in formating need to be set here
+                    // sets different options for the Highchart renderer
+                    // all options that are universal between different charts should be put in the chart renderer bellow
+                    
+                    if ('@stackingType' == 'undefined') {
+                    Highcharts.setOptions({
+                        plotOptions: {
+                            column: {
+                                tooltip: {
+                                    pointFormat: '<span style="color:{series.color}">{series.name}: <b>{point.y}</span>',
+                                }
+                            }
+                        }
+                    });
+                    } else {
+                        Highcharts.setOptions({
+                            plotOptions: {
+                                column: {
+                                    tooltip: {
+                                        pointFormat: '<span style="color:{series.color}">{series.name}: <b>{point.y}</b> ({point.percentage:.' + '@valuesDecimals' +'f}%)<br/></span>',
+
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    if ('@showLabels' == 'true') {
+                        Highcharts.setOptions({
+                            plotOptions: {
+                                series: {
+                                    dataLabels: {
+                                        enabled: true,
+                                        crop: false,
+                                        overflow: 'none'
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    if ('@xaxisType' == 'datetime') {
+                        Highcharts.setOptions({
+                            plotOptions: {
+                                dateTimeLabelFormats: {
+                                    minute: '%e. %b %H:%M',
+                                    hour: '%e. %b %H',
+                                    day: '%e. %b',
+                                    month: '%e. %b',
+                                    year: '%b'
+                                },
+                                line: {
+                                    tooltip: {
+                                        pointFormat: '<span style="color:{series.color}">{point.x:%e. %b %H:%M}: {point.y} </span>'
+                                    }
+                                }
+                            }
+                        });
+                    } else {
+                        Highcharts.setOptions({
+                            plotOptions: {
+                                line: {
+                                    tooltip: {
+                                        pointFormat: '<span style="color:{series.color}">{point.x}: {point.y}',
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    if ('@semiPie' === 'True') {
+                        Highcharts.setOptions({
+                            plotOptions: {
+                                pie: {
+                                    startAngle: -90,
+                                    endAngle: 90,
+                                    center: ['50%', '100%']
+                                }
+                            }
+                        });
+                    }
+
+                    if ('@showPieLabel' === 'inside') {
+                        Highcharts.setOptions({
+                            plotOptions: {
+                                pie: {
+                                    showInLegend: @showLegend,
+                                    dataLabels: {
+                                        format: '{point.y}<br>({point.percentage:.' + '@valuesDecimals' + 'f}%)',
+                                        enabled: true,
+                                        distance: -50,
+                                        style: {
+                                            fontWeight: 'bold',
+                                            color: 'white'
+                                        }
+
+                                    }
+                                }
+                            }
+                        });
+                    } else if ('@showLegend' === 'false') {
+                        Highcharts.setOptions({
+                            plotOptions: {
+                                pie: {
+                                    dataLabels: {
+                                        enabled: true,
+                                        format: '<span style="color:{point.color}">{point.name} <br> <b>{point.y}</b> ({point.percentage:.' + '@valuesDecimals' + 'f}%) </span>',
+                                    }
+                                }
+                            }
+                        });
+                    } else {
+                        Highcharts.setOptions({
+                            plotOptions: {
+                                pie: {
+                                    dataLabels: {
+                                        enabled: true,
+                                        format: '<span style="color:{point.color}"><b>{point.y}</b> ({point.percentage:.' + '@valuesDecimals' + 'f}%) </span>',
+                                    },
+                                    showInLegend: true
+                                }
+                            }
+                        });
+                    }
+
+                    if ('@xaxisType' == "date") {
+                        var xAxisFormatter = function () {
+                            return Highcharts.dateFormat('%d/%m/%Y', this.value);
+                        }
+                    }
+                    if (('@lineMarker' == "True") == false) {
+                         Highcharts.setOptions({
+                            plotOptions: {
+                                series: {
+                                    marker: {
+                                        enabled: false
+                                    }
+                                }
+                            },
+                        });
+                    }
+                    var series = @Html.Raw(Json.Encode(@allSeriesJS));
+                    var colorByPoint = series.length == 1;
+
+                    // The chart
+                    var chart_@containerId = Highcharts.chart('@containerId', {
+                        caption: {
+                            text: '@description',
+                            align: '@alignDescription'
+                        },
+                        chart: {
+                            height: '@heightPx',
+                            type: '@chartType',
+                            zoomType: '@zoomType',
+                            inverted: @inverted,
+                            events: {
+                                load: function () {
+                                    var toShow = series.length;
+                                    if ('@showLastN' !== null && '@showLastN' !== '-1') toShow = parseInt('@showLastN');
+
+                                    for (let i = 0; i < series.length - toShow; i++) {
+                                        series[i].setVisible(false, false);
+                                    }
+                                    if('@showLastN' !== null && '@showLastN' !== '-1')
+                                    chart.redraw();
+                                }
+                            }
+                        },
+                        title: {
+                            text: '@graphTitle'
+                        },
+                        xAxis: {
+                            type: '@xaxisType',
+                            labels: {
+                                formatter: xAxisFormatter,
+                            },
+                            title: {
+                                text: '@xaxisName'
+                            }
+                        },
+                        yAxis: {
+                            type: '@yaxisType',
+                            title: {
+                                text: '@yaxisName'
+                            },
+                            min: 0
+                        },
+                        legend: {
+                            layout: '@legendLayout',
+                            align: '@legendAlign',
+                            verticalAlign: '@legendVerticalAlign',
+                            x: @legendXPosition,
+                            y: @legendYPosition,
+                            floating: @legendFloating,
+                            enabled: @showLegend,
+                        },
+                        colors: @Html.Raw(Json.Encode(@colorArray)),
+                        credits: {
+                            enabled: false
+                        },
+                        tooltip: {
+                            enabled: @enableHover,
+                            valueDecimals: '@valuesDecimals'
+                        },
+                        plotOptions: {
+                            line: {
+                                tooltip: {
+                                    headerFormat: '<span style="color:{series.color}">{series.name}</span><br>',
+                                }
+                            },
+                            column: {
+                                tooltip: {
+                                    shared: true,
+                                    crosshair: true
+                                }
+                            },
+                            pie: {
+                                size: '80%',
+                                innerSize: '@pieInnerSizePercentage' + '%',
+                                tooltip: {
+                                    pointFormat: '<span style="color:{point.color}"> {point.y}<br>({point.percentage:.' + '@valuesDecimals' + 'f}%) </span>',
+                                }
+                            },
+                            series: {
+                                colorByPoint: colorByPoint,
+                                point: {
+                                    events: {
+
+                                    }
+                                },
+                                marker: {
+                                    enabled: ('@lineMarker'=="True")
+                                },
+                                stacking: '@stack',
+								turboThreshold: 0
+                            }
+
+                        },
+                        responsive: {
+                            rules: [{
+                                condition: {
+                                    maxWidth: 500
+                                },
+                                chartOptions: {
+                                    legend: {
+                                        layout: '@legendLayout',
+                                        align: '@legendAlign',
+                                        verticalAlign: '@legendVerticalAlign',
+                                        x: @legendXPosition,
+                                        y: @legendYPosition,
+                                        floating: @legendFloating,
+                                    },
+                                    plotOptions: {
+                                        series: {
+                                            marker: {
+                                                radius: 2.5,
+                                                enabled: true
+                                            }
+                                        }
+                                    }
+                                }
+                            }]
+                        },
+                        series: series,
+                    });
+
+                    // should be revisited when multiple axis are implemented
+                    if ('@chartType' === 'heatmap' || '@xaxisType' === 'category') {
+                        (chart_@containerId).xAxis[0].setCategories(@Html.Raw(Json.Encode(@distinctxaxisJS)));
+                    }
+                    if ('@chartType' === 'heatmap' || '@yaxisType' === 'category') {
+                        (chart_@containerId).yAxis[0].setCategories(@Html.Raw(Json.Encode(@distinctyaxisJS)));
+                    }
+
+                    if ('@chartType' === 'heatmap') {
+                        (chart_@containerId).addColorAxis({
+                                min: 0,
+                                minColor: '#FFFFFF',
+                                maxColor: '@color'
+                        });
+                    }
+
+                    var followups_@containerId = @Html.Raw(Json.Encode(@followups));
+                    Highcharts.addEvent(Highcharts.Point, 'click', function (point) {
+                        let followup = (followups_@containerId)[point.point.id];
+                        let isPopup = followup.substring(followup.indexOf('data-modal-form') + 17, followup.indexOf('"', followup.indexOf('data-modal-form') + 18)) > 0;
+                        let href = followup.substring(followup.indexOf('href')+6, followup.indexOf('"', followup.indexOf('href') + 7));
+
+                        if (isPopup)
+                            OpenModalForm(href, {});
+                        else
+                            QUtils.NavigateTo = href;
+                    });
+
+                    if ('@chartType' === 'heatmap') {
+                        function getPointCategoryName(point, dimension) {
+                        var series = point.series,
+                            isY = dimension === 'y',
+                            axis = series[isY ? 'yAxis' : 'xAxis'];
+                        return axis.categories[point[isY ? 'y' : 'x']];
+                    }
+                        (chart_@containerId).update({
+                            tooltip: {
+                                formatter: function () {
+                                    return 'on '+'<b>' + getPointCategoryName(this.point, 'x') + '</b> received <br><b>' +
+                                        this.point.value + '</b> items from <b>' + getPointCategoryName(this.point, 'y') + '</b>';
+                                }
+                            }
+                        });
+                        (chart_@containerId).reflow();
+                    }
+
+                    if ($('#@containerId').parents('.c-accordion__panel').first().hasClass('c-accordion__panel')) {
+                        const parent = $('#@containerId').parents('.c-accordion__panel').first();
+                        parent[0].querySelector('.b-btn').addEventListener('click', function () {
+                            setInterval(function () {
+                                (chart_@containerId).reflow();
+                            }, 1);
+                        });
+                    }
+
+                    if (!window["hc_instances"]) window["hc_instances"] = {}
+                    window["hc_instances"]['@containerId'] = chart_@containerId;
+
+                </script>
+            </div>
+        </figure>
+    </div>
+</div>

@@ -1,0 +1,75 @@
+﻿@*//PG:SPECIAL_RENDERINGS*@
+@model GenioMVC.ViewModels.ListPropertiesViewModel
+@using GenioMVC.Models
+@using GenioMVC.Models.Navigation;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+    ViewBag.Form = "Lstusr";
+    ViewBag.Title = @Resources.OPCOES_DE_VISUALIZAC22988;
+    ViewBag.formmode = Model.GetFormMode;
+    ViewBag.ClassForFormLayout = "form-flow";
+}
+<div class="c-modal__dialog c-modal--lg">
+    <div class = "c-modal__content">
+        <div class="c-modal__header" style="display: flex; align-items: center;">
+            <h4 class="c-modal__header-title" style="margin: 0;">@ViewBag.Title</h4> 
+            <button class="b-icon-text b-icon-text--secondary float-right" type="button" onclick="Reload_List()" title="@Resources.REPOR35852">
+                <i class="glyphicons glyphicons-refresh e-icon"></i>
+                @Resources.REPOR35852
+            </button>
+        </div>
+
+        <div elem-identifier="ModalBody" class="c-modal__body">
+            @using (Ajax.BeginForm("ChangeListProperties", "SpecialRendering", null, new AjaxOptions { UpdateTargetId = "form-modal" }, new { @class = "", area = "", data_form = "", data_callbackSave = "QUtils.WindowReload" }))
+            {            
+                <div id="Lstusr_ValLstcol_Edit" data-identifier="IFF_LSTUSR___PSEUDLSTCOL__" data-extra-options="">
+                    @{ Html.RenderAction("Lstusr_ValLstcol", "SpecialRendering", new { id = Model.ValCodlstusr, partialView = "MenuRenderingsView" }); }
+                </div>            
+
+                @Html.Hidden("ValDescric", Model.ValDescric)
+                @Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "change-view-mode" })
+                @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "change-view-mode" })
+                @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "change-view-mode" })
+
+
+                @Html.Hidden("Formmode", Model.FormMode);
+                @Html.Hidden("ValCodlstusr", Model.ValCodlstusr);
+                @Html.Hidden("ValCodpsw", Model.ValCodpsw);
+                @Html.Hidden("ValIdlist", Model.ValIdlist);
+                @Html.Hidden("ValOrdercol", Model.ValOrdercol);
+                @Html.Hidden("ValOrdertype", Model.ValOrdertype);
+                @Html.Hidden("ValSistema", Model.ValSistema);
+                @Html.Hidden("ValModulo", Model.ValModulo);
+                @Html.Hidden("Valdata", Model.ValData);
+
+                @Html.AntiForgeryToken()
+            }
+        </div>
+        <div class="c-modal__footer" id="xptoActions">  
+            <div class="actions">     
+                <button type="button" class="b-icon-text b-icon-text--primary" data-end-pers="true" data-modal-close="true" data-modal-form="true" name="XPTO" onclick="window.ValLstcol.SaveEditRows()" data-modal-url='@Url.Action("Save", "SpecialRendering", new { idlist = Navigation.CurrentLevel.GetEntry("idlist") })'>
+                    <i class="SaveIcon e-icon"></i>
+                    @(Model.FormMode == "delete" ? Resources.APAGAR04097 : @Resources.GRAVAR45301)
+                </button>
+                <button type="button" class="b-icon-text b-icon-text--secondary" data-dismiss="modal" aria-label="Close">
+                    <i class="glyphicons glyphicons-ban-circle e-icon" aria-hidden="true"></i>
+                    @Resources.CANCELAR49513
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        jQuery.ModalForms($('#xptoActions'));
+        jQuery('#xptoActions').closest('#form-modal').data('callbackSave', QUtils.WindowReload);
+        //jQuery('#xptoActions').closest('#form-modal').addClass("Lstusr_popup");
+    });
+
+    function Reload_List(reload) {
+        jQuery.post('@Url.Action("ResetViewModes", "SpecialRendering", new { codlstusr = Model.ValCodlstusr })', jQuery.param({ codlstusr: '@Model.ValCodlstusr' }), function (data) {
+            window.ValLstcol.Reload();
+        });
+    };
+</script>

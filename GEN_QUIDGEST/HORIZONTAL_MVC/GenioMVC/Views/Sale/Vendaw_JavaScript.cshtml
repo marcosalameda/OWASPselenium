@@ -1,0 +1,669 @@
+﻿@model GenioMVC.ViewModels.Sale.Vendaw_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS VENDAW]/ *@
+<script  type="text/javascript">
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Vendaw !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Vendaw = new QForm($('[data-form="Vendaw"]'), "Form_Vendaw");
+		}
+		window.Form_Vendaw.baseArea = "sale";
+		window.Form_Vendaw.FormMode = '@Model.GetFormMode';
+		window.Form_Vendaw.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Vendaw.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Sale")',
+			GetDependants:		'@Url.Action("GetDependants", "Sale")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Vendaw", "Sale")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Vendaw", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Sale", "Sale")',
+			Fases: {
+				ForwardLink:	'@Url.Action("Vendaw_Fases_NextStep")',
+				ContentLink:	'@Url.Action("Vendaw_Fases_WizardStep")',
+				PathLink:		'@Url.Action("Vendaw_Fases_GetPath")',
+				Vendaw01SaveLink: '@Url.Action("Vendaw_Fases_Vendaw01_Save")',
+				Vendaw02SaveLink: '@Url.Action("Vendaw_Fases_Vendaw02_Save")',
+				Vendaw03SaveLink: '@Url.Action("Vendaw_Fases_Vendaw03_Save")',
+				Vendaw04SaveLink: '@Url.Action("Vendaw_Fases_Vendaw04_Save")',
+				Vendaw05SaveLink: '@Url.Action("Vendaw_Fases_Vendaw05_Save")',
+				Vendaw06SaveLink: '@Url.Action("Vendaw_Fases_Vendaw06_Save")',
+				Vendaw07SaveLink: '@Url.Action("Vendaw_Fases_Vendaw07_Save")',
+				Vendaw08SaveLink: '@Url.Action("Vendaw_Fases_Vendaw08_Save")',
+			},
+		};
+		window.Form_Vendaw.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Vendaw.formSaveEdit = '@Url.Action("Vendaw_SaveEdit", "Sale")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Vendaw.formAction = 'Vendaw_New';
+		window.Form_Vendaw.formRedirectURL = '@Url.Action("Vendaw_New_Redirect", "Sale")';
+		window.Form_Vendaw.formSubmitURL = '@Url.Action("Vendaw_New", "Sale")';
+		window.Form_Vendaw.formRedirectURL_repeatInsertion = '@Url.Action("Vendaw_New_Redirect", "Sale", new { repeatInsertion = true})';
+		window.Form_Vendaw.formSubmitURL_repeatInsertion = '@Url.Action("Vendaw_New", "Sale", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Vendaw.formAction = 'Vendaw_Edit';
+		window.Form_Vendaw.formRedirectURL = '@Url.Action("Vendaw_Edit_Redirect", "Sale")';
+		window.Form_Vendaw.formSubmitURL = '@Url.Action("Vendaw_Edit", "Sale")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Vendaw.formAction = 'Vendaw_Duplicate';
+		window.Form_Vendaw.formRedirectURL = '@Url.Action("Vendaw_Duplicate_Redirect", "Sale")';
+		window.Form_Vendaw.formSubmitURL = '@Url.Action("Vendaw_Duplicate", "Sale")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Vendaw.formAction = 'Vendaw_Delete';
+		window.Form_Vendaw.formRedirectURL = '@Url.Action("Vendaw_Delete_Redirect", "Sale")';
+		window.Form_Vendaw.formSubmitURL = '@Url.Action("Vendaw_Delete", "Sale")';
+	</text>
+}
+		window.Form_Vendaw.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.IFF_VENDAW__PSEUDFASES___ = new QWizardControl($('[data-identifier="IFF_VENDAW__PSEUDFASES___"]', this.element), window.Form_Vendaw);
+
+
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	@*Hidden Foreign Keys Controls*@
+			this.Controls.LED_VENDAW__ORGANCODORGAN = new QHiddenControl($('[data-identifier="LED_VENDAW__ORGANCODORGAN"]', this.element), window.Form_Vendaw);
+	</text>
+}
+			this.Controls.LED_VENDAW__SALE_CODVENDA = new QHiddenControl($('[data-identifier="LED_VENDAW__SALE_CODVENDA"]', this.element), window.Form_Vendaw);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+			this.Controls.LED_VENDAW__SALE_IDENTIFI = new QSpecialControl($('[data-identifier="LED_VENDAW__SALE_IDENTIFI"]', this.element), window.Form_Vendaw);
+			this.Controls.LED_VENDAW__SALE_IDENTIFI.InitData(@JavaScriptConversion.ToString(@Model.ValIdentifi));
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	</text>
+}
+
+		window.Form_Vendaw.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Vendaw.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI VENDAW]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Vendaw.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS VENDAW]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Vendaw.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS VENDAW]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Vendaw.Data.RelationKeysSelector = {
+				get organ() { return $(':not([elem-identifier="Multiform"]) > #ValCodorgan', $('[data-form="Vendaw"]')); /* Hidden */ },
+		};
+
+		window.Form_Vendaw.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Vendaw.Data.RelationKeys = {
+			get formContext() { return window.Form_Vendaw; },
+			get organ() { return (this.formContext.Data.RelationKeysSelector.organ.getQControl() || {}).Value; /* Hidden FK */ },
+			set organ(newValue) { (this.formContext.Data.RelationKeysSelector.organ.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+		};
+	</text>
+}
+
+	window.Form_Vendaw.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Vendaw.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+	//-------------------------------------------------------------------
+	// Wizard related functions and configurations
+	//-------------------------------------------------------------------
+
+	// Stores the steps, for each wizard, where the save button of the main form should be hidden.
+	var wizardSaveOptions = {
+		'q-wizard-FASES': { 'current': 0, 'steps': [] },
+	};
+
+	/**
+	 * Updates the current step of the specified wizard and checks if the save button should be visible.
+	 * @@param {string} wizard The wizard name
+	 * @@param {number} step The current step order
+	 */
+	function toggleSaveButton(wizard, step)
+	{
+		if (window.Form_Vendaw.FormMode == 'delete')
+			return;
+
+		wizardSaveOptions[wizard].current = step;
+
+		// Iterates all the current steps, in all the wizards, to check if the save button should be visible.
+		var isVisible = true;
+		for (let i in wizardSaveOptions)
+		{
+			let current = wizardSaveOptions[i].current;
+			let steps = wizardSaveOptions[i].steps;
+			if (steps.includes(current))
+			{
+				isVisible = false;
+				break;
+			}
+		}
+
+		// The main save button at the bottom of the form.
+		var bottomBtnName = '@(Helpers.FormModeActionName("Vendaw", Model.FormMode))';
+		var bottomBtn = $('button[type="submit"][name="' + bottomBtnName + '"]');
+
+		// The action buttons on the sidebar.
+		var sidebarBtnSelector = '[data-q-ref="sidebar-main_container"] > [data-q-ref="sidebar-btns-actions"]';
+		var sidebarBtns = $(sidebarBtnSelector);
+
+		// The small save button on the top of the form.
+		var defaultTitle = '@(Resources.GRAVAR45301)';
+		var btnTitle = bottomBtn.attr('title');
+		var topBtn = $('[data-q-ref="form-btns-container-modes"] > button[title="' + btnTitle + '"]');
+		if (topBtn.length == 0)
+			topBtn = $('[data-q-ref="form-btns-container-modes"] > button[title="' + defaultTitle + '"]');
+
+		if (isVisible)
+		{
+			bottomBtn.show();
+			window.Form_Vendaw.initBtns();
+			if (sidebarBtns.length == 0)
+				$(sidebarBtnSelector).remove();
+		}
+		else
+		{
+			bottomBtn.hide();
+			if (topBtn.length > 0)
+				topBtn.remove();
+			if (sidebarBtns.length > 0)
+			{
+				$(sidebarBtnSelector).find('[data-q-ref="sidebar-btn-action"]:contains("' + btnTitle + '")').remove();
+				$(sidebarBtnSelector).find('[data-q-ref="sidebar-btn-action"]:contains("' + defaultTitle + '")').remove();
+			}
+		}
+	}
+
+	/**
+	 * Finds and loads the next step of the wizard.
+	 * @@param {string} wizardId The id of the wizard.
+	 * @@param {string} stepId The id of the step.
+	 * @@param {function} resolve A function that will be called if the step is successfully loaded.
+	 * @@param {function} reject A function that will be called if an error occurs while loading the step.
+	 */
+	function goToNextStep(wizardId, stepId, resolve, reject)
+	{
+		getNextStep($(wizardId), stepId, function(data, isSuccess)
+		{
+			if (isSuccess)
+			{
+				let nextStep = $('#' + data);
+				let isLoaded = nextStep.attr('step-loaded') == 'true';
+				if (!isLoaded)
+				{
+					loadWizardStep(nextStep, function(error)
+					{
+						QAnimation.hidePleaseWait();
+						if (error === undefined)
+							resolve(data);
+						else
+							reject(error);
+					});
+				}
+				else
+				{
+					QAnimation.hidePleaseWait();
+					resolve(data);
+				}
+			}
+			else
+			{
+				QAnimation.hidePleaseWait();
+				reject(data);
+				bootbox.alert(data);
+			}
+		});
+	}
+
+	/**
+	 * Creates a promise that tries to make the transition from the current step to the next.
+	 * @@param {string} wizardId The id of the wizard.
+	 * @@param {string} stepId The id of the step.
+	 * @@param {string} stepForm The form variable.
+	 * @@param {boolean} saveBefore True if an "apply" should be done before advancing to the next step, false otherwise.
+	 * @@returns A promise, to be executed afterward, which will try to select the next step of the wizard.
+	 */
+	function makeTransition(wizardId, stepId, stepForm, saveBefore)
+	{
+		QAnimation.showPleaseWait();
+		return new Promise(function(resolve, reject)
+		{
+			if (saveBefore)
+			{
+				saveWizardState($(wizardId), stepId, function(message, isSuccess, view)
+				{
+					$(wizardId).find('.validation-summary-errors').remove();
+					if (isSuccess)
+						goToNextStep(wizardId, stepId, resolve, reject);
+					else
+					{
+						QAnimation.hidePleaseWait();
+						if (view !== undefined && view.length > 0)
+						{
+							let form = window[stepForm];
+							delete window[stepForm];
+							form.ReplaceHTML(view);
+						}
+						else
+							bootbox.alert(message);
+						reject(message);
+					}
+				});
+			}
+			else
+				goToNextStep(wizardId, stepId, resolve, reject);
+		});
+	}
+
+	/**
+	 * Checks if the user entered the form in an editable mode.
+	 * @@returns True if the form is editable, false otherwise.
+	 */
+	function formIsEditable()
+	{
+		return '@(Model.FormMode == FormMode.Show)'.toLowerCase() !== 'true' && '@(Model.FormMode == FormMode.Delete)'.toLowerCase() !== 'true';
+	}
+
+	jQuery(function($)
+	{
+		$('#q-wizard-FASES').wizard({
+			transitions: {
+				step1Transition: function(state, action, saveBefore)
+				{
+					var wizardId = '#q-wizard-FASES';
+					var stepId = 'wizard-step-FASES-1';
+					var stepForm = 'Form_Vendaw01';
+
+					return makeTransition(wizardId, stepId, stepForm, saveBefore);
+				},
+				step2Transition: function(state, action, saveBefore)
+				{
+					var wizardId = '#q-wizard-FASES';
+					var stepId = 'wizard-step-FASES-2';
+					var stepForm = 'Form_Vendaw02';
+
+					return makeTransition(wizardId, stepId, stepForm, saveBefore);
+				},
+				step3Transition: function(state, action, saveBefore)
+				{
+					var wizardId = '#q-wizard-FASES';
+					var stepId = 'wizard-step-FASES-3';
+					var stepForm = 'Form_Vendaw03';
+
+					return makeTransition(wizardId, stepId, stepForm, saveBefore);
+				},
+				step4Transition: function(state, action, saveBefore)
+				{
+					var wizardId = '#q-wizard-FASES';
+					var stepId = 'wizard-step-FASES-4';
+					var stepForm = 'Form_Vendaw04';
+
+					return makeTransition(wizardId, stepId, stepForm, saveBefore);
+				},
+				step5Transition: function(state, action, saveBefore)
+				{
+					var wizardId = '#q-wizard-FASES';
+					var stepId = 'wizard-step-FASES-5';
+					var stepForm = 'Form_Vendaw05';
+
+					return makeTransition(wizardId, stepId, stepForm, saveBefore);
+				},
+				step6Transition: function(state, action, saveBefore)
+				{
+					var wizardId = '#q-wizard-FASES';
+					var stepId = 'wizard-step-FASES-6';
+					var stepForm = 'Form_Vendaw06';
+
+					return makeTransition(wizardId, stepId, stepForm, saveBefore);
+				},
+				step7Transition: function(state, action, saveBefore)
+				{
+					var wizardId = '#q-wizard-FASES';
+					var stepId = 'wizard-step-FASES-7';
+					var stepForm = 'Form_Vendaw07';
+
+					return makeTransition(wizardId, stepId, stepForm, saveBefore);
+				},
+			},
+			/**
+			 * This function is called when the wizard is created, to initialize all necessary variables.
+			 * @@param {object} event The javascript event object.
+			 * @@param {object} config An object storing the wizard configuration.
+			 */
+			onCreate: function(event, config)
+			{
+				config.isEditableMode = formIsEditable();
+				config.formMode = '@(Model.FormMode)';
+				config.formName = 'Vendaw';
+				config.wizardName = 'FASES';
+				config.styledWizardName = 'Fases';
+				config.wizardId = '#q-wizard-FASES';
+				config.showTitles = true;
+				config.isDynamic = false;
+				config.isVertical = false;
+				config.hasSteps = true;
+				config.hasProgress = false;
+				config.disallowEdit = false;
+				config.stepsAreBlocked = true;
+				config.visibleSteps = 5;
+				config.stepConfig[0] = { order: 1, applyIsOff: true, saveIsOff: false, backwardIsOff: false, forwardIsOff: false, applyOnForward: true, applyOnBackward: false, clearOnBackward: true, reloadStep: true, isRequired: false, title: '@(Resources.PROSPECTING26583)', caption: '@(Resources.PHASE_CAPTION_PLACEH06557)', formName: 'Form_Vendaw01', viewName: 'VENDAW01', icon: '', stepId: 'wizard-step-FASES-1' };
+				config.stepConfig[1] = { order: 2, applyIsOff: true, saveIsOff: false, backwardIsOff: false, forwardIsOff: false, applyOnForward: true, applyOnBackward: false, clearOnBackward: true, reloadStep: true, isRequired: false, title: '@(Resources.QUALIFICATION64257)', caption: '@(Resources.PHASE_CAPTION_PLACEH06557)', formName: 'Form_Vendaw02', viewName: 'VENDAW02', icon: '', stepId: 'wizard-step-FASES-2' };
+				config.stepConfig[2] = { order: 3, applyIsOff: true, saveIsOff: false, backwardIsOff: false, forwardIsOff: false, applyOnForward: true, applyOnBackward: false, clearOnBackward: true, reloadStep: true, isRequired: false, title: '@(Resources.PRE_APPROACH58979)', caption: '@(Resources.PHASE_CAPTION_PLACEH06557)', formName: 'Form_Vendaw03', viewName: 'VENDAW03', icon: '', stepId: 'wizard-step-FASES-3' };
+				config.stepConfig[3] = { order: 4, applyIsOff: true, saveIsOff: false, backwardIsOff: false, forwardIsOff: false, applyOnForward: true, applyOnBackward: false, clearOnBackward: true, reloadStep: true, isRequired: false, title: '@(Resources.APPROACH06577)', caption: '@(Resources.PHASE_CAPTION_PLACEH06557)', formName: 'Form_Vendaw04', viewName: 'VENDAW04', icon: '', stepId: 'wizard-step-FASES-4' };
+				config.stepConfig[4] = { order: 5, applyIsOff: true, saveIsOff: false, backwardIsOff: false, forwardIsOff: false, applyOnForward: true, applyOnBackward: false, clearOnBackward: true, reloadStep: true, isRequired: false, title: '@(Resources.PRESENTATION64246)', caption: '@(Resources.PHASE_CAPTION_PLACEH06557)', formName: 'Form_Vendaw05', viewName: 'VENDAW05', icon: '', stepId: 'wizard-step-FASES-5' };
+				config.stepConfig[5] = { order: 6, applyIsOff: true, saveIsOff: false, backwardIsOff: false, forwardIsOff: false, applyOnForward: true, applyOnBackward: false, clearOnBackward: true, reloadStep: true, isRequired: false, title: '@(Resources.OVERCOMING_OBJECTION04521)', caption: '@(Resources.PHASE_CAPTION_PLACEH06557)', formName: 'Form_Vendaw06', viewName: 'VENDAW06', icon: '', stepId: 'wizard-step-FASES-6' };
+				config.stepConfig[6] = { order: 7, applyIsOff: true, saveIsOff: false, backwardIsOff: false, forwardIsOff: false, applyOnForward: true, applyOnBackward: false, clearOnBackward: true, reloadStep: true, isRequired: false, title: '@(Resources.SALE_CLOSING56682)', caption: '@(Resources.PHASE_CAPTION_PLACEH06557)', formName: 'Form_Vendaw07', viewName: 'VENDAW07', icon: '', stepId: 'wizard-step-FASES-7' };
+				config.stepConfig[7] = { order: 8, applyIsOff: true, saveIsOff: false, backwardIsOff: false, forwardIsOff: false, applyOnForward: true, applyOnBackward: false, clearOnBackward: true, reloadStep: true, isRequired: false, title: '@(Resources.ACCOMPANIMENT25201)', caption: '@(Resources.PHASE_CAPTION_PLACEH06557)', formName: 'Form_Vendaw08', viewName: 'VENDAW08', icon: '', stepId: 'wizard-step-FASES-8' };
+				window.stepForms = ['Form_Vendaw01', 'Form_Vendaw02', 'Form_Vendaw03', 'Form_Vendaw04', 'Form_Vendaw05', 'Form_Vendaw06', 'Form_Vendaw07', 'Form_Vendaw08'];
+ 				window.Form_Vendaw.Controls.IFF_VENDAW__PSEUDFASES___.SetWizardForms(window.stepForms);
+				window.wizardConfig = config;
+
+				var primaryKey = $('#q-wizard-FASES').attr('q-record-id');
+				var formId = $('#' + primaryKey).val();
+
+				var wizardValues = {};
+				if (typeof localStorage['WizardValues'] === 'string')
+					wizardValues = JSON.parse(localStorage['WizardValues']);
+				if (typeof wizardValues['Vendaw' + formId] !== 'object')
+					wizardValues['Vendaw' + formId] = {};
+				if (typeof wizardValues['Vendaw' + formId]['FASES'] !== 'object')
+					wizardValues['Vendaw' + formId]['FASES'] = {};
+				localStorage.setItem('WizardValues', JSON.stringify(wizardValues));
+
+// USE /[MANUAL GQT FORM_CODEJS VENDAW_FASES_ON_CREATE]/
+			},
+			// Called when the user clicks the "forward" button, before moving forward.
+			beforeForward: function(event, state)
+			{
+				var stepIndex = -1;
+				var steps = state.stepsActivated;
+				if (steps.length > 1)
+					stepIndex = steps[steps.length - 2];
+
+				if (stepIndex >= 0 && stepIndex < window.stepForms.length)
+				{
+					let stepName = window.stepForms[stepIndex];
+					let controls = window[stepName].Controls;
+					let stepValues = {};
+
+					for (let i in controls)
+						stepValues[i] = { control: controls[i].Value, view: $('[data-identifier="' + i + '"]').val() };
+
+					let primaryKey = $('#q-wizard-FASES').attr('q-record-id');
+					let formId = $('#' + primaryKey).val();
+					let wizardValues = JSON.parse(localStorage['WizardValues']);
+					wizardValues['Vendaw' + formId]['FASES'][stepName] = stepValues;
+					localStorage.setItem('WizardValues', JSON.stringify(wizardValues));
+				}
+
+// USE /[MANUAL GQT FORM_CODEJS VENDAW_FASES_BEFORE_FORWARD]/
+			},
+			// Called when the user clicks the "back" button, before moving backward.
+			beforeBackward: function(event, state)
+			{
+// USE /[MANUAL GQT FORM_CODEJS VENDAW_FASES_BEFORE_BACKWARD]/
+			},
+			// Called whenever a new step/phase is selected, before the content is loaded.
+			beforeSelect: function(event, state)
+			{
+// USE /[MANUAL GQT FORM_CODEJS VENDAW_FASES_BEFORE_SELECT]/
+			},
+			// Called whenever the state of a step/phase is saved, before the save action.
+			beforeSave: function(event, state)
+			{
+// USE /[MANUAL GQT FORM_CODEJS VENDAW_FASES_BEFORE_SAVE]/
+			},
+			// Called when the user clicks the "forward" button, after moving forward.
+			afterForward: function(event, state)
+			{
+// USE /[MANUAL GQT FORM_CODEJS VENDAW_FASES_AFTER_FORWARD]/
+			},
+			// Called when the user clicks the "back" button, after moving backward.
+			afterBackward: function(event, state)
+			{
+				var stepIndex = state.stepIndex;
+				if (stepIndex >= 0 && stepIndex < window.stepForms.length && window.wizardConfig.stepConfig[stepIndex].clearOnBackward)
+				{
+					let stepName = window.stepForms[stepIndex];
+					let primaryKey = $('#q-wizard-FASES').attr('q-record-id');
+					let formId = $('#' + primaryKey).val();
+					let wizardValues = JSON.parse(localStorage['WizardValues']);
+					let stepValues = wizardValues['Vendaw' + formId]['FASES'][stepName];
+
+					for (let i in stepValues)
+					{
+						window[stepName].Controls[i].Value = stepValues[i].control;
+						$('input[data-identifier="' + i + '"]:not("[type=radio]")').val(stepValues[i].view);
+					}
+				}
+
+// USE /[MANUAL GQT FORM_CODEJS VENDAW_FASES_AFTER_BACKWARD]/
+			},
+			// Called whenever a new step/phase is selected, after the content is loaded.
+			afterSelect: function(event, state)
+			{
+				var wizard = state.step.closest('.wizard-area').attr('id');
+				var step = state.stepIndex + 1;
+				toggleSaveButton(wizard, step);
+				$(document).ready(setNavigationId);
+
+// USE /[MANUAL GQT FORM_CODEJS VENDAW_FASES_AFTER_SELECT]/
+			},
+			// Called whenever the state of a step/phase is saved, after the save action.
+			// Receives an additional parameter (response), that contains a json object with the response from the server.
+			afterSave: function(event, state, response)
+			{
+// USE /[MANUAL GQT FORM_CODEJS VENDAW_FASES_AFTER_SAVE]/
+			}
+		});
+	});
+
+	//-------------------------------------------------------------------
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitVendaw(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Vendaw.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeleteVendaw(event) {
+			event.preventDefault();
+			window.Form_Vendaw.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+    var ajaxCallsRemaining = $(".flash object embed").length;
+    $('form [elem-identifier="ButtonPrimary"]').click(function() {
+        var flashObjects = $(".flash object embed");
+        ajaxCallsRemaining = flashObjects.length;
+        if(flashObjects.length == 0)
+            return true;
+        else {
+            flashObjects.each(function() {
+               var flashObj = GetFlash($(this).attr('id'));
+               flashObj.UsedFlash.TriggerSave(flashObj);
+            });
+            return false;
+        }
+    });
+    </text>
+}
+// USE /[MANUAL GQT FORM_CODEJS VENDAW]/
+
+
+
+ 
+
+    $($('[elem-identifier="FormActions"]'), $('[data-form="Vendaw"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

@@ -1,0 +1,16 @@
+﻿@{
+    var user = GenioMVC.Models.Navigation.UserContext.Current.User;
+    var curRouteData = Request.RequestContext.RouteData;
+    var curAction = curRouteData.Values.ContainsKey("action") ? curRouteData.GetRequiredString("action") : string.Empty;
+    var ephActionsKey = user.CurrentModule + "EPH_Action_Available";
+    var ephActions = (List<string>)(Session[ephActionsKey] ?? new List<string>());
+
+    if (!user.EphOk || (ephActions.Any() && ephActions.Contains(curAction.ToUpper())))
+    {
+        Layout = "~/Views/Shared/Layouts/HorzMenu_WithHeader/_DefEph.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/Layouts/HorzMenu_WithHeader/_Layout.cshtml";
+    }
+}

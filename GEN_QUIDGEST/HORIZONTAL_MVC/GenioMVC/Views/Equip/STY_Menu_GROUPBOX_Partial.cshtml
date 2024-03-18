@@ -1,0 +1,161 @@
+﻿@model GenioMVC.ViewModels.Equip.STY_Menu_GROUPBOX_ViewModel
+@using Newtonsoft.Json;
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@using GenioMVC.ViewModels.Equip;    
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Equip>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodequip, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GROUPBOX_CMPNY_DESIGNAT]/
+		column.Expression(p => p.Cmpny.ValDesignat).Title(@Resources.DESIGNATION35876).Field("Cmpny.ValDesignat").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GROUPBOX_PESS1_NAME]/
+		column.Expression(p => p.Pess1.ValName).Title(@Resources.NAME31974).Field("Pess1.ValName").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GROUPBOX_EQUIP_SEQUENNR]/
+		column.Expression(p => p.ValSequennr).Title(@Resources.SEQUENTIAL_NO_38590).Field("ValSequennr").Size(6);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GROUPBOX_EQUIP_REGISTNR]/
+		column.Expression(p => p.ValRegistnr).Title(@Resources.NO__REGISTER04207).Field("ValRegistnr").Size(6);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GROUPBOX_TPEQU_TIPOEQUI]/
+		column.Expression(p => p.Tpequ.ValTipoequi).Title(@Resources.TYPE_OF_EQUIPMENT18080).Field("Tpequ.ValTipoequi").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GROUPBOX_WAREH_WAREHDES]/
+		column.Expression(p => p.Wareh.ValWarehdes).Title(@Resources.WAREHOUSE51864).Field("Wareh.ValWarehdes").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GROUPBOX_ITEM_ITEMDES]/
+		column.Expression(p => p.Item.ValItemdes).Title(@Resources.ARTICLE60065).Field("Item.ValItemdes").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GROUPBOX_EQUIP_DESIGNAT]/
+		column.Expression(p => p.ValDesignat).Title(@Resources.DESIGNATION35876).Field("ValDesignat").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GROUPBOX_EQUIP_DTAQUISI]/
+		column.Expression(p => p.ValDtaquisi).Title(@Resources.ACQUISITION44180).Field("ValDtaquisi").Size(8).Format("{0:d}");
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GROUPBOX_DECOM_DECOMNR]/
+		column.Expression(p => p.Decom.ValDecomnr).Title(@Resources.NO_BATE21045).Field("Decom.ValDecomnr").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GROUPBOX_EQUIP_DTDECO]/
+		column.Expression(p => p.ValDtdeco).Title(@Resources.DECOMISSION14486).Field("ValDtdeco").Size(8).Format("{0:d}");
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GROUPBOX_EQUIP_IFABATIF]/
+		column.Expression(p => p.ValIfabatif).Title(@Resources.DOWNED_EQUIPMENT43331).Field("ValIfabatif").Size(1);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GROUPBOX_EQUIP_PHOTOGRA]/
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValPhotogra, new {alt=@Resources.PHOTO51874,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCodequip, modelname = "Equip", fldname = "ValPhotogra" }))).Title(@Resources.PHOTO51874).Field("ValPhotogra").Size(3);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GROUPBOX_EQUIP_VALORTOT]/
+		column.Expression(p => p.ValValortot).Title(@Resources.TOTAL_VALUE30570).Field("ValValortot").Size(12);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GROUPBOX_EQUIP_FREQUENC]/
+		column.Expression(p => p.ArrayValfrequenc).Title(@Resources.LOAN_FREQUENCY00701).Field("ValFrequenc", "ArrayFreqempr").Size(1);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GROUPBOX_EQUIP_BOUGHT]/
+		column.Expression(p => p.ValBought).Title(@Resources.BOUGHT32044).Field("ValBought").Size(1);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GROUPBOX_ROOM1_ROOMNR]/
+		column.Expression(p => p.Room1.ValRoomnr).Title(@Resources.N_R__ROOM43805).Field("Room1.ValRoomnr").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GROUPBOX_EQUIP_DTREFERE]/
+		column.Expression(p => p.ValDtrefere).Title(@Resources.REFERENCE28402).Field("ValDtrefere").Size(16);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GROUPBOX_EQUIP_FIRST]/
+		column.Expression(p => p.ValFirst).Title(@Resources.FIRST42972).Field("ValFirst").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GROUPBOX_EQUIP_BEFORE]/
+		column.Expression(p => p.ValBefore).Title(@Resources.BEFORE60156).Field("ValBefore").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GROUPBOX_EQUIP_FOLLOWIN]/
+		column.Expression(p => p.ValFollowin).Title(@Resources.FOLLOWING22170).Field("ValFollowin").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GROUPBOX_EQUIP_LAST]/
+		column.Expression(p => p.ValLast).Title(@Resources.LAST49207).Field("ValLast").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GROUPBOX_EQUIP_SITEFABR]/
+		column.Expression(p => p.ValSitefabr).Title(@Resources.MANUFACTURER_S_WEBSI11084).Field("ValSitefabr").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GROUPBOX_EQUIP_LASTPHO]/
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValLastpho, new {alt=@Resources.LAST_PHOTO_ATTACHED43884,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCodequip, modelname = "Equip", fldname = "ValLastpho" }))).Title(@Resources.LAST_PHOTO_ATTACHED43884).Field("ValLastpho").Size(3);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GROUPBOX_EQUIP_MOVIMENT]/
+		column.Expression(p => p.ValMoviment).Title(@Resources.DRIVES34119).Field("ValMoviment").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GROUPBOX_EQUIP_QTDMOVIM]/
+		column.Expression(p => p.ValQtdmovim).Title(@Resources.QTD__MOVIMENTACOES28400).Field("ValQtdmovim").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GROUPBOX_EQUIP_SHOWRC]/
+		column.Expression(p => p.ValShowrc).Title(@Resources.SHOW_RECORD53851).Field("ValShowrc").Size(1);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Equip")
+        .Id("STY_Menu_GROUPBOX")
+        .AjaxRequest("Menu")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .DBEdit()
+        .Filters(this.Model.Menu.Filters)
+        .Form("Groupbx", false, false)
+        .SetFollowUp("Groupbx_Show", "Equip" , (Func<GenioMVC.Models.Equip, object>)(item => new { id = item.ValCodequip }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
+        .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
+		;
+        
+}
+
+@tbl.ToHtml()
+
+
+<script>
+ 
+ 
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qSTY_Menu_GROUPBOX, #STY_Menu_GROUPBOX_complex_filter th input, #STY_Menu_GROUPBOX_filters input").change(function() {
+                    $("#pSTY_Menu_GROUPBOX").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#STY_Menu_GROUPBOX_tableFilters').val(false);")
+                    @Html.Raw("$('#STY_Menu_GROUPBOX_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#STY_Menu_GROUPBOX_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $("[data-form='STY_Menu_GROUPBOX']").submit();
+                    @:      event.preventDefault();
+                    @:      ClearSearchBox('qSTY_Menu_GROUPBOX');
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#STY_Menu_GROUPBOX_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_STY_Menu_GROUPBOX').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+                 @if (this.Model.Menu.Filters.FiltersValues.Count >= 1) {
+                    var activeFields = Newtonsoft.Json.JsonConvert.SerializeObject(this.Model.Menu.Filters.FiltersValues);
+                    @: SetActiveFilters('STY_Menu_GROUPBOX', 'EQUIP', @Html.Raw(activeFields))
+                  }
+
+
+                setupHistoryClicks()
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='Menu']"));
+                    InitSpecialControls($('#Menu'));
+                    $('#Menu').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS STY_MENU_GROUPBOX]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+// USE /[MANUAL GQT LISTING_CODEJS STY_MENU_GROUPBOX]/
+</script>

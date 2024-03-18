@@ -1,0 +1,132 @@
+﻿@model GenioMVC.ViewModels.Wareh.Armaz02_ValArtigos_ViewModel
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@using Newtonsoft.Json;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@*List properties DBEDIT BUTTONS*@
+<div class="row">
+	<div class="col">
+		<div elem-identifier="List"  help-id="IFF_ARMAZ02_PSEUDARTIGOS_" style="padding-top: 0.5rem;"><label class = "i-text__label table-title c-table__title" > <h3>@Resources.CATALOG_ARTICLES06740</h3> </label></div>
+	</div>
+	<div class="col-auto search">
+	<div id="ValArtigos_simple_filter">
+		<div class="i-input-group input-xxlarge">
+			@Html.TextBox("qValArtigos", Model.Menu.Query, new { @class="i-input-group__field ", @onkeydown = "ListSearchEnter(event)", @style="height: inherit" } )
+			<div class="i-input-group--right">
+				<button type="button" class="b-icon--secondary i-input-group__button--secondary listSearchButton" elem-identifier="ListSearchButton" onclick="window.ValArtigos.Search();"><i class="glyphicons glyphicons-search i-input-group__tag-icon i-input-group__button-icon"></i></button>
+				<button id="ValArtigos_extra" class="b-icon--secondary i-input-group__button--secondary" type="button" onclick="changeFilters('#ValArtigos_complex_filter', 'ValArtigos_tableFilters')" title="@Resources.PESQUISA_AVANCADA06198"><span class="glyphicons glyphicons-zoom-in i-input-group__tag-icon i-input-group__button-icon"></span></button>
+			</div>
+		</div>
+	</div>
+	</div>
+</div>
+
+@* USE /[MANUAL GQT TABLE_FOR ARMAZ02_ARTIGOS]/ *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@using GenioMVC.ViewModels.Item;    
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Item>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCoditem, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN ARMAZ02_ARTIGOS_ITEM_ITEMDES]/
+		column.Expression(p => p.ValItemdes).Title(@Resources.ARTICLE60065).Field("ValItemdes").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN ARMAZ02_ARTIGOS_ITEM_ITEMCOD]/
+		column.Expression(p => p.ValItemcod).Title(@Resources.CODE49225).Field("ValItemcod").Size(15);
+// USE /[MANUAL GQT CUSTOM_COLUMN ARMAZ02_ARTIGOS_ITEM_ENTRIES]/
+		column.Expression(p => p.ValEntries).Title(@Resources.ENTRIES32319).Field("ValEntries").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN ARMAZ02_ARTIGOS_ITEM_EXITS]/
+		column.Expression(p => p.ValExits).Title(@Resources.OUTPUTS47833).Field("ValExits").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN ARMAZ02_ARTIGOS_ITEM_EXISTENC]/
+		column.Expression(p => p.ValExistenc).Title(@Resources.STOCKS47349).Field("ValExistenc").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN ARMAZ02_ARTIGOS_ITEM_IMAGE]/
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValImage, new {alt=@Resources.IMAGE65174,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCoditem, modelname = "Item", fldname = "ValImage" }))).Title(@Resources.IMAGE65174).Field("ValImage").Size(3);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Item")
+        .Id("ValArtigos")
+        .AjaxRequest("Armaz02_ValArtigos")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .TableList(hasFilters: true)
+        .RequestLink(@Url.Action("Armaz02_ValArtigos", new { id = Model.ValCodwareh, partialView = "Armaz02_ValArtigos"}))
+        .Filters(this.Model.Menu.Filters)
+        .Form("Artigext", false, false)
+        .ExtendedForm("Item", "ARTIGAPO")
+        .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
+		;
+        
+}
+
+@tbl.ToHtml()
+
+<script>
+
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                extendedAjaxForm('#ValArtigos');
+                $("#qValArtigos, #ValArtigos_complex_filter th input, #ValArtigos_filters input").change(function() {
+                    $("#pValArtigos").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#ValArtigos_tableFilters').val(false);")
+                    @Html.Raw("$('#ValArtigos_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#ValArtigos_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $('#ValArtigos_complex_filter button#applyComplexFilter').click();
+                    @:      event.preventDefault();
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#ValArtigos_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_ValArtigos').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+
+
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='ValArtigos']"));
+                    InitSpecialControls($('#ValArtigos'));
+                    $('#ValArtigos').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS ARMAZPOP_VALARTIGOS]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+</script>

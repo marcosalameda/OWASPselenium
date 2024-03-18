@@ -1,0 +1,168 @@
+﻿@model GenioMVC.ViewModels.Equip.STY_Menu_ACCORD_ViewModel
+@using GenioMVC.Resources
+@using System.Web.Script.Serialization
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Title = Model.DBEditTitle;
+	//Layout = "~/Views/Shared/Layouts/TopMenu_BT4/_Layout.cshtml";
+}
+
+@{
+	GenioMVC.ViewModels.Equip.STY_Menu_ACCORD_ViewModel modelSTY_Menu_ACCORD = new GenioMVC.ViewModels.Equip.STY_Menu_ACCORD_ViewModel(Navigation);
+	var columns = modelSTY_Menu_ACCORD.GetSearchColumns();
+
+	Dictionary<string, TableFilterField> fields = new Dictionary<string, TableFilterField>();
+
+
+	foreach (var col in columns)
+	{
+		var areaField = col.AreaField;
+		if (areaField.Area == "cmpny" && areaField.Field == "designat")
+		{
+			fields.Add("CMPNY.DESIGNAT", new TableFilterField("CMPNY", "DESIGNAT", Resources.DESIGNATION35876, "text"));
+		}
+		if (areaField.Area == "equip" && areaField.Field == "sequennr")
+		{
+			fields.Add("EQUIP.SEQUENNR", new TableFilterField("EQUIP", "SEQUENNR", Resources.SEQUENTIAL_NO_38590, "num"));
+		}
+		if (areaField.Area == "equip" && areaField.Field == "registnr")
+		{
+			fields.Add("EQUIP.REGISTNR", new TableFilterField("EQUIP", "REGISTNR", Resources.NO__REGISTER04207, "text", defaultSearch : true));
+		}
+		if (areaField.Area == "tpequ" && areaField.Field == "tipoequi")
+		{
+			fields.Add("TPEQU.TIPOEQUI", new TableFilterField("TPEQU", "TIPOEQUI", Resources.TYPE_OF_EQUIPMENT18080, "text"));
+		}
+		if (areaField.Area == "equip" && areaField.Field == "designat")
+		{
+			fields.Add("EQUIP.DESIGNAT", new TableFilterField("EQUIP", "DESIGNAT", Resources.DESIGNATION35876, "text"));
+		}
+		if (areaField.Area == "equip" && areaField.Field == "dtaquisi")
+		{
+			fields.Add("EQUIP.DTAQUISI", new TableFilterField("EQUIP", "DTAQUISI", Resources.ACQUISITION44180, "date"));
+		}
+		if (areaField.Area == "equip" && areaField.Field == "dtdeco")
+		{
+			fields.Add("EQUIP.DTDECO", new TableFilterField("EQUIP", "DTDECO", Resources.DECOMISSION14486, "date"));
+		}
+		if (areaField.Area == "equip" && areaField.Field == "sitefabr")
+		{
+			fields.Add("EQUIP.SITEFABR", new TableFilterField("EQUIP", "SITEFABR", Resources.SITIO_FABRICANTE26458, "text"));
+		}
+	}
+
+	JavaScriptSerializer serializer = new JavaScriptSerializer();
+	string fieldsStr = serializer.Serialize(fields);
+}
+
+<script>
+	//Fields with information for search filters
+	var fields = @Html.Raw(fieldsStr);
+	//Table List Search Filters
+	var searchFilterGroups = [];
+</script>
+
+
+@using (Ajax.BeginForm("STY_Menu_ACCORD", "Equip", new AjaxOptions
+{
+	HttpMethod= "POST",
+	InsertionMode = InsertionMode.Replace,
+	UpdateTargetId = "Menu",
+	OnSuccess = "InitMenuSpecialControls"
+}, new { @class = "form-horizontal", area="Equip", data_form="STY_Menu_ACCORD" }))
+{
+		<input id="SearchFilters" type="hidden" value="" />
+
+		<div class="page-header row" style="align-items:center">
+		   <div class="col">
+<div class="table-title c-table__title">
+					<h1>@ViewBag.Title</h1>
+				</div>
+
+		   </div>
+		   <div class="col-auto search">
+				<div class="i-input-group input-xxlarge" id="STY_Menu_ACCORD_simple_filter">
+					<div data-search-filter-menu-elem="filter-box-list"></div>
+					@Html.TextBox("qSTY_Menu_ACCORD", Navigation.GetStrValue("qSTY_Menu_ACCORD"), new { @class="i-input-group__field input-xxlarge dropdown-toggle", @title=@Resources.CAIXA_DE_PESQUISA53870, @onfocus="ToggleSearchFilterBox('STY_Menu_ACCORD');" ,@onkeydown = "ListSearchEnter(event)", @autocomplete = "off" ,@data_toggle = "dropdown",@data_search_field_menu_elem = "show", @onblur = "HideSearchFieldMenuOnUnfocus('STY_Menu_ACCORD');",@placeholder = Resources.PESQUISAR34506 + " " + Resources.NO__REGISTER04207})
+					<button id="qSTY_Menu_ACCORD-clearBtn" class="clear-search d-none" type="button">
+						<i class="glyphicons glyphicons-remove mr-1"></i>
+					</button>
+					@Html.SearchFieldMenu("STY_Menu_ACCORD", fields, "EQUIP")
+					<div class="b-btn-group i-input-group--right">
+						<button type="button" elem-identifier="ListSearchButton" class="btn b-icon b-icon--secondary i-input-group__button--secondary  listSearchButton" title="@Resources.PESQUISAR34506" onclick="AddSearchFieldFilter('STY_Menu_ACCORD', 'EQUIP', 'EQUIP.REGISTNR');"><i class="glyphicons glyphicons-search i-input-group__tag-icon i-input-group__button-icon"></i></button>
+						@{
+						var advancedSearchIcon = @Model.Menu.Filters.ShowTableFilters ? "glyphicons-zoom-out" : "glyphicons-zoom-in";
+						<button id="STY_Menu_ACCORD_extra" class="btn b-icon b-icon--secondary i-input-group__button--secondary" type="button" onclick="changeFilters('#STY_Menu_ACCORD_complex_filter', 'STY_Menu_ACCORD_tableFilters');applyComplexFilterIDs();" title="@Resources.PESQUISA_AVANCADA06198"><span class="glyphicons @advancedSearchIcon i-input-group__tag-icon i-input-group__button-icon"></span></button>
+						}
+						@Html.SearchFilterMenu("STY_Menu_ACCORD")
+					</div>
+				</div>
+			</div>
+			<div class="col-auto float-right" style="padding: 0; padding-right: 15px">
+				<div class="b-btn-group float-right" style="height: 32.625px">
+					@Html.ExportListMenu("STY_Menu_ACCORD")
+					@*List properties LISTS*@
+					@if(!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest())
+					{
+						<button class="b-btn b-icon b-icon--secondary" type="button" data-modal-form="Lstusr" data-modal-id="lstusr-edit-modal" data-table="STY_Menu_ACCORD" data-modal-url="@Url.Action("ChangeListProperties", "Lstusr", new { idlist = "STY_Menu_ACCORD", idlistController = "Equip", idlistArea = "Equip", codlista ="63f47415-010f-4c3a-890d-4d78a7386e11" })" title="@Resources.ALTERAR_A_APRESENTAC58401"><i class="glyphicons glyphicons-list e-icon"></i></button>
+					}
+				</div>
+			</div>
+		</div>
+ 	<div id="Menu" element-identifier="List">
+		@{ Html.RenderPartial("STY_Menu_ACCORD_Partial"); }
+	</div>
+	@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "STY_Menu_ACCORD" })
+	@Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId)
+	@Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock())
+	@Html.AntiForgeryToken()
+}
+
+
+
+<script>
+	$(document).ready(function () {
+		window.Form_STY_Menu_ACCORD = new QMenuForm($('[data-form="STY_Menu_ACCORD"]'), "Form_STY_Menu_ACCORD");
+		window.Form_STY_Menu_ACCORD.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_STY_Menu_ACCORD.Init();
+
+		//Initialize search field menu for search bar
+		InitSearchFieldMenu("qSTY_Menu_ACCORD");
+		RegisterClearEvents("STY_Menu_ACCORD")
+
+		// TVC - added code to load advanced filters after returning from a form
+		@{
+			string advFil = "";
+			if (!String.IsNullOrEmpty(Navigation.GetStrValue("AdvancedFilters")))
+			{
+				advFil = Navigation.GetStrValue("AdvancedFilters");
+			}
+		}
+
+		SearchFilters.value = '@Html.Raw(advFil)';
+		if (typeof SearchFilters.value === 'string' && SearchFilters.value.length > 0)
+			UpdateSearchFilterStatus("STY_Menu_ACCORD", JSON.parse(SearchFilters.value))
+	});
+</script>
+
+@helper codeJavascript()
+{
+<script>
+	QLocalStorage.remLocalStorage("savedInfo");
+	$(document).ready(function (e) {
+		InitSpecialControls($('[data-form="STY_Menu_ACCORD"]'));
+
+
+   	});
+
+	function InitMenuSpecialControls() {
+		InitSpecialControls($('[data-form="STY_Menu_ACCORD"]'));
+	}
+
+</script>
+}
+
+@section code_javascript {
+	@codeJavascript()
+}

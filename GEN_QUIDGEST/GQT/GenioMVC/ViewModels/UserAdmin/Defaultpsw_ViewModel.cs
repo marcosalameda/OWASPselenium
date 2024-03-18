@@ -8,9 +8,6 @@ using CSGenio.framework;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 
-using JsonIgnoreAttribute = Newtonsoft.Json.JsonIgnoreAttribute;
-using SelectList = System.Web.Mvc.SelectList;
-
 namespace GenioMVC.ViewModels.Psw
 {
 	public class Defaultpsw_ViewModel : FormViewModel<Models.Psw>

@@ -89,6 +89,7 @@ namespace CSGenio.business
 
             Qfield.NotNull = true;
 			Qfield.Dupmsg = "";
+            Qfield.NotDup = true;
             Qfield.ArrayName = "dbo.GetValArrayCassettyp";
             Qfield.ArrayClassName = "Assettyp";
 			info.RegisterFieldDB(Qfield);

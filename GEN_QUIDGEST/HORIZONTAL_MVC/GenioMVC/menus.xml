@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-16"?>
 <ArrayOfMenuEntry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <MenuEntry TYPE="ITEM" DESC="STYLE47121" ID="STY" IMG="" IMGVUE="" LVL="0" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false">
     <MENU TYPE="ITEM" DESC="OVERVIEW09715" SIGLA="" ID="1" HELPTITLE="" IMG="" IMGVUE="" FNT="HOME" SVG="" LVL="1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="1" DEFAULTACTION="">
@@ -407,6 +407,9 @@
           <MENU TYPE="ITEM" ID="5211" PRTID="521" IMG="" ACT="GenGenio.MenuFormConsulta" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="5211" />
         </MENU>
       </MENU>
+    </MENU>
+    <MENU TYPE="ITEM" DESC="NEW_MENU31759" SIGLA="" ID="6" HELPTITLE="" LVL="1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="6" DEFAULTACTION="">
+      <ACCESS>1</ACCESS>
     </MENU>
   </MenuEntry>
   <MenuEntry TYPE="ITEM" DESC="GENIO_QUALITY_TESTS30896" ID="GQT" IMG="" IMGVUE="" LVL="0" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false">

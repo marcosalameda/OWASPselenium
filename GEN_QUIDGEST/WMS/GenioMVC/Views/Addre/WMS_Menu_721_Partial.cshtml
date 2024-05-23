@@ -1,0 +1,131 @@
+﻿@model GenioMVC.ViewModels.Addre.WMS_Menu_721_ViewModel
+@using Newtonsoft.Json;
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@using GenioMVC.ViewModels.Addre;    
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Addre>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodaddre, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_721_ADDRE_ADDRUSE]/
+		column.Expression(p => p.ArrayValaddressuse).Title(@Resources.ADDRESS_USE16014).Field("ValAddressuse", "ArrayAddressu").Size(7);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_721_ADDRE_ADDRTYPE]/
+		column.Expression(p => p.ArrayValaddresstype).Title(@Resources.ADDRESS_TYPE12455).Field("ValAddresstype", "ArrayAddresst").Size(8);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_721_ADDRE_ADDRTEXT]/
+		column.Expression(p => p.ValAddresstext).Title(@Resources.ENTIRE_ADDRESS64248).Field("ValAddresstext").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_721_ADDRE_ADDRCITY]/
+		column.Expression(p => p.ValAddresscity).Title(@Resources.ADDRESS_CITY41109).Field("ValAddresscity").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_721_ADDRE_ADDRDIST]/
+		column.Expression(p => p.ValAddressdistrict).Title(@Resources.ADDRESS_DISTRICT48524).Field("ValAddressdistrict").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_721_ADDRE_ADDRSTAT]/
+		column.Expression(p => p.ValAddressstate).Title(@Resources.ADDRESS_STATE16863).Field("ValAddressstate").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_721_ADDRE_ADDRPCOD]/
+		column.Expression(p => p.ValAddresspostalcode).Title(@Resources.ADDRESS_POSTAL_CODE41631).Field("ValAddresspostalcode").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_721_ADDRE_ADDRCOUN]/
+		column.Expression(p => p.ValAddresscountry).Title(@Resources.ADDRESS_COUNTRY56159).Field("ValAddresscountry").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_721_ADDRE_PERISTAR]/
+		column.Expression(p => p.ValPeriodstart).Title(@Resources.PERIOD_START07901).Field("ValPeriodstart").Size(16);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_721_ADDRE_PERIEND]/
+		column.Expression(p => p.ValPeriodend).Title(@Resources.PERIOD_END31576).Field("ValPeriodend").Size(16);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Addre")
+        .Id("WMS_Menu_721")
+        .AjaxRequest("Menu")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .DBEdit()
+        .Filters(this.Model.Menu.Filters)
+        .Form("Addre", false, false)
+        .UpdateConditions((item)=>Addre_ViewModel.UpdateConditions(item))
+        .ViewConditions((item)=>Addre_ViewModel.ViewConditions(item))
+        .DeleteConditions((item)=>Addre_ViewModel.DeleteConditions(item))
+        .InsertConditions((item)=>Addre_ViewModel.InsertConditions(this.Model.Navigation))
+        .SetFollowUp("Addre_Show", "Addre" , (Func<GenioMVC.Models.Addre, object>)(item => new { id = item.ValCodaddre }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
+        .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
+		;
+        
+}
+
+@tbl.ToHtml()
+
+
+<script>
+ 
+ 
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qWMS_Menu_721, #WMS_Menu_721_complex_filter th input, #WMS_Menu_721_filters input").change(function() {
+                    $("#pWMS_Menu_721").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#WMS_Menu_721_tableFilters').val(false);")
+                    @Html.Raw("$('#WMS_Menu_721_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#WMS_Menu_721_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $("[data-form='WMS_Menu_721']").submit();
+                    @:      event.preventDefault();
+                    @:      ClearSearchBox('qWMS_Menu_721');
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#WMS_Menu_721_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_WMS_Menu_721').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+                 @if (this.Model.Menu.Filters.FiltersValues.Count >= 1) {
+                    var activeFields = Newtonsoft.Json.JsonConvert.SerializeObject(this.Model.Menu.Filters.FiltersValues);
+                    @: SetActiveFilters('WMS_Menu_721', 'ADDRE', @Html.Raw(activeFields))
+                  }
+
+
+                setupHistoryClicks()
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='Menu']"));
+                    InitSpecialControls($('#Menu'));
+                    $('#Menu').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS WMS_MENU_721]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+// USE /[MANUAL GQT LISTING_CODEJS WMS_MENU_721]/
+</script>

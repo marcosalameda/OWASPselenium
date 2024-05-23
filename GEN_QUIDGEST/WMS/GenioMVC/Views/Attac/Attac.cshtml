@@ -1,0 +1,253 @@
+﻿@model GenioMVC.ViewModels.Attac.Attac_ViewModel
+@using GenioMVC.Models.Navigation;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Form = "Attac";
+	ViewBag.Title = @Resources.ATTACHMENT29376;
+    ViewBag.formmode = Model.GetFormMode;
+	ViewBag.ClassForFormLayout = "form-flow";
+}
+
+
+@if (!Model.NestedForm) {
+    if(Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+    {
+        using (Html.BeginForm("Action", "Attac", FormMethod.Post, new { enctype="multipart/form-data", @class = "form-horizontal", area="Attac", data_form="Attac" }))
+        {
+            @form_content_alert()
+            @Html.QValidationSummary()
+	        @LoadDefault()
+        }
+    }
+    else
+    {
+        <div class="form-horizontal" id="Attac" area="Attac" data-form="Attac">
+	        @LoadDefault()
+        </div>
+    }
+}
+else {
+    <div class="c-card nested-form" id="Attac_well" area="Attac" data-form="Attac">
+        @Html.QValidationSummary()
+		@LoadDefault()
+    </div>
+}
+
+@helper form_content_body() {
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-dbedit draggable " id="CONTAINER_IFF_ATTAC___ASSETNAME____">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.TableAssetName, new { label_id="IFF_ATTAC___ASSETNAME____", @class = " i-text__label", id="LABEL_IFF_ATTAC___ASSETNAME____"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('IFF_ATTAC___ASSETNAME____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DropDownListFor(model => model.ValCodasset, Model.TableAssetName.List , "", new {help_id = "IFF_ATTAC___ASSETNAME____", @class = "i-select chosen-dropdown input-xxlarge", data_identifier = "IFF_ATTAC___ASSETNAME____", @pers_cs_area = "Asset", @pers_cs_field = "ValCodasset", @db_field = "ValCodasset", @db_full_field_name = "attac.codasset", data_has_more = Model.TableAssetName.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableAssetName.Selected, data_dbedit_value = Model.TableAssetName.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodattac, @data_see_more = "Attac_AssetValName", title = @Resources.IDENTIFICATION_NAME16317, data_see_more_url = @Url.Action("Attac_AssetValName","Attac"), data_is_dbedit = "true", data_fields = "asset.codasset,asset.name", data_main_field = "Asset.ValName", data_elements = 0, data_filled_by_history = Model.TableAssetName.FilledByHistory, @dependant_fields = "asset.codasset,asset.name" })
+								@Html.ValidationMessageFor(model => model.TableAssetName)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-date-picker draggable " id="CONTAINER_LED_ATTAC___ATTACATTACHED">
+								<div class="d-inline-flex">
+								@Html.LabelFor(model => model.ValAttached, new { label_id="LED_ATTAC___ATTACATTACHED", @class = " i-text__label", id="LABEL_LED_ATTAC___ATTACATTACHED"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_ATTAC___ATTACATTACHED','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DateFor(model => model.ValAttached, new {help_id = "LED_ATTAC___ATTACATTACHED", @class = "i-input-group__field b-icon-text input-medium", data_identifier = "LED_ATTAC___ATTACATTACHED", @pers_cs_area = "Attac", @pers_cs_field = "ValAttached", @db_field = "ValAttached", title = @Resources.ATTACHED26247 })
+								@Html.ValidationMessageFor(model => model.ValAttached)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-textarea draggable " id="CONTAINER_LED_ATTAC___ATTACNOTE____">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValNote, new { label_id="LED_ATTAC___ATTACNOTE____", @class = " i-text__label", id="LABEL_LED_ATTAC___ATTACNOTE____"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_ATTAC___ATTACNOTE____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextAreaFor(model => model.ValNote, 2, 85, new {help_id = "LED_ATTAC___ATTACNOTE____", @class = "i-textarea__field i-textarea input-xxlarge", data_identifier = "LED_ATTAC___ATTACNOTE____", @pers_cs_area = "Attac", @pers_cs_field = "ValNote", @db_field = "ValNote", title = @Resources.NOTE54557 })
+								@Html.ValidationMessageFor(model => model.ValNote)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-document draggable " id="CONTAINER_LED_ATTAC___ATTACDOCUMENT">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValDocument, new { label_id="LED_ATTAC___ATTACDOCUMENT", @class = " i-text__label", id="LABEL_LED_ATTAC___ATTACDOCUMENT"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_ATTAC___ATTACDOCUMENT','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@if (Model.IsEditableMode) {
+									@Html.EditorFor(model => model.ValDocument, new { fieldFk = Model.ValDocumentfk, docProperties = Model.ValDocumentPropertiesVM, baseArea = "Attac", baseAreaKey = Model.ValCodattac, useTemplates =  false, data_identifier="LED_ATTAC___ATTACDOCUMENT", identifier = "FATTAC", fieldSize = "input-xxlarge", isRequired = false, maxSize = "null", allowedTypes = "null", htmlAttributes = new {help_id = "LED_ATTAC___ATTACDOCUMENT", title = @Resources.DOCUMENT00695 }})
+								} else {
+									@Html.DisplayFor(model => model.ValDocument, new { fieldFk = Model.ValDocumentfk, docProperties = Model.ValDocumentPropertiesVM, baseArea = "Attac", baseAreaKey = Model.ValCodattac, useTemplates =  false, data_identifier="LED_ATTAC___ATTACDOCUMENT", identifier = "FATTAC", fieldSize = "input-xxlarge", htmlAttributes = new {help_id = "LED_ATTAC___ATTACDOCUMENT", title = @Resources.DOCUMENT00695 }})
+								}
+								@Html.ValidationMessageFor(model => model.ValDocument)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			@Html.HiddenFor(model => model.ValCodattac, new { @pers_cs_field="ValCodattac", @pers_cs_area="Attac", data_refresh = "true", @form_area="true", @data_value = Model.ValCodattac, @data_identifier = "LED_ATTAC___ATTACCODATTAC" })
+
+            @Html.Hidden("IgnoreWarnings", "false", new { id = "IgnoreWarnings" })
+
+			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Attac" })
+            @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Attac" })
+            @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Attac" })
+			if (!Model.NestedForm)
+            {
+                @Html.AntiForgeryToken()
+            }
+}
+
+@helper form_content_alert() {
+	if(Model.FormMode == FormMode.Delete) {
+		<div class="c-alert c-alert--warning">
+			<i class="glyphicons glyphicons-alert c-alert__icon" aria-hidden="true"></i>
+			<div class="c-alert__text">
+				&ensp;@Resources.DESEJA_ELIMINAR_ESTA24564
+			</div>
+		<!--Ao confirmar esta ficha irá ser eliminada da base de dados. Cancele caso não tenha a certeza.-->
+		</div>
+	}
+}
+
+@helper form_content_buttons() {
+
+
+
+
+    @* Extended support form *@
+    if (Model.NestedForm)
+    {
+        if (Model.IsEditableMode)
+        {
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("Attac", Model.FormMode).ToString(), "Attac")", "Attac_well")' qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>
+                    @Resources.GRAVAR45301
+            </button>
+            <button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Attac_Delete", "Attac", new {id = @Model.ValCodattac} )", "Attac_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+
+            <script type="application/javascript">
+                $(document).ready(function () { loaded($("#Attac_well")); });
+            </script>
+        }
+
+        @* javascript code_javascript *@
+        @*@codeJavascript()*@
+    }
+    @* Normal mode *@
+    else
+    {
+        if (Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+        {
+            if (Model.FormMode == FormMode.New && Convert.ToBoolean(Model.Navigation.CurrentLevel.GetEntry("repeatInsertion")))
+            {
+            <button type="button" data-end-pers="true" name="Attac_repete_insertion" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitAttac(event, true)" qbutton="ok_new">@Resources.GRAVAR_E_CRIAR_NOVA17771</button>
+            }
+            if(Model.FormMode == FormMode.Delete)
+            {
+				<button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Attac", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitDeleteAttac(event)" qbutton="delete">
+                    <i class="glyphicons glyphicons-check e-icon" aria-hidden="true"></i>@Resources.CONFIRMAR09808
+                </button>
+            }
+            else
+            {
+                <button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Attac", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitAttac(event)" title="@Resources.GRAVAR45301" data-selector="true" qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>@Resources.GRAVAR45301
+                </button>
+            }
+
+            <button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-href="@Url.Action("Attac_Cancel", "Attac", new { niv = Model.Navigation.CurrentLevel.Level })" onclick="javascript:window.Form_Attac.Cancel()" title="@Resources.CANCEL65428" data-selector="true" qbutton="cancel">
+                <i class="glyphicons glyphicons-ban-circle e-icon" aria-hidden="true"></i>@Resources.CANCEL65428
+            </button>
+        }
+        else if (!(ViewBag.isHomePage ?? false))
+        {
+            @Html.ActionLinkWithIcon(@Resources.RETROCEDER16633, "Attac_Cancel","Attac","glyphicons glyphicons-arrow-left e-icon", null, new { @class = "b-icon-text b-icon-text--secondary", @data_end_pers = "true", @title = @Resources.RETROCEDER16633, qbutton = "cancel" })
+        }
+    }
+}
+
+@helper LoadDefault() {
+    if (Model.NestedForm)
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div class="c-card__header">
+                    <div class="c-card__header-tag">
+						<span class="form-header" style="padding:0;">
+							<i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+						</span>
+                    </div>
+                </div>
+                <div class="c-card__body">
+                    @form_content_body()
+                    <div elem-identifier="FormActions" class="form-actions" data-form-actions="Attac">
+                        @form_content_buttons()
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    }
+    else
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div id="c-stickyHeader">
+                    <div class="c-action-bar d-flex">
+                        <span class="form-header">
+                            <i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+                        </span>
+                        <div data-parent-form="Attac" data-q-ref="form-btns-main_container"></div>
+                    </div>
+                </div>
+
+                @form_content_body()
+                <div elem-identifier="FormActions" class="form-actions" data-form-actions="Attac">
+                @form_content_buttons()
+                </div>
+            </div>
+        </fieldset>
+    }
+}
+
+@helper LoadFromLayout()
+{
+}
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT ATTAC]/ *@
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_ATTAC" data-form-javascript="true">
+@Html.Partial("Attac_JavaScript", Model, ViewData)
+</div>
+}
+
+@section code_javascript
+{
+	@codeJavascript()
+}
+
+@if (Request.IsAjaxRequest())
+{
+    @codeJavascript()
+    @includeStylesheets()
+}
+
+@helper includeStylesheets()
+{
+
+ }
+
+@section include_stylesheets {
+    @includeStylesheets()
+}

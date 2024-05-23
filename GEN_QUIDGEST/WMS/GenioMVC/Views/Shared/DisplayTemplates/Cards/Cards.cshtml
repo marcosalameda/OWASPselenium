@@ -1,0 +1,136 @@
+@using System.Collections.Generic;
+@{
+    #region Properties
+    // Common
+    var containerId = (string)ViewData["container-id"];
+    var tableId = (string)ViewData["table-id"];
+    var subtype = (string)ViewData["subtype"];
+    var rows = (List<Dictionary<string, object>>)ViewData["rows"];
+    var style = (Dictionary<string, string>)ViewData["style-vars"];
+
+    // Data (default values)
+    var actionsBtnPlacement = "header";
+    var actionsBtnFloat = "float-right";
+    var cardBgColor = "auto";
+    var alignCenter = false;
+    var hoverScaleAmount = "1.00";
+    var cardSize = "normal";
+    var cardsAlignment = "left";
+
+    if (style.ContainsKey("image-shape") && style["image-shape"] == "circular") { subtype = "card-centered"; }
+
+    // Init configuration
+    if (style.ContainsKey("actions-placement")) { actionsBtnPlacement = style["actions-placement"]; }
+    if (style.ContainsKey("actions-alignment")) { actionsBtnFloat = "float-" + style["actions-alignment"]; }
+    if (style.ContainsKey("background-color")) { cardBgColor = style["background-color"]; }
+    if (style.ContainsKey("content-alignment")) { alignCenter = style["content-alignment"] == "center"; }
+    if (style.ContainsKey("hover-scale-amount")) { hoverScaleAmount = style["hover-scale-amount"]; }
+    if (style.ContainsKey("size")) { cardSize = style["size"]; }
+    if (style.ContainsKey("container-alignment")) { cardsAlignment = style["container-alignment"]; }
+
+    // Force based on subtype
+    if (subtype == "card-img-top") { actionsBtnPlacement = "footer"; }
+
+    // Computed values
+    var subtypeSuffix = subtype.Replace("card-", "");
+    var subtypeClass = "c-card--" + subtypeSuffix;
+    var classes = new List<String>() { "c-card", subtypeClass };
+    if (cardSize == "small") { classes.Add("c-card--small"); }
+    if (cardBgColor != "auto") { classes.Add(cardBgColor); }
+    if (alignCenter) { classes.Add("text-center"); }
+
+    var scaleAmount = hoverScaleAmount != "1.00" ? "scale(" + hoverScaleAmount + ")" : "none";
+    var justifyContentCenter = cardsAlignment == "center" ? "justify-content-center" : "";
+    
+// USE /[MANUAL GQT SPECIAL_RENDERING_VARS CARDS]/
+
+    #endregion
+}
+
+<link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/stylesheets/cards.css")" />
+
+<div id="@containerId" class="cards-container container-fluid">
+    <div class="row c-card--gridView @justifyContentCenter">
+        @foreach (var row in rows)
+        {
+            ViewDataDictionary viewData = new ViewDataDictionary();
+            viewData["row"] = row;
+            viewData["style-vars"] = style;
+            viewData["classes"] = String.Join(" ", classes);
+            viewData["table-id"] = tableId;
+            viewData["container-id"] = containerId;
+
+            if (!row.ContainsKey("image")) { row["image"] = null; }
+            if (!row.ContainsKey("title")) { row["title"] = null; }
+            if (!row.ContainsKey("subtitle")) { row["subtitle"] = null; }
+            if (!row.ContainsKey("text")) { row["text"] = new List<string[]>(); }
+            if (!row.ContainsKey("btn-href")) { row["btn-href"] = null; }
+            if (!row.ContainsKey("custom-followup")) { row["custom-followup"] = null; }
+
+            <div class="col-auto d-flex align-items-stretch">
+                @{ Html.RenderPartial("~/Views/Shared/DisplayTemplates/Cards/" + subtype + ".cshtml", viewData); }
+            </div>
+        }
+        @if (!rows.Any())
+        {
+            <div style="display: flex; flex-direction: column; align-items: center; margin: 15px">
+                <img src="@Url.Content("~/Content/img/empty_card_container.png")" alt="@Resources.SEM_REGISTOS62529" style="width: 18rem" />
+                <h5 style="font-weight: bold">@Resources.SEM_REGISTOS62529</h5>
+                <span class="c-alert__row-text" style="color: #747c91"><i>&lt;@Resources.VAZIO58398&gt;</i></span>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+/* Set the click event of each card */
+function onCardClick(card) {
+    let followup = card.children()[0];
+    let isPopup = followup.getAttribute("data-modal-form") == "true";
+    let href = followup.getAttribute("href");
+
+    if (isPopup) OpenModalForm(href, {});
+    else QUtils.NavigateTo = href;
+}
+
+$(document).ready(function () {
+    // Set the correct css class for dropdown placement
+    if ("@actionsBtnPlacement" == "header") {
+        if ("@actionsBtnFloat" == "float-right")
+            $(".sr-dropdown-menu").addClass("sr-dropdown-menu-header-right");
+        else $(".sr-dropdown-menu").addClass("sr-dropdown-menu-header-left");
+    } else {
+        if ("@actionsBtnFloat" == "float-right")
+            $(".sr-dropdown-menu").addClass("sr-dropdown-menu-footer-right");
+        else $(".sr-dropdown-menu").addClass("sr-dropdown-menu-footer-left");
+    }
+
+    const cards = $("#@containerId .c-card");
+
+    cards.find("button").each(function () {
+        $(this).one("click", function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            $(this).dropdown("toggle");
+        });
+    });
+    cards.find("a").each(function () {
+        $(this).one("click", function (e) {
+            e.stopPropagation();
+        });
+    });
+
+    cards.click(function () {
+        onCardClick($(this));
+    });
+});
+</script>
+
+<style>
+.c-card--gridView .c-card:hover,
+.c-card--gridView .c-card:focus-within {
+    transform: @scaleAmount;
+    box-shadow: 0px 15px 26px rgba(0, 0, 0, 0.35);
+    z-index: 100;
+}
+</style>

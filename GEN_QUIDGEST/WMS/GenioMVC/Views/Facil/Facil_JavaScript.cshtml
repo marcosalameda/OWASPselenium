@@ -1,0 +1,345 @@
+﻿@model GenioMVC.ViewModels.Facil.Facil_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS FACIL]/ *@
+<script  type="text/javascript">
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Facil !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Facil = new QForm($('[data-form="Facil"]'), "Form_Facil");
+		}
+		window.Form_Facil.baseArea = "facil";
+		window.Form_Facil.FormMode = '@Model.GetFormMode';
+		window.Form_Facil.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Facil.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Facil")',
+			GetDependants:		'@Url.Action("GetDependants", "Facil")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Facil", "Facil")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Facil", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Facil", "Facil")',
+		};
+		window.Form_Facil.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Facil.formSaveEdit = '@Url.Action("Facil_SaveEdit", "Facil")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Facil.formAction = 'Facil_New';
+		window.Form_Facil.formRedirectURL = '@Url.Action("Facil_New_Redirect", "Facil")';
+		window.Form_Facil.formSubmitURL = '@Url.Action("Facil_New", "Facil")';
+		window.Form_Facil.formRedirectURL_repeatInsertion = '@Url.Action("Facil_New_Redirect", "Facil", new { repeatInsertion = true})';
+		window.Form_Facil.formSubmitURL_repeatInsertion = '@Url.Action("Facil_New", "Facil", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Facil.formAction = 'Facil_Edit';
+		window.Form_Facil.formRedirectURL = '@Url.Action("Facil_Edit_Redirect", "Facil")';
+		window.Form_Facil.formSubmitURL = '@Url.Action("Facil_Edit", "Facil")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Facil.formAction = 'Facil_Duplicate';
+		window.Form_Facil.formRedirectURL = '@Url.Action("Facil_Duplicate_Redirect", "Facil")';
+		window.Form_Facil.formSubmitURL = '@Url.Action("Facil_Duplicate", "Facil")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Facil.formAction = 'Facil_Delete';
+		window.Form_Facil.formRedirectURL = '@Url.Action("Facil_Delete_Redirect", "Facil")';
+		window.Form_Facil.formSubmitURL = '@Url.Action("Facil_Delete", "Facil")';
+	</text>
+}
+		window.Form_Facil.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.IFF_FACIL___ENTITNAME____ = new QDbeditControl($('[data-identifier="IFF_FACIL___ENTITNAME____"]', this.element), window.Form_Facil);
+
+			this.Controls.LED_FACIL___FACILINCORPOR = new QDateControl($('[data-identifier="LED_FACIL___FACILINCORPOR"]', this.element), window.Form_Facil);
+
+			this.Controls.LED_FACIL___FACILNAME____ = new QTextControl($('[data-identifier="LED_FACIL___FACILNAME____"]', this.element), window.Form_Facil);
+
+			this.Controls.LED_FACIL___FACILFACILTYP = new QArrayControl($('[data-identifier="LED_FACIL___FACILFACILTYP"]', this.element), window.Form_Facil);
+
+			this.Controls.IFF_FACIL___FACTYTYPE____ = new QDbeditControl($('[data-identifier="IFF_FACIL___FACTYTYPE____"]', this.element), window.Form_Facil);
+
+			this.Controls.LED_FACIL___FACILADDRESS_ = new QGenericControl($('[data-identifier="LED_FACIL___FACILADDRESS_"]', this.element), window.Form_Facil);
+
+			this.Controls.LED_FACIL___FACILIMAGE___ = new QImageControl($('[data-identifier="LED_FACIL___FACILIMAGE___"]', this.element), window.Form_Facil, '@Html.Raw(Url.Action("ImageDelete", "Facil", new { id=Model.ValCodfacil, modelname="Facil", fldname="ValImage" }))', '@Html.Raw(Url.Action("ImageCropper", "Facil", new { key=Model.ValCodfacil, modelname= "Facil", fldname= "ValImage", identifier= "FFACIL", FormName= "Facil", FieldId= "LED_FACIL___FACILIMAGE___" }))',@Html.IsImageEmpty(Model.ValImage));
+
+			this.Controls.LED_FACIL___FACILGPSINPUT = new QRadioButtonArrayControl($('[data-identifier="LED_FACIL___FACILGPSINPUT"]', this.element), window.Form_Facil);
+
+			this.Controls.LED_FACIL___FACILLATITUDE = new QNumericControl($('[data-identifier="LED_FACIL___FACILLATITUDE"]', this.element), window.Form_Facil);
+
+			this.Controls.LED_FACIL___FACILLONGITUD = new QNumericControl($('[data-identifier="LED_FACIL___FACILLONGITUD"]', this.element), window.Form_Facil);
+
+			this.Controls.LED_FACIL___FACILGEOCOORI = new QTextControl($('[data-identifier="LED_FACIL___FACILGEOCOORI"]', this.element), window.Form_Facil);
+
+
+
+
+			this.Controls.LED_FACIL___FACILCODFACIL = new QHiddenControl($('[data-identifier="LED_FACIL___FACILCODFACIL"]', this.element), window.Form_Facil);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	</text>
+}
+
+		window.Form_Facil.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Facil.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI FACIL]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Facil.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS FACIL]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Facil.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS FACIL]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Facil.Data.RelationKeysSelector = {
+				get entit() { return $(':not([elem-identifier="Multiform"]) > #ValCodentit[pers-cs-area="Entit"]', $('[data-form="Facil"]')); /* DBEdit */ },
+				get facty() { return $(':not([elem-identifier="Multiform"]) > #ValCodfacty[pers-cs-area="Facty"]', $('[data-form="Facil"]')); /* DBEdit */ },
+		};
+
+		window.Form_Facil.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Facil.Data.RelationKeys = {
+			get formContext() { return window.Form_Facil; },
+			get entit() { return (this.formContext.Data.RelationKeysSelector.entit.getQControl() || {}).Value; /* DBEdit */ },
+			set entit(newValue) { (this.formContext.Data.RelationKeysSelector.entit.getQControl() || {}).Value = newValue; /* DBEdit */ },
+			get facty() { return (this.formContext.Data.RelationKeysSelector.facty.getQControl() || {}).Value; /* DBEdit */ },
+			set facty(newValue) { (this.formContext.Data.RelationKeysSelector.facty.getQControl() || {}).Value = newValue; /* DBEdit */ },
+		};
+	</text>
+}
+
+	window.Form_Facil.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+		@* Default of the 'ValCodfacty' field *@
+		window.Form_Facil.SetFormulaDefault('IFF_FACIL___FACTYTYPE____', function() {
+						return (window.Form_Facil.Glob.ValCodfacty);
+		}, 'GLOBVALCODFACTY_CHANGE', 'emptyG');
+		
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+		@* Binding dos eventos que vão despoletar o Mostra Quando do campo ValLatitude *@
+		$(qForm).bind('FORM_LOADED VALGPSINPUT_CHANGE', function(event, eTarget) {
+				var conditionRes = ( getFieldValue($(':not([elem-identifier="Multiform"]) > #ValGpsinput', $('[data-form="Facil"]')))=="L");
+				$.when(conditionRes).done(function (condition) {
+						ShowWhen($(':not([elem-identifier="Multiform"]) > #ValLatitude', $('[data-form="Facil"]')), condition, false, 'LED_FACIL___FACILLATITUDE');
+				});
+		});
+		
+		@* Binding dos eventos que vão despoletar o Mostra Quando do campo ValLongitud *@
+		$(qForm).bind('FORM_LOADED VALGPSINPUT_CHANGE', function(event, eTarget) {
+				var conditionRes = ( getFieldValue($(':not([elem-identifier="Multiform"]) > #ValGpsinput', $('[data-form="Facil"]')))=="L");
+				$.when(conditionRes).done(function (condition) {
+						ShowWhen($(':not([elem-identifier="Multiform"]) > #ValLongitud', $('[data-form="Facil"]')), condition, false, 'LED_FACIL___FACILLONGITUD');
+				});
+		});
+		
+		@* Binding dos eventos que vão despoletar o Mostra Quando do campo ValGeocoori *@
+		$(qForm).bind('FORM_LOADED VALGPSINPUT_CHANGE', function(event, eTarget) {
+				var conditionRes = ( getFieldValue($(':not([elem-identifier="Multiform"]) > #ValGpsinput', $('[data-form="Facil"]')))=="P");
+				$.when(conditionRes).done(function (condition) {
+						ShowWhen($(':not([elem-identifier="Multiform"]) > #ValGeocoori', $('[data-form="Facil"]')), condition, false, 'LED_FACIL___FACILGEOCOORI');
+				});
+		});
+		
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Facil.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitFacil(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Facil.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeleteFacil(event) {
+			event.preventDefault();
+			window.Form_Facil.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+    var ajaxCallsRemaining = $(".flash object embed").length;
+    $('form [elem-identifier="ButtonPrimary"]').click(function() {
+        var flashObjects = $(".flash object embed");
+        ajaxCallsRemaining = flashObjects.length;
+        if(flashObjects.length == 0)
+            return true;
+        else {
+            flashObjects.each(function() {
+               var flashObj = GetFlash($(this).attr('id'));
+               flashObj.UsedFlash.TriggerSave(flashObj);
+            });
+            return false;
+        }
+    });
+    </text>
+}
+// USE /[MANUAL GQT FORM_CODEJS FACIL]/
+
+
+
+ 
+
+    $($('[elem-identifier="FormActions"]'), $('[data-form="Facil"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

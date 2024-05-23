@@ -1,0 +1,12 @@
+@model GenioMVC.ViewModels.Dashboard.MenuWidget
+
+<div class="c-card">
+    <div class="c-card__body">
+        <div class="c-card__title">@Model.Title</div>
+        @Html.MenuAction(@Model.MenuEntry, Url, @Model.Module, buttonInnerHTML().ToHtmlString(), new { @class = "bookmarks__btn--link", data_toggle = "tooltip", data_placement = "right", title = @Model.Path, module = @Model.Module })
+    </div>
+</div>
+
+@helper buttonInnerHTML() {
+<div class="b-icon-text b-icon-text--primary" type="button"><i class="glyphicons glyphicons-new-window e-icon"></i>@Model.ButtonText</div>
+}

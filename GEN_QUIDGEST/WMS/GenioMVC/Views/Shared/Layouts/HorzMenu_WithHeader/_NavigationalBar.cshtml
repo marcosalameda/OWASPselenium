@@ -1,0 +1,139 @@
+﻿@model GenioMVC.ViewModels.Menu_ViewModel
+@using GenioMVC.Models.Navigation;
+
+@* Header *@
+@if (@GenioMVC.LayoutConfig.config.HeaderEnable)
+{
+    <div class="border-bottom c-header">
+        @if (@GenioMVC.LayoutConfig.config.LogoEnable)
+        {
+            <div class="c-header__brand float-left">
+                <a href="@Url.Action("Index", "Home")"><img src="@Url.Content("~/Content/img/logotipo_header.png")" alt="@Resources.PAGINA_INICIAL55004"></a>
+            </div>
+        }
+        @if (@GenioMVC.LayoutConfig.config.logonPlacement.Equals(@GenioMVC.LogonPlacement.in_header))
+        {
+            if (!@GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest())
+            {
+				<style>
+                    ul.n-menu__aside {
+                        list-style-type: none;
+                    }
+
+                    .ml-auto,
+                    .mx-auto {
+                        margin-left: auto !important;
+                        margin-top: -1rem;
+                    }
+                </style>
+                <div class="c-header__content float-xl-right float-sm-right">
+                    <div class="c-header__user-id ">
+                        @Html.Partial("_LogOnPartial")
+                    </div>
+                </div>
+            }
+            else if (@GenioMVC.LayoutConfig.config.loginStyle.Equals(@GenioMVC.LoginStyle.embeded_page))
+            {
+                <div class="float-xl-right float-sm-center mt-4">
+                    @Html.Partial("_LogOnPartial")
+                </div>
+            }
+        }
+    </div>
+}
+
+@* Ribbon *@
+@if (GenioMVC.LayoutConfig.config.menuStyle.Equals(GenioMVC.MenuStyle.ribbon))
+{
+<div class="navigation">
+    @Html.AntiForgeryToken()
+    @Html.Partial("_MenuRibbon")
+</div>
+}
+@* Navbar *@
+else
+{
+    var containerClass = GenioMVC.LayoutConfig.config.containerWidth.Equals(GenioMVC.ContainerWidth.whole_page) ? "container-fluid" : "container";
+    <nav class="navbar navbar-expand-md bg-primary navbar-dark">
+        <!-- Toggler/collapsibe Button -->
+        <div class="@containerClass">
+            @if (@GenioMVC.LayoutConfig.config.BrandIconEnable)
+            {
+            <a class="navbar-brand" href="#">
+                <img src="@Url.Content("~/Content/img/Q_icon.png")" width="30" height="30" alt="">
+            </a>
+            }
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            @{
+                @Html.Partial("_Modules");
+            }
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                @{
+                    @Html.AntiForgeryToken()
+                    @Html.Partial("_Menu")
+                }
+            @if (GenioMVC.LayoutConfig.config.logonPlacement.Equals(GenioMVC.LogonPlacement.in_navmenu))
+            {
+                <div class="navbar-text ml-4">
+                    @Html.Partial("_LogOnPartial")
+                </div>
+            }
+            else
+            {
+                <div class="navbar-text d-none" >
+                    @Html.Partial("_LogOnPartial")
+                </div>
+            }
+            </div>
+
+                @if (GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest() && CSGenio.framework.Configuration.LoginType != CSGenio.framework.Configuration.LoginTypes.AD)
+                {
+                    <div class="collapse_login d-none">
+                        @Html.ActionLink(@Resources.ENTRAR16118, "LogOn", "Account", null, new { @class = "b-icon-text b-icon-text--primary" })
+                    </div>
+                }
+
+            <div>
+
+            </div>
+        </div>
+    </nav>
+    <script>
+        $(window).scroll(function() {
+            if ($('#formContainer #Menu, #formContainer .wellcomeAuthenticated').length)
+                return;
+
+            // WARNING: elements with css position: fixed do not occupy space in the DOM.
+            var threshold = $('.c-header').outerHeight();
+
+            var spacing_top = $('nav').first().outerHeight() - 10;
+            if (!$('.c-header').is(':visible')) {
+                spacing_top += threshold;
+            }
+
+            if ($(window).scrollTop() >= threshold) {
+                $('nav').addClass('fixed-header');
+                // get some space to compensate fixed positioning of header
+                $('div#main').css('padding-top', spacing_top);
+                $('div#main').css('margin-bottom', threshold);
+            } else {
+                $('div#main').css('margin-bottom', 0);
+                $('div#main').css('padding-top', 0);
+                $('nav').removeClass('fixed-header');
+            }
+        });
+
+        $(window).scroll(function () {
+            sidebarPositioning();
+        });
+        $(window).resize(function () {
+             sidebarPositioning();
+        });
+    </script>
+<!-- END of Navigational bar -->
+}

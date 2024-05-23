@@ -1,0 +1,104 @@
+﻿@model string
+
+@{
+    var metadata = ModelMetadata.FromLambdaExpression(model => model, ViewData);
+    var fieldName = metadata.PropertyName;
+    var fieldNameMap = metadata.PropertyName + "_map";
+}
+@*
+    <script type="text/javascript">
+        // Cannot be used inside a modal form, neither in an extended support form
+        if (typeof google === 'undefined') {
+            document.write('<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9qLvLpMEuL-igZ0PAoroFt1JVJKof-EM&v=3.exp&libraries=places,geometry"><\/script>');
+        }
+    </script>
+	// previous script commented above. BPP script below.
+*@
+
+
+<script src='@Scripts.Url("~/Scripts/GoogleMapsDisplay&Editor")' async defer></script>
+
+@Html.HiddenFor(model => model)
+<div class="map_container">
+    <div id="@fieldNameMap" class="map_canvas"></div>
+</div>
+
+<script type="text/javascript">
+
+    $(window).on("load", function () {
+        var map;
+        var marker;
+
+        if (navigator.onLine)
+            initialize();
+        else
+            getErrorMessage();
+
+
+        function initialize() {
+            var point = getPointFromDB("@Model");
+
+            if (point != null) {
+                initMap(point, true);
+            }
+            else {
+                navigator.geolocation.getCurrentPosition(function (pos) {
+                    //point = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
+                    var QuidgestLatLng = new google.maps.LatLng(38.7239975, -9.1528118);
+                    point = QuidgestLatLng;
+                    initMap(point, false);
+                });
+            }
+        }
+
+        function initMap(point, addMarker) {
+            var options = {
+                zoom: 12,
+                center: point,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+
+            map = new google.maps.Map(document.getElementById("@fieldNameMap"), options);
+            
+            if (addMarker) {
+                marker = new google.maps.Marker({
+                    position: point,
+                    map: map
+                });
+            }
+            google.maps.event.addListener(marker, 'click', function (event) {
+                getInfoWindow(event.latLng);
+            });
+
+        }
+
+        function getPointFromDB(stringPosition) {
+            if (stringPosition == "Null" || stringPosition == "")
+                return null;
+            var coord = stringPosition.replace("POINT(", "").replace(")", "").split(" ");
+            return new google.maps.LatLng(coord[1], coord[0]);
+        }
+
+        function getErrorMessage() {
+            var html = "<div class='alert alert-error'>";
+            html += "<h5>There is no connection to the internet, map controller needs connection to the internet!</h5>";
+            html += "</div>";
+            $("#@fieldNameMap").html(html);
+        }
+
+        function getInfoWindow(location) {
+            var geocoder = new google.maps.Geocoder;
+            geocoder.geocode({ 'location': location }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    var infowindow = new google.maps.InfoWindow({ content: "<strong>" + results[0].formatted_address + "<strong>" });
+                    infowindow.open(map, marker);
+                } else {
+                    var infowindow = new google.maps.InfoWindow({ content: '<strong>Lat: ' + location.lat() + '<br>Long: ' + location.lng() + "<strong>" });
+                    infowindow.open(map, marker);
+                }
+            });            
+        }
+
+    });
+
+</script>

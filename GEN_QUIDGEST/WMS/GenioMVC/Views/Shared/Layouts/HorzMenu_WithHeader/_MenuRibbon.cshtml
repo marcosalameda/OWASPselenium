@@ -1,0 +1,374 @@
+﻿@model GenioMVC.ViewModels.Menu_ViewModel
+
+@functions {
+    public void fillAnchorAction(TagBuilder a, GenioMVC.Helpers.Menus.MenuEntry menu, string module)
+    {
+
+        if (menu.Action != null && menu.Action.Equals("GenGenio.MenuRotinaManual"))
+        {
+            a.MergeAttribute("href", "javascript:void(0)");
+            a.MergeAttribute("onclick", menu.Action_MVC + "();");
+            a.MergeAttribute("routine", menu.Action_MVC);
+        }
+        //in case of control of type "Open's web page"
+        else if (menu.Action != null && menu.Action.Equals("GenGenio.MenuPaginaWeb"))
+        {
+            var webpage = menu.WEBPAGE;
+            if (webpage.StartsWith("GLOB_FIELD:"))
+            {
+                try
+                    {
+                        var curUC = GenioMVC.Models.Navigation.UserContext.Current;
+                        var glob = CSGenio.business.CSGenioAglob.searchGlob(curUC.PersistentSupport, curUC.User);
+                        webpage = (string)glob.returnValueField(webpage.Substring(11));
+                    }
+                    catch { webpage = "img/NotFound.jpg"; } // The GLOB has not yet been created.
+            }
+
+            //in case of external page
+            if (webpage.Contains("http"))
+            {
+                a.MergeAttribute("href", webpage);
+            }
+            //in case of external page without protocol
+            else if (webpage.Contains("www."))
+            {
+                a.MergeAttribute("href", "http://" + webpage);
+            }
+            //in case of document
+            else
+            {
+                a.MergeAttribute("href", Url.Content("~/Content/" + webpage));
+            }
+            a.MergeAttribute("target", "_blank");
+        }
+        else if (menu.Action != null && (menu.Action.Equals("GenGenio.MenuSeleccaoUmLimite") || menu.Action.Equals("GenGenio.MenuSeleccaoEntreLimites")))
+        {
+            a.MergeAttribute("href", "javascript:void(0)");
+            a.MergeAttribute("data-link", Url.Action(menu.Action_MVC, menu.Controller, new { module = module, newMenu = true }));
+            a.MergeAttribute("data-menu-id", menu.Action_MVC);
+            if (menu.Action.Equals("GenGenio.MenuSeleccaoUmLimite"))
+            {
+                a.MergeAttribute("data-menu-su", "true");
+            }
+            else
+            {
+                a.MergeAttribute("data-menu-se", "true");
+            }
+        }
+        else if (menu.Type == "REPORT" && !menu.Preview)
+        {
+            // The Crystal Repors without preview will invoke method by the Ajax request (PrintToPrinter)
+            var isAjaxReportRequest = menu.Mode == "CRY";
+            a.MergeAttribute("href", "javascript:void(0)");
+            a.MergeAttribute("onclick", string.Format("javascript:requestReport('{0}', {1});", Url.Action(menu.Action_MVC, menu.Controller, new { newMenu = true }), isAjaxReportRequest.ToString().ToLower()));
+
+        }
+        else
+        {
+            if (menu.Type == "REPORT")
+            {
+                a.MergeAttribute("target", "_blank");
+            }
+
+            var link = String.IsNullOrEmpty(menu.Action_MVC) ? "javascript:void(0)" : Url.Action(menu.Action_MVC, menu.Controller, new { module = module, newMenu = true });
+            a.MergeAttribute("href", link);
+        }
+    }
+}
+
+@helper MakeLink(GenioMVC.Helpers.Menus.MenuEntry menu, string module, bool firstLevel = false)
+{
+    TagBuilder a = new TagBuilder("a");
+
+    if (firstLevel)
+    {
+        a.MergeAttribute("data-toggle", "dropdown");
+    }
+
+    a.AddCssClass("dropdown-item");
+
+    if (!String.IsNullOrEmpty(menu.Image))
+    {
+        TagBuilder i = new TagBuilder("i");
+        //i.AddCssClass("dropdown__icon");
+
+        TagBuilder img = new TagBuilder("img");
+        img.MergeAttribute("src", Url.Content(menu.Image));
+
+		try { img.MergeAttribute("alt", "icon-" + Helpers.GetTextFromResources(menu.Title)); }
+		catch (Exception) { img.MergeAttribute("alt", "icon-" + menu.Title); }
+
+        i.InnerHtml += img;
+
+        a.InnerHtml += i + " ";
+    }
+
+    try
+	{
+		a.InnerHtml += Helpers.GetTextFromResources(menu.Title);
+		if(menu.Count > 0)
+		{
+			a.InnerHtml += " (<u>" + menu.Count + "</u>)";
+		}
+	}
+    catch (Exception) { a.InnerHtml += menu.Title; }
+
+    TagBuilder b = new TagBuilder("b");
+    if (firstLevel)
+    {
+        b.AddCssClass("caret");
+    }
+    a.InnerHtml += b;
+
+    fillAnchorAction(a, menu, module);
+
+	if(!String.IsNullOrEmpty(menu.HELPTITLE))
+    {
+        a.MergeAttribute("title", Helpers.GetTextFromResources(menu.HELPTITLE));
+    }
+    @Html.Raw(a.ToString());
+}
+
+@helper ShowSubItems(GenioMVC.Helpers.Menus.MenuEntry menu, string module, int level, bool root)
+{
+
+    string extra = root ? "dropdown" : "dropdown-submenu";
+    extra = menu.Children.Count > 0 ? extra : "";
+    if (menu.Separates && !root)
+    {
+        <div class='dropdown-divider'></div>
+    }
+    //we should not render this li when extra is empty
+    if (extra != "")
+    {
+        @:<li class='@extra'>
+    }
+
+    if (menu.Children.Count > 0)
+        {
+            @MakeLink(menu, module, level == 0)
+
+            string sMenu = "dropdown-menu";
+
+        <ul class="@sMenu">
+                @foreach (GenioMVC.Helpers.Menus.MenuEntry subMenu in menu.Children)
+                {
+                    if (subMenu.Type == "ITEM")
+                    {
+						@ShowSubItems(subMenu, module, level + 1, false)
+                    }
+                    else if (subMenu.Type == "LIST")
+                    {
+                        Html.RenderAction(subMenu.Action_MVC, subMenu.Controller);
+                    }
+                    else if (subMenu.Type == "REPORT")
+                    {
+							@MakeLink(subMenu, module)
+                    }
+                }
+        </ul>
+
+        }
+        else
+        {
+            @MakeLink(menu, module)
+            // @Html.ActionLink(menu.Title, menu.Action_MVC, menu.Controller, new { module = module }, null);
+        }
+    if (extra != "")
+    {
+        @:</li>
+    }
+
+}
+
+
+@helper ShowSubMenus(GenioMVC.Helpers.Menus.MenuEntry menu, string module, bool root)
+{
+    string sMenu = "dropdown-menu";
+    string title;
+    try { title = Helpers.GetTextFromResources(menu.Title); }
+    catch (Exception) { title = menu.Title; }
+    if (String.IsNullOrEmpty(menu.Image))
+    {
+        menu.Image = "~/Content/img/unknown.png";
+    }
+    <div class="ribbon-button ribbon-button-large" id='@menu.ID'>
+        @if (menu.Preview && menu.Children.Count > 0)
+        {
+            TagBuilder a = new TagBuilder("a");
+            fillAnchorAction(a, menu.Children[0], module);
+            a.InnerHtml = @"<img class='ribbon-icon ribbon-normal' src='" + @Url.Content(menu.Image) + @"' />
+            <img class='ribbon-icon ribbon-hot' src='" + @Url.Content(menu.Image) + @"' />
+            <img class='ribbon-icon ribbon-disabled' src='" + @Url.Content(menu.Image) + @"' />";
+
+            <text>@Html.Raw(a.ToString())</text>
+
+            <a data-toggle="dropdown">
+                <span class="button-title">@Html.Raw(title) <span class="caret" unselectable="on"></span></span>
+                <span class="button-help">&nbsp;</span>
+            </a>
+        }
+        else
+        {
+            <a data-toggle="dropdown">
+                <img class="ribbon-icon ribbon-normal" src='@Url.Content(menu.Image)' />
+                <img class="ribbon-icon ribbon-hot" src='@Url.Content(menu.Image)' />
+                <img class="ribbon-icon ribbon-disabled" src='@Url.Content(menu.Image)' />
+                <span class="button-title">@Html.Raw(title) <span class="caret" unselectable="on"></span></span>
+                <span class="button-help">&nbsp;</span>
+            </a>
+        }
+
+        <div class="@sMenu">
+            @foreach (GenioMVC.Helpers.Menus.MenuEntry subMenu in menu.Children)
+            {
+                if (subMenu.Type == "ITEM")
+                {
+					@ShowSubItems(subMenu, module, menu.TreeLevel + 1, false)
+                }
+                else if (subMenu.Type == "LIST")
+                {
+                    Html.RenderAction(subMenu.Action_MVC, subMenu.Controller);
+                }
+                else if (subMenu.Type == "REPORT")
+                {
+						@MakeLink(subMenu, module)
+                }
+            }
+        </div>
+    </div>
+}
+
+@helper ShowRibbonButton(GenioMVC.Helpers.Menus.MenuEntry menu, string module)
+{
+    string title;
+	TagBuilder a = new TagBuilder("a");
+    try { title = Helpers.GetTextFromResources(menu.Title); }
+    catch (Exception) { title = menu.Title; }
+    if (String.IsNullOrEmpty(menu.Image))
+    {
+        menu.Image = "~/Content/img/unknown.png";
+    }
+    <div class="ribbon-button ribbon-button-large" id='@menu.ID'>
+        @{
+
+            fillAnchorAction(a, menu, module);
+
+            a.InnerHtml += @"
+                <img class='ribbon-icon ribbon-normal' src='" + Url.Content(menu.Image) + @"' />
+                <img class='ribbon-icon ribbon-hot' src='" + Url.Content(menu.Image) + @"' />
+                <img class='ribbon-icon ribbon-disabled' src='" + Url.Content(menu.Image) + @"' />
+                <span class='button-title'>" + Html.Raw(title) + @"</span>
+                <span class='button-help'>&nbsp;</span>";
+
+        }
+		@Html.Raw(a.ToString())
+    </div>
+}
+
+@helper ShowRibbonSection(GenioMVC.Helpers.Menus.MenuEntry menu, bool lastSection, string module)
+{
+    <div class='@(lastSection ? "ribbon-section ribbon-last-section" : "ribbon-section")'>
+        <span class="section-title">@Html.Raw(@Helpers.GetTextFromResources(menu.Title))</span>
+        @foreach (GenioMVC.Helpers.Menus.MenuEntry btnMenu in menu.Children)
+        {
+            if (btnMenu.Children.Count > 0)
+            {
+				@ShowSubMenus(btnMenu, module, true)
+            }
+            else
+            {
+				@ShowRibbonButton(btnMenu, module)
+            }
+        }
+        @if (menu.Children.Count == 0)
+        {
+            //special case for administration menu or where the ribbon 3 level requirement is not met
+            //we just repeat the same menu as a section and as a button
+            @ShowRibbonButton(menu, module)
+        }
+    </div>
+}
+
+@helper RenderRibbon()
+{
+    <script>
+        $(document).ready(function () {
+            $('#ribbon').css('display', '').ribbon();
+            var rc = QLocalStorage.getLocalStorage('ribbon_collapsed');
+            if ($.isEmptyObject(rc)) rc = 'no';
+            if (rc === 'yes') {
+                $('#ribbon').addClass('ribbon-collapsible');
+                $('.ribbon-tab.sel').hide();
+                $('#ribbon').hover(function(){$('.ribbon-tab.sel').show()}, function(){$('.ribbon-tab.sel').hide()});
+            }
+
+            $('#toggleRibbon').click(function () {
+
+                if ($('#ribbon').is('.ribbon-collapsible')) {
+                    $('#ribbon').removeClass('ribbon-collapsible');
+                    $('.ribbon-tab.sel').show();
+                    $('#ribbon').off('mouseenter').off('mouseleave');
+                    QLocalStorage.setLocalStorage('ribbon_collapsed', 'no');
+                }
+                else {
+                    $('#ribbon').addClass('ribbon-collapsible');
+                    $('.ribbon-tab.sel').hide();
+                    $('#ribbon').hover(function(){$('.ribbon-tab.sel').show()}, function(){$('.ribbon-tab.sel').hide()});
+                    QLocalStorage.setLocalStorage('ribbon_collapsed', 'yes');
+                }
+            });
+        });
+    </script>
+}
+
+@helper DrawRibbon()
+{
+	<div>
+        @if (!@GenioMVC.LayoutConfig.config.logonPlacement.Equals(@GenioMVC.LogonPlacement.in_header))
+        {
+            <div class="navbar-collapse collapsable float-right navbarribbon">
+                <div class="navbar-text float-right">
+                    @Html.Partial("_LogOnPartial")
+                </div>
+            </div>
+        }
+        <div class="navbar float-left ribbon-modules">
+            @{
+                @Html.Partial("_Modules");
+            }
+        </div>
+        <div class="navbar float-left">
+            <a id="toggleRibbon" href="#"><i class="glyphicons glyphicons-pushpin changeModuleIcon"></i></a>
+        </div>
+        <div id="ribbon" style="display:none;">
+            <span class="ribbon-window-title"></span>
+            @foreach (GenioMVC.Helpers.Menus.MenuEntry menu in Model.MenuList)
+            {
+                if (menu.TreeLevel == 1)
+                {
+
+                    <div class="ribbon-tab" id='@menu.Title.ToString()'>
+                        <div class="ribbon-section-sep" unselectable="on"></div>
+                        <span class="ribbon-title">@Html.Raw(@Helpers.GetTextFromResources(menu.Title))</span>
+                        @foreach (GenioMVC.Helpers.Menus.MenuEntry gMenu in menu.Children)
+                        {
+                            @ShowRibbonSection(gMenu, menu.Children.Last().Equals(gMenu), Model.CurrentModule)
+
+                            if (menu.Children.Last().Equals(gMenu))
+                            {
+                                <div class="clearfix"></div>
+                            }
+                        }
+                    </div>
+                }
+            }
+        </div>
+		@RenderRibbon()
+    </div>
+}
+
+@{
+    @DrawRibbon()
+}

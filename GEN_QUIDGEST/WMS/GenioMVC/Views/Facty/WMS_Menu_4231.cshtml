@@ -1,0 +1,194 @@
+﻿@model GenioMVC.ViewModels.Facty.WMS_Menu_4231_ViewModel
+@using GenioMVC.Resources
+@using System.Web.Script.Serialization
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Title = Model.DBEditTitle;
+	//Layout = "~/Views/Shared/Layouts/TopMenu_BT4/_Layout.cshtml";
+}
+
+@{
+	GenioMVC.ViewModels.Facty.WMS_Menu_4231_ViewModel modelWMS_Menu_4231 = new GenioMVC.ViewModels.Facty.WMS_Menu_4231_ViewModel(Navigation);
+	var columns = modelWMS_Menu_4231.GetSearchColumns();
+
+	Dictionary<string, TableFilterField> fields = new Dictionary<string, TableFilterField>();
+
+
+	foreach (var col in columns)
+	{
+		var areaField = col.AreaField;
+		if (areaField.Area == "facty" && areaField.Field == "type")
+		{
+			fields.Add("FACTY.TYPE", new TableFilterField("FACTY", "TYPE", Resources.FACILITY_TYPE44577, "text", defaultSearch : true));
+		}
+		if (areaField.Area == "facty" && areaField.Field == "layrname")
+		{
+			fields.Add("FACTY.LAYRNAME", new TableFilterField("FACTY", "LAYRNAME", Resources.LAYER_NAME49545, "text"));
+		}
+		if (areaField.Area == "facty" && areaField.Field == "iconurl")
+		{
+			fields.Add("FACTY.ICONURL", new TableFilterField("FACTY", "ICONURL", Resources.ICON_URL07016, "text"));
+		}
+		if (areaField.Area == "facty" && areaField.Field == "shadowur")
+		{
+			fields.Add("FACTY.SHADOWUR", new TableFilterField("FACTY", "SHADOWUR", Resources.SHADOW_URL57805, "text"));
+		}
+		if (areaField.Area == "facty" && areaField.Field == "iconancx")
+		{
+			fields.Add("FACTY.ICONANCX", new TableFilterField("FACTY", "ICONANCX", Resources.ICON_ANCHOR__X_AXIS_18664, "num"));
+		}
+		if (areaField.Area == "facty" && areaField.Field == "iconancy")
+		{
+			fields.Add("FACTY.ICONANCY", new TableFilterField("FACTY", "ICONANCY", Resources.ICON_ANCHOR__Y_AXIS_63725, "num"));
+		}
+		if (areaField.Area == "facty" && areaField.Field == "iconheig")
+		{
+			fields.Add("FACTY.ICONHEIG", new TableFilterField("FACTY", "ICONHEIG", Resources.ICON_HEIGHT61896, "num"));
+		}
+		if (areaField.Area == "facty" && areaField.Field == "iconwid")
+		{
+			fields.Add("FACTY.ICONWID", new TableFilterField("FACTY", "ICONWID", Resources.ICON_WIDTH02295, "num"));
+		}
+		if (areaField.Area == "facty" && areaField.Field == "popupanx")
+		{
+			fields.Add("FACTY.POPUPANX", new TableFilterField("FACTY", "POPUPANX", Resources.POPUP_ANCHOR__X_AXIS15060, "num"));
+		}
+		if (areaField.Area == "facty" && areaField.Field == "popupany")
+		{
+			fields.Add("FACTY.POPUPANY", new TableFilterField("FACTY", "POPUPANY", Resources.POPUP_ANCHOR__Y_AXIS64670, "num"));
+		}
+		if (areaField.Area == "facty" && areaField.Field == "shadowax")
+		{
+			fields.Add("FACTY.SHADOWAX", new TableFilterField("FACTY", "SHADOWAX", Resources.SHADOW_ANCHOR__X_AXI31230, "num"));
+		}
+		if (areaField.Area == "facty" && areaField.Field == "shadoway")
+		{
+			fields.Add("FACTY.SHADOWAY", new TableFilterField("FACTY", "SHADOWAY", Resources.SHADOW_ANCHOR__Y_AXI51495, "num"));
+		}
+		if (areaField.Area == "facty" && areaField.Field == "shadowhe")
+		{
+			fields.Add("FACTY.SHADOWHE", new TableFilterField("FACTY", "SHADOWHE", Resources.SHADOW_HEIGHT64343, "num"));
+		}
+		if (areaField.Area == "facty" && areaField.Field == "shadowwi")
+		{
+			fields.Add("FACTY.SHADOWWI", new TableFilterField("FACTY", "SHADOWWI", Resources.SHADOW_WIDTH01769, "num"));
+		}
+	}
+
+	JavaScriptSerializer serializer = new JavaScriptSerializer();
+	string fieldsStr = serializer.Serialize(fields);
+}
+
+<script>
+	//Fields with information for search filters
+	var fields = @Html.Raw(fieldsStr);
+	//Table List Search Filters
+	var searchFilterGroups = [];
+</script>
+
+
+@using (Ajax.BeginForm("WMS_Menu_4231", "Facty", new AjaxOptions
+{
+	HttpMethod= "POST",
+	InsertionMode = InsertionMode.Replace,
+	UpdateTargetId = "Menu",
+	OnSuccess = "InitMenuSpecialControls"
+}, new { @class = "form-horizontal", area="Facty", data_form="WMS_Menu_4231" }))
+{
+		<input id="SearchFilters" type="hidden" value="" />
+
+		<div class="page-header row" style="align-items:center">
+		   <div class="col">
+<div class="table-title c-table__title">
+					<h1>@ViewBag.Title</h1>
+				</div>
+
+		   </div>
+		   <div class="col-auto search">
+				<div class="i-input-group input-xxlarge" id="WMS_Menu_4231_simple_filter">
+					<div data-search-filter-menu-elem="filter-box-list"></div>
+					@Html.TextBox("qWMS_Menu_4231", Navigation.GetStrValue("qWMS_Menu_4231"), new { @class="i-input-group__field input-xxlarge dropdown-toggle", @title=@Resources.CAIXA_DE_PESQUISA53870, @onfocus="ToggleSearchFilterBox('WMS_Menu_4231');" ,@onkeydown = "ListSearchEnter(event)", @autocomplete = "off" ,@data_toggle = "dropdown",@data_search_field_menu_elem = "show", @onblur = "HideSearchFieldMenuOnUnfocus('WMS_Menu_4231');",@placeholder = Resources.PESQUISAR34506 + " " + Resources.FACILITY_TYPE44577})
+					<button id="qWMS_Menu_4231-clearBtn" class="clear-search d-none" type="button">
+						<i class="glyphicons glyphicons-remove mr-1"></i>
+					</button>
+					@Html.SearchFieldMenu("WMS_Menu_4231", fields, "FACTY")
+					<div class="b-btn-group i-input-group--right">
+						<button type="button" elem-identifier="ListSearchButton" class="btn b-icon b-icon--secondary i-input-group__button--secondary  listSearchButton" title="@Resources.PESQUISAR34506" onclick="AddSearchFieldFilter('WMS_Menu_4231', 'FACTY', 'FACTY.TYPE');"><i class="glyphicons glyphicons-search i-input-group__tag-icon i-input-group__button-icon"></i></button>
+						@{
+						var advancedSearchIcon = @Model.Menu.Filters.ShowTableFilters ? "glyphicons-zoom-out" : "glyphicons-zoom-in";
+						<button id="WMS_Menu_4231_extra" class="btn b-icon b-icon--secondary i-input-group__button--secondary" type="button" onclick="changeFilters('#WMS_Menu_4231_complex_filter', 'WMS_Menu_4231_tableFilters');applyComplexFilterIDs();" title="@Resources.PESQUISA_AVANCADA06198"><span class="glyphicons @advancedSearchIcon i-input-group__tag-icon i-input-group__button-icon"></span></button>
+						}
+						@Html.SearchFilterMenu("WMS_Menu_4231")
+					</div>
+				</div>
+			</div>
+            @if(!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest() && !Model.IsViewModeHidden("LIST"))
+            {
+			<div class="col-auto float-right" style="padding: 0; padding-right: 15px">
+				<div class="b-btn-group float-right" style="height: 32.625px">
+					@*List properties LISTS*@
+					@if(!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest())
+					{
+						<button class="b-btn b-icon b-icon--secondary" type="button" data-modal-form="Lstusr" data-modal-id="lstusr-edit-modal" data-table="WMS_Menu_4231" data-modal-url="@Url.Action("ChangeListProperties", "Lstusr", new { idlist = "WMS_Menu_4231", idlistController = "Facty", idlistArea = "Facty", codlista ="7e4470ed-09c8-442d-91d2-b76a9ecd0d88" })" title="@Resources.ALTERAR_A_APRESENTAC58401"><i class="glyphicons glyphicons-list e-icon"></i></button>
+					}
+				</div>
+			</div>
+            }
+		</div>
+ 	<div id="Menu" element-identifier="List">
+		@{ Html.RenderPartial("WMS_Menu_4231_Partial"); }
+	</div>
+	@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "WMS_Menu_4231" })
+	@Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId)
+	@Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock())
+	@Html.AntiForgeryToken()
+}
+
+
+
+<script>
+	$(document).ready(function () {
+		window.Form_WMS_Menu_4231 = new QMenuForm($('[data-form="WMS_Menu_4231"]'), "Form_WMS_Menu_4231");
+		window.Form_WMS_Menu_4231.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_WMS_Menu_4231.Init();
+
+		//Initialize search field menu for search bar
+		InitSearchFieldMenu("qWMS_Menu_4231");
+		RegisterClearEvents("WMS_Menu_4231")
+
+		// TVC - added code to load advanced filters after returning from a form
+		@{
+			string advFil = "";
+			if (!String.IsNullOrEmpty(Navigation.GetStrValue("AdvancedFilters")))
+			{
+				advFil = Navigation.GetStrValue("AdvancedFilters");
+			}
+		}
+
+		SearchFilters.value = '@Html.Raw(advFil)';
+		if (typeof SearchFilters.value === 'string' && SearchFilters.value.length > 0)
+			UpdateSearchFilterStatus("WMS_Menu_4231", JSON.parse(SearchFilters.value))
+	});
+</script>
+
+@helper codeJavascript()
+{
+<script>
+	QLocalStorage.remLocalStorage("savedInfo");
+	$(document).ready(function (e) {
+		InitSpecialControls($('[data-form="WMS_Menu_4231"]'));
+
+
+ 	});
+
+	function InitMenuSpecialControls() {
+		InitSpecialControls($('[data-form="WMS_Menu_4231"]'));
+	}
+
+</script>
+}
+
+@section code_javascript {
+	@codeJavascript()
+}

@@ -1,0 +1,125 @@
+﻿@model GenioMVC.ViewModels.Perso.WMS_Menu_4311_ViewModel
+@using Newtonsoft.Json;
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@using GenioMVC.ViewModels.Perso;    
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Perso>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodperso, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_4311_PERSO_NAME]/
+		column.Expression(p => p.ValName).Title(@Resources.PERSON_NAME40980).Field("ValName").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_4311_PERSO_GENDER]/
+		column.Expression(p => p.ArrayValgender).Title(@Resources.GENDER44172).Field("ValGender", "ArrayGender").Size(1);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_4311_PERSO_IDENTIFI]/
+		column.Expression(p => p.ValIdentifi).Title(@Resources.IDENTIFICATION_NUMBE11999).Field("ValIdentifi").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_4311_PERSO_PHOTO]/
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValPhoto, new {alt=@Resources.PHOTO51874,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCodperso, modelname = "Perso", fldname = "ValPhoto" }))).Title(@Resources.PHOTO51874).Field("ValPhoto").Size(3);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_4311_PERSO_DOB]/
+		column.Expression(p => p.ValDob).Title(@Resources.DATE_OF_BIRTH63058).Field("ValDob").Size(8).Format("{0:d}");
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_4311_PERSO_EMAIL]/
+		column.Expression(p => p.ValEmail).Title(@Resources.E_MAIL42251).Field("ValEmail").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_4311_PERSO_YEAR]/
+		column.Expression(p => p.ValYear).Title(@Resources.YEAR61794).Hidden().Field("ValYear").Size(4);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_4311_PERSO_MONTH]/
+		column.Expression(p => p.ArrayValmonth).Title(@Resources.MONTH46035).Hidden().Field("ValMonth", "ArrayMonths").Size(2);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_4311_PERSO_TOB]/
+		column.Expression(p => p.ValTob).Title(@Resources.TIME_OF_BIRTH04797).Hidden().Field("ValTob").Size(5);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Perso")
+        .Id("WMS_Menu_4311")
+        .AjaxRequest("Menu")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .DBEdit()
+        .Filters(this.Model.Menu.Filters)
+        .Form("Perso", false, false)
+        .SetFollowUp("Perso_Show", "Perso" , (Func<GenioMVC.Models.Perso, object>)(item => new { id = item.ValCodperso }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
+        .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
+		;
+        
+}
+
+@tbl.ToHtml()
+
+
+<script>
+ 
+ 
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qWMS_Menu_4311, #WMS_Menu_4311_complex_filter th input, #WMS_Menu_4311_filters input").change(function() {
+                    $("#pWMS_Menu_4311").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#WMS_Menu_4311_tableFilters').val(false);")
+                    @Html.Raw("$('#WMS_Menu_4311_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#WMS_Menu_4311_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $("[data-form='WMS_Menu_4311']").submit();
+                    @:      event.preventDefault();
+                    @:      ClearSearchBox('qWMS_Menu_4311');
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#WMS_Menu_4311_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_WMS_Menu_4311').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+                 @if (this.Model.Menu.Filters.FiltersValues.Count >= 1) {
+                    var activeFields = Newtonsoft.Json.JsonConvert.SerializeObject(this.Model.Menu.Filters.FiltersValues);
+                    @: SetActiveFilters('WMS_Menu_4311', 'PERSO', @Html.Raw(activeFields))
+                  }
+
+
+                setupHistoryClicks()
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='Menu']"));
+                    InitSpecialControls($('#Menu'));
+                    $('#Menu').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS WMS_MENU_4311]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+// USE /[MANUAL GQT LISTING_CODEJS WMS_MENU_4311]/
+</script>

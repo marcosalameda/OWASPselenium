@@ -1,0 +1,147 @@
+﻿@model GenioMVC.ViewModels.Sale.STY_Menu_HWIZARD_ViewModel
+@using Newtonsoft.Json;
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@using GenioMVC.ViewModels.Sale;    
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Sale>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodvenda, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_HWIZARD_SALE_NRLIDE]/
+		column.Expression(p => p.ValNrlide).Title(@Resources.N_O_DA_LIDE50722).Field("ValNrlide").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_HWIZARD_SALE_STARTDT]/
+		column.Expression(p => p.ValStartdt).Title(@Resources.BEGINNING18124).Field("ValStartdt").Size(16);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_HWIZARD_SALE_IDENTIFI]/
+		column.Expression(p => p.ValIdentifi).Title(@Resources.IDENTIFICACAO_DA_OPO05341).Field("ValIdentifi").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_HWIZARD_SALE_POTCOMPR]/
+		column.Expression(p => p.ValPotcompr).Title(@Resources.POTENCIAIS_COMPRADOR25099).Field("ValPotcompr").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_HWIZARD_SALE_PROSPECC]/
+		column.Expression(p => p.ValProspecc).Title(@Resources.PROSPECCAO_EFECTUADA42558).Field("ValProspecc").Size(1);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_HWIZARD_SALE_INTERESS]/
+		column.Expression(p => p.ValInteress).Title(@Resources.INTERESSADO26080).Field("ValInteress").Size(1);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_HWIZARD_SALE_SEMRFINA]/
+		column.Expression(p => p.ValSemrfina).Title(@Resources.SEM_RECURSOS_FINANCE28439).Field("ValSemrfina").Size(1);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_HWIZARD_SALE_SEMCAPAC]/
+		column.Expression(p => p.ValSemcapac).Title(@Resources.SEM_CAPACIDADE_DE_DE07701).Field("ValSemcapac").Size(1);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_HWIZARD_SALE_DTQUALIF]/
+		column.Expression(p => p.ValDtqualif).Title(@Resources.QUALIFICACAO07026).Field("ValDtqualif").Size(16);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_HWIZARD_SALE_QUALIFIC]/
+		column.Expression(p => p.ValQualific).Title(@Resources.QUALIFICACAO_EFECTUA30983).Field("ValQualific").Size(1);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_HWIZARD_SALE_PREABORD]/
+		column.Expression(p => p.ValPreabord).Title(@Resources.PRE_ABORDAGEM30870).Field("ValPreabord").Size(16);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_HWIZARD_SALE_HOMEWORK]/
+		column.Expression(p => p.ValHomework).Title(@Resources.TRABALHO_DE_CASA_EFE54337).Field("ValHomework").Size(1);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_HWIZARD_SALE_DTABORDA]/
+		column.Expression(p => p.ValDtaborda).Title(@Resources.ABORDAGEM05839).Field("ValDtaborda").Size(16);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_HWIZARD_SALE_APPROACH]/
+		column.Expression(p => p.ValApproach).Title(@Resources.ABORDAGEM_EFECTUADA60152).Field("ValApproach").Size(1);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_HWIZARD_SALE_APRESENT]/
+		column.Expression(p => p.ValApresent).Title(@Resources.APRESENTACAO15975).Field("ValApresent").Size(1);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_HWIZARD_SALE_DTAPRESE]/
+		column.Expression(p => p.ValDtaprese).Title(@Resources.APRESENTACAO_EFECTUA37455).Field("ValDtaprese").Size(16);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_HWIZARD_SALE_DTSUPERA]/
+		column.Expression(p => p.ValDtsupera).Title(@Resources.SUPERAR_OBJECOES02243).Field("ValDtsupera").Size(16);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_HWIZARD_SALE_TENTFECH]/
+		column.Expression(p => p.ValTentfech).Title(@Resources.TENTATIVAS_DE_FECHO20342).Field("ValTentfech").Size(16);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_HWIZARD_SALE_DTVENDA]/
+		column.Expression(p => p.ValDtvenda).Title(@Resources.FECHO_DA_VENDA48081).Field("ValDtvenda").Size(16);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_HWIZARD_SALE_DTACOMPA]/
+		column.Expression(p => p.ValDtacompa).Title(@Resources.ACOMPANHAMENTO53507).Field("ValDtacompa").Size(16);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Sale")
+        .Id("STY_Menu_HWIZARD")
+        .AjaxRequest("Menu")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .DBEdit()
+        .Filters(this.Model.Menu.Filters)
+        .Form("Vendaw", false, false)
+        .SetFollowUp("Vendaw_Edit", "Sale" , (Func<GenioMVC.Models.Sale, object>)(item => new { id = item.ValCodvenda }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
+        .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
+		;
+        
+}
+
+@tbl.ToHtml()
+
+
+<script>
+ 
+ 
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qSTY_Menu_HWIZARD, #STY_Menu_HWIZARD_complex_filter th input, #STY_Menu_HWIZARD_filters input").change(function() {
+                    $("#pSTY_Menu_HWIZARD").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#STY_Menu_HWIZARD_tableFilters').val(false);")
+                    @Html.Raw("$('#STY_Menu_HWIZARD_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#STY_Menu_HWIZARD_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $("[data-form='STY_Menu_HWIZARD']").submit();
+                    @:      event.preventDefault();
+                    @:      ClearSearchBox('qSTY_Menu_HWIZARD');
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#STY_Menu_HWIZARD_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_STY_Menu_HWIZARD').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+                 @if (this.Model.Menu.Filters.FiltersValues.Count >= 1) {
+                    var activeFields = Newtonsoft.Json.JsonConvert.SerializeObject(this.Model.Menu.Filters.FiltersValues);
+                    @: SetActiveFilters('STY_Menu_HWIZARD', 'VENDA', @Html.Raw(activeFields))
+                  }
+
+
+                setupHistoryClicks()
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='Menu']"));
+                    InitSpecialControls($('#Menu'));
+                    $('#Menu').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS STY_MENU_HWIZARD]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+// USE /[MANUAL GQT LISTING_CODEJS STY_MENU_HWIZARD]/
+</script>

@@ -1,0 +1,91 @@
+﻿@using GenioMVC.Resources
+
+@using GenioMVC.Helpers.Culture
+@using GenioMVC.Helpers
+@{
+    var culture = UrlNames.GlobalizeCulture;
+    var momentLocal = UrlNames.MomentLocal;
+}
+<!DOCTYPE html>
+<html lang="@culture.Key">
+<head>
+    <meta charset="utf-8" />
+    <meta name="author" content="">
+    <meta name="description" content="">
+    <link href="@Url.Content("~/favicon.ico")" rel="shortcut icon" type="image/x-icon" />
+    <link rel="manifest" href="~/manifest.json">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @{ if (ViewBag.Title == null && ViewData != null) { if (ViewData.Model.GetType().GetProperty("DBEditTitle") != null) { ViewBag.Title = ViewData.Model.DBEditTitle; } } }
+    <title>@ViewBag.Title</title>
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!-- Le styles -->
+    @Styles.Render("~/Content/css/d3andJQueryCss")
+    @Styles.Render("~/Content/css/bootstrapPluginsCss")
+    @Styles.Render("~/Content/css/bootstrpcss")
+    @if (IsSectionDefined("include_stylesheets"))
+    {
+        @RenderSection("include_stylesheets", required: false)
+    }
+
+    <!-- Le javascripts -->
+    @Scripts.Render("~/Scripts/jquery3CoreJs")
+    @Scripts.Render("~/Scripts/other3CoreJs")
+    @Scripts.Render(UrlNames.GlobalizeCulture.Value)
+    @Scripts.Render("~/Scripts/bootstrap4CoreJs")
+
+    @if (GenioMVC.LayoutConfig.config.menuStyle.Equals(GenioMVC.MenuStyle.ribbon))
+    {
+        @Scripts.Render("~/Scripts/RibbonJs");
+    }
+    @if (!String.IsNullOrEmpty(momentLocal.Value))
+    {
+        <script type="text/javascript" src="@Url.Content(momentLocal.Value)"></script>
+    }
+</head>
+
+<body>
+        <div id="wrapper" class="f-EPH_Form">
+            <div class="overlay"></div>
+            <div class="content-wrapper content_wrapper_EPH">
+                <div id="result-report"></div>
+                <div class="modal-dialog c-modal__dialog modal-lg c-modal--lg EPH_container">
+                    <div class="EPH_content">
+                        @if (!GenioMVC.Models.Navigation.UserContext.Current.User.EphOk)
+                        {
+                            <a href="@Url.Action("LogOff", "Account", new { })" data-toggle="tooltip" data-placement="top" class="b-btn b-icon b-icon--secondary" title="@Resources.SAIR20169">
+                                <i class="glyphicons glyphicons-log-out e-icon"></i>
+                            </a>
+                        }
+                        @RenderBody()
+                        <div>
+                            <a class="b-icon-text b-icon-text--secondary" data-end-pers="true" onclick="window.history.back()" qbutton="cancel" title="@Resources.RETROCEDER16633">
+                                <i class="glyphicons glyphicons-arrow-left e-icon"></i>
+                                @Resources.RETROCEDER16633
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="push"></div>
+            @{
+                Html.RenderPartial("_Footer");
+            }
+        </div>
+
+    <script type="application/javascript">
+			@Html.Partial("_Javascript")
+
+                $(".c-footer").css("position","fixed")
+      
+
+    </script>
+    @Scripts.Render("~/Scripts/javascriptControls")
+
+    @Html.RenderScripts()
+    @RenderSection("code_javascript", required: false)
+</body>
+</html>

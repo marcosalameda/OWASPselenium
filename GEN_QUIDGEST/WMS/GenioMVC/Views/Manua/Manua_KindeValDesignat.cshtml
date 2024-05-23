@@ -1,0 +1,113 @@
+﻿@model GenioMVC.ViewModels.Manua.Manua_KindeValDesignat_ViewModel
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+    var searchStyle =  string.Empty;
+}
+<div class="search" @searchStyle>
+    <div class="row">
+        <div class="col">
+            <h2 class="table-title c-table__title">@Resources.TYPES_OF_EQUIPMENT61264</h2>
+        </div>
+        <div class="col-auto normal-view" id="Manua_KindeValDesignat_simple_filter">
+            <div class="i-input-group" style="width:21rem; height: inherit;">
+                @Html.TextBox("qManua_KindeValDesignat", this.Model.Menu.Query, new { @class = "i-input-group__field", @onkeydown = "ListSearchEnter(event)" })
+                <div class="i-input-group--right">
+                    <button type="button" elem-identifier="ListSearchButton" class="b-icon--secondary i-input-group__button--secondary" onclick="window.Manua_KindeValDesignat.Search()"><i class="glyphicons glyphicons-search i-input-group__tag-icon i-input-group__button-icon"></i></button>
+
+                    <button id="Manua_KindeValDesignat_extra" class="b-icon--secondary i-input-group__button--secondary" type="button" onclick="changeFilters('#Manua_KindeValDesignat_complex_filter', 'Manua_KindeValDesignat_tableFilters')" title="@Resources.PESQUISA_AVANCADA06198"><span class="glyphicons glyphicons-zoom-in i-input-group__tag-icon i-input-group__button-icon"></span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="normal-view">
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Kinde>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodkinde, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN MANUA_DESIGNAT_KINDE_DESIGNAT]/
+		column.Expression(p => p.ValDesignat).Title(@Resources.KIND_OF_EQUIPMENT22928).Field("ValDesignat").Size(85);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+			//Hidden field used in JavaScript for return selected row text value
+			column.Expression(p => p.ValDesignat).Field("ValDesignat").AddInlineStyle("display", "none", true).UsedForFilter(false);
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Kinde")
+        .Id("Manua_KindeValDesignat")
+        .AjaxRequest("Manua_KindeValDesignat")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .TableList(hasFilters: true)
+        .RequestLink(@Url.Action("Manua_KindeValDesignat", new { id = Model.ValCodmanua, partialView = "Manua_KindeValDesignat"}))
+        .Filters(this.Model.Menu.Filters)
+        .Permissions(canView: false, canInsert: false, canEdit: false, canDelete: false, canDuplicate: false)
+		;
+        
+}
+
+@tbl.ToHtml()
+</div>
+<script>
+    try {
+        if (jQuery) {
+            try {
+                $("#qManua_KindeValDesignat, #TableKindeDesignat_complex_filter th input").change(function() {
+                    var context = $("#TableKindeDesignat").parent();
+                    $("#table-inputs input", context).val("");
+                });
+
+                var row = $("#Manua_KindeValDesignat table tbody tr");
+                row.mouseenter(function () {
+                    $(this).addClass("highlighted");
+                });
+                row.mouseleave(function () {
+                    $(this).removeClass("highlighted");
+                });
+
+                $('td:not([elem-identifier="RowActions"])', row).click(function () {
+                    var row = $(this).parent();
+                    var key = row.data("key");
+                    var selectList = $('[data-identifier="IFF_MANUA___KINDEDESIGNAT"]');
+
+                    selectList.trigger("DBEditSetValue", key);
+
+                    $('#modal-dbedit').modal('hide');
+                });
+
+                $("td a").click(function (event) {
+                    event.stopPropagation()
+                });
+                $('#Manua_KindeValDesignat_complex_filter input').keypress(function (event) {
+                    var keycode = (event.keyCode ? event.keyCode : event.which);
+                    if(keycode == '13' || keycode == '10'){
+                        $('#Manua_KindeValDesignat_complex_filter button#applyComplexFilter').click();
+                        event.preventDefault();
+                    }
+                });
+@if(Model.Menu.Elements.Count() == 0 && !Model.Menu.Filters.ShowTableFilters)
+{
+<text>
+                $('#Manua_KindeValDesignat_extra').prop("disabled", true);
+</text>
+}
+
+
+// USE /[MANUAL GQT LISTING_JS MANUA_MENU]/
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+</script>

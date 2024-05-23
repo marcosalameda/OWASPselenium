@@ -1,0 +1,189 @@
+﻿@model GenioMVC.ViewModels.Cntry.IMO_Menu_131_ViewModel
+@using GenioMVC.Resources
+@using System.Web.Script.Serialization
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Title = Model.DBEditTitle;
+	//Layout = "~/Views/Shared/Layouts/TopMenu_BT4/_Layout.cshtml";
+}
+
+@{
+	GenioMVC.ViewModels.Cntry.IMO_Menu_131_ViewModel modelIMO_Menu_131 = new GenioMVC.ViewModels.Cntry.IMO_Menu_131_ViewModel(Navigation);
+	var columns = modelIMO_Menu_131.GetSearchColumns();
+
+	Dictionary<string, TableFilterField> fields = new Dictionary<string, TableFilterField>();
+
+
+	foreach (var col in columns)
+	{
+		var areaField = col.AreaField;
+		if (areaField.Area == "cntry" && areaField.Field == "country")
+		{
+			fields.Add("CNTRY.COUNTRY", new TableFilterField("CNTRY", "COUNTRY", Resources.COUNTRY64133, "text", defaultSearch : true));
+		}
+		if (areaField.Area == "cntry" && areaField.Field == "active")
+		{
+			fields.Add("CNTRY.ACTIVE", new TableFilterField("CNTRY", "ACTIVE", Resources.ACTIVE03270, "bool"));
+		}
+		if (areaField.Area == "cntry" && areaField.Field == "codigonr")
+		{
+			fields.Add("CNTRY.CODIGONR", new TableFilterField("CNTRY", "CODIGONR", Resources.NUMERIC19292, "text"));
+		}
+		if (areaField.Area == "cntry" && areaField.Field == "alfa2")
+		{
+			fields.Add("CNTRY.ALFA2", new TableFilterField("CNTRY", "ALFA2", Resources.ALPHABETIC_232435, "text"));
+		}
+		if (areaField.Area == "cntry" && areaField.Field == "alfa3")
+		{
+			fields.Add("CNTRY.ALFA3", new TableFilterField("CNTRY", "ALFA3", Resources.ALPHABETIC_316640, "text"));
+		}
+	}
+
+	JavaScriptSerializer serializer = new JavaScriptSerializer();
+	string fieldsStr = serializer.Serialize(fields);
+}
+
+<script>
+	//Fields with information for search filters
+	var fields = @Html.Raw(fieldsStr);
+	//Table List Search Filters
+	var searchFilterGroups = [];
+</script>
+
+
+@using (Ajax.BeginForm("IMO_Menu_131", "Cntry", new AjaxOptions
+{
+	HttpMethod= "POST",
+	InsertionMode = InsertionMode.Replace,
+	UpdateTargetId = "Menu",
+	OnSuccess = "InitMenuSpecialControls"
+}, new { @class = "form-horizontal", area="Cntry", data_form="IMO_Menu_131" }))
+{
+		<input id="SearchFilters" type="hidden" value="" />
+
+		<div class="page-header row" style="align-items:center">
+		   <div class="col">
+				<div class="table-title c-table__title" elem-identifier="MenuList" data-toggle="tooltip" data-placement="top" title="@Resources.___1737586" description="""">
+				<label><h1>@ViewBag.Title</h1></label>
+
+				</div>
+
+		   </div>
+		   <div class="col-auto search">
+				<div class="i-input-group input-xxlarge" id="IMO_Menu_131_simple_filter">
+					<div data-search-filter-menu-elem="filter-box-list"></div>
+					@Html.TextBox("qIMO_Menu_131", Navigation.GetStrValue("qIMO_Menu_131"), new { @class="i-input-group__field input-xxlarge dropdown-toggle", @title=@Resources.CAIXA_DE_PESQUISA53870, @onfocus="ToggleSearchFilterBox('IMO_Menu_131');" ,@onkeydown = "ListSearchEnter(event)", @autocomplete = "off" ,@data_toggle = "dropdown",@data_search_field_menu_elem = "show", @onblur = "HideSearchFieldMenuOnUnfocus('IMO_Menu_131');",@placeholder = Resources.PESQUISAR34506 + " " + Resources.COUNTRY64133})
+					<button id="qIMO_Menu_131-clearBtn" class="clear-search d-none" type="button">
+						<i class="glyphicons glyphicons-remove mr-1"></i>
+					</button>
+					@Html.SearchFieldMenu("IMO_Menu_131", fields, "CNTRY")
+					<div class="b-btn-group i-input-group--right">
+						<button type="button" elem-identifier="ListSearchButton" class="btn b-icon b-icon--secondary i-input-group__button--secondary  listSearchButton" title="@Resources.PESQUISAR34506" onclick="AddSearchFieldFilter('IMO_Menu_131', 'CNTRY', 'CNTRY.COUNTRY');"><i class="glyphicons glyphicons-search i-input-group__tag-icon i-input-group__button-icon"></i></button>
+						@{
+						var advancedSearchIcon = @Model.Menu.Filters.ShowTableFilters ? "glyphicons-zoom-out" : "glyphicons-zoom-in";
+						<button id="IMO_Menu_131_extra" class="btn b-icon b-icon--secondary i-input-group__button--secondary" type="button" onclick="changeFilters('#IMO_Menu_131_complex_filter', 'IMO_Menu_131_tableFilters');applyComplexFilterIDs();" title="@Resources.PESQUISA_AVANCADA06198"><span class="glyphicons @advancedSearchIcon i-input-group__tag-icon i-input-group__button-icon"></span></button>
+						}
+						@Html.SearchFilterMenu("IMO_Menu_131")
+						<button type="button" class="b-btn b-icon b-icon--secondary" onclick="hideShowDiv('IMO_Menu_131_filters')" title="@Resources.MOSTRAR50268/@Resources.ESCONDER31385 @Resources.FILTROS01340"><i class="glyphicons glyphicons-filter e-icon"></i></button>
+					</div>
+				</div>
+			</div>
+			<div class="col-auto float-right" style="padding: 0; padding-right: 15px">
+				<div class="b-btn-group float-right" style="height: 32.625px">
+					@Html.ExportListMenu("IMO_Menu_131")
+					@Html.ImportListMenu("IMO_Menu_131")
+					<div id="modal-importList" class="modal hide container-fluid" tabindex="-1" role="dialog" aria-labelledby="importList" aria-hidden="true">
+						<div class="c-modal__dialog">
+							<div class = "c-modal__content">
+								<div elem-identifier="ModalBody" class="c-modal__body">
+									<div id="importListinput" data-action="@Url.Action("IMO_Menu_131_UploadFile", "Cntry")"></div>
+								</div>
+								<div class="c-modal__footer">
+									<div elem-identifier="Actions" class="actions">
+										<button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-modal-close="true" onclick="window.IMO_Menu_131.CloseImportList()">@Resources.FECHAR32496</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					@*List properties LISTS*@
+					@if(!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest())
+					{
+						<button class="b-btn b-icon b-icon--secondary" type="button" data-modal-form="Lstusr" data-modal-id="lstusr-edit-modal" data-table="IMO_Menu_131" data-modal-url="@Url.Action("ChangeListProperties", "Lstusr", new { idlist = "IMO_Menu_131", idlistController = "Cntry", idlistArea = "Cntry", codlista ="2e0383bf-f54f-41d7-b7e7-76c78c1dc049" })" title="@Resources.ALTERAR_A_APRESENTAC58401"><i class="glyphicons glyphicons-list e-icon"></i></button>
+					}
+				</div>
+			</div>
+		</div>
+                    <!---------- Filters ------------>
+                        <div class="row-fluid">
+                            <div class="span12">
+                                <div id="IMO_Menu_131_filters">
+                                    <div class="filter-box">
+                                        <div class="form-check-inline">
+                                            <label class="i-checkbox i-checkbox__label i-checkbox--inline">
+                                                @Resources.INACTIVE23138
+                                                @Html.CheckBox("filter_IMO_Menu_131_ACTIVO", Model.Navigation.CheckKey("filter_IMO_Menu_131_ACTIVO_2") ? (bool)Model.Navigation.GetValue("filter_IMO_Menu_131_ACTIVO_2") : false, new { @class="input-filter", value = "2" }) 
+                                                <span class="i-checkbox__field"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+ 	<div id="Menu" element-identifier="List">
+		@{ Html.RenderPartial("IMO_Menu_131_Partial"); }
+	</div>
+	@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "IMO_Menu_131" })
+	@Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId)
+	@Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock())
+	@Html.AntiForgeryToken()
+}
+
+
+
+<script>
+	$(document).ready(function () {
+		window.Form_IMO_Menu_131 = new QMenuForm($('[data-form="IMO_Menu_131"]'), "Form_IMO_Menu_131");
+		window.Form_IMO_Menu_131.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_IMO_Menu_131.Init();
+
+		//Initialize search field menu for search bar
+		InitSearchFieldMenu("qIMO_Menu_131");
+		RegisterClearEvents("IMO_Menu_131")
+
+		// TVC - added code to load advanced filters after returning from a form
+		@{
+			string advFil = "";
+			if (!String.IsNullOrEmpty(Navigation.GetStrValue("AdvancedFilters")))
+			{
+				advFil = Navigation.GetStrValue("AdvancedFilters");
+			}
+		}
+
+		SearchFilters.value = '@Html.Raw(advFil)';
+		if (typeof SearchFilters.value === 'string' && SearchFilters.value.length > 0)
+			UpdateSearchFilterStatus("IMO_Menu_131", JSON.parse(SearchFilters.value))
+	});
+</script>
+
+@helper codeJavascript()
+{
+<script>
+	QLocalStorage.remLocalStorage("savedInfo");
+	$(document).ready(function (e) {
+		InitSpecialControls($('[data-form="IMO_Menu_131"]'));
+
+
+  	});
+
+	function InitMenuSpecialControls() {
+		InitSpecialControls($('[data-form="IMO_Menu_131"]'));
+	}
+
+</script>
+}
+
+@section code_javascript {
+	@codeJavascript()
+}

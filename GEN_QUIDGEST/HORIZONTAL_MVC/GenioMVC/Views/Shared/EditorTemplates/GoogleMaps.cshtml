@@ -1,0 +1,180 @@
+﻿@model string
+
+@{
+    var metadata = ModelMetadata.FromLambdaExpression(model => model, ViewData);
+    var fieldName = metadata.PropertyName;
+    var fieldNameMap = metadata.PropertyName + "_map";
+
+}
+@*
+    <script type="text/javascript">
+        // Cannot be used inside a modal form, neither in an extended support form
+        //if (typeof google === 'undefined') {
+            <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9qLvLpMEuL-igZ0PAoroFt1JVJKof-EM&v=3.exp&libraries=geometry,places"></script>
+        //}
+    </script>
+	// previous script commented above. BPP script below.
+*@
+
+<script src='@Scripts.Url("~/Scripts/GoogleMapsDisplay&Editor")' async defer></script>
+
+@Html.HiddenFor(model => model)
+
+<div class="map_container">
+    <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+    <div id="@fieldNameMap" class="map_canvas"></div>
+</div>
+
+<script type="text/javascript">
+    $(window).on("load", function () {
+        var map;
+        var marker;
+
+        /* Block enter 
+        $('html').bind('keypress', function (e) {
+            if (e.keyCode == 13)
+                return false;
+        });*/
+
+        if (navigator.onLine)
+            initialize();
+        else
+            getErrorMessage();
+
+        function initialize() {
+            var point = getPointFromDB("@Model");
+            
+            if (point != null)
+            {
+                initMap(point, true);
+            }
+            else {
+                navigator.geolocation.getCurrentPosition(function (pos) {
+                    point = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
+                    //var QuidgestLatLng = new google.maps.LatLng(38.7239975, -9.1528118);
+                    //point = QuidgestLatLng;
+                    initMap(point, false);
+                });
+            }
+        }
+
+        function initMap(point, addMarker) {
+            var options = {
+                zoom: 12,
+                center: point,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+
+            map = new google.maps.Map(document.getElementById("@fieldNameMap"), options);
+
+            var input = document.getElementById('pac-input');
+            var searchBox = new google.maps.places.SearchBox(input);
+            map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+            if (addMarker) {
+                marker = new google.maps.Marker({
+                    position: point,
+                    draggable: true,
+                    map: map
+                });
+            }
+            //else { // put my position in map
+            //    new google.maps.Marker({
+            //        position: point,
+            //        //animation: google.maps.Animation.BOUNCE,
+            //        icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+            //        map: map
+            //    });
+            //}
+
+            google.maps.event.addListener(map, 'click', function (event) {
+                $("#@fieldName").val("POINT(" + event.latLng.lng() + " " + event.latLng.lat() + ")").trigger("change");
+            });
+
+            if (marker != null) {
+                google.maps.event.addListener(marker, 'drag', function (event) {
+                    $("#@fieldName").val("POINT(" + event.latLng.lng() + " " + event.latLng.lat() + ")").trigger("change");
+                });
+
+                google.maps.event.addListener(marker, 'click', function (event) {
+                    getInfoWindow(event.latLng);
+                });
+            }
+
+            google.maps.event.addListener(searchBox, 'places_changed', function () {
+                var places = searchBox.getPlaces();
+                if (places.length > 0) {
+                    var place = places[0];
+                    map.setCenter(new google.maps.LatLng(place.geometry.location.lat(), place.geometry.location.lng()));
+                    map.setZoom(15);
+                    if (marker != null) { marker.setMap(null); }
+                    marker = new google.maps.Marker({
+                        map: map,
+                        title: place.name + ' / (' + place.geometry.location.lat() + ' ' + place.geometry.location.lng() + ')',
+                        position: place.geometry.location
+                    });
+                    $("#@fieldName").val("POINT(" + place.geometry.location.lng() + " " + place.geometry.location.lat() + ")").trigger("change");
+                }
+            });
+
+        }
+
+        $("#@fieldName").change(function () {
+            var point = getPointFromDB($(this).val());
+
+            if (point != null) {
+                if (marker != null) {
+                    marker.setPosition(point);
+                }
+                else {
+                    marker = new google.maps.Marker({
+                        position: point,
+                        map: map
+                    });
+                }
+            }
+        });
+
+        function getPointFromDB(stringPosition) {
+            if (stringPosition == "Null" || stringPosition == "")
+                return null;
+            var coord = stringPosition.replace("POINT(", "").replace(")", "").split(" ");
+            // Google Maps format
+            return new google.maps.LatLng(coord[1], coord[0]);
+        }
+
+        /*function getPointFromMap(stringPosition) {
+            if (stringPosition == "Null" || stringPosition == "")
+                return null;
+            var coord = stringPosition.replace("POINT(", "").replace(")", "").split(" ");
+            // Google Maps format
+            return new google.maps.LatLng(coord[0], coord[1]);
+        }*/
+
+        function getErrorMessage() {
+            var html = "<div class='alert alert-error'>";
+            html += "<h5>There is no connection to the internet, map controller needs connection to the internet!</h5>";
+            html += "</div>";
+            $("#@fieldNameMap").html(html);
+        }
+
+        function getInfoWindow(location) {
+            var geocoder = new google.maps.Geocoder;
+            geocoder.geocode({ 'location': location }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    var infowindow = new google.maps.InfoWindow({ content: "<strong>" + results[0].formatted_address + "<strong>" });
+                    infowindow.open(map, marker);
+                } else {
+                    var infowindow = new google.maps.InfoWindow({ content: '<strong>Lat: ' + location.lat() + '<br>Long: ' + location.lng() + "<strong>" });
+                    infowindow.open(map, marker);
+                }
+            });            
+        }
+        /*function getInfoWindow(location) { // previous version
+            var infowindow = new google.maps.InfoWindow({ content: 'Lat: ' + location.lat() + '<br>Long: ' + location.lng()});
+            infowindow.open(map, marker);
+        }*/
+
+    });
+
+</script>

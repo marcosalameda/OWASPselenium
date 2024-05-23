@@ -1,0 +1,53 @@
+﻿@model GenioMVC.ViewModels.Home_ViewModel
+
+@{
+    ViewBag.Title = @Resources.WAREHOUSE_MANAGEMENT10443;
+}
+
+@* USE /[MANUAL GQT INDEX_AUTHENTICATED]/ *@
+@* USE /[MANUAL GQT INDEX_AUTHENTICATED WMS]/ *@
+
+<style>
+    body {
+@if (Model.HomePage_model == null || !Model.HomePage_model.HasHomePage)
+{
+    <text>
+        background-image: url("@Url.Content("~/Content/img/fundo_shadow.png")");
+    </text>
+}
+        background-repeat: round;
+    }
+
+    .wellcomeAuthenticated{
+        color: #FFFFFF;
+        margin: 0 auto;
+        width: 100%;
+        text-align: center;        
+        margin-top: 25%;
+    }
+    .wellcomeAuthenticated h1, .wellcomeAuthenticated h6{
+        font-weight: normal;
+    }
+</style>
+
+@if (Model.HomePage_model != null && Model.HomePage_model.HasHomePage)
+{
+    <div elem-identifier="home-page-form" class="home-page-form">
+        <div class="container-fluid" style="flex: 1 1 auto;">
+            @{ Html.RenderAction(Model.HomePage_model.HomePageAction, Model.HomePage_model.HomePageController, new { module = Model.HomePage_model.HomePageDef.Module, isHomePage = true }); }
+        </div>
+    </div>
+}
+else
+{
+    <div class="wellcomeAuthenticated">
+        <h1>@Resources.OLA13165 @GenioMVC.Models.Navigation.UserContext.Current.User.Name </h1>
+    </div>
+}
+
+@section code_javascript
+{
+<script>
+    QLocalStorage.remLocalStorage("savedInfo");
+</script>
+}

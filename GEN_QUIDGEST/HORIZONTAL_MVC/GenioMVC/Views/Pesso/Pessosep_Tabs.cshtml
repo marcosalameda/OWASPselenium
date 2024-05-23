@@ -1,0 +1,227 @@
+﻿@model GenioMVC.ViewModels.Pesso.Pessosep_ViewModel
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+	<div id="Pessosep_tabs">
+        <div elem-identifier="Tabbable" class="tabbable">
+			<ul class="nav c-tab c-tab__divider" role="tablist">
+				<li class="nav-item c-tab__item" elem-identifier="TabbableIdentifier" id="tab_pessos00" data-tab="pessos00"><a class="nav-link" tabindex="0" data-target="#pessos00" data-toggle="tab">@Resources.COMPANY20759</a></li>
+				<li class="nav-item c-tab__item" elem-identifier="TabbableIdentifier" id="tab_pessos01" data-tab="pessos01"><a class="nav-link" tabindex="0" data-target="#pessos01" data-toggle="tab">@Resources.EVERYTHING62829</a></li>
+ 			</ul>
+
+			<div class="c-tab__item-container">
+				<div class="c-tab__item-content" id="pessos00" data-identifier="IFF_PESSOSEPPSEUDPESSOS00">
+					<div class="form-flow">
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-dbedit draggable " id="CONTAINER_IFF_PESSOS00CMPNYDESIGNAT">
+										<div class="d-flex">
+										@Html.LabelFor(model => model.TableCmpnyDesignat, new { label_id="IFF_PESSOS00CMPNYDESIGNAT", @class = " i-text__label", id="LABEL_IFF_PESSOS00CMPNYDESIGNAT"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('IFF_PESSOS00CMPNYDESIGNAT','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.DropDownListFor(model => model.ValCodempre, Model.TableCmpnyDesignat.List , "", new {help_id = "IFF_PESSOS00CMPNYDESIGNAT", @class = "i-select chosen-dropdown input-xxlarge", data_identifier = "IFF_PESSOS00CMPNYDESIGNAT", @pers_cs_area = "Cmpny", @pers_cs_field = "ValCodempre", @db_field = "ValCodempre", @db_full_field_name = "pesso.codempre", data_has_more = Model.TableCmpnyDesignat.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableCmpnyDesignat.Selected, data_dbedit_value = Model.TableCmpnyDesignat.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodpesso, @data_see_more = "Pessos00_CmpnyValDesignat", title = @Resources.DESIGNATION35876, data_see_more_url = @Url.Action("Pessos00_CmpnyValDesignat","Pesso"), data_is_dbedit = "true", data_fields = "cmpny.codempre,cmpny.designat,cmpny.acronym,cmpny.nif,cmpny.telephon,cmpny.email,cmpny.logo", data_main_field = "Cmpny.ValDesignat", data_elements = 0, data_filled_by_history = Model.TableCmpnyDesignat.FilledByHistory, @dependant_fields = "cmpny.codempre,cmpny.designat" })
+										@Html.ValidationMessageFor(model => model.TableCmpnyDesignat)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="c-tab__item-content" id="pessos01" data-identifier="IFF_PESSOSEPPSEUDPESSOS01">
+					<div class="form-flow">
+						<div class="row">
+							<div class="col-12">
+								<div class="row-large-control">
+									<div class="row-line-group" id="CONTAINER_IFF_PESSOS01PSEUDNOVOGR06">
+<div class="c-accordion" id="PESSOS01_NOVOGR06">
+<div id="PESSOS01_NOVOGR03" elem-identifier="AccordionGroup" class="c-accordion accordion-group " data-identifier="IFF_PESSOS01PSEUDNOVOGR03">
+	
+	<div class="c-accordion__panel">
+		<div elem-identifier="AccordionHeading" class="c-accordion__panel-header" >
+			<a elem-identifier="AccordionToggle" href="#" class="b-btn b-btn--link c-accordion__panel-title" role="button" data-toggle="collapse"  
+				data-target="#PESSOS01_NOVOGR03I" data-zone-type="ZA"
+				label-id="IFF_PESSOS01PSEUDNOVOGR06"
+				>
+				<span  help-id="IFF_PESSOS01PSEUDNOVOGR06"/>	
+				<i class="glyphicons glyphicons-plus-sign c-accordion__panel-icon"></i>
+				@Resources.CONTACT05134		
+				<a href="javascript:OpenSuggestion('IFF_PESSOS01PSEUDNOVOGR06','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a>
+			</a>
+		</div>
+		<div id="PESSOS01_NOVOGR03I" elem-identifier="AccordionBody" data-parent="#PESSOS01_NOVOGR06" class="collapse" style="height:0px; ">
+			<div class="c-accordion__panel-body" elem-identifier="AccordionInner">
+					<div elem-identifier="ContainerAccordionInner" class="container-fluid">
+												<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_PESSOS01PESSOTELEPHON">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValTelephon, new { label_id="LED_PESSOS01PESSOTELEPHON", @class = " i-text__label", id="LABEL_LED_PESSOS01PESSOTELEPHON"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PESSOS01PESSOTELEPHON','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValTelephon, new {help_id = "LED_PESSOS01PESSOTELEPHON", @class = "i-text__field i-text input-medium", data_identifier = "LED_PESSOS01PESSOTELEPHON", @pers_cs_area = "Pesso", @pers_cs_field = "ValTelephon", @db_field = "ValTelephon", title = @Resources.TELEPHONE28697, maxlength = "20", rows = "20" })
+													@Html.ValidationMessageFor(model => model.ValTelephon)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_PESSOS01PESSOEMAIL___">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValEmail, new { label_id="LED_PESSOS01PESSOEMAIL___", @class = " i-text__label", id="LABEL_LED_PESSOS01PESSOEMAIL___"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PESSOS01PESSOEMAIL___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValEmail, new {help_id = "LED_PESSOS01PESSOEMAIL___", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_PESSOS01PESSOEMAIL___", @pers_cs_area = "Pesso", @pers_cs_field = "ValEmail", @db_field = "ValEmail", title = @Resources.EMAIL_44228, maxlength = "254", rows = "60" })
+													@Html.ValidationMessageFor(model => model.ValEmail)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+						</div>
+				</div>
+		</div>
+	</div>
+</div>
+<div id="PESSOS01_NOVOGR04" elem-identifier="AccordionGroup" class="c-accordion accordion-group " data-identifier="IFF_PESSOS01PSEUDNOVOGR04">
+	
+	<div class="c-accordion__panel">
+		<div elem-identifier="AccordionHeading" class="c-accordion__panel-header" >
+			<a elem-identifier="AccordionToggle" href="#" class="b-btn b-btn--link c-accordion__panel-title" role="button" data-toggle="collapse"  
+				data-target="#PESSOS01_NOVOGR04I" data-zone-type="ZA"
+				label-id="IFF_PESSOS01PSEUDNOVOGR06"
+				>
+				<span  help-id="IFF_PESSOS01PSEUDNOVOGR06"/>	
+				<i class="glyphicons glyphicons-plus-sign c-accordion__panel-icon"></i>
+				@Resources.PHOTO32097		
+				<a href="javascript:OpenSuggestion('IFF_PESSOS01PSEUDNOVOGR06','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a>
+			</a>
+		</div>
+		<div id="PESSOS01_NOVOGR04I" elem-identifier="AccordionBody" data-parent="#PESSOS01_NOVOGR06" class="collapse" style="height:0px; ">
+			<div class="c-accordion__panel-body" elem-identifier="AccordionInner">
+					<div elem-identifier="ContainerAccordionInner" class="container-fluid">
+												<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-image draggable " id="CONTAINER_LED_PESSOS01PESSOPHOTOGRA">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValPhotogra, new { label_id="LED_PESSOS01PESSOPHOTOGRA", @class = " i-text__label", id="LABEL_LED_PESSOS01PESSOPHOTOGRA"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PESSOS01PESSOPHOTOGRA','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													<div data-identifier="LED_PESSOS01PESSOPHOTOGRA" pers-cs-area="Pesso" pers-cs-field="ValPhotogra" class="image-control-wrapper" >
+													@if(Model.IsEditableMode) {
+														@Html.EditorFor(m => m.ValPhotogra, new {help_id = "LED_PESSOS01PESSOPHOTOGRA", @class = "col-auto ", data_identifier = "LED_PESSOS01PESSOPHOTOGRA", title = @Resources.PHOTO51874, guid = @Model.ValCodpesso, controller = "Pesso", fldname = "ValPhotogra", identifier = "FPESSOSEP", style = "height: 47pt; display: inline-block;" })
+													} else {
+														@Html.DisplayFor(m => m.ValPhotogra, new {help_id = "LED_PESSOS01PESSOPHOTOGRA", @class = "col-auto ", data_identifier = "LED_PESSOS01PESSOPHOTOGRA", title = @Resources.PHOTO51874, guid = @Model.ValCodpesso, controller = "Pesso", fldname = "ValPhotogra", identifier = "FPESSOSEP", style = "height: 47pt; display: inline-block;" })
+													}
+													</div>
+													@Html.ValidationMessageFor(model => model.ValPhotogra)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+						</div>
+				</div>
+		</div>
+	</div>
+</div>
+<div id="PESSOS01_NOVOGR05" elem-identifier="AccordionGroup" class="c-accordion accordion-group " data-identifier="IFF_PESSOS01PSEUDNOVOGR05">
+	
+	<div class="c-accordion__panel">
+		<div elem-identifier="AccordionHeading" class="c-accordion__panel-header" >
+			<a elem-identifier="AccordionToggle" href="#" class="b-btn b-btn--link c-accordion__panel-title" role="button" data-toggle="collapse"  
+				data-target="#PESSOS01_NOVOGR05I" data-zone-type="ZA"
+				label-id="IFF_PESSOS01PSEUDNOVOGR06"
+				>
+				<span  help-id="IFF_PESSOS01PSEUDNOVOGR06"/>	
+				<i class="glyphicons glyphicons-plus-sign c-accordion__panel-icon"></i>
+				@Resources.CAREER41490		
+				<a href="javascript:OpenSuggestion('IFF_PESSOS01PSEUDNOVOGR06','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a>
+			</a>
+		</div>
+		<div id="PESSOS01_NOVOGR05I" elem-identifier="AccordionBody" data-parent="#PESSOS01_NOVOGR06" class="collapse" style="height:0px; ">
+			<div class="c-accordion__panel-body" elem-identifier="AccordionInner">
+												<div class="row">
+										<div class="col-12">
+											<div class="row-large-control">
+												<div class="row-line-group" id="CONTAINER_IFF_PESSOS01PSEUDEVOLUCAO">
+													<div id="Pessos01_ValEvolucao" data-identifier="IFF_PESSOS01PSEUDEVOLUCAO"  data-extra-options="" > 
+														@{ Html.RenderAction("Pessos01_ValEvolucao", "Pesso", new { id = Model.ValCodpesso, partialView = "Pessos01_ValEvolucao"}); }
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="row-large-control">
+												<div class="row-line-group" id="CONTAINER_IFF_PESSOS01PSEUDFICHACAR">
+													<div id="FICHACAR" data-target="ValEvolucao" elem-identifier="extended-support">
+														<div class="alert alert-block alert-info">@Resources.ESCOLHA_UM_ELEMENTO_24060</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+					</div>
+		</div>
+	</div>
+</div>
+<div id="PESSOS01_NOVOGR07" elem-identifier="AccordionGroup" class="c-accordion accordion-group " data-identifier="IFF_PESSOS01PSEUDNOVOGR07">
+	
+	<div class="c-accordion__panel">
+		<div elem-identifier="AccordionHeading" class="c-accordion__panel-header" >
+			<a elem-identifier="AccordionToggle" href="#" class="b-btn b-btn--link c-accordion__panel-title" role="button" data-toggle="collapse"  
+				data-target="#PESSOS01_NOVOGR07I" data-zone-type="ZA"
+				label-id="IFF_PESSOS01PSEUDNOVOGR06"
+				>
+				<span  help-id="IFF_PESSOS01PSEUDNOVOGR06"/>	
+				<i class="glyphicons glyphicons-plus-sign c-accordion__panel-icon"></i>
+				@Resources.CONTACT05134		
+				<a href="javascript:OpenSuggestion('IFF_PESSOS01PSEUDNOVOGR06','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a>
+			</a>
+		</div>
+		<div id="PESSOS01_NOVOGR07I" elem-identifier="AccordionBody" data-parent="#PESSOS01_NOVOGR06" class="collapse" style="height:0px; ">
+			<div class="c-accordion__panel-body" elem-identifier="AccordionInner">
+												<div class="row">
+										<div class="col-12">
+											<div class="row-large-control">
+												<div class="row-line-group" id="CONTAINER_IFF_PESSOS01PSEUDCONTACTO">
+													<div id="Pessos01_ValContacto" data-identifier="IFF_PESSOS01PSEUDCONTACTO"  data-extra-options="" > 
+														@{ Html.RenderAction("Pessos01_ValContacto", "Pesso", new { id = Model.ValCodpesso, partialView = "Pessos01_ValContacto"}); }
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+					</div>
+		</div>
+	</div>
+</div>
+</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+ 			</div>
+        </div>
+	</div>
+	<!-- end tab content -->
+	<script type="application/javascript">
+		$(document).ready(function () {
+			// to select the first tab
+			var a = $('[elem-identifier="TabbableIdentifier"] > a', "#Pessosep_tabs").first();
+            a.addClass("active");
+
+			var li = $('[elem-identifier="TabbableIdentifier"]', "#Pessosep_tabs").first();			
+			var tabId = li.attr("data-tab");
+			$("#" + tabId).addClass("active");			
+		});
+	</script>

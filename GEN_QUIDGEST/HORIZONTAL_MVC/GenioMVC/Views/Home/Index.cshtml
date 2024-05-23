@@ -1,0 +1,26 @@
+﻿@model GenioMVC.ViewModels.Home_ViewModel
+
+@{
+    ViewBag.Title = @Resources.HORIZONTAL_LAYOUT62933;
+}
+
+@* USE /[MANUAL GQT INDEX HORIZONTAL_MVC]/ *@
+@if (Model.HomePage_model != null && Model.HomePage_model.HasHomePage)
+{
+    <div elem-identifier="home-page-form" class="home-page-form">
+        <div class="container-fluid" style="flex: 1 1 auto;">
+            @{ Html.RenderAction(Model.HomePage_model.HomePageAction, Model.HomePage_model.HomePageController, new { module = Model.HomePage_model.HomePageDef.Module, isHomePage = true }); }
+        </div>
+    </div>
+}
+else
+{
+    <text></text>
+}
+
+@section code_javascript
+{
+<script>
+    QLocalStorage.remLocalStorage("savedInfo");
+</script>
+}

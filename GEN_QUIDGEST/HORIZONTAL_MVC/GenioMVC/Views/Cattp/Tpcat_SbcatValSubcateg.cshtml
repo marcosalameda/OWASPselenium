@@ -1,0 +1,115 @@
+﻿@model GenioMVC.ViewModels.Cattp.Tpcat_SbcatValSubcateg_ViewModel
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+    var searchStyle =  string.Empty;
+}
+<div class="search" @searchStyle>
+    <div class="row">
+        <div class="col">
+            <h2 class="table-title c-table__title">@Resources.SUB_CATEGORY06342</h2>
+        </div>
+        <div class="col-auto normal-view" id="Tpcat_SbcatValSubcateg_simple_filter">
+            <div class="i-input-group" style="width:21rem; height: inherit;">
+                @Html.TextBox("qTpcat_SbcatValSubcateg", this.Model.Menu.Query, new { @class = "i-input-group__field", @onkeydown = "ListSearchEnter(event)" })
+                <div class="i-input-group--right">
+                    <button type="button" elem-identifier="ListSearchButton" class="b-icon--secondary i-input-group__button--secondary" onclick="window.Tpcat_SbcatValSubcateg.Search()"><i class="glyphicons glyphicons-search i-input-group__tag-icon i-input-group__button-icon"></i></button>
+
+                    <button id="Tpcat_SbcatValSubcateg_extra" class="b-icon--secondary i-input-group__button--secondary" type="button" onclick="changeFilters('#Tpcat_SbcatValSubcateg_complex_filter', 'Tpcat_SbcatValSubcateg_tableFilters')" title="@Resources.PESQUISA_AVANCADA06198"><span class="glyphicons glyphicons-zoom-in i-input-group__tag-icon i-input-group__button-icon"></span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="normal-view">
+@using GenioMVC.ViewModels.Sbcat;    
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Sbcat>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodsbcat, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN TPCAT_SUBCATEG_SBCAT_SUBCATEG]/
+		column.Expression(p => p.ValSubcateg).Title(@Resources.SUB_CATEGORIA15612).Field("ValSubcateg").Size(50);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+			//Hidden field used in JavaScript for return selected row text value
+			column.Expression(p => p.ValSubcateg).Field("ValSubcateg").AddInlineStyle("display", "none", true).UsedForFilter(false);
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Sbcat")
+        .Id("Tpcat_SbcatValSubcateg")
+        .AjaxRequest("Tpcat_SbcatValSubcateg")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .TableList(hasFilters: true)
+        .RequestLink(@Url.Action("Tpcat_SbcatValSubcateg", new { id = Model.ValCodtpcat, partialView = "Tpcat_SbcatValSubcateg"}))
+        .Filters(this.Model.Menu.Filters)
+        .Form("Sbcat", false, false, new { data_skip_prevalida = "true" })
+        .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
+		;
+        
+}
+
+@tbl.ToHtml()
+</div>
+<script>
+    try {
+        if (jQuery) {
+            try {
+                $("#qTpcat_SbcatValSubcateg, #TableSbcatSubcateg_complex_filter th input").change(function() {
+                    var context = $("#TableSbcatSubcateg").parent();
+                    $("#table-inputs input", context).val("");
+                });
+
+                var row = $("#Tpcat_SbcatValSubcateg table tbody tr");
+                row.mouseenter(function () {
+                    $(this).addClass("highlighted");
+                });
+                row.mouseleave(function () {
+                    $(this).removeClass("highlighted");
+                });
+
+                $('td:not([elem-identifier="RowActions"])', row).click(function () {
+                    var row = $(this).parent();
+                    var key = row.data("key");
+                    var selectList = $('[data-identifier="IFF_TPCAT___SBCATSUBCATEG"]');
+
+                    selectList.trigger("DBEditSetValue", key);
+
+                    $('#modal-dbedit').modal('hide');
+                });
+
+                $("td a").click(function (event) {
+                    event.stopPropagation()
+                });
+                $('#Tpcat_SbcatValSubcateg_complex_filter input').keypress(function (event) {
+                    var keycode = (event.keyCode ? event.keyCode : event.which);
+                    if(keycode == '13' || keycode == '10'){
+                        $('#Tpcat_SbcatValSubcateg_complex_filter button#applyComplexFilter').click();
+                        event.preventDefault();
+                    }
+                });
+@if(Model.Menu.Elements.Count() == 0 && !Model.Menu.Filters.ShowTableFilters)
+{
+<text>
+                $('#Tpcat_SbcatValSubcateg_extra').prop("disabled", true);
+</text>
+}
+
+
+// USE /[MANUAL GQT LISTING_JS TPCAT_MENU]/
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+</script>

@@ -1,0 +1,293 @@
+﻿@model GenioMVC.ViewModels.Item.Artigext_ViewModel
+@using GenioMVC.Models.Navigation;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Form = "Artigext";
+	ViewBag.Title = @Resources.ITEM40802;
+    ViewBag.formmode = Model.GetFormMode;
+	ViewBag.ClassForFormLayout = "form-flow";
+}
+
+
+@if (!Model.NestedForm) {
+    if(Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+    {
+        using (Html.BeginForm("Action", "Item", FormMethod.Post, new { @class = "form-horizontal", area="Item", data_form="Artigext" }))
+        {
+            @form_content_alert()
+            @Html.QValidationSummary()
+	        @LoadDefault()
+        }
+    }
+    else
+    {
+        <div class="form-horizontal" id="Artigext" area="Item" data-form="Artigext">
+	        @LoadDefault()
+        </div>
+    }
+}
+else {
+    <div class="c-card nested-form" id="Artigext_well" area="Item" data-form="Artigext">
+        @Html.QValidationSummary()
+		@LoadDefault()
+    </div>
+}
+
+@helper form_content_body() {
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-dbedit draggable " id="CONTAINER_IFF_ARTIGEXTWAREHWAREHDES">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.TableWarehWarehdes, new { label_id="IFF_ARTIGEXTWAREHWAREHDES", @class = " i-text__label", id="LABEL_IFF_ARTIGEXTWAREHWAREHDES"}, true, true)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('IFF_ARTIGEXTWAREHWAREHDES','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DropDownListFor(model => model.ValCodwareh, Model.TableWarehWarehdes.List , "", new {help_id = "IFF_ARTIGEXTWAREHWAREHDES", @class = "i-select chosen-dropdown input-xxlarge", data_identifier = "IFF_ARTIGEXTWAREHWAREHDES", @pers_cs_area = "Wareh", @pers_cs_field = "ValCodwareh", @db_field = "ValCodwareh", @db_full_field_name = "item.codwareh", data_has_more = Model.TableWarehWarehdes.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableWarehWarehdes.Selected, data_dbedit_value = Model.TableWarehWarehdes.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCoditem, @data_see_more = "Artigext_WarehValWarehdes", title = @Resources.WAREHOUSE51864, data_see_more_url = @Url.Action("Artigext_WarehValWarehdes","Item"), data_is_dbedit = "true", data_support_form = @Url.Action("ARMAZ_New", "WAREH"), data_fields = "wareh.codwareh,wareh.warehdes", data_main_field = "Wareh.ValWarehdes", data_elements = 0, data_filled_by_history = Model.TableWarehWarehdes.FilledByHistory, @dependant_fields = "wareh.codwareh,wareh.warehdes" })
+								@Html.ValidationMessageFor(model => model.TableWarehWarehdes)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-dbedit draggable " id="CONTAINER_IFF_ARTIGEXTGITEMITEMDES_">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.TableGitemItemdes, new { label_id="IFF_ARTIGEXTGITEMITEMDES_", @class = " i-text__label", id="LABEL_IFF_ARTIGEXTGITEMITEMDES_"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('IFF_ARTIGEXTGITEMITEMDES_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DropDownListFor(model => model.ValCodgitem, Model.TableGitemItemdes.List , "", new {help_id = "IFF_ARTIGEXTGITEMITEMDES_", @class = "i-select chosen-dropdown input-xxlarge", data_identifier = "IFF_ARTIGEXTGITEMITEMDES_", @pers_cs_area = "Gitem", @pers_cs_field = "ValCodgitem", @db_field = "ValCodgitem", @db_full_field_name = "item.codgitem", data_has_more = Model.TableGitemItemdes.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableGitemItemdes.Selected, data_dbedit_value = Model.TableGitemItemdes.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCoditem, @data_see_more = "Artigext_GitemValItemdes", title = @Resources.GLOBAL_ITEM49586, data_see_more_url = @Url.Action("Artigext_GitemValItemdes","Item"), data_is_dbedit = "true", data_fields = "gitem.codgitem,gitem.itemdes,gitem.itemgcod", data_main_field = "Gitem.ValItemdes", data_elements = 0, data_filled_by_history = Model.TableGitemItemdes.FilledByHistory, @dependant_fields = "gitem.codgitem,gitem.itemdes,gitem.itemgcod" })
+								@Html.ValidationMessageFor(model => model.TableGitemItemdes)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_ARTIGEXTGITEMITEMGCOD">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.GitemValItemgcod, new { label_id="LED_ARTIGEXTGITEMITEMGCOD", @class = " i-text__label", id="LABEL_LED_ARTIGEXTGITEMITEMGCOD"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_ARTIGEXTGITEMITEMGCOD','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextBoxFor(model => model.GitemValItemgcod, new {help_id = "LED_ARTIGEXTGITEMITEMGCOD", @class = "i-text__field i-text input-medium", data_identifier = "LED_ARTIGEXTGITEMITEMGCOD", @pers_cs_area = "Gitem", @pers_cs_field = "ValItemgcod", @db_field = "ValItemgcod", fixed_field = "true", @readonly = "readonly", dependant = "ValCodgitem", key_field = "ValCodgitem", dependant_area = "Gitem", title = @Resources.CODE49225, maxlength = "15", rows = "15" })
+								@Html.ValidationMessageFor(model => model.GitemValItemgcod)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_ARTIGEXTITEM_ITEMDES_">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValItemdes, new { label_id="LED_ARTIGEXTITEM_ITEMDES_", @class = " i-text__label", id="LABEL_LED_ARTIGEXTITEM_ITEMDES_"}, true, true)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_ARTIGEXTITEM_ITEMDES_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextBoxFor(model => model.ValItemdes, new {help_id = "LED_ARTIGEXTITEM_ITEMDES_", @class = "i-text__field i-text input-xxlarge", data_refresh = "true", data_tipoform = "DF", data_identifier = "LED_ARTIGEXTITEM_ITEMDES_", @pers_cs_area = "Item", @pers_cs_field = "ValItemdes", @db_field = "ValItemdes", title = @Resources.ITEM40802, maxlength = "85", rows = "85" })
+								@Html.ValidationMessageFor(model => model.ValItemdes)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_ARTIGEXTITEM_ITEMCOD_">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValItemcod, new { label_id="LED_ARTIGEXTITEM_ITEMCOD_", @class = " i-text__label", id="LABEL_LED_ARTIGEXTITEM_ITEMCOD_"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_ARTIGEXTITEM_ITEMCOD_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextBoxFor(model => model.ValItemcod, new {help_id = "LED_ARTIGEXTITEM_ITEMCOD_", @class = "i-text__field i-text input-medium", data_refresh = "true", data_tipoform = "DF", data_identifier = "LED_ARTIGEXTITEM_ITEMCOD_", @pers_cs_area = "Item", @pers_cs_field = "ValItemcod", @db_field = "ValItemcod", title = @Resources.CODE49225, maxlength = "15", rows = "15" })
+								@Html.ValidationMessageFor(model => model.ValItemcod)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-image draggable " id="CONTAINER_LED_ARTIGEXTITEM_IMAGE___">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValImage, new { label_id="LED_ARTIGEXTITEM_IMAGE___", @class = " i-text__label", id="LABEL_LED_ARTIGEXTITEM_IMAGE___"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_ARTIGEXTITEM_IMAGE___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								<div data-identifier="LED_ARTIGEXTITEM_IMAGE___" pers-cs-area="Item" pers-cs-field="ValImage" class="image-control-wrapper" >
+								@if(Model.IsEditableMode) {
+									@Html.EditorFor(m => m.ValImage, new {help_id = "LED_ARTIGEXTITEM_IMAGE___", @class = "col-auto ", data_identifier = "LED_ARTIGEXTITEM_IMAGE___", title = @Resources.IMAGE65174, guid = @Model.ValCoditem, controller = "Item", fldname = "ValImage", identifier = "FARTIGEXT", style = "height: 47pt; display: inline-block;" })
+								} else {
+									@Html.DisplayFor(m => m.ValImage, new {help_id = "LED_ARTIGEXTITEM_IMAGE___", @class = "col-auto ", data_identifier = "LED_ARTIGEXTITEM_IMAGE___", title = @Resources.IMAGE65174, guid = @Model.ValCoditem, controller = "Item", fldname = "ValImage", identifier = "FARTIGEXT", style = "height: 47pt; display: inline-block;" })
+								}
+								</div>
+								@Html.ValidationMessageFor(model => model.ValImage)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			@Html.HiddenFor(model => model.ValCoditem, new { @pers_cs_field="ValCoditem", @pers_cs_area="Item", data_refresh = "true", @form_area="true", @data_value = Model.ValCoditem, @data_identifier = "LED_ARTIGEXTITEM_CODITEM_" })
+
+            @Html.Hidden("IgnoreWarnings", "false", new { id = "IgnoreWarnings" })
+
+			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Artigext" })
+            @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Artigext" })
+            @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Artigext" })
+			if (!Model.NestedForm)
+            {
+                @Html.AntiForgeryToken()
+            }
+}
+
+@helper form_content_alert() {
+	if(Model.FormMode == FormMode.Delete) {
+		<div class="c-alert c-alert--warning">
+			<i class="glyphicons glyphicons-alert c-alert__icon" aria-hidden="true"></i>
+			<div class="c-alert__text">
+				&ensp;@Resources.DESEJA_ELIMINAR_ESTA24564
+			</div>
+		<!--Ao confirmar esta ficha irá ser eliminada da base de dados. Cancele caso não tenha a certeza.-->
+		</div>
+	}
+}
+
+@helper form_content_buttons() {
+
+
+
+
+    @* Extended support form *@
+    if (Model.NestedForm)
+    {
+        if (Model.IsEditableMode)
+        {
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("Artigext", Model.FormMode).ToString(), "Item")", "Artigext_well")' qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>
+                    @Resources.SAVE04165
+            </button>
+            <button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Artigext_Delete", "Item", new {id = @Model.ValCoditem} )", "Artigext_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+
+            <script type="application/javascript">
+                $(document).ready(function () { loaded($("#Artigext_well")); });
+            </script>
+        }
+
+        @* javascript code_javascript *@
+        @*@codeJavascript()*@
+    }
+    @* Normal mode *@
+    else
+    {
+        if (Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+        {
+            if (Model.FormMode == FormMode.New && Convert.ToBoolean(Model.Navigation.CurrentLevel.GetEntry("repeatInsertion")))
+            {
+            <button type="button" data-end-pers="true" name="Artigext_repete_insertion" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitArtigext(event, true)" qbutton="ok_new">@Resources.GRAVAR_E_CRIAR_NOVA17771</button>
+            }
+            if(Model.FormMode == FormMode.Delete)
+            {
+				<button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Artigext", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitDeleteArtigext(event)" qbutton="delete">
+                    <i class="glyphicons glyphicons-check e-icon" aria-hidden="true"></i>@Resources.CONFIRMAR09808
+                </button>
+            }
+            else
+            {
+                <button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Artigext", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitArtigext(event)" title="@Resources.SAVE04165" data-selector="true" qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>@Resources.SAVE04165
+                </button>
+            }
+
+            <button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-href="@Url.Action("Artigext_Cancel", "Item", new { niv = Model.Navigation.CurrentLevel.Level })" onclick="javascript:window.Form_Artigext.Cancel()" title="@Resources.CANCEL65428" data-selector="true" qbutton="cancel">
+                <i class="glyphicons glyphicons-ban-circle e-icon" aria-hidden="true"></i>@Resources.CANCEL65428
+            </button>
+        }
+        else if (!(ViewBag.isHomePage ?? false))
+        {
+            @Html.ActionLinkWithIcon(@Resources.RETROCEDER16633, "Artigext_Cancel","Item","glyphicons glyphicons-arrow-left e-icon", null, new { @class = "b-icon-text b-icon-text--secondary", @data_end_pers = "true", @title = @Resources.RETROCEDER16633, qbutton = "cancel" })
+        }
+    }
+}
+
+@helper LoadDefault() {
+    if (Model.NestedForm)
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div class="c-card__header">
+                    <div class="c-card__header-tag">
+						<span class="form-header" style="padding:0;">
+							<i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+						</span>
+                    </div>
+                </div>
+                <div class="c-card__body">
+                    @form_content_body()
+                    <div elem-identifier="FormActions" class="form-actions" data-form-actions="Artigext">
+                        @form_content_buttons()
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    }
+    else
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div id="c-stickyHeader">
+                    <div class="c-action-bar d-flex">
+                        <span class="form-header">
+                            <i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+                        </span>
+                        <div data-parent-form="Artigext" data-q-ref="form-btns-main_container"></div>
+                    </div>
+                </div>
+
+                @form_content_body()
+                <div elem-identifier="FormActions" class="form-actions" data-form-actions="Artigext">
+                @form_content_buttons()
+                </div>
+            </div>
+        </fieldset>
+    }
+}
+
+@helper LoadFromLayout()
+{
+}
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT ARTIGEXT]/ *@
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_ARTIGEXT" data-form-javascript="true">
+@Html.Partial("Artigext_JavaScript", Model, ViewData)
+</div>
+}
+
+@section code_javascript
+{
+	@codeJavascript()
+}
+
+@if (Request.IsAjaxRequest())
+{
+    @codeJavascript()
+    @includeStylesheets()
+}
+
+@helper includeStylesheets()
+{
+
+ }
+
+@section include_stylesheets {
+    @includeStylesheets()
+}

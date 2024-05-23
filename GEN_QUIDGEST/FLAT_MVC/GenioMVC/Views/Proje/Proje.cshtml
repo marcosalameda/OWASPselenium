@@ -1,0 +1,323 @@
+﻿@model GenioMVC.ViewModels.Proje.Proje_ViewModel
+@using GenioMVC.Models.Navigation;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Form = "Proje";
+	ViewBag.Title = @Resources.PROJECTO50142;
+    ViewBag.formmode = Model.GetFormMode;
+	ViewBag.ClassForFormLayout = "form-flow";
+}
+
+
+@if (!Model.NestedForm) {
+    if(Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+    {
+        using (Html.BeginForm("Action", "Proje", FormMethod.Post, new { @class = "form-horizontal", area="Proje", data_form="Proje" }))
+        {
+            @form_content_alert()
+            @Html.QValidationSummary()
+	        @LoadDefault()
+        }
+    }
+    else
+    {
+        <div class="form-horizontal" id="Proje" area="Proje" data-form="Proje">
+	        @LoadDefault()
+        </div>
+    }
+}
+else {
+    <div class="c-card nested-form" id="Proje_well" area="Proje" data-form="Proje">
+        @Html.QValidationSummary()
+		@LoadDefault()
+    </div>
+}
+
+@helper form_content_body() {
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_PROJE___PROJEPROJECTO">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValProjecto, new { label_id="LED_PROJE___PROJEPROJECTO", @class = " i-text__label", id="LABEL_LED_PROJE___PROJEPROJECTO"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_PROJE___PROJEPROJECTO','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextBoxFor(model => model.ValProjecto, new {help_id = "LED_PROJE___PROJEPROJECTO", @class = "i-text__field i-text input-xlarge", data_identifier = "LED_PROJE___PROJEPROJECTO", @pers_cs_area = "Proje", @pers_cs_field = "ValProjecto", @db_field = "ValProjecto", title = @Resources.PROJECT37121, maxlength = "50", rows = "50" })
+								@Html.ValidationMessageFor(model => model.ValProjecto)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-dbedit draggable " id="CONTAINER_IFF_PROJE___YEAR1YEAR____">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.TableYear1Year, new { label_id="IFF_PROJE___YEAR1YEAR____", @class = " i-text__label", id="LABEL_IFF_PROJE___YEAR1YEAR____"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('IFF_PROJE___YEAR1YEAR____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DropDownListFor(model => model.ValCodyear, Model.TableYear1Year.List , "", new {help_id = "IFF_PROJE___YEAR1YEAR____", @class = "i-select chosen-dropdown input-small", data_identifier = "IFF_PROJE___YEAR1YEAR____", @pers_cs_area = "Year1", @pers_cs_field = "ValCodyear", @db_field = "ValCodyear", @db_full_field_name = "proje.codyear", data_has_more = Model.TableYear1Year.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableYear1Year.Selected, data_dbedit_value = Model.TableYear1Year.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodproje, @data_see_more = "Proje_Year1ValYear", title = @Resources.YEAR61794, data_see_more_url = @Url.Action("Proje_Year1ValYear","Proje"), data_is_dbedit = "true", data_fields = "year1.codyear,year1.year", data_main_field = "Year1.ValYear", data_elements = 0, data_filled_by_history = Model.TableYear1Year.FilledByHistory, @dependant_fields = "year1.codyear,year1.year" })
+								@Html.ValidationMessageFor(model => model.TableYear1Year)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_PROJE___PROJEPRIMEIRO">
+								<div class="d-inline-flex">
+								@Html.LabelFor(model => model.ValPrimeiro, new { label_id="LED_PROJE___PROJEPRIMEIRO", @class = " i-text__label", id="LABEL_LED_PROJE___PROJEPRIMEIRO"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_PROJE___PROJEPRIMEIRO','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValPrimeiro, new {help_id = "LED_PROJE___PROJEPRIMEIRO", @class = "i-input-group__field text-right i-text__field i-text input-small", data_refresh = "true", data_tipoform = "CT", data_identifier = "LED_PROJE___PROJEPRIMEIRO", @pers_cs_area = "Proje", @pers_cs_field = "ValPrimeiro", @db_field = "ValPrimeiro", fixed_field = "true", @readonly = "readonly", title = @Resources.FIRST42972, data_currency = "True", data_number_integer = "7", data_number_decimals = "2", data_number_format = "9999999.99" })
+								@Html.ValidationMessageFor(model => model.ValPrimeiro)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_PROJE___PROJEBEFORE__">
+								<div class="d-inline-flex">
+								@Html.LabelFor(model => model.ValBefore, new { label_id="LED_PROJE___PROJEBEFORE__", @class = " i-text__label", id="LABEL_LED_PROJE___PROJEBEFORE__"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_PROJE___PROJEBEFORE__','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValBefore, new {help_id = "LED_PROJE___PROJEBEFORE__", @class = "i-input-group__field text-right i-text__field i-text input-small", data_refresh = "true", data_tipoform = "CT", data_identifier = "LED_PROJE___PROJEBEFORE__", @pers_cs_area = "Proje", @pers_cs_field = "ValBefore", @db_field = "ValBefore", fixed_field = "true", @readonly = "readonly", title = @Resources.BEFORE60156, data_currency = "True", data_number_integer = "7", data_number_decimals = "2", data_number_format = "9999999.99" })
+								@Html.ValidationMessageFor(model => model.ValBefore)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_PROJE___PROJEFOLLOWIN">
+								<div class="d-inline-flex">
+								@Html.LabelFor(model => model.ValFollowin, new { label_id="LED_PROJE___PROJEFOLLOWIN", @class = " i-text__label", id="LABEL_LED_PROJE___PROJEFOLLOWIN"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_PROJE___PROJEFOLLOWIN','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValFollowin, new {help_id = "LED_PROJE___PROJEFOLLOWIN", @class = "i-input-group__field text-right i-text__field i-text input-small", data_refresh = "true", data_tipoform = "CS", data_identifier = "LED_PROJE___PROJEFOLLOWIN", @pers_cs_area = "Proje", @pers_cs_field = "ValFollowin", @db_field = "ValFollowin", fixed_field = "true", @readonly = "readonly", title = @Resources.FOLLOWING22170, data_currency = "True", data_number_integer = "7", data_number_decimals = "2", data_number_format = "9999999.99" })
+								@Html.ValidationMessageFor(model => model.ValFollowin)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_PROJE___PROJEULTIMO__">
+								<div class="d-inline-flex">
+								@Html.LabelFor(model => model.ValUltimo, new { label_id="LED_PROJE___PROJEULTIMO__", @class = " i-text__label", id="LABEL_LED_PROJE___PROJEULTIMO__"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_PROJE___PROJEULTIMO__','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValUltimo, new {help_id = "LED_PROJE___PROJEULTIMO__", @class = "i-input-group__field text-right i-text__field i-text input-small", data_refresh = "true", data_tipoform = "CS", data_identifier = "LED_PROJE___PROJEULTIMO__", @pers_cs_area = "Proje", @pers_cs_field = "ValUltimo", @db_field = "ValUltimo", fixed_field = "true", @readonly = "readonly", title = @Resources.LAST49207, data_currency = "True", data_number_integer = "7", data_number_decimals = "2", data_number_format = "9999999.99" })
+								@Html.ValidationMessageFor(model => model.ValUltimo)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_PROJE___PROJESALDO1__">
+								<div class="d-inline-flex">
+								@Html.LabelFor(model => model.ValSaldo1, new { label_id="LED_PROJE___PROJESALDO1__", @class = " i-text__label", id="LABEL_LED_PROJE___PROJESALDO1__"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_PROJE___PROJESALDO1__','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValSaldo1, new {help_id = "LED_PROJE___PROJESALDO1__", @class = "i-input-group__field text-right i-text__field i-text input-medium", data_refresh = "true", data_tipoform = "+", data_identifier = "LED_PROJE___PROJESALDO1__", @pers_cs_area = "Proje", @pers_cs_field = "ValSaldo1", @db_field = "ValSaldo1", fixed_field = "true", @readonly = "readonly", title = @Resources.NEXT___PREVIOUS__43778, data_currency = "True", data_number_integer = "7", data_number_decimals = "2", data_number_format = "9999999.99" })
+								@Html.ValidationMessageFor(model => model.ValSaldo1)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_PROJE___PROJESALDO2__">
+								<div class="d-inline-flex">
+								@Html.LabelFor(model => model.ValSaldo2, new { label_id="LED_PROJE___PROJESALDO2__", @class = " i-text__label", id="LABEL_LED_PROJE___PROJESALDO2__"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_PROJE___PROJESALDO2__','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValSaldo2, new {help_id = "LED_PROJE___PROJESALDO2__", @class = "i-input-group__field text-right i-text__field i-text input-medium", data_refresh = "true", data_tipoform = "+", data_identifier = "LED_PROJE___PROJESALDO2__", @pers_cs_area = "Proje", @pers_cs_field = "ValSaldo2", @db_field = "ValSaldo2", fixed_field = "true", @readonly = "readonly", title = @Resources.LAST___FIRST__42481, data_currency = "True", data_number_integer = "7", data_number_decimals = "2", data_number_format = "9999999.99" })
+								@Html.ValidationMessageFor(model => model.ValSaldo2)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="row-large-control">
+						<div class="row-line-group" id="CONTAINER_IFF_PROJE___PSEUDDESPESAS">
+								<div id="Proje_ValDespesas" data-identifier="IFF_PROJE___PSEUDDESPESAS"  data-extra-options="" > 
+									@{ Html.RenderAction("Proje_ValDespesas", "Proje", new { id = Model.ValCodproje, partialView = "Proje_ValDespesas"}); }
+								</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="row-large-control">
+						<div class="row-line-group" id="CONTAINER_IFF_PROJE___PSEUDAGREGADO">
+								<div id="Proje_ValAgregado" data-identifier="IFF_PROJE___PSEUDAGREGADO"  data-extra-options="" > 
+									@{ Html.RenderAction("Proje_ValAgregado", "Proje", new { id = Model.ValCodproje, partialView = "Proje_ValAgregado"}); }
+								</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			@Html.HiddenFor(model => model.ValCodproje, new { @pers_cs_field="ValCodproje", @pers_cs_area="Proje", data_refresh = "true", @form_area="true", @data_value = Model.ValCodproje, @data_identifier = "LED_PROJE___PROJECODPROJE" })
+
+            @Html.Hidden("IgnoreWarnings", "false", new { id = "IgnoreWarnings" })
+
+			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Proje" })
+            @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Proje" })
+            @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Proje" })
+			if (!Model.NestedForm)
+            {
+                @Html.AntiForgeryToken()
+            }
+}
+
+@helper form_content_alert() {
+	if(Model.FormMode == FormMode.Delete) {
+		<div class="c-alert c-alert--warning">
+			<i class="glyphicons glyphicons-alert c-alert__icon" aria-hidden="true"></i>
+			<div class="c-alert__text">
+				&ensp;@Resources.DESEJA_ELIMINAR_ESTA24564
+			</div>
+		<!--Ao confirmar esta ficha irá ser eliminada da base de dados. Cancele caso não tenha a certeza.-->
+		</div>
+	}
+}
+
+@helper form_content_buttons() {
+
+
+
+
+    @* Extended support form *@
+    if (Model.NestedForm)
+    {
+        if (Model.IsEditableMode)
+        {
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("Proje", Model.FormMode).ToString(), "Proje")", "Proje_well")' qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>
+                    @Resources.SAVE04165
+            </button>
+            <button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Proje_Delete", "Proje", new {id = @Model.ValCodproje} )", "Proje_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+
+            <script type="application/javascript">
+                $(document).ready(function () { loaded($("#Proje_well")); });
+            </script>
+        }
+
+        @* javascript code_javascript *@
+        @*@codeJavascript()*@
+    }
+    @* Normal mode *@
+    else
+    {
+        if (Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+        {
+            if (Model.FormMode == FormMode.New && Convert.ToBoolean(Model.Navigation.CurrentLevel.GetEntry("repeatInsertion")))
+            {
+            <button type="button" data-end-pers="true" name="Proje_repete_insertion" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitProje(event, true)" qbutton="ok_new">@Resources.GRAVAR_E_CRIAR_NOVA17771</button>
+            }
+            if(Model.FormMode == FormMode.Delete)
+            {
+				<button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Proje", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitDeleteProje(event)" qbutton="delete">
+                    <i class="glyphicons glyphicons-check e-icon" aria-hidden="true"></i>@Resources.CONFIRMAR09808
+                </button>
+            }
+            else
+            {
+                <button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Proje", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitProje(event)" title="@Resources.SAVE04165" data-selector="true" qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>@Resources.SAVE04165
+                </button>
+            }
+
+            <button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-href="@Url.Action("Proje_Cancel", "Proje", new { niv = Model.Navigation.CurrentLevel.Level })" onclick="javascript:window.Form_Proje.Cancel()" title="@Resources.CANCEL65428" data-selector="true" qbutton="cancel">
+                <i class="glyphicons glyphicons-ban-circle e-icon" aria-hidden="true"></i>@Resources.CANCEL65428
+            </button>
+        }
+        else if (!(ViewBag.isHomePage ?? false))
+        {
+            @Html.ActionLinkWithIcon(@Resources.RETROCEDER16633, "Proje_Cancel","Proje","glyphicons glyphicons-arrow-left e-icon", null, new { @class = "b-icon-text b-icon-text--secondary", @data_end_pers = "true", @title = @Resources.RETROCEDER16633, qbutton = "cancel" })
+        }
+    }
+}
+
+@helper LoadDefault() {
+    if (Model.NestedForm)
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div class="c-card__header">
+                    <div class="c-card__header-tag">
+						<span class="form-header" style="padding:0;">
+							<i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+						</span>
+                    </div>
+                </div>
+                <div class="c-card__body">
+                    @form_content_body()
+                    <div elem-identifier="FormActions" class="form-actions" data-form-actions="Proje">
+                        @form_content_buttons()
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    }
+    else
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div id="c-stickyHeader">
+                    <div class="c-action-bar d-flex">
+                        <span class="form-header">
+                            <i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+                        </span>
+                        <div data-parent-form="Proje" data-q-ref="form-btns-main_container"></div>
+                    </div>
+                </div>
+
+                @form_content_body()
+                <div elem-identifier="FormActions" class="form-actions" data-form-actions="Proje">
+                @form_content_buttons()
+                </div>
+            </div>
+        </fieldset>
+    }
+}
+
+@helper LoadFromLayout()
+{
+}
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT PROJE]/ *@
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_PROJE" data-form-javascript="true">
+@Html.Partial("Proje_JavaScript", Model, ViewData)
+</div>
+}
+
+@section code_javascript
+{
+	@codeJavascript()
+}
+
+@if (Request.IsAjaxRequest())
+{
+    @codeJavascript()
+    @includeStylesheets()
+}
+
+@helper includeStylesheets()
+{
+
+ }
+
+@section include_stylesheets {
+    @includeStylesheets()
+}

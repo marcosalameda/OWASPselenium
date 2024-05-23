@@ -1,0 +1,326 @@
+﻿@model GenioMVC.ViewModels.Equip.Gmaps_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS GMAPS]/ *@
+<script  type="text/javascript">
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Gmaps !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Gmaps = new QForm($('[data-form="Gmaps"]'), "Form_Gmaps");
+		}
+		window.Form_Gmaps.baseArea = "equip";
+		window.Form_Gmaps.FormMode = '@Model.GetFormMode';
+		window.Form_Gmaps.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Gmaps.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Equip")',
+			GetDependants:		'@Url.Action("GetDependants", "Equip")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Gmaps", "Equip")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Gmaps", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Equip", "Equip")',
+		};
+		window.Form_Gmaps.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Gmaps.formSaveEdit = '@Url.Action("Gmaps_SaveEdit", "Equip")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Gmaps.formAction = 'Gmaps_New';
+		window.Form_Gmaps.formRedirectURL = '@Url.Action("Gmaps_New_Redirect", "Equip")';
+		window.Form_Gmaps.formSubmitURL = '@Url.Action("Gmaps_New", "Equip")';
+		window.Form_Gmaps.formRedirectURL_repeatInsertion = '@Url.Action("Gmaps_New_Redirect", "Equip", new { repeatInsertion = true})';
+		window.Form_Gmaps.formSubmitURL_repeatInsertion = '@Url.Action("Gmaps_New", "Equip", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Gmaps.formAction = 'Gmaps_Edit';
+		window.Form_Gmaps.formRedirectURL = '@Url.Action("Gmaps_Edit_Redirect", "Equip")';
+		window.Form_Gmaps.formSubmitURL = '@Url.Action("Gmaps_Edit", "Equip")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Gmaps.formAction = 'Gmaps_Duplicate';
+		window.Form_Gmaps.formRedirectURL = '@Url.Action("Gmaps_Duplicate_Redirect", "Equip")';
+		window.Form_Gmaps.formSubmitURL = '@Url.Action("Gmaps_Duplicate", "Equip")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Gmaps.formAction = 'Gmaps_Delete';
+		window.Form_Gmaps.formRedirectURL = '@Url.Action("Gmaps_Delete_Redirect", "Equip")';
+		window.Form_Gmaps.formSubmitURL = '@Url.Action("Gmaps_Delete", "Equip")';
+	</text>
+}
+		window.Form_Gmaps.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.IFF_GMAPS___PSEUDINSTALAC = new QTableListControl($('[data-identifier="IFF_GMAPS___PSEUDINSTALAC"]', this.element), window.Form_Gmaps);
+
+
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	@*Hidden Foreign Keys Controls*@
+			this.Controls.LED_GMAPS___WAREHCODWAREH = new QHiddenControl($('[data-identifier="LED_GMAPS___WAREHCODWAREH"]', this.element), window.Form_Gmaps);
+			this.Controls.LED_GMAPS___ITEM_CODITEM_ = new QHiddenControl($('[data-identifier="LED_GMAPS___ITEM_CODITEM_"]', this.element), window.Form_Gmaps);
+			this.Controls.LED_GMAPS___CMPNYCODEMPRE = new QHiddenControl($('[data-identifier="LED_GMAPS___CMPNYCODEMPRE"]', this.element), window.Form_Gmaps);
+			this.Controls.LED_GMAPS___TPEQUCODTPEQU = new QHiddenControl($('[data-identifier="LED_GMAPS___TPEQUCODTPEQU"]', this.element), window.Form_Gmaps);
+			this.Controls.LED_GMAPS___ROOM1CODROOMS = new QHiddenControl($('[data-identifier="LED_GMAPS___ROOM1CODROOMS"]', this.element), window.Form_Gmaps);
+			this.Controls.LED_GMAPS___DECOMCODDECO_ = new QHiddenControl($('[data-identifier="LED_GMAPS___DECOMCODDECO_"]', this.element), window.Form_Gmaps);
+			this.Controls.LED_GMAPS___PESS1CODPESSO = new QHiddenControl($('[data-identifier="LED_GMAPS___PESS1CODPESSO"]', this.element), window.Form_Gmaps);
+	</text>
+}
+			this.Controls.LED_GMAPS___EQUIPCODEQUIP = new QHiddenControl($('[data-identifier="LED_GMAPS___EQUIPCODEQUIP"]', this.element), window.Form_Gmaps);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+			this.Controls.LED_GMAPS___EQUIPREGISTNR = new QSpecialControl($('[data-identifier="LED_GMAPS___EQUIPREGISTNR"]', this.element), window.Form_Gmaps);
+			this.Controls.LED_GMAPS___EQUIPREGISTNR.InitData(@JavaScriptConversion.ToString(@Model.ValRegistnr));
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	</text>
+}
+
+		window.Form_Gmaps.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Gmaps.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI GMAPS]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Gmaps.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS GMAPS]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Gmaps.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS GMAPS]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Gmaps.Data.RelationKeysSelector = {
+				get wareh() { return $(':not([elem-identifier="Multiform"]) > #ValCodwareh', $('[data-form="Gmaps"]')); /* Hidden */ },
+				get item() { return $(':not([elem-identifier="Multiform"]) > #ValCoditem', $('[data-form="Gmaps"]')); /* Hidden */ },
+				get cmpny() { return $(':not([elem-identifier="Multiform"]) > #ValCodempre', $('[data-form="Gmaps"]')); /* Hidden */ },
+				get tpequ() { return $(':not([elem-identifier="Multiform"]) > #ValCodtpequ', $('[data-form="Gmaps"]')); /* Hidden */ },
+				get room1() { return $(':not([elem-identifier="Multiform"]) > #ValCodrooms', $('[data-form="Gmaps"]')); /* Hidden */ },
+				get decom() { return $(':not([elem-identifier="Multiform"]) > #ValCoddeco', $('[data-form="Gmaps"]')); /* Hidden */ },
+				get pess1() { return $(':not([elem-identifier="Multiform"]) > #ValCodpess1', $('[data-form="Gmaps"]')); /* Hidden */ },
+		};
+
+		window.Form_Gmaps.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Gmaps.Data.RelationKeys = {
+			get formContext() { return window.Form_Gmaps; },
+			get wareh() { return (this.formContext.Data.RelationKeysSelector.wareh.getQControl() || {}).Value; /* Hidden FK */ },
+			set wareh(newValue) { (this.formContext.Data.RelationKeysSelector.wareh.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+			get item() { return (this.formContext.Data.RelationKeysSelector.item.getQControl() || {}).Value; /* Hidden FK */ },
+			set item(newValue) { (this.formContext.Data.RelationKeysSelector.item.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+			get cmpny() { return (this.formContext.Data.RelationKeysSelector.cmpny.getQControl() || {}).Value; /* Hidden FK */ },
+			set cmpny(newValue) { (this.formContext.Data.RelationKeysSelector.cmpny.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+			get tpequ() { return (this.formContext.Data.RelationKeysSelector.tpequ.getQControl() || {}).Value; /* Hidden FK */ },
+			set tpequ(newValue) { (this.formContext.Data.RelationKeysSelector.tpequ.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+			get room1() { return (this.formContext.Data.RelationKeysSelector.room1.getQControl() || {}).Value; /* Hidden FK */ },
+			set room1(newValue) { (this.formContext.Data.RelationKeysSelector.room1.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+			get decom() { return (this.formContext.Data.RelationKeysSelector.decom.getQControl() || {}).Value; /* Hidden FK */ },
+			set decom(newValue) { (this.formContext.Data.RelationKeysSelector.decom.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+			get pess1() { return (this.formContext.Data.RelationKeysSelector.pess1.getQControl() || {}).Value; /* Hidden FK */ },
+			set pess1(newValue) { (this.formContext.Data.RelationKeysSelector.pess1.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+		};
+	</text>
+}
+
+	window.Form_Gmaps.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Gmaps.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitGmaps(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Gmaps.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeleteGmaps(event) {
+			event.preventDefault();
+			window.Form_Gmaps.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+    var ajaxCallsRemaining = $(".flash object embed").length;
+    $('form [elem-identifier="ButtonPrimary"]').click(function() {
+        var flashObjects = $(".flash object embed");
+        ajaxCallsRemaining = flashObjects.length;
+        if(flashObjects.length == 0)
+            return true;
+        else {
+            flashObjects.each(function() {
+               var flashObj = GetFlash($(this).attr('id'));
+               flashObj.UsedFlash.TriggerSave(flashObj);
+            });
+            return false;
+        }
+    });
+    </text>
+}
+// USE /[MANUAL GQT FORM_CODEJS GMAPS]/
+
+
+
+ 
+
+    $($('[elem-identifier="FormActions"]'), $('[data-form="Gmaps"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

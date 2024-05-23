@@ -1,0 +1,44 @@
+﻿@model string
+
+@using System.Web.Mvc;
+@using GenioMVC.ViewModels;
+
+@{
+    string fieldFk = ViewData["fieldFk"] == null ? "" : ViewData["fieldFk"].ToString();
+    DocumsProperties_ViewModel docProperties = ViewData["docProperties"] == null ? null : ViewData["docProperties"] as DocumsProperties_ViewModel;
+    string baseArea = ViewData["baseArea"] == null ? "" : ViewData["baseArea"].ToString();
+    string baseAreaKey = ViewData["baseAreaKey"] == null ? "" : ViewData["baseAreaKey"].ToString();
+	object htmlAttributes =  ViewData["htmlAttributes"] == null ? "" : ViewData["htmlAttributes"];
+    bool onlyShow = true;
+    string data_identifier = ViewData["data_identifier"] == null ? "" : ViewData["data_identifier"].ToString();
+	string identifier = ViewData["identifier"] == null ? "" : ViewData["identifier"].ToString();
+    @* Use this tag to replace these values *@
+    string options = "{ maxFileSize: 100000000, acceptFileTypes: null }";
+	string fieldSize = ViewData["fieldSize"] == null ? "" : ViewData["fieldSize"].ToString();
+}
+
+<script type="text/javascript">
+    function loadDocument(selector) {
+        $(selector).InitFileControl(@options);
+    }
+
+    $("input[data-identifier='@data_identifier']").ready(function () {
+		if (typeof  $.fn.InitFileControl === 'undefined') {
+			// Lazy loading will have better compatibility with
+			// extended support forms and modals
+			// Last updated by [HTA] at [2019.10.01]
+			$.getScript("@Url.Content(UrlNames.QuidgestDBDocumentLaunch)");
+			$.getScript("@Url.Content(UrlNames.QuidgestDBDocument)",
+				function () {
+					loadDocument("input[data-identifier='@data_identifier']");
+				}
+			)
+		}
+		else {
+			loadDocument("input[data-identifier='@data_identifier']");
+		}
+	});
+</script>
+
+
+@Html.DocumentFor(model => model, fieldFk, docProperties, baseArea, baseAreaKey, htmlAttributes, onlyShow, identifier, fieldSize)

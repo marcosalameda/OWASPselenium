@@ -1,0 +1,142 @@
+﻿@model GenioMVC.ViewModels.Kinde.WMS_Menu_4121_ViewModel
+@using GenioMVC.Resources
+@using System.Web.Script.Serialization
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Title = Model.DBEditTitle;
+	//Layout = "~/Views/Shared/Layouts/TopMenu_BT4/_Layout.cshtml";
+}
+
+@{
+	GenioMVC.ViewModels.Kinde.WMS_Menu_4121_ViewModel modelWMS_Menu_4121 = new GenioMVC.ViewModels.Kinde.WMS_Menu_4121_ViewModel(Navigation);
+	var columns = modelWMS_Menu_4121.GetSearchColumns();
+
+	Dictionary<string, TableFilterField> fields = new Dictionary<string, TableFilterField>();
+
+
+	foreach (var col in columns)
+	{
+		var areaField = col.AreaField;
+		if (areaField.Area == "kinde" && areaField.Field == "designat")
+		{
+			fields.Add("KINDE.DESIGNAT", new TableFilterField("KINDE", "DESIGNAT", Resources.KIND_OF_EQUIPMENT22928, "text", defaultSearch : true));
+		}
+	}
+
+	JavaScriptSerializer serializer = new JavaScriptSerializer();
+	string fieldsStr = serializer.Serialize(fields);
+}
+
+<script>
+	//Fields with information for search filters
+	var fields = @Html.Raw(fieldsStr);
+	//Table List Search Filters
+	var searchFilterGroups = [];
+</script>
+
+
+@using (Ajax.BeginForm("WMS_Menu_4121", "Kinde", new AjaxOptions
+{
+	HttpMethod= "POST",
+	InsertionMode = InsertionMode.Replace,
+	UpdateTargetId = "Menu",
+	OnSuccess = "InitMenuSpecialControls"
+}, new { @class = "form-horizontal", area="Kinde", data_form="WMS_Menu_4121" }))
+{
+		<input id="SearchFilters" type="hidden" value="" />
+
+		<div class="page-header row" style="align-items:center">
+		   <div class="col">
+<div class="table-title c-table__title">
+					<h1>@ViewBag.Title</h1>
+				</div>
+
+		   </div>
+		   <div class="col-auto search">
+				<div class="i-input-group input-xxlarge" id="WMS_Menu_4121_simple_filter">
+					<div data-search-filter-menu-elem="filter-box-list"></div>
+					@Html.TextBox("qWMS_Menu_4121", Navigation.GetStrValue("qWMS_Menu_4121"), new { @class="i-input-group__field input-xxlarge dropdown-toggle", @title=@Resources.CAIXA_DE_PESQUISA53870, @onfocus="ToggleSearchFilterBox('WMS_Menu_4121');" ,@onkeydown = "ListSearchEnter(event)", @autocomplete = "off" ,@data_toggle = "dropdown",@data_search_field_menu_elem = "show", @onblur = "HideSearchFieldMenuOnUnfocus('WMS_Menu_4121');",@placeholder = Resources.PESQUISAR34506 + " " + Resources.KIND_OF_EQUIPMENT22928})
+					<button id="qWMS_Menu_4121-clearBtn" class="clear-search d-none" type="button">
+						<i class="glyphicons glyphicons-remove mr-1"></i>
+					</button>
+					@Html.SearchFieldMenu("WMS_Menu_4121", fields, "KINDE")
+					<div class="b-btn-group i-input-group--right">
+						<button type="button" elem-identifier="ListSearchButton" class="btn b-icon b-icon--secondary i-input-group__button--secondary  listSearchButton" title="@Resources.PESQUISAR34506" onclick="AddSearchFieldFilter('WMS_Menu_4121', 'KINDE', 'KINDE.DESIGNAT');"><i class="glyphicons glyphicons-search i-input-group__tag-icon i-input-group__button-icon"></i></button>
+						@{
+						var advancedSearchIcon = @Model.Menu.Filters.ShowTableFilters ? "glyphicons-zoom-out" : "glyphicons-zoom-in";
+						<button id="WMS_Menu_4121_extra" class="btn b-icon b-icon--secondary i-input-group__button--secondary" type="button" onclick="changeFilters('#WMS_Menu_4121_complex_filter', 'WMS_Menu_4121_tableFilters');applyComplexFilterIDs();" title="@Resources.PESQUISA_AVANCADA06198"><span class="glyphicons @advancedSearchIcon i-input-group__tag-icon i-input-group__button-icon"></span></button>
+						}
+						@Html.SearchFilterMenu("WMS_Menu_4121")
+					</div>
+				</div>
+			</div>
+            @if(!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest() && !Model.IsViewModeHidden("LIST"))
+            {
+			<div class="col-auto float-right" style="padding: 0; padding-right: 15px">
+				<div class="b-btn-group float-right" style="height: 32.625px">
+					@*List properties LISTS*@
+					@if(!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest())
+					{
+						<button class="b-btn b-icon b-icon--secondary" type="button" data-modal-form="Lstusr" data-modal-id="lstusr-edit-modal" data-table="WMS_Menu_4121" data-modal-url="@Url.Action("ChangeListProperties", "Lstusr", new { idlist = "WMS_Menu_4121", idlistController = "Kinde", idlistArea = "Kinde", codlista ="587f2aab-f2be-4298-842b-00848515cc6a" })" title="@Resources.ALTERAR_A_APRESENTAC58401"><i class="glyphicons glyphicons-list e-icon"></i></button>
+					}
+				</div>
+			</div>
+            }
+		</div>
+ 	<div id="Menu" element-identifier="List">
+		@{ Html.RenderPartial("WMS_Menu_4121_Partial"); }
+	</div>
+	@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "WMS_Menu_4121" })
+	@Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId)
+	@Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock())
+	@Html.AntiForgeryToken()
+}
+
+
+
+<script>
+	$(document).ready(function () {
+		window.Form_WMS_Menu_4121 = new QMenuForm($('[data-form="WMS_Menu_4121"]'), "Form_WMS_Menu_4121");
+		window.Form_WMS_Menu_4121.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_WMS_Menu_4121.Init();
+
+		//Initialize search field menu for search bar
+		InitSearchFieldMenu("qWMS_Menu_4121");
+		RegisterClearEvents("WMS_Menu_4121")
+
+		// TVC - added code to load advanced filters after returning from a form
+		@{
+			string advFil = "";
+			if (!String.IsNullOrEmpty(Navigation.GetStrValue("AdvancedFilters")))
+			{
+				advFil = Navigation.GetStrValue("AdvancedFilters");
+			}
+		}
+
+		SearchFilters.value = '@Html.Raw(advFil)';
+		if (typeof SearchFilters.value === 'string' && SearchFilters.value.length > 0)
+			UpdateSearchFilterStatus("WMS_Menu_4121", JSON.parse(SearchFilters.value))
+	});
+</script>
+
+@helper codeJavascript()
+{
+<script>
+	QLocalStorage.remLocalStorage("savedInfo");
+	$(document).ready(function (e) {
+		InitSpecialControls($('[data-form="WMS_Menu_4121"]'));
+
+
+ 	});
+
+	function InitMenuSpecialControls() {
+		InitSpecialControls($('[data-form="WMS_Menu_4121"]'));
+	}
+
+</script>
+}
+
+@section code_javascript {
+	@codeJavascript()
+}

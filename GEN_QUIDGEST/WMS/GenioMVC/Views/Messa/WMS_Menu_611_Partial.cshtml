@@ -1,0 +1,131 @@
+﻿@model GenioMVC.ViewModels.Messa.WMS_Menu_611_ViewModel
+@using Newtonsoft.Json;
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@using GenioMVC.ViewModels.Messa;    
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Messa>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodmessa, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_611_MESSA_IDNOTIF]/
+		column.Expression(p => p.ValIdnotif).Title(@Resources.NOTIFICATION_ID25507).Field("ValIdnotif").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_611_MESSA_IDMSG]/
+		column.Expression(p => p.ValIdmsg).Title(@Resources.MESSAGE_ID37133).Field("ValIdmsg").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_611_MESSA_DESIGNAT]/
+		column.Expression(p => p.ValDesignat).Title(@Resources.TO_WHOM_THE_MESSAGE_02337).Field("ValDesignat").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_611_MESSA_EMAIL]/
+		column.Expression(p => p.ValEmail).Title(@Resources.E_MAIL_TO_WHOM_THE_M37668).Field("ValEmail").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_611_MESSA_MESSAGE]/
+		column.Expression(p => p.ValMessage).Title(@Resources.MESSAGE30602).Field("ValMessage").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_611_MESSA_MAILSENT]/
+		column.Expression(p => p.ValMailsent).Title(@Resources.E_MAIL_SENT_60490).Field("ValMailsent").Size(1);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_611_MESSA_MAILERR]/
+		column.Expression(p => p.ValMailerr).Title(@Resources.ERROR_SENDING_MAIL44674).Field("ValMailerr").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_611_MESSA_CREATOPE]/
+		column.Expression(p => p.ValCreatope).Title(@Resources.CREATED_BY12292).Field("ValCreatope").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_611_MESSA_CREATDAT]/
+		column.Expression(p => p.ValCreatdat).Title(@Resources.CREATED_ON00051).Field("ValCreatdat").Size(8);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_611_ENTIT_NAME]/
+		column.Expression(p => p.Entit.ValName).Title(@Resources.LEGAL_NAME42902).Field("Entit.ValName").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_611_PERSO_NAME]/
+		column.Expression(p => p.Perso.ValName).Title(@Resources.PERSON_NAME40980).Field("Perso.ValName").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_611_MESSA_DOCUM_NR]/
+		column.Expression(p => p.ValDocum_nr).Title(@Resources.DOCUMENT_NUMBER28451).Field("ValDocum_nr").Size(10);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Messa")
+        .Id("WMS_Menu_611")
+        .AjaxRequest("Menu")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .DBEdit()
+        .Filters(this.Model.Menu.Filters)
+        .Form("Messa", false, false)
+        .SetFollowUp("Messa_Show", "Messa" , (Func<GenioMVC.Models.Messa, object>)(item => new { id = item.ValCodmessa }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
+        .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
+		;
+        
+}
+
+@tbl.ToHtml()
+
+
+<script>
+ 
+ 
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qWMS_Menu_611, #WMS_Menu_611_complex_filter th input, #WMS_Menu_611_filters input").change(function() {
+                    $("#pWMS_Menu_611").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#WMS_Menu_611_tableFilters').val(false);")
+                    @Html.Raw("$('#WMS_Menu_611_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#WMS_Menu_611_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $("[data-form='WMS_Menu_611']").submit();
+                    @:      event.preventDefault();
+                    @:      ClearSearchBox('qWMS_Menu_611');
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#WMS_Menu_611_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_WMS_Menu_611').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+                 @if (this.Model.Menu.Filters.FiltersValues.Count >= 1) {
+                    var activeFields = Newtonsoft.Json.JsonConvert.SerializeObject(this.Model.Menu.Filters.FiltersValues);
+                    @: SetActiveFilters('WMS_Menu_611', 'MESSA', @Html.Raw(activeFields))
+                  }
+
+
+                setupHistoryClicks()
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='Menu']"));
+                    InitSpecialControls($('#Menu'));
+                    $('#Menu').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS WMS_MENU_611]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+// USE /[MANUAL GQT LISTING_CODEJS WMS_MENU_611]/
+</script>

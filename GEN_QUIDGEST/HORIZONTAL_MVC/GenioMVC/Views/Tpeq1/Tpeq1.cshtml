@@ -1,0 +1,348 @@
+﻿@model GenioMVC.ViewModels.Tpeq1.Tpeq1_ViewModel
+@using GenioMVC.Models.Navigation;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Form = "Tpeq1";
+	ViewBag.Title = @Resources.TYPE_OF_EQUIPMENT18080;
+    ViewBag.formmode = Model.GetFormMode;
+	ViewBag.ClassForFormLayout = "form-flow";
+}
+
+
+@if (!Model.NestedForm) {
+    if(Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+    {
+        using (Html.BeginForm("Action", "Tpeq1", FormMethod.Post, new { @class = "form-horizontal", area="Tpeq1", data_form="Tpeq1" }))
+        {
+            @form_content_alert()
+            @Html.QValidationSummary()
+	        @LoadDefault()
+        }
+    }
+    else
+    {
+        <div class="form-horizontal" id="Tpeq1" area="Tpeq1" data-form="Tpeq1">
+	        @LoadDefault()
+        </div>
+    }
+}
+else {
+    <div class="c-card nested-form" id="Tpeq1_well" area="Tpeq1" data-form="Tpeq1">
+        @Html.QValidationSummary()
+		@LoadDefault()
+    </div>
+}
+
+@helper form_content_body() {
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-dbedit draggable " id="CONTAINER_IFF_TPEQ1___FAMI1FAMILY__">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.TableFami1Family, new { label_id="IFF_TPEQ1___FAMI1FAMILY__", @class = " i-text__label", id="LABEL_IFF_TPEQ1___FAMI1FAMILY__"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('IFF_TPEQ1___FAMI1FAMILY__','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DropDownListFor(model => model.ValCodfamil, Model.TableFami1Family.List , "", new {help_id = "IFF_TPEQ1___FAMI1FAMILY__", @class = "i-select chosen-dropdown input-xxlarge", data_identifier = "IFF_TPEQ1___FAMI1FAMILY__", @pers_cs_area = "Fami1", @pers_cs_field = "ValCodfamil", @db_field = "ValCodfamil", @db_full_field_name = "tpeq1.codfamil", data_has_more = Model.TableFami1Family.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableFami1Family.Selected, data_dbedit_value = Model.TableFami1Family.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodtpequ, @data_see_more = "Tpeq1_Fami1ValFamily", title = @Resources.EQUIPMENT_FAMILY41883, data_see_more_url = @Url.Action("Tpeq1_Fami1ValFamily","Tpeq1"), data_is_dbedit = "true", data_fields = "fami1.codfamil,fami1.family", data_main_field = "Fami1.ValFamily", data_elements = 0, data_filled_by_history = Model.TableFami1Family.FilledByHistory, @dependant_fields = "fami1.codfamil,fami1.family" })
+								@Html.ValidationMessageFor(model => model.TableFami1Family)
+							</div>
+						</div>
+						<div class="control-join-group">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValTpequcod, new { label_id="LED_TPEQ1___TPEQ1TPEQUCOD", @class = " i-text__label", id="LABEL_LED_TPEQ1___TPEQ1TPEQUCOD"}, true, true)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_TPEQ1___TPEQ1TPEQUCOD','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextBoxFor(model => model.ValTpequcod, new {help_id = "LED_TPEQ1___TPEQ1TPEQUCOD", @class = "i-text__field i-text input-medium", data_identifier = "LED_TPEQ1___TPEQ1TPEQUCOD", @pers_cs_area = "Tpeq1", @pers_cs_field = "ValTpequcod", @db_field = "ValTpequcod", title = @Resources.CODE49225, maxlength = "20", rows = "20" })
+								@Html.ValidationMessageFor(model => model.ValTpequcod)
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValNivel, new { label_id="LED_TPEQ1___TPEQ1NIVEL___", @class = " i-text__label", id="LABEL_LED_TPEQ1___TPEQ1NIVEL___"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_TPEQ1___TPEQ1NIVEL___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValNivel, new {help_id = "LED_TPEQ1___TPEQ1NIVEL___", @class = "i-text__field i-text input-small", data_identifier = "LED_TPEQ1___TPEQ1NIVEL___", @pers_cs_area = "Tpeq1", @pers_cs_field = "ValNivel", @db_field = "ValNivel", title = @Resources.LEVEL_43678, data_number_integer = "3", data_number_decimals = "0", data_number_format = "999" })
+								@Html.ValidationMessageFor(model => model.ValNivel)
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_TPEQ1___TPEQ1TIPOEQUI">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValTipoequi, new { label_id="LED_TPEQ1___TPEQ1TIPOEQUI", @class = " i-text__label", id="LABEL_LED_TPEQ1___TPEQ1TIPOEQUI"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_TPEQ1___TPEQ1TIPOEQUI','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextBoxFor(model => model.ValTipoequi, new {help_id = "LED_TPEQ1___TPEQ1TIPOEQUI", @class = "i-text__field i-text input-xlarge", data_identifier = "LED_TPEQ1___TPEQ1TIPOEQUI", @pers_cs_area = "Tpeq1", @pers_cs_field = "ValTipoequi", @db_field = "ValTipoequi", title = @Resources.TYPE_OF_EQUIPMENT64921, maxlength = "50", rows = "50" })
+								@Html.ValidationMessageFor(model => model.ValTipoequi)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValTpequpai, new { label_id="LED_TPEQ1___TPEQ1TPEQUPAI", @class = " i-text__label", id="LABEL_LED_TPEQ1___TPEQ1TPEQUPAI"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_TPEQ1___TPEQ1TPEQUPAI','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextBoxFor(model => model.ValTpequpai, new {help_id = "LED_TPEQ1___TPEQ1TPEQUPAI", @class = "i-text__field i-text input-medium", data_identifier = "LED_TPEQ1___TPEQ1TPEQUPAI", @pers_cs_area = "Tpeq1", @pers_cs_field = "ValTpequpai", @db_field = "ValTpequpai", title = @Resources.DEPENDENCE_ON13941, maxlength = "20", rows = "20" })
+								@Html.ValidationMessageFor(model => model.ValTpequpai)
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_TPEQ1___TPEQ1BACKCOLO">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValBackcolo, new { label_id="LED_TPEQ1___TPEQ1BACKCOLO", @class = " i-text__label", id="LABEL_LED_TPEQ1___TPEQ1BACKCOLO"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_TPEQ1___TPEQ1BACKCOLO','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextBoxFor(model => model.ValBackcolo, new {help_id = "LED_TPEQ1___TPEQ1BACKCOLO", @class = "i-text__field i-text input-xlarge", data_identifier = "LED_TPEQ1___TPEQ1BACKCOLO", @pers_cs_area = "Tpeq1", @pers_cs_field = "ValBackcolo", @db_field = "ValBackcolo", title = @Resources.BACKGROUND_COLOR07511, maxlength = "50", rows = "50" })
+								@Html.ValidationMessageFor(model => model.ValBackcolo)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_TPEQ1___TPEQ1CORLETRA">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValCorletra, new { label_id="LED_TPEQ1___TPEQ1CORLETRA", @class = " i-text__label", id="LABEL_LED_TPEQ1___TPEQ1CORLETRA"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_TPEQ1___TPEQ1CORLETRA','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextBoxFor(model => model.ValCorletra, new {help_id = "LED_TPEQ1___TPEQ1CORLETRA", @class = "i-text__field i-text input-xlarge", data_identifier = "LED_TPEQ1___TPEQ1CORLETRA", @pers_cs_area = "Tpeq1", @pers_cs_field = "ValCorletra", @db_field = "ValCorletra", title = @Resources.LETTER_COLOR_03195, maxlength = "50", rows = "50" })
+								@Html.ValidationMessageFor(model => model.ValCorletra)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_TPEQ1___TPEQ1PRECOMAX">
+								<div class="d-inline-flex">
+								@Html.LabelFor(model => model.ValPrecomax, new { label_id="LED_TPEQ1___TPEQ1PRECOMAX", @class = " i-text__label", id="LABEL_LED_TPEQ1___TPEQ1PRECOMAX"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_TPEQ1___TPEQ1PRECOMAX','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValPrecomax, new {help_id = "LED_TPEQ1___TPEQ1PRECOMAX", @class = "i-input-group__field text-right i-text__field i-text input-medium", data_identifier = "LED_TPEQ1___TPEQ1PRECOMAX", @pers_cs_area = "Tpeq1", @pers_cs_field = "ValPrecomax", @db_field = "ValPrecomax", title = @Resources.MAXIMUM_PRICE26470, data_currency = "True", data_number_integer = "9", data_number_decimals = "2", data_number_format = "999999999.99" })
+								@Html.ValidationMessageFor(model => model.ValPrecomax)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_TPEQ1___TPEQ1PRECOULT">
+								<div class="d-inline-flex">
+								@Html.LabelFor(model => model.ValPrecoult, new { label_id="LED_TPEQ1___TPEQ1PRECOULT", @class = " i-text__label", id="LABEL_LED_TPEQ1___TPEQ1PRECOULT"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_TPEQ1___TPEQ1PRECOULT','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValPrecoult, new {help_id = "LED_TPEQ1___TPEQ1PRECOULT", @class = "i-input-group__field text-right i-text__field i-text input-medium", data_identifier = "LED_TPEQ1___TPEQ1PRECOULT", @pers_cs_area = "Tpeq1", @pers_cs_field = "ValPrecoult", @db_field = "ValPrecoult", title = @Resources.LAST_PRICE25852, data_currency = "True", data_number_integer = "9", data_number_decimals = "2", data_number_format = "999999999.99" })
+								@Html.ValidationMessageFor(model => model.ValPrecoult)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-date-picker draggable " id="CONTAINER_LED_TPEQ1___TPEQ1SINCE___">
+								<div class="d-inline-flex">
+								@Html.LabelFor(model => model.ValSince, new { label_id="LED_TPEQ1___TPEQ1SINCE___", @class = " i-text__label", id="LABEL_LED_TPEQ1___TPEQ1SINCE___"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_TPEQ1___TPEQ1SINCE___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DateFor(model => model.ValSince, new {help_id = "LED_TPEQ1___TPEQ1SINCE___", @class = "i-input-group__field b-icon-text input-medium", data_identifier = "LED_TPEQ1___TPEQ1SINCE___", @pers_cs_area = "Tpeq1", @pers_cs_field = "ValSince", @db_field = "ValSince", title = @Resources.IN34902 })
+								@Html.ValidationMessageFor(model => model.ValSince)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_TPEQ1___TPEQ1QTDEQUIP">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValQtdequip, new { label_id="LED_TPEQ1___TPEQ1QTDEQUIP", @class = " i-text__label", id="LABEL_LED_TPEQ1___TPEQ1QTDEQUIP"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_TPEQ1___TPEQ1QTDEQUIP','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValQtdequip, new {help_id = "LED_TPEQ1___TPEQ1QTDEQUIP", data_toggle = "tooltip", title = @Resources.____615950, data_placement = "top", description = "", @class = "Number text-right i-text__field i-text input-small", data_identifier = "LED_TPEQ1___TPEQ1QTDEQUIP", @pers_cs_area = "Tpeq1", @pers_cs_field = "ValQtdequip", @db_field = "ValQtdequip", data_number_integer = "6", data_number_decimals = "0", data_number_format = "999999" })
+								@Html.ValidationMessageFor(model => model.ValQtdequip)
+							</div>
+						</div>
+						<div class="control-join-group row-group-checkbox">
+						<div class="i-checkbox draggable " id="CONTAINER_LED_TPEQ1___TPEQ1KIT_____">
+								@Html.CheckBoxFor(model => model.ValKit, new {help_id = "LED_TPEQ1___TPEQ1KIT_____", @class = "i-checkbox__field i-checkbox input-mini", data_identifier = "LED_TPEQ1___TPEQ1KIT_____", @pers_cs_area = "Tpeq1", @pers_cs_field = "ValKit", @db_field = "ValKit", title = @Resources.KIT27179 }, @Model.IsEditableMode, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								@Html.ValidationMessageFor(model => model.ValKit)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			@Html.HiddenFor(model => model.ValCodtpequ, new { @pers_cs_field="ValCodtpequ", @pers_cs_area="Tpeq1", data_refresh = "true", @form_area="true", @data_value = Model.ValCodtpequ, @data_identifier = "LED_TPEQ1___TPEQ1CODTPEQU" })
+
+            @Html.Hidden("IgnoreWarnings", "false", new { id = "IgnoreWarnings" })
+
+			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Tpeq1" })
+            @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Tpeq1" })
+            @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Tpeq1" })
+			if (!Model.NestedForm)
+            {
+                @Html.AntiForgeryToken()
+            }
+}
+
+@helper form_content_alert() {
+	if(Model.FormMode == FormMode.Delete) {
+		<div class="c-alert c-alert--warning">
+			<i class="glyphicons glyphicons-alert c-alert__icon" aria-hidden="true"></i>
+			<div class="c-alert__text">
+				&ensp;@Resources.DESEJA_ELIMINAR_ESTA24564
+			</div>
+		<!--Ao confirmar esta ficha irá ser eliminada da base de dados. Cancele caso não tenha a certeza.-->
+		</div>
+	}
+}
+
+@helper form_content_buttons() {
+
+
+
+
+    @* Extended support form *@
+    if (Model.NestedForm)
+    {
+        if (Model.IsEditableMode)
+        {
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("Tpeq1", Model.FormMode).ToString(), "Tpeq1")", "Tpeq1_well")' qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>
+                    @Resources.GRAVAR45301
+            </button>
+            <button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Tpeq1_Delete", "Tpeq1", new {id = @Model.ValCodtpequ} )", "Tpeq1_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+
+            <script type="application/javascript">
+                $(document).ready(function () { loaded($("#Tpeq1_well")); });
+            </script>
+        }
+
+        @* javascript code_javascript *@
+        @*@codeJavascript()*@
+    }
+    @* Normal mode *@
+    else
+    {
+        if (Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+        {
+            if (Model.FormMode == FormMode.New && Convert.ToBoolean(Model.Navigation.CurrentLevel.GetEntry("repeatInsertion")))
+            {
+            <button type="button" data-end-pers="true" name="Tpeq1_repete_insertion" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitTpeq1(event, true)" qbutton="ok_new">@Resources.GRAVAR_E_CRIAR_NOVA17771</button>
+            }
+            if(Model.FormMode == FormMode.Delete)
+            {
+				<button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Tpeq1", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitDeleteTpeq1(event)" qbutton="delete">
+                    <i class="glyphicons glyphicons-check e-icon" aria-hidden="true"></i>@Resources.CONFIRMAR09808
+                </button>
+            }
+            else
+            {
+                <button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Tpeq1", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitTpeq1(event)" title="@Resources.GRAVAR45301" data-selector="true" qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>@Resources.GRAVAR45301
+                </button>
+            }
+
+            <button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-href="@Url.Action("Tpeq1_Cancel", "Tpeq1", new { niv = Model.Navigation.CurrentLevel.Level })" onclick="javascript:window.Form_Tpeq1.Cancel()" title="@Resources.CANCEL65428" data-selector="true" qbutton="cancel">
+                <i class="glyphicons glyphicons-ban-circle e-icon" aria-hidden="true"></i>@Resources.CANCEL65428
+            </button>
+        }
+        else if (!(ViewBag.isHomePage ?? false))
+        {
+            @Html.ActionLinkWithIcon(@Resources.RETROCEDER16633, "Tpeq1_Cancel","Tpeq1","glyphicons glyphicons-arrow-left e-icon", null, new { @class = "b-icon-text b-icon-text--secondary", @data_end_pers = "true", @title = @Resources.RETROCEDER16633, qbutton = "cancel" })
+        }
+    }
+}
+
+@helper LoadDefault() {
+    if (Model.NestedForm)
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div class="c-card__header">
+                    <div class="c-card__header-tag">
+						<span class="form-header" style="padding:0;">
+							<i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+						</span>
+                    </div>
+                </div>
+                <div class="c-card__body">
+                    @form_content_body()
+                    <div elem-identifier="FormActions" class="form-actions" data-form-actions="Tpeq1">
+                        @form_content_buttons()
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    }
+    else
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div id="c-stickyHeader">
+                    <div class="c-action-bar d-flex">
+                        <span class="form-header">
+                            <i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+                        </span>
+                        <div data-parent-form="Tpeq1" data-q-ref="form-btns-main_container"></div>
+                    </div>
+                </div>
+
+                @form_content_body()
+                <div elem-identifier="FormActions" class="form-actions" data-form-actions="Tpeq1">
+                @form_content_buttons()
+                </div>
+            </div>
+        </fieldset>
+    }
+}
+
+@helper LoadFromLayout()
+{
+}
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT TPEQ1]/ *@
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_TPEQ1" data-form-javascript="true">
+@Html.Partial("Tpeq1_JavaScript", Model, ViewData)
+</div>
+}
+
+@section code_javascript
+{
+	@codeJavascript()
+}
+
+@if (Request.IsAjaxRequest())
+{
+    @codeJavascript()
+    @includeStylesheets()
+}
+
+@helper includeStylesheets()
+{
+
+ }
+
+@section include_stylesheets {
+    @includeStylesheets()
+}

@@ -1,0 +1,679 @@
+﻿@model GenioMVC.ViewModels.Dttyp.Dttyp_ViewModel
+@using GenioMVC.Models.Navigation;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Form = "Dttyp";
+	ViewBag.Title = @Resources.DATA_TYPE47159;
+    ViewBag.formmode = Model.GetFormMode;
+	ViewBag.ClassForFormLayout = "form-flow";
+}
+
+
+@if (!Model.NestedForm) {
+    if(Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+    {
+        using (Html.BeginForm("Action", "Dttyp", FormMethod.Post, new { @class = "form-horizontal", area="Dttyp", data_form="Dttyp" }))
+        {
+            @form_content_alert()
+            @Html.QValidationSummary()
+	        @LoadDefault()
+        }
+    }
+    else
+    {
+        <div class="form-horizontal" id="Dttyp" area="Dttyp" data-form="Dttyp">
+	        @LoadDefault()
+        </div>
+    }
+}
+else {
+    <div class="c-card nested-form" id="Dttyp_well" area="Dttyp" data-form="Dttyp">
+        @Html.QValidationSummary()
+		@LoadDefault()
+    </div>
+}
+
+@helper form_content_body() {
+			<div class="row">
+				<div class="col-12">
+					<div class="row-large-control">
+						<div class="row-line-group" id="CONTAINER_IFF_DTTYP___PSEUDNOVOGR06">
+<div class="c-accordion" id="DTTYP_NOVOGR06">
+<div id="DTTYP_NOVOGR01" elem-identifier="AccordionGroup" class="c-accordion accordion-group " data-identifier="IFF_DTTYP___PSEUDNOVOGR01">
+	
+	<div class="c-accordion__panel">
+		<div elem-identifier="AccordionHeading" class="c-accordion__panel-header" >
+			<a elem-identifier="AccordionToggle" href="#" class="b-btn b-btn--link c-accordion__panel-title" role="button" data-toggle="collapse"  
+				data-target="#DTTYP_NOVOGR01I" data-zone-type="ZA"
+				label-id="IFF_DTTYP___PSEUDNOVOGR06"
+				>
+				<span  help-id="IFF_DTTYP___PSEUDNOVOGR06"/>	
+				<i class="glyphicons glyphicons-plus-sign c-accordion__panel-icon"></i>
+				@Resources.CHAR_STRING32451		
+				<a href="javascript:OpenSuggestion('IFF_DTTYP___PSEUDNOVOGR06','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a>
+			</a>
+		</div>
+		<div id="DTTYP_NOVOGR01I" elem-identifier="AccordionBody" data-parent="#DTTYP_NOVOGR06" class="collapse" style="height:0px; ">
+			<div class="c-accordion__panel-body" elem-identifier="AccordionInner">
+					<div elem-identifier="ContainerAccordionInner" class="container-fluid">
+												<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_DTTYP___DTTYPSTRING__">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValString, new { label_id="LED_DTTYP___DTTYPSTRING__", @class = " i-text__label", id="LABEL_LED_DTTYP___DTTYPSTRING__"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_DTTYP___DTTYPSTRING__','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValString, new {help_id = "LED_DTTYP___DTTYPSTRING__", @class = "i-text__field i-text input-xlarge", data_identifier = "LED_DTTYP___DTTYPSTRING__", @pers_cs_area = "Dttyp", @pers_cs_field = "ValString", @db_field = "ValString", title = @Resources.TEXT04938, maxlength = "50", rows = "50" })
+													@Html.ValidationMessageFor(model => model.ValString)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_DTTYP___DTTYPUPPERCAS">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValUppercas, new { label_id="LED_DTTYP___DTTYPUPPERCAS", @class = " i-text__label", id="LABEL_LED_DTTYP___DTTYPUPPERCAS"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_DTTYP___DTTYPUPPERCAS','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValUppercas, new {help_id = "LED_DTTYP___DTTYPUPPERCAS", @class = "i-text__field i-text uppercase input-xxlarge", data_identifier = "LED_DTTYP___DTTYPUPPERCAS", @pers_cs_area = "Dttyp", @pers_cs_field = "ValUppercas", @db_field = "ValUppercas", title = @Resources.TEXT__UPPER_CASE_62204, maxlength = "50", rows = "50" })
+													@Html.ValidationMessageFor(model => model.ValUppercas)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_DTTYP___DTTYPUUID____">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValUuid, new { label_id="LED_DTTYP___DTTYPUUID____", @class = " i-text__label", id="LABEL_LED_DTTYP___DTTYPUUID____"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_DTTYP___DTTYPUUID____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValUuid, new {help_id = "LED_DTTYP___DTTYPUUID____", @class = "i-text__field i-text input-large", data_identifier = "LED_DTTYP___DTTYPUUID____", @pers_cs_area = "Dttyp", @pers_cs_field = "ValUuid", @db_field = "ValUuid", title = @Resources.TEXT__UUID_AKA_GUID_03442, maxlength = "36", rows = "36" })
+													@Html.ValidationMessageFor(model => model.ValUuid)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValQrcode, new { label_id="LED_DTTYP___DTTYPQRCODE__", @class = " i-text__label", id="LABEL_LED_DTTYP___DTTYPQRCODE__"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_DTTYP___DTTYPQRCODE__','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													<div id="ValQrcode" data-identifier="LED_DTTYP___DTTYPQRCODE__" pers-cs-area="Dttyp" pers-cs-field="ValQrcode" >
+													@Html.DisplayFor(m => m.ValQrcode, new {help_id = "LED_DTTYP___DTTYPQRCODE__", @class = "i-text__field i-text input-medium", data_refresh = "true", data_tipoform = "+", data_identifier = "LED_DTTYP___DTTYPQRCODE__", @pers_cs_area = "Dttyp", @pers_cs_field = "ValQrcode", @db_field = "ValQrcode", title = @Resources.TEXT__QR_CODE_35902, maxlength = "50", rows = "30", category = "input-medium" })
+													</div>
+													@Html.ValidationMessageFor(model => model.ValQrcode)
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-textarea draggable " id="CONTAINER_LED_DTTYP___DTTYPMULTILIN">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValMultilin, new { label_id="LED_DTTYP___DTTYPMULTILIN", @class = " i-text__label", id="LABEL_LED_DTTYP___DTTYPMULTILIN"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_DTTYP___DTTYPMULTILIN','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextAreaFor(model => model.ValMultilin, 3, 60, new {help_id = "LED_DTTYP___DTTYPMULTILIN", @class = "i-textarea__field i-textarea input-xxlarge", data_identifier = "LED_DTTYP___DTTYPMULTILIN", @pers_cs_area = "Dttyp", @pers_cs_field = "ValMultilin", @db_field = "ValMultilin", title = @Resources.MULTILINE_TEXT57254 })
+													@Html.ValidationMessageFor(model => model.ValMultilin)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group control-wrap">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValMultili3, new { label_id="IFF_DTTYP___DTTYPMULTILI3", @class = " i-text__label", id="LABEL_IFF_DTTYP___DTTYPMULTILI3"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('IFF_DTTYP___DTTYPMULTILI3','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													<div data-field-name="ValMultili3" data-identifier="IFF_DTTYP___DTTYPMULTILI3" pers-cs-area="Dttyp" pers-cs-field="ValMultili3"  help-id="IFF_DTTYP___DTTYPMULTILI3">
+													@if(Model.IsEditableMode) {
+														@Html.EditorFor(model => model.ValMultili3, new {help_id = "IFF_DTTYP___DTTYPMULTILI3", @class = "input-xxlarge", data_identifier = "IFF_DTTYP___DTTYPMULTILI3", data_readonly = !Model.IsEditableMode })
+													} else {
+														@Html.Raw(Server.HtmlDecode(Model.ValMultili3))
+													}
+													</div>
+													@Html.ValidationMessageFor(model => model.ValMultili3)
+												</div>
+											</div>
+										</div>
+									</div>
+						</div>
+				</div>
+		</div>
+	</div>
+</div>
+<div id="DTTYP_NOVOGR02" elem-identifier="AccordionGroup" class="c-accordion accordion-group " data-identifier="IFF_DTTYP___PSEUDNOVOGR02">
+	
+	<div class="c-accordion__panel">
+		<div elem-identifier="AccordionHeading" class="c-accordion__panel-header" >
+			<a elem-identifier="AccordionToggle" href="#" class="b-btn b-btn--link c-accordion__panel-title" role="button" data-toggle="collapse"  
+				data-target="#DTTYP_NOVOGR02I" data-zone-type="ZA"
+				label-id="IFF_DTTYP___PSEUDNOVOGR06"
+				>
+				<span  help-id="IFF_DTTYP___PSEUDNOVOGR06"/>	
+				<i class="glyphicons glyphicons-plus-sign c-accordion__panel-icon"></i>
+				@Resources.BOOLEAN45002		
+				<a href="javascript:OpenSuggestion('IFF_DTTYP___PSEUDNOVOGR06','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a>
+			</a>
+		</div>
+		<div id="DTTYP_NOVOGR02I" elem-identifier="AccordionBody" data-parent="#DTTYP_NOVOGR06" class="collapse" style="height:0px; ">
+			<div class="c-accordion__panel-body" elem-identifier="AccordionInner">
+					<div elem-identifier="ContainerAccordionInner" class="container-fluid">
+												<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group row-group-checkbox">
+												<div class="i-checkbox draggable " id="CONTAINER_LED_DTTYP___DTTYPBOOLEAN_">
+													@Html.CheckBoxFor(model => model.ValBoolean, new {help_id = "LED_DTTYP___DTTYPBOOLEAN_", @class = "i-checkbox__field i-checkbox input-large", data_identifier = "LED_DTTYP___DTTYPBOOLEAN_", @pers_cs_area = "Dttyp", @pers_cs_field = "ValBoolean", @db_field = "ValBoolean", title = @Resources.LOGICAL__TINYINT___S35014 }, @Model.IsEditableMode, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													@Html.ValidationMessageFor(model => model.ValBoolean)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group row-group-checkbox">
+												<div class="i-checkbox draggable " id="CONTAINER_LED_DTTYP___DTTYPBOOLEAN2">
+													@Html.CheckBoxFor(model => model.ValBoolean2, new {help_id = "LED_DTTYP___DTTYPBOOLEAN2", @class = "i-checkbox__field i-checkbox input-large", data_identifier = "LED_DTTYP___DTTYPBOOLEAN2", @pers_cs_area = "Dttyp", @pers_cs_field = "ValBoolean2", @db_field = "ValBoolean2", title = @Resources.CONDITIONAL__SMALLIN41010 }, @Model.IsEditableMode, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													@Html.ValidationMessageFor(model => model.ValBoolean2)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+						</div>
+				</div>
+		</div>
+	</div>
+</div>
+<div id="DTTYP_NOVOGR03" elem-identifier="AccordionGroup" class="c-accordion accordion-group " data-identifier="IFF_DTTYP___PSEUDNOVOGR03">
+	
+	<div class="c-accordion__panel">
+		<div elem-identifier="AccordionHeading" class="c-accordion__panel-header" >
+			<a elem-identifier="AccordionToggle" href="#" class="b-btn b-btn--link c-accordion__panel-title" role="button" data-toggle="collapse"  
+				data-target="#DTTYP_NOVOGR03I" data-zone-type="ZA"
+				label-id="IFF_DTTYP___PSEUDNOVOGR06"
+				>
+				<span  help-id="IFF_DTTYP___PSEUDNOVOGR06"/>	
+				<i class="glyphicons glyphicons-plus-sign c-accordion__panel-icon"></i>
+				@Resources.NUMERIC19292		
+				<a href="javascript:OpenSuggestion('IFF_DTTYP___PSEUDNOVOGR06','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a>
+			</a>
+		</div>
+		<div id="DTTYP_NOVOGR03I" elem-identifier="AccordionBody" data-parent="#DTTYP_NOVOGR06" class="collapse" style="height:0px; ">
+			<div class="c-accordion__panel-body" elem-identifier="AccordionInner">
+					<div elem-identifier="ContainerAccordionInner" class="container-fluid">
+												<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable labelleft" id="CONTAINER_LED_DTTYP___DTTYPSMALLINT">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValSmallint, new { label_id="LED_DTTYP___DTTYPSMALLINT", @class = " i-text__label", id="LABEL_LED_DTTYP___DTTYPSMALLINT"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_DTTYP___DTTYPSMALLINT','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValSmallint, new {help_id = "LED_DTTYP___DTTYPSMALLINT", @class = "Number text-right i-text__field i-text input-mini", data_identifier = "LED_DTTYP___DTTYPSMALLINT", @pers_cs_area = "Dttyp", @pers_cs_field = "ValSmallint", @db_field = "ValSmallint", title = @Resources.NUMERIC__4_0___SMALL21475, data_number_integer = "4", data_number_decimals = "0", data_number_format = "9999" })
+													@Html.ValidationMessageFor(model => model.ValSmallint)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable labelleft" id="CONTAINER_LED_DTTYP___DTTYPINTEGER_">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValInteger, new { label_id="LED_DTTYP___DTTYPINTEGER_", @class = " i-text__label", id="LABEL_LED_DTTYP___DTTYPINTEGER_"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_DTTYP___DTTYPINTEGER_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValInteger, new {help_id = "LED_DTTYP___DTTYPINTEGER_", @class = "Number text-right i-text__field i-text input-small", data_identifier = "LED_DTTYP___DTTYPINTEGER_", @pers_cs_area = "Dttyp", @pers_cs_field = "ValInteger", @db_field = "ValInteger", title = @Resources.NUMERIC__9_0___INTEG03994, data_number_integer = "9", data_number_decimals = "0", data_number_format = "999999999" })
+													@Html.ValidationMessageFor(model => model.ValInteger)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable labelleft" id="CONTAINER_LED_DTTYP___DTTYPBIGINT__">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValBigint, new { label_id="LED_DTTYP___DTTYPBIGINT__", @class = " i-text__label", id="LABEL_LED_DTTYP___DTTYPBIGINT__"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_DTTYP___DTTYPBIGINT__','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValBigint, new {help_id = "LED_DTTYP___DTTYPBIGINT__", @class = "Number text-right i-text__field i-text input-medium", data_identifier = "LED_DTTYP___DTTYPBIGINT__", @pers_cs_area = "Dttyp", @pers_cs_field = "ValBigint", @db_field = "ValBigint", title = @Resources.NUMERIC_15_0___BIG_I46007, data_number_integer = "15", data_number_decimals = "0", data_number_format = "999999999999999" })
+													@Html.ValidationMessageFor(model => model.ValBigint)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable labelleft" id="CONTAINER_LED_DTTYP___DTTYPREAL____">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValReal, new { label_id="LED_DTTYP___DTTYPREAL____", @class = " i-text__label", id="LABEL_LED_DTTYP___DTTYPREAL____"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_DTTYP___DTTYPREAL____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValReal, new {help_id = "LED_DTTYP___DTTYPREAL____", @class = "Number text-right i-text__field i-text input-small", data_identifier = "LED_DTTYP___DTTYPREAL____", @pers_cs_area = "Dttyp", @pers_cs_field = "ValReal", @db_field = "ValReal", title = @Resources.NUMERIC__8_2_REAL_FL21391, data_number_integer = "5", data_number_decimals = "2", data_number_format = "99999.99" })
+													@Html.ValidationMessageFor(model => model.ValReal)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable labelleft" id="CONTAINER_LED_DTTYP___DTTYPFLOAT___">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValFloat, new { label_id="LED_DTTYP___DTTYPFLOAT___", @class = " i-text__label", id="LABEL_LED_DTTYP___DTTYPFLOAT___"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_DTTYP___DTTYPFLOAT___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValFloat, new {help_id = "LED_DTTYP___DTTYPFLOAT___", @class = "Number text-right i-text__field i-text input-medium", data_identifier = "LED_DTTYP___DTTYPFLOAT___", @pers_cs_area = "Dttyp", @pers_cs_field = "ValFloat", @db_field = "ValFloat", title = @Resources.NUMERIC_15_2_DOUBLE_11443, data_number_integer = "12", data_number_decimals = "2", data_number_format = "999999999999.99" })
+													@Html.ValidationMessageFor(model => model.ValFloat)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable labelleft" id="CONTAINER_LED_DTTYP___DTTYPDECIMAL_">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValDecimal, new { label_id="LED_DTTYP___DTTYPDECIMAL_", @class = " i-text__label", id="LABEL_LED_DTTYP___DTTYPDECIMAL_"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_DTTYP___DTTYPDECIMAL_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValDecimal, new {help_id = "LED_DTTYP___DTTYPDECIMAL_", @class = "Number text-right i-text__field i-text input-small", data_identifier = "LED_DTTYP___DTTYPDECIMAL_", @pers_cs_area = "Dttyp", @pers_cs_field = "ValDecimal", @db_field = "ValDecimal", title = @Resources.DECIMAL__1_10___STOR64402, data_number_integer = "5", data_number_decimals = "4", data_number_format = "99999.9999" })
+													@Html.ValidationMessageFor(model => model.ValDecimal)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable labelleft" id="CONTAINER_LED_DTTYP___DTTYPDECIMAL9">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValDecimal9, new { label_id="LED_DTTYP___DTTYPDECIMAL9", @class = " i-text__label", id="LABEL_LED_DTTYP___DTTYPDECIMAL9"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_DTTYP___DTTYPDECIMAL9','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValDecimal9, new {help_id = "LED_DTTYP___DTTYPDECIMAL9", @class = "Number text-right i-text__field i-text input-medium", data_identifier = "LED_DTTYP___DTTYPDECIMAL9", @pers_cs_area = "Dttyp", @pers_cs_field = "ValDecimal9", @db_field = "ValDecimal9", title = @Resources.DECIMAL__11_15___STO64707, data_number_integer = "10", data_number_decimals = "4", data_number_format = "9999999999.9999" })
+													@Html.ValidationMessageFor(model => model.ValDecimal9)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable labelleft" id="CONTAINER_LED_DTTYP___DTTYPMONEY___">
+													<div class="d-inline-flex">
+													@Html.LabelFor(model => model.ValMoney, new { label_id="LED_DTTYP___DTTYPMONEY___", @class = " i-text__label", id="LABEL_LED_DTTYP___DTTYPMONEY___"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_DTTYP___DTTYPMONEY___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValMoney, new {help_id = "LED_DTTYP___DTTYPMONEY___", @class = "i-input-group__field text-right i-text__field i-text input-small", data_identifier = "LED_DTTYP___DTTYPMONEY___", @pers_cs_area = "Dttyp", @pers_cs_field = "ValMoney", @db_field = "ValMoney", title = @Resources.MONEY___DECIMAL__1_124403, data_currency = "True", data_number_integer = "5", data_number_decimals = "4", data_number_format = "99999.9999" })
+													@Html.ValidationMessageFor(model => model.ValMoney)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable labelleft" id="CONTAINER_LED_DTTYP___DTTYPMONEY9__">
+													<div class="d-inline-flex">
+													@Html.LabelFor(model => model.ValMoney9, new { label_id="LED_DTTYP___DTTYPMONEY9__", @class = " i-text__label", id="LABEL_LED_DTTYP___DTTYPMONEY9__"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_DTTYP___DTTYPMONEY9__','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValMoney9, new {help_id = "LED_DTTYP___DTTYPMONEY9__", @class = "i-input-group__field text-right i-text__field i-text input-medium", data_identifier = "LED_DTTYP___DTTYPMONEY9__", @pers_cs_area = "Dttyp", @pers_cs_field = "ValMoney9", @db_field = "ValMoney9", title = @Resources.MONEY___DECIMAL__11_02101, data_currency = "True", data_number_integer = "10", data_number_decimals = "4", data_number_format = "9999999999.9999" })
+													@Html.ValidationMessageFor(model => model.ValMoney9)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+						</div>
+				</div>
+		</div>
+	</div>
+</div>
+<div id="DTTYP_NOVOGR04" elem-identifier="AccordionGroup" class="c-accordion accordion-group " data-identifier="IFF_DTTYP___PSEUDNOVOGR04">
+	
+	<div class="c-accordion__panel">
+		<div elem-identifier="AccordionHeading" class="c-accordion__panel-header" >
+			<a elem-identifier="AccordionToggle" href="#" class="b-btn b-btn--link c-accordion__panel-title" role="button" data-toggle="collapse"  
+				data-target="#DTTYP_NOVOGR04I" data-zone-type="ZA"
+				label-id="IFF_DTTYP___PSEUDNOVOGR06"
+				>
+				<span  help-id="IFF_DTTYP___PSEUDNOVOGR06"/>	
+				<i class="glyphicons glyphicons-plus-sign c-accordion__panel-icon"></i>
+				@Resources.DATE_AND_TIME38906		
+				<a href="javascript:OpenSuggestion('IFF_DTTYP___PSEUDNOVOGR06','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a>
+			</a>
+		</div>
+		<div id="DTTYP_NOVOGR04I" elem-identifier="AccordionBody" data-parent="#DTTYP_NOVOGR06" class="collapse" style="height:0px; ">
+			<div class="c-accordion__panel-body" elem-identifier="AccordionInner">
+					<div elem-identifier="ContainerAccordionInner" class="container-fluid">
+												<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-date-picker draggable labelleft" id="CONTAINER_LED_DTTYP___DTTYPDATE____">
+													<div class="d-inline-flex">
+													@Html.LabelFor(model => model.ValDate, new { label_id="LED_DTTYP___DTTYPDATE____", @class = " i-text__label", id="LABEL_LED_DTTYP___DTTYPDATE____"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_DTTYP___DTTYPDATE____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DateFor(model => model.ValDate, new {help_id = "LED_DTTYP___DTTYPDATE____", @class = "i-input-group__field b-icon-text input-small", data_identifier = "LED_DTTYP___DTTYPDATE____", @pers_cs_area = "Dttyp", @pers_cs_field = "ValDate", @db_field = "ValDate", title = @Resources.DATE18475 })
+													@Html.ValidationMessageFor(model => model.ValDate)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-date-picker draggable labelleft" id="CONTAINER_LED_DTTYP___DTTYPDATETIME">
+													<div class="d-inline-flex">
+													@Html.LabelFor(model => model.ValDatetime, new { label_id="LED_DTTYP___DTTYPDATETIME", @class = " i-text__label", id="LABEL_LED_DTTYP___DTTYPDATETIME"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_DTTYP___DTTYPDATETIME','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DateFor(model => model.ValDatetime, new {help_id = "LED_DTTYP___DTTYPDATETIME", @class = "i-input-group__field b-icon-text input-medium", data_identifier = "LED_DTTYP___DTTYPDATETIME", @pers_cs_area = "Dttyp", @pers_cs_field = "ValDatetime", @db_field = "ValDatetime", title = @Resources.DATE_TIME53960 })
+													@Html.ValidationMessageFor(model => model.ValDatetime)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-date-picker draggable labelleft" id="CONTAINER_LED_DTTYP___DTTYPDTSESOND">
+													<div class="d-inline-flex">
+													@Html.LabelFor(model => model.ValDtsesond, new { label_id="LED_DTTYP___DTTYPDTSESOND", @class = " i-text__label", id="LABEL_LED_DTTYP___DTTYPDTSESOND"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_DTTYP___DTTYPDTSESOND','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DateFor(model => model.ValDtsesond, new {help_id = "LED_DTTYP___DTTYPDTSESOND", @class = "i-input-group__field b-icon-text input-medium", data_identifier = "LED_DTTYP___DTTYPDTSESOND", @pers_cs_area = "Dttyp", @pers_cs_field = "ValDtsesond", @db_field = "ValDtsesond", title = @Resources.DATE_TIME_SECOND45106 })
+													@Html.ValidationMessageFor(model => model.ValDtsesond)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-date-picker draggable labelleft" id="CONTAINER_LED_DTTYP___DTTYPTIME____">
+													<div class="d-inline-flex">
+													@Html.LabelFor(model => model.ValTime, new { label_id="LED_DTTYP___DTTYPTIME____", @class = " i-text__label", id="LABEL_LED_DTTYP___DTTYPTIME____"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_DTTYP___DTTYPTIME____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DateFor(model => model.ValTime, new {help_id = "LED_DTTYP___DTTYPTIME____", @class = "i-input-group__field b-icon-text input-mini", data_identifier = "LED_DTTYP___DTTYPTIME____", @pers_cs_area = "Dttyp", @pers_cs_field = "ValTime", @db_field = "ValTime", title = @Resources.TIME15328 })
+													@Html.ValidationMessageFor(model => model.ValTime)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+						</div>
+				</div>
+		</div>
+	</div>
+</div>
+<div id="DTTYP_NOVOGR05" elem-identifier="AccordionGroup" class="c-accordion accordion-group " data-identifier="IFF_DTTYP___PSEUDNOVOGR05">
+	
+	<div class="c-accordion__panel">
+		<div elem-identifier="AccordionHeading" class="c-accordion__panel-header" >
+			<a elem-identifier="AccordionToggle" href="#" class="b-btn b-btn--link c-accordion__panel-title" role="button" data-toggle="collapse"  
+				data-target="#DTTYP_NOVOGR05I" data-zone-type="ZA"
+				label-id="IFF_DTTYP___PSEUDNOVOGR06"
+				>
+				<span  help-id="IFF_DTTYP___PSEUDNOVOGR06"/>	
+				<i class="glyphicons glyphicons-plus-sign c-accordion__panel-icon"></i>
+				@Resources.IMAGE65174		
+				<a href="javascript:OpenSuggestion('IFF_DTTYP___PSEUDNOVOGR06','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a>
+			</a>
+		</div>
+		<div id="DTTYP_NOVOGR05I" elem-identifier="AccordionBody" data-parent="#DTTYP_NOVOGR06" class="collapse" style="height:0px; ">
+			<div class="c-accordion__panel-body" elem-identifier="AccordionInner">
+					<div elem-identifier="ContainerAccordionInner" class="container-fluid">
+												<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-image draggable " id="CONTAINER_LED_DTTYP___DTTYPIMAGE___">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValImage, new { label_id="LED_DTTYP___DTTYPIMAGE___", @class = " i-text__label", id="LABEL_LED_DTTYP___DTTYPIMAGE___"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_DTTYP___DTTYPIMAGE___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													<div data-identifier="LED_DTTYP___DTTYPIMAGE___" pers-cs-area="Dttyp" pers-cs-field="ValImage" class="image-control-wrapper" >
+													@if(Model.IsEditableMode) {
+														@Html.EditorFor(m => m.ValImage, new {help_id = "LED_DTTYP___DTTYPIMAGE___", @class = "col-auto ", data_identifier = "LED_DTTYP___DTTYPIMAGE___", title = @Resources.IMAGE__BINARY_46903, guid = @Model.ValCoddttyp, controller = "Dttyp", fldname = "ValImage", identifier = "FDTTYP", style = "height: 135pt; display: inline-block;" })
+													} else {
+														@Html.DisplayFor(m => m.ValImage, new {help_id = "LED_DTTYP___DTTYPIMAGE___", @class = "col-auto ", data_identifier = "LED_DTTYP___DTTYPIMAGE___", title = @Resources.IMAGE__BINARY_46903, guid = @Model.ValCoddttyp, controller = "Dttyp", fldname = "ValImage", identifier = "FDTTYP", style = "height: 135pt; display: inline-block;" })
+													}
+													</div>
+													@Html.ValidationMessageFor(model => model.ValImage)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+						</div>
+				</div>
+		</div>
+	</div>
+</div>
+</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			@Html.HiddenFor(model => model.ValCoddttyp, new { @pers_cs_field="ValCoddttyp", @pers_cs_area="Dttyp", data_refresh = "true", @form_area="true", @data_value = Model.ValCoddttyp, @data_identifier = "LED_DTTYP___DTTYPCODDTTYP" })
+
+            @Html.Hidden("IgnoreWarnings", "false", new { id = "IgnoreWarnings" })
+
+			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Dttyp" })
+            @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Dttyp" })
+            @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Dttyp" })
+			if (!Model.NestedForm)
+            {
+                @Html.AntiForgeryToken()
+            }
+}
+
+@helper form_content_alert() {
+	if(Model.FormMode == FormMode.Delete) {
+		<div class="c-alert c-alert--warning">
+			<i class="glyphicons glyphicons-alert c-alert__icon" aria-hidden="true"></i>
+			<div class="c-alert__text">
+				&ensp;@Resources.DESEJA_ELIMINAR_ESTA24564
+			</div>
+		<!--Ao confirmar esta ficha irá ser eliminada da base de dados. Cancele caso não tenha a certeza.-->
+		</div>
+	}
+}
+
+@helper form_content_buttons() {
+
+
+
+
+    @* Extended support form *@
+    if (Model.NestedForm)
+    {
+        if (Model.IsEditableMode)
+        {
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("Dttyp", Model.FormMode).ToString(), "Dttyp")", "Dttyp_well")' qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>
+                    @Resources.SAVE04165
+            </button>
+            <button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Dttyp_Delete", "Dttyp", new {id = @Model.ValCoddttyp} )", "Dttyp_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+
+            <script type="application/javascript">
+                $(document).ready(function () { loaded($("#Dttyp_well")); });
+            </script>
+        }
+
+        @* javascript code_javascript *@
+        @*@codeJavascript()*@
+    }
+    @* Normal mode *@
+    else
+    {
+        if (Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+        {
+            if (Model.FormMode == FormMode.New && Convert.ToBoolean(Model.Navigation.CurrentLevel.GetEntry("repeatInsertion")))
+            {
+            <button type="button" data-end-pers="true" name="Dttyp_repete_insertion" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitDttyp(event, true)" qbutton="ok_new">@Resources.GRAVAR_E_CRIAR_NOVA17771</button>
+            }
+            if(Model.FormMode == FormMode.Delete)
+            {
+				<button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Dttyp", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitDeleteDttyp(event)" qbutton="delete">
+                    <i class="glyphicons glyphicons-check e-icon" aria-hidden="true"></i>@Resources.CONFIRMAR09808
+                </button>
+            }
+            else
+            {
+                <button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Dttyp", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitDttyp(event)" title="@Resources.SAVE04165" data-selector="true" qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>@Resources.SAVE04165
+                </button>
+            }
+
+            <button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-href="@Url.Action("Dttyp_Cancel", "Dttyp", new { niv = Model.Navigation.CurrentLevel.Level })" onclick="javascript:window.Form_Dttyp.Cancel()" title="@Resources.CANCEL65428" data-selector="true" qbutton="cancel">
+                <i class="glyphicons glyphicons-ban-circle e-icon" aria-hidden="true"></i>@Resources.CANCEL65428
+            </button>
+        }
+        else if (!(ViewBag.isHomePage ?? false))
+        {
+            @Html.ActionLinkWithIcon(@Resources.RETROCEDER16633, "Dttyp_Cancel","Dttyp","glyphicons glyphicons-arrow-left e-icon", null, new { @class = "b-icon-text b-icon-text--secondary", @data_end_pers = "true", @title = @Resources.RETROCEDER16633, qbutton = "cancel" })
+        }
+    }
+}
+
+@helper LoadDefault() {
+    if (Model.NestedForm)
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div class="c-card__header">
+                    <div class="c-card__header-tag">
+						<span class="form-header" style="padding:0;">
+							<i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+						</span>
+                    </div>
+                </div>
+                <div class="c-card__body">
+                    @form_content_body()
+                    <div elem-identifier="FormActions" class="form-actions" data-form-actions="Dttyp">
+                        @form_content_buttons()
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    }
+    else
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div id="c-stickyHeader">
+                    <div class="c-action-bar d-flex">
+                        <span class="form-header">
+                            <i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+                        </span>
+                        <div data-parent-form="Dttyp" data-q-ref="form-btns-main_container"></div>
+                    </div>
+                </div>
+
+                @form_content_body()
+                <div elem-identifier="FormActions" class="form-actions" data-form-actions="Dttyp">
+                @form_content_buttons()
+                </div>
+            </div>
+        </fieldset>
+    }
+}
+
+@helper LoadFromLayout()
+{
+}
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT DTTYP]/ *@
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_DTTYP" data-form-javascript="true">
+@Html.Partial("Dttyp_JavaScript", Model, ViewData)
+</div>
+}
+
+@section code_javascript
+{
+	@codeJavascript()
+}
+
+@if (Request.IsAjaxRequest())
+{
+    @codeJavascript()
+    @includeStylesheets()
+}
+
+@helper includeStylesheets()
+{
+
+ }
+
+@section include_stylesheets {
+    @includeStylesheets()
+}

@@ -1,0 +1,153 @@
+﻿@model GenioMVC.ViewModels.Asset.WMS_Menu_ASSET_CARD_ViewModel
+@using Newtonsoft.Json;
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@using GenioMVC.ViewModels.Asset;    
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Asset>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodasset, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_ASSET_CARD_ASSET_ASSETNUM]/
+		column.Expression(p => p.ValAssetnum).Title(@Resources.ASSET_NUMBER52372).Field("ValAssetnum").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_ASSET_CARD_ASSET_NAME]/
+		column.Expression(p => p.ValName).Title(@Resources.IDENTIFICATION_NAME16317).Field("ValName").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_ASSET_CARD_KINDE_DESIGNAT]/
+		column.Expression(p => p.Kinde.ValDesignat).Title(@Resources.KIND_OF_EQUIPMENT22928).Hidden().Field("Kinde.ValDesignat").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_ASSET_CARD_ASSET_IDENTTYP]/
+		column.Expression(p => p.ArrayValidenttyp).Title(@Resources.IDENTIFIER_TYPE60623).Field("ValIdenttyp", "ArrayIdenttyp").Size(1);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_ASSET_CARD_ASSET_GRAI]/
+		column.Expression(p => p.ValGrai).Title(@Resources.GRAI10374).Field("ValGrai").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_ASSET_CARD_ASSET_GIAI]/
+		column.Expression(p => p.ValGiai).Title(@Resources.GIAI50592).Field("ValGiai").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_ASSET_CARD_ASSET_PHOTO]/
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValPhoto, new {alt=@Resources.PHOTO51874,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCodasset, modelname = "Asset", fldname = "ValPhoto" }))).Title(@Resources.PHOTO51874).Field("ValPhoto").Size(3);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_ASSET_CARD_MANUF_NAME]/
+		column.Expression(p => p.Manuf.ValName).Title(@Resources.MANUFACTURER50759).Field("Manuf.ValName").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_ASSET_CARD_MANUF_WEBSITE]/
+		column.Expression(p => p.Manuf.ValWebsite).Title(@Resources.WEB_SITE06263).Field("Manuf.ValWebsite").Size(30);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Asset")
+        .Id("WMS_Menu_ASSET_CARD")
+        .AjaxRequest("Menu")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .DBEdit()
+        .Filters(this.Model.Menu.Filters)
+        .Form("Equipm", false, false)
+        .SetFollowUp("Equipm_Edit", "Asset" , (Func<GenioMVC.Models.Asset, object>)(item => new { id = item.ValCodasset }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
+        .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
+		;
+        
+    var cards = data
+        .ToSpecialRendering()
+		.SetSpecialRendering(this.Model.ViewModesCfg.SpecialRenderings.FirstOrDefault(sr => sr.Id == "CARDS"))
+        .Filters(this.Model.Menu.Filters)
+        .Form("Equipm", false, false)
+        .SetFollowUp("Equipm_Edit", "Asset" , (Func<GenioMVC.Models.Asset, object>)(item => new { id = item.ValCodasset }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
+        .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
+		;
+        
+    var carousel = data
+        .ToSpecialRendering()
+		.SetSpecialRendering(this.Model.ViewModesCfg.SpecialRenderings.FirstOrDefault(sr => sr.Id == "CAROUSEL"))
+        .Filters(this.Model.Menu.Filters)
+        .Form("Equipm", false, false)
+        .SetFollowUp("Equipm_Edit", "Asset" , (Func<GenioMVC.Models.Asset, object>)(item => new { id = item.ValCodasset }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
+        .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
+		;
+        
+}
+
+@{ renderings.Clear(); }
+@{ renderings.Add(Model.GetViewModePosition("LIST"), tbl.ToHtml(hidden: Model.IsViewModeHidden("LIST"))); }
+
+@{ renderings.Add(Model.GetViewModePosition("CARDS"), cards.ToSpecialRenderingHtml(hidden: Model.IsViewModeHidden("CARDS"))); }
+@{ renderings.Add(Model.GetViewModePosition("CAROUSEL"), carousel.ToSpecialRenderingHtml(hidden: Model.IsViewModeHidden("CAROUSEL"))); }
+
+
+@foreach (var render in renderings.ToList().OrderBy(r => r.Key))
+{
+    @Html.Raw(render.Value.ToHtmlString());
+}
+
+
+<script>
+ 
+ 
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qWMS_Menu_ASSET_CARD, #WMS_Menu_ASSET_CARD_complex_filter th input, #WMS_Menu_ASSET_CARD_filters input").change(function() {
+                    $("#pWMS_Menu_ASSET_CARD").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#WMS_Menu_ASSET_CARD_tableFilters').val(false);")
+                    @Html.Raw("$('#WMS_Menu_ASSET_CARD_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#WMS_Menu_ASSET_CARD_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $("[data-form='WMS_Menu_ASSET_CARD']").submit();
+                    @:      event.preventDefault();
+                    @:      ClearSearchBox('qWMS_Menu_ASSET_CARD');
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#WMS_Menu_ASSET_CARD_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_WMS_Menu_ASSET_CARD').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+                 @if (this.Model.Menu.Filters.FiltersValues.Count >= 1) {
+                    var activeFields = Newtonsoft.Json.JsonConvert.SerializeObject(this.Model.Menu.Filters.FiltersValues);
+                    @: SetActiveFilters('WMS_Menu_ASSET_CARD', 'ASSET', @Html.Raw(activeFields))
+                  }
+
+
+                setupHistoryClicks()
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='Menu']"));
+                    InitSpecialControls($('#Menu'));
+                    $('#Menu').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS WMS_MENU_ASSET_CARD]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+// USE /[MANUAL GQT LISTING_CODEJS WMS_MENU_ASSET_CARD]/
+</script>

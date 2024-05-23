@@ -1,0 +1,146 @@
+﻿@model GenioMVC.ViewModels.Pwreg.IMO_Menu_LISTA_REGIAO_ViewModel
+@using GenioMVC.Resources
+@using System.Web.Script.Serialization
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Title = Model.DBEditTitle;
+	//Layout = "~/Views/Shared/Layouts/TopMenu_BT4/_Layout.cshtml";
+}
+
+@{
+	GenioMVC.ViewModels.Pwreg.IMO_Menu_LISTA_REGIAO_ViewModel modelIMO_Menu_LISTA_REGIAO = new GenioMVC.ViewModels.Pwreg.IMO_Menu_LISTA_REGIAO_ViewModel(Navigation);
+	var columns = modelIMO_Menu_LISTA_REGIAO.GetSearchColumns();
+
+	Dictionary<string, TableFilterField> fields = new Dictionary<string, TableFilterField>();
+
+
+	foreach (var col in columns)
+	{
+		var areaField = col.AreaField;
+		if (areaField.Area == "psw" && areaField.Field == "nome")
+		{
+			fields.Add("PSW.NOME", new TableFilterField("PSW", "NOME", Resources.LOGIN48703, "text"));
+		}
+		if (areaField.Area == "regio" && areaField.Field == "regiao")
+		{
+			fields.Add("REGIO.REGIAO", new TableFilterField("REGIO", "REGIAO", Resources.REGION12723, "text"));
+		}
+	}
+
+	JavaScriptSerializer serializer = new JavaScriptSerializer();
+	string fieldsStr = serializer.Serialize(fields);
+}
+
+<script>
+	//Fields with information for search filters
+	var fields = @Html.Raw(fieldsStr);
+	//Table List Search Filters
+	var searchFilterGroups = [];
+</script>
+
+
+@using (Ajax.BeginForm("IMO_Menu_LISTA_REGIAO", "Pwreg", new AjaxOptions
+{
+	HttpMethod= "POST",
+	InsertionMode = InsertionMode.Replace,
+	UpdateTargetId = "Menu",
+	OnSuccess = "InitMenuSpecialControls"
+}, new { @class = "form-horizontal", area="Pwreg", data_form="IMO_Menu_LISTA_REGIAO" }))
+{
+		<input id="SearchFilters" type="hidden" value="" />
+
+		<div class="page-header row" style="align-items:center">
+		   <div class="col">
+<div class="table-title c-table__title">
+					<h1>@ViewBag.Title</h1>
+				</div>
+
+		   </div>
+		   <div class="col-auto search">
+				<div class="i-input-group input-xxlarge" id="IMO_Menu_LISTA_REGIAO_simple_filter">
+					<div data-search-filter-menu-elem="filter-box-list"></div>
+					@Html.TextBox("qIMO_Menu_LISTA_REGIAO", Navigation.GetStrValue("qIMO_Menu_LISTA_REGIAO"), new { @class="i-input-group__field input-xxlarge dropdown-toggle", @title=@Resources.CAIXA_DE_PESQUISA53870, @onfocus="ToggleSearchFilterBox('IMO_Menu_LISTA_REGIAO');" ,@onkeydown = "ListSearchEnter(event)", @autocomplete = "off" ,@data_toggle = "dropdown",@data_search_field_menu_elem = "show", @onblur = "HideSearchFieldMenuOnUnfocus('IMO_Menu_LISTA_REGIAO');",@placeholder = Resources.PESQUISAR34506 + " " + Resources.LOGIN48703})
+					<button id="qIMO_Menu_LISTA_REGIAO-clearBtn" class="clear-search d-none" type="button">
+						<i class="glyphicons glyphicons-remove mr-1"></i>
+					</button>
+					@Html.SearchFieldMenu("IMO_Menu_LISTA_REGIAO", fields, "PWREG")
+					<div class="b-btn-group i-input-group--right">
+						<button type="button" elem-identifier="ListSearchButton" class="btn b-icon b-icon--secondary i-input-group__button--secondary  listSearchButton" title="@Resources.PESQUISAR34506" onclick="AddSearchFieldFilter('IMO_Menu_LISTA_REGIAO', 'PWREG', 'PSW.NOME');"><i class="glyphicons glyphicons-search i-input-group__tag-icon i-input-group__button-icon"></i></button>
+						@{
+						var advancedSearchIcon = @Model.Menu.Filters.ShowTableFilters ? "glyphicons-zoom-out" : "glyphicons-zoom-in";
+						<button id="IMO_Menu_LISTA_REGIAO_extra" class="btn b-icon b-icon--secondary i-input-group__button--secondary" type="button" onclick="changeFilters('#IMO_Menu_LISTA_REGIAO_complex_filter', 'IMO_Menu_LISTA_REGIAO_tableFilters');applyComplexFilterIDs();" title="@Resources.PESQUISA_AVANCADA06198"><span class="glyphicons @advancedSearchIcon i-input-group__tag-icon i-input-group__button-icon"></span></button>
+						}
+						@Html.SearchFilterMenu("IMO_Menu_LISTA_REGIAO")
+					</div>
+				</div>
+			</div>
+            @if(!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest() && !Model.IsViewModeHidden("LIST"))
+            {
+			<div class="col-auto float-right" style="padding: 0; padding-right: 15px">
+				<div class="b-btn-group float-right" style="height: 32.625px">
+					@*List properties LISTS*@
+					@if(!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest())
+					{
+						<button class="b-btn b-icon b-icon--secondary" type="button" data-modal-form="Lstusr" data-modal-id="lstusr-edit-modal" data-table="IMO_Menu_LISTA_REGIAO" data-modal-url="@Url.Action("ChangeListProperties", "Lstusr", new { idlist = "IMO_Menu_LISTA_REGIAO", idlistController = "Pwreg", idlistArea = "Pwreg", codlista ="8b11f295-fa69-4195-a32e-829fc2eab416" })" title="@Resources.ALTERAR_A_APRESENTAC58401"><i class="glyphicons glyphicons-list e-icon"></i></button>
+					}
+				</div>
+			</div>
+            }
+		</div>
+ 	<div id="Menu" element-identifier="List">
+		@{ Html.RenderPartial("IMO_Menu_LISTA_REGIAO_Partial"); }
+	</div>
+	@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "IMO_Menu_LISTA_REGIAO" })
+	@Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId)
+	@Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock())
+	@Html.AntiForgeryToken()
+}
+
+
+
+<script>
+	$(document).ready(function () {
+		window.Form_IMO_Menu_LISTA_REGIAO = new QMenuForm($('[data-form="IMO_Menu_LISTA_REGIAO"]'), "Form_IMO_Menu_LISTA_REGIAO");
+		window.Form_IMO_Menu_LISTA_REGIAO.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_IMO_Menu_LISTA_REGIAO.Init();
+
+		//Initialize search field menu for search bar
+		InitSearchFieldMenu("qIMO_Menu_LISTA_REGIAO");
+		RegisterClearEvents("IMO_Menu_LISTA_REGIAO")
+
+		// TVC - added code to load advanced filters after returning from a form
+		@{
+			string advFil = "";
+			if (!String.IsNullOrEmpty(Navigation.GetStrValue("AdvancedFilters")))
+			{
+				advFil = Navigation.GetStrValue("AdvancedFilters");
+			}
+		}
+
+		SearchFilters.value = '@Html.Raw(advFil)';
+		if (typeof SearchFilters.value === 'string' && SearchFilters.value.length > 0)
+			UpdateSearchFilterStatus("IMO_Menu_LISTA_REGIAO", JSON.parse(SearchFilters.value))
+	});
+</script>
+
+@helper codeJavascript()
+{
+<script>
+	QLocalStorage.remLocalStorage("savedInfo");
+	$(document).ready(function (e) {
+		InitSpecialControls($('[data-form="IMO_Menu_LISTA_REGIAO"]'));
+
+
+ 	});
+
+	function InitMenuSpecialControls() {
+		InitSpecialControls($('[data-form="IMO_Menu_LISTA_REGIAO"]'));
+	}
+
+</script>
+}
+
+@section code_javascript {
+	@codeJavascript()
+}

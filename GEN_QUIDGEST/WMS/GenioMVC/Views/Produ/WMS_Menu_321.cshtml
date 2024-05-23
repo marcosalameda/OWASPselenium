@@ -1,0 +1,183 @@
+﻿@model GenioMVC.ViewModels.Produ.WMS_Menu_321_ViewModel
+@using GenioMVC.Resources
+@using System.Web.Script.Serialization
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Title = Model.DBEditTitle;
+	//Layout = "~/Views/Shared/Layouts/TopMenu_BT4/_Layout.cshtml";
+}
+
+@{
+	GenioMVC.ViewModels.Produ.WMS_Menu_321_ViewModel modelWMS_Menu_321 = new GenioMVC.ViewModels.Produ.WMS_Menu_321_ViewModel(Navigation);
+	var columns = modelWMS_Menu_321.GetSearchColumns();
+
+	Dictionary<string, TableFilterField> fields = new Dictionary<string, TableFilterField>();
+
+
+	foreach (var col in columns)
+	{
+		var areaField = col.AreaField;
+		if (areaField.Area == "produ" && areaField.Field == "product")
+		{
+			fields.Add("PRODU.PRODUCT", new TableFilterField("PRODU", "PRODUCT", Resources.PRODUCT12880, "text", defaultSearch : true));
+		}
+		if (areaField.Area == "produ" && areaField.Field == "sku")
+		{
+			fields.Add("PRODU.SKU", new TableFilterField("PRODU", "SKU", Resources.SKU42303, "text"));
+		}
+		if (areaField.Area == "produ" && areaField.Field == "gtin")
+		{
+			fields.Add("PRODU.GTIN", new TableFilterField("PRODU", "GTIN", Resources.GTIN45487, "text"));
+		}
+		if (areaField.Area == "produ" && areaField.Field == "descript")
+		{
+			fields.Add("PRODU.DESCRIPT", new TableFilterField("PRODU", "DESCRIPT", Resources.DESCRIPTION07383, "text"));
+		}
+		if (areaField.Area == "produ" && areaField.Field == "size")
+		{
+			fields.Add("PRODU.SIZE", new TableFilterField("PRODU", "SIZE", Resources.SIZE10299, "text"));
+		}
+		if (areaField.Area == "produ" && areaField.Field == "weight")
+		{
+			fields.Add("PRODU.WEIGHT", new TableFilterField("PRODU", "WEIGHT", Resources.WEIGHT36329, "num"));
+		}
+		if (areaField.Area == "locat" && areaField.Field == "gln")
+		{
+			fields.Add("LOCAT.GLN", new TableFilterField("LOCAT", "GLN", Resources.GLN35528, "text"));
+		}
+		if (areaField.Area == "lcext" && areaField.Field == "glnext")
+		{
+			fields.Add("LCEXT.GLNEXT", new TableFilterField("LCEXT", "GLNEXT", Resources.GLN_EXT31913, "text"));
+		}
+	}
+
+	JavaScriptSerializer serializer = new JavaScriptSerializer();
+	string fieldsStr = serializer.Serialize(fields);
+}
+
+<script>
+	//Fields with information for search filters
+	var fields = @Html.Raw(fieldsStr);
+	//Table List Search Filters
+	var searchFilterGroups = [];
+</script>
+
+
+@using (Ajax.BeginForm("WMS_Menu_321", "Produ", new AjaxOptions
+{
+	HttpMethod= "POST",
+	InsertionMode = InsertionMode.Replace,
+	UpdateTargetId = "Menu",
+	OnSuccess = "InitMenuSpecialControls"
+}, new { @class = "form-horizontal", area="Produ", data_form="WMS_Menu_321" }))
+{
+		<input id="SearchFilters" type="hidden" value="" />
+
+		<div class="page-header row" style="align-items:center">
+		   <div class="col">
+<div class="table-title c-table__title">
+					<h1>@ViewBag.Title</h1>
+				</div>
+
+		   </div>
+		   <div class="col-auto search">
+				<div class="i-input-group input-xxlarge" id="WMS_Menu_321_simple_filter">
+					<div data-search-filter-menu-elem="filter-box-list"></div>
+					@Html.TextBox("qWMS_Menu_321", Navigation.GetStrValue("qWMS_Menu_321"), new { @class="i-input-group__field input-xxlarge dropdown-toggle", @title=@Resources.CAIXA_DE_PESQUISA53870, @onfocus="ToggleSearchFilterBox('WMS_Menu_321');" ,@onkeydown = "ListSearchEnter(event)", @autocomplete = "off" ,@data_toggle = "dropdown",@data_search_field_menu_elem = "show", @onblur = "HideSearchFieldMenuOnUnfocus('WMS_Menu_321');",@placeholder = Resources.PESQUISAR34506 + " " + Resources.PRODUCT12880})
+					<button id="qWMS_Menu_321-clearBtn" class="clear-search d-none" type="button">
+						<i class="glyphicons glyphicons-remove mr-1"></i>
+					</button>
+					@Html.SearchFieldMenu("WMS_Menu_321", fields, "PRODU")
+					<div class="b-btn-group i-input-group--right">
+						<button type="button" elem-identifier="ListSearchButton" class="btn b-icon b-icon--secondary i-input-group__button--secondary  listSearchButton" title="@Resources.PESQUISAR34506" onclick="AddSearchFieldFilter('WMS_Menu_321', 'PRODU', 'PRODU.PRODUCT');"><i class="glyphicons glyphicons-search i-input-group__tag-icon i-input-group__button-icon"></i></button>
+						@{
+						var advancedSearchIcon = @Model.Menu.Filters.ShowTableFilters ? "glyphicons-zoom-out" : "glyphicons-zoom-in";
+						<button id="WMS_Menu_321_extra" class="btn b-icon b-icon--secondary i-input-group__button--secondary" type="button" onclick="changeFilters('#WMS_Menu_321_complex_filter', 'WMS_Menu_321_tableFilters');applyComplexFilterIDs();" title="@Resources.PESQUISA_AVANCADA06198"><span class="glyphicons @advancedSearchIcon i-input-group__tag-icon i-input-group__button-icon"></span></button>
+						}
+						@Html.SearchFilterMenu("WMS_Menu_321")
+					</div>
+				</div>
+			</div>
+			<div class="col-auto float-right" style="padding: 0; padding-right: 15px">
+				<div class="b-btn-group float-right" style="height: 32.625px">
+					@Html.ExportListMenu("WMS_Menu_321")
+					@Html.ImportListMenu("WMS_Menu_321")
+					<div id="modal-importList" class="modal hide container-fluid" tabindex="-1" role="dialog" aria-labelledby="importList" aria-hidden="true">
+						<div class="c-modal__dialog">
+							<div class = "c-modal__content">
+								<div elem-identifier="ModalBody" class="c-modal__body">
+									<div id="importListinput" data-action="@Url.Action("WMS_Menu_321_UploadFile", "Produ")"></div>
+								</div>
+								<div class="c-modal__footer">
+									<div elem-identifier="Actions" class="actions">
+										<button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-modal-close="true" onclick="window.WMS_Menu_321.CloseImportList()">@Resources.FECHAR32496</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					@*List properties LISTS*@
+					@if(!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest())
+					{
+						<button class="b-btn b-icon b-icon--secondary" type="button" data-modal-form="Lstusr" data-modal-id="lstusr-edit-modal" data-table="WMS_Menu_321" data-modal-url="@Url.Action("ChangeListProperties", "Lstusr", new { idlist = "WMS_Menu_321", idlistController = "Produ", idlistArea = "Produ", codlista ="2ea79590-c020-42b1-b8c3-c1e74fe946b6" })" title="@Resources.ALTERAR_A_APRESENTAC58401"><i class="glyphicons glyphicons-list e-icon"></i></button>
+					}
+				</div>
+			</div>
+		</div>
+ 	<div id="Menu" element-identifier="List">
+		@{ Html.RenderPartial("WMS_Menu_321_Partial"); }
+	</div>
+	@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "WMS_Menu_321" })
+	@Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId)
+	@Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock())
+	@Html.AntiForgeryToken()
+}
+
+
+
+<script>
+	$(document).ready(function () {
+		window.Form_WMS_Menu_321 = new QMenuForm($('[data-form="WMS_Menu_321"]'), "Form_WMS_Menu_321");
+		window.Form_WMS_Menu_321.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_WMS_Menu_321.Init();
+
+		//Initialize search field menu for search bar
+		InitSearchFieldMenu("qWMS_Menu_321");
+		RegisterClearEvents("WMS_Menu_321")
+
+		// TVC - added code to load advanced filters after returning from a form
+		@{
+			string advFil = "";
+			if (!String.IsNullOrEmpty(Navigation.GetStrValue("AdvancedFilters")))
+			{
+				advFil = Navigation.GetStrValue("AdvancedFilters");
+			}
+		}
+
+		SearchFilters.value = '@Html.Raw(advFil)';
+		if (typeof SearchFilters.value === 'string' && SearchFilters.value.length > 0)
+			UpdateSearchFilterStatus("WMS_Menu_321", JSON.parse(SearchFilters.value))
+	});
+</script>
+
+@helper codeJavascript()
+{
+<script>
+	QLocalStorage.remLocalStorage("savedInfo");
+	$(document).ready(function (e) {
+		InitSpecialControls($('[data-form="WMS_Menu_321"]'));
+
+
+ 	});
+
+	function InitMenuSpecialControls() {
+		InitSpecialControls($('[data-form="WMS_Menu_321"]'));
+	}
+
+</script>
+}
+
+@section code_javascript {
+	@codeJavascript()
+}

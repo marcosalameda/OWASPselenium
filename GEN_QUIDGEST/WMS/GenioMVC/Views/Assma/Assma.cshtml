@@ -1,0 +1,271 @@
+﻿@model GenioMVC.ViewModels.Assma.Assma_ViewModel
+@using GenioMVC.Models.Navigation;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Form = "Assma";
+	ViewBag.Title = @Resources.ASSET_MANUAL50119;
+    ViewBag.formmode = Model.GetFormMode;
+	ViewBag.ClassForFormLayout = "form-flow";
+}
+
+
+@if (!Model.NestedForm) {
+    if(Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+    {
+        using (Html.BeginForm("Action", "Assma", FormMethod.Post, new { enctype="multipart/form-data", @class = "form-horizontal", area="Assma", data_form="Assma" }))
+        {
+            @form_content_alert()
+            @Html.QValidationSummary()
+	        @LoadDefault()
+        }
+    }
+    else
+    {
+        <div class="form-horizontal" id="Assma" area="Assma" data-form="Assma">
+	        @LoadDefault()
+        </div>
+    }
+}
+else {
+    <div class="c-card nested-form" id="Assma_well" area="Assma" data-form="Assma">
+        @Html.QValidationSummary()
+		@LoadDefault()
+    </div>
+}
+
+@helper form_content_body() {
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-dbedit draggable " id="CONTAINER_IFF_ASSMA___ASSETNAME____">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.TableAssetName, new { label_id="IFF_ASSMA___ASSETNAME____", @class = " i-text__label", id="LABEL_IFF_ASSMA___ASSETNAME____"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('IFF_ASSMA___ASSETNAME____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DropDownListFor(model => model.ValCodasset, Model.TableAssetName.List , "", new {help_id = "IFF_ASSMA___ASSETNAME____", @class = "i-select chosen-dropdown input-xxlarge", data_identifier = "IFF_ASSMA___ASSETNAME____", @pers_cs_area = "Asset", @pers_cs_field = "ValCodasset", @db_field = "ValCodasset", @db_full_field_name = "assma.codasset", data_has_more = Model.TableAssetName.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableAssetName.Selected, data_dbedit_value = Model.TableAssetName.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodassma, @data_see_more = "Assma_AssetValName", title = @Resources.IDENTIFICATION_NAME16317, data_see_more_url = @Url.Action("Assma_AssetValName","Assma"), data_is_dbedit = "true", data_fields = "asset.codasset,asset.name", data_main_field = "Asset.ValName", data_elements = 0, data_filled_by_history = Model.TableAssetName.FilledByHistory, @dependant_fields = "asset.codasset,asset.name" })
+								@Html.ValidationMessageFor(model => model.TableAssetName)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_ASSMA___ASSMANAME____">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValName, new { label_id="LED_ASSMA___ASSMANAME____", @class = " i-text__label", id="LABEL_LED_ASSMA___ASSMANAME____"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_ASSMA___ASSMANAME____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextBoxFor(model => model.ValName, new {help_id = "LED_ASSMA___ASSMANAME____", @class = "i-text__field i-text input-xlarge", data_identifier = "LED_ASSMA___ASSMANAME____", @pers_cs_area = "Assma", @pers_cs_field = "ValName", @db_field = "ValName", title = @Resources.MANUAL_NAME60077, maxlength = "50", rows = "50" })
+								@Html.ValidationMessageFor(model => model.ValName)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-document draggable " id="CONTAINER_LED_ASSMA___ASSMADIGDOCUM">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValDigdocum, new { label_id="LED_ASSMA___ASSMADIGDOCUM", @class = " i-text__label", id="LABEL_LED_ASSMA___ASSMADIGDOCUM"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_ASSMA___ASSMADIGDOCUM','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@if (Model.IsEditableMode) {
+									@Html.EditorFor(model => model.ValDigdocum, new { fieldFk = Model.ValDigdocumfk, docProperties = Model.ValDigdocumPropertiesVM, baseArea = "Assma", baseAreaKey = Model.ValCodassma, useTemplates =  false, data_identifier="LED_ASSMA___ASSMADIGDOCUM", identifier = "FASSMA", fieldSize = "input-xxlarge", isRequired = false, maxSize = "null", allowedTypes = "null", htmlAttributes = new {help_id = "LED_ASSMA___ASSMADIGDOCUM", title = @Resources.DIGITAL_DOCUMENT59580 }})
+								} else {
+									@Html.DisplayFor(model => model.ValDigdocum, new { fieldFk = Model.ValDigdocumfk, docProperties = Model.ValDigdocumPropertiesVM, baseArea = "Assma", baseAreaKey = Model.ValCodassma, useTemplates =  false, data_identifier="LED_ASSMA___ASSMADIGDOCUM", identifier = "FASSMA", fieldSize = "input-xxlarge", htmlAttributes = new {help_id = "LED_ASSMA___ASSMADIGDOCUM", title = @Resources.DIGITAL_DOCUMENT59580 }})
+								}
+								@Html.ValidationMessageFor(model => model.ValDigdocum)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-textarea draggable " id="CONTAINER_LED_ASSMA___ASSMANOTES___">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValNotes, new { label_id="LED_ASSMA___ASSMANOTES___", @class = " i-text__label", id="LABEL_LED_ASSMA___ASSMANOTES___"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_ASSMA___ASSMANOTES___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextAreaFor(model => model.ValNotes, 5, 65, new {help_id = "LED_ASSMA___ASSMANOTES___", @class = "i-textarea__field i-textarea input-xxlarge", data_identifier = "LED_ASSMA___ASSMANOTES___", @pers_cs_area = "Assma", @pers_cs_field = "ValNotes", @db_field = "ValNotes", title = @Resources.NOTES05274 })
+								@Html.ValidationMessageFor(model => model.ValNotes)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			@Html.HiddenFor(model => model.ValCodassma, new { @pers_cs_field="ValCodassma", @pers_cs_area="Assma", data_refresh = "true", @form_area="true", @data_value = Model.ValCodassma, @data_identifier = "LED_ASSMA___ASSMACODASSMA" })
+
+            @Html.Hidden("IgnoreWarnings", "false", new { id = "IgnoreWarnings" })
+
+			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Assma" })
+            @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Assma" })
+            @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Assma" })
+			if (!Model.NestedForm)
+            {
+                @Html.AntiForgeryToken()
+            }
+}
+
+@helper form_content_alert() {
+	if(Model.FormMode == FormMode.Delete) {
+		<div class="c-alert c-alert--warning">
+			<i class="glyphicons glyphicons-alert c-alert__icon" aria-hidden="true"></i>
+			<div class="c-alert__text">
+				&ensp;@Resources.DESEJA_ELIMINAR_ESTA24564
+			</div>
+		<!--Ao confirmar esta ficha irá ser eliminada da base de dados. Cancele caso não tenha a certeza.-->
+		</div>
+	}
+}
+
+@helper form_content_buttons() {
+
+
+
+
+    @* Extended support form *@
+    if (Model.NestedForm)
+    {
+        if (Model.IsEditableMode)
+        {
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("Assma", Model.FormMode).ToString(), "Assma")", "Assma_well")' qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>
+                    @Resources.GRAVAR45301
+            </button>
+            <button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Assma_Delete", "Assma", new {id = @Model.ValCodassma} )", "Assma_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+
+            <script type="application/javascript">
+                $(document).ready(function () { loaded($("#Assma_well")); });
+            </script>
+        }
+
+        @* javascript code_javascript *@
+        @*@codeJavascript()*@
+    }
+    @* Normal mode *@
+    else
+    {
+        if (Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+        {
+            if (Model.FormMode == FormMode.New && Convert.ToBoolean(Model.Navigation.CurrentLevel.GetEntry("repeatInsertion")))
+            {
+            <button type="button" data-end-pers="true" name="Assma_repete_insertion" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitAssma(event, true)" qbutton="ok_new">@Resources.GRAVAR_E_CRIAR_NOVA17771</button>
+            }
+            if(Model.FormMode == FormMode.Delete)
+            {
+				<button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Assma", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitDeleteAssma(event)" qbutton="delete">
+                    <i class="glyphicons glyphicons-check e-icon" aria-hidden="true"></i>@Resources.CONFIRMAR09808
+                </button>
+            }
+            else
+            {
+                <button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Assma", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitAssma(event)" title="@Resources.GRAVAR45301" data-selector="true" qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>@Resources.GRAVAR45301
+                </button>
+            }
+
+            <button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-href="@Url.Action("Assma_Cancel", "Assma", new { niv = Model.Navigation.CurrentLevel.Level })" onclick="javascript:window.Form_Assma.Cancel()" title="@Resources.CANCEL65428" data-selector="true" qbutton="cancel">
+                <i class="glyphicons glyphicons-ban-circle e-icon" aria-hidden="true"></i>@Resources.CANCEL65428
+            </button>
+        }
+        else if (!(ViewBag.isHomePage ?? false))
+        {
+            @Html.ActionLinkWithIcon(@Resources.RETROCEDER16633, "Assma_Cancel","Assma","glyphicons glyphicons-arrow-left e-icon", null, new { @class = "b-icon-text b-icon-text--secondary", @data_end_pers = "true", @title = @Resources.RETROCEDER16633, qbutton = "cancel" })
+        }
+    }
+}
+
+@helper LoadDefault() {
+    if (Model.NestedForm)
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div class="c-card__header">
+                    <div class="c-card__header-tag">
+						<span class="form-header" style="padding:0;">
+							<i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+						</span>
+                    </div>
+                </div>
+                <div class="c-card__body">
+                    @form_content_body()
+                    <div elem-identifier="FormActions" class="form-actions" data-form-actions="Assma">
+                        @form_content_buttons()
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    }
+    else
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div id="c-stickyHeader">
+                    <div class="c-action-bar d-flex">
+                        <span class="form-header">
+                            <i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+                        </span>
+                        <div data-parent-form="Assma" data-q-ref="form-btns-main_container"></div>
+                    </div>
+                </div>
+
+                @form_content_body()
+                <div elem-identifier="FormActions" class="form-actions" data-form-actions="Assma">
+                @form_content_buttons()
+                </div>
+            </div>
+        </fieldset>
+    }
+}
+
+@helper LoadFromLayout()
+{
+}
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT ASSMA]/ *@
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_ASSMA" data-form-javascript="true">
+@Html.Partial("Assma_JavaScript", Model, ViewData)
+</div>
+}
+
+@section code_javascript
+{
+	@codeJavascript()
+}
+
+@if (Request.IsAjaxRequest())
+{
+    @codeJavascript()
+    @includeStylesheets()
+}
+
+@helper includeStylesheets()
+{
+
+ }
+
+@section include_stylesheets {
+    @includeStylesheets()
+}

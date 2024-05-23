@@ -1,0 +1,343 @@
+﻿@model GenioMVC.ViewModels.Asset.Equipm_ViewModel
+@using GenioMVC.Models.Navigation;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Form = "Equipm";
+	ViewBag.Title = string.Format(@Resources._ASSET__ASSETNUM____37227, string.Format("{0:F0}", this.Model.ValAssetnum),this.Model.ValName);
+	Model.Navigation.CurrentLevel.redefineLocName(ViewBag.Title);
+    ViewBag.formmode = Model.GetFormMode;
+	ViewBag.ClassForFormLayout = "form-flow";
+}
+
+
+@if (!Model.NestedForm) {
+    if(Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+    {
+        using (Html.BeginForm("Action", "Asset", FormMethod.Post, new { @class = "form-horizontal", area="Asset", data_form="Equipm" }))
+        {
+            @form_content_alert()
+            @Html.QValidationSummary()
+	        @LoadDefault()
+        }
+    }
+    else
+    {
+        <div class="form-horizontal" id="Equipm" area="Asset" data-form="Equipm">
+	        @LoadDefault()
+        </div>
+    }
+}
+else {
+    <div class="c-card nested-form" id="Equipm_well" area="Asset" data-form="Equipm">
+        @Html.QValidationSummary()
+		@LoadDefault()
+    </div>
+}
+
+@helper form_content_body() {
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="row-line-group">
+                            <div class="c-groupbox " id="GROUPBOX_EQUIPM_NOVOGR01">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_EQUIPM__PSEUDNOVOGR01" 
+                                    label-id="IFF_EQUIPM__PSEUDNOVOGR01">
+                                    <span>@Resources.ASSET_IDENTIFICATION53152</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_EQUIPM__PSEUDNOVOGR01','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_EQUIPM__ASSETNAME____">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValName, new { label_id="LED_EQUIPM__ASSETNAME____", @class = " i-text__label", id="LABEL_LED_EQUIPM__ASSETNAME____"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EQUIPM__ASSETNAME____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValName, new {help_id = "LED_EQUIPM__ASSETNAME____", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_EQUIPM__ASSETNAME____", @pers_cs_area = "Asset", @pers_cs_field = "ValName", @db_field = "ValName", title = @Resources.IDENTIFICATION_NAME16317, maxlength = "85", rows = "85" })
+													@Html.ValidationMessageFor(model => model.ValName)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-dbedit draggable " id="CONTAINER_LED_EQUIPM__ASSETASSETTYP">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValAssettyp, new { label_id="LED_EQUIPM__ASSETASSETTYP", @class = " i-text__label", id="LABEL_LED_EQUIPM__ASSETASSETTYP"}, true, true)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EQUIPM__ASSETASSETTYP','Assettyp')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.ArrayDropDownListFor(model => model.ValAssettyp, Model.List_ValAssettyp, CSGenio.business.ArrayAssettyp.GetElement, "", new {help_id = "LED_EQUIPM__ASSETASSETTYP", @class = "i-select chosen-dropdown input-medium", data_identifier = "LED_EQUIPM__ASSETASSETTYP", @pers_cs_area = "Asset", @pers_cs_field = "ValAssettyp", @db_field = "ValAssettyp", title = @Resources.ASSET_TYPE02033, data_array_type = "AC", data_placeholder = @Resources.ESCOLHA___40245, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_value = Model.List_ValAssettyp.SelectedValue, data_is_array = "true" })
+													@Html.ValidationMessageFor(model => model.ValAssettyp)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_EQUIPM__ASSETASSETNUM">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValAssetnum, new { label_id="LED_EQUIPM__ASSETASSETNUM", @class = " i-text__label", id="LABEL_LED_EQUIPM__ASSETASSETNUM"}, true, true)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EQUIPM__ASSETASSETNUM','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValAssetnum, new {help_id = "LED_EQUIPM__ASSETASSETNUM", @class = "Number text-right i-text__field i-text input-small", data_sequencial = "M1", data_identifier = "LED_EQUIPM__ASSETASSETNUM", @pers_cs_area = "Asset", @pers_cs_field = "ValAssetnum", @db_field = "ValAssetnum", title = @Resources.ASSET_NUMBER52372, data_number_integer = "10", data_number_decimals = "0", data_number_format = "9999999999" })
+													@Html.ValidationMessageFor(model => model.ValAssetnum)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-dbedit draggable " id="CONTAINER_LED_EQUIPM__ASSETIDENTTYP">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValIdenttyp, new { label_id="LED_EQUIPM__ASSETIDENTTYP", @class = " i-text__label", id="LABEL_LED_EQUIPM__ASSETIDENTTYP"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EQUIPM__ASSETIDENTTYP','Identtyp')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.ArrayDropDownListFor(model => model.ValIdenttyp, Model.List_ValIdenttyp, CSGenio.business.ArrayIdenttyp.GetElement, "", new {help_id = "LED_EQUIPM__ASSETIDENTTYP", @class = "i-select chosen-dropdown input-small", data_identifier = "LED_EQUIPM__ASSETIDENTTYP", @pers_cs_area = "Asset", @pers_cs_field = "ValIdenttyp", @db_field = "ValIdenttyp", title = @Resources.IDENTIFIER_TYPE60623, data_array_type = "AC", data_placeholder = @Resources.ESCOLHA___40245, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_value = Model.List_ValIdenttyp.SelectedValue, data_is_array = "true" })
+													@Html.ValidationMessageFor(model => model.ValIdenttyp)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_EQUIPM__ASSETGRAI____">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValGrai, new { label_id="LED_EQUIPM__ASSETGRAI____", @class = " i-text__label", id="LABEL_LED_EQUIPM__ASSETGRAI____"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EQUIPM__ASSETGRAI____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValGrai, new {help_id = "LED_EQUIPM__ASSETGRAI____", @class = "i-text__field i-text input-xlarge", data_identifier = "LED_EQUIPM__ASSETGRAI____", @pers_cs_area = "Asset", @pers_cs_field = "ValGrai", @db_field = "ValGrai", title = @Resources.GRAI___GLOBAL_RETURN06821, maxlength = "50", rows = "50" })
+													@Html.ValidationMessageFor(model => model.ValGrai)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_EQUIPM__ASSETGIAI____">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValGiai, new { label_id="LED_EQUIPM__ASSETGIAI____", @class = " i-text__label", id="LABEL_LED_EQUIPM__ASSETGIAI____"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EQUIPM__ASSETGIAI____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValGiai, new {help_id = "LED_EQUIPM__ASSETGIAI____", @class = "i-text__field i-text input-xlarge", data_identifier = "LED_EQUIPM__ASSETGIAI____", @pers_cs_area = "Asset", @pers_cs_field = "ValGiai", @db_field = "ValGiai", title = @Resources.GIAI___GLOBAL_INDIVI63214, maxlength = "50", rows = "50" })
+													@Html.ValidationMessageFor(model => model.ValGiai)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-dbedit draggable " id="CONTAINER_IFF_EQUIPM__MANUFNAME____">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.TableManufName, new { label_id="IFF_EQUIPM__MANUFNAME____", @class = " i-text__label", id="LABEL_IFF_EQUIPM__MANUFNAME____"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('IFF_EQUIPM__MANUFNAME____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DropDownListFor(model => model.ValCodmanuf, Model.TableManufName.List , "", new {help_id = "IFF_EQUIPM__MANUFNAME____", @class = "i-select chosen-dropdown input-xxlarge", data_identifier = "IFF_EQUIPM__MANUFNAME____", @pers_cs_area = "Manuf", @pers_cs_field = "ValCodentit", @db_field = "ValCodentit", @db_full_field_name = "asset.codmanuf", dependant_area = "", dependant = "", key_field = "ValCodmanuf", data_has_more = Model.TableManufName.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableManufName.Selected, data_dbedit_value = Model.TableManufName.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodasset, @data_see_more = "Equipm_ManufValName", title = @Resources.MANUFACTURER50759, data_see_more_url = @Url.Action("Equipm_ManufValName","Asset"), data_is_dbedit = "true", data_fields = "manuf.codentit,manuf.name,manuf.initials", data_main_field = "Manuf.ValName", data_elements = 0, data_filled_by_history = Model.TableManufName.FilledByHistory, @dependant_fields = "manuf.codentit,manuf.name" })
+													@Html.ValidationMessageFor(model => model.TableManufName)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-dbedit draggable " id="CONTAINER_IFF_EQUIPM__KINDEDESIGNAT">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.TableKindeDesignat, new { label_id="IFF_EQUIPM__KINDEDESIGNAT", @class = " i-text__label", id="LABEL_IFF_EQUIPM__KINDEDESIGNAT"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('IFF_EQUIPM__KINDEDESIGNAT','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DropDownListFor(model => model.ValCodkinde, Model.TableKindeDesignat.List , "", new {help_id = "IFF_EQUIPM__KINDEDESIGNAT", @class = "i-select chosen-dropdown input-xxlarge", data_identifier = "IFF_EQUIPM__KINDEDESIGNAT", @pers_cs_area = "Kinde", @pers_cs_field = "ValCodkinde", @db_field = "ValCodkinde", @db_full_field_name = "asset.codkinde", data_has_more = Model.TableKindeDesignat.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableKindeDesignat.Selected, data_dbedit_value = Model.TableKindeDesignat.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodasset, @data_see_more = "Equipm_KindeValDesignat", title = @Resources.KIND_OF_EQUIPMENT22928, data_see_more_url = @Url.Action("Equipm_KindeValDesignat","Asset"), data_is_dbedit = "true", data_fields = "kinde.codkinde,kinde.designat", data_main_field = "Kinde.ValDesignat", data_elements = 0, data_filled_by_history = Model.TableKindeDesignat.FilledByHistory, @dependant_fields = "kinde.codkinde,kinde.designat" })
+													@Html.ValidationMessageFor(model => model.TableKindeDesignat)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="row-large-control">
+						<div class="row-line-group" id="CONTAINER_IFF_EQUIPM__PSEUDEQUIP01_">
+								<div id="Equipm_Tabs">
+									@{ Html.RenderPartial("~/Views/Asset/Equipm_Tabs.cshtml"); }
+								</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			@Html.HiddenFor(model => model.ValCodasset, new { @pers_cs_field="ValCodasset", @pers_cs_area="Asset", data_refresh = "true", @form_area="true", @data_value = Model.ValCodasset, @data_identifier = "LED_EQUIPM__ASSETCODASSET" })
+
+            @Html.Hidden("IgnoreWarnings", "false", new { id = "IgnoreWarnings" })
+
+			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Equipm" })
+            @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Equipm" })
+            @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Equipm" })
+			if (!Model.NestedForm)
+            {
+                @Html.AntiForgeryToken()
+            }
+}
+
+@helper form_content_alert() {
+	if(Model.FormMode == FormMode.Delete) {
+		<div class="c-alert c-alert--warning">
+			<i class="glyphicons glyphicons-alert c-alert__icon" aria-hidden="true"></i>
+			<div class="c-alert__text">
+				&ensp;@Resources.DESEJA_ELIMINAR_ESTA24564
+			</div>
+		<!--Ao confirmar esta ficha irá ser eliminada da base de dados. Cancele caso não tenha a certeza.-->
+		</div>
+	}
+}
+
+@helper form_content_buttons() {
+
+
+
+
+    @* Extended support form *@
+    if (Model.NestedForm)
+    {
+        if (Model.IsEditableMode)
+        {
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("Equipm", Model.FormMode).ToString(), "Asset")", "Equipm_well")' qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>
+                    @Resources.GRAVAR45301
+            </button>
+            <button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Equipm_Delete", "Asset", new {id = @Model.ValCodasset} )", "Equipm_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+
+            <script type="application/javascript">
+                $(document).ready(function () { loaded($("#Equipm_well")); });
+            </script>
+        }
+
+        @* javascript code_javascript *@
+        @*@codeJavascript()*@
+    }
+    @* Normal mode *@
+    else
+    {
+        if (Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+        {
+            if (Model.FormMode == FormMode.New && Convert.ToBoolean(Model.Navigation.CurrentLevel.GetEntry("repeatInsertion")))
+            {
+            <button type="button" data-end-pers="true" name="Equipm_repete_insertion" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitEquipm(event, true)" qbutton="ok_new">@Resources.GRAVAR_E_CRIAR_NOVA17771</button>
+            }
+            if(Model.FormMode == FormMode.Delete)
+            {
+				<button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Equipm", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitDeleteEquipm(event)" qbutton="delete">
+                    <i class="glyphicons glyphicons-check e-icon" aria-hidden="true"></i>@Resources.CONFIRMAR09808
+                </button>
+            }
+            else
+            {
+                <button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Equipm", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitEquipm(event)" title="@Resources.GRAVAR45301" data-selector="true" qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>@Resources.GRAVAR45301
+                </button>
+            }
+
+            <button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-href="@Url.Action("Equipm_Cancel", "Asset", new { niv = Model.Navigation.CurrentLevel.Level })" onclick="javascript:window.Form_Equipm.Cancel()" title="@Resources.CANCEL65428" data-selector="true" qbutton="cancel">
+                <i class="glyphicons glyphicons-ban-circle e-icon" aria-hidden="true"></i>@Resources.CANCEL65428
+            </button>
+        }
+        else if (!(ViewBag.isHomePage ?? false))
+        {
+            @Html.ActionLinkWithIcon(@Resources.RETROCEDER16633, "Equipm_Cancel","Asset","glyphicons glyphicons-arrow-left e-icon", null, new { @class = "b-icon-text b-icon-text--secondary", @data_end_pers = "true", @title = @Resources.RETROCEDER16633, qbutton = "cancel" })
+        }
+    }
+}
+
+@helper LoadDefault() {
+    if (Model.NestedForm)
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div class="c-card__header">
+                    <div class="c-card__header-tag">
+						<span class="form-header" style="padding:0;">
+							<i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+						</span>
+                    </div>
+                </div>
+                <div class="c-card__body">
+                    @form_content_body()
+                    <div elem-identifier="FormActions" class="form-actions" data-form-actions="Equipm">
+                        @form_content_buttons()
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    }
+    else
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div id="c-stickyHeader">
+                    <div class="c-action-bar d-flex">
+                        <span class="form-header">
+                            <i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+                        </span>
+                        <div data-parent-form="Equipm" data-q-ref="form-btns-main_container"></div>
+                    </div>
+                </div>
+
+                @form_content_body()
+                <div elem-identifier="FormActions" class="form-actions" data-form-actions="Equipm">
+                @form_content_buttons()
+                </div>
+            </div>
+        </fieldset>
+    }
+}
+
+@helper LoadFromLayout()
+{
+}
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT EQUIPM]/ *@
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_EQUIPM" data-form-javascript="true">
+@Html.Partial("Equipm_JavaScript", Model, ViewData)
+</div>
+}
+
+@section code_javascript
+{
+	@codeJavascript()
+}
+
+@if (Request.IsAjaxRequest())
+{
+    @codeJavascript()
+    @includeStylesheets()
+}
+
+@helper includeStylesheets()
+{
+
+ }
+
+@section include_stylesheets {
+    @includeStylesheets()
+}

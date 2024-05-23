@@ -1,0 +1,112 @@
+﻿@using GenioMVC.Resources
+@using GenioMVC.Models.Navigation;
+
+@if (!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest())
+{
+    if (GenioMVC.LayoutConfig.config.headerPlacement.Equals(GenioMVC.HeaderPlacement.in_contentPanel))
+    {
+		<style>
+            ul.n-menu__aside {
+                list-style-type: none;
+            }
+
+            .ml-auto,
+            .mx-auto {
+                margin-left: auto !important;
+                margin-top: -1rem;
+            }
+        </style>
+    <div class="c-header__content float-xl-right float-sm-left">
+        <div class="c-header__user-id">
+        @if (GenioMVC.Models.Navigation.UserContext.Current.User.Years.Count > 1)
+        {
+            <div class="dropdown mr-2" >
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicons glyphicons-calendar n-menu__icon n-DByear__icon"></span>@GenioMVC.Models.Navigation.UserContext.Current.User.Year</a>
+                <div class="nav-item dropdown-menu">
+                    @foreach (var year in GenioMVC.Models.Navigation.UserContext.Current.User.Years)
+                    {
+                    <a class="dropdown-item" style="text-align: center;" href="@Url.Action("Index", "Home", new { system = year })">@year</a>
+                    }
+                </div>
+            </div>
+        }
+
+		<ul class="ml-auto n-menu__aside">
+            @Html.Partial("_UserAvatar")
+        </ul>
+		</div>
+	</div>
+    }
+    else
+    {
+        <li class="c-sidebar__list-item">
+            <button href="ToggleSuggestion()" class="c-sidebar__list-link" title="@Resources.ENTRAR_EM_MODO_DE_SU41031" style="border:0; background-color:transparent;">
+                <i id="toggle-suggestion" class="glyphicons glyphicons-send c-header__icon"></i>
+                @Resources.ENTRAR_EM_MODO_DE_SU00577
+            </button>
+        </li>
+        if(Model.CurrentModule == "STY")
+        {
+            <li class="c-sidebar__list-item">
+                <a href="@Url.Content("~/Content/Manual/STYManual.pdf")" data-toggle="tooltip" class="c-sidebar__list-link" data-placement="top" title="@Resources.AJUDA_AO_UTILIZADOR_37116">
+                    <i class="glyphicons glyphicons-disk-save c-header__icon"></i>
+                    @Resources.AJUDA_AO_UTILIZADOR_37116
+                </a>
+            </li>
+        }
+        if(Model.CurrentModule == "GQT")
+        {
+            <li class="c-sidebar__list-item">
+                <a href="@Url.Content("~/Content/Manual/GQTManual.pdf")" data-toggle="tooltip" class="c-sidebar__list-link" data-placement="top" title="@Resources.AJUDA_AO_UTILIZADOR_37116">
+                    <i class="glyphicons glyphicons-disk-save c-header__icon"></i>
+                    @Resources.AJUDA_AO_UTILIZADOR_37116
+                </a>
+            </li>
+        }
+        if(Model.CurrentModule == "PTN")
+        {
+            <li class="c-sidebar__list-item">
+                <a href="@Url.Content("~/Content/Manual/PTNManual.pdf")" data-toggle="tooltip" class="c-sidebar__list-link" data-placement="top" title="@Resources.AJUDA_AO_UTILIZADOR_37116">
+                    <i class="glyphicons glyphicons-disk-save c-header__icon"></i>
+                    @Resources.AJUDA_AO_UTILIZADOR_37116
+                </a>
+            </li>
+        }
+        if (GenioServer.security.SecurityFactory.HasPasswordManagement()){
+
+            <li class="c-sidebar__list-item">
+                <a href="@Url.Action("Profile", "Home", new { })" data-toggle="tooltip" class="c-sidebar__list-link" data-placement="top" title="@Resources.ALTERAR_PASSWORD32166">
+                    <i class="glyphicons glyphicons-user c-header__icon"></i>
+                    @Resources.ALTERAR_PASSWORD32166
+                </a>
+            </li>
+        }
+        if (CSGenio.framework.Configuration.LoginType != CSGenio.framework.Configuration.LoginTypes.AD)
+        {
+            <li class="c-sidebar__list-item">
+                <a href="@Url.Action("LogOff", "Account", new { })" data-toggle="tooltip" data-placement="top" class="c-sidebar__list-link" title="@Resources.SAIR20169">
+                    <i class="glyphicons glyphicons-log-out c-header__icon"></i>
+                    @Resources.SAIR20169
+                </a>
+            </li>
+
+            @*<label>@GenioMVC.Models.Navigation.UserContext.Current.User.Name</label>*@
+        }
+    }
+}
+else if (CSGenio.framework.Configuration.LoginType != CSGenio.framework.Configuration.LoginTypes.AD)
+{
+	<div class="dropdown_login float-right">
+		<a class="dropdown-toggle b-icon-text b-icon-text--primary" data-toggle="dropdown" href="#">
+			<i class="glyphicons glyphicons-log-in e-icon"></i>
+			@Resources.ENTRAR16118
+		</a>
+		<div class="dropdown-menu dropdown-menu-right c-user__dropdown" aria-labelledby="dropdownMenuButton" style="padding: 15px; padding: 0px;">
+			<div class="c-card c-card--text-center">
+				<div class="c-card__body">
+					@{ Html.RenderAction("LogOnPartial", "Account", new { }); }
+				</div>
+			</div>
+		</div>
+	</div>
+}

@@ -1,0 +1,154 @@
+﻿@model string
+
+@{
+    var metadata = ModelMetadata.FromLambdaExpression(model => model, ViewData);
+    var fieldName = metadata.PropertyName;
+    var fieldNameMap = metadata.PropertyName + "_map";
+	
+	//map in readonly mode: FormMode is Show, or GG field is set as fixed or by PM on table settings:
+    object field_readonly = false;
+    ViewData.TryGetValue("readonly", out field_readonly);
+    object field_data_tipoform = "";
+    ViewData.TryGetValue("data_tipoform", out field_data_tipoform);
+    var formmode = ViewBag.formmode == "show" ? "show" : ((string)field_readonly =="readonly" || (string)field_data_tipoform == "PM" ? "show": ViewBag.formmode);
+	
+	//map height setting variable according to field rows setting:
+	object field_rows;
+    ViewData.TryGetValue("rows", out field_rows);
+    if (field_rows == null)
+    {
+        field_rows = 30;
+    }
+    var height = 15 * Convert.ToInt32(field_rows) + "px";
+}
+
+@Html.HiddenFor(model => model)
+
+<link rel="stylesheet" href='@Scripts.Url("~/Content/stylesheets/leaflet/leaflet.css")' />
+<link rel="stylesheet" href='@Scripts.Url("~/Content/stylesheets/leaflet/Control.Geocoder.css")' />
+<link rel="stylesheet" href='@Scripts.Url("~/Content/stylesheets/leaflet/Leaflet.fullscreen.css")' />
+<script src='@Scripts.Url("~/Scripts/leaflet/leaflet.js")'></script>
+<script src='@Scripts.Url("~/Scripts/leaflet/Control.Geocoder.js")'></script>
+<script src='@Scripts.Url("~/Scripts/leaflet/Leaflet.fullscreen.js")'></script>
+
+@Html.LabelFor(model => model, new { @class = " i-text__label" }, true, false)
+<div id="@fieldNameMap" style="height: 500px;"></div>
+
+<script type="text/javascript">
+
+    $(window).on("load", function () {
+
+		$("#@fieldNameMap").closest('div.tabbable').find('.nav-link').on('shown.bs.tab', function (e) {
+			map.invalidateSize();
+		});
+		
+        $("#@fieldNameMap").closest('[elem-identifier=\"AccordionGroup\"]').on('shown.bs.collapse', function (e) {
+            map.invalidateSize();
+        });
+
+        function onMapClick(e) {
+            map.invalidateSize();
+            setPosition(e.latlng);
+            $("#@fieldName").val("POINT(" + e.latlng.lng + " " + e.latlng.lat + ")").trigger("change");
+        }
+
+        function setPosition(position) {
+            markerLayer.clearLayers();
+            var lat = position.lat;
+            var lon = position.lng;
+            point = [lat, lon];
+            map.setView(point, 14);
+            mark = L.marker(point, { title: point.toString(), draggable: true }).addTo(map)
+                .on('dragend', function (e) {
+                    var newPoint = e.target._latlng;
+                    $("#@fieldName").val("POINT(" + newPoint.lng + " " + newPoint.lat + ")").trigger("change");
+                });
+            markerLayer.addLayer(mark);
+        }
+
+        var mark;
+        //var zoom = 18;
+        var markerLayer = L.layerGroup();
+        var map = L.map("@fieldNameMap", {
+            minZoom: 3,
+            maxZoom: 18
+        });
+        var point = [0, 0]; // When in the insertion mode, the map is shown centered on (lat:0, lng:0) coordinates
+        var coord = ("@Model").replace("POINT(", "").replace(")", "").split(" ");
+
+        if (coord[0] != "") {
+            point = [coord[1], coord[0]];
+        }
+        //else {
+        //    zoom = 12;
+        //}
+
+        map.addLayer(markerLayer);
+
+        if ("@formmode" == "show") {
+            // view record
+            mark = L.marker(point, { title: point.toString(), draggable: false });
+            markerLayer.addLayer(mark);
+            map.setView(point, 14);
+        }
+
+        else {
+            // "@formmode" == "edit"
+
+            if (point[0] == 0 && point[1] == 0) {
+                // new record
+                map.locate({ setView: true, watch: true }) /* This will return map so you can do chaining */
+                    .on('locationfound', function (e) {
+                        // location allowed
+                        point = [e.latlng.lat, e.latlng.lng];
+                        setPosition({ lat: point[0], lng: point[1] });
+                        map.stopLocate();
+                    })
+                    .on('locationerror', function (e) {
+                        // location denied
+                        setPosition({ lat: point[0], lng: point[1] });
+                        map.setView(point, 3);
+                        alert("Location access denied.");
+                    });
+            }
+            else {
+                // update record
+                setPosition({ lat: point[0], lng: point[1] });
+            }
+        }
+
+        // Define layers
+        var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            {
+                attribution: '&copy; <a href=""http://openstreetmap.org"">OpenStreetMap</a>'
+            });
+
+        var grayscale = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+            {
+                attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
+            });
+
+        var baseLayers = {
+            "OpenStreetMap": osm,
+            "Grayscale ": grayscale,
+        };
+
+        osm.addTo(map); // OpenStreetMap is the default layer
+        map.addControl(new L.Control.Fullscreen({
+            title: {
+                'false': 'View Fullscreen',
+                'true': 'Exit Fullscreen'
+            }
+        }));
+
+        if ("@formmode" != "show")
+        {
+            L.Control.geocoder().addTo(map);
+            map.on('click', onMapClick);
+        }
+        L.control.scale().addTo(map);
+        L.control.layers(baseLayers).addTo(map);
+
+    });
+
+</script>

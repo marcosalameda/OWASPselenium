@@ -1,0 +1,229 @@
+﻿@model GenioMVC.ViewModels.Asset.WMS_Menu_ASSET_CARD_ViewModel
+@using GenioMVC.Resources
+@using System.Web.Script.Serialization
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Title = Model.DBEditTitle;
+	//Layout = "~/Views/Shared/Layouts/TopMenu_BT4/_Layout.cshtml";
+}
+
+@{
+	GenioMVC.ViewModels.Asset.WMS_Menu_ASSET_CARD_ViewModel modelWMS_Menu_ASSET_CARD = new GenioMVC.ViewModels.Asset.WMS_Menu_ASSET_CARD_ViewModel(Navigation);
+	var columns = modelWMS_Menu_ASSET_CARD.GetSearchColumns();
+
+	Dictionary<string, TableFilterField> fields = new Dictionary<string, TableFilterField>();
+
+	Dictionary<string, string> arrIdenttyp = new Dictionary<string, string>();
+	foreach(var elem in CSGenio.business.ArrayIdenttyp.GetDictionary())
+	{
+		arrIdenttyp.Add(elem.Key.ToString(), GenioMVC.Resources.Resources.ResourceManager.GetString(elem.Value.ToString()));
+	}
+
+	foreach (var col in columns)
+	{
+		var areaField = col.AreaField;
+		if (areaField.Area == "asset" && areaField.Field == "assetnum")
+		{
+			fields.Add("ASSET.ASSETNUM", new TableFilterField("ASSET", "ASSETNUM", Resources.ASSET_NUMBER52372, "num"));
+		}
+		if (areaField.Area == "asset" && areaField.Field == "name")
+		{
+			fields.Add("ASSET.NAME", new TableFilterField("ASSET", "NAME", Resources.IDENTIFICATION_NAME16317, "text", defaultSearch : true));
+		}
+		if (areaField.Area == "kinde" && areaField.Field == "designat")
+		{
+			fields.Add("KINDE.DESIGNAT", new TableFilterField("KINDE", "DESIGNAT", Resources.KIND_OF_EQUIPMENT22928, "text"));
+		}
+		if (areaField.Area == "asset" && areaField.Field == "identtyp")
+		{
+			fields.Add("ASSET.IDENTTYP", new TableFilterField("ASSET", "IDENTTYP", Resources.IDENTIFIER_TYPE60623, "enum", array : arrIdenttyp));
+		}
+		if (areaField.Area == "asset" && areaField.Field == "grai")
+		{
+			fields.Add("ASSET.GRAI", new TableFilterField("ASSET", "GRAI", Resources.GRAI10374, "text"));
+		}
+		if (areaField.Area == "asset" && areaField.Field == "giai")
+		{
+			fields.Add("ASSET.GIAI", new TableFilterField("ASSET", "GIAI", Resources.GIAI50592, "text"));
+		}
+		if (areaField.Area == "manuf" && areaField.Field == "name")
+		{
+			fields.Add("MANUF.NAME", new TableFilterField("MANUF", "NAME", Resources.MANUFACTURER50759, "text"));
+		}
+		if (areaField.Area == "manuf" && areaField.Field == "website")
+		{
+			fields.Add("MANUF.WEBSITE", new TableFilterField("MANUF", "WEBSITE", Resources.WEB_SITE06263, "text"));
+		}
+	}
+
+	JavaScriptSerializer serializer = new JavaScriptSerializer();
+	string fieldsStr = serializer.Serialize(fields);
+}
+
+<script>
+	//Fields with information for search filters
+	var fields = @Html.Raw(fieldsStr);
+	//Table List Search Filters
+	var searchFilterGroups = [];
+</script>
+
+
+@using (Ajax.BeginForm("WMS_Menu_ASSET_CARD", "Asset", new AjaxOptions
+{
+	HttpMethod= "POST",
+	InsertionMode = InsertionMode.Replace,
+	UpdateTargetId = "Menu",
+	OnSuccess = "InitMenuSpecialControls"
+}, new { @class = "form-horizontal", area="Asset", data_form="WMS_Menu_ASSET_CARD" }))
+{
+		<input id="SearchFilters" type="hidden" value="" />
+
+		<div class="page-header row" style="align-items:center">
+		   <div class="col">
+<div class="table-title c-table__title">
+					<h1>@ViewBag.Title</h1>
+	@Helpers.AuditButton()
+				</div>
+
+		   </div>
+		   <div class="col-auto search">
+				<div class="i-input-group input-xxlarge" id="WMS_Menu_ASSET_CARD_simple_filter">
+					<div data-search-filter-menu-elem="filter-box-list"></div>
+					@Html.TextBox("qWMS_Menu_ASSET_CARD", Navigation.GetStrValue("qWMS_Menu_ASSET_CARD"), new { @class="i-input-group__field input-xxlarge dropdown-toggle", @title=@Resources.CAIXA_DE_PESQUISA53870, @onfocus="ToggleSearchFilterBox('WMS_Menu_ASSET_CARD');" ,@onkeydown = "ListSearchEnter(event)", @autocomplete = "off" ,@data_toggle = "dropdown",@data_search_field_menu_elem = "show", @onblur = "HideSearchFieldMenuOnUnfocus('WMS_Menu_ASSET_CARD');",@placeholder = Resources.PESQUISAR34506 + " " + Resources.IDENTIFICATION_NAME16317})
+					<button id="qWMS_Menu_ASSET_CARD-clearBtn" class="clear-search d-none" type="button">
+						<i class="glyphicons glyphicons-remove mr-1"></i>
+					</button>
+					@Html.SearchFieldMenu("WMS_Menu_ASSET_CARD", fields, "ASSET")
+					<div class="b-btn-group i-input-group--right">
+						<button type="button" elem-identifier="ListSearchButton" class="btn b-icon b-icon--secondary i-input-group__button--secondary  listSearchButton" title="@Resources.PESQUISAR34506" onclick="AddSearchFieldFilter('WMS_Menu_ASSET_CARD', 'ASSET', 'ASSET.NAME');"><i class="glyphicons glyphicons-search i-input-group__tag-icon i-input-group__button-icon"></i></button>
+						@if (!Model.IsViewModeHidden("LIST"))
+						{
+						var advancedSearchIcon = @Model.Menu.Filters.ShowTableFilters ? "glyphicons-zoom-out" : "glyphicons-zoom-in";
+						<button id="WMS_Menu_ASSET_CARD_extra" class="btn b-icon b-icon--secondary i-input-group__button--secondary" type="button" onclick="changeFilters('#WMS_Menu_ASSET_CARD_complex_filter', 'WMS_Menu_ASSET_CARD_tableFilters');applyComplexFilterIDs();" title="@Resources.PESQUISA_AVANCADA06198"><span class="glyphicons @advancedSearchIcon i-input-group__tag-icon i-input-group__button-icon"></span></button>
+						}
+						@Html.SearchFilterMenu("WMS_Menu_ASSET_CARD")
+					</div>
+				</div>
+			</div>
+            @if(!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest() && !Model.IsViewModeHidden("LIST"))
+            {
+			<div class="col-auto float-right" style="padding: 0; padding-right: 15px">
+				<div class="b-btn-group float-right" style="height: 32.625px">
+					@*List properties LISTS*@
+					@if(!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest())
+					{
+						<button class="b-btn b-icon b-icon--secondary" type="button" data-modal-form="Lstusr" data-modal-id="lstusr-edit-modal" data-table="WMS_Menu_ASSET_CARD" data-modal-url="@Url.Action("ChangeListProperties", "Lstusr", new { idlist = "WMS_Menu_ASSET_CARD", idlistController = "Asset", idlistArea = "Asset", codlista ="cbba1257-006c-407c-bff6-cb87a80d6f4e" })" title="@Resources.ALTERAR_A_APRESENTAC58401"><i class="glyphicons glyphicons-list e-icon"></i></button>
+					}
+				</div>
+			</div>
+            }
+		</div>
+ 	<div id="Menu" element-identifier="List">
+		@{ Html.RenderPartial("WMS_Menu_ASSET_CARD_Partial"); }
+	</div>
+	@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "WMS_Menu_ASSET_CARD" })
+	@Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId)
+	@Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock())
+	@Html.AntiForgeryToken()
+}
+
+
+
+<script>
+	$(document).ready(function () {
+		window.Form_WMS_Menu_ASSET_CARD = new QMenuForm($('[data-form="WMS_Menu_ASSET_CARD"]'), "Form_WMS_Menu_ASSET_CARD");
+		window.Form_WMS_Menu_ASSET_CARD.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_WMS_Menu_ASSET_CARD.Init();
+
+		//Initialize search field menu for search bar
+		InitSearchFieldMenu("qWMS_Menu_ASSET_CARD");
+		RegisterClearEvents("WMS_Menu_ASSET_CARD")
+
+		// TVC - added code to load advanced filters after returning from a form
+		@{
+			string advFil = "";
+			if (!String.IsNullOrEmpty(Navigation.GetStrValue("AdvancedFilters")))
+			{
+				advFil = Navigation.GetStrValue("AdvancedFilters");
+			}
+		}
+
+		SearchFilters.value = '@Html.Raw(advFil)';
+		if (typeof SearchFilters.value === 'string' && SearchFilters.value.length > 0)
+			UpdateSearchFilterStatus("WMS_Menu_ASSET_CARD", JSON.parse(SearchFilters.value))
+	});
+</script>
+
+@helper codeJavascript()
+{
+<script>
+	QLocalStorage.remLocalStorage("savedInfo");
+	$(document).ready(function (e) {
+		InitSpecialControls($('[data-form="WMS_Menu_ASSET_CARD"]'));
+
+
+ 	});
+
+	function InitMenuSpecialControls() {
+		InitSpecialControls($('[data-form="WMS_Menu_ASSET_CARD"]'));
+	}
+
+	function ToggleTopInsertButton(bottomInsertBtn, insertBtnContainer) {
+		if (bottomInsertBtn) {
+			if ($(window).scrollTop() + $(window).height() > $(document).height() - 50)
+				insertBtnContainer.addClass("menu-insert-btn-top-hidden");
+			else
+				insertBtnContainer.removeClass("menu-insert-btn-top-hidden");
+		}
+	}
+
+	var nav = $('#header-container > nav')[0];
+	var header = $(".page-header");
+	var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+	var breadcrumbs = $('#breadcrumbs').height() ? $('#breadcrumbs') : $('[aria-label=breadcrumb]');
+	header.css('min-height', 50);
+
+	// get the insert button
+	var bottomInsertBtn = $('[qbutton=insert]')[0];
+
+	if (bottomInsertBtn) {
+		var insertBtn = $.clone($('[qbutton=insert]')[0]);
+		insertBtn.innerHTML = insertBtn.innerHTML.replace(insertBtn.innerText, '');
+		insertBtn = $(insertBtn);
+		insertBtn.removeClass();
+		insertBtn.addClass('b-btn b-icon b-icon--secondary');
+
+		// find the page header
+		var pageHeader = $('.page-header')[0];
+		var newCol = $("<div class='col'></div>");
+
+		// insert
+		var insertBtnContainer = $("<div class='menu-insert-btn-top c-action-bar b-btn-group'></div>");
+		insertBtn.appendTo(insertBtnContainer);
+		insertBtnContainer.appendTo(newCol);
+		$(".page-header > div:nth-child(1)").after($(newCol));
+
+		// adjust table title max width
+		$('.table-title').parent().addClass("table-title-min");
+		insertBtnContainer.parent().css("margin-left", "-.7rem");
+
+		insertBtnContainer.addClass("menu-insert-btn-top-hidden");
+		if ($(window).scrollTop() + $(window).height() <= $(document).height() - 50)
+			insertBtnContainer.removeClass("menu-insert-btn-top-hidden");
+	}
+
+	$(window).scroll(function () {
+		ToggleMenuStickyHeader(nav, header, breadcrumbs, threshold_el);
+		ToggleTopInsertButton(bottomInsertBtn, insertBtnContainer);
+	});
+
+	$(window).resize(function () {
+		ToggleTopInsertButton(bottomInsertBtn, insertBtnContainer);
+	})
+</script>
+}
+
+@section code_javascript {
+	@codeJavascript()
+}

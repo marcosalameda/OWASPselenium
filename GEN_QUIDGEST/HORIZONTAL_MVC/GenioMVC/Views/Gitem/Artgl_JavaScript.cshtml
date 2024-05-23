@@ -1,0 +1,310 @@
+﻿@model GenioMVC.ViewModels.Gitem.Artgl_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS ARTGL]/ *@
+<script  type="text/javascript">
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Artgl !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Artgl = new QForm($('[data-form="Artgl"]'), "Form_Artgl");
+		}
+		window.Form_Artgl.baseArea = "gitem";
+		window.Form_Artgl.FormMode = '@Model.GetFormMode';
+		window.Form_Artgl.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Artgl.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Gitem")',
+			GetDependants:		'@Url.Action("GetDependants", "Gitem")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Artgl", "Gitem")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Artgl", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Gitem", "Gitem")',
+		};
+		window.Form_Artgl.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Artgl.formSaveEdit = '@Url.Action("Artgl_SaveEdit", "Gitem")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Artgl.formAction = 'Artgl_New';
+		window.Form_Artgl.formRedirectURL = '@Url.Action("Artgl_New_Redirect", "Gitem")';
+		window.Form_Artgl.formSubmitURL = '@Url.Action("Artgl_New", "Gitem")';
+		window.Form_Artgl.formRedirectURL_repeatInsertion = '@Url.Action("Artgl_New_Redirect", "Gitem", new { repeatInsertion = true})';
+		window.Form_Artgl.formSubmitURL_repeatInsertion = '@Url.Action("Artgl_New", "Gitem", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Artgl.formAction = 'Artgl_Edit';
+		window.Form_Artgl.formRedirectURL = '@Url.Action("Artgl_Edit_Redirect", "Gitem")';
+		window.Form_Artgl.formSubmitURL = '@Url.Action("Artgl_Edit", "Gitem")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Artgl.formAction = 'Artgl_Duplicate';
+		window.Form_Artgl.formRedirectURL = '@Url.Action("Artgl_Duplicate_Redirect", "Gitem")';
+		window.Form_Artgl.formSubmitURL = '@Url.Action("Artgl_Duplicate", "Gitem")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Artgl.formAction = 'Artgl_Delete';
+		window.Form_Artgl.formRedirectURL = '@Url.Action("Artgl_Delete_Redirect", "Gitem")';
+		window.Form_Artgl.formSubmitURL = '@Url.Action("Artgl_Delete", "Gitem")';
+	</text>
+}
+		window.Form_Artgl.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.LED_ARTGL___GITEMITEMDES_ = new QTextControl($('[data-identifier="LED_ARTGL___GITEMITEMDES_"]', this.element), window.Form_Artgl);
+
+			this.Controls.LED_ARTGL___GITEMITEMGCOD = new QTextControl($('[data-identifier="LED_ARTGL___GITEMITEMGCOD"]', this.element), window.Form_Artgl);
+
+			this.Controls.LED_ARTGL___GITEMDOCUMENT = new QTextControl($('[data-identifier="LED_ARTGL___GITEMDOCUMENT"]', this.element), window.Form_Artgl);
+
+
+
+
+			this.Controls.LED_ARTGL___GITEMCODGITEM = new QHiddenControl($('[data-identifier="LED_ARTGL___GITEMCODGITEM"]', this.element), window.Form_Artgl);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	</text>
+}
+
+		window.Form_Artgl.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Artgl.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI ARTGL]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Artgl.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS ARTGL]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Artgl.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS ARTGL]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Artgl.Data.RelationKeysSelector = {
+		};
+
+		window.Form_Artgl.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Artgl.Data.RelationKeys = {
+			get formContext() { return window.Form_Artgl; },
+		};
+	</text>
+}
+
+	window.Form_Artgl.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Artgl.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitArtgl(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Artgl.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeleteArtgl(event) {
+			event.preventDefault();
+			window.Form_Artgl.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+    modal_QuidgestGlobals = {
+        UrlAction: {
+            newWindow: '@Url.Action("newWindow")',
+            ReloadDBEdit: '@Url.Action("ReloadDBEdit")',
+            formArea: '	@Url.Action("form", "area")',
+            UpdateValues: '@Url.Action("UpdateValues")',
+            LogJavaScriptError: '@Url.Action("LogJavaScriptError", "ApplicationErrors")',
+            syncFormKeys: '@Url.Action("syncFormKeys")',
+            GetDependants: 		'@Url.Action("GetDependants")',
+            ImageHandlerPut:		'@Url.Action("ImageHandlerPut")',
+            ImageHandlerGet:		'@Url.Action("ImageHandlerGet")'
+        }
+    };
+$(document).ready(function () {
+	loaded($("#form-modal"));
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+	var ajaxCallsRemaining = $("#form-modal .flash object embed").length;
+	$('#form-modal form [elem-identifier="ButtonPrimary"]').click(function() {
+		var flashObjects = $("#form-modal .flash object embed");
+		ajaxCallsRemaining = flashObjects.length;
+		if(flashObjects.length == 0)
+			return true;
+		else {
+			flashObjects.each(function() {
+			   var flashObj = GetFlash($(this).attr('id'))
+			   flashObj.UsedFlash.TriggerSave(flashObj);
+			});
+			return false;
+		}
+	});
+    </text>
+}
+});
+// USE /[MANUAL GQT FORM_CODEJS ARTGL]/
+
+
+
+ 
+
+    $($('[elem-identifier="Actions"]'), $('[data-form="Artgl"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

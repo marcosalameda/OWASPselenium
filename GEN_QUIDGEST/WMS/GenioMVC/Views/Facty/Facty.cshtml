@@ -1,0 +1,349 @@
+﻿@model GenioMVC.ViewModels.Facty.Facty_ViewModel
+@using GenioMVC.Models.Navigation;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Form = "Facty";
+	ViewBag.Title = @Resources.FACILITY_TYPE44577;
+    ViewBag.formmode = Model.GetFormMode;
+	ViewBag.ClassForFormLayout = "form-flow";
+}
+
+
+@if (!Model.NestedForm) {
+    if(Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+    {
+        using (Html.BeginForm("Action", "Facty", FormMethod.Post, new { @class = "form-horizontal", area="Facty", data_form="Facty" }))
+        {
+            @form_content_alert()
+            @Html.QValidationSummary()
+	        @LoadDefault()
+        }
+    }
+    else
+    {
+        <div class="form-horizontal" id="Facty" area="Facty" data-form="Facty">
+	        @LoadDefault()
+        </div>
+    }
+}
+else {
+    <div class="c-card nested-form" id="Facty_well" area="Facty" data-form="Facty">
+        @Html.QValidationSummary()
+		@LoadDefault()
+    </div>
+}
+
+@helper form_content_body() {
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_FACTY___FACTYTYPE____">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValType, new { label_id="LED_FACTY___FACTYTYPE____", @class = " i-text__label", id="LABEL_LED_FACTY___FACTYTYPE____"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_FACTY___FACTYTYPE____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextBoxFor(model => model.ValType, new {help_id = "LED_FACTY___FACTYTYPE____", @class = "i-text__field i-text input-medium", data_identifier = "LED_FACTY___FACTYTYPE____", @pers_cs_area = "Facty", @pers_cs_field = "ValType", @db_field = "ValType", title = @Resources.FACILITY_TYPE44577, maxlength = "25", rows = "25" })
+								@Html.ValidationMessageFor(model => model.ValType)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_FACTY___FACTYLAYRNAME">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValLayrname, new { label_id="LED_FACTY___FACTYLAYRNAME", @class = " i-text__label", id="LABEL_LED_FACTY___FACTYLAYRNAME"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_FACTY___FACTYLAYRNAME','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextBoxFor(model => model.ValLayrname, new {help_id = "LED_FACTY___FACTYLAYRNAME", @class = "i-text__field i-text input-xlarge", data_identifier = "LED_FACTY___FACTYLAYRNAME", @pers_cs_area = "Facty", @pers_cs_field = "ValLayrname", @db_field = "ValLayrname", title = @Resources.LAYER_NAME49545, maxlength = "50", rows = "50" })
+								@Html.ValidationMessageFor(model => model.ValLayrname)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_FACTY___FACTYICONURL_">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValIconurl, new { label_id="LED_FACTY___FACTYICONURL_", @class = " i-text__label", id="LABEL_LED_FACTY___FACTYICONURL_"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_FACTY___FACTYICONURL_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextBoxFor(model => model.ValIconurl, new {help_id = "LED_FACTY___FACTYICONURL_", @class = "i-text__field i-text input-xlarge", data_identifier = "LED_FACTY___FACTYICONURL_", @pers_cs_area = "Facty", @pers_cs_field = "ValIconurl", @db_field = "ValIconurl", title = @Resources.ICON_URL07016, maxlength = "50", rows = "50" })
+								@Html.ValidationMessageFor(model => model.ValIconurl)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_FACTY___FACTYSHADOWUR">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValShadowur, new { label_id="LED_FACTY___FACTYSHADOWUR", @class = " i-text__label", id="LABEL_LED_FACTY___FACTYSHADOWUR"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_FACTY___FACTYSHADOWUR','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextBoxFor(model => model.ValShadowur, new {help_id = "LED_FACTY___FACTYSHADOWUR", @class = "i-text__field i-text input-xlarge", data_identifier = "LED_FACTY___FACTYSHADOWUR", @pers_cs_area = "Facty", @pers_cs_field = "ValShadowur", @db_field = "ValShadowur", title = @Resources.SHADOW_URL57805, maxlength = "50", rows = "50" })
+								@Html.ValidationMessageFor(model => model.ValShadowur)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_FACTY___FACTYICONANCX">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValIconancx, new { label_id="LED_FACTY___FACTYICONANCX", @class = " i-text__label", id="LABEL_LED_FACTY___FACTYICONANCX"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_FACTY___FACTYICONANCX','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValIconancx, new {help_id = "LED_FACTY___FACTYICONANCX", @class = "Number text-right i-text__field i-text input-medium", data_identifier = "LED_FACTY___FACTYICONANCX", @pers_cs_area = "Facty", @pers_cs_field = "ValIconancx", @db_field = "ValIconancx", title = @Resources.ICON_ANCHOR__X_AXIS_18664, data_number_integer = "3", data_number_decimals = "0", data_number_format = "999" })
+								@Html.ValidationMessageFor(model => model.ValIconancx)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_FACTY___FACTYICONANCY">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValIconancy, new { label_id="LED_FACTY___FACTYICONANCY", @class = " i-text__label", id="LABEL_LED_FACTY___FACTYICONANCY"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_FACTY___FACTYICONANCY','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValIconancy, new {help_id = "LED_FACTY___FACTYICONANCY", @class = "Number text-right i-text__field i-text input-medium", data_identifier = "LED_FACTY___FACTYICONANCY", @pers_cs_area = "Facty", @pers_cs_field = "ValIconancy", @db_field = "ValIconancy", title = @Resources.ICON_ANCHOR__Y_AXIS_63725, data_number_integer = "3", data_number_decimals = "0", data_number_format = "999" })
+								@Html.ValidationMessageFor(model => model.ValIconancy)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_FACTY___FACTYICONHEIG">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValIconheig, new { label_id="LED_FACTY___FACTYICONHEIG", @class = " i-text__label", id="LABEL_LED_FACTY___FACTYICONHEIG"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_FACTY___FACTYICONHEIG','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValIconheig, new {help_id = "LED_FACTY___FACTYICONHEIG", @class = "Number text-right i-text__field i-text input-mini", data_identifier = "LED_FACTY___FACTYICONHEIG", @pers_cs_area = "Facty", @pers_cs_field = "ValIconheig", @db_field = "ValIconheig", title = @Resources.ICON_HEIGHT61896, data_number_integer = "3", data_number_decimals = "0", data_number_format = "999" })
+								@Html.ValidationMessageFor(model => model.ValIconheig)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_FACTY___FACTYICONWID_">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValIconwid, new { label_id="LED_FACTY___FACTYICONWID_", @class = " i-text__label", id="LABEL_LED_FACTY___FACTYICONWID_"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_FACTY___FACTYICONWID_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValIconwid, new {help_id = "LED_FACTY___FACTYICONWID_", @class = "Number text-right i-text__field i-text input-mini", data_identifier = "LED_FACTY___FACTYICONWID_", @pers_cs_area = "Facty", @pers_cs_field = "ValIconwid", @db_field = "ValIconwid", title = @Resources.ICON_WIDTH02295, data_number_integer = "3", data_number_decimals = "0", data_number_format = "999" })
+								@Html.ValidationMessageFor(model => model.ValIconwid)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_FACTY___FACTYPOPUPANX">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValPopupanx, new { label_id="LED_FACTY___FACTYPOPUPANX", @class = " i-text__label", id="LABEL_LED_FACTY___FACTYPOPUPANX"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_FACTY___FACTYPOPUPANX','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValPopupanx, new {help_id = "LED_FACTY___FACTYPOPUPANX", @class = "Number text-right i-text__field i-text input-medium", data_identifier = "LED_FACTY___FACTYPOPUPANX", @pers_cs_area = "Facty", @pers_cs_field = "ValPopupanx", @db_field = "ValPopupanx", title = @Resources.POPUP_ANCHOR__X_AXIS15060, data_number_integer = "3", data_number_decimals = "0", data_number_format = "999" })
+								@Html.ValidationMessageFor(model => model.ValPopupanx)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_FACTY___FACTYPOPUPANY">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValPopupany, new { label_id="LED_FACTY___FACTYPOPUPANY", @class = " i-text__label", id="LABEL_LED_FACTY___FACTYPOPUPANY"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_FACTY___FACTYPOPUPANY','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValPopupany, new {help_id = "LED_FACTY___FACTYPOPUPANY", @class = "Number text-right i-text__field i-text input-medium", data_identifier = "LED_FACTY___FACTYPOPUPANY", @pers_cs_area = "Facty", @pers_cs_field = "ValPopupany", @db_field = "ValPopupany", title = @Resources.POPUP_ANCHOR__Y_AXIS64670, data_number_integer = "3", data_number_decimals = "0", data_number_format = "999" })
+								@Html.ValidationMessageFor(model => model.ValPopupany)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_FACTY___FACTYSHADOWAX">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValShadowax, new { label_id="LED_FACTY___FACTYSHADOWAX", @class = " i-text__label", id="LABEL_LED_FACTY___FACTYSHADOWAX"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_FACTY___FACTYSHADOWAX','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValShadowax, new {help_id = "LED_FACTY___FACTYSHADOWAX", @class = "Number text-right i-text__field i-text input-medium", data_identifier = "LED_FACTY___FACTYSHADOWAX", @pers_cs_area = "Facty", @pers_cs_field = "ValShadowax", @db_field = "ValShadowax", title = @Resources.SHADOW_ANCHOR__X_AXI31230, data_number_integer = "3", data_number_decimals = "0", data_number_format = "999" })
+								@Html.ValidationMessageFor(model => model.ValShadowax)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_FACTY___FACTYSHADOWAY">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValShadoway, new { label_id="LED_FACTY___FACTYSHADOWAY", @class = " i-text__label", id="LABEL_LED_FACTY___FACTYSHADOWAY"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_FACTY___FACTYSHADOWAY','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValShadoway, new {help_id = "LED_FACTY___FACTYSHADOWAY", @class = "Number text-right i-text__field i-text input-medium", data_identifier = "LED_FACTY___FACTYSHADOWAY", @pers_cs_area = "Facty", @pers_cs_field = "ValShadoway", @db_field = "ValShadoway", title = @Resources.SHADOW_ANCHOR__Y_AXI51495, data_number_integer = "3", data_number_decimals = "0", data_number_format = "999" })
+								@Html.ValidationMessageFor(model => model.ValShadoway)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_FACTY___FACTYSHADOWHE">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValShadowhe, new { label_id="LED_FACTY___FACTYSHADOWHE", @class = " i-text__label", id="LABEL_LED_FACTY___FACTYSHADOWHE"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_FACTY___FACTYSHADOWHE','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValShadowhe, new {help_id = "LED_FACTY___FACTYSHADOWHE", @class = "Number text-right i-text__field i-text input-small", data_identifier = "LED_FACTY___FACTYSHADOWHE", @pers_cs_area = "Facty", @pers_cs_field = "ValShadowhe", @db_field = "ValShadowhe", title = @Resources.SHADOW_HEIGHT64343, data_number_integer = "3", data_number_decimals = "0", data_number_format = "999" })
+								@Html.ValidationMessageFor(model => model.ValShadowhe)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_FACTY___FACTYSHADOWWI">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValShadowwi, new { label_id="LED_FACTY___FACTYSHADOWWI", @class = " i-text__label", id="LABEL_LED_FACTY___FACTYSHADOWWI"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_FACTY___FACTYSHADOWWI','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValShadowwi, new {help_id = "LED_FACTY___FACTYSHADOWWI", @class = "Number text-right i-text__field i-text input-small", data_identifier = "LED_FACTY___FACTYSHADOWWI", @pers_cs_area = "Facty", @pers_cs_field = "ValShadowwi", @db_field = "ValShadowwi", title = @Resources.SHADOW_WIDTH01769, data_number_integer = "3", data_number_decimals = "0", data_number_format = "999" })
+								@Html.ValidationMessageFor(model => model.ValShadowwi)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			@Html.HiddenFor(model => model.ValCodfacty, new { @pers_cs_field="ValCodfacty", @pers_cs_area="Facty", data_refresh = "true", @form_area="true", @data_value = Model.ValCodfacty, @data_identifier = "LED_FACTY___FACTYCODFACTY" })
+
+            @Html.Hidden("IgnoreWarnings", "false", new { id = "IgnoreWarnings" })
+
+			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Facty" })
+            @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Facty" })
+            @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Facty" })
+			if (!Model.NestedForm)
+            {
+                @Html.AntiForgeryToken()
+            }
+}
+
+@helper form_content_alert() {
+	if(Model.FormMode == FormMode.Delete) {
+		<div class="c-alert c-alert--warning">
+			<i class="glyphicons glyphicons-alert c-alert__icon" aria-hidden="true"></i>
+			<div class="c-alert__text">
+				&ensp;@Resources.DESEJA_ELIMINAR_ESTA24564
+			</div>
+		<!--Ao confirmar esta ficha irá ser eliminada da base de dados. Cancele caso não tenha a certeza.-->
+		</div>
+	}
+}
+
+@helper form_content_buttons() {
+
+
+
+
+    @* Extended support form *@
+    if (Model.NestedForm)
+    {
+        if (Model.IsEditableMode)
+        {
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("Facty", Model.FormMode).ToString(), "Facty")", "Facty_well")' qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>
+                    @Resources.GRAVAR45301
+            </button>
+            <button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Facty_Delete", "Facty", new {id = @Model.ValCodfacty} )", "Facty_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+
+            <script type="application/javascript">
+                $(document).ready(function () { loaded($("#Facty_well")); });
+            </script>
+        }
+
+        @* javascript code_javascript *@
+        @*@codeJavascript()*@
+    }
+    @* Normal mode *@
+    else
+    {
+        if (Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+        {
+            if (Model.FormMode == FormMode.New && Convert.ToBoolean(Model.Navigation.CurrentLevel.GetEntry("repeatInsertion")))
+            {
+            <button type="button" data-end-pers="true" name="Facty_repete_insertion" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitFacty(event, true)" qbutton="ok_new">@Resources.GRAVAR_E_CRIAR_NOVA17771</button>
+            }
+            if(Model.FormMode == FormMode.Delete)
+            {
+				<button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Facty", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitDeleteFacty(event)" qbutton="delete">
+                    <i class="glyphicons glyphicons-check e-icon" aria-hidden="true"></i>@Resources.CONFIRMAR09808
+                </button>
+            }
+            else
+            {
+                <button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Facty", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitFacty(event)" title="@Resources.GRAVAR45301" data-selector="true" qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>@Resources.GRAVAR45301
+                </button>
+            }
+
+            <button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-href="@Url.Action("Facty_Cancel", "Facty", new { niv = Model.Navigation.CurrentLevel.Level })" onclick="javascript:window.Form_Facty.Cancel()" title="@Resources.CANCEL65428" data-selector="true" qbutton="cancel">
+                <i class="glyphicons glyphicons-ban-circle e-icon" aria-hidden="true"></i>@Resources.CANCEL65428
+            </button>
+        }
+        else if (!(ViewBag.isHomePage ?? false))
+        {
+            @Html.ActionLinkWithIcon(@Resources.RETROCEDER16633, "Facty_Cancel","Facty","glyphicons glyphicons-arrow-left e-icon", null, new { @class = "b-icon-text b-icon-text--secondary", @data_end_pers = "true", @title = @Resources.RETROCEDER16633, qbutton = "cancel" })
+        }
+    }
+}
+
+@helper LoadDefault() {
+    if (Model.NestedForm)
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div class="c-card__header">
+                    <div class="c-card__header-tag">
+						<span class="form-header" style="padding:0;">
+							<i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+						</span>
+                    </div>
+                </div>
+                <div class="c-card__body">
+                    @form_content_body()
+                    <div elem-identifier="FormActions" class="form-actions" data-form-actions="Facty">
+                        @form_content_buttons()
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    }
+    else
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div id="c-stickyHeader">
+                    <div class="c-action-bar d-flex">
+                        <span class="form-header">
+                            <i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+                        </span>
+                        <div data-parent-form="Facty" data-q-ref="form-btns-main_container"></div>
+                    </div>
+                </div>
+
+                @form_content_body()
+                <div elem-identifier="FormActions" class="form-actions" data-form-actions="Facty">
+                @form_content_buttons()
+                </div>
+            </div>
+        </fieldset>
+    }
+}
+
+@helper LoadFromLayout()
+{
+}
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT FACTY]/ *@
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_FACTY" data-form-javascript="true">
+@Html.Partial("Facty_JavaScript", Model, ViewData)
+</div>
+}
+
+@section code_javascript
+{
+	@codeJavascript()
+}
+
+@if (Request.IsAjaxRequest())
+{
+    @codeJavascript()
+    @includeStylesheets()
+}
+
+@helper includeStylesheets()
+{
+
+ }
+
+@section include_stylesheets {
+    @includeStylesheets()
+}

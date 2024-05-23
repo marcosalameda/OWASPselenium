@@ -1,0 +1,317 @@
+﻿@model GenioMVC.ViewModels.Dilin.Dilin_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS DILIN]/ *@
+<script  type="text/javascript">
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Dilin !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Dilin = new QForm($('[data-form="Dilin"]'), "Form_Dilin");
+		}
+		window.Form_Dilin.baseArea = "dilin";
+		window.Form_Dilin.FormMode = '@Model.GetFormMode';
+		window.Form_Dilin.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Dilin.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Dilin")',
+			GetDependants:		'@Url.Action("GetDependants", "Dilin")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Dilin", "Dilin")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Dilin", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Dilin", "Dilin")',
+		};
+		window.Form_Dilin.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Dilin.formSaveEdit = '@Url.Action("Dilin_SaveEdit", "Dilin")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Dilin.formAction = 'Dilin_New';
+		window.Form_Dilin.formRedirectURL = '@Url.Action("Dilin_New_Redirect", "Dilin")';
+		window.Form_Dilin.formSubmitURL = '@Url.Action("Dilin_New", "Dilin")';
+		window.Form_Dilin.formRedirectURL_repeatInsertion = '@Url.Action("Dilin_New_Redirect", "Dilin", new { repeatInsertion = true})';
+		window.Form_Dilin.formSubmitURL_repeatInsertion = '@Url.Action("Dilin_New", "Dilin", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Dilin.formAction = 'Dilin_Edit';
+		window.Form_Dilin.formRedirectURL = '@Url.Action("Dilin_Edit_Redirect", "Dilin")';
+		window.Form_Dilin.formSubmitURL = '@Url.Action("Dilin_Edit", "Dilin")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Dilin.formAction = 'Dilin_Duplicate';
+		window.Form_Dilin.formRedirectURL = '@Url.Action("Dilin_Duplicate_Redirect", "Dilin")';
+		window.Form_Dilin.formSubmitURL = '@Url.Action("Dilin_Duplicate", "Dilin")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Dilin.formAction = 'Dilin_Delete';
+		window.Form_Dilin.formRedirectURL = '@Url.Action("Dilin_Delete_Redirect", "Dilin")';
+		window.Form_Dilin.formSubmitURL = '@Url.Action("Dilin_Delete", "Dilin")';
+	</text>
+}
+		window.Form_Dilin.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.IFF_DILIN___DISPADISPANR_ = new QDbeditControl($('[data-identifier="IFF_DILIN___DISPADISPANR_"]', this.element), window.Form_Dilin);
+
+			this.Controls.LED_DILIN___DILINLINENUMB = new QNumericControl($('[data-identifier="LED_DILIN___DILINLINENUMB"]', this.element), window.Form_Dilin);
+
+			this.Controls.IFF_DILIN___PRODUPRODUCT_ = new QDbeditControl($('[data-identifier="IFF_DILIN___PRODUPRODUCT_"]', this.element), window.Form_Dilin);
+
+			this.Controls.LED_DILIN___DILINORDERED_ = new QNumericControl($('[data-identifier="LED_DILIN___DILINORDERED_"]', this.element), window.Form_Dilin);
+
+			this.Controls.LED_DILIN___DILINDELIVERE = new QNumericControl($('[data-identifier="LED_DILIN___DILINDELIVERE"]', this.element), window.Form_Dilin);
+
+			this.Controls.LED_DILIN___DILINOUTSTAND = new QNumericControl($('[data-identifier="LED_DILIN___DILINOUTSTAND"]', this.element), window.Form_Dilin);
+
+
+
+
+			this.Controls.LED_DILIN___DILINCODDILIN = new QHiddenControl($('[data-identifier="LED_DILIN___DILINCODDILIN"]', this.element), window.Form_Dilin);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	</text>
+}
+
+		window.Form_Dilin.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Dilin.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI DILIN]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Dilin.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS DILIN]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Dilin.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS DILIN]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Dilin.Data.RelationKeysSelector = {
+				get dispa() { return $(':not([elem-identifier="Multiform"]) > #ValCoddispa[pers-cs-area="Dispa"]', $('[data-form="Dilin"]')); /* DBEdit */ },
+				get produ() { return $(':not([elem-identifier="Multiform"]) > #ValCodprodu[pers-cs-area="Produ"]', $('[data-form="Dilin"]')); /* DBEdit */ },
+		};
+
+		window.Form_Dilin.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Dilin.Data.RelationKeys = {
+			get formContext() { return window.Form_Dilin; },
+			get dispa() { return (this.formContext.Data.RelationKeysSelector.dispa.getQControl() || {}).Value; /* DBEdit */ },
+			set dispa(newValue) { (this.formContext.Data.RelationKeysSelector.dispa.getQControl() || {}).Value = newValue; /* DBEdit */ },
+			get produ() { return (this.formContext.Data.RelationKeysSelector.produ.getQControl() || {}).Value; /* DBEdit */ },
+			set produ(newValue) { (this.formContext.Data.RelationKeysSelector.produ.getQControl() || {}).Value = newValue; /* DBEdit */ },
+		};
+	</text>
+}
+
+	window.Form_Dilin.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+		@* Formula of the 'ValOutstand' field *@
+		$(qForm).bind('VALORDERED_CHANGE VALDELIVERE_CHANGE', function(event, eTarget) {
+				try {
+						var newValue = ( getFieldValue($(':not([elem-identifier="Multiform"]) > #ValOrdered', $('[data-form="Dilin"]')))- getFieldValue($(':not([elem-identifier="Multiform"]) > #ValDelivere', $('[data-form="Dilin"]'))));
+						$.when(newValue).done(function (result) {
+								setFieldValue($(':not([elem-identifier="Multiform"]) > #ValOutstand', $('[data-form="Dilin"]')), result);
+								if($(':not([elem-identifier="Multiform"]) > #ValOutstand', $('[data-form="Dilin"]')).data('QObject') === undefined) $(':not([elem-identifier="Multiform"]) > #ValOutstand', $('[data-form="Dilin"]')).change(); //TODO: Remove this later...
+						});
+				} catch (err) { QError.AppendError('Formula of field ValOutstand: ' + err.message, err.stack, window.location.href); }
+		});
+		
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Dilin.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitDilin(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Dilin.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeleteDilin(event) {
+			event.preventDefault();
+			window.Form_Dilin.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+    var ajaxCallsRemaining = $(".flash object embed").length;
+    $('form [elem-identifier="ButtonPrimary"]').click(function() {
+        var flashObjects = $(".flash object embed");
+        ajaxCallsRemaining = flashObjects.length;
+        if(flashObjects.length == 0)
+            return true;
+        else {
+            flashObjects.each(function() {
+               var flashObj = GetFlash($(this).attr('id'));
+               flashObj.UsedFlash.TriggerSave(flashObj);
+            });
+            return false;
+        }
+    });
+    </text>
+}
+// USE /[MANUAL GQT FORM_CODEJS DILIN]/
+
+
+
+ 
+
+    $($('[elem-identifier="FormActions"]'), $('[data-form="Dilin"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

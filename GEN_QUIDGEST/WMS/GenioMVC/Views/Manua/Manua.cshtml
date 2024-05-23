@@ -1,0 +1,271 @@
+﻿@model GenioMVC.ViewModels.Manua.Manua_ViewModel
+@using GenioMVC.Models.Navigation;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Form = "Manua";
+	ViewBag.Title = @Resources.MANUAL_TO_COLLECT13417;
+    ViewBag.formmode = Model.GetFormMode;
+	ViewBag.ClassForFormLayout = "form-flow";
+}
+
+
+@if (!Model.NestedForm) {
+    if(Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+    {
+        using (Html.BeginForm("Action", "Manua", FormMethod.Post, new { enctype="multipart/form-data", @class = "form-horizontal", area="Manua", data_form="Manua" }))
+        {
+            @form_content_alert()
+            @Html.QValidationSummary()
+	        @LoadDefault()
+        }
+    }
+    else
+    {
+        <div class="form-horizontal" id="Manua" area="Manua" data-form="Manua">
+	        @LoadDefault()
+        </div>
+    }
+}
+else {
+    <div class="c-card nested-form" id="Manua_well" area="Manua" data-form="Manua">
+        @Html.QValidationSummary()
+		@LoadDefault()
+    </div>
+}
+
+@helper form_content_body() {
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-dbedit draggable " id="CONTAINER_IFF_MANUA___KINDEDESIGNAT">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.TableKindeDesignat, new { label_id="IFF_MANUA___KINDEDESIGNAT", @class = " i-text__label", id="LABEL_IFF_MANUA___KINDEDESIGNAT"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('IFF_MANUA___KINDEDESIGNAT','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DropDownListFor(model => model.ValCodkinde, Model.TableKindeDesignat.List , "", new {help_id = "IFF_MANUA___KINDEDESIGNAT", @class = "i-select chosen-dropdown input-xxlarge", data_identifier = "IFF_MANUA___KINDEDESIGNAT", @pers_cs_area = "Kinde", @pers_cs_field = "ValCodkinde", @db_field = "ValCodkinde", @db_full_field_name = "manua.codkinde", data_has_more = Model.TableKindeDesignat.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableKindeDesignat.Selected, data_dbedit_value = Model.TableKindeDesignat.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodmanua, @data_see_more = "Manua_KindeValDesignat", title = @Resources.KIND_OF_EQUIPMENT22928, data_see_more_url = @Url.Action("Manua_KindeValDesignat","Manua"), data_is_dbedit = "true", data_fields = "kinde.codkinde,kinde.designat", data_main_field = "Kinde.ValDesignat", data_elements = 0, data_filled_by_history = Model.TableKindeDesignat.FilledByHistory, @dependant_fields = "kinde.codkinde,kinde.designat" })
+								@Html.ValidationMessageFor(model => model.TableKindeDesignat)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_MANUA___MANUANAME____">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValName, new { label_id="LED_MANUA___MANUANAME____", @class = " i-text__label", id="LABEL_LED_MANUA___MANUANAME____"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_MANUA___MANUANAME____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextBoxFor(model => model.ValName, new {help_id = "LED_MANUA___MANUANAME____", @class = "i-text__field i-text input-xlarge", data_identifier = "LED_MANUA___MANUANAME____", @pers_cs_area = "Manua", @pers_cs_field = "ValName", @db_field = "ValName", title = @Resources.MANUAL_NAME60077, maxlength = "50", rows = "50" })
+								@Html.ValidationMessageFor(model => model.ValName)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-document draggable " id="CONTAINER_LED_MANUA___MANUADIGDOCUM">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValDigdocum, new { label_id="LED_MANUA___MANUADIGDOCUM", @class = " i-text__label", id="LABEL_LED_MANUA___MANUADIGDOCUM"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_MANUA___MANUADIGDOCUM','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@if (Model.IsEditableMode) {
+									@Html.EditorFor(model => model.ValDigdocum, new { fieldFk = Model.ValDigdocumfk, docProperties = Model.ValDigdocumPropertiesVM, baseArea = "Manua", baseAreaKey = Model.ValCodmanua, useTemplates =  false, data_identifier="LED_MANUA___MANUADIGDOCUM", identifier = "FMANUA", fieldSize = "input-xxlarge", isRequired = false, maxSize = "null", allowedTypes = "null", htmlAttributes = new {help_id = "LED_MANUA___MANUADIGDOCUM", title = @Resources.DIGITAL_DOCUMENT59580 }})
+								} else {
+									@Html.DisplayFor(model => model.ValDigdocum, new { fieldFk = Model.ValDigdocumfk, docProperties = Model.ValDigdocumPropertiesVM, baseArea = "Manua", baseAreaKey = Model.ValCodmanua, useTemplates =  false, data_identifier="LED_MANUA___MANUADIGDOCUM", identifier = "FMANUA", fieldSize = "input-xxlarge", htmlAttributes = new {help_id = "LED_MANUA___MANUADIGDOCUM", title = @Resources.DIGITAL_DOCUMENT59580 }})
+								}
+								@Html.ValidationMessageFor(model => model.ValDigdocum)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-textarea draggable " id="CONTAINER_LED_MANUA___MANUANOTES___">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValNotes, new { label_id="LED_MANUA___MANUANOTES___", @class = " i-text__label", id="LABEL_LED_MANUA___MANUANOTES___"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_MANUA___MANUANOTES___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextAreaFor(model => model.ValNotes, 5, 65, new {help_id = "LED_MANUA___MANUANOTES___", @class = "i-textarea__field i-textarea input-xxlarge", data_identifier = "LED_MANUA___MANUANOTES___", @pers_cs_area = "Manua", @pers_cs_field = "ValNotes", @db_field = "ValNotes", title = @Resources.NOTES05274 })
+								@Html.ValidationMessageFor(model => model.ValNotes)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			@Html.HiddenFor(model => model.ValCodmanua, new { @pers_cs_field="ValCodmanua", @pers_cs_area="Manua", data_refresh = "true", @form_area="true", @data_value = Model.ValCodmanua, @data_identifier = "LED_MANUA___MANUACODMANUA" })
+
+            @Html.Hidden("IgnoreWarnings", "false", new { id = "IgnoreWarnings" })
+
+			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Manua" })
+            @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Manua" })
+            @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Manua" })
+			if (!Model.NestedForm)
+            {
+                @Html.AntiForgeryToken()
+            }
+}
+
+@helper form_content_alert() {
+	if(Model.FormMode == FormMode.Delete) {
+		<div class="c-alert c-alert--warning">
+			<i class="glyphicons glyphicons-alert c-alert__icon" aria-hidden="true"></i>
+			<div class="c-alert__text">
+				&ensp;@Resources.DESEJA_ELIMINAR_ESTA24564
+			</div>
+		<!--Ao confirmar esta ficha irá ser eliminada da base de dados. Cancele caso não tenha a certeza.-->
+		</div>
+	}
+}
+
+@helper form_content_buttons() {
+
+
+
+
+    @* Extended support form *@
+    if (Model.NestedForm)
+    {
+        if (Model.IsEditableMode)
+        {
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("Manua", Model.FormMode).ToString(), "Manua")", "Manua_well")' qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>
+                    @Resources.GRAVAR45301
+            </button>
+            <button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Manua_Delete", "Manua", new {id = @Model.ValCodmanua} )", "Manua_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+
+            <script type="application/javascript">
+                $(document).ready(function () { loaded($("#Manua_well")); });
+            </script>
+        }
+
+        @* javascript code_javascript *@
+        @*@codeJavascript()*@
+    }
+    @* Normal mode *@
+    else
+    {
+        if (Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+        {
+            if (Model.FormMode == FormMode.New && Convert.ToBoolean(Model.Navigation.CurrentLevel.GetEntry("repeatInsertion")))
+            {
+            <button type="button" data-end-pers="true" name="Manua_repete_insertion" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitManua(event, true)" qbutton="ok_new">@Resources.GRAVAR_E_CRIAR_NOVA17771</button>
+            }
+            if(Model.FormMode == FormMode.Delete)
+            {
+				<button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Manua", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitDeleteManua(event)" qbutton="delete">
+                    <i class="glyphicons glyphicons-check e-icon" aria-hidden="true"></i>@Resources.CONFIRMAR09808
+                </button>
+            }
+            else
+            {
+                <button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Manua", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitManua(event)" title="@Resources.GRAVAR45301" data-selector="true" qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>@Resources.GRAVAR45301
+                </button>
+            }
+
+            <button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-href="@Url.Action("Manua_Cancel", "Manua", new { niv = Model.Navigation.CurrentLevel.Level })" onclick="javascript:window.Form_Manua.Cancel()" title="@Resources.CANCEL65428" data-selector="true" qbutton="cancel">
+                <i class="glyphicons glyphicons-ban-circle e-icon" aria-hidden="true"></i>@Resources.CANCEL65428
+            </button>
+        }
+        else if (!(ViewBag.isHomePage ?? false))
+        {
+            @Html.ActionLinkWithIcon(@Resources.RETROCEDER16633, "Manua_Cancel","Manua","glyphicons glyphicons-arrow-left e-icon", null, new { @class = "b-icon-text b-icon-text--secondary", @data_end_pers = "true", @title = @Resources.RETROCEDER16633, qbutton = "cancel" })
+        }
+    }
+}
+
+@helper LoadDefault() {
+    if (Model.NestedForm)
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div class="c-card__header">
+                    <div class="c-card__header-tag">
+						<span class="form-header" style="padding:0;">
+							<i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+						</span>
+                    </div>
+                </div>
+                <div class="c-card__body">
+                    @form_content_body()
+                    <div elem-identifier="FormActions" class="form-actions" data-form-actions="Manua">
+                        @form_content_buttons()
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    }
+    else
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div id="c-stickyHeader">
+                    <div class="c-action-bar d-flex">
+                        <span class="form-header">
+                            <i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+                        </span>
+                        <div data-parent-form="Manua" data-q-ref="form-btns-main_container"></div>
+                    </div>
+                </div>
+
+                @form_content_body()
+                <div elem-identifier="FormActions" class="form-actions" data-form-actions="Manua">
+                @form_content_buttons()
+                </div>
+            </div>
+        </fieldset>
+    }
+}
+
+@helper LoadFromLayout()
+{
+}
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT MANUA]/ *@
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_MANUA" data-form-javascript="true">
+@Html.Partial("Manua_JavaScript", Model, ViewData)
+</div>
+}
+
+@section code_javascript
+{
+	@codeJavascript()
+}
+
+@if (Request.IsAjaxRequest())
+{
+    @codeJavascript()
+    @includeStylesheets()
+}
+
+@helper includeStylesheets()
+{
+
+ }
+
+@section include_stylesheets {
+    @includeStylesheets()
+}

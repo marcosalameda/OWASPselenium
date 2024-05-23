@@ -1,0 +1,155 @@
+﻿@model GenioMVC.ViewModels.Dttyp.WMS_Menu_7111_ViewModel
+@using Newtonsoft.Json;
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@using GenioMVC.ViewModels.Dttyp;    
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Dttyp>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCoddttyp, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_7111_DTTYP_STRING]/
+		column.Expression(p => p.ValString).Title(@Resources.STRING29433).Field("ValString").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_7111_DTTYP_UPPERCAS]/
+		column.Expression(p => p.ValUppercas).Title(@Resources.UPPER_CASE31324).Field("ValUppercas").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_7111_DTTYP_QRCODE]/
+		column.Expression(p => p.ValQrcode).Title(@Resources.QR_CODE12259).Field("ValQrcode").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_7111_DTTYP_MULTILIN]/
+		column.Expression(p => p.ValMultilin).Title(@Resources.SIMPLE_MULTILINE_TEX04460).Field("ValMultilin").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_7111_DTTYP_MULTILI3]/
+		column.Expression(p => p.ValMultili3).Title(@Resources.EDITOR_MULTILINE_TEX05556).Field("ValMultili3").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_7111_DTTYP_BOOLEAN]/
+		column.Expression(p => p.ValBoolean).Title(@Resources.BOOLEAN__TINYINT___S57956).Field("ValBoolean").Size(1);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_7111_DTTYP_BOOLEAN2]/
+		column.Expression(p => p.ValBoolean2).Title(@Resources.CONDITIONAL__BOOLEAN08919).Field("ValBoolean2").Size(1);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_7111_DTTYP_SMALLINT]/
+		column.Expression(p => p.ValSmallint).Title(@Resources.SMALL_INTEGER__STORA54196).Field("ValSmallint").Size(4);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_7111_DTTYP_INTEGER]/
+		column.Expression(p => p.ValInteger).Title(@Resources.INTEGER__STORAGE__4_49578).Field("ValInteger").Size(9);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_7111_DTTYP_BIGINT]/
+		column.Expression(p => p.ValBigint).Title(@Resources.BIG_INTEGER__STORAGE28249).Field("ValBigint").Size(15);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_7111_DTTYP_REAL]/
+		column.Expression(p => p.ValReal).Title(@Resources.REAL_FLOAT_24___PREC46659).Field("ValReal").Size(8);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_7111_DTTYP_FLOAT]/
+		column.Expression(p => p.ValFloat).Title(@Resources.DOUBLE___FLOAT_53___07951).Field("ValFloat").Size(15);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_7111_DTTYP_DECIMAL]/
+		column.Expression(p => p.ValDecimal).Title(@Resources.DECIMAL__1_10___STOR26677).Field("ValDecimal").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_7111_DTTYP_DECIMAL9]/
+		column.Expression(p => p.ValDecimal9).Title(@Resources.DECIMAL__11_15___STO49382).Field("ValDecimal9").Size(15);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_7111_DTTYP_MONEY]/
+		column.Expression(p => p.ValMoney).Title(@Resources.MONEY___DECIMAL__1_124403).Field("ValMoney").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_7111_DTTYP_MONEY9]/
+		column.Expression(p => p.ValMoney9).Title(@Resources.MONEY___DECIMAL__11_02101).Field("ValMoney9").Size(15);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_7111_DTTYP_DATE]/
+		column.Expression(p => p.ValDate).Title(@Resources.DATE02091).Field("ValDate").Size(8).Format("{0:d}");
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_7111_DTTYP_DATETIME]/
+		column.Expression(p => p.ValDatetime).Title(@Resources.DATETIME62630).Field("ValDatetime").Size(16);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_7111_DTTYP_DTSESOND]/
+		column.Expression(p => p.ValDtsesond).Title(@Resources.DATE_TIME_SECOND__IN55990).Field("ValDtsesond").Size(19);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_7111_DTTYP_TIME]/
+		column.Expression(p => p.ValTime).Title(@Resources.TIME50904).Field("ValTime").Size(5);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_7111_DTTYP_UUID]/
+		column.Expression(p => p.ValUuid).Title(@Resources.UUID__AKA_GUID_13998).Field("ValUuid").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_7111_DTTYP_IMAGE]/
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValImage, new {alt=@Resources.IMAGE__BINARY_46903,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCoddttyp, modelname = "Dttyp", fldname = "ValImage" }))).Title(@Resources.IMAGE__BINARY_46903).Field("ValImage").Size(3);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_7111_DTTYP_START]/
+		column.Expression(p => p.ValStart).Title(@Resources.STARTING_TIME_WITH_I44217).Field("ValStart").Size(16);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_7111_DTTYP_END]/
+		column.Expression(p => p.ValEnd).Title(@Resources.END_TIME_WITH_INCLUS19241).Field("ValEnd").Size(16);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Dttyp")
+        .Id("WMS_Menu_7111")
+        .AjaxRequest("Menu")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .DBEdit()
+        .Filters(this.Model.Menu.Filters)
+        .Form("Dttyp", false, false)
+        .SetFollowUp("Dttyp_Edit", "Dttyp" , (Func<GenioMVC.Models.Dttyp, object>)(item => new { id = item.ValCoddttyp }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
+        .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
+		;
+        
+}
+
+@tbl.ToHtml()
+
+
+<script>
+ 
+ 
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qWMS_Menu_7111, #WMS_Menu_7111_complex_filter th input, #WMS_Menu_7111_filters input").change(function() {
+                    $("#pWMS_Menu_7111").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#WMS_Menu_7111_tableFilters').val(false);")
+                    @Html.Raw("$('#WMS_Menu_7111_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#WMS_Menu_7111_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $("[data-form='WMS_Menu_7111']").submit();
+                    @:      event.preventDefault();
+                    @:      ClearSearchBox('qWMS_Menu_7111');
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#WMS_Menu_7111_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_WMS_Menu_7111').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+                 @if (this.Model.Menu.Filters.FiltersValues.Count >= 1) {
+                    var activeFields = Newtonsoft.Json.JsonConvert.SerializeObject(this.Model.Menu.Filters.FiltersValues);
+                    @: SetActiveFilters('WMS_Menu_7111', 'DTTYP', @Html.Raw(activeFields))
+                  }
+
+
+                setupHistoryClicks()
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='Menu']"));
+                    InitSpecialControls($('#Menu'));
+                    $('#Menu').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS WMS_MENU_7111]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+// USE /[MANUAL GQT LISTING_CODEJS WMS_MENU_7111]/
+</script>

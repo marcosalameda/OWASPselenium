@@ -1,0 +1,151 @@
+﻿@model GenioMVC.ViewModels.Flds.STY_Menu_358211_ViewModel
+@using Newtonsoft.Json;
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@using GenioMVC.ViewModels.Flds;    
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Flds>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodflds, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_358211_AERO_NAME]/
+		column.Expression(p => p.Aero.ValName).Title(@Resources.NOME_DA_COMPANHIA48638).Field("Aero.ValName").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_358211_FLDS_DESCRIP]/
+		column.Expression(p => p.ValDescrip).Title(@Resources.DESCRICAO51618).Field("ValDescrip").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_358211_FLDS_NPASSAGE]/
+		column.Expression(p => p.ValNpassage).Title(@Resources.CAPACIDADE_DE_PASSEI42438).Field("ValNpassage").Size(3);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_358211_FLDS_DURATION]/
+		column.Expression(p => p.ValDuration).Title(@Resources.DURACAO_VIAGEM00021).Field("ValDuration").Size(5);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_358211_FLDS_PRICE]/
+		column.Expression(p => p.ValPrice).Title(@Resources.PRECO_DO_BILHETE_ARR20993).Field("ValPrice").Size(6);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_358211_FLDS_PRECOBIL]/
+		column.Expression(p => p.ValPrecobil).Title(@Resources.PRECO_DO_BILHETE_AS_59630).Field("ValPrecobil").Size(6);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_358211_FLDS_DATE]/
+		column.Expression(p => p.ValDate).Title(@Resources.DATA_DE_PARTIDA__DD_26044).Field("ValDate").Size(8).Format("{0:d}");
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_358211_FLDS_DATETIME]/
+		column.Expression(p => p.ValDatetime).Title(@Resources.DATA_DE_PARTIDA__HOR47484).Field("ValDatetime").Size(16);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_358211_FLDS_DATESECO]/
+		column.Expression(p => p.ValDateseco).Title(@Resources.DATA_DE_PARTIDA__SEG38575).Field("ValDateseco").Size(19);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_358211_FLDS_TIME]/
+		column.Expression(p => p.ValTime).Title(@Resources.HORA_DE_PARTIDA00929).Field("ValTime").Size(5);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_358211_FLDS_YEAR]/
+		column.Expression(p => p.ValYear).Title(@Resources.ANO_DE_CRIACAO_DO_AE38604).Field("ValYear").Size(4);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_358211_FLDS_PRIMVIAG]/
+		column.Expression(p => p.ValPrimviag).Title(@Resources._1AVIAGEM10982).Field("ValPrimviag").Size(1);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_358211_FLDS_CONDITIO]/
+		column.Expression(p => p.ValConditio).Title(@Resources.JA_VIAJOU_ANTES_22497).Field("ValConditio").Size(1);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_358211_FLDS_CLASS]/
+		column.Expression(p => p.ArrayValclass).Title(@Resources.CLASS__ENUMERACAO_DE17340).Field("ValClass", "ArrayClass").Size(2);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_358211_FLDS_CLASSNUM]/
+		column.Expression(p => p.ArrayValclassnum).Title(@Resources.CLASSE__ENUMERACAO_N29443).Field("ValClassnum", "ArrayClassnum").Size(1);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_358211_FLDS_LOGICENU]/
+		column.Expression(p => p.ArrayVallogicenu).Title(@Resources._1A_VIAGEM__ENUMERAC07656).Field("ValLogicenu", "ArrayPrimviag").Size(1);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_358211_FLDS_LOGO]/
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValLogo, new {alt=@Resources.LOGO62483,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCodflds, modelname = "Flds", fldname = "ValLogo" }))).Title(@Resources.LOGO62483).Field("ValLogo").Size(3);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_358211_FLDS_ATTACH]/
+		column.Expression(p => p.ValAttach).Title(@Resources.ANEXOS65235).Field("ValAttach").Size(30).Document(p => Url.Action("GetFile", "Flds", new { ticket = p.GetTicketForDocField("ValAttach"), viewType = (int)CSGenio.framework.DocumentViewTypeMode.Print}));
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_358211_FLDS_CREATUSE]/
+		column.Expression(p => p.ValCreatuse).Title(@Resources.CRIADO_POR17895).Field("ValCreatuse").Size(20);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_358211_FLDS_CREATDAT]/
+		column.Expression(p => p.ValCreatdat).Title(@Resources.DATA_DE_CRIACAO__DD_33541).Field("ValCreatdat").Size(8);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_358211_FLDS_CREATHOU]/
+		column.Expression(p => p.ValCreathou).Title(@Resources.HORA_DE_CRIACAO40754).Field("ValCreathou").Size(5);
+// USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_358211_FLDS_CREATINS]/
+		column.Expression(p => p.ValCreatins).Title(@Resources.DATA_DE_CRIACAO_COMP31582).Field("ValCreatins").Size(15);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Flds")
+        .Id("STY_Menu_358211")
+        .AjaxRequest("Menu")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .DBEdit()
+        .Filters(this.Model.Menu.Filters)
+        .Form("Infields", false, false)
+        .SetFollowUp("Infields_Show", "Flds" , (Func<GenioMVC.Models.Flds, object>)(item => new { id = item.ValCodflds }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
+        .Permissions(canView: true, canInsert: false, canEdit: true, canDelete: true, canDuplicate: true)
+		;
+        
+}
+
+@tbl.ToHtml()
+
+
+<script>
+ 
+ 
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qSTY_Menu_358211, #STY_Menu_358211_complex_filter th input, #STY_Menu_358211_filters input").change(function() {
+                    $("#pSTY_Menu_358211").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#STY_Menu_358211_tableFilters').val(false);")
+                    @Html.Raw("$('#STY_Menu_358211_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#STY_Menu_358211_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $("[data-form='STY_Menu_358211']").submit();
+                    @:      event.preventDefault();
+                    @:      ClearSearchBox('qSTY_Menu_358211');
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#STY_Menu_358211_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_STY_Menu_358211').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+                 @if (this.Model.Menu.Filters.FiltersValues.Count >= 1) {
+                    var activeFields = Newtonsoft.Json.JsonConvert.SerializeObject(this.Model.Menu.Filters.FiltersValues);
+                    @: SetActiveFilters('STY_Menu_358211', 'FLDS', @Html.Raw(activeFields))
+                  }
+
+
+                setupHistoryClicks()
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='Menu']"));
+                    InitSpecialControls($('#Menu'));
+                    $('#Menu').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS STY_MENU_358211]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+// USE /[MANUAL GQT LISTING_CODEJS STY_MENU_358211]/
+</script>

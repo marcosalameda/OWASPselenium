@@ -1,0 +1,113 @@
+﻿@model GenioMVC.ViewModels.Kinde.Kinde_ValParamete_ViewModel
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@using Newtonsoft.Json;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@*List properties DBEDIT BUTTONS*@
+<div class="row">
+	<div class="col">
+		<div elem-identifier="List"  help-id="IFF_KINDE___PSEUDPARAMETE" style="padding-top: 0.5rem;"><label class = "i-text__label table-title c-table__title" > <h2 list-header>@Resources.PARAMETERS28294</h2 list-header> </label></div>
+	</div>
+</div>
+
+@* USE /[MANUAL GQT TABLE_FOR KINDE_PARAMETE]/ *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@using GenioMVC.ViewModels.Param;    
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Param>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodparam, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN KINDE_PARAMETE_PARAM_PARAMETE]/
+		column.Expression(p => p.ValParameter).Title(@Resources.PARAMETER41976).Field("ValParameter").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN KINDE_PARAMETE_PARAM_DATATYPE]/
+		column.Expression(p => p.ArrayValdatatype).Title(@Resources.DATA_TYPE47159).Field("ValDatatype", "ArrayDatatype").Size(1);
+// USE /[MANUAL GQT CUSTOM_COLUMN KINDE_PARAMETE_PARAM_DECPLACE]/
+		column.Expression(p => p.ArrayValdecimalplaces).Title(@Resources.DECIMAL_PLACES62575).Field("ValDecimalplaces", "ArrayDecplace").Size(2);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Param")
+        .Id("ValParamete")
+        .AjaxRequest("Kinde_ValParamete")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .TableList(hasFilters: false)
+        .RequestLink(@Url.Action("Kinde_ValParamete", new { id = Model.ValCodkinde, partialView = "Kinde_ValParamete"}))
+        .Form("Param", false, false)
+        .SetFollowUp("Param_Show", "Param" , (Func<GenioMVC.Models.Param, object>)(item => new { id = item.ValCodparam }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
+        .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
+		;
+        
+}
+
+@tbl.ToHtml()
+
+<script>
+
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qValParamete, #ValParamete_complex_filter th input, #ValParamete_filters input").change(function() {
+                    $("#pValParamete").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#ValParamete_tableFilters').val(false);")
+                    @Html.Raw("$('#ValParamete_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#ValParamete_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $('#ValParamete_complex_filter button#applyComplexFilter').click();
+                    @:      event.preventDefault();
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#ValParamete_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_ValParamete').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+
+
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='ValParamete']"));
+                    InitSpecialControls($('#ValParamete'));
+                    $('#ValParamete').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS KINDE_VALPARAMETE]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+</script>

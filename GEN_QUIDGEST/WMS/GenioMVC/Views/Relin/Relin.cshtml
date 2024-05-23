@@ -1,0 +1,334 @@
+﻿@model GenioMVC.ViewModels.Relin.Relin_ViewModel
+@using GenioMVC.Models.Navigation;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Form = "Relin";
+	ViewBag.Title = @Resources.RECEIPT_LINE60287;
+    ViewBag.formmode = Model.GetFormMode;
+	ViewBag.ClassForFormLayout = "form-flow";
+}
+
+
+@if (!Model.NestedForm) {
+    if(Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+    {
+        using (Html.BeginForm("Action", "Relin", FormMethod.Post, new { @class = "form-horizontal", area="Relin", data_form="Relin" }))
+        {
+            @form_content_alert()
+            @Html.QValidationSummary()
+	        @LoadDefault()
+        }
+    }
+    else
+    {
+        <div class="form-horizontal" id="Relin" area="Relin" data-form="Relin">
+	        @LoadDefault()
+        </div>
+    }
+}
+else {
+    <div class="c-card nested-form" id="Relin_well" area="Relin" data-form="Relin">
+        @Html.QValidationSummary()
+		@LoadDefault()
+    </div>
+}
+
+@helper form_content_body() {
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="row-line-group">
+                            <div class="c-groupbox " id="GROUPBOX_RELIN_NOVOGR01">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_RELIN___PSEUDNOVOGR01" 
+                                    label-id="IFF_RELIN___PSEUDNOVOGR01">
+                                    <span>@Resources.RECEIPT15218</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_RELIN___PSEUDNOVOGR01','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-dbedit draggable " id="CONTAINER_IFF_RELIN___RECEINUMBER__">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.TableReceiNumber, new { label_id="IFF_RELIN___RECEINUMBER__", @class = " i-text__label", id="LABEL_IFF_RELIN___RECEINUMBER__"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('IFF_RELIN___RECEINUMBER__','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DropDownListFor(model => model.ValCodrecei, Model.TableReceiNumber.List , "", new {help_id = "IFF_RELIN___RECEINUMBER__", @class = "i-select chosen-dropdown input-medium", data_sequencial = "M1", data_identifier = "IFF_RELIN___RECEINUMBER__", @pers_cs_area = "Recei", @pers_cs_field = "ValCodrecei", @db_field = "ValCodrecei", @db_full_field_name = "relin.codrecei", data_has_more = Model.TableReceiNumber.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableReceiNumber.Selected, data_dbedit_value = Model.TableReceiNumber.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCoddilin, @data_see_more = "Relin_ReceiValNumber", title = @Resources.RECEIPT_NUMBER31380, data_see_more_url = @Url.Action("Relin_ReceiValNumber","Relin"), data_is_dbedit = "true", data_fields = "recei.codrecei,recei.number", data_main_field = "Recei.ValNumber", data_elements = 0, data_filled_by_history = Model.TableReceiNumber.FilledByHistory, @dependant_fields = "recei.codrecei,recei.number,entit.codentit,entit.name" })
+													@Html.ValidationMessageFor(model => model.TableReceiNumber)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_RELIN___ENTITNAME____">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.EntitValName, new { label_id="LED_RELIN___ENTITNAME____", @class = " i-text__label", id="LABEL_LED_RELIN___ENTITNAME____"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_RELIN___ENTITNAME____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.EntitValName, new {help_id = "LED_RELIN___ENTITNAME____", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_RELIN___ENTITNAME____", @pers_cs_area = "Entit", @pers_cs_field = "ValName", @db_field = "ValName", fixed_field = "true", @readonly = "readonly", dependant = "ValCodrecei", key_field = "ValCodentit", dependant_area = "Recei", title = @Resources.LEGAL_NAME42902, maxlength = "85", rows = "85" })
+													@Html.ValidationMessageFor(model => model.EntitValName)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="row-line-group">
+                            <div class="c-groupbox " id="GROUPBOX_RELIN_NOVOGR02">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_RELIN___PSEUDNOVOGR02" 
+                                    label-id="IFF_RELIN___PSEUDNOVOGR02">
+                                    <span>@Resources.RECEIPT_LINE60287</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_RELIN___PSEUDNOVOGR02','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_RELIN___RELINLINENUMB">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValLinenumb, new { label_id="LED_RELIN___RELINLINENUMB", @class = " i-text__label", id="LABEL_LED_RELIN___RELINLINENUMB"}, true, true)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_RELIN___RELINLINENUMB','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValLinenumb, new {help_id = "LED_RELIN___RELINLINENUMB", @class = "Number text-right i-text__field i-text input-mini", data_sequencial = "M1", data_identifier = "LED_RELIN___RELINLINENUMB", @pers_cs_area = "Relin", @pers_cs_field = "ValLinenumb", @db_field = "ValLinenumb", title = @Resources.LINE27983, data_number_integer = "6", data_number_decimals = "0", data_number_format = "999999" })
+													@Html.ValidationMessageFor(model => model.ValLinenumb)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-dbedit draggable " id="CONTAINER_IFF_RELIN___PRODUPRODUCT_">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.TableProduProduct, new { label_id="IFF_RELIN___PRODUPRODUCT_", @class = " i-text__label", id="LABEL_IFF_RELIN___PRODUPRODUCT_"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('IFF_RELIN___PRODUPRODUCT_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DropDownListFor(model => model.ValCodprodu, Model.TableProduProduct.List , "", new {help_id = "IFF_RELIN___PRODUPRODUCT_", @class = "i-select chosen-dropdown input-xxlarge", data_identifier = "IFF_RELIN___PRODUPRODUCT_", @pers_cs_area = "Produ", @pers_cs_field = "ValCodprodu", @db_field = "ValCodprodu", @db_full_field_name = "relin.codprodu", data_has_more = Model.TableProduProduct.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableProduProduct.Selected, data_dbedit_value = Model.TableProduProduct.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCoddilin, @data_see_more = "Relin_ProduValProduct", title = @Resources.PRODUCT12880, data_see_more_url = @Url.Action("Relin_ProduValProduct","Relin"), data_is_dbedit = "true", data_fields = "produ.codprodu,produ.product", data_main_field = "Produ.ValProduct", data_elements = 0, data_filled_by_history = Model.TableProduProduct.FilledByHistory, @dependant_fields = "produ.codprodu,produ.product" })
+													@Html.ValidationMessageFor(model => model.TableProduProduct)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_RELIN___RELINORDERED_">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValOrdered, new { label_id="LED_RELIN___RELINORDERED_", @class = " i-text__label", id="LABEL_LED_RELIN___RELINORDERED_"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_RELIN___RELINORDERED_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValOrdered, new {help_id = "LED_RELIN___RELINORDERED_", @class = "Number text-right i-text__field i-text input-small", data_identifier = "LED_RELIN___RELINORDERED_", @pers_cs_area = "Relin", @pers_cs_field = "ValOrdered", @db_field = "ValOrdered", title = @Resources.ORDERED04034, data_number_integer = "10", data_number_decimals = "0", data_number_format = "9999999999" })
+													@Html.ValidationMessageFor(model => model.ValOrdered)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_RELIN___RELINRECEIVED">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValReceived, new { label_id="LED_RELIN___RELINRECEIVED", @class = " i-text__label", id="LABEL_LED_RELIN___RELINRECEIVED"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_RELIN___RELINRECEIVED','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValReceived, new {help_id = "LED_RELIN___RELINRECEIVED", @class = "Number text-right i-text__field i-text input-small", data_identifier = "LED_RELIN___RELINRECEIVED", @pers_cs_area = "Relin", @pers_cs_field = "ValReceived", @db_field = "ValReceived", title = @Resources.RECEIVED19242, data_number_integer = "10", data_number_decimals = "0", data_number_format = "9999999999" })
+													@Html.ValidationMessageFor(model => model.ValReceived)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_RELIN___RELINOUTSTAND">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValOutstand, new { label_id="LED_RELIN___RELINOUTSTAND", @class = " i-text__label", id="LABEL_LED_RELIN___RELINOUTSTAND"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_RELIN___RELINOUTSTAND','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValOutstand, new {help_id = "LED_RELIN___RELINOUTSTAND", @class = "Number text-right i-text__field i-text input-small", data_refresh = "true", data_tipoform = "+", data_identifier = "LED_RELIN___RELINOUTSTAND", @pers_cs_area = "Relin", @pers_cs_field = "ValOutstand", @db_field = "ValOutstand", fixed_field = "true", @readonly = "readonly", title = @Resources.OUTSTANDING36400, data_number_integer = "10", data_number_decimals = "0", data_number_format = "9999999999" })
+													@Html.ValidationMessageFor(model => model.ValOutstand)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+			@Html.HiddenFor(model => model.ValCodentit, new { @pers_cs_field="ValCodentit", @pers_cs_area="Relin", @data_value = Model.ValCodentit, @db_field="ValCodentit", @trelate="Entit", @tfrelate="Codentit", @data_identifier="LED_RELIN___ENTITCODENTIT" })
+
+			@Html.HiddenFor(model => model.ValCoddilin, new { @pers_cs_field="ValCoddilin", @pers_cs_area="Relin", data_refresh = "true", @form_area="true", @data_value = Model.ValCoddilin, @data_identifier = "LED_RELIN___RELINCODDILIN" })
+
+            @Html.Hidden("IgnoreWarnings", "false", new { id = "IgnoreWarnings" })
+
+			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Relin" })
+            @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Relin" })
+            @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Relin" })
+			if (!Model.NestedForm)
+            {
+                @Html.AntiForgeryToken()
+            }
+}
+
+@helper form_content_alert() {
+	if(Model.FormMode == FormMode.Delete) {
+		<div class="c-alert c-alert--warning">
+			<i class="glyphicons glyphicons-alert c-alert__icon" aria-hidden="true"></i>
+			<div class="c-alert__text">
+				&ensp;@Resources.DESEJA_ELIMINAR_ESTA24564
+			</div>
+		<!--Ao confirmar esta ficha irá ser eliminada da base de dados. Cancele caso não tenha a certeza.-->
+		</div>
+	}
+}
+
+@helper form_content_buttons() {
+
+
+
+
+    @* Extended support form *@
+    if (Model.NestedForm)
+    {
+        if (Model.IsEditableMode)
+        {
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("Relin", Model.FormMode).ToString(), "Relin")", "Relin_well")' qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>
+                    @Resources.GRAVAR45301
+            </button>
+            <button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Relin_Delete", "Relin", new {id = @Model.ValCoddilin} )", "Relin_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+
+            <script type="application/javascript">
+                $(document).ready(function () { loaded($("#Relin_well")); });
+            </script>
+        }
+
+        @* javascript code_javascript *@
+        @*@codeJavascript()*@
+    }
+    @* Normal mode *@
+    else
+    {
+        if (Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+        {
+            if (Model.FormMode == FormMode.New && Convert.ToBoolean(Model.Navigation.CurrentLevel.GetEntry("repeatInsertion")))
+            {
+            <button type="button" data-end-pers="true" name="Relin_repete_insertion" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitRelin(event, true)" qbutton="ok_new">@Resources.GRAVAR_E_CRIAR_NOVA17771</button>
+            }
+            if(Model.FormMode == FormMode.Delete)
+            {
+				<button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Relin", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitDeleteRelin(event)" qbutton="delete">
+                    <i class="glyphicons glyphicons-check e-icon" aria-hidden="true"></i>@Resources.CONFIRMAR09808
+                </button>
+            }
+            else
+            {
+                <button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Relin", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitRelin(event)" title="@Resources.GRAVAR45301" data-selector="true" qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>@Resources.GRAVAR45301
+                </button>
+            }
+
+            <button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-href="@Url.Action("Relin_Cancel", "Relin", new { niv = Model.Navigation.CurrentLevel.Level })" onclick="javascript:window.Form_Relin.Cancel()" title="@Resources.CANCEL65428" data-selector="true" qbutton="cancel">
+                <i class="glyphicons glyphicons-ban-circle e-icon" aria-hidden="true"></i>@Resources.CANCEL65428
+            </button>
+        }
+        else if (!(ViewBag.isHomePage ?? false))
+        {
+            @Html.ActionLinkWithIcon(@Resources.RETROCEDER16633, "Relin_Cancel","Relin","glyphicons glyphicons-arrow-left e-icon", null, new { @class = "b-icon-text b-icon-text--secondary", @data_end_pers = "true", @title = @Resources.RETROCEDER16633, qbutton = "cancel" })
+        }
+    }
+}
+
+@helper LoadDefault() {
+    if (Model.NestedForm)
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div class="c-card__header">
+                    <div class="c-card__header-tag">
+						<span class="form-header" style="padding:0;">
+							<i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+						</span>
+                    </div>
+                </div>
+                <div class="c-card__body">
+                    @form_content_body()
+                    <div elem-identifier="FormActions" class="form-actions" data-form-actions="Relin">
+                        @form_content_buttons()
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    }
+    else
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div id="c-stickyHeader">
+                    <div class="c-action-bar d-flex">
+                        <span class="form-header">
+                            <i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+                        </span>
+                        <div data-parent-form="Relin" data-q-ref="form-btns-main_container"></div>
+                    </div>
+                </div>
+
+                @form_content_body()
+                <div elem-identifier="FormActions" class="form-actions" data-form-actions="Relin">
+                @form_content_buttons()
+                </div>
+            </div>
+        </fieldset>
+    }
+}
+
+@helper LoadFromLayout()
+{
+}
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT RELIN]/ *@
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_RELIN" data-form-javascript="true">
+@Html.Partial("Relin_JavaScript", Model, ViewData)
+</div>
+}
+
+@section code_javascript
+{
+	@codeJavascript()
+}
+
+@if (Request.IsAjaxRequest())
+{
+    @codeJavascript()
+    @includeStylesheets()
+}
+
+@helper includeStylesheets()
+{
+
+ }
+
+@section include_stylesheets {
+    @includeStylesheets()
+}

@@ -1,0 +1,135 @@
+﻿@model GenioMVC.ViewModels.Facty.WMS_Menu_4231_ViewModel
+@using Newtonsoft.Json;
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@using GenioMVC.ViewModels.Facty;    
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Facty>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodfacty, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_4231_FACTY_TYPE]/
+		column.Expression(p => p.ValType).Title(@Resources.FACILITY_TYPE44577).Field("ValType").Size(25);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_4231_FACTY_LAYRNAME]/
+		column.Expression(p => p.ValLayrname).Title(@Resources.LAYER_NAME49545).Field("ValLayrname").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_4231_FACTY_ICONURL]/
+		column.Expression(p => p.ValIconurl).Title(@Resources.ICON_URL07016).Field("ValIconurl").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_4231_FACTY_SHADOWUR]/
+		column.Expression(p => p.ValShadowur).Title(@Resources.SHADOW_URL57805).Field("ValShadowur").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_4231_FACTY_ICONANCX]/
+		column.Expression(p => p.ValIconancx).Title(@Resources.ICON_ANCHOR__X_AXIS_18664).Field("ValIconancx").Size(3);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_4231_FACTY_ICONANCY]/
+		column.Expression(p => p.ValIconancy).Title(@Resources.ICON_ANCHOR__Y_AXIS_63725).Field("ValIconancy").Size(3);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_4231_FACTY_ICONHEIG]/
+		column.Expression(p => p.ValIconheig).Title(@Resources.ICON_HEIGHT61896).Field("ValIconheig").Size(3);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_4231_FACTY_ICONWID]/
+		column.Expression(p => p.ValIconwid).Title(@Resources.ICON_WIDTH02295).Field("ValIconwid").Size(3);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_4231_FACTY_POPUPANX]/
+		column.Expression(p => p.ValPopupanx).Title(@Resources.POPUP_ANCHOR__X_AXIS15060).Field("ValPopupanx").Size(3);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_4231_FACTY_POPUPANY]/
+		column.Expression(p => p.ValPopupany).Title(@Resources.POPUP_ANCHOR__Y_AXIS64670).Field("ValPopupany").Size(3);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_4231_FACTY_SHADOWAX]/
+		column.Expression(p => p.ValShadowax).Title(@Resources.SHADOW_ANCHOR__X_AXI31230).Field("ValShadowax").Size(3);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_4231_FACTY_SHADOWAY]/
+		column.Expression(p => p.ValShadoway).Title(@Resources.SHADOW_ANCHOR__Y_AXI51495).Field("ValShadoway").Size(3);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_4231_FACTY_SHADOWHE]/
+		column.Expression(p => p.ValShadowhe).Title(@Resources.SHADOW_HEIGHT64343).Field("ValShadowhe").Size(3);
+// USE /[MANUAL GQT CUSTOM_COLUMN WMS_MENU_4231_FACTY_SHADOWWI]/
+		column.Expression(p => p.ValShadowwi).Title(@Resources.SHADOW_WIDTH01769).Field("ValShadowwi").Size(3);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Facty")
+        .Id("WMS_Menu_4231")
+        .AjaxRequest("Menu")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .DBEdit()
+        .Filters(this.Model.Menu.Filters)
+        .Form("Facty", false, false)
+        .SetFollowUp("Facty_Show", "Facty" , (Func<GenioMVC.Models.Facty, object>)(item => new { id = item.ValCodfacty }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
+        .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
+		;
+        
+}
+
+@tbl.ToHtml()
+
+
+<script>
+ 
+ 
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qWMS_Menu_4231, #WMS_Menu_4231_complex_filter th input, #WMS_Menu_4231_filters input").change(function() {
+                    $("#pWMS_Menu_4231").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#WMS_Menu_4231_tableFilters').val(false);")
+                    @Html.Raw("$('#WMS_Menu_4231_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#WMS_Menu_4231_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $("[data-form='WMS_Menu_4231']").submit();
+                    @:      event.preventDefault();
+                    @:      ClearSearchBox('qWMS_Menu_4231');
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#WMS_Menu_4231_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_WMS_Menu_4231').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+                 @if (this.Model.Menu.Filters.FiltersValues.Count >= 1) {
+                    var activeFields = Newtonsoft.Json.JsonConvert.SerializeObject(this.Model.Menu.Filters.FiltersValues);
+                    @: SetActiveFilters('WMS_Menu_4231', 'FACTY', @Html.Raw(activeFields))
+                  }
+
+
+                setupHistoryClicks()
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='Menu']"));
+                    InitSpecialControls($('#Menu'));
+                    $('#Menu').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS WMS_MENU_4231]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+// USE /[MANUAL GQT LISTING_CODEJS WMS_MENU_4231]/
+</script>

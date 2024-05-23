@@ -1,0 +1,263 @@
+﻿@model GenioMVC.ViewModels.Addre.Addre_ViewModel
+@using GenioMVC.Models.Navigation;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Form = "Addre";
+	ViewBag.Title = @Resources.ADDRESS04342;
+    ViewBag.formmode = Model.GetFormMode;
+	ViewBag.ClassForFormLayout = "form-flow";
+}
+
+
+@if (!Model.NestedForm) {
+    if(Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+    {
+        using (Html.BeginForm("Action", "Addre", FormMethod.Post, new { @class = "form-horizontal", area="Addre", data_form="Addre" }))
+        {
+            @form_content_alert()
+            @Html.QValidationSummary()
+	        @LoadDefault()
+        }
+    }
+    else
+    {
+        <div class="form-horizontal" id="Addre" area="Addre" data-form="Addre">
+	        @LoadDefault()
+        </div>
+    }
+}
+else {
+    <div class="c-card nested-form" id="Addre_well" area="Addre" data-form="Addre">
+        @Html.QValidationSummary()
+		@LoadDefault()
+    </div>
+}
+
+@helper form_content_body() {
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-dbedit draggable " id="CONTAINER_LED_ADDRE___ADDREADDRUSE_">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValAddressuse, new { label_id="LED_ADDRE___ADDREADDRUSE_", @class = " i-text__label", id="LABEL_LED_ADDRE___ADDREADDRUSE_"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_ADDRE___ADDREADDRUSE_','Addressu')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.ArrayDropDownListFor(model => model.ValAddressuse, Model.List_ValAddressuse, CSGenio.business.ArrayAddressu.GetElement, "", new {help_id = "LED_ADDRE___ADDREADDRUSE_", data_toggle = "tooltip", title = @Resources._109631536, data_placement = "top", description = "", @class = "i-select chosen-dropdown input-medium", data_identifier = "LED_ADDRE___ADDREADDRUSE_", @pers_cs_area = "Addre", @pers_cs_field = "ValAddressuse", @db_field = "ValAddressuse", data_array_type = "AC", data_placeholder = @Resources.ESCOLHA___40245, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_value = Model.List_ValAddressuse.SelectedValue, data_is_array = "true" })
+								@Html.ValidationMessageFor(model => model.ValAddressuse)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-dbedit draggable " id="CONTAINER_LED_ADDRE___ADDREADDRTYPE">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValAddresstype, new { label_id="LED_ADDRE___ADDREADDRTYPE", @class = " i-text__label", id="LABEL_LED_ADDRE___ADDREADDRTYPE"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_ADDRE___ADDREADDRTYPE','Addresst')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.ArrayDropDownListFor(model => model.ValAddresstype, Model.List_ValAddresstype, CSGenio.business.ArrayAddresst.GetElement, "", new {help_id = "LED_ADDRE___ADDREADDRTYPE", data_toggle = "tooltip", title = @Resources._109732431, data_placement = "top", description = "", @class = "i-select chosen-dropdown input-medium", data_identifier = "LED_ADDRE___ADDREADDRTYPE", @pers_cs_area = "Addre", @pers_cs_field = "ValAddresstype", @db_field = "ValAddresstype", data_array_type = "AC", data_placeholder = @Resources.ESCOLHA___40245, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_value = Model.List_ValAddresstype.SelectedValue, data_is_array = "true" })
+								@Html.ValidationMessageFor(model => model.ValAddresstype)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-textarea draggable " id="CONTAINER_LED_ADDRE___ADDREADDRTEXT">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValAddresstext, new { label_id="LED_ADDRE___ADDREADDRTEXT", @class = " i-text__label", id="LABEL_LED_ADDRE___ADDREADDRTEXT"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_ADDRE___ADDREADDRTEXT','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextAreaFor(model => model.ValAddresstext, 10, 85, new {help_id = "LED_ADDRE___ADDREADDRTEXT", data_toggle = "tooltip", title = @Resources._109840190, data_placement = "top", description = "", @class = "i-textarea__field i-textarea input-xxlarge", data_identifier = "LED_ADDRE___ADDREADDRTEXT", @pers_cs_area = "Addre", @pers_cs_field = "ValAddresstext", @db_field = "ValAddresstext" })
+								@Html.ValidationMessageFor(model => model.ValAddresstext)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_ADDRE___ADDREADDRCITY">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValAddresscity, new { label_id="LED_ADDRE___ADDREADDRCITY", @class = " i-text__label", id="LABEL_LED_ADDRE___ADDREADDRCITY"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_ADDRE___ADDREADDRCITY','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextBoxFor(model => model.ValAddresscity, new {help_id = "LED_ADDRE___ADDREADDRCITY", data_toggle = "tooltip", title = @Resources._109937997, data_placement = "top", description = "", @class = "i-text__field i-text input-xlarge", data_identifier = "LED_ADDRE___ADDREADDRCITY", @pers_cs_area = "Addre", @pers_cs_field = "ValAddresscity", @db_field = "ValAddresscity", maxlength = "50", rows = "50" })
+								@Html.ValidationMessageFor(model => model.ValAddresscity)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+		@Html.HiddenFor(model=> model.ValPeriodstart, new { @pers_cs_area = "Addre", @pers_cs_field = "ValPeristar", @data_identifier = "LED_ADDRE___ADDREPERISTAR" })
+		@Html.HiddenFor(model=> model.ValPeriodend, new { @pers_cs_area = "Addre", @pers_cs_field = "ValPeriend", @data_identifier = "LED_ADDRE___ADDREPERIEND_" })
+
+
+			@Html.HiddenFor(model => model.ValCodaddre, new { @pers_cs_field="ValCodaddre", @pers_cs_area="Addre", data_refresh = "true", @form_area="true", @data_value = Model.ValCodaddre, @data_identifier = "LED_ADDRE___ADDRECODADDRE" })
+
+            @Html.Hidden("IgnoreWarnings", "false", new { id = "IgnoreWarnings" })
+
+			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Addre" })
+            @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Addre" })
+            @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Addre" })
+			if (!Model.NestedForm)
+            {
+                @Html.AntiForgeryToken()
+            }
+}
+
+@helper form_content_alert() {
+	if(Model.FormMode == FormMode.Delete) {
+		<div class="c-alert c-alert--warning">
+			<i class="glyphicons glyphicons-alert c-alert__icon" aria-hidden="true"></i>
+			<div class="c-alert__text">
+				&ensp;@Resources.DESEJA_ELIMINAR_ESTA24564
+			</div>
+		<!--Ao confirmar esta ficha irá ser eliminada da base de dados. Cancele caso não tenha a certeza.-->
+		</div>
+	}
+}
+
+@helper form_content_buttons() {
+
+
+
+
+    @* Extended support form *@
+    if (Model.NestedForm)
+    {
+        if (Model.IsEditableMode)
+        {
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("Addre", Model.FormMode).ToString(), "Addre")", "Addre_well")' qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>
+                    @Resources.INSERIR43365
+            </button>
+            <button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Addre_Delete", "Addre", new {id = @Model.ValCodaddre} )", "Addre_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+
+            <script type="application/javascript">
+                $(document).ready(function () { loaded($("#Addre_well")); });
+            </script>
+        }
+
+        @* javascript code_javascript *@
+        @*@codeJavascript()*@
+    }
+    @* Normal mode *@
+    else
+    {
+        if (Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+        {
+            if (Model.FormMode == FormMode.New && Convert.ToBoolean(Model.Navigation.CurrentLevel.GetEntry("repeatInsertion")))
+            {
+            <button type="button" data-end-pers="true" name="Addre_repete_insertion" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitAddre(event, true)" qbutton="ok_new">@Resources.GRAVAR_E_CRIAR_NOVA17771</button>
+            }
+            if(Model.FormMode == FormMode.Delete)
+            {
+				<button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Addre", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitDeleteAddre(event)" qbutton="delete">
+                    <i class="glyphicons glyphicons-check e-icon" aria-hidden="true"></i>@Resources.CONFIRMAR09808
+                </button>
+            }
+            else
+            {
+                <button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Addre", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitAddre(event)" title="@Resources.INSERIR43365" data-selector="true" qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>@Resources.INSERIR43365
+                </button>
+            }
+
+            <button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-href="@Url.Action("Addre_Cancel", "Addre", new { niv = Model.Navigation.CurrentLevel.Level })" onclick="javascript:window.Form_Addre.Cancel()" title="@Resources.CANCEL65428" data-selector="true" qbutton="cancel">
+                <i class="glyphicons glyphicons-ban-circle e-icon" aria-hidden="true"></i>@Resources.CANCEL65428
+            </button>
+        }
+        else if (!(ViewBag.isHomePage ?? false))
+        {
+            @Html.ActionLinkWithIcon(@Resources.RETROCEDER16633, "Addre_Cancel","Addre","glyphicons glyphicons-arrow-left e-icon", null, new { @class = "b-icon-text b-icon-text--secondary", @data_end_pers = "true", @title = @Resources.RETROCEDER16633, qbutton = "cancel" })
+        }
+    }
+}
+
+@helper LoadDefault() {
+    if (Model.NestedForm)
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div class="c-card__header">
+                    <div class="c-card__header-tag">
+						<span class="form-header" style="padding:0;">
+							<i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+						</span>
+                    </div>
+                </div>
+                <div class="c-card__body">
+                    @form_content_body()
+                    <div elem-identifier="FormActions" class="form-actions" data-form-actions="Addre">
+                        @form_content_buttons()
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    }
+    else
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div id="c-stickyHeader">
+                    <div class="c-action-bar d-flex">
+                        <span class="form-header">
+                            <i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+                        </span>
+                        <div data-parent-form="Addre" data-q-ref="form-btns-main_container"></div>
+                    </div>
+                </div>
+
+                @form_content_body()
+                <div elem-identifier="FormActions" class="form-actions" data-form-actions="Addre">
+                @form_content_buttons()
+                </div>
+            </div>
+        </fieldset>
+    }
+}
+
+@helper LoadFromLayout()
+{
+}
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT ADDRE]/ *@
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_ADDRE" data-form-javascript="true">
+@Html.Partial("Addre_JavaScript", Model, ViewData)
+</div>
+}
+
+@section code_javascript
+{
+	@codeJavascript()
+}
+
+@if (Request.IsAjaxRequest())
+{
+    @codeJavascript()
+    @includeStylesheets()
+}
+
+@helper includeStylesheets()
+{
+
+ }
+
+@section include_stylesheets {
+    @includeStylesheets()
+}

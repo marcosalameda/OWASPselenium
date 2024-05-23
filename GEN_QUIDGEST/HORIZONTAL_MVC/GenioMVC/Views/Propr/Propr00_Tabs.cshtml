@@ -1,0 +1,217 @@
+﻿@model GenioMVC.ViewModels.Propr.Propr00_ViewModel
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+	<div id="Propr00_tabs">
+        <div elem-identifier="Tabbable" class="tabbable">
+			<ul class="nav c-tab c-tab__divider" role="tablist">
+				<li class="nav-item c-tab__item" elem-identifier="TabbableIdentifier" id="tab_propr02" data-tab="propr02"><a class="nav-link" tabindex="0" data-target="#propr02" data-toggle="tab">@Resources.DETAILS19591</a></li>
+				<li class="nav-item c-tab__item" elem-identifier="TabbableIdentifier" id="tab_propr01" data-tab="propr01"><a class="nav-link" tabindex="0" data-target="#propr01" data-toggle="tab">@Resources.LOCALIZATION34148</a></li>
+				<li class="nav-item c-tab__item" elem-identifier="TabbableIdentifier" id="tab_propr03" data-tab="propr03"><a class="nav-link" tabindex="0" data-target="#propr03" data-toggle="tab">@Resources.DESCRIPTION07383</a></li>
+ 			</ul>
+
+			<div class="c-tab__item-container">
+				<div class="c-tab__item-content" id="propr02" data-identifier="IFF_PROPR00_PSEUDPROPR02_">
+					<div class="form-flow">
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-text draggable " id="CONTAINER_LED_PROPR02_PROPRQTD_WC__">
+										<div class="d-flex">
+										@Html.LabelFor(model => model.ValQtd_wc, new { label_id="LED_PROPR02_PROPRQTD_WC__", @class = " i-text__label", id="LABEL_LED_PROPR02_PROPRQTD_WC__"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_PROPR02_PROPRQTD_WC__','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.NumberFor(model => model.ValQtd_wc, new {help_id = "LED_PROPR02_PROPRQTD_WC__", @class = "Number text-right i-text__field i-text input-small", data_identifier = "LED_PROPR02_PROPRQTD_WC__", @pers_cs_area = "Propr", @pers_cs_field = "ValQtd_wc", @db_field = "ValQtd_wc", title = @Resources.BATHROOM12866, data_number_integer = "6", data_number_decimals = "0", data_number_format = "999999" })
+										@Html.ValidationMessageFor(model => model.ValQtd_wc)
+										</div>
+									</div>
+									<div class="control-join-group">
+									<div class="i-text draggable " id="CONTAINER_LED_PROPR02_PROPRQTDQUART">
+										<div class="d-flex">
+										@Html.LabelFor(model => model.ValQtdquart, new { label_id="LED_PROPR02_PROPRQTDQUART", @class = " i-text__label", id="LABEL_LED_PROPR02_PROPRQTDQUART"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_PROPR02_PROPRQTDQUART','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.NumberFor(model => model.ValQtdquart, new {help_id = "LED_PROPR02_PROPRQTDQUART", @class = "Number text-right i-text__field i-text input-mini", data_identifier = "LED_PROPR02_PROPRQTDQUART", @pers_cs_area = "Propr", @pers_cs_field = "ValQtdquart", @db_field = "ValQtdquart", title = @Resources.QUARTOS46431, data_number_integer = "6", data_number_decimals = "0", data_number_format = "999999" })
+										@Html.ValidationMessageFor(model => model.ValQtdquart)
+										</div>
+									</div>
+									<div class="control-join-group">
+									<div class="i-text draggable " id="CONTAINER_LED_PROPR02_PROPRM2______">
+										<div class="d-flex">
+										@Html.LabelFor(model => model.ValM2, new { label_id="LED_PROPR02_PROPRM2______", @class = " i-text__label", id="LABEL_LED_PROPR02_PROPRM2______"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_PROPR02_PROPRM2______','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.NumberFor(model => model.ValM2, new {help_id = "LED_PROPR02_PROPRM2______", @class = "Number text-right i-text__field i-text input-medium", data_identifier = "LED_PROPR02_PROPRM2______", @pers_cs_area = "Propr", @pers_cs_field = "ValM2", @db_field = "ValM2", title = @Resources.SQUARE_METERS28913, data_number_integer = "6", data_number_decimals = "0", data_number_format = "999999" })
+										@Html.ValidationMessageFor(model => model.ValM2)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-date-picker draggable " id="CONTAINER_LED_PROPR02_PROPRDTDISPON">
+										<div class="d-inline-flex">
+										@Html.LabelFor(model => model.ValDtdispon, new { label_id="LED_PROPR02_PROPRDTDISPON", @class = " i-text__label", id="LABEL_LED_PROPR02_PROPRDTDISPON"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_PROPR02_PROPRDTDISPON','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.DateFor(model => model.ValDtdispon, new {help_id = "LED_PROPR02_PROPRDTDISPON", @class = "i-input-group__field b-icon-text input-small", data_identifier = "LED_PROPR02_PROPRDTDISPON", @pers_cs_area = "Propr", @pers_cs_field = "ValDtdispon", @db_field = "ValDtdispon", title = @Resources.AVAILABLE_FROM53703 })
+										@Html.ValidationMessageFor(model => model.ValDtdispon)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="c-tab__item-content" id="propr01" data-identifier="IFF_PROPR00_PSEUDPROPR01_">
+					<div class="form-flow">
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="row-line-group">
+                            <div class="c-groupbox " id="GROUPBOX_PROPR01_NOVOGR01">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_PROPR01_PSEUDNOVOGR01" 
+                                    label-id="IFF_PROPR01_PSEUDNOVOGR01">
+                                    <span>@Resources.ADDRESS04342</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_PROPR01_PSEUDNOVOGR01','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-textarea draggable " id="CONTAINER_LED_PROPR01_PROPRENDERECO">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValEndereco, new { label_id="LED_PROPR01_PROPRENDERECO", @class = " i-text__label", id="LABEL_LED_PROPR01_PROPRENDERECO"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PROPR01_PROPRENDERECO','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextAreaFor(model => model.ValEndereco, 2, 85, new {help_id = "LED_PROPR01_PROPRENDERECO", @class = "i-textarea__field i-textarea input-xxlarge", data_identifier = "LED_PROPR01_PROPRENDERECO", @pers_cs_area = "Propr", @pers_cs_field = "ValEndereco", @db_field = "ValEndereco", title = @Resources.ADDRESS04342 })
+													@Html.ValidationMessageFor(model => model.ValEndereco)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_PROPR01_PROPRLOCALIDA">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValLocalida, new { label_id="LED_PROPR01_PROPRLOCALIDA", @class = " i-text__label", id="LABEL_LED_PROPR01_PROPRLOCALIDA"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PROPR01_PROPRLOCALIDA','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValLocalida, new {help_id = "LED_PROPR01_PROPRLOCALIDA", @class = "i-text__field i-text input-xlarge", data_identifier = "LED_PROPR01_PROPRLOCALIDA", @pers_cs_area = "Propr", @pers_cs_field = "ValLocalida", @db_field = "ValLocalida", title = @Resources.LOCALIZATION34148, maxlength = "50", rows = "50" })
+													@Html.ValidationMessageFor(model => model.ValLocalida)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_PROPR01_PROPRPOSTALCO">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValPostalco, new { label_id="LED_PROPR01_PROPRPOSTALCO", @class = " i-text__label", id="LABEL_LED_PROPR01_PROPRPOSTALCO"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PROPR01_PROPRPOSTALCO','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValPostalco, new {help_id = "LED_PROPR01_PROPRPOSTALCO", @class = "i-text__field i-text input-small", data_identifier = "LED_PROPR01_PROPRPOSTALCO", @pers_cs_area = "Propr", @pers_cs_field = "ValPostalco", @db_field = "ValPostalco", title = @Resources.ZIPCODE21021, maxlength = "20", rows = "10" })
+													@Html.ValidationMessageFor(model => model.ValPostalco)
+													</div>
+												<div class="i-text draggable " id="CONTAINER_LED_PROPR01_PROPRPOSTALLO">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValPostallo, new { label_id="LED_PROPR01_PROPRPOSTALLO", @class = " i-text__label", id="LABEL_LED_PROPR01_PROPRPOSTALLO"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PROPR01_PROPRPOSTALLO','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValPostallo, new {help_id = "LED_PROPR01_PROPRPOSTALLO", @class = "i-text__field i-text input-large", data_identifier = "LED_PROPR01_PROPRPOSTALLO", @pers_cs_area = "Propr", @pers_cs_field = "ValPostallo", @db_field = "ValPostallo", title = @Resources.ZIPCODE21021, maxlength = "50", rows = "30" })
+													@Html.ValidationMessageFor(model => model.ValPostallo)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-dbedit draggable " id="CONTAINER_IFF_PROPR01_CNTRYCOUNTRY_">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.TableCntryCountry, new { label_id="IFF_PROPR01_CNTRYCOUNTRY_", @class = " i-text__label", id="LABEL_IFF_PROPR01_CNTRYCOUNTRY_"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('IFF_PROPR01_CNTRYCOUNTRY_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DropDownListFor(model => model.ValCodcntry, Model.TableCntryCountry.List , "", new {help_id = "IFF_PROPR01_CNTRYCOUNTRY_", @class = "i-select chosen-dropdown input-xxlarge", data_identifier = "IFF_PROPR01_CNTRYCOUNTRY_", @pers_cs_area = "Cntry", @pers_cs_field = "ValCodcntry", @db_field = "ValCodcntry", @db_full_field_name = "propr.codcntry", data_has_more = Model.TableCntryCountry.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableCntryCountry.Selected, data_dbedit_value = Model.TableCntryCountry.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodpropr, @data_see_more = "Propr01_CntryValCountry", title = @Resources.COUNTRY64133, data_see_more_url = @Url.Action("Propr01_CntryValCountry","Propr"), data_is_dbedit = "true", data_support_form = @Url.Action("PAIS_New", "CNTRY"), data_fields = "cntry.codcntry,cntry.country", data_main_field = "Cntry.ValCountry", data_elements = 0, data_filled_by_history = Model.TableCntryCountry.FilledByHistory, @dependant_fields = "cntry.codcntry,cntry.country" })
+													@Html.ValidationMessageFor(model => model.TableCntryCountry)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-dbedit draggable " id="CONTAINER_IFF_PROPR01_REGIOREGIAO__">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.TableRegioRegiao, new { label_id="IFF_PROPR01_REGIOREGIAO__", @class = " i-text__label", id="LABEL_IFF_PROPR01_REGIOREGIAO__"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('IFF_PROPR01_REGIOREGIAO__','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DropDownListFor(model => model.ValCodregia, Model.TableRegioRegiao.List , "", new {help_id = "IFF_PROPR01_REGIOREGIAO__", @class = "i-select chosen-dropdown input-xxlarge", data_identifier = "IFF_PROPR01_REGIOREGIAO__", @pers_cs_area = "Regio", @pers_cs_field = "ValCodregia", @db_field = "ValCodregia", @db_full_field_name = "propr.codregia", dependant_area = "Cntry", dependant = "ValCodcntry", key_field = "ValCodregia", data_has_more = Model.TableRegioRegiao.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableRegioRegiao.Selected, data_dbedit_value = Model.TableRegioRegiao.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodpropr, @data_see_more = "Propr01_RegioValRegiao", title = @Resources.REGION12723, data_see_more_url = @Url.Action("Propr01_RegioValRegiao","Propr"), data_is_dbedit = "true", data_support_form = @Url.Action("REGIA_New", "REGIO"), data_fields = "regio.codregia,regio.regiao", data_main_field = "Regio.ValRegiao", data_elements = 0, data_filled_by_history = Model.TableRegioRegiao.FilledByHistory, @dependant_fields = "regio.codregia,regio.regiao" })
+													@Html.ValidationMessageFor(model => model.TableRegioRegiao)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<div class="row-large-control">
+									<div class="row-line-group" id="CONTAINER_LED_PROPR01_PROPRCOORDGEO">
+										@Html.EditorFor(model => model.ValCoordgeo, new {help_id = "LED_PROPR01_PROPRCOORDGEO", @class = "input-medium", data_identifier = "LED_PROPR01_PROPRCOORDGEO", @pers_cs_area = "Propr", @pers_cs_field = "ValCoordgeo", @db_field = "ValCoordgeo", title = @Resources.GEOGRAPHIC_COORDINAT42880, rows = "30" })
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="c-tab__item-content" id="propr03" data-identifier="IFF_PROPR00_PSEUDPROPR03_">
+					<div class="form-flow">
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group control-wrap">
+										<div class="d-flex">
+										@Html.LabelFor(model => model.ValDescript, new { label_id="IFF_PROPR03_PROPRDESCRIPT", @class = " i-text__label", id="LABEL_IFF_PROPR03_PROPRDESCRIPT"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('IFF_PROPR03_PROPRDESCRIPT','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										<div data-field-name="ValDescript" data-identifier="IFF_PROPR03_PROPRDESCRIPT" pers-cs-area="Propr" pers-cs-field="ValDescript"  help-id="IFF_PROPR03_PROPRDESCRIPT">
+										@if(Model.IsEditableMode) {
+											@Html.EditorFor(model => model.ValDescript, new {help_id = "IFF_PROPR03_PROPRDESCRIPT", @class = "input-xxlarge", data_identifier = "IFF_PROPR03_PROPRDESCRIPT", data_readonly = !Model.IsEditableMode })
+										} else {
+											@Html.Raw(Server.HtmlDecode(Model.ValDescript))
+										}
+										</div>
+										@Html.ValidationMessageFor(model => model.ValDescript)
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+ 			</div>
+        </div>
+	</div>
+	<!-- end tab content -->
+	<script type="application/javascript">
+		$(document).ready(function () {
+			// to select the first tab
+			var a = $('[elem-identifier="TabbableIdentifier"] > a', "#Propr00_tabs").first();
+            a.addClass("active");
+
+			var li = $('[elem-identifier="TabbableIdentifier"]', "#Propr00_tabs").first();			
+			var tabId = li.attr("data-tab");
+			$("#" + tabId).addClass("active");			
+		});
+	</script>

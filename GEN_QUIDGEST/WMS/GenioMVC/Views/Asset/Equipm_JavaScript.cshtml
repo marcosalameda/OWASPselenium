@@ -1,0 +1,409 @@
+﻿@model GenioMVC.ViewModels.Asset.Equipm_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS EQUIPM]/ *@
+<script  type="text/javascript">
+@{
+	string currentModule = UserContext.Current.User.CurrentModule;
+	var showAuditBtn = (UserContext.Current.User.VerifyAccess(CSGenio.framework.Role.ADMINISTRATION) && CSGenio.framework.Configuration.AuditTag.AuditInterface == true);
+}
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Equipm !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Equipm = new QForm($('[data-form="Equipm"]'), "Form_Equipm");
+		}
+		window.Form_Equipm.baseArea = "asset";
+		window.Form_Equipm.FormMode = '@Model.GetFormMode';
+		window.Form_Equipm.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Equipm.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Asset")',
+			GetDependants:		'@Url.Action("GetDependants", "Asset")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Equipm", "Asset")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Equipm", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Asset", "Asset")',
+		};
+		window.Form_Equipm.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+			AuditButton: @showAuditBtn.ToString().ToLower()
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Equipm.formSaveEdit = '@Url.Action("Equipm_SaveEdit", "Asset")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Equipm.formAction = 'Equipm_New';
+		window.Form_Equipm.formRedirectURL = '@Url.Action("Equipm_New_Redirect", "Asset")';
+		window.Form_Equipm.formSubmitURL = '@Url.Action("Equipm_New", "Asset")';
+		window.Form_Equipm.formRedirectURL_repeatInsertion = '@Url.Action("Equipm_New_Redirect", "Asset", new { repeatInsertion = true})';
+		window.Form_Equipm.formSubmitURL_repeatInsertion = '@Url.Action("Equipm_New", "Asset", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Equipm.formAction = 'Equipm_Edit';
+		window.Form_Equipm.formRedirectURL = '@Url.Action("Equipm_Edit_Redirect", "Asset")';
+		window.Form_Equipm.formSubmitURL = '@Url.Action("Equipm_Edit", "Asset")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Equipm.formAction = 'Equipm_Duplicate';
+		window.Form_Equipm.formRedirectURL = '@Url.Action("Equipm_Duplicate_Redirect", "Asset")';
+		window.Form_Equipm.formSubmitURL = '@Url.Action("Equipm_Duplicate", "Asset")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Equipm.formAction = 'Equipm_Delete';
+		window.Form_Equipm.formRedirectURL = '@Url.Action("Equipm_Delete_Redirect", "Asset")';
+		window.Form_Equipm.formSubmitURL = '@Url.Action("Equipm_Delete", "Asset")';
+	</text>
+}
+		window.Form_Equipm.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.IFF_EQUIPM__PSEUDNOVOGR01 = new QGenericControl($('[data-identifier="IFF_EQUIPM__PSEUDNOVOGR01"]', this.element), window.Form_Equipm);
+
+			this.Controls.LED_EQUIPM__ASSETNAME____ = new QTextControl($('[data-identifier="LED_EQUIPM__ASSETNAME____"]', this.element), window.Form_Equipm);
+
+			this.Controls.LED_EQUIPM__ASSETASSETTYP = new QArrayControl($('[data-identifier="LED_EQUIPM__ASSETASSETTYP"]', this.element), window.Form_Equipm);
+
+			this.Controls.LED_EQUIPM__ASSETASSETNUM = new QNumericControl($('[data-identifier="LED_EQUIPM__ASSETASSETNUM"]', this.element), window.Form_Equipm);
+
+			this.Controls.LED_EQUIPM__ASSETIDENTTYP = new QArrayControl($('[data-identifier="LED_EQUIPM__ASSETIDENTTYP"]', this.element), window.Form_Equipm);
+
+			this.Controls.LED_EQUIPM__ASSETGRAI____ = new QTextControl($('[data-identifier="LED_EQUIPM__ASSETGRAI____"]', this.element), window.Form_Equipm);
+
+			this.Controls.LED_EQUIPM__ASSETGIAI____ = new QTextControl($('[data-identifier="LED_EQUIPM__ASSETGIAI____"]', this.element), window.Form_Equipm);
+
+			this.Controls.IFF_EQUIPM__MANUFNAME____ = new QDbeditControl($('[data-identifier="IFF_EQUIPM__MANUFNAME____"]', this.element), window.Form_Equipm);
+
+			this.Controls.IFF_EQUIPM__PSEUDEQUIP01_ = new QTabControl($('[data-identifier="IFF_EQUIPM__PSEUDEQUIP01_"]', this.element), window.Form_Equipm);
+
+			this.Controls.IFF_EQUIPM__PSEUDEQUIP02_ = new QTabControl($('[data-identifier="IFF_EQUIPM__PSEUDEQUIP02_"]', this.element), window.Form_Equipm);
+
+			this.Controls.IFF_EQUIPM__PSEUDEQUIP03_ = new QTabControl($('[data-identifier="IFF_EQUIPM__PSEUDEQUIP03_"]', this.element), window.Form_Equipm);
+
+			this.Controls.IFF_EQUIPM__PSEUDEQUIP04_ = new QTabControl($('[data-identifier="IFF_EQUIPM__PSEUDEQUIP04_"]', this.element), window.Form_Equipm);
+
+			this.Controls.IFF_EQUIPM__KINDEDESIGNAT = new QDbeditControl($('[data-identifier="IFF_EQUIPM__KINDEDESIGNAT"]', this.element), window.Form_Equipm);
+
+			this.Controls.LED_EQUIP01_ASSETPHOTO___ = new QImageControl($('[data-identifier="LED_EQUIP01_ASSETPHOTO___"]', this.element), window.Form_Equipm, '@Html.Raw(Url.Action("ImageDelete", "Asset", new { id=Model.ValCodasset, modelname="Asset", fldname="ValPhoto" }))', '@Html.Raw(Url.Action("ImageCropper", "Asset", new { key=Model.ValCodasset, modelname= "Asset", fldname= "ValPhoto", identifier= "FEQUIPM", FormName= "Equipm", FieldId= "LED_EQUIP01_ASSETPHOTO___" }))',@Html.IsImageEmpty(Model.ValPhoto));
+
+			this.Controls.IFF_EQUIP02_PSEUDNOVOGR01 = new QGenericControl($('[data-identifier="IFF_EQUIP02_PSEUDNOVOGR01"]', this.element), window.Form_Equipm);
+
+			this.Controls.IFF_EQUIP02_PSEUDATTACHME = new QTableListControl($('[data-identifier="IFF_EQUIP02_PSEUDATTACHME"]', this.element), window.Form_Equipm);
+
+			this.Controls.IFF_EQUIP03_PSEUDNOVOGR01 = new QGenericControl($('[data-identifier="IFF_EQUIP03_PSEUDNOVOGR01"]', this.element), window.Form_Equipm);
+
+			this.Controls.IFF_EQUIP03_PSEUDDOCUMENT = new QTableListControl($('[data-identifier="IFF_EQUIP03_PSEUDDOCUMENT"]', this.element), window.Form_Equipm);
+
+			this.Controls.IFF_EQUIP04_PSEUDNOVOGR01 = new QGenericControl($('[data-identifier="IFF_EQUIP04_PSEUDNOVOGR01"]', this.element), window.Form_Equipm);
+
+			this.Controls.IFF_EQUIP04_PSEUDPARAMLOA = new QButtonControl($('[data-identifier="IFF_EQUIP04_PSEUDPARAMLOA"]', this.element), window.Form_Equipm);
+
+			this.Controls.IFF_EQUIP04_PSEUDMANUALS_ = new QButtonControl($('[data-identifier="IFF_EQUIP04_PSEUDMANUALS_"]', this.element), window.Form_Equipm);
+
+			this.Controls.IFF_EQUIP04_PSEUDPARAMETE = new QTableListControl($('[data-identifier="IFF_EQUIP04_PSEUDPARAMETE"]', this.element), window.Form_Equipm);
+
+
+
+
+			this.Controls.LED_EQUIPM__ASSETCODASSET = new QHiddenControl($('[data-identifier="LED_EQUIPM__ASSETCODASSET"]', this.element), window.Form_Equipm);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	</text>
+}
+
+		window.Form_Equipm.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Equipm.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI EQUIPM]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Equipm.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS EQUIPM]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Equipm.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS EQUIPM]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Equipm.Data.RelationKeysSelector = {
+				get manuf() { return $(':not([elem-identifier="Multiform"]) > #ValCodmanuf[pers-cs-area="Manuf"]', $('[data-form="Equipm"]')); /* DBEdit */ },
+				get kinde() { return $(':not([elem-identifier="Multiform"]) > #ValCodkinde[pers-cs-area="Kinde"]', $('[data-form="Equipm"]')); /* DBEdit */ },
+		};
+
+		window.Form_Equipm.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Equipm.Data.RelationKeys = {
+			get formContext() { return window.Form_Equipm; },
+			get manuf() { return (this.formContext.Data.RelationKeysSelector.manuf.getQControl() || {}).Value; /* DBEdit */ },
+			set manuf(newValue) { (this.formContext.Data.RelationKeysSelector.manuf.getQControl() || {}).Value = newValue; /* DBEdit */ },
+			get kinde() { return (this.formContext.Data.RelationKeysSelector.kinde.getQControl() || {}).Value; /* DBEdit */ },
+			set kinde(newValue) { (this.formContext.Data.RelationKeysSelector.kinde.getQControl() || {}).Value = newValue; /* DBEdit */ },
+		};
+	</text>
+}
+
+	window.Form_Equipm.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+		@* Fill When of the 'ValGrai' field *@
+		this.Controls.LED_EQUIPM__ASSETGRAI____.SetFillWhen('FORM_LOADED VALIDENTTYP_CHANGE',
+				function (eTarget) { return  getFieldValue($(':not([elem-identifier="Multiform"]) > #ValIdenttyp', $('[data-form="Equipm"]')))=="R"; });
+		@* Fill When of the 'ValGiai' field *@
+		this.Controls.LED_EQUIPM__ASSETGIAI____.SetFillWhen('FORM_LOADED VALIDENTTYP_CHANGE',
+				function (eTarget) { return  getFieldValue($(':not([elem-identifier="Multiform"]) > #ValIdenttyp', $('[data-form="Equipm"]')))=="I"; });
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+		@* Binding dos eventos que vão despoletar o Mostra Quando do campo ValGrai *@
+		$(qForm).bind('FORM_LOADED VALIDENTTYP_CHANGE', function(event, eTarget) {
+				var conditionRes = ( getFieldValue($(':not([elem-identifier="Multiform"]) > #ValIdenttyp', $('[data-form="Equipm"]')))=="R");
+				$.when(conditionRes).done(function (condition) {
+						ShowWhen($(':not([elem-identifier="Multiform"]) > #ValGrai', $('[data-form="Equipm"]')), condition, false, 'LED_EQUIPM__ASSETGRAI____');
+				});
+		});
+		
+		@* Binding dos eventos que vão despoletar o Mostra Quando do campo ValGiai *@
+		$(qForm).bind('FORM_LOADED VALIDENTTYP_CHANGE', function(event, eTarget) {
+				var conditionRes = ( getFieldValue($(':not([elem-identifier="Multiform"]) > #ValIdenttyp', $('[data-form="Equipm"]')))=="I");
+				$.when(conditionRes).done(function (condition) {
+						ShowWhen($(':not([elem-identifier="Multiform"]) > #ValGiai', $('[data-form="Equipm"]')), condition, false, 'LED_EQUIPM__ASSETGIAI____');
+				});
+		});
+		
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Equipm.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitEquipm(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Equipm.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeleteEquipm(event) {
+			event.preventDefault();
+			window.Form_Equipm.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+    var ajaxCallsRemaining = $(".flash object embed").length;
+    $('form [elem-identifier="ButtonPrimary"]').click(function() {
+        var flashObjects = $(".flash object embed");
+        ajaxCallsRemaining = flashObjects.length;
+        if(flashObjects.length == 0)
+            return true;
+        else {
+            flashObjects.each(function() {
+               var flashObj = GetFlash($(this).attr('id'));
+               flashObj.UsedFlash.TriggerSave(flashObj);
+            });
+            return false;
+        }
+    });
+    </text>
+}
+// USE /[MANUAL GQT FORM_CODEJS EQUIPM]/
+
+
+
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	function Equip04_BC_PARAMETERS (id) {
+
+		var sourceId =  $('#ValCodkinde').val();
+		$.ajax({
+            url: '@Url.Action("GetCarga_Parameters")',
+            type: "GET",
+            data: { idsrc :sourceId, iddst : id }
+        }).done(function(data) {
+            bootbox.alert(data.data);
+            QUtils.WindowReload();
+        }).fail(function(jqXHR, textStatus) {
+            bootbox.alert(quidgestGlobals.Resources.OCORREU_UM_ERRO_AO_P53091);
+        });
+
+    }
+	</text>
+}
+ 
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	function Equip04_BC_MANUALS (id) {
+
+		var sourceId =  $('#ValCodkinde').val();
+		$.ajax({
+            url: '@Url.Action("GetCarga_Manuals")',
+            type: "GET",
+            data: { idsrc :sourceId, iddst : id }
+        }).done(function(data) {
+            bootbox.alert(data.data);
+            QUtils.WindowReload();
+        }).fail(function(jqXHR, textStatus) {
+            bootbox.alert(quidgestGlobals.Resources.OCORREU_UM_ERRO_AO_P53091);
+        });
+
+    }
+	</text>
+}
+  
+
+    $($('[elem-identifier="FormActions"]'), $('[data-form="Equipm"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

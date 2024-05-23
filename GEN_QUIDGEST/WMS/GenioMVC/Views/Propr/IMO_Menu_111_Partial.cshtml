@@ -1,0 +1,139 @@
+﻿@model GenioMVC.ViewModels.Propr.IMO_Menu_111_ViewModel
+@using Newtonsoft.Json;
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@using GenioMVC.ViewModels.Propr;    
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Propr>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: true)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodpropr, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN IMO_MENU_111_PROPR_NAME]/
+		column.Expression(p => p.ValName).Title(@Resources.PROPERTY43977).Field("ValName").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN IMO_MENU_111_PROPR_PRECOEST]/
+		column.Expression(p => p.ValPrecoest).Title(@Resources.ESTIMATED_PRICE02986).Field("ValPrecoest").Size(12);
+// USE /[MANUAL GQT CUSTOM_COLUMN IMO_MENU_111_TPPRO_TPPROPRI]/
+		column.Expression(p => p.Tppro.ValTppropri).Title(@Resources.TYPE00312).Field("Tppro.ValTppropri").Size(20);
+// USE /[MANUAL GQT CUSTOM_COLUMN IMO_MENU_111_PROPR_ENDERECO]/
+		column.Expression(p => p.ValEndereco).Title(@Resources.ADDRESS04342).Hidden().Field("ValEndereco").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN IMO_MENU_111_PROPR_LOCALIDA]/
+		column.Expression(p => p.ValLocalida).Title(@Resources.LOCALE34521).Field("ValLocalida").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN IMO_MENU_111_REGIO_REGIAO]/
+		column.Expression(p => p.Regio.ValRegiao).Title(@Resources.REGION12723).Field("Regio.ValRegiao").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN IMO_MENU_111_PROPR_POSTALCO]/
+		column.Expression(p => p.ValPostalco).Title(@Resources.ZIP_CODE56964).Hidden().Field("ValPostalco").Size(20);
+// USE /[MANUAL GQT CUSTOM_COLUMN IMO_MENU_111_PROPR_POSTALLO]/
+		column.Expression(p => p.ValPostallo).Title(@Resources.POSTAL_LOCATION08708).Hidden().Field("ValPostallo").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN IMO_MENU_111_CNTRY_COUNTRY]/
+		column.Expression(p => p.Cntry.ValCountry).Title(@Resources.COUNTRY64133).Hidden().Field("Cntry.ValCountry").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN IMO_MENU_111_PROPR_MOBILADA]/
+		column.Expression(p => p.ValMobilada).Title(@Resources.FURNISHED37431).Field("ValMobilada").Size(1);
+// USE /[MANUAL GQT CUSTOM_COLUMN IMO_MENU_111_PROPR_QTD_WC]/
+		column.Expression(p => p.ValQtd_wc).Title(@Resources.TOILET13557).Field("ValQtd_wc").Size(6);
+// USE /[MANUAL GQT CUSTOM_COLUMN IMO_MENU_111_PROPR_QTDQUART]/
+		column.Expression(p => p.ValQtdquart).Title(@Resources.ROOMS06809).Field("ValQtdquart").Size(6);
+// USE /[MANUAL GQT CUSTOM_COLUMN IMO_MENU_111_PROPR_M2]/
+		column.Expression(p => p.ValM2).Title(@Resources.M212241).Field("ValM2").Size(6);
+// USE /[MANUAL GQT CUSTOM_COLUMN IMO_MENU_111_PROPR_DTDISPON]/
+		column.Expression(p => p.ValDtdispon).Title(@Resources.AVAILABILITY56489).Field("ValDtdispon").Size(8).Format("{0:d}");
+// USE /[MANUAL GQT CUSTOM_COLUMN IMO_MENU_111_PROPR_PHOTOGRA]/
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValPhotogra, new {alt=@Resources.PHOTO51874,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCodpropr, modelname = "Propr", fldname = "ValPhotogra" }))).Title(@Resources.PHOTO51874).Field("ValPhotogra").Size(3);
+// USE /[MANUAL GQT CUSTOM_COLUMN IMO_MENU_111_PROPR_DESCRIPT]/
+		column.Expression(p => p.ValDescript).Title(@Resources.DESCRIPTION07383).Hidden().Field("ValDescript").Size(30);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Propr")
+        .Id("IMO_Menu_111")
+        .AjaxRequest("Menu")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .DBEdit()
+        .Filters(this.Model.Menu.Filters)
+        .Form("Propr00", false, false)
+        .SetFollowUp("Propr00_Edit", "Propr" , (Func<GenioMVC.Models.Propr, object>)(item => new { id = item.ValCodpropr }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
+        .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
+		;
+        
+}
+
+@tbl.ToHtml()
+
+
+<script>
+ 
+ 
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qIMO_Menu_111, #IMO_Menu_111_complex_filter th input, #IMO_Menu_111_filters input").change(function() {
+                    $("#pIMO_Menu_111").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#IMO_Menu_111_tableFilters').val(false);")
+                    @Html.Raw("$('#IMO_Menu_111_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#IMO_Menu_111_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $("[data-form='IMO_Menu_111']").submit();
+                    @:      event.preventDefault();
+                    @:      ClearSearchBox('qIMO_Menu_111');
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#IMO_Menu_111_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_IMO_Menu_111').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+                 @if (this.Model.Menu.Filters.FiltersValues.Count >= 1) {
+                    var activeFields = Newtonsoft.Json.JsonConvert.SerializeObject(this.Model.Menu.Filters.FiltersValues);
+                    @: SetActiveFilters('IMO_Menu_111', 'PROPR', @Html.Raw(activeFields))
+                  }
+
+
+                setupHistoryClicks()
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='Menu']"));
+                    InitSpecialControls($('#Menu'));
+                    $('#Menu').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS IMO_MENU_111]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+// USE /[MANUAL GQT LISTING_CODEJS IMO_MENU_111]/
+</script>

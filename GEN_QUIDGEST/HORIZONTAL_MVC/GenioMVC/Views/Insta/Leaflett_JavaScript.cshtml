@@ -1,0 +1,356 @@
+﻿@model GenioMVC.ViewModels.Insta.Leaflett_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS LEAFLETT]/ *@
+<script  type="text/javascript">
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Leaflett !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Leaflett = new QForm($('[data-form="Leaflett"]'), "Form_Leaflett");
+		}
+		window.Form_Leaflett.baseArea = "insta";
+		window.Form_Leaflett.FormMode = '@Model.GetFormMode';
+		window.Form_Leaflett.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Leaflett.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Insta")',
+			GetDependants:		'@Url.Action("GetDependants", "Insta")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Leaflett", "Insta")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Leaflett", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Insta", "Insta")',
+		};
+		window.Form_Leaflett.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Leaflett.formSaveEdit = '@Url.Action("Leaflett_SaveEdit", "Insta")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Leaflett.formAction = 'Leaflett_New';
+		window.Form_Leaflett.formRedirectURL = '@Url.Action("Leaflett_New_Redirect", "Insta")';
+		window.Form_Leaflett.formSubmitURL = '@Url.Action("Leaflett_New", "Insta")';
+		window.Form_Leaflett.formRedirectURL_repeatInsertion = '@Url.Action("Leaflett_New_Redirect", "Insta", new { repeatInsertion = true})';
+		window.Form_Leaflett.formSubmitURL_repeatInsertion = '@Url.Action("Leaflett_New", "Insta", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Leaflett.formAction = 'Leaflett_Edit';
+		window.Form_Leaflett.formRedirectURL = '@Url.Action("Leaflett_Edit_Redirect", "Insta")';
+		window.Form_Leaflett.formSubmitURL = '@Url.Action("Leaflett_Edit", "Insta")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Leaflett.formAction = 'Leaflett_Duplicate';
+		window.Form_Leaflett.formRedirectURL = '@Url.Action("Leaflett_Duplicate_Redirect", "Insta")';
+		window.Form_Leaflett.formSubmitURL = '@Url.Action("Leaflett_Duplicate", "Insta")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Leaflett.formAction = 'Leaflett_Delete';
+		window.Form_Leaflett.formRedirectURL = '@Url.Action("Leaflett_Delete_Redirect", "Insta")';
+		window.Form_Leaflett.formSubmitURL = '@Url.Action("Leaflett_Delete", "Insta")';
+	</text>
+}
+		window.Form_Leaflett.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.IFF_LEAFLETTEQUIPREGISTNR = new QDbeditControl($('[data-identifier="IFF_LEAFLETTEQUIPREGISTNR"]', this.element), window.Form_Leaflett);
+
+			this.Controls.LED_LEAFLETTTPEQUTIPOEQUI = new QTextControl($('[data-identifier="LED_LEAFLETTTPEQUTIPOEQUI"]', this.element), window.Form_Leaflett);
+
+			this.Controls.LED_LEAFLETTINSTADESCRIPT = new QGenericControl($('[data-identifier="LED_LEAFLETTINSTADESCRIPT"]', this.element), window.Form_Leaflett);
+
+			this.Controls.LED_LEAFLETTINSTADESIGNAT = new QTextControl($('[data-identifier="LED_LEAFLETTINSTADESIGNAT"]', this.element), window.Form_Leaflett);
+
+			this.Controls.LED_LEAFLETTINSTADTINIAGE = new QDateControl($('[data-identifier="LED_LEAFLETTINSTADTINIAGE"]', this.element), window.Form_Leaflett);
+
+			this.Controls.LED_LEAFLETTINSTADTFIMAGE = new QDateControl($('[data-identifier="LED_LEAFLETTINSTADTFIMAGE"]', this.element), window.Form_Leaflett);
+
+			this.Controls.LED_LEAFLETTINSTAALLDAY__ = new QCheckBoxControl($('[data-identifier="LED_LEAFLETTINSTAALLDAY__"]', this.element), window.Form_Leaflett);
+
+			this.Controls.LED_LEAFLETTINSTASINCE___ = new QDateControl($('[data-identifier="LED_LEAFLETTINSTASINCE___"]', this.element), window.Form_Leaflett);
+
+			this.Controls.LED_LEAFLETTINSTAUNTIL___ = new QDateControl($('[data-identifier="LED_LEAFLETTINSTAUNTIL___"]', this.element), window.Form_Leaflett);
+
+			this.Controls.LED_LEAFLETTINSTAHOURS___ = new QNumericControl($('[data-identifier="LED_LEAFLETTINSTAHOURS___"]', this.element), window.Form_Leaflett);
+
+			this.Controls.LED_LEAFLETTINSTAPRECOHOR = new QNumericControl($('[data-identifier="LED_LEAFLETTINSTAPRECOHOR"]', this.element), window.Form_Leaflett);
+
+			this.Controls.LED_LEAFLETTINSTAVALUE___ = new QNumericControl($('[data-identifier="LED_LEAFLETTINSTAVALUE___"]', this.element), window.Form_Leaflett);
+
+			this.Controls.LED_LEAFLETTINSTACOORDGEO = new QTextControl($('[data-identifier="LED_LEAFLETTINSTACOORDGEO"]', this.element), window.Form_Leaflett);
+
+
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	@*Hidden Foreign Keys Controls*@
+			this.Controls.LED_LEAFLETTTPEQUCODTPEQU = new QHiddenControl($('[data-identifier="LED_LEAFLETTTPEQUCODTPEQU"]', this.element), window.Form_Leaflett);
+	</text>
+}
+			this.Controls.LED_LEAFLETTINSTACODINSTA = new QHiddenControl($('[data-identifier="LED_LEAFLETTINSTACODINSTA"]', this.element), window.Form_Leaflett);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	@* DBEdit Limits *@
+			this.Controls.IFF_LEAFLETTEQUIPREGISTNR.AddLimit(this.Controls.LED_LEAFLETTTPEQUCODTPEQU, 'A');
+	</text>
+}
+
+		window.Form_Leaflett.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Leaflett.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI LEAFLETT]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Leaflett.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS LEAFLETT]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Leaflett.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS LEAFLETT]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Leaflett.Data.RelationKeysSelector = {
+				get tpequ() { return $(':not([elem-identifier="Multiform"]) > #ValCodtpequ', $('[data-form="Leaflett"]')); /* Hidden */ },
+				get equip() { return $(':not([elem-identifier="Multiform"]) > #ValCodequip[pers-cs-area="Equip"]', $('[data-form="Leaflett"]')); /* DBEdit */ },
+		};
+
+		window.Form_Leaflett.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Leaflett.Data.RelationKeys = {
+			get formContext() { return window.Form_Leaflett; },
+			get tpequ() { return (this.formContext.Data.RelationKeysSelector.tpequ.getQControl() || {}).Value; /* Hidden FK */ },
+			set tpequ(newValue) { (this.formContext.Data.RelationKeysSelector.tpequ.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+			get equip() { return (this.formContext.Data.RelationKeysSelector.equip.getQControl() || {}).Value; /* DBEdit */ },
+			set equip(newValue) { (this.formContext.Data.RelationKeysSelector.equip.getQControl() || {}).Value = newValue; /* DBEdit */ },
+		};
+	</text>
+}
+
+	window.Form_Leaflett.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+		@* Formula of the 'ValHours' field *@
+		$(qForm).bind('VALSINCE_CHANGE VALUNTIL_CHANGE', function(event, eTarget) {
+				try {
+						var newValue = (qApi.iif(qApi.emptyD( getFieldValue($(':not([elem-identifier="Multiform"]) > #ValSince', $('[data-form="Leaflett"]'))))==1||qApi.emptyD( getFieldValue($(':not([elem-identifier="Multiform"]) > #ValUntil', $('[data-form="Leaflett"]'))))==1,0,qApi.Diferenca_entre_Datas( getFieldValue($(':not([elem-identifier="Multiform"]) > #ValSince', $('[data-form="Leaflett"]'))), getFieldValue($(':not([elem-identifier="Multiform"]) > #ValUntil', $('[data-form="Leaflett"]'))),"H")));
+						$.when(newValue).done(function (result) {
+								setFieldValue($(':not([elem-identifier="Multiform"]) > #ValHours', $('[data-form="Leaflett"]')), result);
+								if($(':not([elem-identifier="Multiform"]) > #ValHours', $('[data-form="Leaflett"]')).data('QObject') === undefined) $(':not([elem-identifier="Multiform"]) > #ValHours', $('[data-form="Leaflett"]')).change(); //TODO: Remove this later...
+						});
+				} catch (err) { QError.AppendError('Formula of field ValHours: ' + err.message, err.stack, window.location.href); }
+		});
+		
+		@* Formula of the 'ValValue' field *@
+		$(qForm).bind('VALHOURS_CHANGE VALPRECOHOR_CHANGE', function(event, eTarget) {
+				try {
+						var newValue = ( getFieldValue($(':not([elem-identifier="Multiform"]) > #ValHours', $('[data-form="Leaflett"]')))* getFieldValue($(':not([elem-identifier="Multiform"]) > #ValPrecohor', $('[data-form="Leaflett"]'))));
+						$.when(newValue).done(function (result) {
+								setFieldValue($(':not([elem-identifier="Multiform"]) > #ValValue', $('[data-form="Leaflett"]')), result);
+								if($(':not([elem-identifier="Multiform"]) > #ValValue', $('[data-form="Leaflett"]')).data('QObject') === undefined) $(':not([elem-identifier="Multiform"]) > #ValValue', $('[data-form="Leaflett"]')).change(); //TODO: Remove this later...
+						});
+				} catch (err) { QError.AppendError('Formula of field ValValue: ' + err.message, err.stack, window.location.href); }
+		});
+		
+		@* Recalculate formulas (server side) *@
+		$(qForm).bind('VALSINCE_CHANGE VALCODTPEQU_CHANGE', function(event, eTarget) {
+				window.Form_Leaflett.RecalculateFormulas();
+		});
+		
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Leaflett.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitLeaflett(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Leaflett.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeleteLeaflett(event) {
+			event.preventDefault();
+			window.Form_Leaflett.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+    var ajaxCallsRemaining = $(".flash object embed").length;
+    $('form [elem-identifier="ButtonPrimary"]').click(function() {
+        var flashObjects = $(".flash object embed");
+        ajaxCallsRemaining = flashObjects.length;
+        if(flashObjects.length == 0)
+            return true;
+        else {
+            flashObjects.each(function() {
+               var flashObj = GetFlash($(this).attr('id'));
+               flashObj.UsedFlash.TriggerSave(flashObj);
+            });
+            return false;
+        }
+    });
+    </text>
+}
+// USE /[MANUAL GQT FORM_CODEJS LEAFLETT]/
+
+
+
+ 
+
+    $($('[elem-identifier="FormActions"]'), $('[data-form="Leaflett"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

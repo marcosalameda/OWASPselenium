@@ -1,0 +1,15 @@
+﻿@using GenioMVC.Models.Navigation;
+
+<div class="c-sidebar--container__section">
+    <div class="c-sidebar__alert-buttoncontainer">
+        <div class="b-icon-text b-icon-text alert-button" id="alert-button">
+            <span class="text e-badge e-badge--primary">2</span>
+        </div>
+        <button type="button" id="alert-button-refresh" class="b-icon b-icon--secondary" onclick="Load_Alerts(true)"><i class="glyphicons glyphicons-refresh e-icon" aria-hidden="true"></i><span class="hidden-elem">@Resources.REFRESCAR60171</span></button>
+        <button type="button" id="alert-button-dismiss" class="b-icon b-icon--primary"onclick="dismissAlerts()"><i class="glyphicons glyphicons-bin e-icon" aria-hidden="true"></i><span class="hidden-elem">@Resources.DISPENSAR51481</span></button>
+    </div>
+    <div>
+        <div id="alerts-container" class="c-sidebar__alert-container">
+        </div>
+    </div>
+</div>

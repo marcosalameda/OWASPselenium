@@ -1,0 +1,230 @@
+﻿@model GenioMVC.ViewModels.Dttyp.WMS_Menu_7111_ViewModel
+@using GenioMVC.Resources
+@using System.Web.Script.Serialization
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Title = Model.DBEditTitle;
+	//Layout = "~/Views/Shared/Layouts/TopMenu_BT4/_Layout.cshtml";
+}
+
+@{
+	GenioMVC.ViewModels.Dttyp.WMS_Menu_7111_ViewModel modelWMS_Menu_7111 = new GenioMVC.ViewModels.Dttyp.WMS_Menu_7111_ViewModel(Navigation);
+	var columns = modelWMS_Menu_7111.GetSearchColumns();
+
+	Dictionary<string, TableFilterField> fields = new Dictionary<string, TableFilterField>();
+
+
+	foreach (var col in columns)
+	{
+		var areaField = col.AreaField;
+		if (areaField.Area == "dttyp" && areaField.Field == "string")
+		{
+			fields.Add("DTTYP.STRING", new TableFilterField("DTTYP", "STRING", Resources.STRING29433, "text", defaultSearch : true));
+		}
+		if (areaField.Area == "dttyp" && areaField.Field == "uppercas")
+		{
+			fields.Add("DTTYP.UPPERCAS", new TableFilterField("DTTYP", "UPPERCAS", Resources.UPPER_CASE31324, "text"));
+		}
+		if (areaField.Area == "dttyp" && areaField.Field == "qrcode")
+		{
+			fields.Add("DTTYP.QRCODE", new TableFilterField("DTTYP", "QRCODE", Resources.QR_CODE12259, "text"));
+		}
+		if (areaField.Area == "dttyp" && areaField.Field == "multilin")
+		{
+			fields.Add("DTTYP.MULTILIN", new TableFilterField("DTTYP", "MULTILIN", Resources.SIMPLE_MULTILINE_TEX04460, "text"));
+		}
+		if (areaField.Area == "dttyp" && areaField.Field == "multili3")
+		{
+			fields.Add("DTTYP.MULTILI3", new TableFilterField("DTTYP", "MULTILI3", Resources.EDITOR_MULTILINE_TEX05556, "text"));
+		}
+		if (areaField.Area == "dttyp" && areaField.Field == "boolean")
+		{
+			fields.Add("DTTYP.BOOLEAN", new TableFilterField("DTTYP", "BOOLEAN", Resources.BOOLEAN__TINYINT___S57956, "bool"));
+		}
+		if (areaField.Area == "dttyp" && areaField.Field == "boolean2")
+		{
+			fields.Add("DTTYP.BOOLEAN2", new TableFilterField("DTTYP", "BOOLEAN2", Resources.CONDITIONAL__BOOLEAN08919, "bool"));
+		}
+		if (areaField.Area == "dttyp" && areaField.Field == "smallint")
+		{
+			fields.Add("DTTYP.SMALLINT", new TableFilterField("DTTYP", "SMALLINT", Resources.SMALL_INTEGER__STORA54196, "num"));
+		}
+		if (areaField.Area == "dttyp" && areaField.Field == "integer")
+		{
+			fields.Add("DTTYP.INTEGER", new TableFilterField("DTTYP", "INTEGER", Resources.INTEGER__STORAGE__4_49578, "num"));
+		}
+		if (areaField.Area == "dttyp" && areaField.Field == "bigint")
+		{
+			fields.Add("DTTYP.BIGINT", new TableFilterField("DTTYP", "BIGINT", Resources.BIG_INTEGER__STORAGE28249, "num"));
+		}
+		if (areaField.Area == "dttyp" && areaField.Field == "real")
+		{
+			fields.Add("DTTYP.REAL", new TableFilterField("DTTYP", "REAL", Resources.REAL_FLOAT_24___PREC46659, "num"));
+		}
+		if (areaField.Area == "dttyp" && areaField.Field == "float")
+		{
+			fields.Add("DTTYP.FLOAT", new TableFilterField("DTTYP", "FLOAT", Resources.DOUBLE___FLOAT_53___07951, "num"));
+		}
+		if (areaField.Area == "dttyp" && areaField.Field == "decimal")
+		{
+			fields.Add("DTTYP.DECIMAL", new TableFilterField("DTTYP", "DECIMAL", Resources.DECIMAL__1_10___STOR26677, "num"));
+		}
+		if (areaField.Area == "dttyp" && areaField.Field == "decimal9")
+		{
+			fields.Add("DTTYP.DECIMAL9", new TableFilterField("DTTYP", "DECIMAL9", Resources.DECIMAL__11_15___STO49382, "num"));
+		}
+		if (areaField.Area == "dttyp" && areaField.Field == "money")
+		{
+			fields.Add("DTTYP.MONEY", new TableFilterField("DTTYP", "MONEY", Resources.MONEY___DECIMAL__1_124403, "num"));
+		}
+		if (areaField.Area == "dttyp" && areaField.Field == "money9")
+		{
+			fields.Add("DTTYP.MONEY9", new TableFilterField("DTTYP", "MONEY9", Resources.MONEY___DECIMAL__11_02101, "num"));
+		}
+		if (areaField.Area == "dttyp" && areaField.Field == "date")
+		{
+			fields.Add("DTTYP.DATE", new TableFilterField("DTTYP", "DATE", Resources.DATE02091, "date"));
+		}
+		if (areaField.Area == "dttyp" && areaField.Field == "datetime")
+		{
+			fields.Add("DTTYP.DATETIME", new TableFilterField("DTTYP", "DATETIME", Resources.DATETIME62630, "date"));
+		}
+		if (areaField.Area == "dttyp" && areaField.Field == "dtsesond")
+		{
+			fields.Add("DTTYP.DTSESOND", new TableFilterField("DTTYP", "DTSESOND", Resources.DATE_TIME_SECOND__IN55990, "date"));
+		}
+		if (areaField.Area == "dttyp" && areaField.Field == "time")
+		{
+			fields.Add("DTTYP.TIME", new TableFilterField("DTTYP", "TIME", Resources.TIME50904, "text"));
+		}
+		if (areaField.Area == "dttyp" && areaField.Field == "uuid")
+		{
+			fields.Add("DTTYP.UUID", new TableFilterField("DTTYP", "UUID", Resources.UUID__AKA_GUID_13998, "text"));
+		}
+		if (areaField.Area == "dttyp" && areaField.Field == "start")
+		{
+			fields.Add("DTTYP.START", new TableFilterField("DTTYP", "START", Resources.STARTING_TIME_WITH_I44217, "date"));
+		}
+		if (areaField.Area == "dttyp" && areaField.Field == "end")
+		{
+			fields.Add("DTTYP.END", new TableFilterField("DTTYP", "END", Resources.END_TIME_WITH_INCLUS19241, "date"));
+		}
+	}
+
+	JavaScriptSerializer serializer = new JavaScriptSerializer();
+	string fieldsStr = serializer.Serialize(fields);
+}
+
+<script>
+	//Fields with information for search filters
+	var fields = @Html.Raw(fieldsStr);
+	//Table List Search Filters
+	var searchFilterGroups = [];
+</script>
+
+
+@using (Ajax.BeginForm("WMS_Menu_7111", "Dttyp", new AjaxOptions
+{
+	HttpMethod= "POST",
+	InsertionMode = InsertionMode.Replace,
+	UpdateTargetId = "Menu",
+	OnSuccess = "InitMenuSpecialControls"
+}, new { @class = "form-horizontal", area="Dttyp", data_form="WMS_Menu_7111" }))
+{
+		<input id="SearchFilters" type="hidden" value="" />
+
+		<div class="page-header row" style="align-items:center">
+		   <div class="col">
+<div class="table-title c-table__title">
+					<h1>@ViewBag.Title</h1>
+				</div>
+
+		   </div>
+		   <div class="col-auto search">
+				<div class="i-input-group input-xxlarge" id="WMS_Menu_7111_simple_filter">
+					<div data-search-filter-menu-elem="filter-box-list"></div>
+					@Html.TextBox("qWMS_Menu_7111", Navigation.GetStrValue("qWMS_Menu_7111"), new { @class="i-input-group__field input-xxlarge dropdown-toggle", @title=@Resources.CAIXA_DE_PESQUISA53870, @onfocus="ToggleSearchFilterBox('WMS_Menu_7111');" ,@onkeydown = "ListSearchEnter(event)", @autocomplete = "off" ,@data_toggle = "dropdown",@data_search_field_menu_elem = "show", @onblur = "HideSearchFieldMenuOnUnfocus('WMS_Menu_7111');",@placeholder = Resources.PESQUISAR34506 + " " + Resources.STRING29433})
+					<button id="qWMS_Menu_7111-clearBtn" class="clear-search d-none" type="button">
+						<i class="glyphicons glyphicons-remove mr-1"></i>
+					</button>
+					@Html.SearchFieldMenu("WMS_Menu_7111", fields, "DTTYP")
+					<div class="b-btn-group i-input-group--right">
+						<button type="button" elem-identifier="ListSearchButton" class="btn b-icon b-icon--secondary i-input-group__button--secondary  listSearchButton" title="@Resources.PESQUISAR34506" onclick="AddSearchFieldFilter('WMS_Menu_7111', 'DTTYP', 'DTTYP.STRING');"><i class="glyphicons glyphicons-search i-input-group__tag-icon i-input-group__button-icon"></i></button>
+						@{
+						var advancedSearchIcon = @Model.Menu.Filters.ShowTableFilters ? "glyphicons-zoom-out" : "glyphicons-zoom-in";
+						<button id="WMS_Menu_7111_extra" class="btn b-icon b-icon--secondary i-input-group__button--secondary" type="button" onclick="changeFilters('#WMS_Menu_7111_complex_filter', 'WMS_Menu_7111_tableFilters');applyComplexFilterIDs();" title="@Resources.PESQUISA_AVANCADA06198"><span class="glyphicons @advancedSearchIcon i-input-group__tag-icon i-input-group__button-icon"></span></button>
+						}
+						@Html.SearchFilterMenu("WMS_Menu_7111")
+					</div>
+				</div>
+			</div>
+            @if(!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest() && !Model.IsViewModeHidden("LIST"))
+            {
+			<div class="col-auto float-right" style="padding: 0; padding-right: 15px">
+				<div class="b-btn-group float-right" style="height: 32.625px">
+					@*List properties LISTS*@
+					@if(!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest())
+					{
+						<button class="b-btn b-icon b-icon--secondary" type="button" data-modal-form="Lstusr" data-modal-id="lstusr-edit-modal" data-table="WMS_Menu_7111" data-modal-url="@Url.Action("ChangeListProperties", "Lstusr", new { idlist = "WMS_Menu_7111", idlistController = "Dttyp", idlistArea = "Dttyp", codlista ="c2b15f2a-27e8-459e-91be-79fcbdf502e1" })" title="@Resources.ALTERAR_A_APRESENTAC58401"><i class="glyphicons glyphicons-list e-icon"></i></button>
+					}
+				</div>
+			</div>
+            }
+		</div>
+ 	<div id="Menu" element-identifier="List">
+		@{ Html.RenderPartial("WMS_Menu_7111_Partial"); }
+	</div>
+	@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "WMS_Menu_7111" })
+	@Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId)
+	@Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock())
+	@Html.AntiForgeryToken()
+}
+
+
+
+<script>
+	$(document).ready(function () {
+		window.Form_WMS_Menu_7111 = new QMenuForm($('[data-form="WMS_Menu_7111"]'), "Form_WMS_Menu_7111");
+		window.Form_WMS_Menu_7111.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_WMS_Menu_7111.Init();
+
+		//Initialize search field menu for search bar
+		InitSearchFieldMenu("qWMS_Menu_7111");
+		RegisterClearEvents("WMS_Menu_7111")
+
+		// TVC - added code to load advanced filters after returning from a form
+		@{
+			string advFil = "";
+			if (!String.IsNullOrEmpty(Navigation.GetStrValue("AdvancedFilters")))
+			{
+				advFil = Navigation.GetStrValue("AdvancedFilters");
+			}
+		}
+
+		SearchFilters.value = '@Html.Raw(advFil)';
+		if (typeof SearchFilters.value === 'string' && SearchFilters.value.length > 0)
+			UpdateSearchFilterStatus("WMS_Menu_7111", JSON.parse(SearchFilters.value))
+	});
+</script>
+
+@helper codeJavascript()
+{
+<script>
+	QLocalStorage.remLocalStorage("savedInfo");
+	$(document).ready(function (e) {
+		InitSpecialControls($('[data-form="WMS_Menu_7111"]'));
+
+
+ 	});
+
+	function InitMenuSpecialControls() {
+		InitSpecialControls($('[data-form="WMS_Menu_7111"]'));
+	}
+
+</script>
+}
+
+@section code_javascript {
+	@codeJavascript()
+}

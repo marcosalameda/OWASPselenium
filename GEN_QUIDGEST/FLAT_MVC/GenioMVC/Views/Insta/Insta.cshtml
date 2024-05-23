@@ -1,0 +1,392 @@
+﻿@model GenioMVC.ViewModels.Insta.Insta_ViewModel
+@using GenioMVC.Models.Navigation;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Form = "Insta";
+	ViewBag.Title = @Resources.INSTALLATION12952;
+    ViewBag.formmode = Model.GetFormMode;
+	ViewBag.ClassForFormLayout = "form-flow";
+}
+
+
+@if (!Model.NestedForm) {
+    if(Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+    {
+        using (Html.BeginForm("Action", "Insta", FormMethod.Post, new { @class = "form-horizontal", area="Insta", data_form="Insta" }))
+        {
+            @form_content_alert()
+            @Html.QValidationSummary()
+	        @LoadDefault()
+        }
+    }
+    else
+    {
+        <div class="form-horizontal" id="Insta" area="Insta" data-form="Insta">
+	        @LoadDefault()
+        </div>
+    }
+}
+else {
+    <div class="c-card nested-form" id="Insta_well" area="Insta" data-form="Insta">
+        @Html.QValidationSummary()
+		@LoadDefault()
+    </div>
+}
+
+@helper form_content_body() {
+			<div class="row">
+				<div class="col-12">
+					<div class="row-large-control">
+						<div class="row-line-group" id="CONTAINER_IFF_INSTA___PSEUDNOVOGR01">
+<div id="INSTA_NOVOGR01" elem-identifier="AccordionGroup" class="c-accordion accordion-group " data-identifier="IFF_INSTA___PSEUDNOVOGR01">
+	
+	<div class="c-accordion__panel">
+		<div elem-identifier="AccordionHeading" class="c-accordion__panel-header" >
+			<a elem-identifier="AccordionToggle" href="#" class="b-btn b-btn--link c-accordion__panel-title" role="button" data-toggle="collapse"  
+				data-target="#INSTA_NOVOGR01I" data-zone-type="ZC"
+				label-id="IFF_INSTA___PSEUDNOVOGR01"
+				>
+				<span  help-id="IFF_INSTA___PSEUDNOVOGR01"/>	
+				<i class="glyphicons glyphicons-plus-sign c-accordion__panel-icon"></i>
+				@Resources.EQUIPMENT03632		
+				<a href="javascript:OpenSuggestion('IFF_INSTA___PSEUDNOVOGR01','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a>
+			</a>
+		</div>
+		<div id="INSTA_NOVOGR01I" elem-identifier="AccordionBody" data-parent="#INSTA_NOVOGR01" class="collapse" style="height:0px; ">
+			<div class="c-accordion__panel-body" elem-identifier="AccordionInner">
+					<div elem-identifier="ContainerAccordionInner" class="container-fluid">
+												<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-dbedit draggable " id="CONTAINER_IFF_INSTA___TPEQUTIPOEQUI">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.TableTpequTipoequi, new { label_id="IFF_INSTA___TPEQUTIPOEQUI", @class = " i-text__label", id="LABEL_IFF_INSTA___TPEQUTIPOEQUI"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('IFF_INSTA___TPEQUTIPOEQUI','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DropDownListFor(model => model.ValCodtpequ, Model.TableTpequTipoequi.List , "", new {help_id = "IFF_INSTA___TPEQUTIPOEQUI", @class = "i-select chosen-dropdown input-xxlarge", data_identifier = "IFF_INSTA___TPEQUTIPOEQUI", @pers_cs_area = "Tpequ", @pers_cs_field = "ValCodtpequ", @db_field = "ValCodtpequ", @db_full_field_name = "insta.codtpequ", data_has_more = Model.TableTpequTipoequi.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableTpequTipoequi.Selected, data_dbedit_value = Model.TableTpequTipoequi.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodinsta, @data_see_more = "Insta_TpequValTipoequi", title = @Resources.TYPE_OF_EQUIPMENT64921, data_see_more_url = @Url.Action("Insta_TpequValTipoequi","Insta"), data_see_more_tree_url = @Url.Action("GetTreeSeeMore", new { Identifier = "IFF_INSTA___TPEQUTIPOEQUI" }), data_is_dbedit = "true", data_fields = "tpequ.codtpequ,tpequ.tpequcod,tpequ.tipoequi,tpequ.qtdequip", data_main_field = "Tpequ.ValTipoequi", data_elements = 0, data_filled_by_history = Model.TableTpequTipoequi.FilledByHistory, @dependant_fields = "tpequ.codtpequ,tpequ.tipoequi" })
+													@Html.ValidationMessageFor(model => model.TableTpequTipoequi)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-dbedit draggable " id="CONTAINER_IFF_INSTA___EQUIPREGISTNR">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.TableEquipRegistnr, new { label_id="IFF_INSTA___EQUIPREGISTNR", @class = " i-text__label", id="LABEL_IFF_INSTA___EQUIPREGISTNR"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('IFF_INSTA___EQUIPREGISTNR','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DropDownListFor(model => model.ValCodequip, Model.TableEquipRegistnr.List , "", new {help_id = "IFF_INSTA___EQUIPREGISTNR", @class = "i-select chosen-dropdown input-medium", data_identifier = "IFF_INSTA___EQUIPREGISTNR", @pers_cs_area = "Equip", @pers_cs_field = "ValCodequip", @db_field = "ValCodequip", @db_full_field_name = "insta.codequip", dependant_area = "Tpequ", dependant = "ValCodtpequ", key_field = "ValCodequip", data_has_more = Model.TableEquipRegistnr.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableEquipRegistnr.Selected, data_dbedit_value = Model.TableEquipRegistnr.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodinsta, @data_see_more = "Insta_EquipValRegistnr", title = @Resources.REGISTRATION_NO_06209, data_see_more_url = @Url.Action("Insta_EquipValRegistnr","Insta"), data_is_dbedit = "true", data_fields = "equip.codequip,equip.designat,equip.registnr,equip.sequennr,equip.dtaquisi,equip.dtdeco,equip.photogra,equip.valortot", data_main_field = "Equip.ValRegistnr", data_elements = 0, data_filled_by_history = Model.TableEquipRegistnr.FilledByHistory, @dependant_fields = "equip.codequip,equip.registnr,equip.designat" })
+													@Html.ValidationMessageFor(model => model.TableEquipRegistnr)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_INSTA___EQUIPDESIGNAT">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.EquipValDesignat, new { label_id="LED_INSTA___EQUIPDESIGNAT", @class = " i-text__label", id="LABEL_LED_INSTA___EQUIPDESIGNAT"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_INSTA___EQUIPDESIGNAT','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.EquipValDesignat, new {help_id = "LED_INSTA___EQUIPDESIGNAT", @class = "i-text__field i-text input-xxlarge", data_refresh = "true", data_tipoform = "DF", data_identifier = "LED_INSTA___EQUIPDESIGNAT", @pers_cs_area = "Equip", @pers_cs_field = "ValDesignat", @db_field = "ValDesignat", fixed_field = "true", @readonly = "readonly", dependant = "ValCodequip", key_field = "ValCodequip", dependant_area = "Equip", title = @Resources.DESIGNATION_35800, maxlength = "85", rows = "85" })
+													@Html.ValidationMessageFor(model => model.EquipValDesignat)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-image draggable " id="CONTAINER_LED_INSTA___EQUIPPHOTOGRA">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.EquipValPhotogra, new { label_id="LED_INSTA___EQUIPPHOTOGRA", @class = " i-text__label", id="LABEL_LED_INSTA___EQUIPPHOTOGRA"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_INSTA___EQUIPPHOTOGRA','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													<div data-identifier="LED_INSTA___EQUIPPHOTOGRA" pers-cs-area="Equip" pers-cs-field="ValPhotogra" class="image-control-wrapper" >
+													@Html.DisplayFor(m => m.EquipValPhotogra, new {help_id = "LED_INSTA___EQUIPPHOTOGRA", @class = "col-auto ", data_identifier = "LED_INSTA___EQUIPPHOTOGRA", fixed_field = "true", @readonly = "readonly", dependant = "ValCodequip", key_field = "ValCodequip", dependant_area = "Equip", title = @Resources.PHOTO51874, guid = @Model.ValCodequip, controller = "Equip", fldname = "ValPhotogra", identifier = "FINSTA", style = "height: 50pt; display: inline-block;" })
+													</div>
+													@Html.ValidationMessageFor(model => model.EquipValPhotogra)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+						</div>
+				</div>
+		</div>
+	</div>
+</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="row-line-group">
+                            <div class="c-groupbox " id="GROUPBOX_INSTA_NOVOGR02">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_INSTA___PSEUDNOVOGR02" 
+                                    label-id="IFF_INSTA___PSEUDNOVOGR02">
+                                    <span>@Resources.COST06096</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_INSTA___PSEUDNOVOGR02','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-date-picker draggable " id="CONTAINER_LED_INSTA___INSTASINCE___">
+													<div class="d-inline-flex">
+													@Html.LabelFor(model => model.ValSince, new { label_id="LED_INSTA___INSTASINCE___", @class = " i-text__label", id="LABEL_LED_INSTA___INSTASINCE___"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_INSTA___INSTASINCE___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DateFor(model => model.ValSince, new {help_id = "LED_INSTA___INSTASINCE___", @class = "i-input-group__field b-icon-text input-medium", data_identifier = "LED_INSTA___INSTASINCE___", @pers_cs_area = "Insta", @pers_cs_field = "ValSince", @db_field = "ValSince", title = @Resources.SINCE_26335 })
+													@Html.ValidationMessageFor(model => model.ValSince)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-date-picker draggable " id="CONTAINER_LED_INSTA___INSTAUNTIL___">
+													<div class="d-inline-flex">
+													@Html.LabelFor(model => model.ValUntil, new { label_id="LED_INSTA___INSTAUNTIL___", @class = " i-text__label", id="LABEL_LED_INSTA___INSTAUNTIL___"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_INSTA___INSTAUNTIL___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DateFor(model => model.ValUntil, new {help_id = "LED_INSTA___INSTAUNTIL___", @class = "i-input-group__field b-icon-text input-medium", data_identifier = "LED_INSTA___INSTAUNTIL___", @pers_cs_area = "Insta", @pers_cs_field = "ValUntil", @db_field = "ValUntil", title = @Resources.UNTIL39173 })
+													@Html.ValidationMessageFor(model => model.ValUntil)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_INSTA___INSTAHOURS___">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValHours, new { label_id="LED_INSTA___INSTAHOURS___", @class = " i-text__label", id="LABEL_LED_INSTA___INSTAHOURS___"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_INSTA___INSTAHOURS___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValHours, new {help_id = "LED_INSTA___INSTAHOURS___", @class = "Number text-right i-text__field i-text input-small", data_refresh = "true", data_tipoform = "+", data_identifier = "LED_INSTA___INSTAHOURS___", @pers_cs_area = "Insta", @pers_cs_field = "ValHours", @db_field = "ValHours", fixed_field = "true", @readonly = "readonly", title = @Resources.QUANTITY_OF_HOURS_61426, data_number_integer = "7", data_number_decimals = "2", data_number_format = "9999999.99" })
+													@Html.ValidationMessageFor(model => model.ValHours)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_INSTA___INSTAPRECOHOR">
+													<div class="d-inline-flex">
+													@Html.LabelFor(model => model.ValPrecohor, new { label_id="LED_INSTA___INSTAPRECOHOR", @class = " i-text__label", id="LABEL_LED_INSTA___INSTAPRECOHOR"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_INSTA___INSTAPRECOHOR','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValPrecohor, new {help_id = "LED_INSTA___INSTAPRECOHOR", @class = "i-input-group__field text-right i-text__field i-text input-medium", data_refresh = "true", data_tipoform = "CT", data_identifier = "LED_INSTA___INSTAPRECOHOR", @pers_cs_area = "Insta", @pers_cs_field = "ValPrecohor", @db_field = "ValPrecohor", fixed_field = "true", @readonly = "readonly", title = @Resources.PRICE_PER_HOUR_37472, data_currency = "True", data_number_integer = "9", data_number_decimals = "2", data_number_format = "999999999.99" })
+													@Html.ValidationMessageFor(model => model.ValPrecohor)
+													</div>
+												<div class="i-text draggable " id="CONTAINER_LED_INSTA___INSTAVALUE___">
+													<div class="d-inline-flex">
+													@Html.LabelFor(model => model.ValValue, new { label_id="LED_INSTA___INSTAVALUE___", @class = " i-text__label", id="LABEL_LED_INSTA___INSTAVALUE___"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_INSTA___INSTAVALUE___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValValue, new {help_id = "LED_INSTA___INSTAVALUE___", @class = "i-input-group__field text-right i-text__field i-text input-medium", data_refresh = "true", data_tipoform = "+", data_identifier = "LED_INSTA___INSTAVALUE___", @pers_cs_area = "Insta", @pers_cs_field = "ValValue", @db_field = "ValValue", fixed_field = "true", @readonly = "readonly", title = @Resources.VALUE_48317, data_currency = "True", data_number_integer = "9", data_number_decimals = "2", data_number_format = "999999999.99" })
+													@Html.ValidationMessageFor(model => model.ValValue)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="row-line-group">
+                            <div class="c-groupbox " id="GROUPBOX_INSTA_NOVOGR03">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_INSTA___PSEUDNOVOGR03" 
+                                    label-id="IFF_INSTA___PSEUDNOVOGR03">
+                                    <span>@Resources.LOCAL41011</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_INSTA___PSEUDNOVOGR03','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="row-large-control">
+												<div class="row-line-group" id="CONTAINER_LED_INSTA___INSTACOORDGEO">
+													@Html.EditorFor(model => model.ValCoordgeo, new {help_id = "LED_INSTA___INSTACOORDGEO", @class = "input-block-level", data_identifier = "LED_INSTA___INSTACOORDGEO", @pers_cs_area = "Insta", @pers_cs_field = "ValCoordgeo", @db_field = "ValCoordgeo", title = @Resources.GEOGRAPHIC_COORDINAT42880, rows = "50" })
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			@Html.HiddenFor(model => model.ValCodinsta, new { @pers_cs_field="ValCodinsta", @pers_cs_area="Insta", data_refresh = "true", @form_area="true", @data_value = Model.ValCodinsta, @data_identifier = "LED_INSTA___INSTACODINSTA" })
+
+            @Html.Hidden("IgnoreWarnings", "false", new { id = "IgnoreWarnings" })
+
+			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Insta" })
+            @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Insta" })
+            @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Insta" })
+			if (!Model.NestedForm)
+            {
+                @Html.AntiForgeryToken()
+            }
+}
+
+@helper form_content_alert() {
+	if(Model.FormMode == FormMode.Delete) {
+		<div class="c-alert c-alert--warning">
+			<i class="glyphicons glyphicons-alert c-alert__icon" aria-hidden="true"></i>
+			<div class="c-alert__text">
+				&ensp;@Resources.DESEJA_ELIMINAR_ESTA24564
+			</div>
+		<!--Ao confirmar esta ficha irá ser eliminada da base de dados. Cancele caso não tenha a certeza.-->
+		</div>
+	}
+}
+
+@helper form_content_buttons() {
+
+
+
+
+    @* Extended support form *@
+    if (Model.NestedForm)
+    {
+        if (Model.IsEditableMode)
+        {
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("Insta", Model.FormMode).ToString(), "Insta")", "Insta_well")' qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>
+                    @Resources.SAVE04165
+            </button>
+            <button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Insta_Delete", "Insta", new {id = @Model.ValCodinsta} )", "Insta_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+
+            <script type="application/javascript">
+                $(document).ready(function () { loaded($("#Insta_well")); });
+            </script>
+        }
+
+        @* javascript code_javascript *@
+        @*@codeJavascript()*@
+    }
+    @* Normal mode *@
+    else
+    {
+        if (Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+        {
+            if (Model.FormMode == FormMode.New && Convert.ToBoolean(Model.Navigation.CurrentLevel.GetEntry("repeatInsertion")))
+            {
+            <button type="button" data-end-pers="true" name="Insta_repete_insertion" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitInsta(event, true)" qbutton="ok_new">@Resources.GRAVAR_E_CRIAR_NOVA17771</button>
+            }
+            if(Model.FormMode == FormMode.Delete)
+            {
+				<button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Insta", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitDeleteInsta(event)" qbutton="delete">
+                    <i class="glyphicons glyphicons-check e-icon" aria-hidden="true"></i>@Resources.CONFIRMAR09808
+                </button>
+            }
+            else
+            {
+                <button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Insta", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitInsta(event)" title="@Resources.SAVE04165" data-selector="true" qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>@Resources.SAVE04165
+                </button>
+            }
+
+            <button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-href="@Url.Action("Insta_Cancel", "Insta", new { niv = Model.Navigation.CurrentLevel.Level })" onclick="javascript:window.Form_Insta.Cancel()" title="@Resources.CANCEL65428" data-selector="true" qbutton="cancel">
+                <i class="glyphicons glyphicons-ban-circle e-icon" aria-hidden="true"></i>@Resources.CANCEL65428
+            </button>
+        }
+        else if (!(ViewBag.isHomePage ?? false))
+        {
+            @Html.ActionLinkWithIcon(@Resources.RETROCEDER16633, "Insta_Cancel","Insta","glyphicons glyphicons-arrow-left e-icon", null, new { @class = "b-icon-text b-icon-text--secondary", @data_end_pers = "true", @title = @Resources.RETROCEDER16633, qbutton = "cancel" })
+        }
+    }
+}
+
+@helper LoadDefault() {
+    if (Model.NestedForm)
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div class="c-card__header">
+                    <div class="c-card__header-tag">
+						<span class="form-header" style="padding:0;">
+							<i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+						</span>
+                    </div>
+                </div>
+                <div class="c-card__body">
+                    @form_content_body()
+                    <div elem-identifier="FormActions" class="form-actions" data-form-actions="Insta">
+                        @form_content_buttons()
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    }
+    else
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div id="c-stickyHeader">
+                    <div class="c-action-bar d-flex">
+                        <span class="form-header">
+                            <i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+                        </span>
+                        <div data-parent-form="Insta" data-q-ref="form-btns-main_container"></div>
+                    </div>
+                </div>
+
+                @form_content_body()
+                <div elem-identifier="FormActions" class="form-actions" data-form-actions="Insta">
+                @form_content_buttons()
+                </div>
+            </div>
+        </fieldset>
+    }
+}
+
+@helper LoadFromLayout()
+{
+}
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT INSTA]/ *@
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_INSTA" data-form-javascript="true">
+@Html.Partial("Insta_JavaScript", Model, ViewData)
+</div>
+}
+
+@section code_javascript
+{
+	@codeJavascript()
+}
+
+@if (Request.IsAjaxRequest())
+{
+    @codeJavascript()
+    @includeStylesheets()
+}
+
+@helper includeStylesheets()
+{
+
+ }
+
+@section include_stylesheets {
+    @includeStylesheets()
+}

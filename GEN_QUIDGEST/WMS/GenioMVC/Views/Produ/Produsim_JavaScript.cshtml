@@ -1,0 +1,316 @@
+﻿@model GenioMVC.ViewModels.Produ.Produsim_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS PRODUSIM]/ *@
+<script  type="text/javascript">
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Produsim !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Produsim = new QForm($('[data-form="Produsim"]'), "Form_Produsim");
+		}
+		window.Form_Produsim.baseArea = "produ";
+		window.Form_Produsim.FormMode = '@Model.GetFormMode';
+		window.Form_Produsim.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Produsim.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Produ")',
+			GetDependants:		'@Url.Action("GetDependants", "Produ")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Produsim", "Produ")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Produsim", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Produ", "Produ")',
+		};
+		window.Form_Produsim.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Produsim.formSaveEdit = '@Url.Action("Produsim_SaveEdit", "Produ")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Produsim.formAction = 'Produsim_New';
+		window.Form_Produsim.formRedirectURL = '@Url.Action("Produsim_New_Redirect", "Produ")';
+		window.Form_Produsim.formSubmitURL = '@Url.Action("Produsim_New", "Produ")';
+		window.Form_Produsim.formRedirectURL_repeatInsertion = '@Url.Action("Produsim_New_Redirect", "Produ", new { repeatInsertion = true})';
+		window.Form_Produsim.formSubmitURL_repeatInsertion = '@Url.Action("Produsim_New", "Produ", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Produsim.formAction = 'Produsim_Edit';
+		window.Form_Produsim.formRedirectURL = '@Url.Action("Produsim_Edit_Redirect", "Produ")';
+		window.Form_Produsim.formSubmitURL = '@Url.Action("Produsim_Edit", "Produ")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Produsim.formAction = 'Produsim_Duplicate';
+		window.Form_Produsim.formRedirectURL = '@Url.Action("Produsim_Duplicate_Redirect", "Produ")';
+		window.Form_Produsim.formSubmitURL = '@Url.Action("Produsim_Duplicate", "Produ")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Produsim.formAction = 'Produsim_Delete';
+		window.Form_Produsim.formRedirectURL = '@Url.Action("Produsim_Delete_Redirect", "Produ")';
+		window.Form_Produsim.formSubmitURL = '@Url.Action("Produsim_Delete", "Produ")';
+	</text>
+}
+		window.Form_Produsim.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.IFF_PRODUSIMPSEUDNOVOGR01 = new QGenericControl($('[data-identifier="IFF_PRODUSIMPSEUDNOVOGR01"]', this.element), window.Form_Produsim);
+
+			this.Controls.LED_PRODUSIMPRODUPRODUCT_ = new QTextControl($('[data-identifier="LED_PRODUSIMPRODUPRODUCT_"]', this.element), window.Form_Produsim);
+
+			this.Controls.LED_PRODUSIMPRODUDESCRIPT = new QGenericControl($('[data-identifier="LED_PRODUSIMPRODUDESCRIPT"]', this.element), window.Form_Produsim);
+
+			this.Controls.LED_PRODUSIMPRODUSKU_____ = new QTextControl($('[data-identifier="LED_PRODUSIMPRODUSKU_____"]', this.element), window.Form_Produsim);
+
+			this.Controls.LED_PRODUSIMPRODUGTIN____ = new QTextControl($('[data-identifier="LED_PRODUSIMPRODUGTIN____"]', this.element), window.Form_Produsim);
+
+			this.Controls.LED_PRODUSIMPRODUSIZE____ = new QTextControl($('[data-identifier="LED_PRODUSIMPRODUSIZE____"]', this.element), window.Form_Produsim);
+
+			this.Controls.LED_PRODUSIMPRODUWEIGHT__ = new QNumericControl($('[data-identifier="LED_PRODUSIMPRODUWEIGHT__"]', this.element), window.Form_Produsim);
+
+			this.Controls.IFF_PRODUSIMPSEUDNOVOGR02 = new QGenericControl($('[data-identifier="IFF_PRODUSIMPSEUDNOVOGR02"]', this.element), window.Form_Produsim);
+
+			this.Controls.IFF_PRODUSIMLOCATGLN_____ = new QDbeditControl($('[data-identifier="IFF_PRODUSIMLOCATGLN_____"]', this.element), window.Form_Produsim);
+
+			this.Controls.IFF_PRODUSIMLCEXTGLNEXT__ = new QDbeditControl($('[data-identifier="IFF_PRODUSIMLCEXTGLNEXT__"]', this.element), window.Form_Produsim);
+
+
+
+
+			this.Controls.LED_PRODUSIMPRODUCODPRODU = new QHiddenControl($('[data-identifier="LED_PRODUSIMPRODUCODPRODU"]', this.element), window.Form_Produsim);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	@* DBEdit Limits *@
+			this.Controls.IFF_PRODUSIMLCEXTGLNEXT__.AddLimit(this.Controls.IFF_PRODUSIMLOCATGLN_____, 'A');
+	</text>
+}
+
+		window.Form_Produsim.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Produsim.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI PRODUSIM]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Produsim.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS PRODUSIM]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Produsim.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS PRODUSIM]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Produsim.Data.RelationKeysSelector = {
+				get locat() { return $(':not([elem-identifier="Multiform"]) > #ValCodlocat[pers-cs-area="Locat"]', $('[data-form="Produsim"]')); /* DBEdit */ },
+				get lcext() { return $(':not([elem-identifier="Multiform"]) > #ValCodlcext[pers-cs-area="Lcext"]', $('[data-form="Produsim"]')); /* DBEdit */ },
+		};
+
+		window.Form_Produsim.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Produsim.Data.RelationKeys = {
+			get formContext() { return window.Form_Produsim; },
+			get locat() { return (this.formContext.Data.RelationKeysSelector.locat.getQControl() || {}).Value; /* DBEdit */ },
+			set locat(newValue) { (this.formContext.Data.RelationKeysSelector.locat.getQControl() || {}).Value = newValue; /* DBEdit */ },
+			get lcext() { return (this.formContext.Data.RelationKeysSelector.lcext.getQControl() || {}).Value; /* DBEdit */ },
+			set lcext(newValue) { (this.formContext.Data.RelationKeysSelector.lcext.getQControl() || {}).Value = newValue; /* DBEdit */ },
+		};
+	</text>
+}
+
+	window.Form_Produsim.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Produsim.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitProdusim(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Produsim.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeleteProdusim(event) {
+			event.preventDefault();
+			window.Form_Produsim.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+    var ajaxCallsRemaining = $(".flash object embed").length;
+    $('form [elem-identifier="ButtonPrimary"]').click(function() {
+        var flashObjects = $(".flash object embed");
+        ajaxCallsRemaining = flashObjects.length;
+        if(flashObjects.length == 0)
+            return true;
+        else {
+            flashObjects.each(function() {
+               var flashObj = GetFlash($(this).attr('id'));
+               flashObj.UsedFlash.TriggerSave(flashObj);
+            });
+            return false;
+        }
+    });
+    </text>
+}
+// USE /[MANUAL GQT FORM_CODEJS PRODUSIM]/
+
+
+
+ 
+
+    $($('[elem-identifier="FormActions"]'), $('[data-form="Produsim"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

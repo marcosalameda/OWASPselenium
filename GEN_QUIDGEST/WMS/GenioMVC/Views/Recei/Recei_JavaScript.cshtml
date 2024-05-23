@@ -1,0 +1,339 @@
+﻿@model GenioMVC.ViewModels.Recei.Recei_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS RECEI]/ *@
+<script  type="text/javascript">
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Recei !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Recei = new QForm($('[data-form="Recei"]'), "Form_Recei");
+		}
+		window.Form_Recei.baseArea = "recei";
+		window.Form_Recei.FormMode = '@Model.GetFormMode';
+		window.Form_Recei.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Recei.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Recei")',
+			GetDependants:		'@Url.Action("GetDependants", "Recei")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Recei", "Recei")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Recei", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Recei", "Recei")',
+		};
+		window.Form_Recei.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Recei.formSaveEdit = '@Url.Action("Recei_SaveEdit", "Recei")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Recei.formAction = 'Recei_New';
+		window.Form_Recei.formRedirectURL = '@Url.Action("Recei_New_Redirect", "Recei")';
+		window.Form_Recei.formSubmitURL = '@Url.Action("Recei_New", "Recei")';
+		window.Form_Recei.formRedirectURL_repeatInsertion = '@Url.Action("Recei_New_Redirect", "Recei", new { repeatInsertion = true})';
+		window.Form_Recei.formSubmitURL_repeatInsertion = '@Url.Action("Recei_New", "Recei", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Recei.formAction = 'Recei_Edit';
+		window.Form_Recei.formRedirectURL = '@Url.Action("Recei_Edit_Redirect", "Recei")';
+		window.Form_Recei.formSubmitURL = '@Url.Action("Recei_Edit", "Recei")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Recei.formAction = 'Recei_Duplicate';
+		window.Form_Recei.formRedirectURL = '@Url.Action("Recei_Duplicate_Redirect", "Recei")';
+		window.Form_Recei.formSubmitURL = '@Url.Action("Recei_Duplicate", "Recei")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Recei.formAction = 'Recei_Delete';
+		window.Form_Recei.formRedirectURL = '@Url.Action("Recei_Delete_Redirect", "Recei")';
+		window.Form_Recei.formSubmitURL = '@Url.Action("Recei_Delete", "Recei")';
+	</text>
+}
+		window.Form_Recei.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.LED_RECEI___RECEIDTRECEIP = new QDateControl($('[data-identifier="LED_RECEI___RECEIDTRECEIP"]', this.element), window.Form_Recei);
+
+			this.Controls.LED_RECEI___RECEINUMBER__ = new QNumericControl($('[data-identifier="LED_RECEI___RECEINUMBER__"]', this.element), window.Form_Recei);
+
+			this.Controls.IFF_RECEI___ENTITNAME____ = new QDbeditControl($('[data-identifier="IFF_RECEI___ENTITNAME____"]', this.element), window.Form_Recei);
+
+			this.Controls.IFF_RECEI___PSEUDRECEIPTL = new QTableListControl($('[data-identifier="IFF_RECEI___PSEUDRECEIPTL"]', this.element), window.Form_Recei);
+
+			this.Controls.LED_RECEI___RECEIDTCHECK_ = new QDateControl($('[data-identifier="LED_RECEI___RECEIDTCHECK_"]', this.element), window.Form_Recei);
+
+			this.Controls.LED_RECEI___RECEITOCHECK_ = new QCheckBoxControl($('[data-identifier="LED_RECEI___RECEITOCHECK_"]', this.element), window.Form_Recei);
+
+			this.Controls.LED_RECEI___RECEICHECKED_ = new QCheckBoxControl($('[data-identifier="LED_RECEI___RECEICHECKED_"]', this.element), window.Form_Recei);
+
+			this.Controls.LED_RECEI___RECEISTORED__ = new QCheckBoxControl($('[data-identifier="LED_RECEI___RECEISTORED__"]', this.element), window.Form_Recei);
+
+			this.Controls.LED_RECEI___RECEIDTSTORAG = new QDateControl($('[data-identifier="LED_RECEI___RECEIDTSTORAG"]', this.element), window.Form_Recei);
+
+
+
+
+			this.Controls.LED_RECEI___RECEICODRECEI = new QHiddenControl($('[data-identifier="LED_RECEI___RECEICODRECEI"]', this.element), window.Form_Recei);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	</text>
+}
+
+		window.Form_Recei.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Recei.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI RECEI]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Recei.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS RECEI]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Recei.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS RECEI]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Recei.Data.RelationKeysSelector = {
+				get entit() { return $(':not([elem-identifier="Multiform"]) > #ValCodentit[pers-cs-area="Entit"]', $('[data-form="Recei"]')); /* DBEdit */ },
+		};
+
+		window.Form_Recei.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Recei.Data.RelationKeys = {
+			get formContext() { return window.Form_Recei; },
+			get entit() { return (this.formContext.Data.RelationKeysSelector.entit.getQControl() || {}).Value; /* DBEdit */ },
+			set entit(newValue) { (this.formContext.Data.RelationKeysSelector.entit.getQControl() || {}).Value = newValue; /* DBEdit */ },
+		};
+	</text>
+}
+
+	window.Form_Recei.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+		@* Formula of the 'ValTocheck' field *@
+		$(qForm).bind('VALDTRECEIP_CHANGE VALDTCHECK_CHANGE', function(event, eTarget) {
+				try {
+						var newValue = (qApi.iif(!( getFieldValue($(':not([elem-identifier="Multiform"]) > #ValDtreceip', $('[data-form="Recei"]'))) == "")&&( getFieldValue($(':not([elem-identifier="Multiform"]) > #ValDtcheck', $('[data-form="Recei"]'))) == ""),1,0));
+						$.when(newValue).done(function (result) {
+								setFieldValue($(':not([elem-identifier="Multiform"]) > #ValTocheck', $('[data-form="Recei"]')), result);
+								if($(':not([elem-identifier="Multiform"]) > #ValTocheck', $('[data-form="Recei"]')).data('QObject') === undefined) $(':not([elem-identifier="Multiform"]) > #ValTocheck', $('[data-form="Recei"]')).change(); //TODO: Remove this later...
+						});
+				} catch (err) { QError.AppendError('Formula of field ValTocheck: ' + err.message, err.stack, window.location.href); }
+		});
+		
+		@* Formula of the 'ValChecked' field *@
+		$(qForm).bind('VALDTCHECK_CHANGE', function(event, eTarget) {
+				try {
+						var newValue = (qApi.iif(( getFieldValue($(':not([elem-identifier="Multiform"]) > #ValDtcheck', $('[data-form="Recei"]'))) == ""),0,1));
+						$.when(newValue).done(function (result) {
+								setFieldValue($(':not([elem-identifier="Multiform"]) > #ValChecked', $('[data-form="Recei"]')), result);
+								if($(':not([elem-identifier="Multiform"]) > #ValChecked', $('[data-form="Recei"]')).data('QObject') === undefined) $(':not([elem-identifier="Multiform"]) > #ValChecked', $('[data-form="Recei"]')).change(); //TODO: Remove this later...
+						});
+				} catch (err) { QError.AppendError('Formula of field ValChecked: ' + err.message, err.stack, window.location.href); }
+		});
+		
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+		@* Binding dos eventos que vão despoletar o Mostra Quando do campo ValDtstorag *@
+		$(qForm).bind('FORM_LOADED VALSTORED_CHANGE', function(event, eTarget) {
+				var conditionRes = (qApi.emptyL( getFieldValue($(':not([elem-identifier="Multiform"]) > #ValStored', $('[data-form="Recei"]'))))==0);
+				$.when(conditionRes).done(function (condition) {
+						ShowWhen($(':not([elem-identifier="Multiform"]) > #ValDtstorag', $('[data-form="Recei"]')), condition, false, 'LED_RECEI___RECEIDTSTORAG');
+				});
+		});
+		
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Recei.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitRecei(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Recei.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeleteRecei(event) {
+			event.preventDefault();
+			window.Form_Recei.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+    var ajaxCallsRemaining = $(".flash object embed").length;
+    $('form [elem-identifier="ButtonPrimary"]').click(function() {
+        var flashObjects = $(".flash object embed");
+        ajaxCallsRemaining = flashObjects.length;
+        if(flashObjects.length == 0)
+            return true;
+        else {
+            flashObjects.each(function() {
+               var flashObj = GetFlash($(this).attr('id'));
+               flashObj.UsedFlash.TriggerSave(flashObj);
+            });
+            return false;
+        }
+    });
+    </text>
+}
+// USE /[MANUAL GQT FORM_CODEJS RECEI]/
+
+
+
+ 
+
+    $($('[elem-identifier="FormActions"]'), $('[data-form="Recei"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

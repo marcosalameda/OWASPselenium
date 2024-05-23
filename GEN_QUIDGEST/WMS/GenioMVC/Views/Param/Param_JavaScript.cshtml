@@ -1,0 +1,299 @@
+﻿@model GenioMVC.ViewModels.Param.Param_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS PARAM]/ *@
+<script  type="text/javascript">
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Param !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Param = new QForm($('[data-form="Param"]'), "Form_Param");
+		}
+		window.Form_Param.baseArea = "param";
+		window.Form_Param.FormMode = '@Model.GetFormMode';
+		window.Form_Param.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Param.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Param")',
+			GetDependants:		'@Url.Action("GetDependants", "Param")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Param", "Param")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Param", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Param", "Param")',
+		};
+		window.Form_Param.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Param.formSaveEdit = '@Url.Action("Param_SaveEdit", "Param")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Param.formAction = 'Param_New';
+		window.Form_Param.formRedirectURL = '@Url.Action("Param_New_Redirect", "Param")';
+		window.Form_Param.formSubmitURL = '@Url.Action("Param_New", "Param")';
+		window.Form_Param.formRedirectURL_repeatInsertion = '@Url.Action("Param_New_Redirect", "Param", new { repeatInsertion = true})';
+		window.Form_Param.formSubmitURL_repeatInsertion = '@Url.Action("Param_New", "Param", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Param.formAction = 'Param_Edit';
+		window.Form_Param.formRedirectURL = '@Url.Action("Param_Edit_Redirect", "Param")';
+		window.Form_Param.formSubmitURL = '@Url.Action("Param_Edit", "Param")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Param.formAction = 'Param_Duplicate';
+		window.Form_Param.formRedirectURL = '@Url.Action("Param_Duplicate_Redirect", "Param")';
+		window.Form_Param.formSubmitURL = '@Url.Action("Param_Duplicate", "Param")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Param.formAction = 'Param_Delete';
+		window.Form_Param.formRedirectURL = '@Url.Action("Param_Delete_Redirect", "Param")';
+		window.Form_Param.formSubmitURL = '@Url.Action("Param_Delete", "Param")';
+	</text>
+}
+		window.Form_Param.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.IFF_PARAM___KINDEDESIGNAT = new QDbeditControl($('[data-identifier="IFF_PARAM___KINDEDESIGNAT"]', this.element), window.Form_Param);
+
+			this.Controls.LED_PARAM___PARAMPARAMETE = new QTextControl($('[data-identifier="LED_PARAM___PARAMPARAMETE"]', this.element), window.Form_Param);
+
+			this.Controls.LED_PARAM___PARAMDATATYPE = new QArrayControl($('[data-identifier="LED_PARAM___PARAMDATATYPE"]', this.element), window.Form_Param);
+
+			this.Controls.LED_PARAM___PARAMDECPLACE = new QArrayControl($('[data-identifier="LED_PARAM___PARAMDECPLACE"]', this.element), window.Form_Param);
+
+
+
+
+			this.Controls.LED_PARAM___PARAMCODPARAM = new QHiddenControl($('[data-identifier="LED_PARAM___PARAMCODPARAM"]', this.element), window.Form_Param);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	</text>
+}
+
+		window.Form_Param.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Param.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI PARAM]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Param.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS PARAM]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Param.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS PARAM]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Param.Data.RelationKeysSelector = {
+				get kinde() { return $(':not([elem-identifier="Multiform"]) > #ValCodkinde[pers-cs-area="Kinde"]', $('[data-form="Param"]')); /* DBEdit */ },
+		};
+
+		window.Form_Param.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Param.Data.RelationKeys = {
+			get formContext() { return window.Form_Param; },
+			get kinde() { return (this.formContext.Data.RelationKeysSelector.kinde.getQControl() || {}).Value; /* DBEdit */ },
+			set kinde(newValue) { (this.formContext.Data.RelationKeysSelector.kinde.getQControl() || {}).Value = newValue; /* DBEdit */ },
+		};
+	</text>
+}
+
+	window.Form_Param.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Param.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitParam(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Param.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeleteParam(event) {
+			event.preventDefault();
+			window.Form_Param.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+    var ajaxCallsRemaining = $(".flash object embed").length;
+    $('form [elem-identifier="ButtonPrimary"]').click(function() {
+        var flashObjects = $(".flash object embed");
+        ajaxCallsRemaining = flashObjects.length;
+        if(flashObjects.length == 0)
+            return true;
+        else {
+            flashObjects.each(function() {
+               var flashObj = GetFlash($(this).attr('id'));
+               flashObj.UsedFlash.TriggerSave(flashObj);
+            });
+            return false;
+        }
+    });
+    </text>
+}
+// USE /[MANUAL GQT FORM_CODEJS PARAM]/
+
+
+
+ 
+
+    $($('[elem-identifier="FormActions"]'), $('[data-form="Param"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

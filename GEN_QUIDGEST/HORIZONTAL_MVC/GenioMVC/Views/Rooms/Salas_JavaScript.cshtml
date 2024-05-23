@@ -1,0 +1,292 @@
+﻿@model GenioMVC.ViewModels.Rooms.Salas_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS SALAS]/ *@
+<script  type="text/javascript">
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Salas !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Salas = new QForm($('[data-form="Salas"]'), "Form_Salas");
+		}
+		window.Form_Salas.baseArea = "rooms";
+		window.Form_Salas.FormMode = '@Model.GetFormMode';
+		window.Form_Salas.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Salas.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Rooms")',
+			GetDependants:		'@Url.Action("GetDependants", "Rooms")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Salas", "Rooms")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Salas", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Rooms", "Rooms")',
+		};
+		window.Form_Salas.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Salas.formSaveEdit = '@Url.Action("Salas_SaveEdit", "Rooms")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Salas.formAction = 'Salas_New';
+		window.Form_Salas.formRedirectURL = '@Url.Action("Salas_New_Redirect", "Rooms")';
+		window.Form_Salas.formSubmitURL = '@Url.Action("Salas_New", "Rooms")';
+		window.Form_Salas.formRedirectURL_repeatInsertion = '@Url.Action("Salas_New_Redirect", "Rooms", new { repeatInsertion = true})';
+		window.Form_Salas.formSubmitURL_repeatInsertion = '@Url.Action("Salas_New", "Rooms", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Salas.formAction = 'Salas_Edit';
+		window.Form_Salas.formRedirectURL = '@Url.Action("Salas_Edit_Redirect", "Rooms")';
+		window.Form_Salas.formSubmitURL = '@Url.Action("Salas_Edit", "Rooms")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Salas.formAction = 'Salas_Duplicate';
+		window.Form_Salas.formRedirectURL = '@Url.Action("Salas_Duplicate_Redirect", "Rooms")';
+		window.Form_Salas.formSubmitURL = '@Url.Action("Salas_Duplicate", "Rooms")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Salas.formAction = 'Salas_Delete';
+		window.Form_Salas.formRedirectURL = '@Url.Action("Salas_Delete_Redirect", "Rooms")';
+		window.Form_Salas.formSubmitURL = '@Url.Action("Salas_Delete", "Rooms")';
+	</text>
+}
+		window.Form_Salas.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.LED_SALAS___ROOMSROOMNR__ = new QTextControl($('[data-identifier="LED_SALAS___ROOMSROOMNR__"]', this.element), window.Form_Salas);
+
+			this.Controls.LED_SALAS___ROOMSDESIGNAT = new QTextControl($('[data-identifier="LED_SALAS___ROOMSDESIGNAT"]', this.element), window.Form_Salas);
+
+
+
+
+			this.Controls.LED_SALAS___ROOMSCODROOMS = new QHiddenControl($('[data-identifier="LED_SALAS___ROOMSCODROOMS"]', this.element), window.Form_Salas);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	</text>
+}
+
+		window.Form_Salas.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Salas.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI SALAS]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Salas.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS SALAS]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Salas.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS SALAS]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Salas.Data.RelationKeysSelector = {
+		};
+
+		window.Form_Salas.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Salas.Data.RelationKeys = {
+			get formContext() { return window.Form_Salas; },
+		};
+	</text>
+}
+
+	window.Form_Salas.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Salas.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitSalas(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Salas.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeleteSalas(event) {
+			event.preventDefault();
+			window.Form_Salas.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+    var ajaxCallsRemaining = $(".flash object embed").length;
+    $('form [elem-identifier="ButtonPrimary"]').click(function() {
+        var flashObjects = $(".flash object embed");
+        ajaxCallsRemaining = flashObjects.length;
+        if(flashObjects.length == 0)
+            return true;
+        else {
+            flashObjects.each(function() {
+               var flashObj = GetFlash($(this).attr('id'));
+               flashObj.UsedFlash.TriggerSave(flashObj);
+            });
+            return false;
+        }
+    });
+    </text>
+}
+// USE /[MANUAL GQT FORM_CODEJS SALAS]/
+
+
+
+ 
+
+    $($('[elem-identifier="FormActions"]'), $('[data-form="Salas"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

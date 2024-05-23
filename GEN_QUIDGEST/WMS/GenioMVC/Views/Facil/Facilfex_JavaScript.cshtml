@@ -1,0 +1,315 @@
+﻿@model GenioMVC.ViewModels.Facil.Facilfex_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS FACILFEX]/ *@
+<script  type="text/javascript">
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Facilfex !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Facilfex = new QForm($('[data-form="Facilfex"]'), "Form_Facilfex");
+		}
+		window.Form_Facilfex.baseArea = "facil";
+		window.Form_Facilfex.FormMode = '@Model.GetFormMode';
+		window.Form_Facilfex.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Facilfex.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Facil")',
+			GetDependants:		'@Url.Action("GetDependants", "Facil")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Facilfex", "Facil")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Facilfex", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Facil", "Facil")',
+		};
+		window.Form_Facilfex.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Facilfex.formSaveEdit = '@Url.Action("Facilfex_SaveEdit", "Facil")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Facilfex.formAction = 'Facilfex_New';
+		window.Form_Facilfex.formRedirectURL = '@Url.Action("Facilfex_New_Redirect", "Facil")';
+		window.Form_Facilfex.formSubmitURL = '@Url.Action("Facilfex_New", "Facil")';
+		window.Form_Facilfex.formRedirectURL_repeatInsertion = '@Url.Action("Facilfex_New_Redirect", "Facil", new { repeatInsertion = true})';
+		window.Form_Facilfex.formSubmitURL_repeatInsertion = '@Url.Action("Facilfex_New", "Facil", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Facilfex.formAction = 'Facilfex_Edit';
+		window.Form_Facilfex.formRedirectURL = '@Url.Action("Facilfex_Edit_Redirect", "Facil")';
+		window.Form_Facilfex.formSubmitURL = '@Url.Action("Facilfex_Edit", "Facil")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Facilfex.formAction = 'Facilfex_Duplicate';
+		window.Form_Facilfex.formRedirectURL = '@Url.Action("Facilfex_Duplicate_Redirect", "Facil")';
+		window.Form_Facilfex.formSubmitURL = '@Url.Action("Facilfex_Duplicate", "Facil")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Facilfex.formAction = 'Facilfex_Delete';
+		window.Form_Facilfex.formRedirectURL = '@Url.Action("Facilfex_Delete_Redirect", "Facil")';
+		window.Form_Facilfex.formSubmitURL = '@Url.Action("Facilfex_Delete", "Facil")';
+	</text>
+}
+		window.Form_Facilfex.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.IFF_FACILFEXENTITNAME____ = new QDbeditControl($('[data-identifier="IFF_FACILFEXENTITNAME____"]', this.element), window.Form_Facilfex);
+
+			this.Controls.LED_FACILFEXFACILINCORPOR = new QDateControl($('[data-identifier="LED_FACILFEXFACILINCORPOR"]', this.element), window.Form_Facilfex);
+
+			this.Controls.LED_FACILFEXFACILNAME____ = new QTextControl($('[data-identifier="LED_FACILFEXFACILNAME____"]', this.element), window.Form_Facilfex);
+
+			this.Controls.LED_FACILFEXFACILFACILTYP = new QArrayControl($('[data-identifier="LED_FACILFEXFACILFACILTYP"]', this.element), window.Form_Facilfex);
+
+			this.Controls.IFF_FACILFEXFACTYTYPE____ = new QDbeditControl($('[data-identifier="IFF_FACILFEXFACTYTYPE____"]', this.element), window.Form_Facilfex);
+
+			this.Controls.LED_FACILFEXFACILLATITUDE = new QNumericControl($('[data-identifier="LED_FACILFEXFACILLATITUDE"]', this.element), window.Form_Facilfex);
+
+			this.Controls.LED_FACILFEXFACILLONGITUD = new QNumericControl($('[data-identifier="LED_FACILFEXFACILLONGITUD"]', this.element), window.Form_Facilfex);
+
+			this.Controls.LED_FACILFEXFACILADDRESS_ = new QGenericControl($('[data-identifier="LED_FACILFEXFACILADDRESS_"]', this.element), window.Form_Facilfex);
+
+
+
+
+			this.Controls.LED_FACILFEXFACILCODFACIL = new QHiddenControl($('[data-identifier="LED_FACILFEXFACILCODFACIL"]', this.element), window.Form_Facilfex);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	</text>
+}
+
+		window.Form_Facilfex.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Facilfex.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI FACILFEX]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Facilfex.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS FACILFEX]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Facilfex.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS FACILFEX]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Facilfex.Data.RelationKeysSelector = {
+				get entit() { return $(':not([elem-identifier="Multiform"]) > #ValCodentit[pers-cs-area="Entit"]', $('[data-form="Facilfex"]')); /* DBEdit */ },
+				get facty() { return $(':not([elem-identifier="Multiform"]) > #ValCodfacty[pers-cs-area="Facty"]', $('[data-form="Facilfex"]')); /* DBEdit */ },
+		};
+
+		window.Form_Facilfex.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Facilfex.Data.RelationKeys = {
+			get formContext() { return window.Form_Facilfex; },
+			get entit() { return (this.formContext.Data.RelationKeysSelector.entit.getQControl() || {}).Value; /* DBEdit */ },
+			set entit(newValue) { (this.formContext.Data.RelationKeysSelector.entit.getQControl() || {}).Value = newValue; /* DBEdit */ },
+			get facty() { return (this.formContext.Data.RelationKeysSelector.facty.getQControl() || {}).Value; /* DBEdit */ },
+			set facty(newValue) { (this.formContext.Data.RelationKeysSelector.facty.getQControl() || {}).Value = newValue; /* DBEdit */ },
+		};
+	</text>
+}
+
+	window.Form_Facilfex.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+		@* Default of the 'ValCodfacty' field *@
+		window.Form_Facilfex.SetFormulaDefault('IFF_FACILFEXFACTYTYPE____', function() {
+						return (window.Form_Facilfex.Glob.ValCodfacty);
+		}, 'GLOBVALCODFACTY_CHANGE', 'emptyG');
+		
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Facilfex.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitFacilfex(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Facilfex.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeleteFacilfex(event) {
+			event.preventDefault();
+			window.Form_Facilfex.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+    var ajaxCallsRemaining = $(".flash object embed").length;
+    $('form [elem-identifier="ButtonPrimary"]').click(function() {
+        var flashObjects = $(".flash object embed");
+        ajaxCallsRemaining = flashObjects.length;
+        if(flashObjects.length == 0)
+            return true;
+        else {
+            flashObjects.each(function() {
+               var flashObj = GetFlash($(this).attr('id'));
+               flashObj.UsedFlash.TriggerSave(flashObj);
+            });
+            return false;
+        }
+    });
+    </text>
+}
+// USE /[MANUAL GQT FORM_CODEJS FACILFEX]/
+
+
+
+ 
+
+    $($('[elem-identifier="FormActions"]'), $('[data-form="Facilfex"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

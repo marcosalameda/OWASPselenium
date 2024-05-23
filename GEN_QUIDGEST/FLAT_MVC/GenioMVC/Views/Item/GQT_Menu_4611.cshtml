@@ -1,0 +1,164 @@
+﻿@model GenioMVC.ViewModels.Item.GQT_Menu_4611_ViewModel
+@using GenioMVC.Resources
+@using System.Web.Script.Serialization
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Title = Model.DBEditTitle;
+	//Layout = "~/Views/Shared/Layouts/TopMenu_BT4/_Layout.cshtml";
+}
+
+@{
+	GenioMVC.ViewModels.Item.GQT_Menu_4611_ViewModel modelGQT_Menu_4611 = new GenioMVC.ViewModels.Item.GQT_Menu_4611_ViewModel(Navigation);
+	var columns = modelGQT_Menu_4611.GetSearchColumns();
+
+	Dictionary<string, TableFilterField> fields = new Dictionary<string, TableFilterField>();
+
+
+	foreach (var col in columns)
+	{
+		var areaField = col.AreaField;
+		if (areaField.Area == "item" && areaField.Field == "itemdes")
+		{
+			fields.Add("ITEM.ITEMDES", new TableFilterField("ITEM", "ITEMDES", Resources.ARTICLE60065, "text", defaultSearch : true));
+		}
+		if (areaField.Area == "item" && areaField.Field == "itemcod")
+		{
+			fields.Add("ITEM.ITEMCOD", new TableFilterField("ITEM", "ITEMCOD", Resources.CODE49225, "text"));
+		}
+		if (areaField.Area == "item" && areaField.Field == "entries")
+		{
+			fields.Add("ITEM.ENTRIES", new TableFilterField("ITEM", "ENTRIES", Resources.ENTRIES32319, "num"));
+		}
+		if (areaField.Area == "item" && areaField.Field == "exits")
+		{
+			fields.Add("ITEM.EXITS", new TableFilterField("ITEM", "EXITS", Resources.OUTPUTS47833, "num"));
+		}
+		if (areaField.Area == "item" && areaField.Field == "existenc")
+		{
+			fields.Add("ITEM.EXISTENC", new TableFilterField("ITEM", "EXISTENC", Resources.STOCKS47349, "num"));
+		}
+		if (areaField.Area == "wareh" && areaField.Field == "warehdes")
+		{
+			fields.Add("WAREH.WAREHDES", new TableFilterField("WAREH", "WAREHDES", Resources.WAREHOUSE51864, "text"));
+		}
+		if (areaField.Area == "gitem" && areaField.Field == "itemdes")
+		{
+			fields.Add("GITEM.ITEMDES", new TableFilterField("GITEM", "ITEMDES", Resources.GLOBAL_ARTICLE63861, "text"));
+		}
+	}
+
+	JavaScriptSerializer serializer = new JavaScriptSerializer();
+	string fieldsStr = serializer.Serialize(fields);
+}
+
+<script>
+	//Fields with information for search filters
+	var fields = @Html.Raw(fieldsStr);
+	//Table List Search Filters
+	var searchFilterGroups = [];
+</script>
+
+
+@using (Ajax.BeginForm("GQT_Menu_4611", "Item", new AjaxOptions
+{
+	HttpMethod= "POST",
+	InsertionMode = InsertionMode.Replace,
+	UpdateTargetId = "Menu",
+	OnSuccess = "InitMenuSpecialControls"
+}, new { @class = "form-horizontal", area="Item", data_form="GQT_Menu_4611" }))
+{
+		<input id="SearchFilters" type="hidden" value="" />
+
+		<div class="page-header row" style="align-items:center">
+		   <div class="col">
+<div class="table-title c-table__title">
+					<h1>@ViewBag.Title</h1>
+				</div>
+
+		   </div>
+		   <div class="col-auto search">
+				<div class="i-input-group input-xxlarge" id="GQT_Menu_4611_simple_filter">
+					<div data-search-filter-menu-elem="filter-box-list"></div>
+					@Html.TextBox("qGQT_Menu_4611", Navigation.GetStrValue("qGQT_Menu_4611"), new { @class="i-input-group__field input-xxlarge dropdown-toggle", @title=@Resources.CAIXA_DE_PESQUISA53870, @onfocus="ToggleSearchFilterBox('GQT_Menu_4611');" ,@onkeydown = "ListSearchEnter(event)", @autocomplete = "off" ,@data_toggle = "dropdown",@data_search_field_menu_elem = "show", @onblur = "HideSearchFieldMenuOnUnfocus('GQT_Menu_4611');",@placeholder = Resources.PESQUISAR34506 + " " + Resources.ARTICLE60065})
+					<button id="qGQT_Menu_4611-clearBtn" class="clear-search d-none" type="button">
+						<i class="glyphicons glyphicons-remove mr-1"></i>
+					</button>
+					@Html.SearchFieldMenu("GQT_Menu_4611", fields, "ITEM")
+					<div class="b-btn-group i-input-group--right">
+						<button type="button" elem-identifier="ListSearchButton" class="btn b-icon b-icon--secondary i-input-group__button--secondary  listSearchButton" title="@Resources.PESQUISAR34506" onclick="AddSearchFieldFilter('GQT_Menu_4611', 'ITEM', 'ITEM.ITEMDES');"><i class="glyphicons glyphicons-search i-input-group__tag-icon i-input-group__button-icon"></i></button>
+						@{
+						var advancedSearchIcon = @Model.Menu.Filters.ShowTableFilters ? "glyphicons-zoom-out" : "glyphicons-zoom-in";
+						<button id="GQT_Menu_4611_extra" class="btn b-icon b-icon--secondary i-input-group__button--secondary" type="button" onclick="changeFilters('#GQT_Menu_4611_complex_filter', 'GQT_Menu_4611_tableFilters');applyComplexFilterIDs();" title="@Resources.PESQUISA_AVANCADA06198"><span class="glyphicons @advancedSearchIcon i-input-group__tag-icon i-input-group__button-icon"></span></button>
+						}
+						@Html.SearchFilterMenu("GQT_Menu_4611")
+					</div>
+				</div>
+			</div>
+			<div class="col-auto float-right" style="padding: 0; padding-right: 15px">
+				<div class="b-btn-group float-right" style="height: 32.625px">
+					@Html.ExportListMenu("GQT_Menu_4611")
+					@*List properties LISTS*@
+					@if(!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest())
+					{
+						<button class="b-btn b-icon b-icon--secondary" type="button" data-modal-form="Lstusr" data-modal-id="lstusr-edit-modal" data-table="GQT_Menu_4611" data-modal-url="@Url.Action("ChangeListProperties", "Lstusr", new { idlist = "GQT_Menu_4611", idlistController = "Item", idlistArea = "Item", codlista ="a95f0654-5e3a-4d36-b46f-5a17074e5019" })" title="@Resources.ALTERAR_A_APRESENTAC58401"><i class="glyphicons glyphicons-list e-icon"></i></button>
+					}
+				</div>
+			</div>
+		</div>
+ 	<div id="Menu" element-identifier="List">
+		@{ Html.RenderPartial("GQT_Menu_4611_Partial"); }
+	</div>
+	@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "GQT_Menu_4611" })
+	@Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId)
+	@Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock())
+	@Html.AntiForgeryToken()
+}
+
+
+
+<script>
+	$(document).ready(function () {
+		window.Form_GQT_Menu_4611 = new QMenuForm($('[data-form="GQT_Menu_4611"]'), "Form_GQT_Menu_4611");
+		window.Form_GQT_Menu_4611.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_GQT_Menu_4611.Init();
+
+		//Initialize search field menu for search bar
+		InitSearchFieldMenu("qGQT_Menu_4611");
+		RegisterClearEvents("GQT_Menu_4611")
+
+		// TVC - added code to load advanced filters after returning from a form
+		@{
+			string advFil = "";
+			if (!String.IsNullOrEmpty(Navigation.GetStrValue("AdvancedFilters")))
+			{
+				advFil = Navigation.GetStrValue("AdvancedFilters");
+			}
+		}
+
+		SearchFilters.value = '@Html.Raw(advFil)';
+		if (typeof SearchFilters.value === 'string' && SearchFilters.value.length > 0)
+			UpdateSearchFilterStatus("GQT_Menu_4611", JSON.parse(SearchFilters.value))
+	});
+</script>
+
+@helper codeJavascript()
+{
+<script>
+	QLocalStorage.remLocalStorage("savedInfo");
+	$(document).ready(function (e) {
+		InitSpecialControls($('[data-form="GQT_Menu_4611"]'));
+
+
+ 	});
+
+	function InitMenuSpecialControls() {
+		InitSpecialControls($('[data-form="GQT_Menu_4611"]'));
+	}
+
+</script>
+}
+
+@section code_javascript {
+	@codeJavascript()
+}

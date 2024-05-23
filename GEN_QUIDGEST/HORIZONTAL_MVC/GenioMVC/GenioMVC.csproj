@@ -1,0 +1,783 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{21223579-5383-468A-949F-137E52FD2554}</ProjectGuid>
+    <ProjectTypeGuids>{E3E379DF-F4C6-4180-9B81-6769533ABE47};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GenioMVC</RootNamespace>
+    <AssemblyName>GenioMVC</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <WebGreaseLibPath>..\packages\WebGrease.1.6.0\lib</WebGreaseLibPath>
+    <UseGlobalApplicationHostFile />
+    <TargetFrameworkProfile />
+    <Use64BitIISExpress />
+    <RuntimeIdentifiers>win</RuntimeIdentifiers>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;MAL_CARAC;NOGER_CARAC;NOVUE_CARAC;HORIZONTAL_MVC_MODULE;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE;MAL_CARAC;NOGER_CARAC;NOVUE_CARAC;HORIZONTAL_MVC_MODULE;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="CaptchaMvc.Mvc4">
+      <Version>1.5.0</Version>
+    </PackageReference>
+    <PackageReference Include="dotless">
+      <Version>1.5.2</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AspNet.SessionState.SqlSessionStateProviderAsync">
+      <Version>1.1.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Web.RedisSessionStateProvider">
+      <Version>5.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Report.Viewer">
+      <Version>11.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AspNet.Razor">
+      <Version>2.0.20710</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AspNet.Web.Optimization">
+      <Version>1.1.3</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AspNet.WebApi">
+      <Version>4.0.20710.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client">
+      <Version>4.0.30506.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Core">
+      <Version>4.0.30506.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AspNet.WebApi.WebHost">
+      <Version>4.0.30506.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AspNet.WebPages">
+      <Version>2.0.20710.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Web.Infrastructure">
+      <Version>1.0.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt">
+      <Version>6.35.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.Web.Optimization.Less">
+      <Version>1.3.4</Version>
+    </PackageReference>
+    <PackageReference Include="WebActivator">
+      <Version>1.5.1</Version>
+    </PackageReference>
+    <PackageReference Include="WebGrease">
+      <Version>1.6.0</Version>
+    </PackageReference>
+    <PackageReference Include="Lucene.Net">
+      <Version>3.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="PagedList">
+      <Version>1.17.0</Version>
+    </PackageReference>
+    <PackageReference Include="EPPlus">
+      <Version>4.5.3.3</Version>
+    </PackageReference>
+                    <Reference Include="Microsoft.ReportViewer.DataVisualization, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\CSGenio.reporting\Libs\Microsoft.ReportViewer.DataVisualization.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.Shared, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.Mvc" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+<!-- USE /[MANUAL GQT REFEREN]/ -->
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\LayoutConfig.cs" />
+
+    <Compile Include="Controllers\ControllerBase.cs" />
+    <Compile Include="Controllers\*Controller.cs" />
+    <Compile Include="Controllers\cav\*.cs" />
+    <Compile Include="Controllers\Dashboard\*.cs" />
+    <Compile Include="Models\Cav\*.cs" />
+    <Compile Include="Models\*.cs" />
+    <Compile Include="ViewModels\Cav\*.cs" />
+
+    <Compile Include="Helpers\MvcHtmlDropDownExtensions.cs" />
+    <Compile Include="Helpers\ResizeImageSerializer.cs" />
+    <Compile Include="Helpers\SelectListSerializer.cs" />
+    <Compile Include="Helpers\NavigationSerializer.cs" />
+
+    <Compile Include="Helpers\Attributes\ActionSessionStateAttribute.cs" />
+    <Compile Include="Helpers\Attributes\AuthorizeForUsers.cs" />
+    <Compile Include="Helpers\Attributes\CurrencyAttribute.cs" />
+    <Compile Include="Helpers\Attributes\DataArray.cs" />
+    <Compile Include="Helpers\Attributes\DateAttribute.cs" />
+    <Compile Include="Helpers\Attributes\DocumentAttribute.cs" />
+    <Compile Include="Helpers\Attributes\LayoutInjecter.cs" />
+    <Compile Include="Helpers\Attributes\RequireHttp.cs" />
+    <Compile Include="Helpers\Attributes\HttpParamActionAttribute.cs" />
+    <Compile Include="Helpers\Attributes\MaskAttribute.cs" />
+    <Compile Include="Helpers\Attributes\NoCacheAttribute.cs" />
+    <Compile Include="Helpers\Attributes\PropertyBinderAttribute.cs" />
+    <Compile Include="Helpers\Attributes\Validations.cs" />
+    <Compile Include="Helpers\Attributes\GeographicAttribute.cs" />
+    <Compile Include="Helpers\Attributes\NumericAttribute.cs" />
+    <Compile Include="Helpers\Attributes\DynamicJsonAttribute.cs" />
+    <Compile Include="Helpers\Attributes\HyperLinkAttribute.cs" />
+
+    <Compile Include="Helpers\CacheUtility.cs" />
+
+    <Compile Include="Helpers\Culture\CultureFormatChecker.cs" />
+    <Compile Include="Helpers\Culture\CultureManager.cs" />
+    <Compile Include="Helpers\Culture\CultureRouteConstraint.cs" />
+    <Compile Include="Helpers\Culture\GlobalisationHtmlHelperExtensions.cs" />
+    <Compile Include="Helpers\Culture\GlobalisationRouteHandler.cs" />
+    <Compile Include="Helpers\Culture\GlobalisedRoute.cs" />
+
+    <Compile Include="Helpers\TrailingSlashHandler.cs" />
+
+    <Compile Include="Helpers\Errors\ErrorHandler.cs" />
+    <Compile Include="Helpers\Errors\JavaScriptException.cs" />
+
+    <Compile Include="Helpers\FileUpload.cs" />
+
+    <Compile Include="Helpers\ModelBinders\DateModelBinder.cs" />
+    <Compile Include="Helpers\ModelBinders\ConditionalBinder.cs" />
+    <Compile Include="Helpers\ModelBinders\NumericModelBinder.cs" />
+    <Compile Include="Helpers\ModelBinders\BooleanModelBinder.cs" />
+    <Compile Include="Helpers\ModelBinders\ExtendedModelBinder.cs" />
+    <Compile Include="Helpers\ModelBinders\DynamicJsonModelBinder.cs" />
+
+    <Compile Include="Helpers\Menus\Menus.cs" />
+    <Compile Include="Helpers\Menus\MenuSearch.cs" />
+
+    <Compile Include="Helpers\Helpers.cs" />
+    <Compile Include="Helpers\Mailer.cs" />
+    <Compile Include="Helpers\CustomHelpers.cs" />
+    <Compile Include="Helpers\ITreeNode.cs" />
+    <Compile Include="Helpers\ReportViewerHelperExtension.cs" />
+
+    <Compile Include="Helpers\Table\Properties\AjaxRequest.cs" />
+    <Compile Include="Helpers\Table\Properties\FormProperties.cs" />
+    <Compile Include="Helpers\Table\Properties\TableAction.cs" />
+    <Compile Include="Helpers\Table\Properties\TablePermissions.cs" />
+    <Compile Include="Helpers\Table\Properties\TableType.cs" />
+    <Compile Include="Helpers\Table\Sorting\SortDirection.cs" />
+
+    <Compile Include="Helpers\TreeModelHelper.cs" />
+    <Compile Include="Helpers\TreeNode.cs" />
+    <Compile Include="Helpers\UrlNames.cs" />
+    <Compile Include="Helpers\ControllerUtility.cs" />
+    <Compile Include="Helpers\CustomControllerFactory.cs" />
+
+    <Compile Include="Helpers\CustomControls\*.cs" />
+
+    <Compile Include="Helpers\QCaptcha.cs" />
+
+    <Compile Include="Helpers\Cav\*.cs" />
+    <Compile Include="Helpers\TableFilterField.cs" />
+    <Compile Include="Helpers\MvcHtmlTableExtensions.cs" />
+    <Compile Include="Helpers\MvcHtmlTableExtensionsRenderer.cs" />
+    <Compile Include="Helpers\TableExtensions.cs" />
+    <Compile Include="Helpers\Table\Builder\DbEdit.cs" />
+    <Compile Include="Helpers\Table\Builder\Table.cs" />
+    <Compile Include="Helpers\Table\Builder\CheckList.cs" />
+    <Compile Include="Helpers\Table\Builder\Multiform.cs" />
+    <Compile Include="Helpers\Table\Builder\TableList.cs" />
+    <Compile Include="Helpers\Table\Builder\GridTableList.cs" />
+    <Compile Include="Helpers\Table\Builder\SearchList.cs" />
+    <Compile Include="Helpers\Table\Builder\MatrixBuilder.cs" />
+    <Compile Include="Helpers\Table\Builder\Timeline.cs" />
+    <Compile Include="Helpers\Table\CheckListBuilder.cs" />
+    <Compile Include="Helpers\Table\Columns\ColumnBuilder.cs" />
+    <Compile Include="Helpers\Table\Columns\ITableColumn.cs" />
+    <Compile Include="Helpers\Table\Columns\ITableColumnInternal.cs" />
+    <Compile Include="Helpers\Table\Columns\TableColumn.cs" />
+    <Compile Include="Helpers\Table\Columns\TableRowViewData.cs" />
+    <Compile Include="Helpers\Table\Pagination\TablePager.cs" />
+    <Compile Include="Helpers\Table\Sorting\TableSorter.cs" />
+    <Compile Include="Helpers\Table\Renderer\TableListRenderer.cs" />
+    <Compile Include="Helpers\Table\Renderer\TimelineRender.cs" />
+    <Compile Include="Helpers\Table\TableListBuilder.cs" />
+    <Compile Include="Helpers\Table\GridTableListBuilder.cs" />
+    <Compile Include="Helpers\Table\SearchListBuilder.cs" />
+    <Compile Include="Helpers\Table\DbEditBuilder.cs" />
+    <Compile Include="Helpers\Table\TimelineBuilder.cs" />
+    <Compile Include="Helpers\Table\Filtering\TableFilter.cs" />
+    <Compile Include="Helpers\Table\InterfacesBuilder.cs" />
+    <Compile Include="Helpers\Table\MultiformBuilder.cs" />
+    <Compile Include="Helpers\Table\Renderer\CheckListRenderer.cs" />
+    <Compile Include="Helpers\Table\Renderer\SearchListRenderer.cs" />
+    <Compile Include="Helpers\Table\Renderer\ColumnRenderer.cs" />
+    <Compile Include="Helpers\Table\Renderer\DbEditRenderer.cs" />
+    <Compile Include="Helpers\Table\Renderer\FilterRenderer.cs" />
+    <Compile Include="Helpers\Table\Renderer\MultiformRenderer.cs" />
+    <Compile Include="Helpers\Table\Renderer\PagerRenderer.cs" />
+    <Compile Include="Helpers\Table\Renderer\SorterRenderer.cs" />
+    <Compile Include="Helpers\Table\Renderer\SpecialRenderer.cs" />
+    <Compile Include="Helpers\Table\Renderer\TableRenderer.cs" />
+    <Compile Include="Helpers\Table\Renderer\GridTableListRenderer.cs" />
+    <Compile Include="Helpers\Table\Scripts\TableScripts.cs" />
+    <Compile Include="Helpers\Table\Utils\ColumnUtils.cs" />
+    <Compile Include="Helpers\Table\Utils\TableUtils.cs" />
+    <Compile Include="Helpers\Table\Utils\TableStrings.cs" />
+    <Compile Include="Helpers\Table\TableBuilder.cs" />
+    <Compile Include="Helpers\ITreeBuilder.cs" />
+    <Compile Include="Helpers\TreeBuilder.cs" />
+    <Compile Include="Helpers\TreeColumnBuilder.cs" />
+    <Compile Include="Helpers\MvcHtmlTreeExtensions.cs" />
+
+    <Compile Include="ViewModels\Pwcom\*_ViewModel.cs" />
+    <Compile Include="Controllers\Pwcom\*.cs" />
+    <Compile Include="ViewModels\Addrl\*_ViewModel.cs" />
+    <Compile Include="Controllers\Addrl\*.cs" />
+    <Compile Include="ViewModels\Genre\*_ViewModel.cs" />
+    <Compile Include="Controllers\Genre\*.cs" />
+    <Compile Include="ViewModels\Feeca\*_ViewModel.cs" />
+    <Compile Include="Controllers\Feeca\*.cs" />
+    <Compile Include="ViewModels\Notif\*_ViewModel.cs" />
+    <Compile Include="Controllers\Notif\*.cs" />
+    <Compile Include="ViewModels\Asset\*_ViewModel.cs" />
+    <Compile Include="Controllers\Asset\*.cs" />
+    <Compile Include="ViewModels\Lang2\*_ViewModel.cs" />
+    <Compile Include="Controllers\Lang2\*.cs" />
+    <Compile Include="ViewModels\Lendi\*_ViewModel.cs" />
+    <Compile Include="Controllers\Lendi\*.cs" />
+    <Compile Include="ViewModels\S_pax\*_ViewModel.cs" />
+    <Compile Include="Controllers\S_pax\*.cs" />
+    <Compile Include="ViewModels\Cntry\*_ViewModel.cs" />
+    <Compile Include="Controllers\Cntry\*.cs" />
+    <Compile Include="ViewModels\Repar\*_ViewModel.cs" />
+    <Compile Include="Controllers\Repar\*.cs" />
+    <Compile Include="ViewModels\Sale\*_ViewModel.cs" />
+    <Compile Include="Controllers\Sale\*.cs" />
+    <Compile Include="ViewModels\Dispa\*_ViewModel.cs" />
+    <Compile Include="Controllers\Dispa\*.cs" />
+    <Compile Include="ViewModels\Inpgr\*_ViewModel.cs" />
+    <Compile Include="Controllers\Inpgr\*.cs" />
+    <Compile Include="ViewModels\Manuf\*_ViewModel.cs" />
+    <Compile Include="Controllers\Manuf\*.cs" />
+    <Compile Include="ViewModels\Rordf\*_ViewModel.cs" />
+    <Compile Include="Controllers\Rordf\*.cs" />
+    <Compile Include="ViewModels\Speci\*_ViewModel.cs" />
+    <Compile Include="Controllers\Speci\*.cs" />
+    <Compile Include="ViewModels\Categ\*_ViewModel.cs" />
+    <Compile Include="Controllers\Categ\*.cs" />
+    <Compile Include="ViewModels\Tpequ\*_ViewModel.cs" />
+    <Compile Include="Controllers\Tpequ\*.cs" />
+    <Compile Include="ViewModels\Addre\*_ViewModel.cs" />
+    <Compile Include="Controllers\Addre\*.cs" />
+    <Compile Include="ViewModels\Lnhpd\*_ViewModel.cs" />
+    <Compile Include="Controllers\Lnhpd\*.cs" />
+    <Compile Include="ViewModels\Cfaqs\*_ViewModel.cs" />
+    <Compile Include="Controllers\Cfaqs\*.cs" />
+    <Compile Include="ViewModels\Gitem\*_ViewModel.cs" />
+    <Compile Include="Controllers\Gitem\*.cs" />
+    <Compile Include="ViewModels\Lnhde\*_ViewModel.cs" />
+    <Compile Include="Controllers\Lnhde\*.cs" />
+    <Compile Include="ViewModels\Strat\*_ViewModel.cs" />
+    <Compile Include="Controllers\Strat\*.cs" />
+    <Compile Include="ViewModels\Decom\*_ViewModel.cs" />
+    <Compile Include="Controllers\Decom\*.cs" />
+    <Compile Include="ViewModels\Room1\*_ViewModel.cs" />
+    <Compile Include="Controllers\Room1\*.cs" />
+    <Compile Include="ViewModels\Proje\*_ViewModel.cs" />
+    <Compile Include="Controllers\Proje\*.cs" />
+    <Compile Include="ViewModels\Year\*_ViewModel.cs" />
+    <Compile Include="Controllers\Year\*.cs" />
+    <Compile Include="ViewModels\Tabpr\*_ViewModel.cs" />
+    <Compile Include="Controllers\Tabpr\*.cs" />
+    <Compile Include="ViewModels\Regio\*_ViewModel.cs" />
+    <Compile Include="Controllers\Regio\*.cs" />
+    <Compile Include="ViewModels\Tpeq1\*_ViewModel.cs" />
+    <Compile Include="Controllers\Tpeq1\*.cs" />
+    <Compile Include="ViewModels\Faqs\*_ViewModel.cs" />
+    <Compile Include="Controllers\Faqs\*.cs" />
+    <Compile Include="ViewModels\Tpcon\*_ViewModel.cs" />
+    <Compile Include="Controllers\Tpcon\*.cs" />
+    <Compile Include="ViewModels\S_apr\*_ViewModel.cs" />
+    <Compile Include="Controllers\S_apr\*.cs" />
+    <Compile Include="ViewModels\Fami1\*_ViewModel.cs" />
+    <Compile Include="Controllers\Fami1\*.cs" />
+    <Compile Include="ViewModels\Movim\*_ViewModel.cs" />
+    <Compile Include="Controllers\Movim\*.cs" />
+    <Compile Include="ViewModels\Langu\*_ViewModel.cs" />
+    <Compile Include="Controllers\Langu\*.cs" />
+    <Compile Include="ViewModels\Sbcat\*_ViewModel.cs" />
+    <Compile Include="Controllers\Sbcat\*.cs" />
+    <Compile Include="ViewModels\Shity\*_ViewModel.cs" />
+    <Compile Include="Controllers\Shity\*.cs" />
+    <Compile Include="ViewModels\Ccorr\*_ViewModel.cs" />
+    <Compile Include="Controllers\Ccorr\*.cs" />
+    <Compile Include="ViewModels\Assma\*_ViewModel.cs" />
+    <Compile Include="Controllers\Assma\*.cs" />
+    <Compile Include="ViewModels\Wpess\*_ViewModel.cs" />
+    <Compile Include="Controllers\Wpess\*.cs" />
+    <Compile Include="ViewModels\Cattp\*_ViewModel.cs" />
+    <Compile Include="Controllers\Cattp\*.cs" />
+    <Compile Include="ViewModels\Regis\*_ViewModel.cs" />
+    <Compile Include="Controllers\Regis\*.cs" />
+    <Compile Include="ViewModels\Facty\*_ViewModel.cs" />
+    <Compile Include="Controllers\Facty\*.cs" />
+    <Compile Include="ViewModels\Rordi\*_ViewModel.cs" />
+    <Compile Include="Controllers\Rordi\*.cs" />
+    <Compile Include="ViewModels\Dilin\*_ViewModel.cs" />
+    <Compile Include="Controllers\Dilin\*.cs" />
+    <Compile Include="ViewModels\Organ\*_ViewModel.cs" />
+    <Compile Include="Controllers\Organ\*.cs" />
+    <Compile Include="ViewModels\Relin\*_ViewModel.cs" />
+    <Compile Include="Controllers\Relin\*.cs" />
+    <Compile Include="ViewModels\Teamp\*_ViewModel.cs" />
+    <Compile Include="Controllers\Teamp\*.cs" />
+    <Compile Include="ViewModels\Ware1\*_ViewModel.cs" />
+    <Compile Include="Controllers\Ware1\*.cs" />
+    <Compile Include="ViewModels\Pess2\*_ViewModel.cs" />
+    <Compile Include="Controllers\Pess2\*.cs" />
+    <Compile Include="ViewModels\Entit\*_ViewModel.cs" />
+    <Compile Include="Controllers\Entit\*.cs" />
+    <Compile Include="ViewModels\Esppe\*_ViewModel.cs" />
+    <Compile Include="Controllers\Esppe\*.cs" />
+    <Compile Include="ViewModels\Lcext\*_ViewModel.cs" />
+    <Compile Include="Controllers\Lcext\*.cs" />
+    <Compile Include="ViewModels\Dttyp\*_ViewModel.cs" />
+    <Compile Include="Controllers\Dttyp\*.cs" />
+    <Compile Include="ViewModels\Tblb\*_ViewModel.cs" />
+    <Compile Include="Controllers\Tblb\*.cs" />
+    <Compile Include="ViewModels\Year1\*_ViewModel.cs" />
+    <Compile Include="Controllers\Year1\*.cs" />
+    <Compile Include="ViewModels\Regi1\*_ViewModel.cs" />
+    <Compile Include="Controllers\Regi1\*.cs" />
+    <Compile Include="ViewModels\Space\*_ViewModel.cs" />
+    <Compile Include="Controllers\Space\*.cs" />
+    <Compile Include="ViewModels\Stake\*_ViewModel.cs" />
+    <Compile Include="Controllers\Stake\*.cs" />
+    <Compile Include="ViewModels\Manua\*_ViewModel.cs" />
+    <Compile Include="Controllers\Manua\*.cs" />
+    <Compile Include="ViewModels\Wareh\*_ViewModel.cs" />
+    <Compile Include="Controllers\Wareh\*.cs" />
+    <Compile Include="ViewModels\Glob\*_ViewModel.cs" />
+    <Compile Include="Controllers\Glob\*.cs" />
+    <Compile Include="ViewModels\Tblk\*_ViewModel.cs" />
+    <Compile Include="Controllers\Tblk\*.cs" />
+    <Compile Include="ViewModels\Cmpny\*_ViewModel.cs" />
+    <Compile Include="Controllers\Cmpny\*.cs" />
+    <Compile Include="ViewModels\Ldent\*_ViewModel.cs" />
+    <Compile Include="Controllers\Ldent\*.cs" />
+    <Compile Include="ViewModels\Team1\*_ViewModel.cs" />
+    <Compile Include="Controllers\Team1\*.cs" />
+    <Compile Include="ViewModels\Indoc\*_ViewModel.cs" />
+    <Compile Include="Controllers\Indoc\*.cs" />
+    <Compile Include="ViewModels\Photo\*_ViewModel.cs" />
+    <Compile Include="Controllers\Photo\*.cs" />
+    <Compile Include="ViewModels\Locat\*_ViewModel.cs" />
+    <Compile Include="Controllers\Locat\*.cs" />
+    <Compile Include="ViewModels\Mem\*_ViewModel.cs" />
+    <Compile Include="Controllers\Mem\*.cs" />
+    <Compile Include="ViewModels\Cmpki\*_ViewModel.cs" />
+    <Compile Include="Controllers\Cmpki\*.cs" />
+    <Compile Include="ViewModels\Produ\*_ViewModel.cs" />
+    <Compile Include="Controllers\Produ\*.cs" />
+    <Compile Include="ViewModels\Kinde\*_ViewModel.cs" />
+    <Compile Include="Controllers\Kinde\*.cs" />
+    <Compile Include="ViewModels\Rules\*_ViewModel.cs" />
+    <Compile Include="Controllers\Rules\*.cs" />
+    <Compile Include="ViewModels\S_ua\*_ViewModel.cs" />
+    <Compile Include="Controllers\S_ua\*.cs" />
+    <Compile Include="ViewModels\Ftgri\*_ViewModel.cs" />
+    <Compile Include="Controllers\Ftgri\*.cs" />
+    <Compile Include="ViewModels\Cate1\*_ViewModel.cs" />
+    <Compile Include="Controllers\Cate1\*.cs" />
+    <Compile Include="ViewModels\Propr\*_ViewModel.cs" />
+    <Compile Include="Controllers\Propr\*.cs" />
+    <Compile Include="ViewModels\Ware2\*_ViewModel.cs" />
+    <Compile Include="Controllers\Ware2\*.cs" />
+    <Compile Include="ViewModels\Afini\*_ViewModel.cs" />
+    <Compile Include="Controllers\Afini\*.cs" />
+    <Compile Include="ViewModels\Param\*_ViewModel.cs" />
+    <Compile Include="Controllers\Param\*.cs" />
+    <Compile Include="ViewModels\Tppro\*_ViewModel.cs" />
+    <Compile Include="Controllers\Tppro\*.cs" />
+    <Compile Include="ViewModels\Pesso\*_ViewModel.cs" />
+    <Compile Include="Controllers\Pesso\*.cs" />
+    <Compile Include="ViewModels\Grpb\*_ViewModel.cs" />
+    <Compile Include="Controllers\Grpb\*.cs" />
+    <Compile Include="ViewModels\Users\*_ViewModel.cs" />
+    <Compile Include="Controllers\Users\*.cs" />
+    <Compile Include="ViewModels\Pais1\*_ViewModel.cs" />
+    <Compile Include="Controllers\Pais1\*.cs" />
+    <Compile Include="ViewModels\Compa\*_ViewModel.cs" />
+    <Compile Include="Controllers\Compa\*.cs" />
+    <Compile Include="ViewModels\S_nes\*_ViewModel.cs" />
+    <Compile Include="Controllers\S_nes\*.cs" />
+    <Compile Include="ViewModels\Uicom\*_ViewModel.cs" />
+    <Compile Include="Controllers\Uicom\*.cs" />
+    <Compile Include="ViewModels\Cate2\*_ViewModel.cs" />
+    <Compile Include="Controllers\Cate2\*.cs" />
+    <Compile Include="ViewModels\S_nm\*_ViewModel.cs" />
+    <Compile Include="Controllers\S_nm\*.cs" />
+    <Compile Include="ViewModels\Asspa\*_ViewModel.cs" />
+    <Compile Include="Controllers\Asspa\*.cs" />
+    <Compile Include="ViewModels\Audit\*_ViewModel.cs" />
+    <Compile Include="Controllers\Audit\*.cs" />
+    <Compile Include="ViewModels\Perio\*_ViewModel.cs" />
+    <Compile Include="Controllers\Perio\*.cs" />
+    <Compile Include="ViewModels\Perso\*_ViewModel.cs" />
+    <Compile Include="Controllers\Perso\*.cs" />
+    <Compile Include="ViewModels\Lang1\*_ViewModel.cs" />
+    <Compile Include="Controllers\Lang1\*.cs" />
+    <Compile Include="ViewModels\Psw\*_ViewModel.cs" />
+    <Compile Include="Controllers\Psw\*.cs" />
+    <Compile Include="ViewModels\Messa\*_ViewModel.cs" />
+    <Compile Include="Controllers\Messa\*.cs" />
+    <Compile Include="ViewModels\Outpt\*_ViewModel.cs" />
+    <Compile Include="Controllers\Outpt\*.cs" />
+    <Compile Include="ViewModels\Item\*_ViewModel.cs" />
+    <Compile Include="Controllers\Item\*.cs" />
+    <Compile Include="ViewModels\Expe1\*_ViewModel.cs" />
+    <Compile Include="Controllers\Expe1\*.cs" />
+    <Compile Include="ViewModels\Noti1\*_ViewModel.cs" />
+    <Compile Include="Controllers\Noti1\*.cs" />
+    <Compile Include="ViewModels\Roigf\*_ViewModel.cs" />
+    <Compile Include="Controllers\Roigf\*.cs" />
+    <Compile Include="ViewModels\Visit\*_ViewModel.cs" />
+    <Compile Include="Controllers\Visit\*.cs" />
+    <Compile Include="ViewModels\Conta\*_ViewModel.cs" />
+    <Compile Include="Controllers\Conta\*.cs" />
+    <Compile Include="ViewModels\Games\*_ViewModel.cs" />
+    <Compile Include="Controllers\Games\*.cs" />
+    <Compile Include="ViewModels\Insta\*_ViewModel.cs" />
+    <Compile Include="Controllers\Insta\*.cs" />
+    <Compile Include="ViewModels\Recei\*_ViewModel.cs" />
+    <Compile Include="Controllers\Recei\*.cs" />
+    <Compile Include="ViewModels\Oudoc\*_ViewModel.cs" />
+    <Compile Include="Controllers\Oudoc\*.cs" />
+    <Compile Include="ViewModels\Outpu\*_ViewModel.cs" />
+    <Compile Include="Controllers\Outpu\*.cs" />
+    <Compile Include="ViewModels\Prpin\*_ViewModel.cs" />
+    <Compile Include="Controllers\Prpin\*.cs" />
+    <Compile Include="ViewModels\Rooms\*_ViewModel.cs" />
+    <Compile Include="Controllers\Rooms\*.cs" />
+    <Compile Include="ViewModels\Expen\*_ViewModel.cs" />
+    <Compile Include="Controllers\Expen\*.cs" />
+    <Compile Include="ViewModels\Roigi\*_ViewModel.cs" />
+    <Compile Include="Controllers\Roigi\*.cs" />
+    <Compile Include="ViewModels\Itemc\*_ViewModel.cs" />
+    <Compile Include="Controllers\Itemc\*.cs" />
+    <Compile Include="ViewModels\Desam\*_ViewModel.cs" />
+    <Compile Include="Controllers\Desam\*.cs" />
+    <Compile Include="ViewModels\Patie\*_ViewModel.cs" />
+    <Compile Include="Controllers\Patie\*.cs" />
+    <Compile Include="ViewModels\Trsb\*_ViewModel.cs" />
+    <Compile Include="Controllers\Trsb\*.cs" />
+    <Compile Include="ViewModels\Attac\*_ViewModel.cs" />
+    <Compile Include="Controllers\Attac\*.cs" />
+    <Compile Include="ViewModels\Role\*_ViewModel.cs" />
+    <Compile Include="Controllers\Role\*.cs" />
+    <Compile Include="ViewModels\Pwreg\*_ViewModel.cs" />
+    <Compile Include="Controllers\Pwreg\*.cs" />
+    <Compile Include="ViewModels\Anexd\*_ViewModel.cs" />
+    <Compile Include="Controllers\Anexd\*.cs" />
+    <Compile Include="ViewModels\Pess1\*_ViewModel.cs" />
+    <Compile Include="Controllers\Pess1\*.cs" />
+    <Compile Include="ViewModels\Pess3\*_ViewModel.cs" />
+    <Compile Include="Controllers\Pess3\*.cs" />
+    <Compile Include="ViewModels\Stock\*_ViewModel.cs" />
+    <Compile Include="Controllers\Stock\*.cs" />
+    <Compile Include="ViewModels\Famil\*_ViewModel.cs" />
+    <Compile Include="Controllers\Famil\*.cs" />
+    <Compile Include="ViewModels\Rogl1\*_ViewModel.cs" />
+    <Compile Include="Controllers\Rogl1\*.cs" />
+    <Compile Include="ViewModels\S_arg\*_ViewModel.cs" />
+    <Compile Include="Controllers\S_arg\*.cs" />
+    <Compile Include="ViewModels\Equip\*_ViewModel.cs" />
+    <Compile Include="Controllers\Equip\*.cs" />
+    <Compile Include="ViewModels\Pworg\*_ViewModel.cs" />
+    <Compile Include="Controllers\Pworg\*.cs" />
+    <Compile Include="ViewModels\Cate3\*_ViewModel.cs" />
+    <Compile Include="Controllers\Cate3\*.cs" />
+    <Compile Include="ViewModels\Grid\*_ViewModel.cs" />
+    <Compile Include="Controllers\Grid\*.cs" />
+    <Compile Include="ViewModels\Tradu\*_ViewModel.cs" />
+    <Compile Include="Controllers\Tradu\*.cs" />
+    <Compile Include="ViewModels\Pedid\*_ViewModel.cs" />
+    <Compile Include="Controllers\Pedid\*.cs" />
+    <Compile Include="ViewModels\Facil\*_ViewModel.cs" />
+    <Compile Include="Controllers\Facil\*.cs" />
+    <Compile Include="ViewModels\Aero\*_ViewModel.cs" />
+    <Compile Include="Controllers\Aero\*.cs" />
+    <Compile Include="ViewModels\Flds\*_ViewModel.cs" />
+    <Compile Include="Controllers\Flds\*.cs" />
+    <Compile Include="ViewModels\Faci1\*_ViewModel.cs" />
+    <Compile Include="Controllers\Faci1\*.cs" />
+    <Compile Include="ViewModels\Sales\*_ViewModel.cs" />
+    <Compile Include="Controllers\Sales\*.cs" />
+    <Compile Include="ViewModels\Faci2\*_ViewModel.cs" />
+    <Compile Include="Controllers\Faci2\*.cs" />
+    <Compile Include="ViewModels\Agreg\*_ViewModel.cs" />
+    <Compile Include="Controllers\Agreg\*.cs" />
+    <Compile Include="ViewModels\Evcat\*_ViewModel.cs" />
+    <Compile Include="Controllers\Evcat\*.cs" />
+    <Compile Include="ViewModels\Lnhag\*_ViewModel.cs" />
+    <Compile Include="Controllers\Lnhag\*.cs" />
+    <Compile Include="ViewModels\UserAdmin\*.cs" />
+    <Compile Include="ViewModels\Breadcrumbs_ViewModel.cs" />
+    <Compile Include="ViewModels\Messages_ViewModel.cs" />
+    <Compile Include="ViewModels\Alerts_ViewModel.cs" />
+    <Compile Include="ViewModels\Menu_ViewModel.cs" />
+    <Compile Include="ViewModels\Home_ViewModel.cs" />
+    <Compile Include="ViewModels\Bookmarks_ViewModel.cs" />
+    <Compile Include="ViewModels\HomePage_ViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelHelpers.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="ViewModels\CalendarVariables.cs" />
+    <Compile Include="ViewModels\CrudViewModel.cs" />
+    <Compile Include="ViewModels\FormViewModel.cs" />
+    <Compile Include="ViewModels\EmptyFormViewModel.cs" />
+    <Compile Include="ViewModels\CustomTableFormViewModel.cs" />
+    <Compile Include="ViewModels\GridTableListRowViewModel.cs" />
+    <Compile Include="ViewModels\ListViewModel.cs" />
+    <Compile Include="ViewModels\Shared\**" />
+    <Compile Include="ViewModels\Home_*_ViewModel.cs" />
+    <Compile Include="ViewModels\RegisterViewModel.cs" />
+    <Compile Include="ViewModels\ListPropertiesViewModel.cs" />
+    <Compile Include="ViewModels\SuggestionViewModel.cs" />
+    <Compile Include="ViewModels\Lstusr\*.cs" />
+    <Compile Include="ViewModels\SpecialRendering\*.cs" />
+    <Compile Include="ViewModels\Dashboard\*.cs" />
+    <Compile Include="ViewModels\Dashboard\Widgets\*.cs" />
+
+    <Compile Include="Models\Audit\*cs" />
+    <Compile Include="Models\Authentication\AccountModels.cs" />
+    <Compile Include="Models\Authentication\QPrincipal.cs" />
+    <Compile Include="Models\Authentication\UserCache.cs" />
+    <Compile Include="Models\Documents\Docums.cs" />
+    <Compile Include="Models\Exception\InvalidAuthenticationException.cs" />
+    <Compile Include="Models\Exception\UserUnavailableException.cs" />
+    <Compile Include="Models\Exception\ModelNotFoundException.cs" />
+    <Compile Include="Models\Navigation\FormMode.cs" />
+    <Compile Include="Models\Navigation\HistoryEntry.cs" />
+    <Compile Include="Models\Navigation\HistoryLevel.cs" />
+    <Compile Include="Models\Navigation\Messages.cs" />
+    <Compile Include="Models\Navigation\Alerts.cs" />
+    <Compile Include="Models\Navigation\AlertDto.cs" />
+    <Compile Include="Models\Navigation\NavigationContext.cs" />
+    <Compile Include="Models\Navigation\NavigationLocation.cs" />
+    <Compile Include="Models\Navigation\NavigationMap.cs" />
+    <Compile Include="Models\Navigation\UserContext.cs" />
+    <Compile Include="Models\Navigation\CurrentNavigation.cs" />
+    <Compile Include="Models\Navigation\MenuResult.cs" />
+    <Compile Include="Models\Navigation\ItemActionDescriptor.cs" />
+    <Compile Include="Models\Timeline\TimelineItem.cs" />
+	  <Compile Include="Models\SpecialRendering\SpecialRendering.cs" />
+    <Compile Include="Models\Wizard\Wizard.cs" />
+    <Compile Include="Models\Dashboard\*.cs" />
+    <Compile Include="Models\Lstusr\*.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\AuthConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="App_Start\MagicalUnicornCustomErrorHandling.cs" />
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="CustomEngines\ExtendedRazorEngine.cs" />
+    <Content Include="Bin\\layoutConfig.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="menus.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="GQTQueries.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="favicon.ico" />
+    <Compile Include="Resources\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Resources.en-US.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.en-US.resx</DependentUpon>
+    </Compile>
+<!-- USE /[MANUAL GQT PROJCOMPILES]/ -->
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="_app_offline.htm">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ReportViewerWebForm.aspx.cs">
+      <DependentUpon>ReportViewerWebForm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="ReportViewerWebForm.aspx.designer.cs">
+      <DependentUpon>ReportViewerWebForm.aspx.cs</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Content Include="ReportViewerWebForm.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\**" />
+    <Content Include="Content\**" />
+    <Content Include="Scripts\**" />
+    <Content Include="Global.asax" />
+    <Content Include="Web.config" />
+    <Content Include="ObterRecurso.aspx" />
+    <Content Include="UploadFile.aspx" />
+    <Content Include="UploadAddin.aspx" />
+    <Content Include="manifest.json" />
+    <Content Include="serviceworker.js" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+<!-- USE /[MANUAL GQT PROJCONTENT]/ -->
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CSGenio.core\CSGenio.core.csproj">
+      <Project>{b4208612-c332-4a48-be24-6ef1799be01c}</Project>
+      <Name>CSGenio.core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSGenio.framework\CSGenio.framework.csproj">
+      <Project>{4c187a83-7650-4854-a536-c1839dce1975}</Project>
+      <Name>CSGenio.framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSGenio.reporting\CSGenio.reporting.csproj">
+      <Project>{1321e13a-2445-4e43-80dc-58b3fc827461}</Project>
+      <Name>CSGenio.reporting</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Quidgest.Persistence\Quidgest.Persistence.csproj">
+      <Project>{A2AEB65C-1B92-4756-99BB-CD7ED88024D8}</Project>
+      <Name>Quidgest.Persistence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GenioServer\GenioServer.csproj">
+      <Project>{BD00DFF9-9C9D-4002-A8FD-F273F34A0AC8}</Project>
+      <Name>GenioServer</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Resources.en-US.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <ItemGroup>
+      <ExtraWebConfigs Include="$(BaseIntermediateOutputPath)\**\web.config" />
+      <ExtraPackageTmp Include="$([System.IO.Directory]::GetDirectories(&quot;$(BaseIntermediateOutputPath)&quot;, &quot;PackageTmp&quot;, System.IO.SearchOption.AllDirectories))" />
+    </ItemGroup>
+    <Delete Files="@(ExtraWebConfigs)" />
+    <RemoveDir Directories="@(ExtraPackageTmp)" />
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+    <!-- Compile the css before building -->
+  <ItemGroup>
+    <SCSSFiles Include="Content\stylesheets\*.scss"/>
+    <CSSFiles Include="Content\stylesheets/css/quidgest.css"/>
+  </ItemGroup>
+  <Target Name="BuildSass" BeforeTargets="BeforeBuild" Inputs="@(SCSSFiles)" Outputs="@(CSSFiles)">
+    <Exec WorkingDirectory="$(ProjectDir)" Command="dart-sass\sass  Content\stylesheets/quidgest.scss Content\stylesheets/css/quidgest.css" />
+    <ItemGroup>
+      <Content Include="Content\stylesheets\css\**" />
+    </ItemGroup>
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>59464</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:59464/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

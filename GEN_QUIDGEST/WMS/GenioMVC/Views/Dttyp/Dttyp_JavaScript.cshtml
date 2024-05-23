@@ -1,0 +1,356 @@
+﻿@model GenioMVC.ViewModels.Dttyp.Dttyp_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS DTTYP]/ *@
+<script  type="text/javascript">
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Dttyp !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Dttyp = new QForm($('[data-form="Dttyp"]'), "Form_Dttyp");
+		}
+		window.Form_Dttyp.baseArea = "dttyp";
+		window.Form_Dttyp.FormMode = '@Model.GetFormMode';
+		window.Form_Dttyp.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Dttyp.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Dttyp")',
+			GetDependants:		'@Url.Action("GetDependants", "Dttyp")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Dttyp", "Dttyp")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Dttyp", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Dttyp", "Dttyp")',
+		};
+		window.Form_Dttyp.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Dttyp.formSaveEdit = '@Url.Action("Dttyp_SaveEdit", "Dttyp")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Dttyp.formAction = 'Dttyp_New';
+		window.Form_Dttyp.formRedirectURL = '@Url.Action("Dttyp_New_Redirect", "Dttyp")';
+		window.Form_Dttyp.formSubmitURL = '@Url.Action("Dttyp_New", "Dttyp")';
+		window.Form_Dttyp.formRedirectURL_repeatInsertion = '@Url.Action("Dttyp_New_Redirect", "Dttyp", new { repeatInsertion = true})';
+		window.Form_Dttyp.formSubmitURL_repeatInsertion = '@Url.Action("Dttyp_New", "Dttyp", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Dttyp.formAction = 'Dttyp_Edit';
+		window.Form_Dttyp.formRedirectURL = '@Url.Action("Dttyp_Edit_Redirect", "Dttyp")';
+		window.Form_Dttyp.formSubmitURL = '@Url.Action("Dttyp_Edit", "Dttyp")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Dttyp.formAction = 'Dttyp_Duplicate';
+		window.Form_Dttyp.formRedirectURL = '@Url.Action("Dttyp_Duplicate_Redirect", "Dttyp")';
+		window.Form_Dttyp.formSubmitURL = '@Url.Action("Dttyp_Duplicate", "Dttyp")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Dttyp.formAction = 'Dttyp_Delete';
+		window.Form_Dttyp.formRedirectURL = '@Url.Action("Dttyp_Delete_Redirect", "Dttyp")';
+		window.Form_Dttyp.formSubmitURL = '@Url.Action("Dttyp_Delete", "Dttyp")';
+	</text>
+}
+		window.Form_Dttyp.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.IFF_DTTYP___PSEUDNOVOGR06 = new QGenericControl($('[data-identifier="IFF_DTTYP___PSEUDNOVOGR06"]', this.element), window.Form_Dttyp);
+
+			this.Controls.IFF_DTTYP___PSEUDNOVOGR01 = new QGenericControl($('[data-identifier="IFF_DTTYP___PSEUDNOVOGR01"]', this.element), window.Form_Dttyp);
+
+			this.Controls.LED_DTTYP___DTTYPSTRING__ = new QTextControl($('[data-identifier="LED_DTTYP___DTTYPSTRING__"]', this.element), window.Form_Dttyp);
+
+			this.Controls.LED_DTTYP___DTTYPUPPERCAS = new QTextControl($('[data-identifier="LED_DTTYP___DTTYPUPPERCAS"]', this.element), window.Form_Dttyp);
+
+			this.Controls.LED_DTTYP___DTTYPUUID____ = new QTextControl($('[data-identifier="LED_DTTYP___DTTYPUUID____"]', this.element), window.Form_Dttyp);
+
+			this.Controls.LED_DTTYP___DTTYPQRCODE__ = new QQRcodeControl($('[data-identifier="LED_DTTYP___DTTYPQRCODE__"]', this.element), window.Form_Dttyp);
+
+			this.Controls.LED_DTTYP___DTTYPMULTILIN = new QGenericControl($('[data-identifier="LED_DTTYP___DTTYPMULTILIN"]', this.element), window.Form_Dttyp);
+
+			this.Controls.IFF_DTTYP___DTTYPMULTILI3 = new QRichTextControl($('[data-identifier="IFF_DTTYP___DTTYPMULTILI3"]', this.element), window.Form_Dttyp);
+
+			this.Controls.IFF_DTTYP___PSEUDNOVOGR02 = new QGenericControl($('[data-identifier="IFF_DTTYP___PSEUDNOVOGR02"]', this.element), window.Form_Dttyp);
+
+			this.Controls.LED_DTTYP___DTTYPBOOLEAN_ = new QCheckBoxControl($('[data-identifier="LED_DTTYP___DTTYPBOOLEAN_"]', this.element), window.Form_Dttyp);
+
+			this.Controls.LED_DTTYP___DTTYPBOOLEAN2 = new QCheckBoxControl($('[data-identifier="LED_DTTYP___DTTYPBOOLEAN2"]', this.element), window.Form_Dttyp);
+
+			this.Controls.IFF_DTTYP___PSEUDNOVOGR03 = new QGenericControl($('[data-identifier="IFF_DTTYP___PSEUDNOVOGR03"]', this.element), window.Form_Dttyp);
+
+			this.Controls.LED_DTTYP___DTTYPSMALLINT = new QNumericControl($('[data-identifier="LED_DTTYP___DTTYPSMALLINT"]', this.element), window.Form_Dttyp);
+
+			this.Controls.LED_DTTYP___DTTYPINTEGER_ = new QNumericControl($('[data-identifier="LED_DTTYP___DTTYPINTEGER_"]', this.element), window.Form_Dttyp);
+
+			this.Controls.LED_DTTYP___DTTYPBIGINT__ = new QNumericControl($('[data-identifier="LED_DTTYP___DTTYPBIGINT__"]', this.element), window.Form_Dttyp);
+
+			this.Controls.LED_DTTYP___DTTYPREAL____ = new QNumericControl($('[data-identifier="LED_DTTYP___DTTYPREAL____"]', this.element), window.Form_Dttyp);
+
+			this.Controls.LED_DTTYP___DTTYPFLOAT___ = new QNumericControl($('[data-identifier="LED_DTTYP___DTTYPFLOAT___"]', this.element), window.Form_Dttyp);
+
+			this.Controls.LED_DTTYP___DTTYPDECIMAL_ = new QNumericControl($('[data-identifier="LED_DTTYP___DTTYPDECIMAL_"]', this.element), window.Form_Dttyp);
+
+			this.Controls.LED_DTTYP___DTTYPDECIMAL9 = new QNumericControl($('[data-identifier="LED_DTTYP___DTTYPDECIMAL9"]', this.element), window.Form_Dttyp);
+
+			this.Controls.LED_DTTYP___DTTYPMONEY___ = new QNumericControl($('[data-identifier="LED_DTTYP___DTTYPMONEY___"]', this.element), window.Form_Dttyp);
+
+			this.Controls.LED_DTTYP___DTTYPMONEY9__ = new QNumericControl($('[data-identifier="LED_DTTYP___DTTYPMONEY9__"]', this.element), window.Form_Dttyp);
+
+			this.Controls.IFF_DTTYP___PSEUDNOVOGR04 = new QGenericControl($('[data-identifier="IFF_DTTYP___PSEUDNOVOGR04"]', this.element), window.Form_Dttyp);
+
+			this.Controls.LED_DTTYP___DTTYPDATE____ = new QDateControl($('[data-identifier="LED_DTTYP___DTTYPDATE____"]', this.element), window.Form_Dttyp);
+
+			this.Controls.LED_DTTYP___DTTYPDATETIME = new QDateControl($('[data-identifier="LED_DTTYP___DTTYPDATETIME"]', this.element), window.Form_Dttyp);
+
+			this.Controls.LED_DTTYP___DTTYPDTSESOND = new QDateControl($('[data-identifier="LED_DTTYP___DTTYPDTSESOND"]', this.element), window.Form_Dttyp);
+
+			this.Controls.LED_DTTYP___DTTYPTIME____ = new QDateControl($('[data-identifier="LED_DTTYP___DTTYPTIME____"]', this.element), window.Form_Dttyp);
+
+			this.Controls.IFF_DTTYP___PSEUDNOVOGR05 = new QGenericControl($('[data-identifier="IFF_DTTYP___PSEUDNOVOGR05"]', this.element), window.Form_Dttyp);
+
+			this.Controls.LED_DTTYP___DTTYPIMAGE___ = new QImageControl($('[data-identifier="LED_DTTYP___DTTYPIMAGE___"]', this.element), window.Form_Dttyp, '@Html.Raw(Url.Action("ImageDelete", "Dttyp", new { id=Model.ValCoddttyp, modelname="Dttyp", fldname="ValImage" }))', '@Html.Raw(Url.Action("ImageCropper", "Dttyp", new { key=Model.ValCoddttyp, modelname= "Dttyp", fldname= "ValImage", identifier= "FDTTYP", FormName= "Dttyp", FieldId= "LED_DTTYP___DTTYPIMAGE___" }))',@Html.IsImageEmpty(Model.ValImage));
+
+
+
+
+			this.Controls.LED_DTTYP___DTTYPCODDTTYP = new QHiddenControl($('[data-identifier="LED_DTTYP___DTTYPCODDTTYP"]', this.element), window.Form_Dttyp);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	</text>
+}
+
+		window.Form_Dttyp.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Dttyp.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			this.Controls.LED_DTTYP___DTTYPUPPERCAS.Value = (this.Controls.LED_DTTYP___DTTYPUPPERCAS.Value || '').toUpperCase();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI DTTYP]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Dttyp.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS DTTYP]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Dttyp.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS DTTYP]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Dttyp.Data.RelationKeysSelector = {
+		};
+
+		window.Form_Dttyp.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Dttyp.Data.RelationKeys = {
+			get formContext() { return window.Form_Dttyp; },
+		};
+	</text>
+}
+
+	window.Form_Dttyp.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+		@* Formula of the 'ValQrcode' field *@
+		$(qForm).bind('VALSTRING_CHANGE', function(event, eTarget) {
+				try {
+						var newValue = ( getFieldValue($(':not([elem-identifier="Multiform"]) > #ValString', $('[data-form="Dttyp"]'))));
+						$.when(newValue).done(function (result) {
+								setFieldValue($(':not([elem-identifier="Multiform"]) > #ValQrcode', $('[data-form="Dttyp"]')), result);
+								if($(':not([elem-identifier="Multiform"]) > #ValQrcode', $('[data-form="Dttyp"]')).data('QObject') === undefined) $(':not([elem-identifier="Multiform"]) > #ValQrcode', $('[data-form="Dttyp"]')).change(); //TODO: Remove this later...
+						});
+				} catch (err) { QError.AppendError('Formula of field ValQrcode: ' + err.message, err.stack, window.location.href); }
+		});
+		
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Dttyp.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitDttyp(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Dttyp.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeleteDttyp(event) {
+			event.preventDefault();
+			window.Form_Dttyp.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+    var ajaxCallsRemaining = $(".flash object embed").length;
+    $('form [elem-identifier="ButtonPrimary"]').click(function() {
+        var flashObjects = $(".flash object embed");
+        ajaxCallsRemaining = flashObjects.length;
+        if(flashObjects.length == 0)
+            return true;
+        else {
+            flashObjects.each(function() {
+               var flashObj = GetFlash($(this).attr('id'));
+               flashObj.UsedFlash.TriggerSave(flashObj);
+            });
+            return false;
+        }
+    });
+    </text>
+}
+// USE /[MANUAL GQT FORM_CODEJS DTTYP]/
+
+
+
+ 
+
+    $($('[elem-identifier="FormActions"]'), $('[data-form="Dttyp"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

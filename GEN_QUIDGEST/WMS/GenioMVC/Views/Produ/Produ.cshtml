@@ -1,0 +1,552 @@
+﻿@model GenioMVC.ViewModels.Produ.Produ_ViewModel
+@using GenioMVC.Models.Navigation;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Form = "Produ";
+	ViewBag.Title = @Resources.PRODUCT12880;
+    ViewBag.formmode = Model.GetFormMode;
+	ViewBag.ClassForFormLayout = "form-flow";
+}
+
+
+@if (!Model.NestedForm) {
+    if(Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+    {
+        using (Html.BeginForm("Action", "Produ", FormMethod.Post, new { @class = "form-horizontal", area="Produ", data_form="Produ" }))
+        {
+            @form_content_alert()
+            @Html.QValidationSummary()
+	        @LoadDefault()
+        }
+    }
+    else
+    {
+        <div class="form-horizontal" id="Produ" area="Produ" data-form="Produ">
+	        @LoadDefault()
+        </div>
+    }
+}
+else {
+    <div class="c-card nested-form" id="Produ_well" area="Produ" data-form="Produ">
+        @Html.QValidationSummary()
+		@LoadDefault()
+    </div>
+}
+
+@helper form_content_body() {
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="row-line-group">
+                            <div class="c-groupbox " id="GROUPBOX_PRODU_NOVOGR01">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_PRODU___PSEUDNOVOGR01" 
+                                    label-id="IFF_PRODU___PSEUDNOVOGR01">
+                                    <span>@Resources.PRODUCT_IDENTIFICATI25169</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_PRODU___PSEUDNOVOGR01','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_PRODU___PRODUPRODUCT_">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValProduct, new { label_id="LED_PRODU___PRODUPRODUCT_", @class = " i-text__label", id="LABEL_LED_PRODU___PRODUPRODUCT_"}, true, true)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PRODU___PRODUPRODUCT_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValProduct, new {help_id = "LED_PRODU___PRODUPRODUCT_", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_PRODU___PRODUPRODUCT_", @pers_cs_area = "Produ", @pers_cs_field = "ValProduct", @db_field = "ValProduct", title = @Resources.PRODUCT12880, maxlength = "85", rows = "85" })
+													@Html.ValidationMessageFor(model => model.ValProduct)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-dbedit draggable " id="CONTAINER_LED_PRODU___PRODUIN_USE__">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValIn_use, new { label_id="LED_PRODU___PRODUIN_USE__", @class = " i-text__label", id="LABEL_LED_PRODU___PRODUIN_USE__"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PRODU___PRODUIN_USE__','Yesno')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.ArrayLogicalFor(model => model.ValIn_use, Model.List_ValIn_use, CSGenio.business.ArrayYesno.GetElement, false, new {help_id = "LED_PRODU___PRODUIN_USE__", @class = "input-mini", data_identifier = "LED_PRODU___PRODUIN_USE__", @pers_cs_area = "Produ", @pers_cs_field = "ValIn_use", @db_field = "ValIn_use", title = @Resources.IN_USE42606 })
+													@Html.ValidationMessageFor(model => model.ValIn_use)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-textarea draggable " id="CONTAINER_LED_PRODU___PRODUDESCRIPT">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValDescript, new { label_id="LED_PRODU___PRODUDESCRIPT", @class = " i-text__label", id="LABEL_LED_PRODU___PRODUDESCRIPT"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PRODU___PRODUDESCRIPT','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextAreaFor(model => model.ValDescript, 3, 85, new {help_id = "LED_PRODU___PRODUDESCRIPT", @class = "i-textarea__field i-textarea input-xxlarge", data_identifier = "LED_PRODU___PRODUDESCRIPT", @pers_cs_area = "Produ", @pers_cs_field = "ValDescript", @db_field = "ValDescript", title = @Resources.DESCRIPTION07383 })
+													@Html.ValidationMessageFor(model => model.ValDescript)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_PRODU___PRODUSKU_____">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValSku, new { label_id="LED_PRODU___PRODUSKU_____", @class = " i-text__label", id="LABEL_LED_PRODU___PRODUSKU_____"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PRODU___PRODUSKU_____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValSku, new {help_id = "LED_PRODU___PRODUSKU_____", @class = "i-text__field i-text input-medium", data_identifier = "LED_PRODU___PRODUSKU_____", @pers_cs_area = "Produ", @pers_cs_field = "ValSku", @db_field = "ValSku", title = @Resources.SKU42303, maxlength = "20", rows = "20" })
+													@Html.ValidationMessageFor(model => model.ValSku)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_PRODU___PRODUGTIN____">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValGtin, new { label_id="LED_PRODU___PRODUGTIN____", @class = " i-text__label", id="LABEL_LED_PRODU___PRODUGTIN____"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PRODU___PRODUGTIN____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValGtin, new {help_id = "LED_PRODU___PRODUGTIN____", @class = "i-text__field i-text input-small", data_identifier = "LED_PRODU___PRODUGTIN____", @pers_cs_area = "Produ", @pers_cs_field = "ValGtin", @db_field = "ValGtin", title = @Resources.GTIN45487, maxlength = "14", rows = "14" })
+													@Html.ValidationMessageFor(model => model.ValGtin)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_PRODU___PRODUSIZE____">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValSize, new { label_id="LED_PRODU___PRODUSIZE____", @class = " i-text__label", id="LABEL_LED_PRODU___PRODUSIZE____"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PRODU___PRODUSIZE____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValSize, new {help_id = "LED_PRODU___PRODUSIZE____", @class = "i-text__field i-text input-medium", data_identifier = "LED_PRODU___PRODUSIZE____", @pers_cs_area = "Produ", @pers_cs_field = "ValSize", @db_field = "ValSize", title = @Resources.SIZE10299, maxlength = "50", rows = "25" })
+													@Html.ValidationMessageFor(model => model.ValSize)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_PRODU___PRODUWEIGHT__">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValWeight, new { label_id="LED_PRODU___PRODUWEIGHT__", @class = " i-text__label", id="LABEL_LED_PRODU___PRODUWEIGHT__"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PRODU___PRODUWEIGHT__','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValWeight, new {help_id = "LED_PRODU___PRODUWEIGHT__", @class = "Number text-right i-text__field i-text input-small", data_identifier = "LED_PRODU___PRODUWEIGHT__", @pers_cs_area = "Produ", @pers_cs_field = "ValWeight", @db_field = "ValWeight", title = @Resources.WEIGHT36329, data_number_integer = "7", data_number_decimals = "2", data_number_format = "9999999.99" })
+													@Html.ValidationMessageFor(model => model.ValWeight)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_PRODU___PRODUPRICE___">
+													<div class="d-inline-flex">
+													@Html.LabelFor(model => model.ValPrice, new { label_id="LED_PRODU___PRODUPRICE___", @class = " i-text__label", id="LABEL_LED_PRODU___PRODUPRICE___"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PRODU___PRODUPRICE___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValPrice, new {help_id = "LED_PRODU___PRODUPRICE___", @class = "i-input-group__field text-right i-text__field i-text input-medium", data_identifier = "LED_PRODU___PRODUPRICE___", @pers_cs_area = "Produ", @pers_cs_field = "ValPrice", @db_field = "ValPrice", title = @Resources.PRICE06900, data_currency = "True", data_number_integer = "7", data_number_decimals = "4", data_number_format = "9999999.9999" })
+													@Html.ValidationMessageFor(model => model.ValPrice)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_PRODU___PRODUINPUTS__">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValInputs, new { label_id="LED_PRODU___PRODUINPUTS__", @class = " i-text__label", id="LABEL_LED_PRODU___PRODUINPUTS__"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PRODU___PRODUINPUTS__','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValInputs, new {help_id = "LED_PRODU___PRODUINPUTS__", @class = "Number text-right i-text__field i-text input-small", data_refresh = "true", data_tipoform = "SR", data_identifier = "LED_PRODU___PRODUINPUTS__", @pers_cs_area = "Produ", @pers_cs_field = "ValInputs", @db_field = "ValInputs", fixed_field = "true", @readonly = "readonly", title = @Resources.INPUTS19315, data_number_integer = "10", data_number_decimals = "0", data_number_format = "9999999999" })
+													@Html.ValidationMessageFor(model => model.ValInputs)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_PRODU___PRODUOUTPUTS_">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValOutputs, new { label_id="LED_PRODU___PRODUOUTPUTS_", @class = " i-text__label", id="LABEL_LED_PRODU___PRODUOUTPUTS_"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PRODU___PRODUOUTPUTS_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValOutputs, new {help_id = "LED_PRODU___PRODUOUTPUTS_", @class = "Number text-right i-text__field i-text input-small", data_refresh = "true", data_tipoform = "SR", data_identifier = "LED_PRODU___PRODUOUTPUTS_", @pers_cs_area = "Produ", @pers_cs_field = "ValOutputs", @db_field = "ValOutputs", fixed_field = "true", @readonly = "readonly", title = @Resources.OUTPUTS47833, data_number_integer = "10", data_number_decimals = "0", data_number_format = "9999999999" })
+													@Html.ValidationMessageFor(model => model.ValOutputs)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_PRODU___PRODUSTOCK___">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValStock, new { label_id="LED_PRODU___PRODUSTOCK___", @class = " i-text__label", id="LABEL_LED_PRODU___PRODUSTOCK___"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PRODU___PRODUSTOCK___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValStock, new {help_id = "LED_PRODU___PRODUSTOCK___", @class = "Number text-right i-text__field i-text input-small", data_refresh = "true", data_tipoform = "SR", data_identifier = "LED_PRODU___PRODUSTOCK___", @pers_cs_area = "Produ", @pers_cs_field = "ValStock", @db_field = "ValStock", fixed_field = "true", @readonly = "readonly", title = @Resources.STOCK37618, data_number_integer = "10", data_number_decimals = "0", data_number_format = "9999999999" })
+													@Html.ValidationMessageFor(model => model.ValStock)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="row-large-control">
+						<div class="row-line-group" id="CONTAINER_IFF_PRODU___PSEUDNOVOGR02">
+<div id="PRODU_NOVOGR02" elem-identifier="AccordionGroup" class="c-accordion accordion-group " data-identifier="IFF_PRODU___PSEUDNOVOGR02">
+	
+	<div class="c-accordion__panel">
+		<div elem-identifier="AccordionHeading" class="c-accordion__panel-header" >
+			<a elem-identifier="AccordionToggle" href="#" class="b-btn b-btn--link c-accordion__panel-title" role="button" data-toggle="collapse"  
+				data-target="#PRODU_NOVOGR02I" data-zone-type="ZC"
+				label-id="IFF_PRODU___PSEUDNOVOGR02"
+				>
+				<span  help-id="IFF_PRODU___PSEUDNOVOGR02"/>	
+				<i class="glyphicons glyphicons-plus-sign c-accordion__panel-icon"></i>
+				@Resources.IMAGE65174		
+				<a href="javascript:OpenSuggestion('IFF_PRODU___PSEUDNOVOGR02','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a>
+			</a>
+		</div>
+		<div id="PRODU_NOVOGR02I" elem-identifier="AccordionBody" data-parent="#PRODU_NOVOGR02" class="collapse" style="height:0px; ">
+			<div class="c-accordion__panel-body" elem-identifier="AccordionInner">
+					<div elem-identifier="ContainerAccordionInner" class="container-fluid">
+												<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-image draggable " id="CONTAINER_LED_PRODU___PRODUIMAGE___">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValImage, new { label_id="LED_PRODU___PRODUIMAGE___", @class = " i-text__label", id="LABEL_LED_PRODU___PRODUIMAGE___"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PRODU___PRODUIMAGE___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													<div data-identifier="LED_PRODU___PRODUIMAGE___" pers-cs-area="Produ" pers-cs-field="ValImage" class="image-control-wrapper" >
+													@if(Model.IsEditableMode) {
+														@Html.EditorFor(m => m.ValImage, new {help_id = "LED_PRODU___PRODUIMAGE___", @class = "col-auto ", data_identifier = "LED_PRODU___PRODUIMAGE___", title = @Resources.IMAGE65174, guid = @Model.ValCodprodu, controller = "Produ", fldname = "ValImage", identifier = "FPRODU", style = "height: 297pt; display: inline-block;" })
+													} else {
+														@Html.DisplayFor(m => m.ValImage, new {help_id = "LED_PRODU___PRODUIMAGE___", @class = "col-auto ", data_identifier = "LED_PRODU___PRODUIMAGE___", title = @Resources.IMAGE65174, guid = @Model.ValCodprodu, controller = "Produ", fldname = "ValImage", identifier = "FPRODU", style = "height: 297pt; display: inline-block;" })
+													}
+													</div>
+													@Html.ValidationMessageFor(model => model.ValImage)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+						</div>
+				</div>
+		</div>
+	</div>
+</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="row-large-control">
+						<div class="row-line-group" id="CONTAINER_IFF_PRODU___PSEUDNOVOGR06">
+<div class="c-accordion" id="PRODU_NOVOGR06">
+<div id="PRODU_NOVOGR04" elem-identifier="AccordionGroup" class="c-accordion accordion-group " data-identifier="IFF_PRODU___PSEUDNOVOGR04">
+	
+	<div class="c-accordion__panel">
+		<div elem-identifier="AccordionHeading" class="c-accordion__panel-header" >
+			<a elem-identifier="AccordionToggle" href="#" class="b-btn b-btn--link c-accordion__panel-title" role="button" data-toggle="collapse"  
+				data-target="#PRODU_NOVOGR04I" data-zone-type="ZA"
+				label-id="IFF_PRODU___PSEUDNOVOGR06"
+				>
+				<span  help-id="IFF_PRODU___PSEUDNOVOGR06"/>	
+				<i class="glyphicons glyphicons-plus-sign c-accordion__panel-icon"></i>
+				@Resources.STOCK37618		
+				<a href="javascript:OpenSuggestion('IFF_PRODU___PSEUDNOVOGR06','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a>
+			</a>
+		</div>
+		<div id="PRODU_NOVOGR04I" elem-identifier="AccordionBody" data-parent="#PRODU_NOVOGR06" class="collapse" style="height:0px; ">
+			<div class="c-accordion__panel-body" elem-identifier="AccordionInner">
+												<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="row-line-group">
+                            <div class="c-groupbox " id="GROUPBOX_PRODU_NOVOGR03">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_PRODU___PSEUDNOVOGR03" 
+                                    label-id="IFF_PRODU___PSEUDNOVOGR03">
+                                    <span>@Resources.LOCATION54790</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_PRODU___PSEUDNOVOGR03','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-dbedit draggable " id="CONTAINER_IFF_PRODU___LOCATGLN_____">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.TableLocatGln, new { label_id="IFF_PRODU___LOCATGLN_____", @class = " i-text__label", id="LABEL_IFF_PRODU___LOCATGLN_____"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('IFF_PRODU___LOCATGLN_____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DropDownListFor(model => model.ValCodlocat, Model.TableLocatGln.List , "", new {help_id = "IFF_PRODU___LOCATGLN_____", @class = "i-select chosen-dropdown input-xxlarge", data_identifier = "IFF_PRODU___LOCATGLN_____", @pers_cs_area = "Locat", @pers_cs_field = "ValCodlocat", @db_field = "ValCodlocat", @db_full_field_name = "produ.codlocat", data_has_more = Model.TableLocatGln.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableLocatGln.Selected, data_dbedit_value = Model.TableLocatGln.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodprodu, @data_see_more = "Produ_LocatValGln", title = @Resources.GLOBAL_LOCATION_NUMB24637, data_see_more_url = @Url.Action("Produ_LocatValGln","Produ"), data_is_dbedit = "true", data_fields = "locat.codlocat,locat.gln", data_main_field = "Locat.ValGln", data_elements = 0, data_filled_by_history = Model.TableLocatGln.FilledByHistory, @dependant_fields = "locat.codlocat,locat.gln" })
+													@Html.ValidationMessageFor(model => model.TableLocatGln)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-dbedit draggable " id="CONTAINER_IFF_PRODU___LCEXTGLNEXT__">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.TableLcextGlnext, new { label_id="IFF_PRODU___LCEXTGLNEXT__", @class = " i-text__label", id="LABEL_IFF_PRODU___LCEXTGLNEXT__"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('IFF_PRODU___LCEXTGLNEXT__','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DropDownListFor(model => model.ValCodlcext, Model.TableLcextGlnext.List , "", new {help_id = "IFF_PRODU___LCEXTGLNEXT__", @class = "i-select chosen-dropdown input-xxlarge", data_identifier = "IFF_PRODU___LCEXTGLNEXT__", @pers_cs_area = "Lcext", @pers_cs_field = "ValCodlcext", @db_field = "ValCodlcext", @db_full_field_name = "produ.codlcext", dependant_area = "Locat", dependant = "ValCodlocat", key_field = "ValCodlcext", data_has_more = Model.TableLcextGlnext.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableLcextGlnext.Selected, data_dbedit_value = Model.TableLcextGlnext.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodprodu, @data_see_more = "Produ_LcextValGlnext", title = @Resources.GLN_EXTENSION_COMPON55869, data_see_more_url = @Url.Action("Produ_LcextValGlnext","Produ"), data_is_dbedit = "true", data_fields = "lcext.codlcext,lcext.glnext", data_main_field = "Lcext.ValGlnext", data_elements = 0, data_filled_by_history = Model.TableLcextGlnext.FilledByHistory, @dependant_fields = "lcext.codlcext,lcext.glnext" })
+													@Html.ValidationMessageFor(model => model.TableLcextGlnext)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="row-large-control">
+												<div class="row-line-group" id="CONTAINER_IFF_PRODU___PSEUDSTOCKEVO">
+													<div id="Produ_ValStockevo" data-identifier="IFF_PRODU___PSEUDSTOCKEVO"  data-extra-options="" > 
+														@{ Html.RenderAction("Produ_ValStockevo", "Produ", new { id = Model.ValCodprodu, partialView = "Produ_ValStockevo"}); }
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+					</div>
+		</div>
+	</div>
+</div>
+<div id="PRODU_NOVOGR05" elem-identifier="AccordionGroup" class="c-accordion accordion-group " data-identifier="IFF_PRODU___PSEUDNOVOGR05">
+	
+	<div class="c-accordion__panel">
+		<div elem-identifier="AccordionHeading" class="c-accordion__panel-header" >
+			<a elem-identifier="AccordionToggle" href="#" class="b-btn b-btn--link c-accordion__panel-title" role="button" data-toggle="collapse"  
+				data-target="#PRODU_NOVOGR05I" data-zone-type="ZA"
+				label-id="IFF_PRODU___PSEUDNOVOGR06"
+				>
+				<span  help-id="IFF_PRODU___PSEUDNOVOGR06"/>	
+				<i class="glyphicons glyphicons-plus-sign c-accordion__panel-icon"></i>
+				@Resources.DETAILS19591		
+				<a href="javascript:OpenSuggestion('IFF_PRODU___PSEUDNOVOGR06','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a>
+			</a>
+		</div>
+		<div id="PRODU_NOVOGR05I" elem-identifier="AccordionBody" data-parent="#PRODU_NOVOGR06" class="collapse" style="height:0px; ">
+			<div class="c-accordion__panel-body" elem-identifier="AccordionInner">
+												<div class="row">
+										<div class="col-12">
+											<div class="row-large-control">
+												<div class="row-line-group" id="CONTAINER_IFF_PRODU___PSEUDINPUTSRE">
+													<div id="Produ_ValInputsre" data-identifier="IFF_PRODU___PSEUDINPUTSRE"  data-extra-options="" > 
+														@{ Html.RenderAction("Produ_ValInputsre", "Produ", new { id = Model.ValCodprodu, partialView = "Produ_ValInputsre"}); }
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="row-large-control">
+												<div class="row-line-group" id="CONTAINER_IFF_PRODU___PSEUDOUTPUTSD">
+													<div id="Produ_ValOutputsd" data-identifier="IFF_PRODU___PSEUDOUTPUTSD"  data-extra-options="" > 
+														@{ Html.RenderAction("Produ_ValOutputsd", "Produ", new { id = Model.ValCodprodu, partialView = "Produ_ValOutputsd"}); }
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+					</div>
+		</div>
+	</div>
+</div>
+</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			@Html.HiddenFor(model => model.ValCodprodu, new { @pers_cs_field="ValCodprodu", @pers_cs_area="Produ", data_refresh = "true", @form_area="true", @data_value = Model.ValCodprodu, @data_identifier = "LED_PRODU___PRODUCODPRODU" })
+
+            @Html.Hidden("IgnoreWarnings", "false", new { id = "IgnoreWarnings" })
+
+			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Produ" })
+            @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Produ" })
+            @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Produ" })
+			if (!Model.NestedForm)
+            {
+                @Html.AntiForgeryToken()
+            }
+}
+
+@helper form_content_alert() {
+	if(Model.FormMode == FormMode.Delete) {
+		<div class="c-alert c-alert--warning">
+			<i class="glyphicons glyphicons-alert c-alert__icon" aria-hidden="true"></i>
+			<div class="c-alert__text">
+				&ensp;@Resources.DESEJA_ELIMINAR_ESTA24564
+			</div>
+		<!--Ao confirmar esta ficha irá ser eliminada da base de dados. Cancele caso não tenha a certeza.-->
+		</div>
+	}
+}
+
+@helper form_content_buttons() {
+
+
+
+
+    @* Extended support form *@
+    if (Model.NestedForm)
+    {
+        if (Model.IsEditableMode)
+        {
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("Produ", Model.FormMode).ToString(), "Produ")", "Produ_well")' qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>
+                    @Resources.GRAVAR45301
+            </button>
+            <button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Produ_Delete", "Produ", new {id = @Model.ValCodprodu} )", "Produ_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+
+            <script type="application/javascript">
+                $(document).ready(function () { loaded($("#Produ_well")); });
+            </script>
+        }
+
+        @* javascript code_javascript *@
+        @*@codeJavascript()*@
+    }
+    @* Normal mode *@
+    else
+    {
+        if (Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+        {
+            if (Model.FormMode == FormMode.New && Convert.ToBoolean(Model.Navigation.CurrentLevel.GetEntry("repeatInsertion")))
+            {
+            <button type="button" data-end-pers="true" name="Produ_repete_insertion" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitProdu(event, true)" qbutton="ok_new">@Resources.GRAVAR_E_CRIAR_NOVA17771</button>
+            }
+            if(Model.FormMode == FormMode.Delete)
+            {
+				<button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Produ", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitDeleteProdu(event)" qbutton="delete">
+                    <i class="glyphicons glyphicons-check e-icon" aria-hidden="true"></i>@Resources.CONFIRMAR09808
+                </button>
+            }
+            else
+            {
+                <button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Produ", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitProdu(event)" title="@Resources.GRAVAR45301" data-selector="true" qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>@Resources.GRAVAR45301
+                </button>
+            }
+
+            <button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-href="@Url.Action("Produ_Cancel", "Produ", new { niv = Model.Navigation.CurrentLevel.Level })" onclick="javascript:window.Form_Produ.Cancel()" title="@Resources.CANCEL65428" data-selector="true" qbutton="cancel">
+                <i class="glyphicons glyphicons-ban-circle e-icon" aria-hidden="true"></i>@Resources.CANCEL65428
+            </button>
+        }
+        else if (!(ViewBag.isHomePage ?? false))
+        {
+            @Html.ActionLinkWithIcon(@Resources.RETROCEDER16633, "Produ_Cancel","Produ","glyphicons glyphicons-arrow-left e-icon", null, new { @class = "b-icon-text b-icon-text--secondary", @data_end_pers = "true", @title = @Resources.RETROCEDER16633, qbutton = "cancel" })
+        }
+    }
+}
+
+@helper LoadDefault() {
+    if (Model.NestedForm)
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div class="c-card__header">
+                    <div class="c-card__header-tag">
+						<span class="form-header" style="padding:0;">
+							<i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+						</span>
+                    </div>
+                </div>
+                <div class="c-card__body">
+                    @form_content_body()
+                    <div elem-identifier="FormActions" class="form-actions" data-form-actions="Produ">
+                        @form_content_buttons()
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    }
+    else
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div id="c-stickyHeader">
+                    <div class="c-action-bar d-flex">
+                        <span class="form-header">
+                            <i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+                        </span>
+                        <div data-parent-form="Produ" data-q-ref="form-btns-main_container"></div>
+                    </div>
+                </div>
+
+                @form_content_body()
+                <div elem-identifier="FormActions" class="form-actions" data-form-actions="Produ">
+                @form_content_buttons()
+                </div>
+            </div>
+        </fieldset>
+    }
+}
+
+@helper LoadFromLayout()
+{
+}
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT PRODU]/ *@
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_PRODU" data-form-javascript="true">
+@Html.Partial("Produ_JavaScript", Model, ViewData)
+</div>
+}
+
+@section code_javascript
+{
+	@codeJavascript()
+}
+
+@if (Request.IsAjaxRequest())
+{
+    @codeJavascript()
+    @includeStylesheets()
+}
+
+@helper includeStylesheets()
+{
+
+ }
+
+@section include_stylesheets {
+    @includeStylesheets()
+}

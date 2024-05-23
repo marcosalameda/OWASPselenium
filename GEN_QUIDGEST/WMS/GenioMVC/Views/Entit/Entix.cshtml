@@ -1,0 +1,690 @@
+﻿@model GenioMVC.ViewModels.Entit.Entix_ViewModel
+@using GenioMVC.Models.Navigation;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Form = "Entix";
+	ViewBag.Title = @Resources.ENTITY62049;
+    ViewBag.formmode = Model.GetFormMode;
+	ViewBag.ClassForFormLayout = "form-flow";
+}
+
+
+@if (!Model.NestedForm) {
+    if(Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+    {
+        using (Html.BeginForm("Action", "Entit", FormMethod.Post, new { @class = "form-horizontal", area="Entit", data_form="Entix" }))
+        {
+            @form_content_alert()
+            @Html.QValidationSummary()
+	        @LoadDefault()
+        }
+    }
+    else
+    {
+        <div class="form-horizontal" id="Entix" area="Entit" data-form="Entix">
+	        @LoadDefault()
+        </div>
+    }
+}
+else {
+    <div class="c-card nested-form" id="Entix_well" area="Entit" data-form="Entix">
+        @Html.QValidationSummary()
+		@LoadDefault()
+    </div>
+}
+
+@helper form_content_body() {
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="row-line-group">
+                            <div class="c-groupbox " id="GROUPBOX_ENTIX_NOVOGR01">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_ENTIX___PSEUDNOVOGR01" 
+                                    label-id="IFF_ENTIX___PSEUDNOVOGR01">
+                                    <span>@Resources.COMPANY_IDENTIFICATI44986</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_ENTIX___PSEUDNOVOGR01','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_ENTIX___ENTITNAME____">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValName, new { label_id="LED_ENTIX___ENTITNAME____", @class = " i-text__label", id="LABEL_LED_ENTIX___ENTITNAME____"}, true, true)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_ENTIX___ENTITNAME____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValName, new {help_id = "LED_ENTIX___ENTITNAME____", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_ENTIX___ENTITNAME____", @pers_cs_area = "Entit", @pers_cs_field = "ValName", @db_field = "ValName", title = @Resources.LEGAL_NAME42902, maxlength = "85", rows = "85" })
+													@Html.ValidationMessageFor(model => model.ValName)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-date-picker draggable " id="CONTAINER_LED_ENTIX___ENTITFOUNDED_">
+													<div class="d-inline-flex">
+													@Html.LabelFor(model => model.ValFounded, new { label_id="LED_ENTIX___ENTITFOUNDED_", @class = " i-text__label", id="LABEL_LED_ENTIX___ENTITFOUNDED_"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_ENTIX___ENTITFOUNDED_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DateFor(model => model.ValFounded, new {help_id = "LED_ENTIX___ENTITFOUNDED_", @class = "i-input-group__field b-icon-text input-small", data_identifier = "LED_ENTIX___ENTITFOUNDED_", @pers_cs_area = "Entit", @pers_cs_field = "ValFounded", @db_field = "ValFounded", title = @Resources.FOUNDED_IN54120 })
+													@Html.ValidationMessageFor(model => model.ValFounded)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_ENTIX___ENTITINITIALS">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValInitials, new { label_id="LED_ENTIX___ENTITINITIALS", @class = " i-text__label", id="LABEL_LED_ENTIX___ENTITINITIALS"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_ENTIX___ENTITINITIALS','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValInitials, new {help_id = "LED_ENTIX___ENTITINITIALS", @class = "i-text__field i-text input-small", data_identifier = "LED_ENTIX___ENTITINITIALS", @pers_cs_area = "Entit", @pers_cs_field = "ValInitials", @db_field = "ValInitials", title = @Resources.COMPANY_INITIALS56204, maxlength = "10", rows = "10" })
+													@Html.ValidationMessageFor(model => model.ValInitials)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_ENTIX___ENTITREGISTRA">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValRegistra, new { label_id="LED_ENTIX___ENTITREGISTRA", @class = " i-text__label", id="LABEL_LED_ENTIX___ENTITREGISTRA"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_ENTIX___ENTITREGISTRA','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValRegistra, new {help_id = "LED_ENTIX___ENTITREGISTRA", @class = "i-text__field i-text input-medium", data_identifier = "LED_ENTIX___ENTITREGISTRA", @pers_cs_area = "Entit", @pers_cs_field = "ValRegistra", @db_field = "ValRegistra", title = @Resources.LEGAL_REGISTRATION04413, maxlength = "20", rows = "20" })
+													@Html.ValidationMessageFor(model => model.ValRegistra)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_ENTIX___ENTITTAXNUMBE">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValTaxnumbe, new { label_id="LED_ENTIX___ENTITTAXNUMBE", @class = " i-text__label", id="LABEL_LED_ENTIX___ENTITTAXNUMBE"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_ENTIX___ENTITTAXNUMBE','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValTaxnumbe, new {help_id = "LED_ENTIX___ENTITTAXNUMBE", @class = "i-text__field i-text input-medium", data_identifier = "LED_ENTIX___ENTITTAXNUMBE", @pers_cs_area = "Entit", @pers_cs_field = "ValTaxnumbe", @db_field = "ValTaxnumbe", title = @Resources.VAT_NUMBER24236, maxlength = "20", rows = "20" })
+													@Html.ValidationMessageFor(model => model.ValTaxnumbe)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_ENTIX___ENTITIBAN____">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValIban, new { label_id="LED_ENTIX___ENTITIBAN____", @class = " i-text__label", id="LABEL_LED_ENTIX___ENTITIBAN____"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_ENTIX___ENTITIBAN____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValIban, new {help_id = "LED_ENTIX___ENTITIBAN____", @class = "i-text__field i-text input-large", data_identifier = "LED_ENTIX___ENTITIBAN____", @pers_cs_area = "Entit", @pers_cs_field = "ValIban", @db_field = "ValIban", title = @Resources.IBAN__INTERNATIONAL_45066, maxlength = "25", rows = "25" })
+													@Html.ValidationMessageFor(model => model.ValIban)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_ENTIX___ENTITPHONENUM">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValPhonenum, new { label_id="LED_ENTIX___ENTITPHONENUM", @class = " i-text__label", id="LABEL_LED_ENTIX___ENTITPHONENUM"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_ENTIX___ENTITPHONENUM','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValPhonenum, new {help_id = "LED_ENTIX___ENTITPHONENUM", @class = "i-text__field i-text input-medium", data_identifier = "LED_ENTIX___ENTITPHONENUM", @pers_cs_area = "Entit", @pers_cs_field = "ValPhonenum", @db_field = "ValPhonenum", title = @Resources.PHONE_NUMBER20774, maxlength = "20", rows = "20" })
+													@Html.ValidationMessageFor(model => model.ValPhonenum)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group row-group-checkbox">
+												<div class="i-checkbox draggable " id="CONTAINER_LED_ENTIX___ENTITOWNER___">
+													@Html.CheckBoxFor(model => model.ValOwner, new {help_id = "LED_ENTIX___ENTITOWNER___", @class = "i-checkbox__field i-checkbox input-mini", data_identifier = "LED_ENTIX___ENTITOWNER___", @pers_cs_area = "Entit", @pers_cs_field = "ValOwner", @db_field = "ValOwner", title = @Resources.OWNER09558 }, @Model.IsEditableMode, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													@Html.ValidationMessageFor(model => model.ValOwner)
+													</div>
+												</div>
+												<div class="control-join-group row-group-checkbox">
+												<div class="i-checkbox draggable " id="CONTAINER_LED_ENTIX___ENTITCARRIER_">
+													@Html.CheckBoxFor(model => model.ValCarrier, new {help_id = "LED_ENTIX___ENTITCARRIER_", @class = "i-checkbox__field i-checkbox input-mini", data_identifier = "LED_ENTIX___ENTITCARRIER_", @pers_cs_area = "Entit", @pers_cs_field = "ValCarrier", @db_field = "ValCarrier", title = @Resources.CARRIER64855 }, @Model.IsEditableMode, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													@Html.ValidationMessageFor(model => model.ValCarrier)
+													</div>
+												</div>
+												<div class="control-join-group row-group-checkbox">
+												<div class="i-checkbox draggable " id="CONTAINER_LED_ENTIX___ENTITSUPPLIER">
+													@Html.CheckBoxFor(model => model.ValSupplier, new {help_id = "LED_ENTIX___ENTITSUPPLIER", @class = "i-checkbox__field i-checkbox input-small", data_identifier = "LED_ENTIX___ENTITSUPPLIER", @pers_cs_area = "Entit", @pers_cs_field = "ValSupplier", @db_field = "ValSupplier", title = @Resources.SUPPLIER17230 }, @Model.IsEditableMode, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													@Html.ValidationMessageFor(model => model.ValSupplier)
+													</div>
+												</div>
+												<div class="control-join-group row-group-checkbox">
+												<div class="i-checkbox draggable " id="CONTAINER_LED_ENTIX___ENTITMANUFACT">
+													@Html.CheckBoxFor(model => model.ValManufact, new {help_id = "LED_ENTIX___ENTITMANUFACT", @class = "i-checkbox__field i-checkbox input-small", data_identifier = "LED_ENTIX___ENTITMANUFACT", @pers_cs_area = "Entit", @pers_cs_field = "ValManufact", @db_field = "ValManufact", title = @Resources.MANUFACTURER50759 }, @Model.IsEditableMode, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													@Html.ValidationMessageFor(model => model.ValManufact)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="row-large-control">
+						<div class="row-line-group" id="CONTAINER_IFF_ENTIX___PSEUDNOVOGR05">
+<div class="c-accordion" id="ENTIX_NOVOGR05">
+<div id="ENTIX_NOVOGR02" elem-identifier="AccordionGroup" class="c-accordion accordion-group " data-identifier="IFF_ENTIX___PSEUDNOVOGR02">
+	
+	<div class="c-accordion__panel">
+		<div elem-identifier="AccordionHeading" class="c-accordion__panel-header" >
+			<a elem-identifier="AccordionToggle" href="#" class="b-btn b-btn--link c-accordion__panel-title" role="button" data-toggle="collapse"  
+				data-target="#ENTIX_NOVOGR02I" data-zone-type="ZA"
+				label-id="IFF_ENTIX___PSEUDNOVOGR05"
+				>
+				<span  help-id="IFF_ENTIX___PSEUDNOVOGR05"/>	
+				<i class="glyphicons glyphicons-plus-sign c-accordion__panel-icon"></i>
+				@Resources.CONTACT59247		
+				<a href="javascript:OpenSuggestion('IFF_ENTIX___PSEUDNOVOGR05','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a>
+			</a>
+		</div>
+		<div id="ENTIX_NOVOGR02I" elem-identifier="AccordionBody" data-parent="#ENTIX_NOVOGR05" class="collapse" style="height:0px; ">
+			<div class="c-accordion__panel-body" elem-identifier="AccordionInner">
+					<div elem-identifier="ContainerAccordionInner" class="container-fluid">
+												<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_ENTIX___ENTITTELEPHON">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValTelephon, new { label_id="LED_ENTIX___ENTITTELEPHON", @class = " i-text__label", id="LABEL_LED_ENTIX___ENTITTELEPHON"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_ENTIX___ENTITTELEPHON','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValTelephon, new {help_id = "LED_ENTIX___ENTITTELEPHON", @class = "i-text__field i-text input-medium", data_identifier = "LED_ENTIX___ENTITTELEPHON", @pers_cs_area = "Entit", @pers_cs_field = "ValTelephon", @db_field = "ValTelephon", title = @Resources.TELEPHONE28697, maxlength = "20", rows = "20" })
+													@Html.ValidationMessageFor(model => model.ValTelephon)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_ENTIX___ENTITFAX_____">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValFax, new { label_id="LED_ENTIX___ENTITFAX_____", @class = " i-text__label", id="LABEL_LED_ENTIX___ENTITFAX_____"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_ENTIX___ENTITFAX_____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValFax, new {help_id = "LED_ENTIX___ENTITFAX_____", @class = "i-text__field i-text input-medium", data_identifier = "LED_ENTIX___ENTITFAX_____", @pers_cs_area = "Entit", @pers_cs_field = "ValFax", @db_field = "ValFax", title = @Resources.FAX08532, maxlength = "20", rows = "20" })
+													@Html.ValidationMessageFor(model => model.ValFax)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_ENTIX___ENTITEMAIL___">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValEmail, new { label_id="LED_ENTIX___ENTITEMAIL___", @class = " i-text__label", id="LABEL_LED_ENTIX___ENTITEMAIL___"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_ENTIX___ENTITEMAIL___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValEmail, new {help_id = "LED_ENTIX___ENTITEMAIL___", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_ENTIX___ENTITEMAIL___", @pers_cs_area = "Entit", @pers_cs_field = "ValEmail", @db_field = "ValEmail", title = @Resources.EMAIL25170, maxlength = "254", rows = "85" })
+													@Html.ValidationMessageFor(model => model.ValEmail)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_ENTIX___ENTITWEBSITE_">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValWebsite, new { label_id="LED_ENTIX___ENTITWEBSITE_", @class = " i-text__label", id="LABEL_LED_ENTIX___ENTITWEBSITE_"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_ENTIX___ENTITWEBSITE_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValWebsite, new {help_id = "LED_ENTIX___ENTITWEBSITE_", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_ENTIX___ENTITWEBSITE_", @pers_cs_area = "Entit", @pers_cs_field = "ValWebsite", @db_field = "ValWebsite", title = @Resources.WEB_SITE06263, maxlength = "254", rows = "85" })
+													@Html.ValidationMessageFor(model => model.ValWebsite)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_ENTIX___ENTITPERSON__">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValPerson, new { label_id="LED_ENTIX___ENTITPERSON__", @class = " i-text__label", id="LABEL_LED_ENTIX___ENTITPERSON__"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_ENTIX___ENTITPERSON__','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValPerson, new {help_id = "LED_ENTIX___ENTITPERSON__", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_ENTIX___ENTITPERSON__", @pers_cs_area = "Entit", @pers_cs_field = "ValPerson", @db_field = "ValPerson", title = @Resources.PERSON_DEPARTMENT_TO28777, maxlength = "85", rows = "85" })
+													@Html.ValidationMessageFor(model => model.ValPerson)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_ENTIX___ENTITCONTACT_">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValContact, new { label_id="LED_ENTIX___ENTITCONTACT_", @class = " i-text__label", id="LABEL_LED_ENTIX___ENTITCONTACT_"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_ENTIX___ENTITCONTACT_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValContact, new {help_id = "LED_ENTIX___ENTITCONTACT_", @class = "i-text__field i-text input-medium", data_identifier = "LED_ENTIX___ENTITCONTACT_", @pers_cs_area = "Entit", @pers_cs_field = "ValContact", @db_field = "ValContact", title = @Resources.CONTACT_TELEPHONE_NU12694, maxlength = "20", rows = "20" })
+													@Html.ValidationMessageFor(model => model.ValContact)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_ENTIX___ENTITLANGUAGE">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValLanguage, new { label_id="LED_ENTIX___ENTITLANGUAGE", @class = " i-text__label", id="LABEL_LED_ENTIX___ENTITLANGUAGE"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_ENTIX___ENTITLANGUAGE','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValLanguage, new {help_id = "LED_ENTIX___ENTITLANGUAGE", @class = "i-text__field i-text input-mini", data_identifier = "LED_ENTIX___ENTITLANGUAGE", @pers_cs_area = "Entit", @pers_cs_field = "ValLanguage", @db_field = "ValLanguage", title = @Resources.LANGUAGE16872, maxlength = "2", rows = "2" })
+													@Html.ValidationMessageFor(model => model.ValLanguage)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_ENTIX___ENTITCURRENCY">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValCurrency, new { label_id="LED_ENTIX___ENTITCURRENCY", @class = " i-text__label", id="LABEL_LED_ENTIX___ENTITCURRENCY"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_ENTIX___ENTITCURRENCY','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValCurrency, new {help_id = "LED_ENTIX___ENTITCURRENCY", @class = "i-text__field i-text input-mini", data_identifier = "LED_ENTIX___ENTITCURRENCY", @pers_cs_area = "Entit", @pers_cs_field = "ValCurrency", @db_field = "ValCurrency", title = @Resources.CURRENCY13881, maxlength = "3", rows = "3" })
+													@Html.ValidationMessageFor(model => model.ValCurrency)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+						</div>
+				</div>
+		</div>
+	</div>
+</div>
+<div id="ENTIX_NOVOGR03" elem-identifier="AccordionGroup" class="c-accordion accordion-group " data-identifier="IFF_ENTIX___PSEUDNOVOGR03">
+	
+	<div class="c-accordion__panel">
+		<div elem-identifier="AccordionHeading" class="c-accordion__panel-header" >
+			<a elem-identifier="AccordionToggle" href="#" class="b-btn b-btn--link c-accordion__panel-title" role="button" data-toggle="collapse"  
+				data-target="#ENTIX_NOVOGR03I" data-zone-type="ZA"
+				label-id="IFF_ENTIX___PSEUDNOVOGR05"
+				>
+				<span  help-id="IFF_ENTIX___PSEUDNOVOGR05"/>	
+				<i class="glyphicons glyphicons-plus-sign c-accordion__panel-icon"></i>
+				""		
+				<a href="javascript:OpenSuggestion('IFF_ENTIX___PSEUDNOVOGR05','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a>
+			</a>
+		</div>
+		<div id="ENTIX_NOVOGR03I" elem-identifier="AccordionBody" data-parent="#ENTIX_NOVOGR05" class="collapse" style="height:0px; ">
+			<div class="c-accordion__panel-body" elem-identifier="AccordionInner">
+					<div elem-identifier="ContainerAccordionInner" class="container-fluid">
+												<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_ENTIX___ENTITBUILDING">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValBuilding, new { label_id="LED_ENTIX___ENTITBUILDING", @class = " i-text__label", id="LABEL_LED_ENTIX___ENTITBUILDING"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_ENTIX___ENTITBUILDING','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValBuilding, new {help_id = "LED_ENTIX___ENTITBUILDING", @class = "i-text__field i-text input-medium", data_identifier = "LED_ENTIX___ENTITBUILDING", @pers_cs_area = "Entit", @pers_cs_field = "ValBuilding", @db_field = "ValBuilding", title = @Resources.BUILDING_HOUSE_NUMBE20738, maxlength = "10", rows = "10" })
+													@Html.ValidationMessageFor(model => model.ValBuilding)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_ENTIX___ENTITSTREET__">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValStreet, new { label_id="LED_ENTIX___ENTITSTREET__", @class = " i-text__label", id="LABEL_LED_ENTIX___ENTITSTREET__"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_ENTIX___ENTITSTREET__','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValStreet, new {help_id = "LED_ENTIX___ENTITSTREET__", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_ENTIX___ENTITSTREET__", @pers_cs_area = "Entit", @pers_cs_field = "ValStreet", @db_field = "ValStreet", title = @Resources.STREET44324, maxlength = "85", rows = "85" })
+													@Html.ValidationMessageFor(model => model.ValStreet)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_ENTIX___ENTITTOWN____">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValTown, new { label_id="LED_ENTIX___ENTITTOWN____", @class = " i-text__label", id="LABEL_LED_ENTIX___ENTITTOWN____"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_ENTIX___ENTITTOWN____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValTown, new {help_id = "LED_ENTIX___ENTITTOWN____", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_ENTIX___ENTITTOWN____", @pers_cs_area = "Entit", @pers_cs_field = "ValTown", @db_field = "ValTown", title = @Resources.TOWN_CITY16259, maxlength = "85", rows = "85" })
+													@Html.ValidationMessageFor(model => model.ValTown)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_ENTIX___ENTITCOUNTY__">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValCounty, new { label_id="LED_ENTIX___ENTITCOUNTY__", @class = " i-text__label", id="LABEL_LED_ENTIX___ENTITCOUNTY__"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_ENTIX___ENTITCOUNTY__','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValCounty, new {help_id = "LED_ENTIX___ENTITCOUNTY__", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_ENTIX___ENTITCOUNTY__", @pers_cs_area = "Entit", @pers_cs_field = "ValCounty", @db_field = "ValCounty", title = @Resources.COUNTY_PROVINCE34285, maxlength = "85", rows = "85" })
+													@Html.ValidationMessageFor(model => model.ValCounty)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_ENTIX___ENTITSTATE___">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValState, new { label_id="LED_ENTIX___ENTITSTATE___", @class = " i-text__label", id="LABEL_LED_ENTIX___ENTITSTATE___"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_ENTIX___ENTITSTATE___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValState, new {help_id = "LED_ENTIX___ENTITSTATE___", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_ENTIX___ENTITSTATE___", @pers_cs_area = "Entit", @pers_cs_field = "ValState", @db_field = "ValState", title = @Resources.STATE_PROVINCE28516, maxlength = "85", rows = "85" })
+													@Html.ValidationMessageFor(model => model.ValState)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_ENTIX___ENTITPOSTALCO">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValPostalco, new { label_id="LED_ENTIX___ENTITPOSTALCO", @class = " i-text__label", id="LABEL_LED_ENTIX___ENTITPOSTALCO"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_ENTIX___ENTITPOSTALCO','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValPostalco, new {help_id = "LED_ENTIX___ENTITPOSTALCO", @class = "i-text__field i-text input-xlarge", data_identifier = "LED_ENTIX___ENTITPOSTALCO", @pers_cs_area = "Entit", @pers_cs_field = "ValPostalco", @db_field = "ValPostalco", title = @Resources.ZIP_POSTAL_CODE55613, maxlength = "50", rows = "50" })
+													@Html.ValidationMessageFor(model => model.ValPostalco)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_ENTIX___ENTITPOBOX___">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValPobox, new { label_id="LED_ENTIX___ENTITPOBOX___", @class = " i-text__label", id="LABEL_LED_ENTIX___ENTITPOBOX___"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_ENTIX___ENTITPOBOX___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValPobox, new {help_id = "LED_ENTIX___ENTITPOBOX___", @class = "i-text__field i-text input-small", data_identifier = "LED_ENTIX___ENTITPOBOX___", @pers_cs_area = "Entit", @pers_cs_field = "ValPobox", @db_field = "ValPobox", title = @Resources.POST_OFFICE_BOX06223, maxlength = "5", rows = "5" })
+													@Html.ValidationMessageFor(model => model.ValPobox)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+						</div>
+				</div>
+		</div>
+	</div>
+</div>
+<div id="ENTIX_NOVOGR04" elem-identifier="AccordionGroup" class="c-accordion accordion-group " data-identifier="IFF_ENTIX___PSEUDNOVOGR04">
+	
+	<div class="c-accordion__panel">
+		<div elem-identifier="AccordionHeading" class="c-accordion__panel-header" >
+			<a elem-identifier="AccordionToggle" href="#" class="b-btn b-btn--link c-accordion__panel-title" role="button" data-toggle="collapse"  
+				data-target="#ENTIX_NOVOGR04I" data-zone-type="ZA"
+				label-id="IFF_ENTIX___PSEUDNOVOGR05"
+				>
+				<span  help-id="IFF_ENTIX___PSEUDNOVOGR05"/>	
+				<i class="glyphicons glyphicons-plus-sign c-accordion__panel-icon"></i>
+				@Resources.FACILITIES08876		
+				<a href="javascript:OpenSuggestion('IFF_ENTIX___PSEUDNOVOGR05','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a>
+			</a>
+		</div>
+		<div id="ENTIX_NOVOGR04I" elem-identifier="AccordionBody" data-parent="#ENTIX_NOVOGR05" class="collapse" style="height:0px; ">
+			<div class="c-accordion__panel-body" elem-identifier="AccordionInner">
+					<div elem-identifier="ContainerAccordionInner" class="container-fluid">
+												<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-dbedit draggable " id="CONTAINER_IFF_ENTIX___FACI1NAME____">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.TableFaci1Name, new { label_id="IFF_ENTIX___FACI1NAME____", @class = " i-text__label", id="LABEL_IFF_ENTIX___FACI1NAME____"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('IFF_ENTIX___FACI1NAME____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DropDownListFor(model => model.ValFirstfacilitie, Model.TableFaci1Name.List , "", new {help_id = "IFF_ENTIX___FACI1NAME____", @class = "i-select chosen-dropdown input-xlarge", data_refresh = "true", data_tipoform = "CT", @readonly = "readonly", data_identifier = "IFF_ENTIX___FACI1NAME____", fixed_field = "true", @pers_cs_area = "Faci1", @pers_cs_field = "ValCodfacil", @db_field = "ValCodfacil", @db_full_field_name = "entit.firstfacilitie", data_has_more = Model.TableFaci1Name.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableFaci1Name.Selected, data_dbedit_value = Model.TableFaci1Name.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodentit, @data_see_more = "Entix_Faci1ValName", title = @Resources.FACILITY_NAME19514, data_see_more_url = @Url.Action("Entix_Faci1ValName","Entit"), data_is_dbedit = "true", data_fields = "faci1.codfacil", data_main_field = "Faci1.ValName", data_elements = 0, data_filled_by_history = Model.TableFaci1Name.FilledByHistory, @dependant_fields = "faci1.codfacil,faci1.name" })
+													@Html.ValidationMessageFor(model => model.TableFaci1Name)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-dbedit draggable " id="CONTAINER_IFF_ENTIX___FACI2NAME____">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.TableFaci2Name, new { label_id="IFF_ENTIX___FACI2NAME____", @class = " i-text__label", id="LABEL_IFF_ENTIX___FACI2NAME____"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('IFF_ENTIX___FACI2NAME____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DropDownListFor(model => model.ValLastfacilitie, Model.TableFaci2Name.List , "", new {help_id = "IFF_ENTIX___FACI2NAME____", @class = "i-select chosen-dropdown input-xlarge", data_refresh = "true", data_tipoform = "CS", @readonly = "readonly", data_identifier = "IFF_ENTIX___FACI2NAME____", fixed_field = "true", @pers_cs_area = "Faci2", @pers_cs_field = "ValCodfacil", @db_field = "ValCodfacil", @db_full_field_name = "entit.lastfacilitie", data_has_more = Model.TableFaci2Name.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableFaci2Name.Selected, data_dbedit_value = Model.TableFaci2Name.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodentit, @data_see_more = "Entix_Faci2ValName", title = @Resources.FACILITY_NAME19514, data_see_more_url = @Url.Action("Entix_Faci2ValName","Entit"), data_is_dbedit = "true", data_fields = "faci2.codfacil", data_main_field = "Faci2.ValName", data_elements = 0, data_filled_by_history = Model.TableFaci2Name.FilledByHistory, @dependant_fields = "faci2.codfacil,faci2.name" })
+													@Html.ValidationMessageFor(model => model.TableFaci2Name)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+						</div>
+				</div>
+		</div>
+	</div>
+</div>
+</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="row-large-control">
+						<div class="row-line-group" id="CONTAINER_IFF_ENTIX___PSEUDNOVOGR06">
+                            <div class="c-groupbox zone-no-border ">
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="row-large-control">
+												<div class="row-line-group" id="CONTAINER_IFF_ENTIX___PSEUDFACILITE">
+													<div id="Entix_ValFacilite" data-identifier="IFF_ENTIX___PSEUDFACILITE"  data-extra-options="" > 
+														@{ Html.RenderAction("Entix_ValFacilite", "Entit", new { id = Model.ValCodentit, partialView = "Entix_ValFacilite"}); }
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			@Html.HiddenFor(model => model.ValCodentit, new { @pers_cs_field="ValCodentit", @pers_cs_area="Entit", data_refresh = "true", @form_area="true", @data_value = Model.ValCodentit, @data_identifier = "LED_ENTIX___ENTITCODENTIT" })
+
+            @Html.Hidden("IgnoreWarnings", "false", new { id = "IgnoreWarnings" })
+
+			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Entix" })
+            @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Entix" })
+            @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Entix" })
+			if (!Model.NestedForm)
+            {
+                @Html.AntiForgeryToken()
+            }
+}
+
+@helper form_content_alert() {
+	if(Model.FormMode == FormMode.Delete) {
+		<div class="c-alert c-alert--warning">
+			<i class="glyphicons glyphicons-alert c-alert__icon" aria-hidden="true"></i>
+			<div class="c-alert__text">
+				&ensp;@Resources.DESEJA_ELIMINAR_ESTA24564
+			</div>
+		<!--Ao confirmar esta ficha irá ser eliminada da base de dados. Cancele caso não tenha a certeza.-->
+		</div>
+	}
+}
+
+@helper form_content_buttons() {
+
+
+
+
+    @* Extended support form *@
+    if (Model.NestedForm)
+    {
+        if (Model.IsEditableMode)
+        {
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("Entix", Model.FormMode).ToString(), "Entit")", "Entix_well")' qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>
+                    @Resources.INSERIR43365
+            </button>
+            <button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Entix_Delete", "Entit", new {id = @Model.ValCodentit} )", "Entix_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+
+            <script type="application/javascript">
+                $(document).ready(function () { loaded($("#Entix_well")); });
+            </script>
+        }
+
+        @* javascript code_javascript *@
+        @*@codeJavascript()*@
+    }
+    @* Normal mode *@
+    else
+    {
+        if (Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+        {
+            if (Model.FormMode == FormMode.New && Convert.ToBoolean(Model.Navigation.CurrentLevel.GetEntry("repeatInsertion")))
+            {
+            <button type="button" data-end-pers="true" name="Entix_repete_insertion" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitEntix(event, true)" qbutton="ok_new">@Resources.GRAVAR_E_CRIAR_NOVA17771</button>
+            }
+            if(Model.FormMode == FormMode.Delete)
+            {
+				<button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Entix", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitDeleteEntix(event)" qbutton="delete">
+                    <i class="glyphicons glyphicons-check e-icon" aria-hidden="true"></i>@Resources.CONFIRMAR09808
+                </button>
+            }
+            else
+            {
+                <button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Entix", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitEntix(event)" title="@Resources.INSERIR43365" data-selector="true" qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>@Resources.INSERIR43365
+                </button>
+            }
+
+            <button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-href="@Url.Action("Entix_Cancel", "Entit", new { niv = Model.Navigation.CurrentLevel.Level })" onclick="javascript:window.Form_Entix.Cancel()" title="@Resources.CANCEL65428" data-selector="true" qbutton="cancel">
+                <i class="glyphicons glyphicons-ban-circle e-icon" aria-hidden="true"></i>@Resources.CANCEL65428
+            </button>
+        }
+        else if (!(ViewBag.isHomePage ?? false))
+        {
+            @Html.ActionLinkWithIcon(@Resources.RETROCEDER16633, "Entix_Cancel","Entit","glyphicons glyphicons-arrow-left e-icon", null, new { @class = "b-icon-text b-icon-text--secondary", @data_end_pers = "true", @title = @Resources.RETROCEDER16633, qbutton = "cancel" })
+        }
+    }
+}
+
+@helper LoadDefault() {
+    if (Model.NestedForm)
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div class="c-card__header">
+                    <div class="c-card__header-tag">
+						<span class="form-header" style="padding:0;">
+							<i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+						</span>
+                    </div>
+                </div>
+                <div class="c-card__body">
+                    @form_content_body()
+                    <div elem-identifier="FormActions" class="form-actions" data-form-actions="Entix">
+                        @form_content_buttons()
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    }
+    else
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div id="c-stickyHeader">
+                    <div class="c-action-bar d-flex">
+                        <span class="form-header">
+                            <i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+                        </span>
+                        <div data-parent-form="Entix" data-q-ref="form-btns-main_container"></div>
+                    </div>
+                </div>
+
+                @form_content_body()
+                <div elem-identifier="FormActions" class="form-actions" data-form-actions="Entix">
+                @form_content_buttons()
+                </div>
+            </div>
+        </fieldset>
+    }
+}
+
+@helper LoadFromLayout()
+{
+}
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT ENTIX]/ *@
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_ENTIX" data-form-javascript="true">
+@Html.Partial("Entix_JavaScript", Model, ViewData)
+</div>
+}
+
+@section code_javascript
+{
+	@codeJavascript()
+}
+
+@if (Request.IsAjaxRequest())
+{
+    @codeJavascript()
+    @includeStylesheets()
+}
+
+@helper includeStylesheets()
+{
+
+ }
+
+@section include_stylesheets {
+    @includeStylesheets()
+}

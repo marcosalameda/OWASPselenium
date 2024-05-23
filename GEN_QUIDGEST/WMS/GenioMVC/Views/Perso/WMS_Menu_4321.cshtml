@@ -1,0 +1,26 @@
+﻿@model GenioMVC.ViewModels.Perso.WMS_Menu_4321_ViewModel
+@using GenioMVC.Helpers
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+    ViewBag.Title = @Resources.SELECIONE_UMA_OPCAO51988;
+}
+
+<h2 class="table-title c-table__title">@ViewBag.Title</h2>
+
+<table class="c-table table-resizable">
+    <thead class="c-table__head">
+        <tr>  
+            <th>@Resources.GENDER44172</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody class="c-table__body">
+    @foreach (var item in Model.List_ValGender) {
+        <tr>
+            <td>@Helpers.GetTextFromResources(item.Text)</td>
+            <td><a href="@Url.Action("WMS_Menu_43211", "Perso" ,new { perso_gender=item.Value })" class="btn b-icon-text b-icon-text--primary"><i class="glyphicons glyphicons-arrow-right e-icon"></i> @Resources.SEGUINTE24541</a></td>
+        </tr>
+    }
+    </tbody>
+</table>

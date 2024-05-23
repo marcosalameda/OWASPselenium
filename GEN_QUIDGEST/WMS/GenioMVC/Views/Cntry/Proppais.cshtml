@@ -1,0 +1,327 @@
+﻿@model GenioMVC.ViewModels.Cntry.Proppais_ViewModel
+@using GenioMVC.Models.Navigation;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Form = "Proppais";
+	ViewBag.Title = @Resources.COUNTRY64133;
+    ViewBag.formmode = Model.GetFormMode;
+	ViewBag.ClassForFormLayout = "form-flow";
+}
+
+
+@if (!Model.NestedForm) {
+    if(Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+    {
+        using (Html.BeginForm("Action", "Cntry", FormMethod.Post, new { @class = "form-horizontal", area="Cntry", data_form="Proppais" }))
+        {
+            @form_content_alert()
+            @Html.QValidationSummary()
+	        @LoadDefault()
+        }
+    }
+    else
+    {
+        <div class="form-horizontal" id="Proppais" area="Cntry" data-form="Proppais">
+	        @LoadDefault()
+        </div>
+    }
+}
+else {
+    <div class="c-card nested-form" id="Proppais_well" area="Cntry" data-form="Proppais">
+        @Html.QValidationSummary()
+		@LoadDefault()
+    </div>
+}
+
+@helper form_content_body() {
+			<div class="row">
+				<div class="col-12">
+					<div class="row-large-control">
+						<div class="row-line-group" id="CONTAINER_IFF_PROPPAISPSEUDNOVOGR02">
+                            <div class="c-groupbox " id="GROUPBOX_PROPPAIS_NOVOGR02">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_PROPPAISPSEUDNOVOGR02" 
+                                    label-id="IFF_PROPPAISPSEUDNOVOGR02">
+                                    <span>@Resources.COUNTRY64133</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_PROPPAISPSEUDNOVOGR02','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_PROPPAISCNTRYCOUNTRY_">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValCountry, new { label_id="LED_PROPPAISCNTRYCOUNTRY_", @class = " i-text__label", id="LABEL_LED_PROPPAISCNTRYCOUNTRY_"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PROPPAISCNTRYCOUNTRY_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValCountry, new {help_id = "LED_PROPPAISCNTRYCOUNTRY_", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_PROPPAISCNTRYCOUNTRY_", @pers_cs_area = "Cntry", @pers_cs_field = "ValCountry", @db_field = "ValCountry", title = @Resources.DESIGNATION_35800, maxlength = "90", rows = "90" })
+													@Html.ValidationMessageFor(model => model.ValCountry)
+													</div>
+												</div>
+												<div class="control-join-group row-group-checkbox">
+												<div class="i-checkbox draggable " id="CONTAINER_LED_PROPPAISCNTRYACTIVE__">
+													@Html.CheckBoxFor(model => model.ValActive, new {help_id = "LED_PROPPAISCNTRYACTIVE__", @class = "i-checkbox__field i-checkbox input-mini", data_identifier = "LED_PROPPAISCNTRYACTIVE__", @pers_cs_area = "Cntry", @pers_cs_field = "ValActive", @db_field = "ValActive", title = @Resources.ACTIVE03270 }, @Model.IsEditableMode, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													@Html.ValidationMessageFor(model => model.ValActive)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="row-large-control">
+												<div class="row-line-group" id="CONTAINER_IFF_PROPPAISPSEUDNOVOGR01">
+<div id="PROPPAIS_NOVOGR01" elem-identifier="AccordionGroup" class="c-accordion accordion-group " data-identifier="IFF_PROPPAISPSEUDNOVOGR01">
+	
+	<div class="c-accordion__panel">
+		<div elem-identifier="AccordionHeading" class="c-accordion__panel-header" >
+			<a elem-identifier="AccordionToggle" href="#" class="b-btn b-btn--link c-accordion__panel-title" role="button" data-toggle="collapse"  
+				data-target="#PROPPAIS_NOVOGR01I" data-zone-type="ZC"
+				label-id="IFF_PROPPAISPSEUDNOVOGR01"
+				>
+				<span  help-id="IFF_PROPPAISPSEUDNOVOGR01"/>	
+				<i class="glyphicons glyphicons-plus-sign c-accordion__panel-icon"></i>
+				@Resources.COUNTRY_CODE16360		
+				<a href="javascript:OpenSuggestion('IFF_PROPPAISPSEUDNOVOGR01','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a>
+			</a>
+		</div>
+		<div id="PROPPAIS_NOVOGR01I" elem-identifier="AccordionBody" data-parent="#PROPPAIS_NOVOGR01" class="collapse" style="height:0px; ">
+			<div class="c-accordion__panel-body" elem-identifier="AccordionInner">
+					<div elem-identifier="ContainerAccordionInner" class="container-fluid">
+												<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_PROPPAISCNTRYCODIGONR">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValCodigonr, new { label_id="LED_PROPPAISCNTRYCODIGONR", @class = " i-text__label", id="LABEL_LED_PROPPAISCNTRYCODIGONR"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PROPPAISCNTRYCODIGONR','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValCodigonr, new {help_id = "LED_PROPPAISCNTRYCODIGONR", @class = "i-text__field i-text input-mini", data_identifier = "LED_PROPPAISCNTRYCODIGONR", @pers_cs_area = "Cntry", @pers_cs_field = "ValCodigonr", @db_field = "ValCodigonr", title = @Resources.NUMERIC19292, maxlength = "3", rows = "3" })
+													@Html.ValidationMessageFor(model => model.ValCodigonr)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_PROPPAISCNTRYALFA2___">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValAlfa2, new { label_id="LED_PROPPAISCNTRYALFA2___", @class = " i-text__label", id="LABEL_LED_PROPPAISCNTRYALFA2___"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PROPPAISCNTRYALFA2___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValAlfa2, new {help_id = "LED_PROPPAISCNTRYALFA2___", @class = "i-text__field i-text input-small", data_identifier = "LED_PROPPAISCNTRYALFA2___", @pers_cs_area = "Cntry", @pers_cs_field = "ValAlfa2", @db_field = "ValAlfa2", title = @Resources.ALPHABETIC_2_16300, maxlength = "2", rows = "2" })
+													@Html.ValidationMessageFor(model => model.ValAlfa2)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_PROPPAISCNTRYALFA3___">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValAlfa3, new { label_id="LED_PROPPAISCNTRYALFA3___", @class = " i-text__label", id="LABEL_LED_PROPPAISCNTRYALFA3___"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PROPPAISCNTRYALFA3___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValAlfa3, new {help_id = "LED_PROPPAISCNTRYALFA3___", @class = "i-text__field i-text input-small", data_identifier = "LED_PROPPAISCNTRYALFA3___", @pers_cs_area = "Cntry", @pers_cs_field = "ValAlfa3", @db_field = "ValAlfa3", title = @Resources.ALPHABETIC_3_29295, maxlength = "3", rows = "3" })
+													@Html.ValidationMessageFor(model => model.ValAlfa3)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+						</div>
+				</div>
+		</div>
+	</div>
+</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="row-large-control">
+						<div class="row-line-group c-multiform" id="CONTAINER_IFF_PROPPAISPSEUDPROPRIED">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValPropried, new { label_id="IFF_PROPPAISPSEUDPROPRIED", @class = " i-text__label table-title f-header__title", id="LABEL_IFF_PROPPAISPSEUDPROPRIED"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('IFF_PROPPAISPSEUDPROPRIED','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								<div id="Proppais_ValPropried" data-object="ValPropried">
+									@{
+										Html.RenderAction("Proppais_ValPropried", "Cntry", new { id = Model.ValCodcntry});
+									}
+								</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			@Html.HiddenFor(model => model.ValCodcntry, new { @pers_cs_field="ValCodcntry", @pers_cs_area="Cntry", data_refresh = "true", @form_area="true", @data_value = Model.ValCodcntry, @data_identifier = "LED_PROPPAISCNTRYCODCNTRY" })
+
+            @Html.Hidden("IgnoreWarnings", "false", new { id = "IgnoreWarnings" })
+
+			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Proppais" })
+            @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Proppais" })
+            @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Proppais" })
+			if (!Model.NestedForm)
+            {
+                @Html.AntiForgeryToken()
+            }
+}
+
+@helper form_content_alert() {
+	if(Model.FormMode == FormMode.Delete) {
+		<div class="c-alert c-alert--warning">
+			<i class="glyphicons glyphicons-alert c-alert__icon" aria-hidden="true"></i>
+			<div class="c-alert__text">
+				&ensp;@Resources.DESEJA_ELIMINAR_ESTA24564
+			</div>
+		<!--Ao confirmar esta ficha irá ser eliminada da base de dados. Cancele caso não tenha a certeza.-->
+		</div>
+	}
+}
+
+@helper form_content_buttons() {
+
+
+
+
+    @* Extended support form *@
+    if (Model.NestedForm)
+    {
+        if (Model.IsEditableMode)
+        {
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("Proppais", Model.FormMode).ToString(), "Cntry")", "Proppais_well")' qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>
+                    @Resources.SAVE04165
+            </button>
+            <button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Proppais_Delete", "Cntry", new {id = @Model.ValCodcntry} )", "Proppais_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+
+            <script type="application/javascript">
+                $(document).ready(function () { loaded($("#Proppais_well")); });
+            </script>
+        }
+
+        @* javascript code_javascript *@
+        @*@codeJavascript()*@
+    }
+    @* Normal mode *@
+    else
+    {
+        if (Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+        {
+            if (Model.FormMode == FormMode.New && Convert.ToBoolean(Model.Navigation.CurrentLevel.GetEntry("repeatInsertion")))
+            {
+            <button type="button" data-end-pers="true" name="Proppais_repete_insertion" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitProppais(event, true)" qbutton="ok_new">@Resources.GRAVAR_E_CRIAR_NOVA17771</button>
+            }
+            if(Model.FormMode == FormMode.Delete)
+            {
+				<button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Proppais", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitDeleteProppais(event)" qbutton="delete">
+                    <i class="glyphicons glyphicons-check e-icon" aria-hidden="true"></i>@Resources.CONFIRMAR09808
+                </button>
+            }
+            else
+            {
+                <button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Proppais", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitProppais(event)" title="@Resources.SAVE04165" data-selector="true" qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>@Resources.SAVE04165
+                </button>
+            }
+
+            <button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-href="@Url.Action("Proppais_Cancel", "Cntry", new { niv = Model.Navigation.CurrentLevel.Level })" onclick="javascript:window.Form_Proppais.Cancel()" title="@Resources.CANCEL65428" data-selector="true" qbutton="cancel">
+                <i class="glyphicons glyphicons-ban-circle e-icon" aria-hidden="true"></i>@Resources.CANCEL65428
+            </button>
+        }
+        else if (!(ViewBag.isHomePage ?? false))
+        {
+            @Html.ActionLinkWithIcon(@Resources.RETROCEDER16633, "Proppais_Cancel","Cntry","glyphicons glyphicons-arrow-left e-icon", null, new { @class = "b-icon-text b-icon-text--secondary", @data_end_pers = "true", @title = @Resources.RETROCEDER16633, qbutton = "cancel" })
+        }
+    }
+}
+
+@helper LoadDefault() {
+    if (Model.NestedForm)
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div class="c-card__header">
+                    <div class="c-card__header-tag">
+						<span class="form-header" style="padding:0;">
+							<i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+						</span>
+                    </div>
+                </div>
+                <div class="c-card__body">
+                    @form_content_body()
+                    <div elem-identifier="FormActions" class="form-actions" data-form-actions="Proppais">
+                        @form_content_buttons()
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    }
+    else
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div id="c-stickyHeader">
+                    <div class="c-action-bar d-flex">
+                        <span class="form-header">
+                            <i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+                        </span>
+                        <div data-parent-form="Proppais" data-q-ref="form-btns-main_container"></div>
+                    </div>
+                </div>
+
+                @form_content_body()
+                <div elem-identifier="FormActions" class="form-actions" data-form-actions="Proppais">
+                @form_content_buttons()
+                </div>
+            </div>
+        </fieldset>
+    }
+}
+
+@helper LoadFromLayout()
+{
+}
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT PROPPAIS]/ *@
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_PROPPAIS" data-form-javascript="true">
+@Html.Partial("Proppais_JavaScript", Model, ViewData)
+</div>
+}
+
+@section code_javascript
+{
+	@codeJavascript()
+}
+
+@if (Request.IsAjaxRequest())
+{
+    @codeJavascript()
+    @includeStylesheets()
+}
+
+@helper includeStylesheets()
+{
+
+ }
+
+@section include_stylesheets {
+    @includeStylesheets()
+}

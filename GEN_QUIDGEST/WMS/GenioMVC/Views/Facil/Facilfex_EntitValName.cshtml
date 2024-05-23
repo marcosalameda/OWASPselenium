@@ -1,0 +1,115 @@
+﻿@model GenioMVC.ViewModels.Facil.Facilfex_EntitValName_ViewModel
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+    var searchStyle =  string.Empty;
+}
+<div class="search" @searchStyle>
+    <div class="row">
+        <div class="col">
+            <h2 class="table-title c-table__title">@Resources.ENTITIES22578</h2>
+        </div>
+        <div class="col-auto normal-view" id="Facilfex_EntitValName_simple_filter">
+            <div class="i-input-group" style="width:21rem; height: inherit;">
+                @Html.TextBox("qFacilfex_EntitValName", this.Model.Menu.Query, new { @class = "i-input-group__field", @onkeydown = "ListSearchEnter(event)" })
+                <div class="i-input-group--right">
+                    <button type="button" elem-identifier="ListSearchButton" class="b-icon--secondary i-input-group__button--secondary" onclick="window.Facilfex_EntitValName.Search()"><i class="glyphicons glyphicons-search i-input-group__tag-icon i-input-group__button-icon"></i></button>
+
+                    <button id="Facilfex_EntitValName_extra" class="b-icon--secondary i-input-group__button--secondary" type="button" onclick="changeFilters('#Facilfex_EntitValName_complex_filter', 'Facilfex_EntitValName_tableFilters')" title="@Resources.PESQUISA_AVANCADA06198"><span class="glyphicons glyphicons-zoom-in i-input-group__tag-icon i-input-group__button-icon"></span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="normal-view">
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Entit>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodentit, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN FACILFEX_NAME_ENTIT_NAME]/
+		column.Expression(p => p.ValName).Title(@Resources.LEGAL_NAME42902).Field("ValName").Size(85);
+// USE /[MANUAL GQT CUSTOM_COLUMN FACILFEX_NAME_ENTIT_INITIALS]/
+		column.Expression(p => p.ValInitials).Title(@Resources.COMPANY_INITIALS56204).Field("ValInitials").Size(10);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+			//Hidden field used in JavaScript for return selected row text value
+			column.Expression(p => p.ValName).Field("ValName").AddInlineStyle("display", "none", true).UsedForFilter(false);
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Entit")
+        .Id("Facilfex_EntitValName")
+        .AjaxRequest("Facilfex_EntitValName")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .TableList(hasFilters: true)
+        .RequestLink(@Url.Action("Facilfex_EntitValName", new { id = Model.ValCodfacil, partialView = "Facilfex_EntitValName"}))
+        .Filters(this.Model.Menu.Filters)
+        .Permissions(canView: false, canInsert: false, canEdit: false, canDelete: false, canDuplicate: false)
+		;
+        
+}
+
+@tbl.ToHtml()
+</div>
+<script>
+    try {
+        if (jQuery) {
+            try {
+                $("#qFacilfex_EntitValName, #TableEntitName_complex_filter th input").change(function() {
+                    var context = $("#TableEntitName").parent();
+                    $("#table-inputs input", context).val("");
+                });
+
+                var row = $("#Facilfex_EntitValName table tbody tr");
+                row.mouseenter(function () {
+                    $(this).addClass("highlighted");
+                });
+                row.mouseleave(function () {
+                    $(this).removeClass("highlighted");
+                });
+
+                $('td:not([elem-identifier="RowActions"])', row).click(function () {
+                    var row = $(this).parent();
+                    var key = row.data("key");
+                    var selectList = $('[data-identifier="IFF_FACILFEXENTITNAME____"]');
+
+                    selectList.trigger("DBEditSetValue", key);
+
+                    $('#modal-dbedit').modal('hide');
+                });
+
+                $("td a").click(function (event) {
+                    event.stopPropagation()
+                });
+                $('#Facilfex_EntitValName_complex_filter input').keypress(function (event) {
+                    var keycode = (event.keyCode ? event.keyCode : event.which);
+                    if(keycode == '13' || keycode == '10'){
+                        $('#Facilfex_EntitValName_complex_filter button#applyComplexFilter').click();
+                        event.preventDefault();
+                    }
+                });
+@if(Model.Menu.Elements.Count() == 0 && !Model.Menu.Filters.ShowTableFilters)
+{
+<text>
+                $('#Facilfex_EntitValName_extra').prop("disabled", true);
+</text>
+}
+
+
+// USE /[MANUAL GQT LISTING_JS FACILFEX_MENU]/
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+</script>

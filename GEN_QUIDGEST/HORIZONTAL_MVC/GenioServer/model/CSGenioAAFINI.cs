@@ -1,0 +1,460 @@
+﻿
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data.SqlTypes;
+using System.Text;
+using CSGenio.framework;
+using CSGenio.persistence;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
+using System.Linq;
+
+namespace CSGenio.business
+{
+	/// <summary>
+	/// Affinity
+	/// </summary>
+	public class CSGenioAafini : DbArea	{
+		/// <summary>
+		/// Meta-information on this area
+		/// </summary>
+		protected readonly static AreaInfo informacao = InicializaAreaInfo();
+
+		public CSGenioAafini(User user, string module)
+		{
+			fields = new Hashtable();
+            this.user = user;
+            this.module = module;
+			this.KeyType = CodeType.GUID_KEY;
+			// USE /[MANUAL GQT CONSTRUTOR AFINI]/
+		}
+
+		public CSGenioAafini(User user) : this(user, user.CurrentModule)
+		{
+		}
+
+		/// <summary>
+		/// Initializes the metadata relative to the fields of this area
+		/// </summary>
+		private static void InicializaCampos(AreaInfo info)
+		{
+			Field Qfield = null;
+#pragma warning disable CS0168, S1481 // Variable is declared but never used
+			List<ByAreaArguments> argumentsListByArea;
+#pragma warning restore CS0168, S1481 // Variable is declared but never used
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field("codafini", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield.FieldDescription = "";
+			Qfield.FieldSize =  36;
+			Qfield.Alias = info.Alias;
+			Qfield.CavDesignation = "";
+
+			Qfield.Dupmsg = "";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field("iniafini", FieldType.DATA);
+			Qfield.FieldDescription = "Beginning";
+			Qfield.FieldSize =  8;
+			Qfield.Alias = info.Alias;
+			Qfield.CavDesignation = "BEGINNING18124";
+
+			Qfield.Dupmsg = "";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field("endafini", FieldType.DATA);
+			Qfield.FieldDescription = "End";
+			Qfield.FieldSize =  8;
+			Qfield.Alias = info.Alias;
+			Qfield.CavDesignation = "END47577";
+
+			Qfield.Dupmsg = "";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field("codpess1", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield.FieldDescription = ">COMOMODOR";
+			Qfield.FieldSize =  36;
+			Qfield.Alias = info.Alias;
+			Qfield.CavDesignation = "_COMOMODOR01469";
+
+			Qfield.Dupmsg = "";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field("codpess2", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield.FieldDescription = ">DADATARY";
+			Qfield.FieldSize =  36;
+			Qfield.Alias = info.Alias;
+			Qfield.CavDesignation = "_DADATARY21139";
+
+			Qfield.Dupmsg = "";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field("codgafin", FieldType.CHAVE_FALSA_GUID);
+			Qfield.FieldDescription = ">AFFINITY GENRE";
+			Qfield.FieldSize =  36;
+			Qfield.Alias = info.Alias;
+			Qfield.CavDesignation = "_AFFINITY_GENRE64973";
+
+			Qfield.Dupmsg = "";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield.FieldDescription = "Estado da ficha";
+			Qfield.Alias = info.Alias;
+			info.RegisterFieldDB(Qfield);
+
+		}
+
+		/// <summary>
+		/// Initializes metadata for paths direct to other areas
+		/// </summary>
+		private static void InicializaRelacoes(AreaInfo info)
+		{
+			// Daughters Relations
+			//------------------------------
+
+			// Mother Relations
+			//------------------------------
+			info.ParentTables = new Dictionary<string, Relation>();
+			info.ParentTables.Add("pess1", new Relation("GQT", "gqtafini", "afini", "codafini", "codpess1", "GQT", "gqtpessoas", "pess1", "codpesso", "codpesso"));
+			info.ParentTables.Add("pess2", new Relation("GQT", "gqtafini", "afini", "codafini", "codpess2", "GQT", "gqtpessoas", "pess2", "codpesso", "codpesso"));
+		}
+
+		/// <summary>
+		/// Initializes metadata for indirect paths to other areas
+		/// </summary>
+		private static void InicializaCaminhos(AreaInfo info)
+		{
+			// Pathways
+			//------------------------------
+			info.Pathways = new Dictionary<string, string>(6);
+			info.Pathways.Add("pess1","pess1");
+			info.Pathways.Add("pess2","pess2");
+			info.Pathways.Add("stake","pess1");
+			info.Pathways.Add("cate2","pess1");
+			info.Pathways.Add("cmpny","pess1");
+			info.Pathways.Add("cntry","pess1");
+		}
+
+		/// <summary>
+		/// Initializes metadata for triggers and formula arguments
+		/// </summary>
+		private static void InicializaFormulas(AreaInfo info)
+		{
+			// Formulas
+			//------------------------------
+
+
+
+
+
+
+
+
+			//Write conditions
+			List<ConditionFormula> conditions = new List<ConditionFormula>();
+			info.WriteConditions = conditions.Where(c=> c.IsWriteCondition()).ToList();
+			info.CrudConditions = conditions.Where(c=> c.IsCrudCondition()).ToList();
+
+		}
+
+		/// <summary>
+		/// static CSGenioAafini()
+		/// </summary>
+		private static AreaInfo InicializaAreaInfo()
+		{
+			AreaInfo info = new AreaInfo();
+
+			// Area meta-information
+			info.QSystem="GQT";
+			info.TableName="gqtafini";
+			info.ShadowTabName="";
+			info.ShadowTabKeyName="";
+
+			info.PrimaryKeyName="codafini";
+			info.HumanKeyName="iniafini,".TrimEnd(',');
+			info.Alias="afini";
+			info.IsDomain = true;
+			info.PersistenceType = PersistenceType.Database;
+			info.AreaDesignation="Affinity";
+			info.AreaPluralDesignation="Affinities";
+			info.DescriptionCav="AFFINITY39346";
+
+			info.KeyType = CodeType.GUID_KEY;
+
+			//sincronização
+			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);
+			info.SyncIncrementalDateEnd = TimeSpan.FromHours(23);
+			info.SyncCompleteHour = TimeSpan.FromHours(0.5);
+			info.SyncIncrementalPeriod = TimeSpan.FromHours(1);
+			info.BatchSync = 100;
+			info.SyncType = SyncType.Central;
+            info.SolrList = new List<string>();
+        	info.QueuesList = new List<GenioServer.business.QueueGenio>();
+
+
+
+
+
+			//RS 22.03.2011 I separated in submetodos due to performance problems with the JIT in 64bits
+			// that in very large projects took 2 minutes on the first call.
+			// After a Microsoft analysis of the JIT algortimo it was revealed that it has a
+			// complexity O(n*m) where n are the lines of code and m the number of variables of a function.
+			// Tests have revealed that splitting into subfunctions cuts the JIT time by more than half by 64-bit.
+			//------------------------------
+			InicializaCampos(info);
+
+			//------------------------------
+			InicializaRelacoes(info);
+
+			//------------------------------
+			InicializaCaminhos(info);
+
+			//------------------------------
+			InicializaFormulas(info);
+
+			// Automatic audit stamps in BD
+            //------------------------------
+
+            // Documents in DB
+            //------------------------------
+
+            // Historics
+            //------------------------------
+
+			// Duplication
+			//------------------------------
+
+			// Ephs
+			//------------------------------
+			info.Ephs=new Hashtable();
+			EPHField[] camposEPH;
+						camposEPH = new EPHField[1];
+			camposEPH[0] = new EPHField("COMODANTE", "pess1", "codpesso", "=", false);
+			info.Ephs.Add(new Par("GQT", "1"), camposEPH);
+			camposEPH = new EPHField[1];
+			camposEPH[0] = new EPHField("COMODANTE", "pess1", "codpesso", "=", false);
+			info.Ephs.Add(new Par("GQT", "20"), camposEPH);
+
+			// Table minimum roles and access levels
+			//------------------------------
+            info.QLevel = new QLevel();
+            info.QLevel.Query = Role.ROLE_1;
+            info.QLevel.Create = Role.ROLE_1;
+            info.QLevel.AlterAlways = Role.AUTHORIZED;
+            info.QLevel.RemoveAlways = Role.AUTHORIZED;
+
+      		return info;
+		}
+
+		/// <summary>
+		/// Meta-information about this area
+		/// </summary>
+		public override AreaInfo Information
+		{
+			get { return informacao; }
+		}
+		/// <summary>
+		/// Meta-information about this area
+		/// </summary>
+		public static AreaInfo GetInformation()
+		{
+			return informacao;
+		}
+
+		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
+		public static FieldRef FldCodafini { get { return m_fldCodafini; } }
+		private static FieldRef m_fldCodafini = new FieldRef("afini", "codafini");
+
+		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
+		public string ValCodafini
+		{
+			get { return (string)returnValueField(FldCodafini); }
+			set { insertNameValueField(FldCodafini, value); }
+		}
+
+
+		/// <summary>Field : "Beginning" Tipo: "D" Formula:  ""</summary>
+		public static FieldRef FldIniafini { get { return m_fldIniafini; } }
+		private static FieldRef m_fldIniafini = new FieldRef("afini", "iniafini");
+
+		/// <summary>Field : "Beginning" Tipo: "D" Formula:  ""</summary>
+		public DateTime ValIniafini
+		{
+			get { return (DateTime)returnValueField(FldIniafini); }
+			set { insertNameValueField(FldIniafini, value); }
+		}
+
+
+		/// <summary>Field : "End" Tipo: "D" Formula:  ""</summary>
+		public static FieldRef FldEndafini { get { return m_fldEndafini; } }
+		private static FieldRef m_fldEndafini = new FieldRef("afini", "endafini");
+
+		/// <summary>Field : "End" Tipo: "D" Formula:  ""</summary>
+		public DateTime ValEndafini
+		{
+			get { return (DateTime)returnValueField(FldEndafini); }
+			set { insertNameValueField(FldEndafini, value); }
+		}
+
+
+		/// <summary>Field : ">COMOMODOR" Tipo: "CE" Formula:  ""</summary>
+		public static FieldRef FldCodpess1 { get { return m_fldCodpess1; } }
+		private static FieldRef m_fldCodpess1 = new FieldRef("afini", "codpess1");
+
+		/// <summary>Field : ">COMOMODOR" Tipo: "CE" Formula:  ""</summary>
+		public string ValCodpess1
+		{
+			get { return (string)returnValueField(FldCodpess1); }
+			set { insertNameValueField(FldCodpess1, value); }
+		}
+
+
+		/// <summary>Field : ">DADATARY" Tipo: "CE" Formula:  ""</summary>
+		public static FieldRef FldCodpess2 { get { return m_fldCodpess2; } }
+		private static FieldRef m_fldCodpess2 = new FieldRef("afini", "codpess2");
+
+		/// <summary>Field : ">DADATARY" Tipo: "CE" Formula:  ""</summary>
+		public string ValCodpess2
+		{
+			get { return (string)returnValueField(FldCodpess2); }
+			set { insertNameValueField(FldCodpess2, value); }
+		}
+
+
+		/// <summary>Field : ">AFFINITY GENRE" Tipo: "CF" Formula:  ""</summary>
+		public static FieldRef FldCodgafin { get { return m_fldCodgafin; } }
+		private static FieldRef m_fldCodgafin = new FieldRef("afini", "codgafin");
+
+		/// <summary>Field : ">AFFINITY GENRE" Tipo: "CF" Formula:  ""</summary>
+		public string ValCodgafin
+		{
+			get { return (string)returnValueField(FldCodgafin); }
+			set { insertNameValueField(FldCodgafin, value); }
+		}
+
+
+		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
+		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
+		private static FieldRef m_fldZzstate = new FieldRef("afini", "zzstate");
+
+
+
+		/// <summary>Field : "ZZSTATE" Type: "INT"</summary>
+		public int ValZzstate
+		{
+			get { return (int)returnValueField(FldZzstate); }
+			set { insertNameValueField(FldZzstate, value); }
+		}
+
+        /// <summary>
+        /// Obtains a partially populated area with the record corresponding to a primary key
+        /// </summary>
+        /// <param name="sp">Persistent support from where to get the registration</param>
+        /// <param name="key">The value of the primary key</param>
+        /// <param name="user">The context of the user</param>
+        /// <param name="fields">The fields to be filled in the area</param>
+        /// <returns>An area with the fields requests of the record read or null if the key does not exist</returns>
+        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
+        public static CSGenioAafini search(PersistentSupport sp, string key, User user, string[] fields = null)
+        {
+			if (string.IsNullOrEmpty(key))
+				return null;
+
+		    CSGenioAafini area = new CSGenioAafini(user, user.CurrentModule);
+
+            if (sp.getRecord(area, key, fields))
+                return area;
+			return null;
+        }
+
+
+		public static string GetkeyFromControlledRecord(PersistentSupport sp, string ID, User user)
+		{
+			if (informacao.ControlledRecords != null)
+				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
+			return String.Empty;
+		}
+
+
+
+        /// <summary>
+        /// Search for all records of this area that comply with a condition
+        /// </summary>
+        /// <param name="sp">Persistent support from where to get the list</param>
+        /// <param name="user">The context of the user</param>
+        /// <param name="where">The search condition for the records. Use null to get all records</param>
+        /// <param name="fields">The fields to be filled in the area</param>
+        /// <returns>A list of area records with all fields populated</returns>
+        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
+        [Obsolete("Use List<CSGenioAafini> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
+        public static List<CSGenioAafini> searchList(PersistentSupport sp, User user, string where, string []fields = null)
+        {
+            return sp.searchListWhere<CSGenioAafini>(where, user, fields);
+        }
+
+
+        /// <summary>
+        /// Search for all records of this area that comply with a condition
+        /// </summary>
+        /// <param name="sp">Persistent support from where to get the list</param>
+        /// <param name="user">The context of the user</param>
+        /// <param name="where">The search condition for the records. Use null to get all records</param>
+        /// <param name="fields">The fields to be filled in the area</param>
+        /// <param name="distinct">Get distinct from fields</param>
+        /// <param name="noLock">NOLOCK</param>
+        /// <returns>A list of area records with all fields populated</returns>
+        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
+        public static List<CSGenioAafini> searchList(PersistentSupport sp, User user, CriteriaSet where, string[] fields = null, bool distinct = false, bool noLock = false)
+        {
+				return sp.searchListWhere<CSGenioAafini>(where, user, fields, distinct, noLock);
+        }
+
+
+
+       	/// <summary>
+        /// Search for all records of this area that comply with a condition
+        /// </summary>
+        /// <param name="sp">Persistent support from where to get the list</param>
+        /// <param name="user">The context of the user</param>
+        /// <param name="where">The search condition for the records. Use null to get all records</param>
+        /// <param name="listing">List configuration</param>
+        /// <returns>A list of area records with all fields populated</returns>
+        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
+        public static void searchListAdvancedWhere(PersistentSupport sp, User user, CriteriaSet where, ListingMVC<CSGenioAafini> listing)
+        {
+			sp.searchListAdvancedWhere<CSGenioAafini>(where, listing);
+        }
+
+
+
+
+		/// <summary>
+		/// Check if a record exist
+		/// </summary>
+		/// <param name="key">Record key</param>
+		/// <param name="sp">DB conecntion</param>
+		/// <returns>True if the record exist</returns>
+		public static bool RecordExist(string key, PersistentSupport sp) => DbArea.RecordExist(key, informacao, sp);
+
+
+
+
+
+
+
+		// USE /[MANUAL GQT TABAUX AFINI]/
+
+     
+
+       
+
+	}
+}

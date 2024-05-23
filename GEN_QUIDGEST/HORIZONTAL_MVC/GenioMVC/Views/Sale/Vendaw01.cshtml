@@ -1,0 +1,108 @@
+﻿@model GenioMVC.ViewModels.Sale.Vendaw01_ViewModel
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+<div id="Vendaw01" class="form-horizontal" area="Sale" data-form="Vendaw01">
+	@Html.QValidationSummary()
+	<div class="f-wizard-body">
+		@LoadDefault()
+	</div>
+</div>
+
+@helper LoadDefault()
+{
+	<fieldset>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-dbedit draggable " id="CONTAINER_IFF_VENDAW01ORGANORGANIZA">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.TableOrganOrganiza, new { label_id="IFF_VENDAW01ORGANORGANIZA", @class = " i-text__label", id="LABEL_IFF_VENDAW01ORGANORGANIZA"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('IFF_VENDAW01ORGANORGANIZA','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DropDownListFor(model => model.ValCodorgan, Model.TableOrganOrganiza.List , "", new {help_id = "IFF_VENDAW01ORGANORGANIZA", @class = "i-select chosen-dropdown input-xlarge", data_identifier = "IFF_VENDAW01ORGANORGANIZA", @pers_cs_area = "Organ", @pers_cs_field = "ValCodorgan", @db_field = "ValCodorgan", @db_full_field_name = "sale.codorgan", data_has_more = Model.TableOrganOrganiza.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableOrganOrganiza.Selected, data_dbedit_value = Model.TableOrganOrganiza.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodvenda, @data_see_more = "Vendaw01_OrganValOrganiza", title = @Resources.ORGANIZATION64123, data_see_more_url = @Url.Action("Vendaw01_OrganValOrganiza","Sale"), data_is_dbedit = "true", data_fields = "organ.codorgan,organ.organiza", data_main_field = "Organ.ValOrganiza", data_elements = 0, data_filled_by_history = Model.TableOrganOrganiza.FilledByHistory, @dependant_fields = "organ.codorgan,organ.organiza" })
+								@Html.ValidationMessageFor(model => model.TableOrganOrganiza)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="row-line-group">
+                            <div class="c-groupbox " id="GROUPBOX_VENDAW01_NOVOGR01">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_VENDAW01PSEUDNOVOGR01" 
+                                    label-id="IFF_VENDAW01PSEUDNOVOGR01">
+                                    <span>@Resources.PROSPECTING26583</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_VENDAW01PSEUDNOVOGR01','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_VENDAW01SALE_IDENTIFI">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValIdentifi, new { label_id="LED_VENDAW01SALE_IDENTIFI", @class = " i-text__label", id="LABEL_LED_VENDAW01SALE_IDENTIFI"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_VENDAW01SALE_IDENTIFI','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValIdentifi, new {help_id = "LED_VENDAW01SALE_IDENTIFI", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_VENDAW01SALE_IDENTIFI", @pers_cs_area = "Sale", @pers_cs_field = "ValIdentifi", @db_field = "ValIdentifi", title = @Resources.IDENTIFICATION_OF_BU58085, maxlength = "85", rows = "85" })
+													@Html.ValidationMessageFor(model => model.ValIdentifi)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_VENDAW01SALE_POTCOMPR">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValPotcompr, new { label_id="LED_VENDAW01SALE_POTCOMPR", @class = " i-text__label", id="LABEL_LED_VENDAW01SALE_POTCOMPR"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_VENDAW01SALE_POTCOMPR','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValPotcompr, new {help_id = "LED_VENDAW01SALE_POTCOMPR", @class = "i-text__field i-text input-xlarge", data_identifier = "LED_VENDAW01SALE_POTCOMPR", @pers_cs_area = "Sale", @pers_cs_field = "ValPotcompr", @db_field = "ValPotcompr", title = @Resources.POTENTIAL_BUYERS44829, maxlength = "50", rows = "50" })
+													@Html.ValidationMessageFor(model => model.ValPotcompr)
+													</div>
+												</div>
+												<div class="control-join-group row-group-checkbox">
+												<div class="i-checkbox draggable " id="CONTAINER_LED_VENDAW01SALE_PROSPECC">
+													@Html.CheckBoxFor(model => model.ValProspecc, new {help_id = "LED_VENDAW01SALE_PROSPECC", @class = "i-checkbox__field i-checkbox input-medium", data_identifier = "LED_VENDAW01SALE_PROSPECC", @pers_cs_area = "Sale", @pers_cs_field = "ValProspecc", @db_field = "ValProspecc", title = @Resources.PROSPECTING_CARRIED_08979 }, @Model.IsEditableMode, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													@Html.ValidationMessageFor(model => model.ValProspecc)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			@Html.HiddenFor(model => model.ValCodvenda, new { @pers_cs_field="ValCodvenda", @pers_cs_area="Sale", data_refresh = "true", @form_area="true", @data_value = Model.ValCodvenda, @data_identifier = "LED_VENDAW01SALE_CODVENDA" })
+	</fieldset>
+}
+
+@helper codeJavascript()
+{
+	<div class="hidden" id="FormJavaScript_VENDAW01" data-form-javascript="true">
+		@Html.Partial("~/Views/Sale/Vendaw01_JavaScript.cshtml", Model, ViewData)
+	</div>
+}
+
+
+ 
+@section include_stylesheets
+{
+}
+
+@codeJavascript()

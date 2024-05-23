@@ -1,0 +1,198 @@
+﻿@model GenioMVC.ViewModels.Propr.IMO_Menu_111_ViewModel
+@using GenioMVC.Resources
+@using System.Web.Script.Serialization
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Title = Model.DBEditTitle;
+	//Layout = "~/Views/Shared/Layouts/TopMenu_BT4/_Layout.cshtml";
+}
+
+@{
+	GenioMVC.ViewModels.Propr.IMO_Menu_111_ViewModel modelIMO_Menu_111 = new GenioMVC.ViewModels.Propr.IMO_Menu_111_ViewModel(Navigation);
+	var columns = modelIMO_Menu_111.GetSearchColumns();
+
+	Dictionary<string, TableFilterField> fields = new Dictionary<string, TableFilterField>();
+
+
+	foreach (var col in columns)
+	{
+		var areaField = col.AreaField;
+		if (areaField.Area == "propr" && areaField.Field == "name")
+		{
+			fields.Add("PROPR.NAME", new TableFilterField("PROPR", "NAME", Resources.PROPERTY43977, "text", defaultSearch : true));
+		}
+		if (areaField.Area == "propr" && areaField.Field == "precoest")
+		{
+			fields.Add("PROPR.PRECOEST", new TableFilterField("PROPR", "PRECOEST", Resources.ESTIMATED_PRICE02986, "num"));
+		}
+		if (areaField.Area == "tppro" && areaField.Field == "tppropri")
+		{
+			fields.Add("TPPRO.TPPROPRI", new TableFilterField("TPPRO", "TPPROPRI", Resources.TYPE00312, "text"));
+		}
+		if (areaField.Area == "propr" && areaField.Field == "endereco")
+		{
+			fields.Add("PROPR.ENDERECO", new TableFilterField("PROPR", "ENDERECO", Resources.ADDRESS04342, "text"));
+		}
+		if (areaField.Area == "propr" && areaField.Field == "localida")
+		{
+			fields.Add("PROPR.LOCALIDA", new TableFilterField("PROPR", "LOCALIDA", Resources.LOCALE34521, "text"));
+		}
+		if (areaField.Area == "regio" && areaField.Field == "regiao")
+		{
+			fields.Add("REGIO.REGIAO", new TableFilterField("REGIO", "REGIAO", Resources.REGION12723, "text"));
+		}
+		if (areaField.Area == "propr" && areaField.Field == "postalco")
+		{
+			fields.Add("PROPR.POSTALCO", new TableFilterField("PROPR", "POSTALCO", Resources.ZIP_CODE56964, "text"));
+		}
+		if (areaField.Area == "propr" && areaField.Field == "postallo")
+		{
+			fields.Add("PROPR.POSTALLO", new TableFilterField("PROPR", "POSTALLO", Resources.POSTAL_LOCATION08708, "text"));
+		}
+		if (areaField.Area == "cntry" && areaField.Field == "country")
+		{
+			fields.Add("CNTRY.COUNTRY", new TableFilterField("CNTRY", "COUNTRY", Resources.COUNTRY64133, "text"));
+		}
+		if (areaField.Area == "propr" && areaField.Field == "mobilada")
+		{
+			fields.Add("PROPR.MOBILADA", new TableFilterField("PROPR", "MOBILADA", Resources.FURNISHED37431, "bool"));
+		}
+		if (areaField.Area == "propr" && areaField.Field == "qtd_wc")
+		{
+			fields.Add("PROPR.QTD_WC", new TableFilterField("PROPR", "QTD_WC", Resources.TOILET13557, "num"));
+		}
+		if (areaField.Area == "propr" && areaField.Field == "qtdquart")
+		{
+			fields.Add("PROPR.QTDQUART", new TableFilterField("PROPR", "QTDQUART", Resources.ROOMS06809, "num"));
+		}
+		if (areaField.Area == "propr" && areaField.Field == "m2")
+		{
+			fields.Add("PROPR.M2", new TableFilterField("PROPR", "M2", Resources.M212241, "num"));
+		}
+		if (areaField.Area == "propr" && areaField.Field == "dtdispon")
+		{
+			fields.Add("PROPR.DTDISPON", new TableFilterField("PROPR", "DTDISPON", Resources.AVAILABILITY56489, "date"));
+		}
+		if (areaField.Area == "propr" && areaField.Field == "descript")
+		{
+			fields.Add("PROPR.DESCRIPT", new TableFilterField("PROPR", "DESCRIPT", Resources.DESCRIPTION07383, "text"));
+		}
+	}
+
+	JavaScriptSerializer serializer = new JavaScriptSerializer();
+	string fieldsStr = serializer.Serialize(fields);
+}
+
+<script>
+	//Fields with information for search filters
+	var fields = @Html.Raw(fieldsStr);
+	//Table List Search Filters
+	var searchFilterGroups = [];
+</script>
+
+
+@using (Ajax.BeginForm("IMO_Menu_111", "Propr", new AjaxOptions
+{
+	HttpMethod= "POST",
+	InsertionMode = InsertionMode.Replace,
+	UpdateTargetId = "Menu",
+	OnSuccess = "InitMenuSpecialControls"
+}, new { @class = "form-horizontal", area="Propr", data_form="IMO_Menu_111" }))
+{
+		<input id="SearchFilters" type="hidden" value="" />
+
+		<div class="page-header row" style="align-items:center">
+		   <div class="col">
+<div class="table-title c-table__title">
+					<h1>@ViewBag.Title</h1>
+				</div>
+
+		   </div>
+		   <div class="col-auto search">
+				<div class="i-input-group input-xxlarge" id="IMO_Menu_111_simple_filter">
+					<div data-search-filter-menu-elem="filter-box-list"></div>
+					@Html.TextBox("qIMO_Menu_111", Navigation.GetStrValue("qIMO_Menu_111"), new { @class="i-input-group__field input-xxlarge dropdown-toggle", @title=@Resources.CAIXA_DE_PESQUISA53870, @onfocus="ToggleSearchFilterBox('IMO_Menu_111');" ,@onkeydown = "ListSearchEnter(event)", @autocomplete = "off" ,@data_toggle = "dropdown",@data_search_field_menu_elem = "show", @onblur = "HideSearchFieldMenuOnUnfocus('IMO_Menu_111');",@placeholder = Resources.PESQUISAR34506 + " " + Resources.PROPERTY43977})
+					<button id="qIMO_Menu_111-clearBtn" class="clear-search d-none" type="button">
+						<i class="glyphicons glyphicons-remove mr-1"></i>
+					</button>
+					@Html.SearchFieldMenu("IMO_Menu_111", fields, "PROPR")
+					<div class="b-btn-group i-input-group--right">
+						<button type="button" elem-identifier="ListSearchButton" class="btn b-icon b-icon--secondary i-input-group__button--secondary  listSearchButton" title="@Resources.PESQUISAR34506" onclick="AddSearchFieldFilter('IMO_Menu_111', 'PROPR', 'PROPR.NAME');"><i class="glyphicons glyphicons-search i-input-group__tag-icon i-input-group__button-icon"></i></button>
+						@{
+						var advancedSearchIcon = @Model.Menu.Filters.ShowTableFilters ? "glyphicons-zoom-out" : "glyphicons-zoom-in";
+						<button id="IMO_Menu_111_extra" class="btn b-icon b-icon--secondary i-input-group__button--secondary" type="button" onclick="changeFilters('#IMO_Menu_111_complex_filter', 'IMO_Menu_111_tableFilters');applyComplexFilterIDs();" title="@Resources.PESQUISA_AVANCADA06198"><span class="glyphicons @advancedSearchIcon i-input-group__tag-icon i-input-group__button-icon"></span></button>
+						}
+						@Html.SearchFilterMenu("IMO_Menu_111")
+					</div>
+				</div>
+			</div>
+            @if(!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest() && !Model.IsViewModeHidden("LIST"))
+            {
+			<div class="col-auto float-right" style="padding: 0; padding-right: 15px">
+				<div class="b-btn-group float-right" style="height: 32.625px">
+					@*List properties LISTS*@
+					@if(!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest())
+					{
+						<button class="b-btn b-icon b-icon--secondary" type="button" data-modal-form="Lstusr" data-modal-id="lstusr-edit-modal" data-table="IMO_Menu_111" data-modal-url="@Url.Action("ChangeListProperties", "Lstusr", new { idlist = "IMO_Menu_111", idlistController = "Propr", idlistArea = "Propr", codlista ="5d7b8c5d-ac05-4bf4-b866-40e2585c681e" })" title="@Resources.ALTERAR_A_APRESENTAC58401"><i class="glyphicons glyphicons-list e-icon"></i></button>
+					}
+				</div>
+			</div>
+            }
+		</div>
+ 	<div id="Menu" element-identifier="List">
+		@{ Html.RenderPartial("IMO_Menu_111_Partial"); }
+	</div>
+	@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "IMO_Menu_111" })
+	@Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId)
+	@Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock())
+	@Html.AntiForgeryToken()
+}
+
+
+
+<script>
+	$(document).ready(function () {
+		window.Form_IMO_Menu_111 = new QMenuForm($('[data-form="IMO_Menu_111"]'), "Form_IMO_Menu_111");
+		window.Form_IMO_Menu_111.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_IMO_Menu_111.Init();
+
+		//Initialize search field menu for search bar
+		InitSearchFieldMenu("qIMO_Menu_111");
+		RegisterClearEvents("IMO_Menu_111")
+
+		// TVC - added code to load advanced filters after returning from a form
+		@{
+			string advFil = "";
+			if (!String.IsNullOrEmpty(Navigation.GetStrValue("AdvancedFilters")))
+			{
+				advFil = Navigation.GetStrValue("AdvancedFilters");
+			}
+		}
+
+		SearchFilters.value = '@Html.Raw(advFil)';
+		if (typeof SearchFilters.value === 'string' && SearchFilters.value.length > 0)
+			UpdateSearchFilterStatus("IMO_Menu_111", JSON.parse(SearchFilters.value))
+	});
+</script>
+
+@helper codeJavascript()
+{
+<script>
+	QLocalStorage.remLocalStorage("savedInfo");
+	$(document).ready(function (e) {
+		InitSpecialControls($('[data-form="IMO_Menu_111"]'));
+
+
+ 	});
+
+	function InitMenuSpecialControls() {
+		InitSpecialControls($('[data-form="IMO_Menu_111"]'));
+	}
+
+</script>
+}
+
+@section code_javascript {
+	@codeJavascript()
+}

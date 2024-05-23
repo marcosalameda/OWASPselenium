@@ -1,0 +1,705 @@
+﻿@model GenioMVC.ViewModels.Flds.Infields_ViewModel
+@using GenioMVC.Models.Navigation;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Form = "Infields";
+	ViewBag.Title = @Resources.INPUT_FIELDS51344;
+    ViewBag.formmode = Model.GetFormMode;
+	ViewBag.ClassForFormLayout = "form-flow";
+}
+
+
+@if (!Model.NestedForm) {
+    if(Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+    {
+        using (Html.BeginForm("Action", "Flds", FormMethod.Post, new { @class = "form-horizontal", area="Flds", data_form="Infields" }))
+        {
+            @form_content_alert()
+            @Html.QValidationSummary()
+	        @LoadDefault()
+        }
+    }
+    else
+    {
+        <div class="form-horizontal" id="Infields" area="Flds" data-form="Infields">
+	        @LoadDefault()
+        </div>
+    }
+}
+else {
+    <div class="c-card nested-form" id="Infields_well" area="Flds" data-form="Infields">
+        @Html.QValidationSummary()
+		@LoadDefault()
+    </div>
+}
+
+@helper form_content_body() {
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="row-line-group">
+                            <div class="c-groupbox " id="GROUPBOX_INFIELDS_NOVOGR02">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_INFIELDSPSEUDNOVOGR02" 
+                                    label-id="IFF_INFIELDSPSEUDNOVOGR02">
+                                    <span>@Resources.TEXT_INPUTS37770</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_INFIELDSPSEUDNOVOGR02','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_INFIELDSFLDS_TXTFIELD">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValTxtfield, new { label_id="LED_INFIELDSFLDS_TXTFIELD", @class = " i-text__label", id="LABEL_LED_INFIELDSFLDS_TXTFIELD"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_INFIELDSFLDS_TXTFIELD','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValTxtfield, new {help_id = "LED_INFIELDSFLDS_TXTFIELD", @class = "i-text__field i-text input-large", data_identifier = "LED_INFIELDSFLDS_TXTFIELD", @pers_cs_area = "Flds", @pers_cs_field = "ValTxtfield", @db_field = "ValTxtfield", title = @Resources.TEXT_FIELD41810, maxlength = "50", rows = "30" })
+													@Html.ValidationMessageFor(model => model.ValTxtfield)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-textarea draggable " id="CONTAINER_LED_INFIELDSFLDS_DESCRIP_">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValDescrip, new { label_id="LED_INFIELDSFLDS_DESCRIP_", @class = " i-text__label", id="LABEL_LED_INFIELDSFLDS_DESCRIP_"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_INFIELDSFLDS_DESCRIP_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextAreaFor(model => model.ValDescrip, 1, 30, new {help_id = "LED_INFIELDSFLDS_DESCRIP_", @class = "i-textarea__field i-textarea input-large", data_identifier = "LED_INFIELDSFLDS_DESCRIP_", @pers_cs_area = "Flds", @pers_cs_field = "ValDescrip", @db_field = "ValDescrip", title = @Resources.MULTINE_TEXT05310 })
+													@Html.ValidationMessageFor(model => model.ValDescrip)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="row-line-group">
+                            <div class="c-groupbox " id="GROUPBOX_INFIELDS_NOVOGR01">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_INFIELDSPSEUDNOVOGR01" 
+                                    label-id="IFF_INFIELDSPSEUDNOVOGR01">
+                                    <span>@Resources.DATE_TIME_INPUTS06842</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_INFIELDSPSEUDNOVOGR01','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_INFIELDSFLDS_YEAR____">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValYear, new { label_id="LED_INFIELDSFLDS_YEAR____", @class = " i-text__label", id="LABEL_LED_INFIELDSFLDS_YEAR____"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_INFIELDSFLDS_YEAR____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValYear, new {help_id = "LED_INFIELDSFLDS_YEAR____", @class = "Number text-right i-text__field i-text input-mini", data_identifier = "LED_INFIELDSFLDS_YEAR____", @pers_cs_area = "Flds", @pers_cs_field = "ValYear", @db_field = "ValYear", title = @Resources.YEAR61794, data_number_integer = "4", data_number_decimals = "0", data_number_format = "9999" })
+													@Html.ValidationMessageFor(model => model.ValYear)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-date-picker draggable " id="CONTAINER_LED_INFIELDSFLDS_TIME____">
+													<div class="d-inline-flex">
+													@Html.LabelFor(model => model.ValTime, new { label_id="LED_INFIELDSFLDS_TIME____", @class = " i-text__label", id="LABEL_LED_INFIELDSFLDS_TIME____"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_INFIELDSFLDS_TIME____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DateFor(model => model.ValTime, new {help_id = "LED_INFIELDSFLDS_TIME____", @class = "i-input-group__field b-icon-text input-mini", data_identifier = "LED_INFIELDSFLDS_TIME____", @pers_cs_area = "Flds", @pers_cs_field = "ValTime", @db_field = "ValTime", title = @Resources.TIME15328 })
+													@Html.ValidationMessageFor(model => model.ValTime)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-date-picker draggable " id="CONTAINER_LED_INFIELDSFLDS_DATE____">
+													<div class="d-inline-flex">
+													@Html.LabelFor(model => model.ValDate, new { label_id="LED_INFIELDSFLDS_DATE____", @class = " i-text__label", id="LABEL_LED_INFIELDSFLDS_DATE____"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_INFIELDSFLDS_DATE____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DateFor(model => model.ValDate, new {help_id = "LED_INFIELDSFLDS_DATE____", @class = "i-input-group__field b-icon-text input-small", data_identifier = "LED_INFIELDSFLDS_DATE____", @pers_cs_area = "Flds", @pers_cs_field = "ValDate", @db_field = "ValDate", title = @Resources.DATE18475 })
+													@Html.ValidationMessageFor(model => model.ValDate)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-date-picker draggable " id="CONTAINER_LED_INFIELDSFLDS_DATETIME">
+													<div class="d-inline-flex">
+													@Html.LabelFor(model => model.ValDatetime, new { label_id="LED_INFIELDSFLDS_DATETIME", @class = " i-text__label", id="LABEL_LED_INFIELDSFLDS_DATETIME"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_INFIELDSFLDS_DATETIME','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DateFor(model => model.ValDatetime, new {help_id = "LED_INFIELDSFLDS_DATETIME", @class = "i-input-group__field b-icon-text input-medium", data_identifier = "LED_INFIELDSFLDS_DATETIME", @pers_cs_area = "Flds", @pers_cs_field = "ValDatetime", @db_field = "ValDatetime", title = @Resources.DATE_TIME59103 })
+													@Html.ValidationMessageFor(model => model.ValDatetime)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-date-picker draggable " id="CONTAINER_LED_INFIELDSFLDS_DATESECO">
+													<div class="d-inline-flex">
+													@Html.LabelFor(model => model.ValDateseco, new { label_id="LED_INFIELDSFLDS_DATESECO", @class = " i-text__label", id="LABEL_LED_INFIELDSFLDS_DATESECO"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_INFIELDSFLDS_DATESECO','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DateFor(model => model.ValDateseco, new {help_id = "LED_INFIELDSFLDS_DATESECO", @class = "i-input-group__field b-icon-text input-medium", data_identifier = "LED_INFIELDSFLDS_DATESECO", @pers_cs_area = "Flds", @pers_cs_field = "ValDateseco", @db_field = "ValDateseco", title = @Resources.DATE_SECOND44057 })
+													@Html.ValidationMessageFor(model => model.ValDateseco)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="row-line-group">
+                            <div class="c-groupbox " id="GROUPBOX_INFIELDS_NOVOGR04">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_INFIELDSPSEUDNOVOGR04" 
+                                    label-id="IFF_INFIELDSPSEUDNOVOGR04">
+                                    <span>@Resources.INPUTS_WITH_MASKS08900</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_INFIELDSPSEUDNOVOGR04','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_INFIELDSFLDS_SSNUMBER">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValSsnumber, new { label_id="LED_INFIELDSFLDS_SSNUMBER", @class = " i-text__label", id="LABEL_LED_INFIELDSFLDS_SSNUMBER"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_INFIELDSFLDS_SSNUMBER','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.MaskFor(model => model.ValSsnumber, new {help_id = "LED_INFIELDSFLDS_SSNUMBER", @class = "input-medium", data_identifier = "LED_INFIELDSFLDS_SSNUMBER", @pers_cs_area = "Flds", @pers_cs_field = "ValSsnumber", @db_field = "ValSsnumber", title = @Resources.SOCIAL_SECURITY_NO48150, placeholder = @Resources._1234567891237929, data_plac2lab = "false", maxlength = "11" })
+													@Html.ValidationMessageFor(model => model.ValSsnumber)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_INFIELDSFLDS_ZIPFIELD">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValZipfield, new { label_id="LED_INFIELDSFLDS_ZIPFIELD", @class = " i-text__label", id="LABEL_LED_INFIELDSFLDS_ZIPFIELD"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_INFIELDSFLDS_ZIPFIELD','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.MaskFor(model => model.ValZipfield, new {help_id = "LED_INFIELDSFLDS_ZIPFIELD", @class = "input-small", data_identifier = "LED_INFIELDSFLDS_ZIPFIELD", @pers_cs_area = "Flds", @pers_cs_field = "ValZipfield", @db_field = "ValZipfield", title = @Resources.ZIPCODE21021, placeholder = @Resources.XXXX_XXX51420, data_plac2lab = "false", maxlength = "8" })
+													@Html.ValidationMessageFor(model => model.ValZipfield)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_INFIELDSFLDS_VATNUMBR">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValVatnumbr, new { label_id="LED_INFIELDSFLDS_VATNUMBR", @class = " i-text__label", id="LABEL_LED_INFIELDSFLDS_VATNUMBR"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_INFIELDSFLDS_VATNUMBR','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.MaskFor(model => model.ValVatnumbr, new {help_id = "LED_INFIELDSFLDS_VATNUMBR", @class = "input-small", data_identifier = "LED_INFIELDSFLDS_VATNUMBR", @pers_cs_area = "Flds", @pers_cs_field = "ValVatnumbr", @db_field = "ValVatnumbr", title = @Resources.VAT_NUMBER24236, placeholder = @Resources._12345678953785, data_plac2lab = "false", maxlength = "9" })
+													@Html.ValidationMessageFor(model => model.ValVatnumbr)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_INFIELDSFLDS_LICPLATE">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValLicplate, new { label_id="LED_INFIELDSFLDS_LICPLATE", @class = " i-text__label", id="LABEL_LED_INFIELDSFLDS_LICPLATE"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_INFIELDSFLDS_LICPLATE','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.MaskFor(model => model.ValLicplate, new {help_id = "LED_INFIELDSFLDS_LICPLATE", @class = "input-small", data_identifier = "LED_INFIELDSFLDS_LICPLATE", @pers_cs_area = "Flds", @pers_cs_field = "ValLicplate", @db_field = "ValLicplate", title = @Resources.LICENCE_PLATE07627, placeholder = @Resources.XX_00_XX10122, data_plac2lab = "false", maxlength = "8" })
+													@Html.ValidationMessageFor(model => model.ValLicplate)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_INFIELDSFLDS_BANKNMBR">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValBanknmbr, new { label_id="LED_INFIELDSFLDS_BANKNMBR", @class = " i-text__label", id="LABEL_LED_INFIELDSFLDS_BANKNMBR"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_INFIELDSFLDS_BANKNMBR','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.MaskFor(model => model.ValBanknmbr, new {help_id = "LED_INFIELDSFLDS_BANKNMBR", @class = "input-large", data_identifier = "LED_INFIELDSFLDS_BANKNMBR", @pers_cs_area = "Flds", @pers_cs_field = "ValBanknmbr", @db_field = "ValBanknmbr", title = @Resources.BANKING_ACCOUNT_NUMB62548, placeholder = @Resources._1234_5678_90123456761043, data_plac2lab = "false", maxlength = "24" })
+													@Html.ValidationMessageFor(model => model.ValBanknmbr)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_INFIELDSFLDS_EMAILFLD">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValEmailfld, new { label_id="LED_INFIELDSFLDS_EMAILFLD", @class = " i-text__label", id="LABEL_LED_INFIELDSFLDS_EMAILFLD"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_INFIELDSFLDS_EMAILFLD','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValEmailfld, new {help_id = "LED_INFIELDSFLDS_EMAILFLD", @class = "i-text__field i-text input-large", data_identifier = "LED_INFIELDSFLDS_EMAILFLD", @pers_cs_area = "Flds", @pers_cs_field = "ValEmailfld", @db_field = "ValEmailfld", title = @Resources.EMAIL25170, placeholder = @Resources.QUIDGESTAT_QUIDGEST_PT47872, data_plac2lab = "false", maxlength = "50", rows = "30" })
+													@Html.ValidationMessageFor(model => model.ValEmailfld)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_INFIELDSFLDS_IBANFIEL">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValIbanfiel, new { label_id="LED_INFIELDSFLDS_IBANFIEL", @class = " i-text__label", id="LABEL_LED_INFIELDSFLDS_IBANFIEL"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_INFIELDSFLDS_IBANFIEL','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.MaskFor(model => model.ValIbanfiel, new {help_id = "LED_INFIELDSFLDS_IBANFIEL", @class = "input-large", data_identifier = "LED_INFIELDSFLDS_IBANFIEL", @pers_cs_area = "Flds", @pers_cs_field = "ValIbanfiel", @db_field = "ValIbanfiel", title = @Resources.IBAN28506, placeholder = @Resources.PT12345678901234567820477, data_plac2lab = "false", maxlength = "34" })
+													@Html.ValidationMessageFor(model => model.ValIbanfiel)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_INFIELDSFLDS_UPPRTEXT">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValUpprtext, new { label_id="LED_INFIELDSFLDS_UPPRTEXT", @class = " i-text__label", id="LABEL_LED_INFIELDSFLDS_UPPRTEXT"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_INFIELDSFLDS_UPPRTEXT','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValUpprtext, new {help_id = "LED_INFIELDSFLDS_UPPRTEXT", @class = "i-text__field i-text uppercase input-xlarge", data_identifier = "LED_INFIELDSFLDS_UPPRTEXT", @pers_cs_area = "Flds", @pers_cs_field = "ValUpprtext", @db_field = "ValUpprtext", title = @Resources.UPPERCASE48238, placeholder = @Resources.QUIDGEST56322, data_plac2lab = "false", maxlength = "50", rows = "30" })
+													@Html.ValidationMessageFor(model => model.ValUpprtext)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="row-line-group">
+                            <div class="c-groupbox " id="GROUPBOX_INFIELDS_NOVOGR03">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_INFIELDSPSEUDNOVOGR03" 
+                                    label-id="IFF_INFIELDSPSEUDNOVOGR03">
+                                    <span>@Resources.NUMERIC_INPUTS64739</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_INFIELDSPSEUDNOVOGR03','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_INFIELDSFLDS_NPASSAGE">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValNpassage, new { label_id="LED_INFIELDSFLDS_NPASSAGE", @class = " i-text__label", id="LABEL_LED_INFIELDSFLDS_NPASSAGE"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_INFIELDSFLDS_NPASSAGE','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValNpassage, new {help_id = "LED_INFIELDSFLDS_NPASSAGE", @class = "Number text-right i-text__field i-text input-mini", data_identifier = "LED_INFIELDSFLDS_NPASSAGE", @pers_cs_area = "Flds", @pers_cs_field = "ValNpassage", @db_field = "ValNpassage", title = @Resources.NUMERIC19292, data_number_integer = "3", data_number_decimals = "0", data_number_format = "999" })
+													@Html.ValidationMessageFor(model => model.ValNpassage)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_INFIELDSFLDS_DURATION">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValDuration, new { label_id="LED_INFIELDSFLDS_DURATION", @class = " i-text__label", id="LABEL_LED_INFIELDSFLDS_DURATION"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_INFIELDSFLDS_DURATION','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValDuration, new {help_id = "LED_INFIELDSFLDS_DURATION", @class = "Number text-right i-text__field i-text input-small", data_identifier = "LED_INFIELDSFLDS_DURATION", @pers_cs_area = "Flds", @pers_cs_field = "ValDuration", @db_field = "ValDuration", title = @Resources.NUMERIC_DECIMAL49512, data_number_integer = "2", data_number_decimals = "2", data_number_format = "99.99" })
+													@Html.ValidationMessageFor(model => model.ValDuration)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_INFIELDSFLDS_PRECOBIL">
+													<div class="d-inline-flex">
+													@Html.LabelFor(model => model.ValPrecobil, new { label_id="LED_INFIELDSFLDS_PRECOBIL", @class = " i-text__label", id="LABEL_LED_INFIELDSFLDS_PRECOBIL"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_INFIELDSFLDS_PRECOBIL','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValPrecobil, new {help_id = "LED_INFIELDSFLDS_PRECOBIL", @class = "i-input-group__field text-right i-text__field i-text input-small", data_identifier = "LED_INFIELDSFLDS_PRECOBIL", @pers_cs_area = "Flds", @pers_cs_field = "ValPrecobil", @db_field = "ValPrecobil", title = @Resources.CURRENCY_DECIMAL48296, data_currency = "True", data_number_integer = "3", data_number_decimals = "2", data_number_format = "999.99" })
+													@Html.ValidationMessageFor(model => model.ValPrecobil)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_INFIELDSFLDS_PRICE___">
+													<div class="d-inline-flex">
+													@Html.LabelFor(model => model.ValPrice, new { label_id="LED_INFIELDSFLDS_PRICE___", @class = " i-text__label", id="LABEL_LED_INFIELDSFLDS_PRICE___"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_INFIELDSFLDS_PRICE___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValPrice, new {help_id = "LED_INFIELDSFLDS_PRICE___", @class = "i-input-group__field text-right i-text__field i-text input-mini", data_identifier = "LED_INFIELDSFLDS_PRICE___", @pers_cs_area = "Flds", @pers_cs_field = "ValPrice", @db_field = "ValPrice", title = @Resources.CURRENCY13881, data_currency = "True", data_number_integer = "3", data_number_decimals = "2", data_number_format = "999.99" })
+													@Html.ValidationMessageFor(model => model.ValPrice)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="row-line-group">
+                            <div class="c-groupbox " id="GROUPBOX_INFIELDS_NOVOGR05">
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggablepasswordgroup  " id="CONTAINER_LED_INFIELDSFLDS_PASSFLD_">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValPassfld, new { label_id="LED_INFIELDSFLDS_PASSFLD_", @class = " i-text__label", id="LABEL_LED_INFIELDSFLDS_PASSFLD_"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_INFIELDSFLDS_PASSFLD_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.PasswordEditFor(model => model.ValPassfld, new {help_id = "LED_INFIELDSFLDS_PASSFLD_", @class = "i-text__field i-text input-large", data_identifier = "LED_INFIELDSFLDS_PASSFLD_", @pers_cs_area = "Flds", @pers_cs_field = "ValPassfld", @db_field = "ValPassfld", title = @Resources.PASSWORD09467, maxlength = "50", rows = "30" })
+													@Html.ValidationMessageFor(model => model.ValPassfld)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_INFIELDSFLDS_CLRPICKE">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValClrpicke, new { label_id="LED_INFIELDSFLDS_CLRPICKE", @class = " i-text__label", id="LABEL_LED_INFIELDSFLDS_CLRPICKE"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_INFIELDSFLDS_CLRPICKE','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.ColorPicker(model => model.ValClrpicke, new {help_id = "LED_INFIELDSFLDS_CLRPICKE", @class = "input-large", data_identifier = "LED_INFIELDSFLDS_CLRPICKE", @pers_cs_area = "Flds", @pers_cs_field = "ValClrpicke", @db_field = "ValClrpicke", title = @Resources.COLORPICKER39653, maxlength = "50", rows = "30" })
+													@Html.ValidationMessageFor(model => model.ValClrpicke)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="row-line-group">
+                            <div class="c-groupbox " id="GROUPBOX_INFIELDS_NOVOGR06">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_INFIELDSPSEUDNOVOGR06" 
+                                    label-id="IFF_INFIELDSPSEUDNOVOGR06">
+                                    <span>@Resources.OTHER_INPUTS32089</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_INFIELDSPSEUDNOVOGR06','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group row-group-checkbox">
+												<div class="i-checkbox draggable " id="CONTAINER_LED_INFIELDSFLDS_PRIMVIAG">
+													@Html.CheckBoxFor(model => model.ValPrimviag, new {help_id = "LED_INFIELDSFLDS_PRIMVIAG", @class = "i-checkbox__field i-checkbox input-mini", data_identifier = "LED_INFIELDSFLDS_PRIMVIAG", @pers_cs_area = "Flds", @pers_cs_field = "ValPrimviag", @db_field = "ValPrimviag", title = @Resources.LOGICAL47485 }, @Model.IsEditableMode, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													@Html.ValidationMessageFor(model => model.ValPrimviag)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-dbedit draggable " id="CONTAINER_LED_INFIELDSFLDS_LOGICENU">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValLogicenu, new { label_id="LED_INFIELDSFLDS_LOGICENU", @class = " i-text__label hidden-label", id="LABEL_LED_INFIELDSFLDS_LOGICENU"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_INFIELDSFLDS_LOGICENU','Primviag')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.ArrayLogicalFor(model => model.ValLogicenu, Model.List_ValLogicenu, CSGenio.business.ArrayPrimviag.GetElement, false, new {help_id = "LED_INFIELDSFLDS_LOGICENU", @class = "input-mini", data_identifier = "LED_INFIELDSFLDS_LOGICENU", @pers_cs_area = "Flds", @pers_cs_field = "ValLogicenu", @db_field = "ValLogicenu", title = "Logicenu" })
+													@Html.ValidationMessageFor(model => model.ValLogicenu)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-radio__control draggable " id="CONTAINER_LED_INFIELDSFLDS_RADIOB__">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValRadiob, new { label_id="LED_INFIELDSFLDS_RADIOB__", @class = " i-text__label", id="LABEL_LED_INFIELDSFLDS_RADIOB__"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_INFIELDSFLDS_RADIOB__','Radiobtn')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.RadioButtonForSelectList(model => model.ValRadiob, Model.List_ValRadiob, @Resources.ESCOLHA___40245, new {help_id = "LED_INFIELDSFLDS_RADIOB__", @class = "input-mini", data_identifier = "LED_INFIELDSFLDS_RADIOB__", @pers_cs_area = "Flds", @pers_cs_field = "ValRadiob", @db_field = "ValRadiob", title = @Resources.RADIO_BTN20980, data_array_type = "AC" }, 2)
+													@Html.ValidationMessageFor(model => model.ValRadiob)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_INFIELDSFLDS_CREATUSE">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValCreatuse, new { label_id="LED_INFIELDSFLDS_CREATUSE", @class = " i-text__label", id="LABEL_LED_INFIELDSFLDS_CREATUSE"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_INFIELDSFLDS_CREATUSE','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextBoxFor(model => model.ValCreatuse, new {help_id = "LED_INFIELDSFLDS_CREATUSE", @class = "i-text__field i-text input-medium", data_identifier = "LED_INFIELDSFLDS_CREATUSE", @pers_cs_area = "Flds", @pers_cs_field = "ValCreatuse", @db_field = "ValCreatuse", fixed_field = "true", @readonly = "readonly", title = @Resources.CREATED_BY12292 })
+								@Html.ValidationMessageFor(model => model.ValCreatuse)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-date-picker draggable " id="CONTAINER_LED_INFIELDSFLDS_CREATDAT">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValCreatdat, new { label_id="LED_INFIELDSFLDS_CREATDAT", @class = " i-text__label", id="LABEL_LED_INFIELDSFLDS_CREATDAT"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_INFIELDSFLDS_CREATDAT','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DateFor(model => model.ValCreatdat, new {help_id = "LED_INFIELDSFLDS_CREATDAT", @class = "i-input-group__field b-icon-text input-small", data_identifier = "LED_INFIELDSFLDS_CREATDAT", @pers_cs_area = "Flds", @pers_cs_field = "ValCreatdat", @db_field = "ValCreatdat", fixed_field = "true", @readonly = "readonly", title = @Resources.DAY27593 })
+								@Html.ValidationMessageFor(model => model.ValCreatdat)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-date-picker draggable " id="CONTAINER_LED_INFIELDSFLDS_CREATINS">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValCreatins, new { label_id="LED_INFIELDSFLDS_CREATINS", @class = " i-text__label", id="LABEL_LED_INFIELDSFLDS_CREATINS"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_INFIELDSFLDS_CREATINS','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DateFor(model => model.ValCreatins, new {help_id = "LED_INFIELDSFLDS_CREATINS", @class = "i-input-group__field b-icon-text input-medium", data_identifier = "LED_INFIELDSFLDS_CREATINS", @pers_cs_area = "Flds", @pers_cs_field = "ValCreatins", @db_field = "ValCreatins", fixed_field = "true", @readonly = "readonly", title = @Resources.COMPLETE_DATE53774 })
+								@Html.ValidationMessageFor(model => model.ValCreatins)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-date-picker draggable " id="CONTAINER_LED_INFIELDSFLDS_CREATHOU">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValCreathou, new { label_id="LED_INFIELDSFLDS_CREATHOU", @class = " i-text__label", id="LABEL_LED_INFIELDSFLDS_CREATHOU"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_INFIELDSFLDS_CREATHOU','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DateFor(model => model.ValCreathou, new {help_id = "LED_INFIELDSFLDS_CREATHOU", @class = "i-input-group__field b-icon-text input-mini", data_identifier = "LED_INFIELDSFLDS_CREATHOU", @pers_cs_area = "Flds", @pers_cs_field = "ValCreathou", @db_field = "ValCreathou", fixed_field = "true", @readonly = "readonly", title = @Resources.HOUR15646 })
+								@Html.ValidationMessageFor(model => model.ValCreathou)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+			@Html.HiddenFor(model => model.ValCodaero, new { @pers_cs_field="ValCodaero", @pers_cs_area="Flds", @data_value = Model.ValCodaero, @db_field="ValCodaero", @trelate="Aero", @tfrelate="Codaero", @data_identifier="LED_INFIELDSAERO_CODAERO_" })
+			@Html.HiddenFor(model => model.ValCodequip, new { @pers_cs_field="ValCodequip", @pers_cs_area="Flds", @data_value = Model.ValCodequip, @db_field="ValCodequip", @trelate="Equip", @tfrelate="Codequip", @data_identifier="LED_INFIELDSEQUIPCODEQUIP" })
+
+			@Html.HiddenFor(model => model.ValCodflds, new { @pers_cs_field="ValCodflds", @pers_cs_area="Flds", data_refresh = "true", @form_area="true", @data_value = Model.ValCodflds, @data_identifier = "LED_INFIELDSFLDS_CODFLDS_" })
+
+            @Html.Hidden("IgnoreWarnings", "false", new { id = "IgnoreWarnings" })
+
+			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Infields" })
+            @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Infields" })
+            @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Infields" })
+			if (!Model.NestedForm)
+            {
+                @Html.AntiForgeryToken()
+            }
+}
+
+@helper form_content_alert() {
+	if(Model.FormMode == FormMode.Delete) {
+		<div class="c-alert c-alert--warning">
+			<i class="glyphicons glyphicons-alert c-alert__icon" aria-hidden="true"></i>
+			<div class="c-alert__text">
+				&ensp;@Resources.DESEJA_ELIMINAR_ESTA24564
+			</div>
+		<!--Ao confirmar esta ficha irá ser eliminada da base de dados. Cancele caso não tenha a certeza.-->
+		</div>
+	}
+}
+
+@helper form_content_buttons() {
+
+
+
+
+    @* Extended support form *@
+    if (Model.NestedForm)
+    {
+        if (Model.IsEditableMode)
+        {
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("Infields", Model.FormMode).ToString(), "Flds")", "Infields_well")' qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>
+                    @Resources.INSERT30329
+            </button>
+            <button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Infields_Delete", "Flds", new {id = @Model.ValCodflds} )", "Infields_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+
+            <script type="application/javascript">
+                $(document).ready(function () { loaded($("#Infields_well")); });
+            </script>
+        }
+
+        @* javascript code_javascript *@
+        @*@codeJavascript()*@
+    }
+    @* Normal mode *@
+    else
+    {
+        if (Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+        {
+            if (Model.FormMode == FormMode.New && Convert.ToBoolean(Model.Navigation.CurrentLevel.GetEntry("repeatInsertion")))
+            {
+            <button type="button" data-end-pers="true" name="Infields_repete_insertion" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitInfields(event, true)" qbutton="ok_new">@Resources.GRAVAR_E_CRIAR_NOVA17771</button>
+            }
+            if(Model.FormMode == FormMode.Delete)
+            {
+				<button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Infields", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitDeleteInfields(event)" qbutton="delete">
+                    <i class="glyphicons glyphicons-check e-icon" aria-hidden="true"></i>@Resources.CONFIRMAR09808
+                </button>
+            }
+            else
+            {
+                <button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Infields", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitInfields(event)" title="@Resources.INSERT30329" data-selector="true" qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>@Resources.INSERT30329
+                </button>
+            }
+
+            <button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-href="@Url.Action("Infields_Cancel", "Flds", new { niv = Model.Navigation.CurrentLevel.Level })" onclick="javascript:window.Form_Infields.Cancel()" title="@Resources.CANCEL65428" data-selector="true" qbutton="cancel">
+                <i class="glyphicons glyphicons-ban-circle e-icon" aria-hidden="true"></i>@Resources.CANCEL65428
+            </button>
+        }
+        else if (!(ViewBag.isHomePage ?? false))
+        {
+            @Html.ActionLinkWithIcon(@Resources.RETROCEDER16633, "Infields_Cancel","Flds","glyphicons glyphicons-arrow-left e-icon", null, new { @class = "b-icon-text b-icon-text--secondary", @data_end_pers = "true", @title = @Resources.RETROCEDER16633, qbutton = "cancel" })
+        }
+    }
+}
+
+@helper LoadDefault() {
+    if (Model.NestedForm)
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div class="c-card__header">
+                    <div class="c-card__header-tag">
+						<span class="form-header" style="padding:0;">
+							<i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+						</span>
+                    </div>
+                </div>
+                <div class="c-card__body">
+                    @form_content_body()
+                    <div elem-identifier="FormActions" class="form-actions" data-form-actions="Infields">
+                        @form_content_buttons()
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    }
+    else
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div id="c-stickyHeader">
+                    <div class="c-action-bar d-flex">
+                        <span class="form-header">
+                            <i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+                        </span>
+                        <div data-parent-form="Infields" data-q-ref="form-btns-main_container"></div>
+                    </div>
+                </div>
+
+                @form_content_body()
+                <div elem-identifier="FormActions" class="form-actions" data-form-actions="Infields">
+                @form_content_buttons()
+                </div>
+            </div>
+        </fieldset>
+    }
+}
+
+@helper LoadFromLayout()
+{
+}
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT INFIELDS]/ *@
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_INFIELDS" data-form-javascript="true">
+@Html.Partial("Infields_JavaScript", Model, ViewData)
+</div>
+}
+
+@section code_javascript
+{
+	@codeJavascript()
+}
+
+@if (Request.IsAjaxRequest())
+{
+    @codeJavascript()
+    @includeStylesheets()
+}
+
+@helper includeStylesheets()
+{
+<link href="@Url.Content("~/Content/stylesheets/bootstrap-colorpicker.min.css")" rel="stylesheet" type="text/css" />
+
+ }
+
+@section include_stylesheets {
+    @includeStylesheets()
+}

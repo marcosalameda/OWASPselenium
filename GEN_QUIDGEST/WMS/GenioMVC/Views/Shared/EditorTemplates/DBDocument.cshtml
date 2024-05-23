@@ -1,0 +1,55 @@
+﻿@model string
+
+@using System.Web.Mvc;
+@using GenioMVC.ViewModels;
+
+@{
+
+	string fieldFk = ViewData["fieldFk"] == null ? "" : ViewData["fieldFk"].ToString();
+	DocumsProperties_ViewModel docProperties = ViewData["docProperties"] == null ? null : ViewData["docProperties"] as DocumsProperties_ViewModel;
+	string baseArea = ViewData["baseArea"] == null ? "" : ViewData["baseArea"].ToString();
+	string baseAreaKey = ViewData["baseAreaKey"] == null ? "" : ViewData["baseAreaKey"].ToString();
+	object htmlAttributes =  ViewData["htmlAttributes"] == null ? "" : ViewData["htmlAttributes"];
+	string data_identifier = ViewData["data_identifier"] == null ? "" : ViewData["data_identifier"].ToString();
+	bool onlyShow = false;
+	string identifier = ViewData["identifier"] == null ? "" : ViewData["identifier"].ToString();
+	string fieldSize = ViewData["fieldSize"] == null ? "" : ViewData["fieldSize"].ToString();
+	string maxFileSize = ViewData["maxSize"] == null ? "null" : ViewData["maxSize"].ToString();
+	string regex = ViewData["allowedTypes"] == null ? "null" : ViewData["allowedTypes"].ToString();
+	bool isRequired = ViewData["isRequired"] == null ? false : Convert.ToBoolean(ViewData["isRequired"]);
+	string sysMaxSize = "";
+	string sysRegex = "";
+
+	@*Platform: MVC | Type: DOCUMENT_UPLOAD_CONFIG | Module: GQT | Parameter:  | File:  | Order: 0*@
+@*BEGIN_MANUALCODE_CODMANUA:1b8c31be-6b1e-45d5-bf07-9fe5ea43b901*@
+string options = "{ maxFileSize: 209715200, acceptFileTypes: /(\\.|\\/)(gif|jpe?g|png|docx?|xlsx?|xml|xltm|xlsm|xlt|pptx?|ods|csv|infopathxml|xps|txt|pdf|zip|rar|7z|msg|dot|mp4)$/i, maxChunkSize: undefined}";
+@*END_MANUALCODE*@
+
+	sysMaxSize = options.Split(',')[0].Split(':')[1].Trim();
+	sysRegex = options.Split(',')[1].Split(':')[1].Replace("}", "").Trim();
+	maxFileSize = maxFileSize != "null" ? maxFileSize : sysMaxSize;
+	regex = regex != "null" ? regex : sysRegex;
+
+	options = "{maxFileSize: " + maxFileSize + ", acceptFileTypes: " + regex + "}";
+}
+
+<script type="text/javascript">
+	$("input[data-identifier='@data_identifier']").ready(function () {
+		if (typeof  $.fn.InitFileControl === 'undefined') {
+			// Lazy loading will have better compatibility with
+			// extended support forms and modals
+			// Last updated by [HTA] at [2019.10.01]
+			$.getScript("@Url.Content(UrlNames.QuidgestDBDocumentLaunch)");
+			$.getScript("@Url.Content(UrlNames.QuidgestDBDocument)",
+				function () {
+					$("input[data-identifier='@data_identifier']").InitFileControl(@options);
+				}
+			)
+		}
+		else {
+			$("input[data-identifier='@data_identifier']").InitFileControl(@options);
+		}
+	});
+</script>
+
+@Html.DocumentFor(model => model, fieldFk, docProperties, baseArea, baseAreaKey, htmlAttributes, onlyShow, identifier, fieldSize, isRequired)

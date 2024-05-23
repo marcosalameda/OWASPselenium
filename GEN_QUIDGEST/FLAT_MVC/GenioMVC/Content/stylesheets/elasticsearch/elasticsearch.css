@@ -1,0 +1,127 @@
+﻿.ui-autocomplete {
+    max-height: 300px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+    /* padding for vertical scrollbar */
+    padding-right: 20px;
+} 
+
+/*#region Button search type*/
+.display-flex {
+    display: flex;
+}
+
+.display-none {
+    display: none;
+}
+/*#region Button search type*/
+
+.ui-menu-item .clsDominio {
+    font-size: 1em;
+    font-style: italic;
+    line-height: 110%;
+    color: #666;
+}
+
+.ui-menu-item .clsTitulo {
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+.ui-menu-item .clsDetalhes {
+    font-size: 0.7em;
+    font-style: italic;
+    line-height: 110%;
+    color: #666;
+}
+
+.ui-menu-item .clsImagem {
+    float: left;
+    margin-right: 5px;
+}
+
+.ui-menu-item .clear {
+    clear: both;
+}
+
+/* Start with fallback for browsers that don't support -webkit-line-clamp */
+.textEllipsis {
+    overflow: hidden;
+}
+
+    .textEllipsis:after {
+        content: "";
+        text-align: right;
+    }
+
+/* Now add in code for the browsers that support -webkit-line-clamp and overwrite the non-supportive stuff */
+@supports (-webkit-line-clamp: 2) {
+    .textEllipsis {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: initial;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+    }
+
+        .textEllipsis:after {
+            display: none;
+        }
+}
+
+/*#region Cards results*/
+span.textEllipsis {
+    font-weight: 400;
+}
+dt {
+    margin-top: 0.4rem;
+}
+.card-body {
+    width: 100%;
+    content: "";
+    display: table;
+    line-height: 0;
+}
+.card-body:hover {
+    box-shadow: 5px 5px 10px #999;
+    transition: all .2s ease;
+    cursor: pointer;
+}
+.c-card{
+    border: none;
+}
+
+.c-card .f-search__engine--result-thumbnail {
+    float: left;
+    float: left !important;
+}
+
+.f-search__engine {
+    background-color: #f2f2f2;
+    margin-top: -.5rem;
+    padding: 2rem 1rem 1rem 1rem;
+    margin-right: -0.95rem;
+    margin-left: -0.95rem;
+}
+.f-search__engine--result-text.float-left {
+    width: 54%;
+}
+span.f-search__engine--result-subtitle{
+    display: none;
+}
+i.glyphicons.glyphicons-eye-open.e-icon.mt-4 {
+    display: none;
+}
+/*#endregion Cards results*/
+/*#region filters*/
+.nav-list.form-check {
+    margin-bottom: 0.2rem;
+}
+.c-accordion__panel-icon {
+    margin-top: 0.12rem !important;
+}
+.c-accordion__panel-icon {
+    margin-top: 0.12rem !important;
+}
+/*#enregion filters*/

@@ -1,0 +1,250 @@
+﻿@model GenioMVC.ViewModels.Entit.WMS_Menu_5311_ViewModel
+@using GenioMVC.Resources
+@using System.Web.Script.Serialization
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Title = Model.DBEditTitle;
+	//Layout = "~/Views/Shared/Layouts/TopMenu_BT4/_Layout.cshtml";
+}
+
+@{
+	GenioMVC.ViewModels.Entit.WMS_Menu_5311_ViewModel modelWMS_Menu_5311 = new GenioMVC.ViewModels.Entit.WMS_Menu_5311_ViewModel(Navigation);
+	var columns = modelWMS_Menu_5311.GetSearchColumns();
+
+	Dictionary<string, TableFilterField> fields = new Dictionary<string, TableFilterField>();
+
+
+	foreach (var col in columns)
+	{
+		var areaField = col.AreaField;
+		if (areaField.Area == "entit" && areaField.Field == "name")
+		{
+			fields.Add("ENTIT.NAME", new TableFilterField("ENTIT", "NAME", Resources.LEGAL_NAME42902, "text", defaultSearch : true));
+		}
+		if (areaField.Area == "entit" && areaField.Field == "initials")
+		{
+			fields.Add("ENTIT.INITIALS", new TableFilterField("ENTIT", "INITIALS", Resources.COMPANY_INITIALS56204, "text"));
+		}
+		if (areaField.Area == "entit" && areaField.Field == "registra")
+		{
+			fields.Add("ENTIT.REGISTRA", new TableFilterField("ENTIT", "REGISTRA", Resources.LEGAL_REGISTRATION04413, "text"));
+		}
+		if (areaField.Area == "entit" && areaField.Field == "taxnumbe")
+		{
+			fields.Add("ENTIT.TAXNUMBE", new TableFilterField("ENTIT", "TAXNUMBE", Resources.VAT_NUMBER24236, "text"));
+		}
+		if (areaField.Area == "entit" && areaField.Field == "email")
+		{
+			fields.Add("ENTIT.EMAIL", new TableFilterField("ENTIT", "EMAIL", Resources.EMAIL25170, "text"));
+		}
+		if (areaField.Area == "entit" && areaField.Field == "phonenum")
+		{
+			fields.Add("ENTIT.PHONENUM", new TableFilterField("ENTIT", "PHONENUM", Resources.PHONE_NUMBER20774, "text"));
+		}
+		if (areaField.Area == "entit" && areaField.Field == "iban")
+		{
+			fields.Add("ENTIT.IBAN", new TableFilterField("ENTIT", "IBAN", Resources.IBAN__INTERNATIONAL_45066, "text"));
+		}
+		if (areaField.Area == "entit" && areaField.Field == "building")
+		{
+			fields.Add("ENTIT.BUILDING", new TableFilterField("ENTIT", "BUILDING", Resources.BUILDING_HOUSE_NUMBE20738, "text"));
+		}
+		if (areaField.Area == "entit" && areaField.Field == "street")
+		{
+			fields.Add("ENTIT.STREET", new TableFilterField("ENTIT", "STREET", Resources.STREET44324, "text"));
+		}
+		if (areaField.Area == "entit" && areaField.Field == "town")
+		{
+			fields.Add("ENTIT.TOWN", new TableFilterField("ENTIT", "TOWN", Resources.TOWN_CITY16259, "text"));
+		}
+		if (areaField.Area == "entit" && areaField.Field == "county")
+		{
+			fields.Add("ENTIT.COUNTY", new TableFilterField("ENTIT", "COUNTY", Resources.COUNTY_PROVINCE34285, "text"));
+		}
+		if (areaField.Area == "entit" && areaField.Field == "state")
+		{
+			fields.Add("ENTIT.STATE", new TableFilterField("ENTIT", "STATE", Resources.STATE_PROVINCE28516, "text"));
+		}
+		if (areaField.Area == "entit" && areaField.Field == "pobox")
+		{
+			fields.Add("ENTIT.POBOX", new TableFilterField("ENTIT", "POBOX", Resources.POST_OFFICE_BOX06223, "text"));
+		}
+		if (areaField.Area == "entit" && areaField.Field == "postalco")
+		{
+			fields.Add("ENTIT.POSTALCO", new TableFilterField("ENTIT", "POSTALCO", Resources.ZIP_POSTAL_CODE55613, "text"));
+		}
+		if (areaField.Area == "entit" && areaField.Field == "telephon")
+		{
+			fields.Add("ENTIT.TELEPHON", new TableFilterField("ENTIT", "TELEPHON", Resources.TELEPHONE28697, "text"));
+		}
+		if (areaField.Area == "entit" && areaField.Field == "fax")
+		{
+			fields.Add("ENTIT.FAX", new TableFilterField("ENTIT", "FAX", Resources.FAX08532, "text"));
+		}
+		if (areaField.Area == "entit" && areaField.Field == "website")
+		{
+			fields.Add("ENTIT.WEBSITE", new TableFilterField("ENTIT", "WEBSITE", Resources.WEB_SITE06263, "text"));
+		}
+		if (areaField.Area == "entit" && areaField.Field == "person")
+		{
+			fields.Add("ENTIT.PERSON", new TableFilterField("ENTIT", "PERSON", Resources.PERSON_DEPARTMENT_TO28777, "text"));
+		}
+		if (areaField.Area == "entit" && areaField.Field == "contact")
+		{
+			fields.Add("ENTIT.CONTACT", new TableFilterField("ENTIT", "CONTACT", Resources.CONTACT_TELEPHONE_NU12694, "text"));
+		}
+		if (areaField.Area == "entit" && areaField.Field == "manufact")
+		{
+			fields.Add("ENTIT.MANUFACT", new TableFilterField("ENTIT", "MANUFACT", Resources.MANUFACTURER50759, "bool"));
+		}
+		if (areaField.Area == "entit" && areaField.Field == "founded")
+		{
+			fields.Add("ENTIT.FOUNDED", new TableFilterField("ENTIT", "FOUNDED", Resources.FOUNDED_IN54120, "date"));
+		}
+		if (areaField.Area == "faci1" && areaField.Field == "name")
+		{
+			fields.Add("FACI1.NAME", new TableFilterField("FACI1", "NAME", Resources.FACILITY_NAME19514, "text"));
+		}
+		if (areaField.Area == "faci2" && areaField.Field == "name")
+		{
+			fields.Add("FACI2.NAME", new TableFilterField("FACI2", "NAME", Resources.FACILITY_NAME19514, "text"));
+		}
+		if (areaField.Area == "entit" && areaField.Field == "language")
+		{
+			fields.Add("ENTIT.LANGUAGE", new TableFilterField("ENTIT", "LANGUAGE", Resources.LANGUAGE16872, "text"));
+		}
+		if (areaField.Area == "entit" && areaField.Field == "currency")
+		{
+			fields.Add("ENTIT.CURRENCY", new TableFilterField("ENTIT", "CURRENCY", Resources.CURRENCY13881, "text"));
+		}
+		if (areaField.Area == "entit" && areaField.Field == "owner")
+		{
+			fields.Add("ENTIT.OWNER", new TableFilterField("ENTIT", "OWNER", Resources.OWNER09558, "bool"));
+		}
+		if (areaField.Area == "entit" && areaField.Field == "carrier")
+		{
+			fields.Add("ENTIT.CARRIER", new TableFilterField("ENTIT", "CARRIER", Resources.CARRIER64855, "bool"));
+		}
+		if (areaField.Area == "entit" && areaField.Field == "supplier")
+		{
+			fields.Add("ENTIT.SUPPLIER", new TableFilterField("ENTIT", "SUPPLIER", Resources.SUPPLIER17230, "bool"));
+		}
+	}
+
+	JavaScriptSerializer serializer = new JavaScriptSerializer();
+	string fieldsStr = serializer.Serialize(fields);
+}
+
+<script>
+	//Fields with information for search filters
+	var fields = @Html.Raw(fieldsStr);
+	//Table List Search Filters
+	var searchFilterGroups = [];
+</script>
+
+
+@using (Ajax.BeginForm("WMS_Menu_5311", "Entit", new AjaxOptions
+{
+	HttpMethod= "POST",
+	InsertionMode = InsertionMode.Replace,
+	UpdateTargetId = "Menu",
+	OnSuccess = "InitMenuSpecialControls"
+}, new { @class = "form-horizontal", area="Entit", data_form="WMS_Menu_5311" }))
+{
+		<input id="SearchFilters" type="hidden" value="" />
+
+		<div class="page-header row" style="align-items:center">
+		   <div class="col">
+<div class="table-title c-table__title">
+					<h1>@ViewBag.Title</h1>
+				</div>
+
+		   </div>
+		   <div class="col-auto search">
+				<div class="i-input-group input-xxlarge" id="WMS_Menu_5311_simple_filter">
+					<div data-search-filter-menu-elem="filter-box-list"></div>
+					@Html.TextBox("qWMS_Menu_5311", Navigation.GetStrValue("qWMS_Menu_5311"), new { @class="i-input-group__field input-xxlarge dropdown-toggle", @title=@Resources.CAIXA_DE_PESQUISA53870, @onfocus="ToggleSearchFilterBox('WMS_Menu_5311');" ,@onkeydown = "ListSearchEnter(event)", @autocomplete = "off" ,@data_toggle = "dropdown",@data_search_field_menu_elem = "show", @onblur = "HideSearchFieldMenuOnUnfocus('WMS_Menu_5311');",@placeholder = Resources.PESQUISAR34506 + " " + Resources.LEGAL_NAME42902})
+					<button id="qWMS_Menu_5311-clearBtn" class="clear-search d-none" type="button">
+						<i class="glyphicons glyphicons-remove mr-1"></i>
+					</button>
+					@Html.SearchFieldMenu("WMS_Menu_5311", fields, "ENTIT")
+					<div class="b-btn-group i-input-group--right">
+						<button type="button" elem-identifier="ListSearchButton" class="btn b-icon b-icon--secondary i-input-group__button--secondary  listSearchButton" title="@Resources.PESQUISAR34506" onclick="AddSearchFieldFilter('WMS_Menu_5311', 'ENTIT', 'ENTIT.NAME');"><i class="glyphicons glyphicons-search i-input-group__tag-icon i-input-group__button-icon"></i></button>
+						@{
+						var advancedSearchIcon = @Model.Menu.Filters.ShowTableFilters ? "glyphicons-zoom-out" : "glyphicons-zoom-in";
+						<button id="WMS_Menu_5311_extra" class="btn b-icon b-icon--secondary i-input-group__button--secondary" type="button" onclick="changeFilters('#WMS_Menu_5311_complex_filter', 'WMS_Menu_5311_tableFilters');applyComplexFilterIDs();" title="@Resources.PESQUISA_AVANCADA06198"><span class="glyphicons @advancedSearchIcon i-input-group__tag-icon i-input-group__button-icon"></span></button>
+						}
+						@Html.SearchFilterMenu("WMS_Menu_5311")
+					</div>
+				</div>
+			</div>
+            @if(!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest() && !Model.IsViewModeHidden("LIST"))
+            {
+			<div class="col-auto float-right" style="padding: 0; padding-right: 15px">
+				<div class="b-btn-group float-right" style="height: 32.625px">
+					@*List properties LISTS*@
+					@if(!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest())
+					{
+						<button class="b-btn b-icon b-icon--secondary" type="button" data-modal-form="Lstusr" data-modal-id="lstusr-edit-modal" data-table="WMS_Menu_5311" data-modal-url="@Url.Action("ChangeListProperties", "Lstusr", new { idlist = "WMS_Menu_5311", idlistController = "Entit", idlistArea = "Entit", codlista ="c507fd2e-3399-4cc1-ab05-02fd06f4746a" })" title="@Resources.ALTERAR_A_APRESENTAC58401"><i class="glyphicons glyphicons-list e-icon"></i></button>
+					}
+				</div>
+			</div>
+            }
+		</div>
+ 	<div id="Menu" element-identifier="List">
+		@{ Html.RenderPartial("WMS_Menu_5311_Partial"); }
+	</div>
+	@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "WMS_Menu_5311" })
+	@Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId)
+	@Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock())
+	@Html.AntiForgeryToken()
+}
+
+
+
+<script>
+	$(document).ready(function () {
+		window.Form_WMS_Menu_5311 = new QMenuForm($('[data-form="WMS_Menu_5311"]'), "Form_WMS_Menu_5311");
+		window.Form_WMS_Menu_5311.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_WMS_Menu_5311.Init();
+
+		//Initialize search field menu for search bar
+		InitSearchFieldMenu("qWMS_Menu_5311");
+		RegisterClearEvents("WMS_Menu_5311")
+
+		// TVC - added code to load advanced filters after returning from a form
+		@{
+			string advFil = "";
+			if (!String.IsNullOrEmpty(Navigation.GetStrValue("AdvancedFilters")))
+			{
+				advFil = Navigation.GetStrValue("AdvancedFilters");
+			}
+		}
+
+		SearchFilters.value = '@Html.Raw(advFil)';
+		if (typeof SearchFilters.value === 'string' && SearchFilters.value.length > 0)
+			UpdateSearchFilterStatus("WMS_Menu_5311", JSON.parse(SearchFilters.value))
+	});
+</script>
+
+@helper codeJavascript()
+{
+<script>
+	QLocalStorage.remLocalStorage("savedInfo");
+	$(document).ready(function (e) {
+		InitSpecialControls($('[data-form="WMS_Menu_5311"]'));
+
+
+ 	});
+
+	function InitMenuSpecialControls() {
+		InitSpecialControls($('[data-form="WMS_Menu_5311"]'));
+	}
+
+</script>
+}
+
+@section code_javascript {
+	@codeJavascript()
+}

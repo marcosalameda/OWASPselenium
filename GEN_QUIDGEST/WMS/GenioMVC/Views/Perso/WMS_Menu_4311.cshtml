@@ -1,0 +1,180 @@
+﻿@model GenioMVC.ViewModels.Perso.WMS_Menu_4311_ViewModel
+@using GenioMVC.Resources
+@using System.Web.Script.Serialization
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Title = Model.DBEditTitle;
+	//Layout = "~/Views/Shared/Layouts/TopMenu_BT4/_Layout.cshtml";
+}
+
+@{
+	GenioMVC.ViewModels.Perso.WMS_Menu_4311_ViewModel modelWMS_Menu_4311 = new GenioMVC.ViewModels.Perso.WMS_Menu_4311_ViewModel(Navigation);
+	var columns = modelWMS_Menu_4311.GetSearchColumns();
+
+	Dictionary<string, TableFilterField> fields = new Dictionary<string, TableFilterField>();
+
+	Dictionary<string, string> arrGender = new Dictionary<string, string>();
+	foreach(var elem in CSGenio.business.ArrayGender.GetDictionary())
+	{
+		arrGender.Add(elem.Key.ToString(), GenioMVC.Resources.Resources.ResourceManager.GetString(elem.Value.ToString()));
+	}
+	Dictionary<string, string> arrMonths = new Dictionary<string, string>();
+	foreach(var elem in CSGenio.business.ArrayMonths.GetDictionary())
+	{
+		arrMonths.Add(elem.Key.ToString(), GenioMVC.Resources.Resources.ResourceManager.GetString(elem.Value.ToString()));
+	}
+
+	foreach (var col in columns)
+	{
+		var areaField = col.AreaField;
+		if (areaField.Area == "perso" && areaField.Field == "name")
+		{
+			fields.Add("PERSO.NAME", new TableFilterField("PERSO", "NAME", Resources.PERSON_NAME40980, "text", defaultSearch : true));
+		}
+		if (areaField.Area == "perso" && areaField.Field == "gender")
+		{
+			fields.Add("PERSO.GENDER", new TableFilterField("PERSO", "GENDER", Resources.GENDER44172, "enum", array : arrGender));
+		}
+		if (areaField.Area == "perso" && areaField.Field == "identifi")
+		{
+			fields.Add("PERSO.IDENTIFI", new TableFilterField("PERSO", "IDENTIFI", Resources.IDENTIFICATION_NUMBE11999, "text"));
+		}
+		if (areaField.Area == "perso" && areaField.Field == "dob")
+		{
+			fields.Add("PERSO.DOB", new TableFilterField("PERSO", "DOB", Resources.DATE_OF_BIRTH63058, "date"));
+		}
+		if (areaField.Area == "perso" && areaField.Field == "email")
+		{
+			fields.Add("PERSO.EMAIL", new TableFilterField("PERSO", "EMAIL", Resources.E_MAIL42251, "text"));
+		}
+		if (areaField.Area == "perso" && areaField.Field == "year")
+		{
+			fields.Add("PERSO.YEAR", new TableFilterField("PERSO", "YEAR", Resources.YEAR61794, "num"));
+		}
+		if (areaField.Area == "perso" && areaField.Field == "month")
+		{
+			fields.Add("PERSO.MONTH", new TableFilterField("PERSO", "MONTH", Resources.MONTH46035, "enum", array : arrMonths));
+		}
+		if (areaField.Area == "perso" && areaField.Field == "tob")
+		{
+			fields.Add("PERSO.TOB", new TableFilterField("PERSO", "TOB", Resources.TIME_OF_BIRTH04797, "text"));
+		}
+	}
+
+	JavaScriptSerializer serializer = new JavaScriptSerializer();
+	string fieldsStr = serializer.Serialize(fields);
+}
+
+<script>
+	//Fields with information for search filters
+	var fields = @Html.Raw(fieldsStr);
+	//Table List Search Filters
+	var searchFilterGroups = [];
+</script>
+
+
+@using (Ajax.BeginForm("WMS_Menu_4311", "Perso", new AjaxOptions
+{
+	HttpMethod= "POST",
+	InsertionMode = InsertionMode.Replace,
+	UpdateTargetId = "Menu",
+	OnSuccess = "InitMenuSpecialControls"
+}, new { @class = "form-horizontal", area="Perso", data_form="WMS_Menu_4311" }))
+{
+		<input id="SearchFilters" type="hidden" value="" />
+
+		<div class="page-header row" style="align-items:center">
+		   <div class="col">
+<div class="table-title c-table__title">
+					<h1>@ViewBag.Title</h1>
+				</div>
+
+		   </div>
+		   <div class="col-auto search">
+				<div class="i-input-group input-xxlarge" id="WMS_Menu_4311_simple_filter">
+					<div data-search-filter-menu-elem="filter-box-list"></div>
+					@Html.TextBox("qWMS_Menu_4311", Navigation.GetStrValue("qWMS_Menu_4311"), new { @class="i-input-group__field input-xxlarge dropdown-toggle", @title=@Resources.CAIXA_DE_PESQUISA53870, @onfocus="ToggleSearchFilterBox('WMS_Menu_4311');" ,@onkeydown = "ListSearchEnter(event)", @autocomplete = "off" ,@data_toggle = "dropdown",@data_search_field_menu_elem = "show", @onblur = "HideSearchFieldMenuOnUnfocus('WMS_Menu_4311');",@placeholder = Resources.PESQUISAR34506 + " " + Resources.PERSON_NAME40980})
+					<button id="qWMS_Menu_4311-clearBtn" class="clear-search d-none" type="button">
+						<i class="glyphicons glyphicons-remove mr-1"></i>
+					</button>
+					@Html.SearchFieldMenu("WMS_Menu_4311", fields, "PERSO")
+					<div class="b-btn-group i-input-group--right">
+						<button type="button" elem-identifier="ListSearchButton" class="btn b-icon b-icon--secondary i-input-group__button--secondary  listSearchButton" title="@Resources.PESQUISAR34506" onclick="AddSearchFieldFilter('WMS_Menu_4311', 'PERSO', 'PERSO.NAME');"><i class="glyphicons glyphicons-search i-input-group__tag-icon i-input-group__button-icon"></i></button>
+						@{
+						var advancedSearchIcon = @Model.Menu.Filters.ShowTableFilters ? "glyphicons-zoom-out" : "glyphicons-zoom-in";
+						<button id="WMS_Menu_4311_extra" class="btn b-icon b-icon--secondary i-input-group__button--secondary" type="button" onclick="changeFilters('#WMS_Menu_4311_complex_filter', 'WMS_Menu_4311_tableFilters');applyComplexFilterIDs();" title="@Resources.PESQUISA_AVANCADA06198"><span class="glyphicons @advancedSearchIcon i-input-group__tag-icon i-input-group__button-icon"></span></button>
+						}
+						@Html.SearchFilterMenu("WMS_Menu_4311")
+					</div>
+				</div>
+			</div>
+            @if(!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest() && !Model.IsViewModeHidden("LIST"))
+            {
+			<div class="col-auto float-right" style="padding: 0; padding-right: 15px">
+				<div class="b-btn-group float-right" style="height: 32.625px">
+					@*List properties LISTS*@
+					@if(!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest())
+					{
+						<button class="b-btn b-icon b-icon--secondary" type="button" data-modal-form="Lstusr" data-modal-id="lstusr-edit-modal" data-table="WMS_Menu_4311" data-modal-url="@Url.Action("ChangeListProperties", "Lstusr", new { idlist = "WMS_Menu_4311", idlistController = "Perso", idlistArea = "Perso", codlista ="41620bc2-3820-44b2-9922-4b85648ff0b5" })" title="@Resources.ALTERAR_A_APRESENTAC58401"><i class="glyphicons glyphicons-list e-icon"></i></button>
+					}
+				</div>
+			</div>
+            }
+		</div>
+ 	<div id="Menu" element-identifier="List">
+		@{ Html.RenderPartial("WMS_Menu_4311_Partial"); }
+	</div>
+	@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "WMS_Menu_4311" })
+	@Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId)
+	@Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock())
+	@Html.AntiForgeryToken()
+}
+
+
+
+<script>
+	$(document).ready(function () {
+		window.Form_WMS_Menu_4311 = new QMenuForm($('[data-form="WMS_Menu_4311"]'), "Form_WMS_Menu_4311");
+		window.Form_WMS_Menu_4311.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_WMS_Menu_4311.Init();
+
+		//Initialize search field menu for search bar
+		InitSearchFieldMenu("qWMS_Menu_4311");
+		RegisterClearEvents("WMS_Menu_4311")
+
+		// TVC - added code to load advanced filters after returning from a form
+		@{
+			string advFil = "";
+			if (!String.IsNullOrEmpty(Navigation.GetStrValue("AdvancedFilters")))
+			{
+				advFil = Navigation.GetStrValue("AdvancedFilters");
+			}
+		}
+
+		SearchFilters.value = '@Html.Raw(advFil)';
+		if (typeof SearchFilters.value === 'string' && SearchFilters.value.length > 0)
+			UpdateSearchFilterStatus("WMS_Menu_4311", JSON.parse(SearchFilters.value))
+	});
+</script>
+
+@helper codeJavascript()
+{
+<script>
+	QLocalStorage.remLocalStorage("savedInfo");
+	$(document).ready(function (e) {
+		InitSpecialControls($('[data-form="WMS_Menu_4311"]'));
+
+
+ 	});
+
+	function InitMenuSpecialControls() {
+		InitSpecialControls($('[data-form="WMS_Menu_4311"]'));
+	}
+
+</script>
+}
+
+@section code_javascript {
+	@codeJavascript()
+}

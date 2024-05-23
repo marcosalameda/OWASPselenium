@@ -1,0 +1,121 @@
+﻿@model GenioMVC.ViewModels.Produ.Produ_ValInputsre_ViewModel
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@using Newtonsoft.Json;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@*List properties DBEDIT BUTTONS*@
+<div class="row">
+	<div class="col">
+		<div elem-identifier="List"  help-id="IFF_PRODU___PSEUDINPUTSRE" style="padding-top: 0.5rem;"><label class = "i-text__label table-title c-table__title" > <h2 list-header>@Resources.INPUTS19315</h2 list-header> </label></div>
+	</div>
+</div>
+
+@* USE /[MANUAL GQT TABLE_FOR PRODU_INPUTSRE]/ *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@using GenioMVC.ViewModels.Relin;    
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Relin>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCoddilin, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN PRODU_INPUTSRE_RELIN_INSTANT]/
+		column.Expression(p => p.ValInstant).Title(@Resources.INSTANT35907).Field("ValInstant").Size(16);
+// USE /[MANUAL GQT CUSTOM_COLUMN PRODU_INPUTSRE_RECEI_NUMBER]/
+		column.Expression(p => p.Recei.ValNumber).Title(@Resources.RECEIPT_NUMBER31380).Field("Recei.ValNumber").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN PRODU_INPUTSRE_ENTIT_NAME]/
+		column.Expression(p => p.Entit.ValName).Title(@Resources.ENTITY62049).Field("Entit.ValName").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN PRODU_INPUTSRE_RELIN_LINENUMB]/
+		column.Expression(p => p.ValLinenumb).Title(@Resources.LINE27983).Field("ValLinenumb").Size(6);
+// USE /[MANUAL GQT CUSTOM_COLUMN PRODU_INPUTSRE_RELIN_ORDERED]/
+		column.Expression(p => p.ValOrdered).Title(@Resources.ORDERED04034).Field("ValOrdered").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN PRODU_INPUTSRE_RELIN_RECEIVED]/
+		column.Expression(p => p.ValReceived).Title(@Resources.RECEIVED19242).Field("ValReceived").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN PRODU_INPUTSRE_RELIN_OUTSTAND]/
+		column.Expression(p => p.ValOutstand).Title(@Resources.OUTSTANDING36400).Field("ValOutstand").Size(10);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Relin")
+        .Id("ValInputsre")
+        .AjaxRequest("Produ_ValInputsre")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .TableList(hasFilters: false)
+        .RequestLink(@Url.Action("Produ_ValInputsre", new { id = Model.ValCodprodu, partialView = "Produ_ValInputsre"}))
+        .Form("Relin", false, false)
+        .SetFollowUp("Relin_Show", "Relin" , (Func<GenioMVC.Models.Relin, object>)(item => new { id = item.ValCoddilin }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
+        .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
+		;
+        
+}
+
+@tbl.ToHtml()
+
+<script>
+
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qValInputsre, #ValInputsre_complex_filter th input, #ValInputsre_filters input").change(function() {
+                    $("#pValInputsre").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#ValInputsre_tableFilters').val(false);")
+                    @Html.Raw("$('#ValInputsre_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#ValInputsre_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $('#ValInputsre_complex_filter button#applyComplexFilter').click();
+                    @:      event.preventDefault();
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#ValInputsre_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_ValInputsre').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+
+
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='ValInputsre']"));
+                    InitSpecialControls($('#ValInputsre'));
+                    $('#ValInputsre').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS PRODU_VALINPUTSRE]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+</script>

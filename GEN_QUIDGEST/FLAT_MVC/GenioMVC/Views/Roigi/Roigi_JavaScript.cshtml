@@ -1,0 +1,297 @@
+﻿@model GenioMVC.ViewModels.Roigi.Roigi_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS ROIGI]/ *@
+<script  type="text/javascript">
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Roigi !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Roigi = new QForm($('[data-form="Roigi"]'), "Form_Roigi");
+		}
+		window.Form_Roigi.baseArea = "roigi";
+		window.Form_Roigi.FormMode = '@Model.GetFormMode';
+		window.Form_Roigi.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Roigi.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Roigi")',
+			GetDependants:		'@Url.Action("GetDependants", "Roigi")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Roigi", "Roigi")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Roigi", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Roigi", "Roigi")',
+		};
+		window.Form_Roigi.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Roigi.formSaveEdit = '@Url.Action("Roigi_SaveEdit", "Roigi")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Roigi.formAction = 'Roigi_New';
+		window.Form_Roigi.formRedirectURL = '@Url.Action("Roigi_New_Redirect", "Roigi")';
+		window.Form_Roigi.formSubmitURL = '@Url.Action("Roigi_New", "Roigi")';
+		window.Form_Roigi.formRedirectURL_repeatInsertion = '@Url.Action("Roigi_New_Redirect", "Roigi", new { repeatInsertion = true})';
+		window.Form_Roigi.formSubmitURL_repeatInsertion = '@Url.Action("Roigi_New", "Roigi", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Roigi.formAction = 'Roigi_Edit';
+		window.Form_Roigi.formRedirectURL = '@Url.Action("Roigi_Edit_Redirect", "Roigi")';
+		window.Form_Roigi.formSubmitURL = '@Url.Action("Roigi_Edit", "Roigi")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Roigi.formAction = 'Roigi_Duplicate';
+		window.Form_Roigi.formRedirectURL = '@Url.Action("Roigi_Duplicate_Redirect", "Roigi")';
+		window.Form_Roigi.formSubmitURL = '@Url.Action("Roigi_Duplicate", "Roigi")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Roigi.formAction = 'Roigi_Delete';
+		window.Form_Roigi.formRedirectURL = '@Url.Action("Roigi_Delete_Redirect", "Roigi")';
+		window.Form_Roigi.formSubmitURL = '@Url.Action("Roigi_Delete", "Roigi")';
+	</text>
+}
+		window.Form_Roigi.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.IFF_ROIGI___ROGL1TITLE___ = new QDbeditControl($('[data-identifier="IFF_ROIGI___ROGL1TITLE___"]', this.element), window.Form_Roigi);
+
+			this.Controls.LED_ROIGI___ROIGIORDER___ = new QNumericControl($('[data-identifier="LED_ROIGI___ROIGIORDER___"]', this.element), window.Form_Roigi);
+
+			this.Controls.LED_ROIGI___ROIGITITLE___ = new QTextControl($('[data-identifier="LED_ROIGI___ROIGITITLE___"]', this.element), window.Form_Roigi);
+
+
+
+
+			this.Controls.LED_ROIGI___ROIGICODROIGI = new QHiddenControl($('[data-identifier="LED_ROIGI___ROIGICODROIGI"]', this.element), window.Form_Roigi);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	</text>
+}
+
+		window.Form_Roigi.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Roigi.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI ROIGI]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Roigi.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS ROIGI]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Roigi.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS ROIGI]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Roigi.Data.RelationKeysSelector = {
+				get rogl1() { return $(':not([elem-identifier="Multiform"]) > #ValCodrogl1[pers-cs-area="Rogl1"]', $('[data-form="Roigi"]')); /* DBEdit */ },
+		};
+
+		window.Form_Roigi.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Roigi.Data.RelationKeys = {
+			get formContext() { return window.Form_Roigi; },
+			get rogl1() { return (this.formContext.Data.RelationKeysSelector.rogl1.getQControl() || {}).Value; /* DBEdit */ },
+			set rogl1(newValue) { (this.formContext.Data.RelationKeysSelector.rogl1.getQControl() || {}).Value = newValue; /* DBEdit */ },
+		};
+	</text>
+}
+
+	window.Form_Roigi.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Roigi.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitRoigi(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Roigi.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeleteRoigi(event) {
+			event.preventDefault();
+			window.Form_Roigi.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+    var ajaxCallsRemaining = $(".flash object embed").length;
+    $('form [elem-identifier="ButtonPrimary"]').click(function() {
+        var flashObjects = $(".flash object embed");
+        ajaxCallsRemaining = flashObjects.length;
+        if(flashObjects.length == 0)
+            return true;
+        else {
+            flashObjects.each(function() {
+               var flashObj = GetFlash($(this).attr('id'));
+               flashObj.UsedFlash.TriggerSave(flashObj);
+            });
+            return false;
+        }
+    });
+    </text>
+}
+// USE /[MANUAL GQT FORM_CODEJS ROIGI]/
+
+
+
+ 
+
+    $($('[elem-identifier="FormActions"]'), $('[data-form="Roigi"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

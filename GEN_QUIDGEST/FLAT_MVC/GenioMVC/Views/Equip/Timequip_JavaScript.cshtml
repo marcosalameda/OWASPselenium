@@ -1,0 +1,330 @@
+﻿@model GenioMVC.ViewModels.Equip.Timequip_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS TIMEQUIP]/ *@
+<script  type="text/javascript">
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Timequip !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Timequip = new QForm($('[data-form="Timequip"]'), "Form_Timequip");
+		}
+		window.Form_Timequip.baseArea = "equip";
+		window.Form_Timequip.FormMode = '@Model.GetFormMode';
+		window.Form_Timequip.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Timequip.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Equip")',
+			GetDependants:		'@Url.Action("GetDependants", "Equip")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Timequip", "Equip")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Timequip", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Equip", "Equip")',
+		};
+		window.Form_Timequip.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Timequip.formSaveEdit = '@Url.Action("Timequip_SaveEdit", "Equip")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Timequip.formAction = 'Timequip_New';
+		window.Form_Timequip.formRedirectURL = '@Url.Action("Timequip_New_Redirect", "Equip")';
+		window.Form_Timequip.formSubmitURL = '@Url.Action("Timequip_New", "Equip")';
+		window.Form_Timequip.formRedirectURL_repeatInsertion = '@Url.Action("Timequip_New_Redirect", "Equip", new { repeatInsertion = true})';
+		window.Form_Timequip.formSubmitURL_repeatInsertion = '@Url.Action("Timequip_New", "Equip", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Timequip.formAction = 'Timequip_Edit';
+		window.Form_Timequip.formRedirectURL = '@Url.Action("Timequip_Edit_Redirect", "Equip")';
+		window.Form_Timequip.formSubmitURL = '@Url.Action("Timequip_Edit", "Equip")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Timequip.formAction = 'Timequip_Duplicate';
+		window.Form_Timequip.formRedirectURL = '@Url.Action("Timequip_Duplicate_Redirect", "Equip")';
+		window.Form_Timequip.formSubmitURL = '@Url.Action("Timequip_Duplicate", "Equip")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Timequip.formAction = 'Timequip_Delete';
+		window.Form_Timequip.formRedirectURL = '@Url.Action("Timequip_Delete_Redirect", "Equip")';
+		window.Form_Timequip.formSubmitURL = '@Url.Action("Timequip_Delete", "Equip")';
+	</text>
+}
+		window.Form_Timequip.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.IFF_TIMEQUIPPSEUDREPARACO = new QTableListControl($('[data-identifier="IFF_TIMEQUIPPSEUDREPARACO"]', this.element), window.Form_Timequip);
+
+			this.Controls.IFF_TIMEQUIPPSEUDPRIMARY_ = new QTimeLineControl($('[data-identifier="IFF_TIMEQUIPPSEUDPRIMARY_"]', this.element), window.Form_Timequip);
+
+			this.Controls.IFF_TIMEQUIPPSEUDSECUNDAR = new QTimeLineControl($('[data-identifier="IFF_TIMEQUIPPSEUDSECUNDAR"]', this.element), window.Form_Timequip);
+
+
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	@*Hidden Foreign Keys Controls*@
+			this.Controls.LED_TIMEQUIPWAREHCODWAREH = new QHiddenControl($('[data-identifier="LED_TIMEQUIPWAREHCODWAREH"]', this.element), window.Form_Timequip);
+			this.Controls.LED_TIMEQUIPITEM_CODITEM_ = new QHiddenControl($('[data-identifier="LED_TIMEQUIPITEM_CODITEM_"]', this.element), window.Form_Timequip);
+			this.Controls.LED_TIMEQUIPCMPNYCODEMPRE = new QHiddenControl($('[data-identifier="LED_TIMEQUIPCMPNYCODEMPRE"]', this.element), window.Form_Timequip);
+			this.Controls.LED_TIMEQUIPTPEQUCODTPEQU = new QHiddenControl($('[data-identifier="LED_TIMEQUIPTPEQUCODTPEQU"]', this.element), window.Form_Timequip);
+			this.Controls.LED_TIMEQUIPROOM1CODROOMS = new QHiddenControl($('[data-identifier="LED_TIMEQUIPROOM1CODROOMS"]', this.element), window.Form_Timequip);
+			this.Controls.LED_TIMEQUIPDECOMCODDECO_ = new QHiddenControl($('[data-identifier="LED_TIMEQUIPDECOMCODDECO_"]', this.element), window.Form_Timequip);
+			this.Controls.LED_TIMEQUIPPESS1CODPESSO = new QHiddenControl($('[data-identifier="LED_TIMEQUIPPESS1CODPESSO"]', this.element), window.Form_Timequip);
+	</text>
+}
+			this.Controls.LED_TIMEQUIPEQUIPCODEQUIP = new QHiddenControl($('[data-identifier="LED_TIMEQUIPEQUIPCODEQUIP"]', this.element), window.Form_Timequip);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+			this.Controls.LED_TIMEQUIPEQUIPREGISTNR = new QSpecialControl($('[data-identifier="LED_TIMEQUIPEQUIPREGISTNR"]', this.element), window.Form_Timequip);
+			this.Controls.LED_TIMEQUIPEQUIPREGISTNR.InitData(@JavaScriptConversion.ToString(@Model.ValRegistnr));
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	</text>
+}
+
+		window.Form_Timequip.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Timequip.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI TIMEQUIP]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Timequip.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS TIMEQUIP]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Timequip.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS TIMEQUIP]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Timequip.Data.RelationKeysSelector = {
+				get wareh() { return $(':not([elem-identifier="Multiform"]) > #ValCodwareh', $('[data-form="Timequip"]')); /* Hidden */ },
+				get item() { return $(':not([elem-identifier="Multiform"]) > #ValCoditem', $('[data-form="Timequip"]')); /* Hidden */ },
+				get cmpny() { return $(':not([elem-identifier="Multiform"]) > #ValCodempre', $('[data-form="Timequip"]')); /* Hidden */ },
+				get tpequ() { return $(':not([elem-identifier="Multiform"]) > #ValCodtpequ', $('[data-form="Timequip"]')); /* Hidden */ },
+				get room1() { return $(':not([elem-identifier="Multiform"]) > #ValCodrooms', $('[data-form="Timequip"]')); /* Hidden */ },
+				get decom() { return $(':not([elem-identifier="Multiform"]) > #ValCoddeco', $('[data-form="Timequip"]')); /* Hidden */ },
+				get pess1() { return $(':not([elem-identifier="Multiform"]) > #ValCodpess1', $('[data-form="Timequip"]')); /* Hidden */ },
+		};
+
+		window.Form_Timequip.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Timequip.Data.RelationKeys = {
+			get formContext() { return window.Form_Timequip; },
+			get wareh() { return (this.formContext.Data.RelationKeysSelector.wareh.getQControl() || {}).Value; /* Hidden FK */ },
+			set wareh(newValue) { (this.formContext.Data.RelationKeysSelector.wareh.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+			get item() { return (this.formContext.Data.RelationKeysSelector.item.getQControl() || {}).Value; /* Hidden FK */ },
+			set item(newValue) { (this.formContext.Data.RelationKeysSelector.item.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+			get cmpny() { return (this.formContext.Data.RelationKeysSelector.cmpny.getQControl() || {}).Value; /* Hidden FK */ },
+			set cmpny(newValue) { (this.formContext.Data.RelationKeysSelector.cmpny.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+			get tpequ() { return (this.formContext.Data.RelationKeysSelector.tpequ.getQControl() || {}).Value; /* Hidden FK */ },
+			set tpequ(newValue) { (this.formContext.Data.RelationKeysSelector.tpequ.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+			get room1() { return (this.formContext.Data.RelationKeysSelector.room1.getQControl() || {}).Value; /* Hidden FK */ },
+			set room1(newValue) { (this.formContext.Data.RelationKeysSelector.room1.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+			get decom() { return (this.formContext.Data.RelationKeysSelector.decom.getQControl() || {}).Value; /* Hidden FK */ },
+			set decom(newValue) { (this.formContext.Data.RelationKeysSelector.decom.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+			get pess1() { return (this.formContext.Data.RelationKeysSelector.pess1.getQControl() || {}).Value; /* Hidden FK */ },
+			set pess1(newValue) { (this.formContext.Data.RelationKeysSelector.pess1.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+		};
+	</text>
+}
+
+	window.Form_Timequip.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Timequip.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitTimequip(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Timequip.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeleteTimequip(event) {
+			event.preventDefault();
+			window.Form_Timequip.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+    var ajaxCallsRemaining = $(".flash object embed").length;
+    $('form [elem-identifier="ButtonPrimary"]').click(function() {
+        var flashObjects = $(".flash object embed");
+        ajaxCallsRemaining = flashObjects.length;
+        if(flashObjects.length == 0)
+            return true;
+        else {
+            flashObjects.each(function() {
+               var flashObj = GetFlash($(this).attr('id'));
+               flashObj.UsedFlash.TriggerSave(flashObj);
+            });
+            return false;
+        }
+    });
+    </text>
+}
+// USE /[MANUAL GQT FORM_CODEJS TIMEQUIP]/
+
+
+
+ 
+
+    $($('[elem-identifier="FormActions"]'), $('[data-form="Timequip"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

@@ -1,0 +1,218 @@
+﻿@model GenioMVC.ViewModels.Sale.STY_Menu_VWIZARD_ViewModel
+@using GenioMVC.Resources
+@using System.Web.Script.Serialization
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Title = Model.DBEditTitle;
+	//Layout = "~/Views/Shared/Layouts/TopMenu_BT4/_Layout.cshtml";
+}
+
+@{
+	GenioMVC.ViewModels.Sale.STY_Menu_VWIZARD_ViewModel modelSTY_Menu_VWIZARD = new GenioMVC.ViewModels.Sale.STY_Menu_VWIZARD_ViewModel(Navigation);
+	var columns = modelSTY_Menu_VWIZARD.GetSearchColumns();
+
+	Dictionary<string, TableFilterField> fields = new Dictionary<string, TableFilterField>();
+
+
+	foreach (var col in columns)
+	{
+		var areaField = col.AreaField;
+		if (areaField.Area == "sale" && areaField.Field == "nrlide")
+		{
+			fields.Add("SALE.NRLIDE", new TableFilterField("SALE", "NRLIDE", Resources.N_O_DA_LIDE50722, "num"));
+		}
+		if (areaField.Area == "sale" && areaField.Field == "startdt")
+		{
+			fields.Add("SALE.STARTDT", new TableFilterField("SALE", "STARTDT", Resources.BEGINNING18124, "date"));
+		}
+		if (areaField.Area == "sale" && areaField.Field == "identifi")
+		{
+			fields.Add("SALE.IDENTIFI", new TableFilterField("SALE", "IDENTIFI", Resources.IDENTIFICACAO_DA_OPO05341, "text", defaultSearch : true));
+		}
+		if (areaField.Area == "sale" && areaField.Field == "potcompr")
+		{
+			fields.Add("SALE.POTCOMPR", new TableFilterField("SALE", "POTCOMPR", Resources.POTENCIAIS_COMPRADOR25099, "text"));
+		}
+		if (areaField.Area == "sale" && areaField.Field == "prospecc")
+		{
+			fields.Add("SALE.PROSPECC", new TableFilterField("SALE", "PROSPECC", Resources.PROSPECCAO_EFECTUADA42558, "bool"));
+		}
+		if (areaField.Area == "sale" && areaField.Field == "interess")
+		{
+			fields.Add("SALE.INTERESS", new TableFilterField("SALE", "INTERESS", Resources.INTERESSADO26080, "bool"));
+		}
+		if (areaField.Area == "sale" && areaField.Field == "semrfina")
+		{
+			fields.Add("SALE.SEMRFINA", new TableFilterField("SALE", "SEMRFINA", Resources.SEM_RECURSOS_FINANCE28439, "bool"));
+		}
+		if (areaField.Area == "sale" && areaField.Field == "semcapac")
+		{
+			fields.Add("SALE.SEMCAPAC", new TableFilterField("SALE", "SEMCAPAC", Resources.SEM_CAPACIDADE_DE_DE07701, "bool"));
+		}
+		if (areaField.Area == "sale" && areaField.Field == "dtqualif")
+		{
+			fields.Add("SALE.DTQUALIF", new TableFilterField("SALE", "DTQUALIF", Resources.QUALIFICACAO07026, "date"));
+		}
+		if (areaField.Area == "sale" && areaField.Field == "qualific")
+		{
+			fields.Add("SALE.QUALIFIC", new TableFilterField("SALE", "QUALIFIC", Resources.QUALIFICACAO_EFECTUA30983, "bool"));
+		}
+		if (areaField.Area == "sale" && areaField.Field == "preabord")
+		{
+			fields.Add("SALE.PREABORD", new TableFilterField("SALE", "PREABORD", Resources.PRE_ABORDAGEM30870, "date"));
+		}
+		if (areaField.Area == "sale" && areaField.Field == "homework")
+		{
+			fields.Add("SALE.HOMEWORK", new TableFilterField("SALE", "HOMEWORK", Resources.TRABALHO_DE_CASA_EFE54337, "bool"));
+		}
+		if (areaField.Area == "sale" && areaField.Field == "dtaborda")
+		{
+			fields.Add("SALE.DTABORDA", new TableFilterField("SALE", "DTABORDA", Resources.ABORDAGEM05839, "date"));
+		}
+		if (areaField.Area == "sale" && areaField.Field == "approach")
+		{
+			fields.Add("SALE.APPROACH", new TableFilterField("SALE", "APPROACH", Resources.ABORDAGEM_EFECTUADA60152, "bool"));
+		}
+		if (areaField.Area == "sale" && areaField.Field == "apresent")
+		{
+			fields.Add("SALE.APRESENT", new TableFilterField("SALE", "APRESENT", Resources.APRESENTACAO15975, "bool"));
+		}
+		if (areaField.Area == "sale" && areaField.Field == "dtaprese")
+		{
+			fields.Add("SALE.DTAPRESE", new TableFilterField("SALE", "DTAPRESE", Resources.APRESENTACAO_EFECTUA37455, "date"));
+		}
+		if (areaField.Area == "sale" && areaField.Field == "dtsupera")
+		{
+			fields.Add("SALE.DTSUPERA", new TableFilterField("SALE", "DTSUPERA", Resources.SUPERAR_OBJECOES02243, "date"));
+		}
+		if (areaField.Area == "sale" && areaField.Field == "tentfech")
+		{
+			fields.Add("SALE.TENTFECH", new TableFilterField("SALE", "TENTFECH", Resources.TENTATIVAS_DE_FECHO20342, "date"));
+		}
+		if (areaField.Area == "sale" && areaField.Field == "dtvenda")
+		{
+			fields.Add("SALE.DTVENDA", new TableFilterField("SALE", "DTVENDA", Resources.FECHO_DA_VENDA48081, "date"));
+		}
+		if (areaField.Area == "sale" && areaField.Field == "dtacompa")
+		{
+			fields.Add("SALE.DTACOMPA", new TableFilterField("SALE", "DTACOMPA", Resources.ACOMPANHAMENTO53507, "date"));
+		}
+	}
+
+	JavaScriptSerializer serializer = new JavaScriptSerializer();
+	string fieldsStr = serializer.Serialize(fields);
+}
+
+<script>
+	//Fields with information for search filters
+	var fields = @Html.Raw(fieldsStr);
+	//Table List Search Filters
+	var searchFilterGroups = [];
+</script>
+
+
+@using (Ajax.BeginForm("STY_Menu_VWIZARD", "Sale", new AjaxOptions
+{
+	HttpMethod= "POST",
+	InsertionMode = InsertionMode.Replace,
+	UpdateTargetId = "Menu",
+	OnSuccess = "InitMenuSpecialControls"
+}, new { @class = "form-horizontal", area="Sale", data_form="STY_Menu_VWIZARD" }))
+{
+		<input id="SearchFilters" type="hidden" value="" />
+
+		<div class="page-header row" style="align-items:center">
+		   <div class="col">
+<div class="table-title c-table__title">
+					<h1>@ViewBag.Title</h1>
+				</div>
+
+		   </div>
+		   <div class="col-auto search">
+				<div class="i-input-group input-xxlarge" id="STY_Menu_VWIZARD_simple_filter">
+					<div data-search-filter-menu-elem="filter-box-list"></div>
+					@Html.TextBox("qSTY_Menu_VWIZARD", Navigation.GetStrValue("qSTY_Menu_VWIZARD"), new { @class="i-input-group__field input-xxlarge dropdown-toggle", @title=@Resources.CAIXA_DE_PESQUISA53870, @onfocus="ToggleSearchFilterBox('STY_Menu_VWIZARD');" ,@onkeydown = "ListSearchEnter(event)", @autocomplete = "off" ,@data_toggle = "dropdown",@data_search_field_menu_elem = "show", @onblur = "HideSearchFieldMenuOnUnfocus('STY_Menu_VWIZARD');",@placeholder = Resources.PESQUISAR34506 + " " + Resources.IDENTIFICACAO_DA_OPO05341})
+					<button id="qSTY_Menu_VWIZARD-clearBtn" class="clear-search d-none" type="button">
+						<i class="glyphicons glyphicons-remove mr-1"></i>
+					</button>
+					@Html.SearchFieldMenu("STY_Menu_VWIZARD", fields, "SALE")
+					<div class="b-btn-group i-input-group--right">
+						<button type="button" elem-identifier="ListSearchButton" class="btn b-icon b-icon--secondary i-input-group__button--secondary  listSearchButton" title="@Resources.PESQUISAR34506" onclick="AddSearchFieldFilter('STY_Menu_VWIZARD', 'SALE', 'SALE.IDENTIFI');"><i class="glyphicons glyphicons-search i-input-group__tag-icon i-input-group__button-icon"></i></button>
+						@{
+						var advancedSearchIcon = @Model.Menu.Filters.ShowTableFilters ? "glyphicons-zoom-out" : "glyphicons-zoom-in";
+						<button id="STY_Menu_VWIZARD_extra" class="btn b-icon b-icon--secondary i-input-group__button--secondary" type="button" onclick="changeFilters('#STY_Menu_VWIZARD_complex_filter', 'STY_Menu_VWIZARD_tableFilters');applyComplexFilterIDs();" title="@Resources.PESQUISA_AVANCADA06198"><span class="glyphicons @advancedSearchIcon i-input-group__tag-icon i-input-group__button-icon"></span></button>
+						}
+						@Html.SearchFilterMenu("STY_Menu_VWIZARD")
+					</div>
+				</div>
+			</div>
+            @if(!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest() && !Model.IsViewModeHidden("LIST"))
+            {
+			<div class="col-auto float-right" style="padding: 0; padding-right: 15px">
+				<div class="b-btn-group float-right" style="height: 32.625px">
+					@*List properties LISTS*@
+					@if(!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest())
+					{
+						<button class="b-btn b-icon b-icon--secondary" type="button" data-modal-form="Lstusr" data-modal-id="lstusr-edit-modal" data-table="STY_Menu_VWIZARD" data-modal-url="@Url.Action("ChangeListProperties", "Lstusr", new { idlist = "STY_Menu_VWIZARD", idlistController = "Sale", idlistArea = "Sale", codlista ="f2d1cbbd-a32f-46d9-bce2-59d3c80a3e1b" })" title="@Resources.ALTERAR_A_APRESENTAC58401"><i class="glyphicons glyphicons-list e-icon"></i></button>
+					}
+				</div>
+			</div>
+            }
+		</div>
+ 	<div id="Menu" element-identifier="List">
+		@{ Html.RenderPartial("STY_Menu_VWIZARD_Partial"); }
+	</div>
+	@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "STY_Menu_VWIZARD" })
+	@Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId)
+	@Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock())
+	@Html.AntiForgeryToken()
+}
+
+
+
+<script>
+	$(document).ready(function () {
+		window.Form_STY_Menu_VWIZARD = new QMenuForm($('[data-form="STY_Menu_VWIZARD"]'), "Form_STY_Menu_VWIZARD");
+		window.Form_STY_Menu_VWIZARD.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_STY_Menu_VWIZARD.Init();
+
+		//Initialize search field menu for search bar
+		InitSearchFieldMenu("qSTY_Menu_VWIZARD");
+		RegisterClearEvents("STY_Menu_VWIZARD")
+
+		// TVC - added code to load advanced filters after returning from a form
+		@{
+			string advFil = "";
+			if (!String.IsNullOrEmpty(Navigation.GetStrValue("AdvancedFilters")))
+			{
+				advFil = Navigation.GetStrValue("AdvancedFilters");
+			}
+		}
+
+		SearchFilters.value = '@Html.Raw(advFil)';
+		if (typeof SearchFilters.value === 'string' && SearchFilters.value.length > 0)
+			UpdateSearchFilterStatus("STY_Menu_VWIZARD", JSON.parse(SearchFilters.value))
+	});
+</script>
+
+@helper codeJavascript()
+{
+<script>
+	QLocalStorage.remLocalStorage("savedInfo");
+	$(document).ready(function (e) {
+		InitSpecialControls($('[data-form="STY_Menu_VWIZARD"]'));
+
+
+   	});
+
+	function InitMenuSpecialControls() {
+		InitSpecialControls($('[data-form="STY_Menu_VWIZARD"]'));
+	}
+
+</script>
+}
+
+@section code_javascript {
+	@codeJavascript()
+}

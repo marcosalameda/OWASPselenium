@@ -1,0 +1,313 @@
+﻿@model GenioMVC.ViewModels.Facil.Facilfex_ViewModel
+@using GenioMVC.Models.Navigation;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Form = "Facilfex";
+	ViewBag.Title = @Resources.FACILITY55206;
+    ViewBag.formmode = Model.GetFormMode;
+	ViewBag.ClassForFormLayout = "form-flow";
+}
+
+
+@if (!Model.NestedForm) {
+    if(Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+    {
+        using (Html.BeginForm("Action", "Facil", FormMethod.Post, new { @class = "form-horizontal", area="Facil", data_form="Facilfex" }))
+        {
+            @form_content_alert()
+            @Html.QValidationSummary()
+	        @LoadDefault()
+        }
+    }
+    else
+    {
+        <div class="form-horizontal" id="Facilfex" area="Facil" data-form="Facilfex">
+	        @LoadDefault()
+        </div>
+    }
+}
+else {
+    <div class="c-card nested-form" id="Facilfex_well" area="Facil" data-form="Facilfex">
+        @Html.QValidationSummary()
+		@LoadDefault()
+    </div>
+}
+
+@helper form_content_body() {
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-dbedit draggable " id="CONTAINER_IFF_FACILFEXENTITNAME____">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.TableEntitName, new { label_id="IFF_FACILFEXENTITNAME____", @class = " i-text__label", id="LABEL_IFF_FACILFEXENTITNAME____"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('IFF_FACILFEXENTITNAME____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DropDownListFor(model => model.ValCodentit, Model.TableEntitName.List , "", new {help_id = "IFF_FACILFEXENTITNAME____", @class = "i-select chosen-dropdown input-xxlarge", data_identifier = "IFF_FACILFEXENTITNAME____", @pers_cs_area = "Entit", @pers_cs_field = "ValCodentit", @db_field = "ValCodentit", @db_full_field_name = "facil.codentit", data_has_more = Model.TableEntitName.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableEntitName.Selected, data_dbedit_value = Model.TableEntitName.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodfacil, @data_see_more = "Facilfex_EntitValName", title = @Resources.ENTITY_LEGAL_NAME17888, data_see_more_url = @Url.Action("Facilfex_EntitValName","Facil"), data_is_dbedit = "true", data_fields = "entit.codentit,entit.name,entit.initials", data_main_field = "Entit.ValName", data_elements = 0, data_filled_by_history = Model.TableEntitName.FilledByHistory, @dependant_fields = "entit.codentit,entit.name" })
+								@Html.ValidationMessageFor(model => model.TableEntitName)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-date-picker draggable " id="CONTAINER_LED_FACILFEXFACILINCORPOR">
+								<div class="d-inline-flex">
+								@Html.LabelFor(model => model.ValIncorpor, new { label_id="LED_FACILFEXFACILINCORPOR", @class = " i-text__label", id="LABEL_LED_FACILFEXFACILINCORPOR"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_FACILFEXFACILINCORPOR','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DateFor(model => model.ValIncorpor, new {help_id = "LED_FACILFEXFACILINCORPOR", @class = "i-input-group__field b-icon-text input-small", data_identifier = "LED_FACILFEXFACILINCORPOR", @pers_cs_area = "Facil", @pers_cs_field = "ValIncorpor", @db_field = "ValIncorpor", title = @Resources.INCORPORATION10135 })
+								@Html.ValidationMessageFor(model => model.ValIncorpor)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_FACILFEXFACILNAME____">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValName, new { label_id="LED_FACILFEXFACILNAME____", @class = " i-text__label", id="LABEL_LED_FACILFEXFACILNAME____"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_FACILFEXFACILNAME____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextBoxFor(model => model.ValName, new {help_id = "LED_FACILFEXFACILNAME____", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_FACILFEXFACILNAME____", @pers_cs_area = "Facil", @pers_cs_field = "ValName", @db_field = "ValName", title = @Resources.FACILITY_NAME19514, maxlength = "85", rows = "85" })
+								@Html.ValidationMessageFor(model => model.ValName)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-dbedit draggable " id="CONTAINER_LED_FACILFEXFACILFACILTYP">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValFaciltyp, new { label_id="LED_FACILFEXFACILFACILTYP", @class = " i-text__label", id="LABEL_LED_FACILFEXFACILFACILTYP"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_FACILFEXFACILFACILTYP','Faciltyp')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.ArrayDropDownListFor(model => model.ValFaciltyp, Model.List_ValFaciltyp, CSGenio.business.ArrayFaciltyp.GetElement, "", new {help_id = "LED_FACILFEXFACILFACILTYP", @class = "i-select chosen-dropdown input-medium", data_identifier = "LED_FACILFEXFACILFACILTYP", @pers_cs_area = "Facil", @pers_cs_field = "ValFaciltyp", @db_field = "ValFaciltyp", title = @Resources.FACILITY_TYPE44577, data_array_type = "AC", data_placeholder = @Resources.ESCOLHA___40245, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_value = Model.List_ValFaciltyp.SelectedValue, data_is_array = "true" })
+								@Html.ValidationMessageFor(model => model.ValFaciltyp)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-dbedit draggable " id="CONTAINER_IFF_FACILFEXFACTYTYPE____">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.TableFactyType, new { label_id="IFF_FACILFEXFACTYTYPE____", @class = " i-text__label", id="LABEL_IFF_FACILFEXFACTYTYPE____"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('IFF_FACILFEXFACTYTYPE____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DropDownListFor(model => model.ValCodfacty, Model.TableFactyType.List , "", new {help_id = "IFF_FACILFEXFACTYTYPE____", @class = "i-select chosen-dropdown input-large", data_refresh = "true", data_tipoform = "DG", data_identifier = "IFF_FACILFEXFACTYTYPE____", @pers_cs_area = "Facty", @pers_cs_field = "ValCodfacty", @db_field = "ValCodfacty", @db_full_field_name = "facil.codfacty", data_has_more = Model.TableFactyType.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableFactyType.Selected, data_dbedit_value = Model.TableFactyType.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodfacil, @data_see_more = "Facilfex_FactyValType", title = @Resources.FACILITY_TYPE44577, data_see_more_url = @Url.Action("Facilfex_FactyValType","Facil"), data_is_dbedit = "true", data_fields = "facty.codfacty,facty.type", data_main_field = "Facty.ValType", data_elements = 0, data_filled_by_history = Model.TableFactyType.FilledByHistory, @dependant_fields = "facty.codfacty,facty.type" })
+								@Html.ValidationMessageFor(model => model.TableFactyType)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_FACILFEXFACILLATITUDE">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValLatitude, new { label_id="LED_FACILFEXFACILLATITUDE", @class = " i-text__label", id="LABEL_LED_FACILFEXFACILLATITUDE"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_FACILFEXFACILLATITUDE','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValLatitude, new {help_id = "LED_FACILFEXFACILLATITUDE", @class = "Number text-right i-text__field i-text input-small", data_identifier = "LED_FACILFEXFACILLATITUDE", @pers_cs_area = "Facil", @pers_cs_field = "ValLatitude", @db_field = "ValLatitude", title = @Resources.LATITUDE11291, data_number_integer = "3", data_number_decimals = "6", data_number_format = "999.999999" })
+								@Html.ValidationMessageFor(model => model.ValLatitude)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_FACILFEXFACILLONGITUD">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValLongitud, new { label_id="LED_FACILFEXFACILLONGITUD", @class = " i-text__label", id="LABEL_LED_FACILFEXFACILLONGITUD"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_FACILFEXFACILLONGITUD','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValLongitud, new {help_id = "LED_FACILFEXFACILLONGITUD", @class = "Number text-right i-text__field i-text input-small", data_identifier = "LED_FACILFEXFACILLONGITUD", @pers_cs_area = "Facil", @pers_cs_field = "ValLongitud", @db_field = "ValLongitud", title = @Resources.LONGITUDE01015, data_number_integer = "3", data_number_decimals = "6", data_number_format = "999.999999" })
+								@Html.ValidationMessageFor(model => model.ValLongitud)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-textarea draggable " id="CONTAINER_LED_FACILFEXFACILADDRESS_">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValAddress, new { label_id="LED_FACILFEXFACILADDRESS_", @class = " i-text__label", id="LABEL_LED_FACILFEXFACILADDRESS_"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_FACILFEXFACILADDRESS_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextAreaFor(model => model.ValAddress, 5, 85, new {help_id = "LED_FACILFEXFACILADDRESS_", @class = "i-textarea__field i-textarea input-xxlarge", data_identifier = "LED_FACILFEXFACILADDRESS_", @pers_cs_area = "Facil", @pers_cs_field = "ValAddress", @db_field = "ValAddress", title = @Resources.ADDRESS04342 })
+								@Html.ValidationMessageFor(model => model.ValAddress)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			@Html.HiddenFor(model => model.ValCodfacil, new { @pers_cs_field="ValCodfacil", @pers_cs_area="Facil", data_refresh = "true", @form_area="true", @data_value = Model.ValCodfacil, @data_identifier = "LED_FACILFEXFACILCODFACIL" })
+
+            @Html.Hidden("IgnoreWarnings", "false", new { id = "IgnoreWarnings" })
+
+			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Facilfex" })
+            @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Facilfex" })
+            @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Facilfex" })
+			if (!Model.NestedForm)
+            {
+                @Html.AntiForgeryToken()
+            }
+}
+
+@helper form_content_alert() {
+	if(Model.FormMode == FormMode.Delete) {
+		<div class="c-alert c-alert--warning">
+			<i class="glyphicons glyphicons-alert c-alert__icon" aria-hidden="true"></i>
+			<div class="c-alert__text">
+				&ensp;@Resources.DESEJA_ELIMINAR_ESTA24564
+			</div>
+		<!--Ao confirmar esta ficha irá ser eliminada da base de dados. Cancele caso não tenha a certeza.-->
+		</div>
+	}
+}
+
+@helper form_content_buttons() {
+
+
+
+
+    @* Extended support form *@
+    if (Model.NestedForm)
+    {
+        if (Model.IsEditableMode)
+        {
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("Facilfex", Model.FormMode).ToString(), "Facil")", "Facilfex_well")' qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>
+                    @Resources.INSERIR43365
+            </button>
+            <button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Facilfex_Delete", "Facil", new {id = @Model.ValCodfacil} )", "Facilfex_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+
+            <script type="application/javascript">
+                $(document).ready(function () { loaded($("#Facilfex_well")); });
+            </script>
+        }
+
+        @* javascript code_javascript *@
+        @*@codeJavascript()*@
+    }
+    @* Normal mode *@
+    else
+    {
+        if (Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+        {
+            if (Model.FormMode == FormMode.New && Convert.ToBoolean(Model.Navigation.CurrentLevel.GetEntry("repeatInsertion")))
+            {
+            <button type="button" data-end-pers="true" name="Facilfex_repete_insertion" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitFacilfex(event, true)" qbutton="ok_new">@Resources.GRAVAR_E_CRIAR_NOVA17771</button>
+            }
+            if(Model.FormMode == FormMode.Delete)
+            {
+				<button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Facilfex", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitDeleteFacilfex(event)" qbutton="delete">
+                    <i class="glyphicons glyphicons-check e-icon" aria-hidden="true"></i>@Resources.CONFIRMAR09808
+                </button>
+            }
+            else
+            {
+                <button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Facilfex", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitFacilfex(event)" title="@Resources.INSERIR43365" data-selector="true" qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>@Resources.INSERIR43365
+                </button>
+            }
+
+            <button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-href="@Url.Action("Facilfex_Cancel", "Facil", new { niv = Model.Navigation.CurrentLevel.Level })" onclick="javascript:window.Form_Facilfex.Cancel()" title="@Resources.CANCEL65428" data-selector="true" qbutton="cancel">
+                <i class="glyphicons glyphicons-ban-circle e-icon" aria-hidden="true"></i>@Resources.CANCEL65428
+            </button>
+        }
+        else if (!(ViewBag.isHomePage ?? false))
+        {
+            @Html.ActionLinkWithIcon(@Resources.RETROCEDER16633, "Facilfex_Cancel","Facil","glyphicons glyphicons-arrow-left e-icon", null, new { @class = "b-icon-text b-icon-text--secondary", @data_end_pers = "true", @title = @Resources.RETROCEDER16633, qbutton = "cancel" })
+        }
+    }
+}
+
+@helper LoadDefault() {
+    if (Model.NestedForm)
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div class="c-card__header">
+                    <div class="c-card__header-tag">
+						<span class="form-header" style="padding:0;">
+							<i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+						</span>
+                    </div>
+                </div>
+                <div class="c-card__body">
+                    @form_content_body()
+                    <div elem-identifier="FormActions" class="form-actions" data-form-actions="Facilfex">
+                        @form_content_buttons()
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    }
+    else
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div id="c-stickyHeader">
+                    <div class="c-action-bar d-flex">
+                        <span class="form-header">
+                            <i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+                        </span>
+                        <div data-parent-form="Facilfex" data-q-ref="form-btns-main_container"></div>
+                    </div>
+                </div>
+
+                @form_content_body()
+                <div elem-identifier="FormActions" class="form-actions" data-form-actions="Facilfex">
+                @form_content_buttons()
+                </div>
+            </div>
+        </fieldset>
+    }
+}
+
+@helper LoadFromLayout()
+{
+}
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT FACILFEX]/ *@
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_FACILFEX" data-form-javascript="true">
+@Html.Partial("Facilfex_JavaScript", Model, ViewData)
+</div>
+}
+
+@section code_javascript
+{
+	@codeJavascript()
+}
+
+@if (Request.IsAjaxRequest())
+{
+    @codeJavascript()
+    @includeStylesheets()
+}
+
+@helper includeStylesheets()
+{
+
+ }
+
+@section include_stylesheets {
+    @includeStylesheets()
+}

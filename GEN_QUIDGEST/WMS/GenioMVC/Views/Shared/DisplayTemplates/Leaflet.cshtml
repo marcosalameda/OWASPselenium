@@ -1,0 +1,98 @@
+﻿@model string
+
+@{
+    var metadata = ModelMetadata.FromLambdaExpression(model => model, ViewData);
+    var fieldName = metadata.PropertyName;
+    var fieldNameMap = metadata.PropertyName + "_map";
+    var formmode = ViewBag.formmode;
+}
+
+@Html.HiddenFor(model => model)
+
+<link rel="stylesheet" href='@Scripts.Url("~/Content/stylesheets/leaflet/leaflet.css")' />
+<script src='@Scripts.Url("~/Scripts/leaflet/leaflet.js")'></script>
+
+@Html.LabelFor(model => model, new { @class = " i-text__label"}, false, false)
+<div id="@fieldNameMap" style="height: 500px;"></div>
+
+<script type="text/javascript">
+
+    $(window).on("load", function () {
+
+        //var popup = L.popup();
+        function onMapClick(e) {
+            map.invalidateSize();
+            //popup
+            //    .setLatLng(e.latlng)
+            //    .setContent('You clicked the map at ' + e.latlng.toString())
+            //    .openOn(map);
+        }
+
+        function getPosition(position) {
+            var lat = position.coords.latitude;
+            var lon = position.coords.longitude;
+            point = [lat, lon];
+            map.setView(point, 18);
+            L.marker(point, { title: point.toString(), draggable: true }).addTo(map)
+                .on('dragend', function (e) {
+                var newPoint = e.target._latlng;
+                $("#@fieldName").val("POINT(" + newPoint.lng + " " + newPoint.lat + ")").trigger("change");
+            });
+        }
+
+        var map = L.map("@fieldNameMap");
+        var point = [38.71667, -9.13333]; // When in the insertion mode, the map is shown centered on the official Lisbon coordinates
+        var coord = ("@Model").replace("POINT(", "").replace(")", "").split(" ");
+        var mark;
+
+        if ("@formmode" == "show") {
+            point = [coord[1], coord[0]];
+            mark = L.marker(point, { title: point.toString(), draggable: false });
+            map.setView(point, 18);
+        }
+        else {
+            if (coord[0] != "") {
+                point = [coord[1], coord[0]];
+            }
+            map.setView(point, 18);
+            mark = L.marker(point, { title: point.toString(), draggable: true })
+                .on('dragend', function (e) {
+                var newPoint = e.target._latlng;
+                $("#@fieldName").val("POINT(" + newPoint.lng + " " + newPoint.lat + ")").trigger("change");
+            });
+            
+            //else {
+            //    //navigator.geolocation.getCurrentPosition(getPosition);
+            //}
+        }
+
+        // Define layers
+        var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            {
+                attribution: '&copy; <a href=""http://openstreetmap.org"">OpenStreetMap</a>'
+            });
+
+        var grayscale = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+            {
+                attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
+            });
+
+        var wmsLayer = L.tileLayer.wms('http://ows.mundialis.de/services/service?', {
+            layers: 'TOPO-OSM-WMS'
+        });
+
+        var baseLayers = {
+            "OpenStreetMap": osm,
+            "Grayscale ": grayscale,
+            "TOPO-OSM-WMS": wmsLayer,
+        };
+
+        osm.addTo(map); // OpenStreetMap is the default layer
+        mark.addTo(map);
+        L.control.layers(baseLayers).addTo(map);
+
+        map.on('click', onMapClick);
+
+    });
+
+</script>

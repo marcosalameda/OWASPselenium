@@ -1,0 +1,61 @@
+﻿@using CaptchaMvc.HtmlHelpers
+@model GenioMVC.ViewModels.RegisterViewModel
+
+@{
+    ViewBag.Title = @Resources.REGISTE_SE48908;
+}
+<div id="TotalRegistration" style="margin-top: 5%;">
+	<script src="@Url.Content(UrlNames.JQueryValidate)" type="application/javascript"></script>
+	<script src="@Url.Content(UrlNames.JQueryValidateUnobtrusive)" type="application/javascript"></script>
+
+	@using (Html.BeginForm())
+	{
+	@Html.ValidationSummary(false)
+		<div id="Register_well" area="Register" data-form="Register">
+			<fieldset>
+                <div id="register-first-form">
+                    @if (Model.FormDataOrdem >= Model.FormPswOrdem)
+                    {
+                        Html.RenderPartial(Model.PswpartialView, Model.FormPswData);
+                    }
+                    else
+                    {
+                        Html.RenderPartial(Model.partialView, Model.FormData);
+                    }
+                </div>
+                <div id="register-second-form">
+                    @if (Model.FormDataOrdem >= Model.FormPswOrdem)
+                    {
+                        Html.RenderPartial(Model.partialView, Model.FormData);
+                    }
+                    else
+                    {
+                        Html.RenderPartial(Model.PswpartialView, Model.FormPswData);
+                    }
+                </div>
+				<div id="CaptchaField">
+					@Html.Captcha(@Resources.REFRESCAR60171, "captcha", 5)
+				</div>
+				<div class="form-actions">
+					<button id="RegistrationsubmitButton" class="b-icon-text b-icon-text--primary"><i class="SaveIcon e-icon"></i>@Resources.REGISTAR62252</button>
+					<button id="RegistrationCanceltButton" type="button" class="b-icon-text b-icon-text--secondary" onclick="window.location ='@Url.Action("Index", "Home")' ">
+						<i class="glyphicons glyphicons-ban-circle e-icon"></i>
+                         @Resources.SAIR20169
+                    </button>
+				</div>
+			</fieldset>
+		</div>
+	}
+	<script>
+		$(document).ready(function () {
+
+			$("#RegistrationsubmitButton").click(function (event) {
+				event.preventDefault();
+
+				SubmitMultipleFormsRegistration('@Url.Action(Model.redirect)', "Register_well", "@Model.PswDivID", "@Model.DivID");
+			});
+		});
+	</script>
+</div>
+
+

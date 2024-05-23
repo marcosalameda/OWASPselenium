@@ -1,0 +1,306 @@
+﻿@model GenioMVC.ViewModels.Locat.Locat_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS LOCAT]/ *@
+<script  type="text/javascript">
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Locat !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Locat = new QForm($('[data-form="Locat"]'), "Form_Locat");
+		}
+		window.Form_Locat.baseArea = "locat";
+		window.Form_Locat.FormMode = '@Model.GetFormMode';
+		window.Form_Locat.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Locat.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Locat")',
+			GetDependants:		'@Url.Action("GetDependants", "Locat")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Locat", "Locat")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Locat", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Locat", "Locat")',
+		};
+		window.Form_Locat.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Locat.formSaveEdit = '@Url.Action("Locat_SaveEdit", "Locat")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Locat.formAction = 'Locat_New';
+		window.Form_Locat.formRedirectURL = '@Url.Action("Locat_New_Redirect", "Locat")';
+		window.Form_Locat.formSubmitURL = '@Url.Action("Locat_New", "Locat")';
+		window.Form_Locat.formRedirectURL_repeatInsertion = '@Url.Action("Locat_New_Redirect", "Locat", new { repeatInsertion = true})';
+		window.Form_Locat.formSubmitURL_repeatInsertion = '@Url.Action("Locat_New", "Locat", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Locat.formAction = 'Locat_Edit';
+		window.Form_Locat.formRedirectURL = '@Url.Action("Locat_Edit_Redirect", "Locat")';
+		window.Form_Locat.formSubmitURL = '@Url.Action("Locat_Edit", "Locat")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Locat.formAction = 'Locat_Duplicate';
+		window.Form_Locat.formRedirectURL = '@Url.Action("Locat_Duplicate_Redirect", "Locat")';
+		window.Form_Locat.formSubmitURL = '@Url.Action("Locat_Duplicate", "Locat")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Locat.formAction = 'Locat_Delete';
+		window.Form_Locat.formRedirectURL = '@Url.Action("Locat_Delete_Redirect", "Locat")';
+		window.Form_Locat.formSubmitURL = '@Url.Action("Locat_Delete", "Locat")';
+	</text>
+}
+		window.Form_Locat.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.IFF_LOCAT___PSEUDNOVOGR01 = new QGenericControl($('[data-identifier="IFF_LOCAT___PSEUDNOVOGR01"]', this.element), window.Form_Locat);
+
+			this.Controls.IFF_LOCAT___ENTITNAME____ = new QDbeditControl($('[data-identifier="IFF_LOCAT___ENTITNAME____"]', this.element), window.Form_Locat);
+
+			this.Controls.IFF_LOCAT___FACILNAME____ = new QDbeditControl($('[data-identifier="IFF_LOCAT___FACILNAME____"]', this.element), window.Form_Locat);
+
+			this.Controls.LED_LOCAT___LOCATGLN_____ = new QTextControl($('[data-identifier="LED_LOCAT___LOCATGLN_____"]', this.element), window.Form_Locat);
+
+			this.Controls.IFF_LOCAT___PSEUDLOCALEXT = new QTableListControl($('[data-identifier="IFF_LOCAT___PSEUDLOCALEXT"]', this.element), window.Form_Locat);
+
+
+
+
+			this.Controls.LED_LOCAT___LOCATCODLOCAT = new QHiddenControl($('[data-identifier="LED_LOCAT___LOCATCODLOCAT"]', this.element), window.Form_Locat);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	@* DBEdit Limits *@
+			this.Controls.IFF_LOCAT___FACILNAME____.AddLimit(this.Controls.IFF_LOCAT___ENTITNAME____, 'A');
+	</text>
+}
+
+		window.Form_Locat.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Locat.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI LOCAT]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Locat.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS LOCAT]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Locat.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS LOCAT]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Locat.Data.RelationKeysSelector = {
+				get entit() { return $(':not([elem-identifier="Multiform"]) > #ValCodentit[pers-cs-area="Entit"]', $('[data-form="Locat"]')); /* DBEdit */ },
+				get facil() { return $(':not([elem-identifier="Multiform"]) > #ValCodfacil[pers-cs-area="Facil"]', $('[data-form="Locat"]')); /* DBEdit */ },
+		};
+
+		window.Form_Locat.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Locat.Data.RelationKeys = {
+			get formContext() { return window.Form_Locat; },
+			get entit() { return (this.formContext.Data.RelationKeysSelector.entit.getQControl() || {}).Value; /* DBEdit */ },
+			set entit(newValue) { (this.formContext.Data.RelationKeysSelector.entit.getQControl() || {}).Value = newValue; /* DBEdit */ },
+			get facil() { return (this.formContext.Data.RelationKeysSelector.facil.getQControl() || {}).Value; /* DBEdit */ },
+			set facil(newValue) { (this.formContext.Data.RelationKeysSelector.facil.getQControl() || {}).Value = newValue; /* DBEdit */ },
+		};
+	</text>
+}
+
+	window.Form_Locat.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Locat.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitLocat(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Locat.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeleteLocat(event) {
+			event.preventDefault();
+			window.Form_Locat.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+    var ajaxCallsRemaining = $(".flash object embed").length;
+    $('form [elem-identifier="ButtonPrimary"]').click(function() {
+        var flashObjects = $(".flash object embed");
+        ajaxCallsRemaining = flashObjects.length;
+        if(flashObjects.length == 0)
+            return true;
+        else {
+            flashObjects.each(function() {
+               var flashObj = GetFlash($(this).attr('id'));
+               flashObj.UsedFlash.TriggerSave(flashObj);
+            });
+            return false;
+        }
+    });
+    </text>
+}
+// USE /[MANUAL GQT FORM_CODEJS LOCAT]/
+
+
+
+ 
+
+    $($('[elem-identifier="FormActions"]'), $('[data-form="Locat"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

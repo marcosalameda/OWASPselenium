@@ -1,0 +1,151 @@
+﻿@model GenioMVC.ViewModels.Asset.Equipm_ViewModel
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+	<div id="Equipm_tabs">
+        <div elem-identifier="Tabbable" class="tabbable">
+			<ul class="nav c-tab c-tab__divider" role="tablist">
+				<li class="nav-item c-tab__item" elem-identifier="TabbableIdentifier" id="tab_equip01" data-tab="equip01"><a class="nav-link" tabindex="0" data-target="#equip01" data-toggle="tab">@Resources.PHOTO51874</a></li>
+				<li class="nav-item c-tab__item" elem-identifier="TabbableIdentifier" id="tab_equip02" data-tab="equip02"><a class="nav-link" tabindex="0" data-target="#equip02" data-toggle="tab">@Resources.ATTACHMENTS19612</a></li>
+				<li class="nav-item c-tab__item" elem-identifier="TabbableIdentifier" id="tab_equip03" data-tab="equip03"><a class="nav-link" tabindex="0" data-target="#equip03" data-toggle="tab">@Resources.DOCUMENTS14470</a></li>
+				<li class="nav-item c-tab__item" elem-identifier="TabbableIdentifier" id="tab_equip04" data-tab="equip04"><a class="nav-link" tabindex="0" data-target="#equip04" data-toggle="tab">@Resources.PARAMETERS28294</a></li>
+ 			</ul>
+
+			<div class="c-tab__item-container">
+				<div class="c-tab__item-content" id="equip01" data-identifier="IFF_EQUIPM__PSEUDEQUIP01_">
+					<div class="form-flow">
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-image draggable " id="CONTAINER_LED_EQUIP01_ASSETPHOTO___">
+										<div class="d-flex">
+										@Html.LabelFor(model => model.ValPhoto, new { label_id="LED_EQUIP01_ASSETPHOTO___", @class = " i-text__label", id="LABEL_LED_EQUIP01_ASSETPHOTO___"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_EQUIP01_ASSETPHOTO___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										<div data-identifier="LED_EQUIP01_ASSETPHOTO___" pers-cs-area="Asset" pers-cs-field="ValPhoto" class="image-control-wrapper" >
+										@if(Model.IsEditableMode) {
+											@Html.EditorFor(m => m.ValPhoto, new {help_id = "LED_EQUIP01_ASSETPHOTO___", @class = "col-auto ", data_identifier = "LED_EQUIP01_ASSETPHOTO___", title = @Resources.PHOTO51874, guid = @Model.ValCodasset, controller = "Asset", fldname = "ValPhoto", identifier = "FEQUIPM", style = "height: 297pt; display: inline-block;" })
+										} else {
+											@Html.DisplayFor(m => m.ValPhoto, new {help_id = "LED_EQUIP01_ASSETPHOTO___", @class = "col-auto ", data_identifier = "LED_EQUIP01_ASSETPHOTO___", title = @Resources.PHOTO51874, guid = @Model.ValCodasset, controller = "Asset", fldname = "ValPhoto", identifier = "FEQUIPM", style = "height: 297pt; display: inline-block;" })
+										}
+										</div>
+										@Html.ValidationMessageFor(model => model.ValPhoto)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="c-tab__item-content" id="equip02" data-identifier="IFF_EQUIPM__PSEUDEQUIP02_">
+					<div class="form-flow">
+						<div class="row">
+							<div class="col-12">
+								<div class="row-large-control">
+									<div class="row-line-group" id="CONTAINER_IFF_EQUIP02_PSEUDNOVOGR01">
+                            <div class="c-groupbox zone-no-border ">
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="row-large-control">
+												<div class="row-line-group" id="CONTAINER_IFF_EQUIP02_PSEUDATTACHME">
+													<div id="Equip02_ValAttachme" data-identifier="IFF_EQUIP02_PSEUDATTACHME"  data-extra-options="" > 
+														@{ Html.RenderAction("Equip02_ValAttachme", "Asset", new { id = Model.ValCodasset, partialView = "Equip02_ValAttachme"}); }
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="c-tab__item-content" id="equip03" data-identifier="IFF_EQUIPM__PSEUDEQUIP03_">
+					<div class="form-flow">
+						<div class="row">
+							<div class="col-12">
+								<div class="row-large-control">
+									<div class="row-line-group" id="CONTAINER_IFF_EQUIP03_PSEUDNOVOGR01">
+                            <div class="c-groupbox zone-no-border ">
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="row-large-control">
+												<div class="row-line-group" id="CONTAINER_IFF_EQUIP03_PSEUDDOCUMENT">
+													<div id="Equip03_ValDocument" data-identifier="IFF_EQUIP03_PSEUDDOCUMENT"  data-extra-options="" > 
+														@{ Html.RenderAction("Equip03_ValDocument", "Asset", new { id = Model.ValCodasset, partialView = "Equip03_ValDocument"}); }
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="c-tab__item-content" id="equip04" data-identifier="IFF_EQUIPM__PSEUDEQUIP04_">
+					<div class="form-flow">
+						<div class="row">
+							<div class="col-12">
+								<div class="row-large-control">
+									<div class="row-line-group" id="CONTAINER_IFF_EQUIP04_PSEUDNOVOGR01">
+                            <div class="c-groupbox zone-no-border ">
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+															<div class="i-dbedit"> <button type="submit" id="ValParamloa" onclick="Equip04_BC_PARAMETERS('@Model.ValCodasset'); return false;" name="PARAMLOA" data-identifier = "IFF_EQUIP04_PSEUDPARAMLOA" class="b-icon-text b-icon-text--secondary" data-frtnb="Equipm" data-frtnb-text="@Resources.PARAMETERS_LOAD27737" >@Resources.PARAMETERS_LOAD27737</button></div>
+												</div>
+												<div class="control-join-group">
+															<div class="i-dbedit"> <button type="submit" id="ValManuals" onclick="Equip04_BC_MANUALS('@Model.ValCodasset'); return false;" name="MANUALS" data-identifier = "IFF_EQUIP04_PSEUDMANUALS_" class="b-icon-text b-icon-text--secondary" data-frtnb="Equipm" data-frtnb-text="@Resources.MANUALS_LOAD21238" >@Resources.MANUALS_LOAD21238</button></div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="row-large-control">
+												<div class="row-line-group" id="CONTAINER_IFF_EQUIP04_PSEUDPARAMETE">
+													<div id="Equip04_ValParamete" data-identifier="IFF_EQUIP04_PSEUDPARAMETE"  data-extra-options="" > 
+														@{ Html.RenderAction("Equip04_ValParamete", "Asset", new { id = Model.ValCodasset, partialView = "Equip04_ValParamete"}); }
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+ 			</div>
+        </div>
+	</div>
+	<!-- end tab content -->
+	<script type="application/javascript">
+		$(document).ready(function () {
+			// to select the first tab
+			var a = $('[elem-identifier="TabbableIdentifier"] > a', "#Equipm_tabs").first();
+            a.addClass("active");
+
+			var li = $('[elem-identifier="TabbableIdentifier"]', "#Equipm_tabs").first();			
+			var tabId = li.attr("data-tab");
+			$("#" + tabId).addClass("active");			
+		});
+	</script>

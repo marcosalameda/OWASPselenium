@@ -1,0 +1,141 @@
+@using System.Collections.Generic;
+@{
+    #region Properties
+    var row = (Dictionary<string, object>)ViewData["row"];
+    var followup = (string)row["followup"];
+    var actions = (string)row["actions"];
+    var dominantColor = row.ContainsKey("dominantColor") ? (string)row["dominantColor"] : null;
+
+    // Mapping variables
+    var img = (string)row["image"];
+    var title = (string)row["title"];
+    var subtitle = (string)row["subtitle"];
+    var texts = (List<string[]>)row["text"];
+    var help = (string)row["btn-href"];
+    var cardFollowup = (string)row["custom-followup"];
+    
+    // Style variables
+    var style = (Dictionary<string, string>)ViewData["style-vars"];
+    var classes = (string)ViewData["classes"];
+
+    // Data (default values)
+    var actionsBtnPlacement = "header";
+    var actionsBtnFloat = "float-right";
+    var btnHrefFloat = "float-left";
+    var showColumnTitles = true;
+    var showEmptyColumnTitles = false;
+
+    // Init configuration
+    if (style.ContainsKey("actions-placement")) { actionsBtnPlacement = style["actions-placement"]; }
+    if (style.ContainsKey("actions-alignment")) { actionsBtnFloat = "float-" + style["actions-alignment"]; }
+    if (style.ContainsKey("show-column-titles")) { showColumnTitles = style["show-column-titles"] == "true"; }
+    if (style.ContainsKey("show-empty-column-titles")) { showEmptyColumnTitles = style["show-empty-column-titles"] == "true"; }
+
+    // Computed
+    var cropperStyle = dominantColor != null ? "background-color: " + dominantColor : "";
+    var hasHeaderActions = actionsBtnPlacement == "header" && actions != null;
+    var hasFooterActions = (actionsBtnPlacement == "footer" && actions != null) || help != null;
+    
+// USE /[MANUAL GQT SPECIAL_RENDERING_VARS CARD-CENTERED]/
+
+    #endregion
+}
+
+<div class="@classes">
+    @{
+        var tableId = (string)ViewData["table-id"];        
+        if (tableId == "STY_Menu_OVERVIEW_Cards")
+        {
+            string followupMenu = (string)row["UICOM.MENUID"];
+            if (!String.IsNullOrEmpty(followupMenu))
+            {
+                GenioMVC.Helpers.Menus.MenuEntry menuEntry = GenioMVC.Helpers.Menus.Menus.FindMenuActionName("STY", "STY_Menu_" + followupMenu);
+                followup = @Html.MenuAction(menuEntry, Url, "STY", "", null).ToHtmlString();
+            }
+            else
+            {
+                followup = String.Empty;
+            }
+        }
+
+        if (cardFollowup != null)
+        {
+            <a data-followup-button="true" href="@cardFollowup"><span class="hidden-elem">Follow Up</span></a>
+        }
+        else if (!String.IsNullOrEmpty(followup))
+        {
+            @Html.Raw(followup);
+        }
+    }
+    @if (hasHeaderActions)
+    {
+        <div class="c-card__header">
+            <div class="@actionsBtnFloat">
+                @Html.Raw(actions)
+            </div>
+        </div>
+    }
+    <div class="c-card__body">
+        @if (img != null)
+        {
+            <div class="d-flex justify-content-center">
+                <div class="c-card__img-cropper" style="@cropperStyle">
+                    <img src="@img" decoding="async" loading="lazy" class="c-card__img" role="cell">
+                </div>
+            </div>
+        }
+        @if (title != null)
+        {
+            <h5 class="c-card__title" role="cell">@title</h5>
+        }
+        @if (subtitle != null)
+        {
+            <p class="c-card__subtitle" role="cell">@subtitle</p>
+        }
+        @foreach (var text in texts)
+        {
+            string value = text[0];
+            string columnTitle = text[1];
+            
+            <p class="c-card__text" role="cell">
+            @if (showColumnTitles && (!String.IsNullOrEmpty(value) || showEmptyColumnTitles))
+            {
+                <span class="label">
+                    @columnTitle
+                </span>
+            }
+            @value
+            </p>
+        }
+        @{
+            if (tableId == "STY_Menu_OVERVIEW_Cards")
+            {
+                string category = (string)row["UICOM.CATEGORY"];
+                string badge = "<span class=\"e-badge e-badge--primary\">" + category + "</span>";
+                @Html.Raw(badge)
+            }
+
+        }
+    </div>
+    @if (hasFooterActions)
+    {
+        <div class="c-card__footer">
+            @{
+@* USE /[MANUAL GQT SPECIAL_RENDERING_HTML CARD_FOOTER]/ *@
+
+            }
+            @if (!String.IsNullOrEmpty(help))
+            {
+                <div class="@btnHrefFloat">
+                    <a href="@help" target="_blank" class="btn">@Resources.VER_MAIS32592</a>
+                </div>
+            }
+            @if (actions != null)
+            {
+                <div class="@actionsBtnFloat">
+                    @Html.Raw(actions)
+                </div>
+            }
+        </div>
+    }
+</div>

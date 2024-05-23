@@ -1,0 +1,237 @@
+﻿@model GenioMVC.ViewModels.Cav.GlobalViewModel
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    <div id="tablelist" class="w-btn-horiz q-wizard-container">
+        <div class="row-large-control">
+            <div id="cavtabs" class="g-reporting__flow-tabs">
+                <div class="container-fluid">
+                    <div elem-identifier="Tabbable" class="row tabbable">
+                        <div class="col-12">
+                            <ul class="nav c-tab q-wizard__steps--horizontal" role="tablist">
+                                <li class="nav-item c-tab__item q-wizard__step current-step" elem-identifier="TabbableIdentifier" id="tab_campos" data-tab="campos">
+                                    <a class="nav-link q-wizard__step-link active" id="camposlink" tabindex="0" data-target="#campos" data-toggle="tab">
+                                        <span class="q-wizard__step-number">1</span>
+                                        @Resources.CAMPOS13449
+                                    </a>
+                                </li>
+                                <li class="nav-item c-tab__item q-wizard__step" elem-identifier="TabbableIdentifier" id="tab_condicoes" data-tab="condicoes">
+                                    <a class="nav-link q-wizard__step-link" id="condicoeslink" tabindex="1" data-target="#condicoes" data-toggle="tab">
+                                        <span class="q-wizard__step-number">2</span>
+                                        @Resources.CONDICOES28572
+                                    </a>
+                                </li>
+                                <li class="nav-item c-tab__item q-wizard__step" elem-identifier="TabbableIdentifier" id="tab_grupos" data-tab="grupos">
+                                    <a class="nav-link q-wizard__step-link" id="gruposlink" tabindex="2" data-target="#grupos" data-toggle="tab">
+                                        <span class="q-wizard__step-number">3</span>
+                                        @Resources.GRUPOS62631
+                                    </a>
+                                </li>
+                                <li class="nav-item c-tab__item q-wizard__step" elem-identifier="TabbableIdentifier" id="tab_ordenacao" data-tab="ordenacao">
+                                    <a class="nav-link q-wizard__step-link" id="ordenacaolink" tabindex="3" data-target="#ordenacao" data-toggle="tab">
+                                        <span class="q-wizard__step-number">4</span>
+                                        @Resources.ORDENACAO06542
+                                    </a>
+                                </li>
+                                <li class="nav-item c-tab__item q-wizard__step" elem-identifier="TabbableIdentifier" id="tab_totais" data-tab="totais">
+                                    <a class="nav-link q-wizard__step-link" id="totaislink" tabindex="4" data-target="#totais" data-toggle="tab">
+                                        <span class="q-wizard__step-number">5</span>
+                                        @Resources.TOTAIS03749
+                                    </a>
+                                </li>
+                                <li class="nav-item c-tab__item q-wizard__step required-step" elem-identifier="TabbableIdentifier" id="tab_executar" data-tab="executar">
+                                    <a class="nav-link q-wizard__step-link" id="executarlink" tabindex="5" data-target="#executar" data-toggle="tab">
+                                        <span class="q-wizard__step-number">6</span>
+                                        @Resources.EXECUTAR63244
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="c-tab__item-container g-reporting__flow-content">
+                                <div class="c-tab__item-content active" id="campos">
+                                    <h3>@Resources.CAMPOS13449</h3>
+                                    <div id="Stwo" class="section">
+                                        <div id="dropblearea" class="ui-widget-content ui-droppable" style="height:100%;">
+                                            @{ Html.RenderPartial("_FieldsSelected", Model);}
+                                        </div>
+                                    </div>
+                                    <div class="pagination mt-3 mb-1">                                
+                                        <a href="#" id="fieldNext" class="b-btn b-icon-text b-icon-text--primary">
+                                            @Resources.AVANCAR20939
+                                            <i class="glyphicons glyphicons-chevron-right e-icon" aria-hidden="true"></i>                                            
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="c-tab__item-content" id="condicoes">
+                                    <h3>@Resources.CONDICOES28572</h3>
+                                    <div id="Sthree" class="section">
+                                    </div>
+                                                                                                                                                                                </div>
+                                <div class="c-tab__item-content" id="grupos">
+                                    <h3>@Resources.GRUPOS62631</h3>
+                                    @*<h1>Grupos</h1>*@
+                                    <div id="Sfour" class="section">
+                                        @*@{ Html.RenderPartial("_GroupBySelected", Model);}*@
+                                    </div>
+                                                                                                                                                                                </div>
+                                <div class="c-tab__item-content" id="ordenacao">
+                                    <h3>@Resources.ORDENACAO06542</h3>
+                                    @*<h1>Ordenação</h1>*@
+                                    <div id="Sfive" class="section">
+                                        @*@{ Html.RenderPartial("_OrderBySelected", Model);}*@
+                                    </div>
+                                                                                                                                                                                </div>
+                                <div class="c-tab__item-content" id="totais">
+                                    @*<h1>Totais</h1>*@
+                                     <h3>@Resources.TOTAIS03749</h3>
+                                    <div id="Ssix" class="section">
+                                        @*@{ Html.RenderPartial("_TotalSelected", Model);}*@
+                                    </div>
+                                                                                                                                                                                </div>
+                                <div class="c-tab__item-content" id="executar">
+                                    @*<h1>Executar</h1>*@
+                                    <div id="Sseven" class="section">                            
+                                    </div>
+                                    <div class="pagination mt-3 mb-1">
+                                        <a id="execBack" href="#" class="b-icon-text b-icon-text--secondary">
+                                            <i class="glyphicons glyphicons-chevron-left e-icon" aria-hidden="true"></i>
+                                            @Resources.RETROCEDER16633
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+<script type="text/javascript">
+        $(document).ready(function () {
+            $("#dropblearea").droppable({
+                drop: function( event, ui ) {                    
+                    if (ui.draggable.length > 0) {
+                        var field = $('input,select', ui.draggable[0])
+
+                        if (field) {
+                            var fieldName = $(field).attr('pers-cs-field');
+
+                            var dataMainField = $(field).attr('data-main-field');
+                            if (dataMainField != undefined) {
+                                var splitedData = dataMainField.split('.');
+                                if (splitedData.length == 2) {
+                                    fieldName = splitedData[1];
+                                }
+                            }
+
+                            $.ajax({
+                                url: '@Url.Action("AddField", "Cav")',
+                                data: JSON.stringify({ tableId: $(field).attr('pers-cs-area'), fieldId: fieldName }),
+                                contentType: 'application/json',
+                                type: "POST",
+                                success: function (data) {
+                                    if (data.Success == false) {
+                                         bootbox.alert(data.Message);
+                                    }
+                                    else {
+                                        $('#dropblearea').html(data);
+                                    }                                    
+                                }
+                            })
+                        }
+                    }
+                }
+            });
+            
+            $("#one").click(function (ev) {
+                ev.preventDefault();
+                UpdateDetails('@Url.Action("UpdateQuery","Cav")');
+            });
+
+            $('#execute-button').click(function (ev) {
+                ev.preventDefault();
+                var $thisLink = $(this);
+
+                ExecQuery($thisLink.attr("href"));
+
+                return false;
+            });
+
+            $('.page-button').on('click', function (ev) {
+                ev.preventDefault();
+                var $thisLink = $(this);
+                return false;
+            });
+
+            $('#view-query').click(function (ev) {
+                ev.preventDefault();
+                var $thisLink = $(this);
+                $.ajax(
+                 {
+                     type: 'GET',
+                     contentType: 'application/json; charset=utf-8',
+                     dataType: 'html',
+                     url: $thisLink.attr("href"),
+                     success: function (data) {
+                         //createModalDialog_Custom("Consulta Avançada (SQL)", data);
+                     },
+                     error: function (error) {
+                         //createModalDialog_Custom("Erro", error);
+                     }
+                 });
+            });
+
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                var targetId = $(e.target).attr('id');
+                var targetRelatedId = $(e.relatedTarget).attr('id');
+                $(e.relatedTarget).closest('li').removeClass('current-step');
+                $(e.target).closest('li').addClass('current-step')
+
+                if (targetId == 'camposlink') {
+                    $('#formContainer').show();
+                }
+                else if (targetId == 'condicoeslink') {
+                    $('#Sthree').load('@Url.Action("GetTabContentByType","Cav", new { type = "C"})', function () {
+                        $("#ms-ConditionsSelected").multiSelect({ type: "C", search: true, collapse: true });
+                    });                    
+                }
+                else if (targetId == 'gruposlink') {
+                    $('#Sfour').load('@Url.Action("GetTabContentByType","Cav",new { type = "G"})', function () {
+                        $("#ms-GroupBySelected").multiSelect({ type: "G", search: true, collapse: true });
+                    });                    
+                }
+                else if (targetId == 'ordenacaolink') {
+                    $('#Sfive').load('@Url.Action("GetTabContentByType","Cav",new { type = "O"})', function () {
+                        $("#ms-OrderBySelected").multiSelect({ type: "O", search: true, collapse: true });
+                    });                                         
+                }
+                else if (targetId == 'totaislink') {
+                    $('#Ssix').load('@Url.Action("GetTabContentByType","Cav",new { type = "T"})');                    
+                }
+                else if (targetId == 'executarlink') {
+                    $('#Sseven').load('@Url.Action("GetTabContentByType","Cav",new { type = "E"})', function () {
+                        ExecQuery('@Url.Action("ExecuteQuery","Cav" , new { table = Model.Query.BaseTable })',1);                                 
+                    });
+                    
+                }
+
+                //if (isDirt())
+                    UpdateDetails('@Url.Action("UpdateQuery","Cav")');
+
+                if (targetRelatedId == 'camposlink') {
+                    $('#formContainer').hide();
+                }               
+            });
+
+            initPaginationButtons();
+        })
+</script>
+}

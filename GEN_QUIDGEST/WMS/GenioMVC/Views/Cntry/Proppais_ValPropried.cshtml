@@ -1,0 +1,64 @@
+﻿@model GenioMVC.ViewModels.Cntry.Proppais_ValPropried_ViewModel
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@using Newtonsoft.Json;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@*List properties DBEDIT BUTTONS*@
+<div class="row">
+</div>
+
+@* USE /[MANUAL GQT TABLE_FOR PROPPAIS_PROPRIED]/ *@
+@{ 
+
+
+    
+    var tblPermission = Model.IsEditableMode;
+	var tbl = Html.MultiformFor<GenioMVC.ViewModels.Propr.Proprall_ViewModel>(edit: Model.IsEditableMode, canPage: true)
+        .Id("ValPropried")
+        .DataSource(this.Model.Menu.Elements)
+        .RequestLink(@Url.Action("Proppais_ValPropried", new { id = Model.ValCodcntry }))
+        .InsertLink(@Url.Action("MFProprall_New", "Propr"))
+        .BuilderForm("../Propr/MFProprall")
+        .AjaxRequest("Proppais_ValPropried")
+        .Pager(this.Model.Menu.Pagination)
+        .BaseQuery(this.Model.Menu.Query)
+		.Permissions(true, true, tblPermission, tblPermission)
+;}
+@tbl.ToHtml()
+<script>
+
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qValPropried, #ValPropried_complex_filter th input, #ValPropried_filters input").change(function() {
+                    $("#pValPropried").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='ValPropried']"));
+                    InitSpecialControls($('#ValPropried'));
+                    $('#ValPropried').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+</script>

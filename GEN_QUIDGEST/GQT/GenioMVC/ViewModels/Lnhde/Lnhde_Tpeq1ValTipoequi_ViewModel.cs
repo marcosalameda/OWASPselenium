@@ -128,10 +128,10 @@ namespace GenioMVC.ViewModels.Lnhde
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("TPEQ1.TPEQUCOD", new OrderedDictionary());
-					allSortOrders["TPEQ1.TPEQUCOD"].Add("TPEQ1.TPEQUCOD", "A");
-				allSortOrders.Add("TPEQ1.TIPOEQUI", new OrderedDictionary());
-					allSortOrders["TPEQ1.TIPOEQUI"].Add("TPEQ1.TIPOEQUI", "A");
+			allSortOrders.Add("TPEQ1.TPEQUCOD", new OrderedDictionary());
+			allSortOrders["TPEQ1.TPEQUCOD"].Add("TPEQ1.TPEQUCOD", "A");
+			allSortOrders.Add("TPEQ1.TIPOEQUI", new OrderedDictionary());
+			allSortOrders["TPEQ1.TIPOEQUI"].Add("TPEQ1.TIPOEQUI", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Lnhde_Tpeq1ValTipoequi_"));
@@ -223,10 +223,10 @@ namespace GenioMVC.ViewModels.Lnhde
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("TPEQ1.TPEQUCOD", new OrderedDictionary());
-					allSortOrders["TPEQ1.TPEQUCOD"].Add("TPEQ1.TPEQUCOD", "A");
-				allSortOrders.Add("TPEQ1.TIPOEQUI", new OrderedDictionary());
-					allSortOrders["TPEQ1.TIPOEQUI"].Add("TPEQ1.TIPOEQUI", "A");
+			allSortOrders.Add("TPEQ1.TPEQUCOD", new OrderedDictionary());
+			allSortOrders["TPEQ1.TPEQUCOD"].Add("TPEQ1.TPEQUCOD", "A");
+			allSortOrders.Add("TPEQ1.TIPOEQUI", new OrderedDictionary());
+			allSortOrders["TPEQ1.TIPOEQUI"].Add("TPEQ1.TIPOEQUI", "A");
 
 
 
@@ -314,6 +314,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpeq1.FldCodtpequ, CSGenioAtpeq1.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP LNHDE_TPEQ1TIPOEQUI]/
 
+                conditions = lnhde___tpeq1tipoequiConds;
                 return;
 			}
 

@@ -298,6 +298,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApedid.FldCodpedid, CSGenioApedid.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP LNHPD_NRPEDIDO]/
 
+                conditions = lnhpd___pedidnrpedidoConds;
                 return;
 			}
 

@@ -314,6 +314,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtblb.FldCodtblb, CSGenioAtblb.FldZz
 
 // USE /[MANUAL GQT OVERRQLSTEXP GRPB_PSEUDTBLB]/
 
+                conditions = grpb____pseudtblb____Conds;
                 return;
 			}
 
@@ -443,7 +444,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtblb.FldCodtblb, CSGenioAtblb.FldZz
             new TableSearchColumn("ValDatets", CSGenioAtblb.FldDatets, typeof(DateTime?)),
             new TableSearchColumn("ValTimehm", CSGenioAtblb.FldTimehm, typeof(string)),
             new TableSearchColumn("ValEnumt", CSGenioAtblb.FldEnumt, typeof(string), array : "typet"),
-            new TableSearchColumn("ValEnumn", CSGenioAtblb.FldEnumn, typeof(double), array : "typen")
+            new TableSearchColumn("ValEnumn", CSGenioAtblb.FldEnumn, typeof(decimal), array : "typen")
         };
     }
 }

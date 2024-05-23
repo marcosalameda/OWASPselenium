@@ -127,8 +127,8 @@ namespace GenioMVC.ViewModels.Visit
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("EQUIP.REGISTNR", new OrderedDictionary());
-					allSortOrders["EQUIP.REGISTNR"].Add("EQUIP.REGISTNR", "A");
+			allSortOrders.Add("EQUIP.REGISTNR", new OrderedDictionary());
+			allSortOrders["EQUIP.REGISTNR"].Add("EQUIP.REGISTNR", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Visit2_EquipValRegistnr_"));
@@ -220,8 +220,8 @@ namespace GenioMVC.ViewModels.Visit
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("EQUIP.REGISTNR", new OrderedDictionary());
-					allSortOrders["EQUIP.REGISTNR"].Add("EQUIP.REGISTNR", "A");
+			allSortOrders.Add("EQUIP.REGISTNR", new OrderedDictionary());
+			allSortOrders["EQUIP.REGISTNR"].Add("EQUIP.REGISTNR", "A");
 
 
 
@@ -308,6 +308,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP VISIT2_EQUIPREGISTNR]/
 
+                conditions = visit2__equipregistnrConds;
                 return;
 			}
 

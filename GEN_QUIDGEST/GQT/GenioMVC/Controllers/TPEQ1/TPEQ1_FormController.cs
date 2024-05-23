@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Tpeq1_ModalDBEdit(string partialView)
-		{
-			Tpeq1_ViewModel model = new Tpeq1_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Tpeq1_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW TPEQ1]/

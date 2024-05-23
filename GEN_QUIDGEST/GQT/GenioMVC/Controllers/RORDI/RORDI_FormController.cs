@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Rordi_ModalDBEdit(string partialView)
-		{
-			Rordi_ViewModel model = new Rordi_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Rordi_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW RORDI]/

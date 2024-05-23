@@ -128,10 +128,10 @@ namespace GenioMVC.ViewModels.Pesso
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("CATEG.CATEGORY", new OrderedDictionary());
-					allSortOrders["CATEG.CATEGORY"].Add("CATEG.CATEGORY", "A");
-				allSortOrders.Add("CATEG.ABBREVIA", new OrderedDictionary());
-					allSortOrders["CATEG.ABBREVIA"].Add("CATEG.ABBREVIA", "A");
+			allSortOrders.Add("CATEG.CATEGORIA", new OrderedDictionary());
+			allSortOrders["CATEG.CATEGORIA"].Add("CATEG.CATEGORIA", "A");
+			allSortOrders.Add("CATEG.ABBREVIATION", new OrderedDictionary());
+			allSortOrders["CATEG.ABBREVIATION"].Add("CATEG.ABBREVIATION", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Pesso1_CategValCategoria_"));
@@ -223,10 +223,10 @@ namespace GenioMVC.ViewModels.Pesso
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("CATEG.CATEGORY", new OrderedDictionary());
-					allSortOrders["CATEG.CATEGORY"].Add("CATEG.CATEGORY", "A");
-				allSortOrders.Add("CATEG.ABBREVIA", new OrderedDictionary());
-					allSortOrders["CATEG.ABBREVIA"].Add("CATEG.ABBREVIA", "A");
+			allSortOrders.Add("CATEG.CATEGORIA", new OrderedDictionary());
+			allSortOrders["CATEG.CATEGORIA"].Add("CATEG.CATEGORIA", "A");
+			allSortOrders.Add("CATEG.ABBREVIATION", new OrderedDictionary());
+			allSortOrders["CATEG.ABBREVIATION"].Add("CATEG.ABBREVIATION", "A");
 
 
 
@@ -314,6 +314,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcateg.FldCodcateg, CSGenioAcateg.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP PESSO1_CATEGCATEGORY]/
 
+                conditions = pesso1__categcategoryConds;
                 return;
 			}
 

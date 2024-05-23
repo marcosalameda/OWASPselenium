@@ -93,7 +93,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL STY MENU_GET 35911]/
+// USE /[MANUAL STY MENU_GET 35911]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());

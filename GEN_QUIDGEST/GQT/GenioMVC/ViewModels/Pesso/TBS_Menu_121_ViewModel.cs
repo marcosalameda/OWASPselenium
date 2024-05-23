@@ -173,10 +173,10 @@ FieldRef[] fields = new FieldRef[] { CSGenioApesso.FldCodpesso, CSGenioApesso.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("PESSO.NAME", new OrderedDictionary());
-					allSortOrders["PESSO.NAME"].Add("PESSO.NAME", "A");
-				allSortOrders.Add("PESSO.DTULTCAT", new OrderedDictionary());
-					allSortOrders["PESSO.DTULTCAT"].Add("PESSO.DTULTCAT", "A");
+			allSortOrders.Add("PESSO.NAME", new OrderedDictionary());
+			allSortOrders["PESSO.NAME"].Add("PESSO.NAME", "A");
+			allSortOrders.Add("PESSO.DTULTCAT", new OrderedDictionary());
+			allSortOrders["PESSO.DTULTCAT"].Add("PESSO.DTULTCAT", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "TBS_Menu_121_"));
@@ -269,10 +269,10 @@ FieldRef[] fields = new FieldRef[] { CSGenioApesso.FldCodpesso, CSGenioApesso.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("PESSO.NAME", new OrderedDictionary());
-					allSortOrders["PESSO.NAME"].Add("PESSO.NAME", "A");
-				allSortOrders.Add("PESSO.DTULTCAT", new OrderedDictionary());
-					allSortOrders["PESSO.DTULTCAT"].Add("PESSO.DTULTCAT", "A");
+			allSortOrders.Add("PESSO.NAME", new OrderedDictionary());
+			allSortOrders["PESSO.NAME"].Add("PESSO.NAME", "A");
+			allSortOrders.Add("PESSO.DTULTCAT", new OrderedDictionary());
+			allSortOrders["PESSO.DTULTCAT"].Add("PESSO.DTULTCAT", "A");
 
 
 
@@ -360,6 +360,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApesso.FldCodpesso, CSGenioApesso.Fl
 
 // USE /[MANUAL TBS OVERRQLSTEXP 121]/
 
+                conditions = tbs_menu_121Conds;
                 return;
 			}
 

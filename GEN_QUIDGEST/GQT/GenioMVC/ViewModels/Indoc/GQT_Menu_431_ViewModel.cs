@@ -166,8 +166,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAindoc.FldCoddentr, CSGenioAindoc.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("INDOC.DOCUMENR", new OrderedDictionary());
-					allSortOrders["INDOC.DOCUMENR"].Add("INDOC.DOCUMENR", "A");
+			allSortOrders.Add("INDOC.DOCUMENR", new OrderedDictionary());
+			allSortOrders["INDOC.DOCUMENR"].Add("INDOC.DOCUMENR", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "GQT_Menu_431_"));
@@ -260,8 +260,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAindoc.FldCoddentr, CSGenioAindoc.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("INDOC.DOCUMENR", new OrderedDictionary());
-					allSortOrders["INDOC.DOCUMENR"].Add("INDOC.DOCUMENR", "A");
+			allSortOrders.Add("INDOC.DOCUMENR", new OrderedDictionary());
+			allSortOrders["INDOC.DOCUMENR"].Add("INDOC.DOCUMENR", "A");
 
 
 
@@ -348,6 +348,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAindoc.FldCoddentr, CSGenioAindoc.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP 431]/
 
+                conditions = gqt_menu_431Conds;
                 return;
 			}
 

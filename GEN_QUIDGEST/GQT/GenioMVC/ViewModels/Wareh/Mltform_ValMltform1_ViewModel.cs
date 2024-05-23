@@ -304,6 +304,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.Fld
 
 // USE /[MANUAL GQT OVERRQLSTEXP MLTFORM_PSEUDMLTFORM1]/
 
+                conditions = mltform_pseudmltform1Conds;
                 return;
 			}
 

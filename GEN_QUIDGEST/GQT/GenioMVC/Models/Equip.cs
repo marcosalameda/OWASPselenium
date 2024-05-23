@@ -56,7 +56,7 @@ namespace GenioMVC.Models
 		[DisplayName("Sequential no.")]
 		/// <summary>Field : "Sequential no." Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValSequennr { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValSequennr, 0)); } set { klass.ValSequennr = Convert.ToDouble(value); } }
+		public decimal? ValSequennr { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValSequennr, 0)); } set { klass.ValSequennr = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValSequennr() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Equip.ValSequennr");
 
 		[DisplayName("No. register")]
@@ -133,15 +133,15 @@ namespace GenioMVC.Models
 		[DisplayName("Total value")]
 		/// <summary>Field : "Total value" Tipo: "$D" Formula: SR "[INSTA->VALUE]"</summary>
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValValortot { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValValortot, 2)); } set { klass.ValValortot = Convert.ToDouble(value); } }
+		public decimal? ValValortot { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValValortot, 2)); } set { klass.ValValortot = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValValortot() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Equip.ValValortot");
 
 		[DisplayName("Loan frequency")]
 		/// <summary>Field : "Loan frequency" Tipo: "AN" Formula:  ""</summary>
 		[DataArray("Freqempr", GenioMVC.Helpers.ArrayType.Numeric)]
-		public double ValFrequenc { get { return klass.ValFrequenc; } set { klass.ValFrequenc = value; } }
+		public decimal ValFrequenc { get { return klass.ValFrequenc; } set { klass.ValFrequenc = value; } }
 		[JsonIgnore]
-		public SelectList ArrayValfrequenc { get { return new SelectList(CSGenio.business.ArrayFreqempr.GetDictionary(), "Key", "Value", ValFrequenc); } set { ValFrequenc = Convert.ToDouble(value.SelectedValue); } }
+		public SelectList ArrayValfrequenc { get { return new SelectList(CSGenio.business.ArrayFreqempr.GetDictionary(), "Key", "Value", ValFrequenc); } set { ValFrequenc = Convert.ToDecimal(value.SelectedValue); } }
 		public bool ShouldSerializeValFrequenc() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Equip.ValFrequenc");
 
 		[DisplayName("Bought")]
@@ -206,7 +206,7 @@ namespace GenioMVC.Models
 		[DisplayName("Qtd. movimentações")]
 		/// <summary>Field : "Qtd. movimentações" Tipo: "N" Formula: SR "[MOVIM->1]"</summary>
 		[NumericAttribute(0)]
-		public decimal? ValQtdmovim { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQtdmovim, 0)); } set { klass.ValQtdmovim = Convert.ToDouble(value); } }
+		public decimal? ValQtdmovim { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQtdmovim, 0)); } set { klass.ValQtdmovim = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValQtdmovim() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Equip.ValQtdmovim");
 
 		[DisplayName("Show record")]

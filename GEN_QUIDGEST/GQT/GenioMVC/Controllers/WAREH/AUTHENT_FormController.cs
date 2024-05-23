@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Authent_ModalDBEdit(string partialView)
-		{
-			Authent_ViewModel model = new Authent_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Authent_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW AUTHENT]/

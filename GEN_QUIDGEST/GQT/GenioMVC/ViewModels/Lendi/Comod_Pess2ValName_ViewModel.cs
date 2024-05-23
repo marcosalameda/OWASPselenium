@@ -127,8 +127,8 @@ namespace GenioMVC.ViewModels.Lendi
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("PESS2.NAME", new OrderedDictionary());
-					allSortOrders["PESS2.NAME"].Add("PESS2.NAME", "A");
+			allSortOrders.Add("PESS2.NAME", new OrderedDictionary());
+			allSortOrders["PESS2.NAME"].Add("PESS2.NAME", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Comod_Pess2ValName_"));
@@ -220,8 +220,8 @@ namespace GenioMVC.ViewModels.Lendi
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("PESS2.NAME", new OrderedDictionary());
-					allSortOrders["PESS2.NAME"].Add("PESS2.NAME", "A");
+			allSortOrders.Add("PESS2.NAME", new OrderedDictionary());
+			allSortOrders["PESS2.NAME"].Add("PESS2.NAME", "A");
 
 
 
@@ -308,6 +308,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApess2.FldCodpesso, CSGenioApess2.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP COMOD_PESS2NAME]/
 
+                conditions = comod___pess2name____Conds;
                 return;
 			}
 

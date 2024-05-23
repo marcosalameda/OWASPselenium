@@ -307,6 +307,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAinsta.FldCodinsta, CSGenioAinsta.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP ACCORDI_PSEUDINSTALAC]/
 
+                conditions = accordi_pseudinstalacConds;
                 return;
 			}
 

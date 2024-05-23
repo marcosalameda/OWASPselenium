@@ -18,6 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.ModelBinders;
+using GenioMVC.Helpers.Table.Properties;
 using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
@@ -110,7 +111,7 @@ namespace GenioMVC.ViewModels.Tblb
 		/// <summary>Campo : "Enumeration (Numeric)" Tipo:"AN"</summary>
 		[Display(Name = "ENUMERATION__NUMERIC44708", ResourceType = typeof(Resources.Resources))]
 		[DataArray("Typen", GenioMVC.Helpers.ArrayType.Numeric)]
-		public double? ValEnumn { get; set; }
+		public decimal? ValEnumn { get; set; }
 		[JsonIgnore]
 		public SelectList List_ValEnumn { get; set; }
 
@@ -251,7 +252,7 @@ namespace GenioMVC.ViewModels.Tblb
  				ValDatets = ViewModelConversion.ToDateTime(m.ValDatets);
  				ValTimehm = ViewModelConversion.ToString(m.ValTimehm);
  				ValEnumt = ViewModelConversion.ToString(m.ValEnumt);
- 				ValEnumn = ViewModelConversion.ToDouble(m.ValEnumn);
+ 				ValEnumn = ViewModelConversion.ToNumeric(m.ValEnumn);
  				ValFkey1 = ViewModelConversion.ToString(m.ValFkey1);
  				ValCodtblb = ViewModelConversion.ToString(m.ValCodtblb);
 			}
@@ -283,7 +284,7 @@ namespace GenioMVC.ViewModels.Tblb
 				m.ValDatets = ViewModelConversion.ToDateTime(ValDatets);
 				m.ValTimehm = ViewModelConversion.ToString(ValTimehm);
 				m.ValEnumt = ViewModelConversion.ToString(ValEnumt);
-				m.ValEnumn = ViewModelConversion.ToDouble(ValEnumn);
+				m.ValEnumn = ViewModelConversion.ToNumeric(ValEnumn);
 				m.ValFkey1 = ViewModelConversion.ToString(ValFkey1);
 				m.ValCodtblb = ViewModelConversion.ToString(ValCodtblb);
 			}

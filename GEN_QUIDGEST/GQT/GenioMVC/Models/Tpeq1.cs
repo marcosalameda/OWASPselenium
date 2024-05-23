@@ -61,7 +61,7 @@ namespace GenioMVC.Models
 
 		[DisplayName("Level")]
 		/// <summary>Field : "Level" Tipo: "TN" Formula:  ""</summary>
-		public double ValNivel { get { return klass.ValNivel; } set { klass.ValNivel = value; } }
+		public decimal ValNivel { get { return klass.ValNivel; } set { klass.ValNivel = value; } }
 		public bool ShouldSerializeValNivel() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Tpeq1.ValNivel");
 
 		[DisplayName("Background color")]
@@ -77,13 +77,13 @@ namespace GenioMVC.Models
 		[DisplayName("Maximum price")]
 		/// <summary>Field : "Maximum price" Tipo: "$D" Formula:  ""</summary>
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValPrecomax { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrecomax, 2)); } set { klass.ValPrecomax = Convert.ToDouble(value); } }
+		public decimal? ValPrecomax { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrecomax, 2)); } set { klass.ValPrecomax = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPrecomax() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Tpeq1.ValPrecomax");
 
 		[DisplayName("Last price")]
 		/// <summary>Field : "Last price" Tipo: "$D" Formula:  ""</summary>
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValPrecoult { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrecoult, 2)); } set { klass.ValPrecoult = Convert.ToDouble(value); } }
+		public decimal? ValPrecoult { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrecoult, 2)); } set { klass.ValPrecoult = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPrecoult() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Tpeq1.ValPrecoult");
 
 		[DisplayName("In")]
@@ -96,7 +96,7 @@ namespace GenioMVC.Models
 		[DisplayName("Amount")]
 		/// <summary>Field : "Amount" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValQtdequip { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQtdequip, 0)); } set { klass.ValQtdequip = Convert.ToDouble(value); } }
+		public decimal? ValQtdequip { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQtdequip, 0)); } set { klass.ValQtdequip = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValQtdequip() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Tpeq1.ValQtdequip");
 
 		[DisplayName("Kit")]

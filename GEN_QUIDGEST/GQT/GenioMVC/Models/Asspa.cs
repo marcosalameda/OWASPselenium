@@ -69,7 +69,7 @@ namespace GenioMVC.Models
 		[DisplayName("Decimal places")]
 		/// <summary>Field : "Decimal places" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValDecimalplaces { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValDecimalplaces, 0)); } set { klass.ValDecimalplaces = Convert.ToDouble(value); } }
+		public decimal? ValDecimalplaces { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValDecimalplaces, 0)); } set { klass.ValDecimalplaces = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValDecimalplaces() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Asspa.ValDecimalplaces");
 
 		[DisplayName("Text")]
@@ -80,7 +80,7 @@ namespace GenioMVC.Models
 		[DisplayName("Quantity")]
 		/// <summary>Field : "Quantity" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(4)]
-		public decimal? ValQuantity { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQuantity, 4)); } set { klass.ValQuantity = Convert.ToDouble(value); } }
+		public decimal? ValQuantity { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQuantity, 4)); } set { klass.ValQuantity = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValQuantity() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Asspa.ValQuantity");
 
 		[DisplayName("Date")]

@@ -128,8 +128,8 @@ namespace GenioMVC.ViewModels.Pedid
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("LNHPD.LINE", new OrderedDictionary());
-					allSortOrders["LNHPD.LINE"].Add("LNHPD.LINE", "A");
+			allSortOrders.Add("LNHPD.LINE", new OrderedDictionary());
+			allSortOrders["LNHPD.LINE"].Add("LNHPD.LINE", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValLinhas_"));
@@ -225,8 +225,8 @@ namespace GenioMVC.ViewModels.Pedid
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("LNHPD.LINE", new OrderedDictionary());
-					allSortOrders["LNHPD.LINE"].Add("LNHPD.LINE", "A");
+			allSortOrders.Add("LNHPD.LINE", new OrderedDictionary());
+			allSortOrders["LNHPD.LINE"].Add("LNHPD.LINE", "A");
 
 
 
@@ -313,6 +313,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlnhpd.FldCodlnhpd, CSGenioAlnhpd.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP PEDID_PSEUDLINHAS]/
 
+                conditions = pedid___pseudlinhas__Conds;
                 return;
 			}
 

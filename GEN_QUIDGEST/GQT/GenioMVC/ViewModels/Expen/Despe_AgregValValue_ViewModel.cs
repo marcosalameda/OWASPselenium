@@ -137,8 +137,8 @@ namespace GenioMVC.ViewModels.Expen
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("AGREG.VALUE", new OrderedDictionary());
-					allSortOrders["AGREG.VALUE"].Add("AGREG.VALUE", "A");
+			allSortOrders.Add("AGREG.VALUE", new OrderedDictionary());
+			allSortOrders["AGREG.VALUE"].Add("AGREG.VALUE", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Despe_AgregValValue_"));
@@ -230,8 +230,8 @@ namespace GenioMVC.ViewModels.Expen
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("AGREG.VALUE", new OrderedDictionary());
-					allSortOrders["AGREG.VALUE"].Add("AGREG.VALUE", "A");
+			allSortOrders.Add("AGREG.VALUE", new OrderedDictionary());
+			allSortOrders["AGREG.VALUE"].Add("AGREG.VALUE", "A");
 
 
 
@@ -308,6 +308,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAagreg.FldCodaggre, CSGenioAagreg.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP DESPE_AGREGVALUE]/
 
+                conditions = despe___agregvalue___Conds;
                 return;
 			}
 

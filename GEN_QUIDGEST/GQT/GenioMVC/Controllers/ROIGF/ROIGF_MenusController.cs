@@ -93,7 +93,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL PTN MENU_GET 15311]/
+// USE /[MANUAL PTN MENU_GET 15311]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());

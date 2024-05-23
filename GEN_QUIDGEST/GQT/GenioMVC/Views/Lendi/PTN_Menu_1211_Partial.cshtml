@@ -3,6 +3,7 @@
 @using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
 @{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
 @{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@using GenioMVC.ViewModels.Lendi;    
 @{
     var data = Html.newTableFor<GenioMVC.Models.Lendi>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
         .Columns(column =>
@@ -48,9 +49,10 @@
         .DBEdit()
         .MultipleSelection()
         .Filters(this.Model.Menu.Filters)
-        .AddTableAction("PTN_MenuR_MESSAGEOK", "Lendi" , (Func<GenioMVC.Models.Lendi, object>)(item => new { id = item.ValCodlendi }), "", @Resources.SINGLE_RECORD62788, isRoutine: true, isAjaxAction: false, htmlAttributes: new { }, accesslevel: GenioMVC.Models.Navigation.UserContext.Current.User.VerifyAccess(CSGenio.framework.Role.ROLE_1), openInPopup: false, isBootStrapIcon: false)
-        .AddTableAction("PTN_MenuR_MESSAGEOK", "Lendi" , (Func<GenioMVC.Models.Lendi, object>)(item => new { id = item.ValCodlendi }), "", @Resources.MULTIPLE_RECORDS42019, isRoutine: true, multipleSelection: true, isAjaxAction: false, htmlAttributes: new { }, accesslevel: GenioMVC.Models.Navigation.UserContext.Current.User.VerifyAccess(CSGenio.framework.Role.ROLE_1), openInPopup: false, isBootStrapIcon: false)
-        .AddTableAction("PTN_MenuR_MESSAGEOK", "Lendi" , (Func<GenioMVC.Models.Lendi, object>)(item => new { id = item.ValCodlendi }), "", @Resources.OPTIONAL_RECORDS50081, isRoutine: true, isAjaxAction: false, htmlAttributes: new { }, accesslevel: GenioMVC.Models.Navigation.UserContext.Current.User.VerifyAccess(CSGenio.framework.Role.ROLE_1), openInPopup: false, isBootStrapIcon: false)
+        .Form("Comod", false, false)
+        .AddTableAction("PTN_MenuR_DELETEONEROW", "Lendi" , (Func<GenioMVC.Models.Lendi, object>)(item => new { id = item.ValCodlendi }), "delete.svg", @Resources.DELETE_SINGLE_RECORD05929, isRoutine: true, isAjaxAction: false, htmlAttributes: new { }, accesslevel: GenioMVC.Models.Navigation.UserContext.Current.User.VerifyAccess(CSGenio.framework.Role.ROLE_1), openInPopup: false, isBootStrapIcon: false)
+        .AddTableAction("PTN_MenuR_DELETEROWS", "Lendi" , (Func<GenioMVC.Models.Lendi, object>)(item => new { id = item.ValCodlendi }), "delete.svg", @Resources.DELETE_MULTIPLE_RECO17551, isRoutine: true, multipleSelection: true, isAjaxAction: false, htmlAttributes: new { }, accesslevel: GenioMVC.Models.Navigation.UserContext.Current.User.VerifyAccess(CSGenio.framework.Role.ROLE_1), openInPopup: false, isBootStrapIcon: false)
+        .AddTableAction("PTN_MenuR_DELETEROWS", "Lendi" , (Func<GenioMVC.Models.Lendi, object>)(item => new { id = item.ValCodlendi }), "delete.svg", @Resources.DELETE_OPTIONAL_RECO37994, isRoutine: true, isAjaxAction: false, htmlAttributes: new { }, accesslevel: GenioMVC.Models.Navigation.UserContext.Current.User.VerifyAccess(CSGenio.framework.Role.ROLE_1), openInPopup: false, isBootStrapIcon: false)
         .Permissions(canView: false, canInsert: false, canEdit: false, canDelete: false, canDuplicate: false)
 		;
         
@@ -62,16 +64,16 @@
 <script>
  
 
-	function PTN_MenuR_MESSAGEOK (jsonRouteValues) {
+	function PTN_MenuR_DELETEONEROW (jsonRouteValues) {
 
-		displayMessage('@Resources.DO_YOU_WANT_TO_EXECU40462', MessageDefs.StatusEnum.Q, undefined,
+		displayMessage('@Resources.DO_YOU_WANT_TO_DELET18100', MessageDefs.StatusEnum.Q, undefined,
 			[
 				{
 					label: '@Resources.CONTINUAR44831',
 					style: MessageDefs.ButtonTypes.Primary,
 					callback: function (confirmed) {
 						if (confirmed) {
-							PTN_MenuR_MESSAGEOK_Success (jsonRouteValues)
+							PTN_MenuR_DELETEONEROW_Success (jsonRouteValues)
 						}
 					},
 					icon: "check"
@@ -85,14 +87,14 @@
 		);
 
 	}
-	function PTN_MenuR_MESSAGEOK_Success (jsonRouteValues) {
+	function PTN_MenuR_DELETEONEROW_Success (jsonRouteValues) {
 
 		var customParameters;
-// USE /[MANUAL GQT VIEW_MANUAL_ROUTINE MESSAGEOK]/
+// USE /[MANUAL GQT VIEW_MANUAL_ROUTINE DELETEONEROW]/
 
-		return PTN_MenuR_MESSAGEOK_AjaxCall(jsonRouteValues, customParameters);
+		return PTN_MenuR_DELETEONEROW_AjaxCall(jsonRouteValues, customParameters);
 	}
-	function PTN_MenuR_MESSAGEOK_AjaxCall (jsonRouteValues, customParameters) {
+	function PTN_MenuR_DELETEONEROW_AjaxCall (jsonRouteValues, customParameters) {
 		//Check for all selected
 		/*
 		* This parameter will not cause harm to MB routines without multipleSelection,
@@ -106,49 +108,49 @@
 
 		jsonRouteValues.queryParams = window[tblId].GetTableFilters();
 
-		var urlAction = '@Url.Action("PTN_MenuR_MESSAGEOK", "Lendi")';
+		var urlAction = '@Url.Action("PTN_MenuR_DELETEONEROW", "Lendi")';
 		var jqxhr = $.ajax({
 			url : urlAction,
 			cache: false,
 			type: "POST",
 			contentType: 'application/json',
-			// USE /[MANUAL GQT PARAMETERS_ROUTINE MESSAGEOK]/
+			// USE /[MANUAL GQT PARAMETERS_ROUTINE DELETEONEROW]/
 			data: JSON.stringify(jsonRouteValues),
 			beforeSend : function(xhr, opts) {
  			QAnimation.showPleaseWait('@Resources.PROCESSING44327');
-// USE /[MANUAL GQT BEFORESEND_ROUTINE MESSAGEOK]/
+// USE /[MANUAL GQT BEFORESEND_ROUTINE DELETEONEROW]/
 
 			}
 		})
 		.done(function(data, textStatus, jqXHR) {
 			QAnimation.hidePleaseWait();
-// USE /[MANUAL GQT DONE_ROUTINE MESSAGEOK]/
+// USE /[MANUAL GQT DONE_ROUTINE DELETEONEROW]/
 			try {
 				if (data.success == undefined || data.message == undefined)
 					throw "Invalid data structure.";
 				switch (data.success) {
 					case 'E':
 						if (typeof console != "undefined") {
-							console.log("Erro na Rotina Manual 'MESSAGEOK' (" + data.message + ") ");
+							console.log("Erro na Rotina Manual 'DELETEONEROW' (" + data.message + ") ");
 						}
-						displayMessage(data.message, MessageDefs.StatusEnum.E, undefined, [{label: "OK", callback: () => PTN_MenuR_MESSAGEOK_AfterDone(data), icon: "check"}], {onEscapeCallback: 0});
+						displayMessage(data.message, MessageDefs.StatusEnum.E, undefined, [{label: "OK", callback: () => PTN_MenuR_DELETEONEROW_AfterDone(data), icon: "check"}], {onEscapeCallback: 0});
 						break;
 					case 'W':
 						if (typeof console != "undefined") {
-							console.log("Rotina Manual 'MESSAGEOK' executada com sucesso!");
+							console.log("Rotina Manual 'DELETEONEROW' executada com sucesso!");
 						}
-						displayMessage(data.message, MessageDefs.StatusEnum.W, undefined, [{label: "OK", callback: () => PTN_MenuR_MESSAGEOK_AfterDone(data), icon: "check"}], {onEscapeCallback: 0});
+						displayMessage(data.message, MessageDefs.StatusEnum.W, undefined, [{label: "OK", callback: () => PTN_MenuR_DELETEONEROW_AfterDone(data), icon: "check"}], {onEscapeCallback: 0});
 						break;
 					case 'OK':
 						if (typeof console != "undefined") {
-							console.log("Rotina Manual 'MESSAGEOK' executada com sucesso!");
+							console.log("Rotina Manual 'DELETEONEROW' executada com sucesso!");
 						}
 
 
 						if(data.message != ""){
-							displayMessage(data.message, MessageDefs.StatusEnum.OK, undefined, [{label: "OK", callback: () => PTN_MenuR_MESSAGEOK_AfterDone(data), icon: "check"}], {onEscapeCallback: 0});
+							displayMessage(data.message, MessageDefs.StatusEnum.OK, undefined, [{label: "OK", callback: () => PTN_MenuR_DELETEONEROW_AfterDone(data), icon: "check"}], {onEscapeCallback: 0});
 						}else{
-							PTN_MenuR_MESSAGEOK_AfterDone(data)
+							PTN_MenuR_DELETEONEROW_AfterDone(data)
 						}
 
 						break;
@@ -157,8 +159,8 @@
 			catch (e) {
 				displayMessage(quidgestGlobals.Resources.NAO_FOI_POSSIVEL_CONCLUIR, MessageDefs.StatusEnum.E);
 				if (typeof QError !== "undefined") {
-					var qErrorMsg = 'AFTER DONE ROUTINE "MESSAGEOK"';
-					QError.AppendError(qErrorMsg, e, '@Url.Action("PTN_MenuR_MESSAGEOK", "Lendi")', 0, 0);
+					var qErrorMsg = 'AFTER DONE ROUTINE "DELETEONEROW"';
+					QError.AppendError(qErrorMsg, e, '@Url.Action("PTN_MenuR_DELETEONEROW", "Lendi")', 0, 0);
 				}
 				if (typeof console !== "undefined") {
 					console.error(e.toString());
@@ -172,24 +174,24 @@
 		return jqxhr;
 	}
 
-	function PTN_MenuR_MESSAGEOK_AfterDone (data) {
-// USE /[MANUAL GQT AFTER_DONE_ROUTINE MESSAGEOK]/
+	function PTN_MenuR_DELETEONEROW_AfterDone (data) {
+// USE /[MANUAL GQT AFTER_DONE_ROUTINE DELETEONEROW]/
 	}
 
 
-	@*// END ROTINA MESSAGEOK *@
+	@*// END ROTINA DELETEONEROW *@
 
 
-	function PTN_MenuR_MESSAGEOK (jsonRouteValues) {
+	function PTN_MenuR_DELETEROWS (jsonRouteValues) {
 
-		displayMessage('@Resources.DO_YOU_WANT_TO_EXECU46759', MessageDefs.StatusEnum.Q, undefined,
+		displayMessage('@Resources.DO_YOU_WANT_TO_DELET37828', MessageDefs.StatusEnum.Q, undefined,
 			[
 				{
 					label: '@Resources.CONTINUAR44831',
 					style: MessageDefs.ButtonTypes.Primary,
 					callback: function (confirmed) {
 						if (confirmed) {
-							PTN_MenuR_MESSAGEOK_Success (jsonRouteValues)
+							PTN_MenuR_DELETEROWS_Success (jsonRouteValues)
 						}
 					},
 					icon: "check"
@@ -203,14 +205,14 @@
 		);
 
 	}
-	function PTN_MenuR_MESSAGEOK_Success (jsonRouteValues) {
+	function PTN_MenuR_DELETEROWS_Success (jsonRouteValues) {
 
 		var customParameters;
-// USE /[MANUAL GQT VIEW_MANUAL_ROUTINE MESSAGEOK]/
+// USE /[MANUAL GQT VIEW_MANUAL_ROUTINE DELETEROWS]/
 
-		return PTN_MenuR_MESSAGEOK_AjaxCall(jsonRouteValues, customParameters);
+		return PTN_MenuR_DELETEROWS_AjaxCall(jsonRouteValues, customParameters);
 	}
-	function PTN_MenuR_MESSAGEOK_AjaxCall (jsonRouteValues, customParameters) {
+	function PTN_MenuR_DELETEROWS_AjaxCall (jsonRouteValues, customParameters) {
 		//Check for all selected
 		/*
 		* This parameter will not cause harm to MB routines without multipleSelection,
@@ -224,49 +226,49 @@
 
 		jsonRouteValues.queryParams = window[tblId].GetTableFilters();
 
-		var urlAction = '@Url.Action("PTN_MenuR_MESSAGEOK", "Lendi")';
+		var urlAction = '@Url.Action("PTN_MenuR_DELETEROWS", "Lendi")';
 		var jqxhr = $.ajax({
 			url : urlAction,
 			cache: false,
 			type: "POST",
 			contentType: 'application/json',
-			// USE /[MANUAL GQT PARAMETERS_ROUTINE MESSAGEOK]/
+			// USE /[MANUAL GQT PARAMETERS_ROUTINE DELETEROWS]/
 			data: JSON.stringify(jsonRouteValues),
 			beforeSend : function(xhr, opts) {
  			QAnimation.showPleaseWait('@Resources.PROCESSING44327');
-// USE /[MANUAL GQT BEFORESEND_ROUTINE MESSAGEOK]/
+// USE /[MANUAL GQT BEFORESEND_ROUTINE DELETEROWS]/
 
 			}
 		})
 		.done(function(data, textStatus, jqXHR) {
 			QAnimation.hidePleaseWait();
-// USE /[MANUAL GQT DONE_ROUTINE MESSAGEOK]/
+// USE /[MANUAL GQT DONE_ROUTINE DELETEROWS]/
 			try {
 				if (data.success == undefined || data.message == undefined)
 					throw "Invalid data structure.";
 				switch (data.success) {
 					case 'E':
 						if (typeof console != "undefined") {
-							console.log("Erro na Rotina Manual 'MESSAGEOK' (" + data.message + ") ");
+							console.log("Erro na Rotina Manual 'DELETEROWS' (" + data.message + ") ");
 						}
-						displayMessage(data.message, MessageDefs.StatusEnum.E, undefined, [{label: "OK", callback: () => PTN_MenuR_MESSAGEOK_AfterDone(data), icon: "check"}], {onEscapeCallback: 0});
+						displayMessage(data.message, MessageDefs.StatusEnum.E, undefined, [{label: "OK", callback: () => PTN_MenuR_DELETEROWS_AfterDone(data), icon: "check"}], {onEscapeCallback: 0});
 						break;
 					case 'W':
 						if (typeof console != "undefined") {
-							console.log("Rotina Manual 'MESSAGEOK' executada com sucesso!");
+							console.log("Rotina Manual 'DELETEROWS' executada com sucesso!");
 						}
-						displayMessage(data.message, MessageDefs.StatusEnum.W, undefined, [{label: "OK", callback: () => PTN_MenuR_MESSAGEOK_AfterDone(data), icon: "check"}], {onEscapeCallback: 0});
+						displayMessage(data.message, MessageDefs.StatusEnum.W, undefined, [{label: "OK", callback: () => PTN_MenuR_DELETEROWS_AfterDone(data), icon: "check"}], {onEscapeCallback: 0});
 						break;
 					case 'OK':
 						if (typeof console != "undefined") {
-							console.log("Rotina Manual 'MESSAGEOK' executada com sucesso!");
+							console.log("Rotina Manual 'DELETEROWS' executada com sucesso!");
 						}
 
 
 						if(data.message != ""){
-							displayMessage(data.message, MessageDefs.StatusEnum.OK, undefined, [{label: "OK", callback: () => PTN_MenuR_MESSAGEOK_AfterDone(data), icon: "check"}], {onEscapeCallback: 0});
+							displayMessage(data.message, MessageDefs.StatusEnum.OK, undefined, [{label: "OK", callback: () => PTN_MenuR_DELETEROWS_AfterDone(data), icon: "check"}], {onEscapeCallback: 0});
 						}else{
-							PTN_MenuR_MESSAGEOK_AfterDone(data)
+							PTN_MenuR_DELETEROWS_AfterDone(data)
 						}
 
 						break;
@@ -275,8 +277,8 @@
 			catch (e) {
 				displayMessage(quidgestGlobals.Resources.NAO_FOI_POSSIVEL_CONCLUIR, MessageDefs.StatusEnum.E);
 				if (typeof QError !== "undefined") {
-					var qErrorMsg = 'AFTER DONE ROUTINE "MESSAGEOK"';
-					QError.AppendError(qErrorMsg, e, '@Url.Action("PTN_MenuR_MESSAGEOK", "Lendi")', 0, 0);
+					var qErrorMsg = 'AFTER DONE ROUTINE "DELETEROWS"';
+					QError.AppendError(qErrorMsg, e, '@Url.Action("PTN_MenuR_DELETEROWS", "Lendi")', 0, 0);
 				}
 				if (typeof console !== "undefined") {
 					console.error(e.toString());
@@ -290,15 +292,15 @@
 		return jqxhr;
 	}
 
-	function PTN_MenuR_MESSAGEOK_AfterDone (data) {
-// USE /[MANUAL GQT AFTER_DONE_ROUTINE MESSAGEOK]/
+	function PTN_MenuR_DELETEROWS_AfterDone (data) {
+// USE /[MANUAL GQT AFTER_DONE_ROUTINE DELETEROWS]/
 	}
 
 
-	@*// END ROTINA MESSAGEOK *@
+	@*// END ROTINA DELETEROWS *@
 
 
-	function PTN_MenuR_MESSAGEOK (jsonRouteValues) {
+	function PTN_MenuR_DELETEROWS (jsonRouteValues) {
 
 		displayMessage('@Resources.DO_YOU_WANT_TO_EXECU27028', MessageDefs.StatusEnum.Q, undefined,
 			[
@@ -307,7 +309,7 @@
 					style: MessageDefs.ButtonTypes.Primary,
 					callback: function (confirmed) {
 						if (confirmed) {
-							PTN_MenuR_MESSAGEOK_Success (jsonRouteValues)
+							PTN_MenuR_DELETEROWS_Success (jsonRouteValues)
 						}
 					},
 					icon: "check"
@@ -321,14 +323,14 @@
 		);
 
 	}
-	function PTN_MenuR_MESSAGEOK_Success (jsonRouteValues) {
+	function PTN_MenuR_DELETEROWS_Success (jsonRouteValues) {
 
 		var customParameters;
-// USE /[MANUAL GQT VIEW_MANUAL_ROUTINE MESSAGEOK]/
+// USE /[MANUAL GQT VIEW_MANUAL_ROUTINE DELETEROWS]/
 
-		return PTN_MenuR_MESSAGEOK_AjaxCall(jsonRouteValues, customParameters);
+		return PTN_MenuR_DELETEROWS_AjaxCall(jsonRouteValues, customParameters);
 	}
-	function PTN_MenuR_MESSAGEOK_AjaxCall (jsonRouteValues, customParameters) {
+	function PTN_MenuR_DELETEROWS_AjaxCall (jsonRouteValues, customParameters) {
 		//Check for all selected
 		/*
 		* This parameter will not cause harm to MB routines without multipleSelection,
@@ -342,49 +344,49 @@
 
 		jsonRouteValues.queryParams = window[tblId].GetTableFilters();
 
-		var urlAction = '@Url.Action("PTN_MenuR_MESSAGEOK", "Lendi")';
+		var urlAction = '@Url.Action("PTN_MenuR_DELETEROWS", "Lendi")';
 		var jqxhr = $.ajax({
 			url : urlAction,
 			cache: false,
 			type: "POST",
 			contentType: 'application/json',
-			// USE /[MANUAL GQT PARAMETERS_ROUTINE MESSAGEOK]/
+			// USE /[MANUAL GQT PARAMETERS_ROUTINE DELETEROWS]/
 			data: JSON.stringify(jsonRouteValues),
 			beforeSend : function(xhr, opts) {
  			QAnimation.showPleaseWait('@Resources.PROCESSING44327');
-// USE /[MANUAL GQT BEFORESEND_ROUTINE MESSAGEOK]/
+// USE /[MANUAL GQT BEFORESEND_ROUTINE DELETEROWS]/
 
 			}
 		})
 		.done(function(data, textStatus, jqXHR) {
 			QAnimation.hidePleaseWait();
-// USE /[MANUAL GQT DONE_ROUTINE MESSAGEOK]/
+// USE /[MANUAL GQT DONE_ROUTINE DELETEROWS]/
 			try {
 				if (data.success == undefined || data.message == undefined)
 					throw "Invalid data structure.";
 				switch (data.success) {
 					case 'E':
 						if (typeof console != "undefined") {
-							console.log("Erro na Rotina Manual 'MESSAGEOK' (" + data.message + ") ");
+							console.log("Erro na Rotina Manual 'DELETEROWS' (" + data.message + ") ");
 						}
-						displayMessage(data.message, MessageDefs.StatusEnum.E, undefined, [{label: "OK", callback: () => PTN_MenuR_MESSAGEOK_AfterDone(data), icon: "check"}], {onEscapeCallback: 0});
+						displayMessage(data.message, MessageDefs.StatusEnum.E, undefined, [{label: "OK", callback: () => PTN_MenuR_DELETEROWS_AfterDone(data), icon: "check"}], {onEscapeCallback: 0});
 						break;
 					case 'W':
 						if (typeof console != "undefined") {
-							console.log("Rotina Manual 'MESSAGEOK' executada com sucesso!");
+							console.log("Rotina Manual 'DELETEROWS' executada com sucesso!");
 						}
-						displayMessage(data.message, MessageDefs.StatusEnum.W, undefined, [{label: "OK", callback: () => PTN_MenuR_MESSAGEOK_AfterDone(data), icon: "check"}], {onEscapeCallback: 0});
+						displayMessage(data.message, MessageDefs.StatusEnum.W, undefined, [{label: "OK", callback: () => PTN_MenuR_DELETEROWS_AfterDone(data), icon: "check"}], {onEscapeCallback: 0});
 						break;
 					case 'OK':
 						if (typeof console != "undefined") {
-							console.log("Rotina Manual 'MESSAGEOK' executada com sucesso!");
+							console.log("Rotina Manual 'DELETEROWS' executada com sucesso!");
 						}
 
 
 						if(data.message != ""){
-							displayMessage(data.message, MessageDefs.StatusEnum.OK, undefined, [{label: "OK", callback: () => PTN_MenuR_MESSAGEOK_AfterDone(data), icon: "check"}], {onEscapeCallback: 0});
+							displayMessage(data.message, MessageDefs.StatusEnum.OK, undefined, [{label: "OK", callback: () => PTN_MenuR_DELETEROWS_AfterDone(data), icon: "check"}], {onEscapeCallback: 0});
 						}else{
-							PTN_MenuR_MESSAGEOK_AfterDone(data)
+							PTN_MenuR_DELETEROWS_AfterDone(data)
 						}
 
 						break;
@@ -393,8 +395,8 @@
 			catch (e) {
 				displayMessage(quidgestGlobals.Resources.NAO_FOI_POSSIVEL_CONCLUIR, MessageDefs.StatusEnum.E);
 				if (typeof QError !== "undefined") {
-					var qErrorMsg = 'AFTER DONE ROUTINE "MESSAGEOK"';
-					QError.AppendError(qErrorMsg, e, '@Url.Action("PTN_MenuR_MESSAGEOK", "Lendi")', 0, 0);
+					var qErrorMsg = 'AFTER DONE ROUTINE "DELETEROWS"';
+					QError.AppendError(qErrorMsg, e, '@Url.Action("PTN_MenuR_DELETEROWS", "Lendi")', 0, 0);
 				}
 				if (typeof console !== "undefined") {
 					console.error(e.toString());
@@ -408,12 +410,12 @@
 		return jqxhr;
 	}
 
-	function PTN_MenuR_MESSAGEOK_AfterDone (data) {
-// USE /[MANUAL GQT AFTER_DONE_ROUTINE MESSAGEOK]/
+	function PTN_MenuR_DELETEROWS_AfterDone (data) {
+// USE /[MANUAL GQT AFTER_DONE_ROUTINE DELETEROWS]/
 	}
 
 
-	@*// END ROTINA MESSAGEOK *@
+	@*// END ROTINA DELETEROWS *@
 
  
 
@@ -451,7 +453,7 @@ $(document).ready(function() {
                 });
                  @if (this.Model.Menu.Filters.FiltersValues.Count >= 1) {
                     var activeFields = Newtonsoft.Json.JsonConvert.SerializeObject(this.Model.Menu.Filters.FiltersValues);
-                    @: SetActiveFilters('PTN_Menu_1211', 'COMOD', @Html.Raw(activeFields))
+                    @: SetActiveFilters('PTN_Menu_1211', 'LENDI', @Html.Raw(activeFields))
                   }
 
 

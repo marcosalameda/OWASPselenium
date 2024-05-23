@@ -127,8 +127,8 @@ namespace GenioMVC.ViewModels.Pwreg
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("PSW.NOME", new OrderedDictionary());
-					allSortOrders["PSW.NOME"].Add("PSW.NOME", "A");
+			allSortOrders.Add("PSW.NOME", new OrderedDictionary());
+			allSortOrders["PSW.NOME"].Add("PSW.NOME", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Pwreg_PswValNome_"));
@@ -220,8 +220,8 @@ namespace GenioMVC.ViewModels.Pwreg
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("PSW.NOME", new OrderedDictionary());
-					allSortOrders["PSW.NOME"].Add("PSW.NOME", "A");
+			allSortOrders.Add("PSW.NOME", new OrderedDictionary());
+			allSortOrders["PSW.NOME"].Add("PSW.NOME", "A");
 
 
 
@@ -298,6 +298,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApsw.FldCodpsw, CSGenioApsw.FldZzsta
 
 // USE /[MANUAL GQT OVERRQLSTEXP PWREG_NOME]/
 
+                conditions = pwreg___psw__nome____Conds;
                 return;
 			}
 

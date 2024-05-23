@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Dentr_ModalDBEdit(string partialView)
-		{
-			Dentr_ViewModel model = new Dentr_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Dentr_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW DENTR]/

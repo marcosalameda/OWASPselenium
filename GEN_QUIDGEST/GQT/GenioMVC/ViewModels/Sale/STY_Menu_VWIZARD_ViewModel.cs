@@ -184,8 +184,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAsale.FldCodvenda, CSGenioAsale.FldZ
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("SALE.STARTDT", new OrderedDictionary());
-					allSortOrders["SALE.STARTDT"].Add("SALE.STARTDT", "A");
+			allSortOrders.Add("SALE.STARTDT", new OrderedDictionary());
+			allSortOrders["SALE.STARTDT"].Add("SALE.STARTDT", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "STY_Menu_VWIZARD_"));
@@ -281,8 +281,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAsale.FldCodvenda, CSGenioAsale.FldZ
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("SALE.STARTDT", new OrderedDictionary());
-					allSortOrders["SALE.STARTDT"].Add("SALE.STARTDT", "A");
+			allSortOrders.Add("SALE.STARTDT", new OrderedDictionary());
+			allSortOrders["SALE.STARTDT"].Add("SALE.STARTDT", "A");
 
 
 
@@ -385,6 +385,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAsale.FldCodvenda, CSGenioAsale.FldZ
 
 // USE /[MANUAL STY OVERRQLSTEXP VWIZARD]/
 
+                conditions = sty_menu_vwizardConds;
                 return;
 			}
 

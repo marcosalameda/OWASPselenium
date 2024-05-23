@@ -127,8 +127,8 @@ namespace GenioMVC.ViewModels.Regio
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("PAIS1.COUNTRY", new OrderedDictionary());
-					allSortOrders["PAIS1.COUNTRY"].Add("PAIS1.COUNTRY", "A");
+			allSortOrders.Add("PAIS1.COUNTRY", new OrderedDictionary());
+			allSortOrders["PAIS1.COUNTRY"].Add("PAIS1.COUNTRY", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Regia_ml_Pais1ValCountry_"));
@@ -220,8 +220,8 @@ namespace GenioMVC.ViewModels.Regio
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("PAIS1.COUNTRY", new OrderedDictionary());
-					allSortOrders["PAIS1.COUNTRY"].Add("PAIS1.COUNTRY", "A");
+			allSortOrders.Add("PAIS1.COUNTRY", new OrderedDictionary());
+			allSortOrders["PAIS1.COUNTRY"].Add("PAIS1.COUNTRY", "A");
 
 
 
@@ -298,6 +298,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApais1.FldCodcntry, CSGenioApais1.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP REGIA_ML_PAIS1COUNTRY]/
 
+                conditions = regia_mlpais1country_Conds;
                 return;
 			}
 

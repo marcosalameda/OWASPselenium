@@ -91,7 +91,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL GQT MENU_GET A41]/
+// USE /[MANUAL GQT MENU_GET A41]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());

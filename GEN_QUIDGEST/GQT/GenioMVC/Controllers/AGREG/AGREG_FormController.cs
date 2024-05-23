@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Agreg_ModalDBEdit(string partialView)
-		{
-			Agreg_ViewModel model = new Agreg_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Agreg_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW AGREG]/

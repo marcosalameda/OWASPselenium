@@ -314,9 +314,9 @@ namespace System.Web.Mvc.Html
                         {
                             (sellist.Items as Dictionary<int, string>).TryGetValue((int)sellist.SelectedValue, out value);
                         }
-                        else if ((sellist.Items as Dictionary<double, string>) != null)
+                        else if ((sellist.Items as Dictionary<decimal, string>) != null)
                         {
-                            (sellist.Items as Dictionary<double, string>).TryGetValue((double)sellist.SelectedValue, out value);
+                            (sellist.Items as Dictionary<decimal, string>).TryGetValue((decimal)sellist.SelectedValue, out value);
                         }
                         else
                             if (sellist.SelectedValue.GetType().Equals(typeof(Double)))

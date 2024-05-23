@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Abatereq_ModalDBEdit(string partialView)
-		{
-			Abatereq_ViewModel model = new Abatereq_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Abatereq_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW ABATEREQ]/

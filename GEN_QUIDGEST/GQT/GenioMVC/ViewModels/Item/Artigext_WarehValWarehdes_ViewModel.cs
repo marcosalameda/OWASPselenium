@@ -127,8 +127,8 @@ namespace GenioMVC.ViewModels.Item
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("WAREH.WAREHDES", new OrderedDictionary());
-					allSortOrders["WAREH.WAREHDES"].Add("WAREH.WAREHDES", "A");
+			allSortOrders.Add("WAREH.WAREHDES", new OrderedDictionary());
+			allSortOrders["WAREH.WAREHDES"].Add("WAREH.WAREHDES", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Artigext_WarehValWarehdes_"));
@@ -220,8 +220,8 @@ namespace GenioMVC.ViewModels.Item
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("WAREH.WAREHDES", new OrderedDictionary());
-					allSortOrders["WAREH.WAREHDES"].Add("WAREH.WAREHDES", "A");
+			allSortOrders.Add("WAREH.WAREHDES", new OrderedDictionary());
+			allSortOrders["WAREH.WAREHDES"].Add("WAREH.WAREHDES", "A");
 
 
 
@@ -308,6 +308,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwareh.FldCodwareh, CSGenioAwareh.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP ARTIGEXT_WAREHWAREHDES]/
 
+                conditions = artigextwarehwarehdesConds;
                 return;
 			}
 

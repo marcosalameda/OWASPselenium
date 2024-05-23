@@ -132,8 +132,8 @@ namespace GenioMVC.ViewModels.Item
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("CCORR.NORDER", new OrderedDictionary());
-					allSortOrders["CCORR.NORDER"].Add("CCORR.NORDER", "A");
+			allSortOrders.Add("CCORR.NORDER", new OrderedDictionary());
+			allSortOrders["CCORR.NORDER"].Add("CCORR.NORDER", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValContacor_"));
@@ -229,8 +229,8 @@ namespace GenioMVC.ViewModels.Item
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("CCORR.NORDER", new OrderedDictionary());
-					allSortOrders["CCORR.NORDER"].Add("CCORR.NORDER", "A");
+			allSortOrders.Add("CCORR.NORDER", new OrderedDictionary());
+			allSortOrders["CCORR.NORDER"].Add("CCORR.NORDER", "A");
 
 
 
@@ -317,6 +317,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAccorr.FldCodccorr, CSGenioAccorr.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP ARTIG_PSEUDCONTACOR]/
 
+                conditions = artig___pseudcontacorConds;
                 return;
 			}
 

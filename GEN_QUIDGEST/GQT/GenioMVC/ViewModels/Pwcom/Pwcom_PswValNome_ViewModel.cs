@@ -127,8 +127,8 @@ namespace GenioMVC.ViewModels.Pwcom
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("PSW.NOME", new OrderedDictionary());
-					allSortOrders["PSW.NOME"].Add("PSW.NOME", "A");
+			allSortOrders.Add("PSW.NOME", new OrderedDictionary());
+			allSortOrders["PSW.NOME"].Add("PSW.NOME", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Pwcom_PswValNome_"));
@@ -220,8 +220,8 @@ namespace GenioMVC.ViewModels.Pwcom
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("PSW.NOME", new OrderedDictionary());
-					allSortOrders["PSW.NOME"].Add("PSW.NOME", "A");
+			allSortOrders.Add("PSW.NOME", new OrderedDictionary());
+			allSortOrders["PSW.NOME"].Add("PSW.NOME", "A");
 
 
 
@@ -308,6 +308,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApsw.FldCodpsw, CSGenioApsw.FldZzsta
 
 // USE /[MANUAL GQT OVERRQLSTEXP PWCOM_PSWNOME]/
 
+                conditions = pwcom___psw__nome____Conds;
                 return;
 			}
 

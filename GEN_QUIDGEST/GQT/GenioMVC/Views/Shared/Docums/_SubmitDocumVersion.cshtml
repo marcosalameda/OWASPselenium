@@ -5,6 +5,8 @@
     ViewBag.Title = @Resources.SUBMISSAO_DE_FICHEIR50281;
     string fldSize = ViewData["fieldSize"] == null ? "" : ViewData["fieldSize"].ToString();
     bool isRequired = ViewData["isRequired"] == null ? false : Convert.ToBoolean(ViewData["isRequired"]);
+    string maxFileSize = ViewData["maxSize"] == null ? "null" : ViewData["maxSize"].ToString();
+    string allowedTypes = ViewData["allowedTypes"] == null ? "null" : ViewData["allowedTypes"].ToString();
 }
 
 <form>
@@ -92,9 +94,9 @@
 
 <script>
     var DBControl = $("#@Model.FieldName" + "_file").closest('[elem-identifier="DocumContainer"]').data('dbdocument');
-	var setFileUrl = '@Url.Action("SetFile", Model.Model, new { fieldSize = fldSize, isRequired })';
+	var setFileUrl = '@Url.Action("SetFile", Model.Model, new { fieldSize = fldSize, isRequired, maxFileSize, allowedTypes })';
 	var fieldContainer = $("#@Model.FieldName");
 
-    setFileUrl = setFileUrl.replace('amp;', '');
+    setFileUrl = setFileUrl.replaceAll('amp;', '');
 	DBControl.initSubmitVersion(setFileUrl, fieldContainer);
 </script>

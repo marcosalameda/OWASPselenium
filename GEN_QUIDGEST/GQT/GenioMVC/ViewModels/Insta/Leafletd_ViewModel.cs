@@ -18,6 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.ModelBinders;
+using GenioMVC.Helpers.Table.Properties;
 using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
@@ -438,7 +439,7 @@ namespace GenioMVC.ViewModels.Insta
 			// Limits Generation
 
 			// Area limit
-			leafletdequipregistnrDoLoad &= AddCriteriaAreaLimit(leafletdequipregistnrConds, CSGenio.business.CSGenioAtpequ.FldCodtpequ, "tpequ", this.ValCodtpequ, false);
+			leafletdequipregistnrDoLoad &= AddCriteriaAreaLimit(leafletdequipregistnrConds, CSGenio.business.CSGenioAtpequ.FldCodtpequ, "tpequ", this.ValCodtpequ, true);
 
 
             TableEquipRegistnr = new TableDBEdit<Models.Equip>();

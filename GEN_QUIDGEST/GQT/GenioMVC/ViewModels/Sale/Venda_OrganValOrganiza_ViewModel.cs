@@ -127,8 +127,8 @@ namespace GenioMVC.ViewModels.Sale
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("ORGAN.ORGANIZA", new OrderedDictionary());
-					allSortOrders["ORGAN.ORGANIZA"].Add("ORGAN.ORGANIZA", "A");
+			allSortOrders.Add("ORGAN.ORGANIZA", new OrderedDictionary());
+			allSortOrders["ORGAN.ORGANIZA"].Add("ORGAN.ORGANIZA", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Venda_OrganValOrganiza_"));
@@ -220,8 +220,8 @@ namespace GenioMVC.ViewModels.Sale
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("ORGAN.ORGANIZA", new OrderedDictionary());
-					allSortOrders["ORGAN.ORGANIZA"].Add("ORGAN.ORGANIZA", "A");
+			allSortOrders.Add("ORGAN.ORGANIZA", new OrderedDictionary());
+			allSortOrders["ORGAN.ORGANIZA"].Add("ORGAN.ORGANIZA", "A");
 
 
 
@@ -298,6 +298,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAorgan.FldCodorgan, CSGenioAorgan.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP VENDA_ORGANORGANIZA]/
 
+                conditions = venda___organorganizaConds;
                 return;
 			}
 

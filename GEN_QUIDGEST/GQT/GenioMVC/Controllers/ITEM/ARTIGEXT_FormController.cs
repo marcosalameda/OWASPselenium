@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Artigext_ModalDBEdit(string partialView)
-		{
-			Artigext_ViewModel model = new Artigext_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Artigext_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW ARTIGEXT]/

@@ -58,7 +58,7 @@ namespace GenioMVC.Models
 		[DisplayName("NºFuncionário")]
 		/// <summary>Field : "NºFuncionário" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValNfunc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNfunc, 0)); } set { klass.ValNfunc = Convert.ToDouble(value); } }
+		public decimal? ValNfunc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNfunc, 0)); } set { klass.ValNfunc = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValNfunc() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Wpess.ValNfunc");
 
 		[DisplayName("Address")]
@@ -84,7 +84,7 @@ namespace GenioMVC.Models
 		[DisplayName("NºTelefone")]
 		/// <summary>Field : "NºTelefone" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValCellphon { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValCellphon, 0)); } set { klass.ValCellphon = Convert.ToDouble(value); } }
+		public decimal? ValCellphon { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValCellphon, 0)); } set { klass.ValCellphon = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValCellphon() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Wpess.ValCellphon");
 
 		[DisplayName("Naturalness")]

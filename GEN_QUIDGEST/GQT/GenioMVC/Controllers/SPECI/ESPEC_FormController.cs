@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Espec_ModalDBEdit(string partialView)
-		{
-			Espec_ViewModel model = new Espec_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Espec_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW ESPEC]/

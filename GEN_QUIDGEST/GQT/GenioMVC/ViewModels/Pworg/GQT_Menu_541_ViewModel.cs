@@ -337,6 +337,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApworg.FldCodpworg, CSGenioApworg.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP 541]/
 
+                conditions = gqt_menu_541Conds;
                 return;
 			}
 

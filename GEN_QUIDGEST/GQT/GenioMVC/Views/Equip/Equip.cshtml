@@ -190,12 +190,12 @@ else {
 													</div>
 												</div>
 												<div class="control-join-group">
-												<div class="i-dbedit draggable " id="CONTAINER_LED_EQUIP___EQUIPFREQUENC">
+												<div class="i-dbedit draggable " id="CONTAINER_IFF_EQUIP___EQUIPFREQUENC">
 													<div class="d-flex">
-													@Html.LabelFor(model => model.ValFrequenc, new { label_id="LED_EQUIP___EQUIPFREQUENC", @class = " i-text__label", id="LABEL_LED_EQUIP___EQUIPFREQUENC"}, true, false)
+													@Html.LabelFor(model => model.ValFrequenc, new { label_id="IFF_EQUIP___EQUIPFREQUENC", @class = " i-text__label", id="LABEL_IFF_EQUIP___EQUIPFREQUENC"}, true, false)
 													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
-													<a href="javascript:OpenSuggestion('LED_EQUIP___EQUIPFREQUENC','Freqempr')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-													@Html.ArrayDropDownListFor(model => model.ValFrequenc, Model.List_ValFrequenc, CSGenio.business.ArrayFreqempr.GetElement, "", new {help_id = "LED_EQUIP___EQUIPFREQUENC", data_toggle = "tooltip", title = @Resources.___1438719, data_placement = "top", description = "", @class = "i-select chosen-dropdown input-small", data_identifier = "LED_EQUIP___EQUIPFREQUENC", @pers_cs_area = "Equip", @pers_cs_field = "ValFrequenc", @db_field = "ValFrequenc", data_array_type = "AN", data_placeholder = @Resources.ESCOLHA___40245, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_value = Model.List_ValFrequenc.SelectedValue, data_is_array = "true" })
+													<a href="javascript:OpenSuggestion('IFF_EQUIP___EQUIPFREQUENC','Freqempr')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.ArrayDropDownListFor(model => model.ValFrequenc, Model.List_ValFrequenc, CSGenio.business.ArrayFreqempr.GetElement, "", new {help_id = "IFF_EQUIP___EQUIPFREQUENC", data_toggle = "tooltip", title = @Resources.___1438719, data_placement = "top", description = "", @class = "i-select chosen-dropdown input-small", data_identifier = "LED_EQUIP___EQUIPFREQUENC", @pers_cs_area = "Equip", @pers_cs_field = "ValFrequenc", @db_field = "ValFrequenc", data_array_type = "AN", data_placeholder = @Resources.ESCOLHA___40245, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_value = Model.List_ValFrequenc.SelectedValue, data_is_array = "true" })
 													@Html.ValidationMessageFor(model => model.ValFrequenc)
 													</div>
 												</div>

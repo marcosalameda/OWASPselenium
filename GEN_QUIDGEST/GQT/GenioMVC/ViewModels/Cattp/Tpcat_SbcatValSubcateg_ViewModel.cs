@@ -127,8 +127,8 @@ namespace GenioMVC.ViewModels.Cattp
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("SBCAT.SUBCATEG", new OrderedDictionary());
-					allSortOrders["SBCAT.SUBCATEG"].Add("SBCAT.SUBCATEG", "A");
+			allSortOrders.Add("SBCAT.SUBCATEG", new OrderedDictionary());
+			allSortOrders["SBCAT.SUBCATEG"].Add("SBCAT.SUBCATEG", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Tpcat_SbcatValSubcateg_"));
@@ -220,8 +220,8 @@ namespace GenioMVC.ViewModels.Cattp
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("SBCAT.SUBCATEG", new OrderedDictionary());
-					allSortOrders["SBCAT.SUBCATEG"].Add("SBCAT.SUBCATEG", "A");
+			allSortOrders.Add("SBCAT.SUBCATEG", new OrderedDictionary());
+			allSortOrders["SBCAT.SUBCATEG"].Add("SBCAT.SUBCATEG", "A");
 
 
 
@@ -308,6 +308,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAsbcat.FldCodsbcat, CSGenioAsbcat.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP TPCAT_SBCATSUBCATEG]/
 
+                conditions = tpcat___sbcatsubcategConds;
                 return;
 			}
 

@@ -49,7 +49,7 @@ namespace GenioMVC.Helpers
 		/// Level of TreeNode
 		/// </summary>
 		[Newtonsoft.Json.JsonIgnore]
-		public double Level { get; set; }
+		public decimal Level { get; set; }
 
 		/// <summary>
 		/// Area

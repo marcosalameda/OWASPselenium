@@ -307,6 +307,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAinsta.FldCodinsta, CSGenioAinsta.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP EQUIP_PSEUDINSTALAC]/
 
+                conditions = equip___pseudinstalacConds;
                 return;
 			}
 
@@ -474,7 +475,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAinsta.FldCodinsta, CSGenioAinsta.Fl
                         new SpecialRenderingVariable { Variable = "bound-south-west", Value = "" },
                         new SpecialRenderingVariable { Variable = "bound-north-east", Value = "" },
                         new SpecialRenderingVariable { Variable = "disable-search", Value = "false" },
-                        new SpecialRenderingVariable { Variable = "enable-address-search", Value = "false" },
                         new SpecialRenderingVariable { Variable = "show-sources-in-description", Value = "true" },
                         new SpecialRenderingVariable { Variable = "collapse-layer-options", Value = "false" },
                         new SpecialRenderingVariable { Variable = "crs", Value = "EPSG:4326" },

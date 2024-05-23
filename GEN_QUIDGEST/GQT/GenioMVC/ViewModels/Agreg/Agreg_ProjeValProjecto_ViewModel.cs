@@ -127,8 +127,8 @@ namespace GenioMVC.ViewModels.Agreg
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("PROJE.PROJECTO", new OrderedDictionary());
-					allSortOrders["PROJE.PROJECTO"].Add("PROJE.PROJECTO", "A");
+			allSortOrders.Add("PROJE.PROJECTO", new OrderedDictionary());
+			allSortOrders["PROJE.PROJECTO"].Add("PROJE.PROJECTO", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Agreg_ProjeValProjecto_"));
@@ -220,8 +220,8 @@ namespace GenioMVC.ViewModels.Agreg
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("PROJE.PROJECTO", new OrderedDictionary());
-					allSortOrders["PROJE.PROJECTO"].Add("PROJE.PROJECTO", "A");
+			allSortOrders.Add("PROJE.PROJECTO", new OrderedDictionary());
+			allSortOrders["PROJE.PROJECTO"].Add("PROJE.PROJECTO", "A");
 
 
 
@@ -298,6 +298,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAproje.FldCodproje, CSGenioAproje.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP AGREG_PROJEPROJECTO]/
 
+                conditions = agreg___projeprojectoConds;
                 return;
 			}
 

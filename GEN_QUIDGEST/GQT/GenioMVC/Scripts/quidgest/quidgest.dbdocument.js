@@ -56,6 +56,12 @@ DBDocument = (function () {
                         dataType: 'json',
                         acceptFileTypes: obj.options.acceptFileTypes,
                         maxFileSize: obj.options.maxFileSize,
+                        messages: {
+                            maxNumberOfFiles: quidgestGlobals.Resources.MAXIMUM_NUMBER_OF_FI03180,
+                            acceptFileTypes: quidgestGlobals.Resources.FILE_TYPE_NOT_ALLOWE47893,
+                            maxFileSize: quidgestGlobals.Resources.FILE_IS_TOO_LARGE22896,
+                            minFileSize: quidgestGlobals.Resources.FILE_IS_TOO_SMALL45972
+                        },
 
                         // TODO move maxChunkSize to obj.options
                         // (requires changes outside this file)

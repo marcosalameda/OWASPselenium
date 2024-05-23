@@ -177,8 +177,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAdecom.FldCoddeco, CSGenioAdecom.Fld
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("DECOM.DTDECO", new OrderedDictionary());
-					allSortOrders["DECOM.DTDECO"].Add("DECOM.DTDECO", "A");
+			allSortOrders.Add("DECOM.DTDECO", new OrderedDictionary());
+			allSortOrders["DECOM.DTDECO"].Add("DECOM.DTDECO", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "GQT_Menu_2C111_"));
@@ -272,8 +272,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAdecom.FldCoddeco, CSGenioAdecom.Fld
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("DECOM.DTDECO", new OrderedDictionary());
-					allSortOrders["DECOM.DTDECO"].Add("DECOM.DTDECO", "A");
+			allSortOrders.Add("DECOM.DTDECO", new OrderedDictionary());
+			allSortOrders["DECOM.DTDECO"].Add("DECOM.DTDECO", "A");
 
 
 
@@ -365,6 +365,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAdecom.FldCoddeco, CSGenioAdecom.Fld
 
 // USE /[MANUAL GQT OVERRQLSTEXP 2C111]/
 
+                conditions = gqt_menu_2c111Conds;
                 return;
 			}
 

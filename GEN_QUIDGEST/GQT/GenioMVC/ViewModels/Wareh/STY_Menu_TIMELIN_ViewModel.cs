@@ -167,8 +167,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwareh.FldCodwareh, CSGenioAwareh.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("WAREH.WAREHDES", new OrderedDictionary());
-					allSortOrders["WAREH.WAREHDES"].Add("WAREH.WAREHDES", "A");
+			allSortOrders.Add("WAREH.WAREHDES", new OrderedDictionary());
+			allSortOrders["WAREH.WAREHDES"].Add("WAREH.WAREHDES", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "STY_Menu_TIMELIN_"));
@@ -264,8 +264,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwareh.FldCodwareh, CSGenioAwareh.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("WAREH.WAREHDES", new OrderedDictionary());
-					allSortOrders["WAREH.WAREHDES"].Add("WAREH.WAREHDES", "A");
+			allSortOrders.Add("WAREH.WAREHDES", new OrderedDictionary());
+			allSortOrders["WAREH.WAREHDES"].Add("WAREH.WAREHDES", "A");
 
 
 
@@ -368,6 +368,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwareh.FldCodwareh, CSGenioAwareh.Fl
 
 // USE /[MANUAL STY OVERRQLSTEXP TIMELIN]/
 
+                conditions = sty_menu_timelinConds;
                 return;
 			}
 

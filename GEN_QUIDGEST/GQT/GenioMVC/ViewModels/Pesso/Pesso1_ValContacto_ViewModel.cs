@@ -128,8 +128,8 @@ namespace GenioMVC.ViewModels.Pesso
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("TPCON.TIPOCONT", new OrderedDictionary());
-					allSortOrders["TPCON.TIPOCONT"].Add("TPCON.TIPOCONT", "A");
+			allSortOrders.Add("TPCON.TIPOCONT", new OrderedDictionary());
+			allSortOrders["TPCON.TIPOCONT"].Add("TPCON.TIPOCONT", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValContacto_"));
@@ -225,8 +225,8 @@ namespace GenioMVC.ViewModels.Pesso
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("TPCON.TIPOCONT", new OrderedDictionary());
-					allSortOrders["TPCON.TIPOCONT"].Add("TPCON.TIPOCONT", "A");
+			allSortOrders.Add("TPCON.TIPOCONT", new OrderedDictionary());
+			allSortOrders["TPCON.TIPOCONT"].Add("TPCON.TIPOCONT", "A");
 
 
 
@@ -313,6 +313,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAconta.FldCodconta, CSGenioAconta.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP PESSO1_PSEUDCONTACTO]/
 
+                conditions = pesso1__pseudcontactoConds;
                 return;
 			}
 

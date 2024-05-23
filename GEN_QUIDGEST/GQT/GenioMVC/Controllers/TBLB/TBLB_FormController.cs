@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Tblb_ModalDBEdit(string partialView)
-		{
-			Tblb_ViewModel model = new Tblb_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Tblb_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW TBLB]/

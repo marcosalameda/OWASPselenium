@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Pedid_ModalDBEdit(string partialView)
-		{
-			Pedid_ViewModel model = new Pedid_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Pedid_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW PEDID]/

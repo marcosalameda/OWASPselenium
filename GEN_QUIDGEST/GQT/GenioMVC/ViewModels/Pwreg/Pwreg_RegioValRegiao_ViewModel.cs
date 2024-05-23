@@ -127,8 +127,8 @@ namespace GenioMVC.ViewModels.Pwreg
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("REGIO.REGIAO", new OrderedDictionary());
-					allSortOrders["REGIO.REGIAO"].Add("REGIO.REGIAO", "A");
+			allSortOrders.Add("REGIO.REGIAO", new OrderedDictionary());
+			allSortOrders["REGIO.REGIAO"].Add("REGIO.REGIAO", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Pwreg_RegioValRegiao_"));
@@ -220,8 +220,8 @@ namespace GenioMVC.ViewModels.Pwreg
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("REGIO.REGIAO", new OrderedDictionary());
-					allSortOrders["REGIO.REGIAO"].Add("REGIO.REGIAO", "A");
+			allSortOrders.Add("REGIO.REGIAO", new OrderedDictionary());
+			allSortOrders["REGIO.REGIAO"].Add("REGIO.REGIAO", "A");
 
 
 
@@ -298,6 +298,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAregio.FldCodregia, CSGenioAregio.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP PWREG_REGIAO]/
 
+                conditions = pwreg___regioregiao__Conds;
                 return;
 			}
 

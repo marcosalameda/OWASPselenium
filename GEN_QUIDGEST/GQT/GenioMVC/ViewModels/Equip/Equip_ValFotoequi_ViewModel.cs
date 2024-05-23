@@ -128,8 +128,8 @@ namespace GenioMVC.ViewModels.Equip
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("PHOTO.TITLE", new OrderedDictionary());
-					allSortOrders["PHOTO.TITLE"].Add("PHOTO.TITLE", "A");
+			allSortOrders.Add("PHOTO.TITLE", new OrderedDictionary());
+			allSortOrders["PHOTO.TITLE"].Add("PHOTO.TITLE", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValFotoequi_"));
@@ -225,8 +225,8 @@ namespace GenioMVC.ViewModels.Equip
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("PHOTO.TITLE", new OrderedDictionary());
-					allSortOrders["PHOTO.TITLE"].Add("PHOTO.TITLE", "A");
+			allSortOrders.Add("PHOTO.TITLE", new OrderedDictionary());
+			allSortOrders["PHOTO.TITLE"].Add("PHOTO.TITLE", "A");
 
 
 
@@ -313,6 +313,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAphoto.FldCodphoto, CSGenioAphoto.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP EQUIP_PSEUDFOTOEQUI]/
 
+                conditions = equip___pseudfotoequiConds;
                 return;
 			}
 

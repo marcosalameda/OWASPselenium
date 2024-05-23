@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Btnsform_ModalDBEdit(string partialView)
-		{
-			Btnsform_ViewModel model = new Btnsform_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Btnsform_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW BTNSFORM]/

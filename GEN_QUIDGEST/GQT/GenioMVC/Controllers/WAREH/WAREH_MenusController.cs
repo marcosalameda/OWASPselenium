@@ -100,7 +100,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL GQT MENU_GET 461]/
+// USE /[MANUAL GQT MENU_GET 461]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -175,7 +175,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL GQT MENU_GET 491]/
+// USE /[MANUAL GQT MENU_GET 491]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -251,7 +251,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL STY MENU_GET MODAL]/
+// USE /[MANUAL STY MENU_GET MODAL]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -326,7 +326,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL STY MENU_GET ALERTS]/
+// USE /[MANUAL STY MENU_GET ALERTS]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -402,7 +402,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL STY MENU_GET AUTH]/
+// USE /[MANUAL STY MENU_GET AUTH]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -499,7 +499,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL STY MENU_GET BTNFORM]/
+// USE /[MANUAL STY MENU_GET BTNFORM]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -596,7 +596,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL STY MENU_GET MULTIFORM]/
+// USE /[MANUAL STY MENU_GET MULTIFORM]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -693,7 +693,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL STY MENU_GET EXTENDFORM]/
+// USE /[MANUAL STY MENU_GET EXTENDFORM]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -790,7 +790,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL STY MENU_GET EXPOSETABLE]/
+// USE /[MANUAL STY MENU_GET EXPOSETABLE]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -887,7 +887,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL STY MENU_GET TIMELIN]/
+// USE /[MANUAL STY MENU_GET TIMELIN]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());

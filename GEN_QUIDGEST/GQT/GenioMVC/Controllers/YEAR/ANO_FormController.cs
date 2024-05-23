@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Ano_ModalDBEdit(string partialView)
-		{
-			Ano_ViewModel model = new Ano_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Ano_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW ANO]/

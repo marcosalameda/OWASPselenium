@@ -118,16 +118,24 @@ namespace GenioMVC.Controllers
         #region Programmers code...
 
 
-		// GET: /Lendi/PTN_MenuR_MESSAGEOK
+		// GET: /Lendi/PTN_MenuR_DELETEONEROW
 		// <returns>Json(new { success = "OK", message = "" }, JsonRequestBehavior.AllowGet)</returns>
-		public JsonResult PTN_MenuR_MESSAGEOK(string id)
+		public JsonResult PTN_MenuR_DELETEONEROW(string id)
 		{
 			try
 			{
-//Platform: MVC | Type: CONTROLLER_ROUTINE_BODY | Module: GQT | Parameter: MESSAGEOK | File:  | Order: 0
-//BEGIN_MANUALCODE_CODMANUA:0c2d5cb3-18c7-413c-8452-58bb80443e50
-//Return ok message
-return Json(new { success = true, message = "OK" });
+//Platform: MVC | Type: CONTROLLER_ROUTINE_BODY | Module: GQT | Parameter: DELETEONEROW | File:  | Order: 0
+//BEGIN_MANUALCODE_CODMANUA:d31ac115-e389-497a-814c-ae4776fc238a
+			
+			var sp = m_userContext.PersistentSupport;
+			var user = m_userContext.User;
+			var id_model = CSGenioAlendi.search(sp, id, user);
+
+			sp.openConnection();
+				id_model.delete(sp);
+			sp.closeConnection();
+			
+			return Json(new { success = "OK", message = "Routine success" });
 //END_MANUALCODE
 			}
 			catch (BusinessException ex)
@@ -136,9 +144,76 @@ return Json(new { success = true, message = "OK" });
 			}
 			catch (Exception ex)
 			{
-				Log.Error("Error in action PTN_MenuR_MESSAGEOK: " + ex.Message);
+				Log.Error("Error in action PTN_MenuR_DELETEONEROW: " + ex.Message);
 				return Json(new { success = "E", message = Resources.Resources.PEDIMOS_DESCULPA__OC63848 }, JsonRequestBehavior.AllowGet);
 			}
+		}
+
+
+		// GET: /Lendi/PTN_MenuR_DELETEROWS
+		// <returns>Json(new { success = "OK", message = "" }, JsonRequestBehavior.AllowGet)</returns>
+		public JsonResult PTN_MenuR_DELETEROWS(List<string> ids, Dictionary<string, string> queryParams, bool allSelected = false)
+		{
+			CSGenio.business.Area area = CSGenio.business.Area.createArea("lendi", UserContext.Current.User, UserContext.Current.User.CurrentModule);
+			NameValueCollection parameters;
+			PTN_Menu_1211_ViewModel model = new PTN_Menu_1211_ViewModel(Navigation);
+			
+			//Fetch and format the parameters
+			if (queryParams != null && queryParams.Count() > 0)
+				parameters = FormatQueryString(queryParams);
+			else
+				parameters = this.Navigation.GetValue<NameValueCollection>("requestValues" + "PTN_Menu_1211");
+			
+			//Get CriteriaSet
+			CriteriaSet crs = model.BuildCriteriaSet(parameters, out bool hasAllRequiredLimits);
+
+
+			if (!allSelected || crs == null)
+				crs.In("lendi", "CODLENDI", ids);
+
+			//Fetch List of Related Areas
+			List<string> relatedTables = new List<string>();
+			QueryUtils.checkConditionsForForeignTables(crs, area, relatedTables);
+
+			/*
+			 * This is a list of Relationships has to be included in the query
+			 * that will be using the CriteriaSet.
+			 *
+			 * This can be done using QueryUtils.setFromTabDirect()
+			 */
+			List<CSGenio.framework.Relation> relations = QueryUtils.tablesRelationships(relatedTables, area);
+			try
+			{
+				return PTN_MenuR_DELETEROWS_Routine(crs, relations, area);
+			}
+			catch (BusinessException ex)
+			{
+				return Json(new { success = "E", message = ex.UserMessage }, JsonRequestBehavior.AllowGet);
+			}
+			catch (Exception ex)
+			{
+				Log.Error("Error in action PTN_MenuR_DELETEROWS: " + ex.Message);
+				return Json(new { success = "E", message = Resources.Resources.PEDIMOS_DESCULPA__OC63848 }, JsonRequestBehavior.AllowGet);
+			}
+		}
+
+		private JsonResult PTN_MenuR_DELETEROWS_Routine(CriteriaSet crs, List<Relation> relations, CSGenio.business.Area routineArea)
+		{
+//Platform: MVC | Type: CONTROLLER_ROUTINE_BODY | Module: GQT | Parameter: DELETEROWS | File:  | Order: 0
+//BEGIN_MANUALCODE_CODMANUA:db1bb593-c309-49f0-9eee-3ee35c5c4383
+			
+			var sp = m_userContext.PersistentSupport;
+			var user = m_userContext.User;
+			var listComod = CSGenioAlendi.searchList(sp, user, crs);
+			
+			sp.openConnection();
+			foreach (var comod in listComod) {
+				comod.delete(sp);
+			}
+			sp.closeConnection();
+			
+			return Json(new { success = "OK", message = "Routine success" });
+//END_MANUALCODE
 		}
 
 

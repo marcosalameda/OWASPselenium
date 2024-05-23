@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Leafletd_ModalDBEdit(string partialView)
-		{
-			Leafletd_ViewModel model = new Leafletd_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Leafletd_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW LEAFLETD]/

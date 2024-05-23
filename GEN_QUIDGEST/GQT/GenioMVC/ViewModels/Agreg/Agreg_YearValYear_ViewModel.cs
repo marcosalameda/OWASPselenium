@@ -127,8 +127,8 @@ namespace GenioMVC.ViewModels.Agreg
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("YEAR.YEAR", new OrderedDictionary());
-					allSortOrders["YEAR.YEAR"].Add("YEAR.YEAR", "A");
+			allSortOrders.Add("YEAR.YEAR", new OrderedDictionary());
+			allSortOrders["YEAR.YEAR"].Add("YEAR.YEAR", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Agreg_YearValYear_"));
@@ -220,8 +220,8 @@ namespace GenioMVC.ViewModels.Agreg
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("YEAR.YEAR", new OrderedDictionary());
-					allSortOrders["YEAR.YEAR"].Add("YEAR.YEAR", "A");
+			allSortOrders.Add("YEAR.YEAR", new OrderedDictionary());
+			allSortOrders["YEAR.YEAR"].Add("YEAR.YEAR", "A");
 
 
 
@@ -298,6 +298,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAyear.FldCodyear, CSGenioAyear.FldZz
 
 // USE /[MANUAL GQT OVERRQLSTEXP AGREG_YEARYEAR]/
 
+                conditions = agreg___year_year____Conds;
                 return;
 			}
 

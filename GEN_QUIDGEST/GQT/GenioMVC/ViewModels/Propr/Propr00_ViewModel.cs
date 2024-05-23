@@ -18,6 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.ModelBinders;
+using GenioMVC.Helpers.Table.Properties;
 using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
@@ -1094,7 +1095,7 @@ namespace GenioMVC.ViewModels.Propr
 			// Limits Generation
 
 			// Area limit
-			propr01_regioregiao__DoLoad &= AddCriteriaAreaLimit(propr01_regioregiao__Conds, CSGenio.business.CSGenioAcntry.FldCodcntry, "cntry", this.ValCodcntry, false);
+			propr01_regioregiao__DoLoad &= AddCriteriaAreaLimit(propr01_regioregiao__Conds, CSGenio.business.CSGenioAcntry.FldCodcntry, "cntry", this.ValCodcntry, true);
 
 
             TableRegioRegiao = new TableDBEdit<Models.Regio>();

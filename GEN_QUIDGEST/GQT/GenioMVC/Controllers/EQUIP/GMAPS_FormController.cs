@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Gmaps_ModalDBEdit(string partialView)
-		{
-			Gmaps_ViewModel model = new Gmaps_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Gmaps_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW GMAPS]/

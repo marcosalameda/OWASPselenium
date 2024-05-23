@@ -298,6 +298,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwareh.FldCodwareh, CSGenioAwareh.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP ARTIG_WAREHWAREHDES]/
 
+                conditions = artig___warehwarehdesConds;
                 return;
 			}
 

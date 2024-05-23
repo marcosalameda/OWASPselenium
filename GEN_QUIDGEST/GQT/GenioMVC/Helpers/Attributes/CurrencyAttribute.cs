@@ -21,7 +21,7 @@ namespace GenioMVC.Helpers
 
 		public enum CurrencyEnum
 		{
-			AOA, AUD, BRL, CAD, CNY, CVE, EUR, GBP, JPY, MZN, NZD, PLN, USD, ZAR
+			AOA, AUD, BRL, CAD, CNY, CVE, EUR, GBP, JPY, MZN, NZD, PLN, USD, ZAR, STN
 		}
 
 		public static string GetCurrencySymbol(string currency)
@@ -57,6 +57,8 @@ namespace GenioMVC.Helpers
 					return "zł";
 				case CurrencyEnum.ZAR:
 					return "R";
+				case CurrencyEnum.STN:
+					return "Db";
 				default:
 					throw new CurrencyNotImplementedException(string.Format("The currency {0} is not implemented by the CurrencyAttribute class.", currency));
 			}

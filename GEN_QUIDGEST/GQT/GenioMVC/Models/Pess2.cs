@@ -76,13 +76,13 @@ namespace GenioMVC.Models
 		[DisplayName("Age")]
 		/// <summary>Field : "Age" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValIdade { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValIdade, 0)); } set { klass.ValIdade = Convert.ToDouble(value); } }
+		public decimal? ValIdade { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValIdade, 0)); } set { klass.ValIdade = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValIdade() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Pess2.ValIdade");
 
 		[DisplayName("Official No.")]
 		/// <summary>Field : "Official No." Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValIdfuncio { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValIdfuncio, 0)); } set { klass.ValIdfuncio = Convert.ToDouble(value); } }
+		public decimal? ValIdfuncio { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValIdfuncio, 0)); } set { klass.ValIdfuncio = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValIdfuncio() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Pess2.ValIdfuncio");
 
 		[DisplayName("Phone")]
@@ -162,7 +162,7 @@ namespace GenioMVC.Models
 		[DisplayName("Minimum zoom to load features")]
 		/// <summary>Field : "Minimum zoom to load features" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValExtminzm { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValExtminzm, 0)); } set { klass.ValExtminzm = Convert.ToDouble(value); } }
+		public decimal? ValExtminzm { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValExtminzm, 0)); } set { klass.ValExtminzm = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValExtminzm() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Pess2.ValExtminzm");
 
 		[DisplayName("Map height")]
@@ -173,13 +173,13 @@ namespace GenioMVC.Models
 		[DisplayName("Zoom level")]
 		/// <summary>Field : "Zoom level" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValZoomlvl { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValZoomlvl, 0)); } set { klass.ValZoomlvl = Convert.ToDouble(value); } }
+		public decimal? ValZoomlvl { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValZoomlvl, 0)); } set { klass.ValZoomlvl = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValZoomlvl() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Pess2.ValZoomlvl");
 
 		[DisplayName("Outline weight")]
 		/// <summary>Field : "Outline weight" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValOutweigh { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOutweigh, 0)); } set { klass.ValOutweigh = Convert.ToDouble(value); } }
+		public decimal? ValOutweigh { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOutweigh, 0)); } set { klass.ValOutweigh = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValOutweigh() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Pess2.ValOutweigh");
 
 		[DisplayName("Polyline color")]

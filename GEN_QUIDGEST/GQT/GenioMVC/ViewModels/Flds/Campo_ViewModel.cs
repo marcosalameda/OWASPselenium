@@ -18,6 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.ModelBinders;
+using GenioMVC.Helpers.Table.Properties;
 using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
@@ -106,7 +107,7 @@ namespace GenioMVC.ViewModels.Flds
 		[Display(Name = "HAVE_YOU_TRAVELED_BE53808", ResourceType = typeof(Resources.Resources))]
 		[UIHint("DBConditional")]
 		[ConditionalBinder]
-		public double ValConditio { get; set; }
+		public decimal ValConditio { get; set; }
 
 		/// <summary>Campo : "Class (Enumeração de Texto)" Tipo:"AC"</summary>
 		[Display(Name = "CLASS__ENUMERACAO_DE17340", ResourceType = typeof(Resources.Resources))]
@@ -119,7 +120,7 @@ namespace GenioMVC.ViewModels.Flds
 		/// <summary>Campo : "Classe (Enumeração Numérica)" Tipo:"AN"</summary>
 		[Display(Name = "CLASSE__ENUMERACAO_N29443", ResourceType = typeof(Resources.Resources))]
 		[DataArray("Classnum", GenioMVC.Helpers.ArrayType.Numeric)]
-		public double? ValClassnum { get; set; }
+		public decimal? ValClassnum { get; set; }
 		[JsonIgnore]
 		public SelectList List_ValClassnum { get; set; }
 
@@ -306,9 +307,9 @@ namespace GenioMVC.ViewModels.Flds
  				ValTime = ViewModelConversion.ToString(m.ValTime);
  				ValYear = ViewModelConversion.ToNumeric(m.ValYear);
  				ValPrimviag = ViewModelConversion.ToLogic(m.ValPrimviag);
- 				ValConditio = ViewModelConversion.ToDouble(m.ValConditio);
+ 				ValConditio = ViewModelConversion.ToNumeric(m.ValConditio);
  				ValClass = ViewModelConversion.ToString(m.ValClass);
- 				ValClassnum = ViewModelConversion.ToDouble(m.ValClassnum);
+ 				ValClassnum = ViewModelConversion.ToNumeric(m.ValClassnum);
  				ValLogicenu = ViewModelConversion.ToInteger(m.ValLogicenu);
  				ValLogo = ViewModelConversion.ToImage(m.ValLogo);
  				ValAttach = ViewModelConversion.ToString(m.ValAttach);
@@ -348,9 +349,9 @@ namespace GenioMVC.ViewModels.Flds
 				m.ValTime = ViewModelConversion.ToString(ValTime);
 				m.ValYear = ViewModelConversion.ToNumeric(ValYear);
 				m.ValPrimviag = ViewModelConversion.ToLogic(ValPrimviag);
-				m.ValConditio = ViewModelConversion.ToDouble(ValConditio);
+				m.ValConditio = ViewModelConversion.ToNumeric(ValConditio);
 				m.ValClass = ViewModelConversion.ToString(ValClass);
-				m.ValClassnum = ViewModelConversion.ToDouble(ValClassnum);
+				m.ValClassnum = ViewModelConversion.ToNumeric(ValClassnum);
 				m.ValLogicenu = ViewModelConversion.ToInteger(ValLogicenu);
 				m.ValAttach = ViewModelConversion.ToString(ValAttach);
 				m.ValAttachfk = ViewModelConversion.ToString(ValAttachfk);

@@ -18,6 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.ModelBinders;
+using GenioMVC.Helpers.Table.Properties;
 using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
@@ -1293,10 +1294,10 @@ namespace GenioMVC.ViewModels.Pesso
 			// Limits Generation
 
 			// History limit
-			pesso___regi1regiao__DoLoad &= AddCriteriaHistoryLimit(pesso___regi1regiao__Conds, CSGenio.business.CSGenioAregi1.FldCodcntry, "pais", true);
+			pesso___regi1regiao__DoLoad &= AddCriteriaHistoryLimit(pesso___regi1regiao__Conds, CSGenio.business.CSGenioAregi1.FldCodcntry, OperationType.EQUAL, "pais", true);
 
 			// Area limit
-			pesso___regi1regiao__DoLoad &= AddCriteriaAreaLimit(pesso___regi1regiao__Conds, CSGenio.business.CSGenioApais1.FldCodcntry, "pais1", this.ValCodcntry, false);
+			pesso___regi1regiao__DoLoad &= AddCriteriaAreaLimit(pesso___regi1regiao__Conds, CSGenio.business.CSGenioApais1.FldCodcntry, "pais1", this.ValCodcntry, true);
 
 
             TableRegi1Regiao = new TableDBEdit<Models.Regi1>();

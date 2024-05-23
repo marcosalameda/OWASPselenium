@@ -12,6 +12,12 @@ public class BaseSeleniumTest
     {
         Driver = DriverFactory.getWebDriver();
     }
+	
+	[SetUp]
+	public void Setup()
+	{
+		Driver.SwitchTo().NewWindow(WindowType.Tab);
+	}
 
     [TearDown]
     public void Teardown()
@@ -20,7 +26,6 @@ public class BaseSeleniumTest
         //Using a new tab avoid situations where the previous test might have left a modal popup waiting for user input.
         //Tests that need full isolation can always be put in a separate test class alone.
         Driver.Manage().Cookies.DeleteAllCookies();
-        Driver.SwitchTo().NewWindow(WindowType.Tab);
     }
 
     [OneTimeTearDown]

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-16"?>
 <ArrayOfMenuEntry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <MenuEntry TYPE="ITEM" DESC="GENIO_QUALITY_TESTS30896" ID="GQT" IMG="" IMGVUE="" LVL="0" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false">
     <MENU TYPE="ITEM" DESC="LENDING18782" SIGLA="" ID="1" HELPTITLE="" LVL="1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="1" DEFAULTACTION="">
@@ -474,17 +474,17 @@
       </MENU>
       <MENU TYPE="ITEM" DESC="MULTIPLE_SELECT_LIST41638" SIGLA="" ID="12" PRTID="1" HELPTITLE="" LVL="2" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="12" DEFAULTACTION="">
         <ACCESS>1</ACCESS>
-        <MENU TYPE="ITEM" DESC="TO_ROUTINE31339" SIGLA="" ID="121" PRTID="12" HELPTITLE="" LVL="3" PREVIEW="true" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="121" DEFAULTACTION="">
+        <MENU TYPE="ITEM" DESC="WITH_ROUTINE___DELET51714" SIGLA="" ID="121" PRTID="12" HELPTITLE="" LVL="3" PREVIEW="true" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="121" DEFAULTACTION="">
           <ACCESS>1</ACCESS>
           <MENU TYPE="ITEM" DESC="LENDING18782" ID="1211" PRTID="121" IMG="" ACT="GenGenio.MenuDBEditMultiplaEscolha" ACTMVC="PTN_Menu_1211" ACTVUE="menu-PTN_1211" CONT="LENDI" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="1211">
-            <MENU TYPE="ITEM" DESC="SINGLE_RECORD62788" ID="12111" PRTID="1211" HELPTITLE="" IMG="" ACT="GenGenio.MenuBotoesEspecificos" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="12111">
-              <MENU TYPE="ITEM" ID="121111" PRTID="12111" IMG="" ACT="GenGenio.MenuRotinaManual" ACTMVC="PTN_MenuR_MESSAGEOK" CONT="LENDI" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="121111" />
+            <MENU TYPE="ITEM" DESC="DELETE_SINGLE_RECORD05929" ID="12111" PRTID="1211" HELPTITLE="" IMG="~/Content/img/delete.svg" ACT="GenGenio.MenuBotoesEspecificos" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="12111">
+              <MENU TYPE="ITEM" ID="121111" PRTID="12111" IMG="" ACT="GenGenio.MenuRotinaManual" ACTMVC="PTN_MenuR_DELETEONEROW" CONT="LENDI" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="121111" />
             </MENU>
-            <MENU TYPE="ITEM" DESC="MULTIPLE_RECORDS42019" ID="12112" PRTID="1211" HELPTITLE="" IMG="" ACT="GenGenio.MenuBotoesEspecificos" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="12112">
-              <MENU TYPE="ITEM" ID="121121" PRTID="12112" IMG="" ACT="GenGenio.MenuRotinaManual" ACTMVC="PTN_MenuR_MESSAGEOK" CONT="LENDI" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="121121" />
+            <MENU TYPE="ITEM" DESC="DELETE_MULTIPLE_RECO17551" ID="D" PRTID="1211" HELPTITLE="" IMG="~/Content/img/delete.svg" ACT="GenGenio.MenuBotoesEspecificos" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="12112">
+              <MENU TYPE="ITEM" ID="121121" PRTID="D" IMG="" ACT="GenGenio.MenuRotinaManual" ACTMVC="PTN_MenuR_DELETEROWS" CONT="LENDI" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="121121" />
             </MENU>
-            <MENU TYPE="ITEM" DESC="OPTIONAL_RECORDS50081" ID="12113" PRTID="1211" HELPTITLE="" IMG="" ACT="GenGenio.MenuBotoesEspecificos" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="12113">
-              <MENU TYPE="ITEM" ID="121131" PRTID="12113" IMG="" ACT="GenGenio.MenuRotinaManual" ACTMVC="PTN_MenuR_MESSAGEOK" CONT="LENDI" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="121131" />
+            <MENU TYPE="ITEM" DESC="DELETE_OPTIONAL_RECO37994" ID="12113" PRTID="1211" HELPTITLE="" IMG="~/Content/img/delete.svg" ACT="GenGenio.MenuBotoesEspecificos" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="12113">
+              <MENU TYPE="ITEM" ID="121131" PRTID="12113" IMG="" ACT="GenGenio.MenuRotinaManual" ACTMVC="PTN_MenuR_DELETEROWS" CONT="LENDI" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="121131" />
             </MENU>
           </MENU>
         </MENU>

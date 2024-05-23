@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Pessosep_ModalDBEdit(string partialView)
-		{
-			Pessosep_ViewModel model = new Pessosep_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Pessosep_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW PESSOSEP]/

@@ -308,6 +308,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAvisit.FldCodvisit, CSGenioAvisit.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP FULLCALE_PSEUDFULLCALE]/
 
+                conditions = fullcalepseudfullcaleConds;
                 return;
 			}
 

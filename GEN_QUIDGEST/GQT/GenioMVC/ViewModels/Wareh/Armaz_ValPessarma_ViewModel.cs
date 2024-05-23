@@ -73,9 +73,9 @@ namespace GenioMVC.ViewModels.Wareh
         {
             var columns = new List<Exports.QColumn>()
             {
+                new Exports.QColumn(CSGenioAwpess.FldNfunc, FieldType.NUMERO, Resources.Resources.NOFUNCIONARIO21429, 6, 0, true),
                 new Exports.QColumn(CSGenioAwpess.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
                 new Exports.QColumn(CSGenioAwpess.FldSex, FieldType.ARRAY_COD_TEXTO, Resources.Resources.SEXO52099, 9, 0, true, "SEXO"),
-                new Exports.QColumn(CSGenioAwpess.FldNfunc, FieldType.NUMERO, Resources.Resources.NOFUNCIONARIO21429, 6, 0, true),
             };
 
             columns.RemoveAll(item => item == null);
@@ -129,6 +129,8 @@ namespace GenioMVC.ViewModels.Wareh
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
+			allSortOrders.Add("WPESS.NFUNC", new OrderedDictionary());
+			allSortOrders["WPESS.NFUNC"].Add("WPESS.NFUNC", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValPessarma_"));
@@ -224,6 +226,8 @@ namespace GenioMVC.ViewModels.Wareh
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
+			allSortOrders.Add("WPESS.NFUNC", new OrderedDictionary());
+			allSortOrders["WPESS.NFUNC"].Add("WPESS.NFUNC", "A");
 
 
 
@@ -236,8 +240,14 @@ namespace GenioMVC.ViewModels.Wareh
 
 			List<ColumnSort> sorts = GetRequestSorts(this.Menu, "sValPessarma", "dValPessarma", requestValues, "wpess", allSortOrders);
 
+			if (sorts == null || sorts.Count == 0)
+			{
+				sorts = new List<ColumnSort>();
+				sorts.Add(new ColumnSort(new ColumnReference(CSGenioAwpess.FldNfunc), SortOrder.Ascending));
 
-FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.FldZzstate, CSGenioAwpess.FldName, CSGenioAwpess.FldSex, CSGenioAwpess.FldNfunc };
+			}
+
+FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.FldZzstate, CSGenioAwpess.FldNfunc, CSGenioAwpess.FldName, CSGenioAwpess.FldSex };
 
 
 			//columns by users list (TemplateDBEditViewModel)
@@ -266,7 +276,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.Fld
 					}
 				}
 				else
-					firstVisibleColumn = new FieldRef("wpess", "name");
+					firstVisibleColumn = new FieldRef("wpess", "nfunc");
 
 
 			// Limitations
@@ -304,6 +314,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.Fld
 
 // USE /[MANUAL GQT OVERRQLSTEXP ARMAZ_PSEUDPESSARMA]/
 
+                conditions = armaz___pseudpessarmaConds;
                 return;
 			}
 
@@ -416,14 +427,14 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.Fld
 
         private static readonly string[] _fieldsToSerialize =
         {
-            "Wpess", "Wpess.ValCodpess", "Wpess.ValZzstate", "Wpess.ValName", "Wpess.ValSex", "Wpess.ValNfunc", "Wpess.ValCodwareh"
+            "Wpess", "Wpess.ValCodpess", "Wpess.ValZzstate", "Wpess.ValNfunc", "Wpess.ValName", "Wpess.ValSex", "Wpess.ValCodwareh"
         };
 
         private static readonly List<TableSearchColumn> _searchableColumns = new List<TableSearchColumn>
         {
+            new TableSearchColumn("ValNfunc", CSGenioAwpess.FldNfunc, typeof(decimal?)),
             new TableSearchColumn("ValName", CSGenioAwpess.FldName, typeof(string), defaultSearch : true),
-            new TableSearchColumn("ValSex", CSGenioAwpess.FldSex, typeof(string), array : "SEXO"),
-            new TableSearchColumn("ValNfunc", CSGenioAwpess.FldNfunc, typeof(decimal?))
+            new TableSearchColumn("ValSex", CSGenioAwpess.FldSex, typeof(string), array : "SEXO")
         };
     }
 }

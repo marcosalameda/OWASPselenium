@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using CSGenio.framework;
 using CSGenio.business;
+
 namespace GenioMVC.Helpers.Table.Properties
 {
     public enum TableType

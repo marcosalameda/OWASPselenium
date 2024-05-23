@@ -357,8 +357,8 @@ namespace GenioMVC.Helpers.Table.Columns
                         (selectList.Items as Dictionary<string, string>).TryGetValue((string)selectList.SelectedValue, out selectedText);
                     else if (selectList.SelectedValue.GetType().Equals(typeof(int)))
                         (selectList.Items as Dictionary<int, string>).TryGetValue((int)selectList.SelectedValue, out selectedText);
-                    else if (selectList.SelectedValue.GetType().Equals(typeof(Double)))
-                        (selectList.Items as Dictionary<double, string>).TryGetValue((double)selectList.SelectedValue, out selectedText);
+                    else if (selectList.SelectedValue.GetType().Equals(typeof(decimal)))
+                        (selectList.Items as Dictionary<decimal, string>).TryGetValue((decimal)selectList.SelectedValue, out selectedText);
 
                     if (String.IsNullOrEmpty(selectedText))
                         result = string.Empty;

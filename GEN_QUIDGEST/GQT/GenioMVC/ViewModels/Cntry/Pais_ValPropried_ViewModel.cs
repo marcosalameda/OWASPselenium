@@ -315,6 +315,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApropr.FldCodpropr, CSGenioApropr.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP PAIS_PSEUDPROPRIED]/
 
+                conditions = pais____pseudpropriedConds;
                 return;
 			}
 

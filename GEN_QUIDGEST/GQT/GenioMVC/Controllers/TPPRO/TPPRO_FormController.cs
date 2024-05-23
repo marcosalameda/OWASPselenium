@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Tppro_ModalDBEdit(string partialView)
-		{
-			Tppro_ViewModel model = new Tppro_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Tppro_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW TPPRO]/

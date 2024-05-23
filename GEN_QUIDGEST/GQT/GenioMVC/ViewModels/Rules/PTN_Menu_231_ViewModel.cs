@@ -338,6 +338,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioArules.FldCodregra, CSGenioArules.Fl
 
 // USE /[MANUAL PTN OVERRQLSTEXP 231]/
 
+                conditions = ptn_menu_231Conds;
                 return;
 			}
 

@@ -169,16 +169,16 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcmpny.FldCodempre, CSGenioAcmpny.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("CMPNY.DESIGNAT", new OrderedDictionary());
-					allSortOrders["CMPNY.DESIGNAT"].Add("CMPNY.DESIGNAT", "A");
-				allSortOrders.Add("CMPNY.ACRONYM", new OrderedDictionary());
-					allSortOrders["CMPNY.ACRONYM"].Add("CMPNY.ACRONYM", "A");
-				allSortOrders.Add("CMPNY.NIF", new OrderedDictionary());
-					allSortOrders["CMPNY.NIF"].Add("CMPNY.NIF", "A");
-				allSortOrders.Add("CMPNY.TELEPHON", new OrderedDictionary());
-					allSortOrders["CMPNY.TELEPHON"].Add("CMPNY.TELEPHON", "A");
-				allSortOrders.Add("CMPNY.EMAIL", new OrderedDictionary());
-					allSortOrders["CMPNY.EMAIL"].Add("CMPNY.EMAIL", "A");
+			allSortOrders.Add("CMPNY.DESIGNAT", new OrderedDictionary());
+			allSortOrders["CMPNY.DESIGNAT"].Add("CMPNY.DESIGNAT", "A");
+			allSortOrders.Add("CMPNY.ACRONYM", new OrderedDictionary());
+			allSortOrders["CMPNY.ACRONYM"].Add("CMPNY.ACRONYM", "A");
+			allSortOrders.Add("CMPNY.NIF", new OrderedDictionary());
+			allSortOrders["CMPNY.NIF"].Add("CMPNY.NIF", "A");
+			allSortOrders.Add("CMPNY.TELEPHON", new OrderedDictionary());
+			allSortOrders["CMPNY.TELEPHON"].Add("CMPNY.TELEPHON", "A");
+			allSortOrders.Add("CMPNY.EMAIL", new OrderedDictionary());
+			allSortOrders["CMPNY.EMAIL"].Add("CMPNY.EMAIL", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "GQT_Menu_621_"));
@@ -271,16 +271,16 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcmpny.FldCodempre, CSGenioAcmpny.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("CMPNY.DESIGNAT", new OrderedDictionary());
-					allSortOrders["CMPNY.DESIGNAT"].Add("CMPNY.DESIGNAT", "A");
-				allSortOrders.Add("CMPNY.ACRONYM", new OrderedDictionary());
-					allSortOrders["CMPNY.ACRONYM"].Add("CMPNY.ACRONYM", "A");
-				allSortOrders.Add("CMPNY.NIF", new OrderedDictionary());
-					allSortOrders["CMPNY.NIF"].Add("CMPNY.NIF", "A");
-				allSortOrders.Add("CMPNY.TELEPHON", new OrderedDictionary());
-					allSortOrders["CMPNY.TELEPHON"].Add("CMPNY.TELEPHON", "A");
-				allSortOrders.Add("CMPNY.EMAIL", new OrderedDictionary());
-					allSortOrders["CMPNY.EMAIL"].Add("CMPNY.EMAIL", "A");
+			allSortOrders.Add("CMPNY.DESIGNAT", new OrderedDictionary());
+			allSortOrders["CMPNY.DESIGNAT"].Add("CMPNY.DESIGNAT", "A");
+			allSortOrders.Add("CMPNY.ACRONYM", new OrderedDictionary());
+			allSortOrders["CMPNY.ACRONYM"].Add("CMPNY.ACRONYM", "A");
+			allSortOrders.Add("CMPNY.NIF", new OrderedDictionary());
+			allSortOrders["CMPNY.NIF"].Add("CMPNY.NIF", "A");
+			allSortOrders.Add("CMPNY.TELEPHON", new OrderedDictionary());
+			allSortOrders["CMPNY.TELEPHON"].Add("CMPNY.TELEPHON", "A");
+			allSortOrders.Add("CMPNY.EMAIL", new OrderedDictionary());
+			allSortOrders["CMPNY.EMAIL"].Add("CMPNY.EMAIL", "A");
 
 
 
@@ -371,6 +371,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcmpny.FldCodempre, CSGenioAcmpny.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP 621]/
 
+                conditions = gqt_menu_621Conds;
                 return;
 			}
 

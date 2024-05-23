@@ -96,8 +96,6 @@ namespace GenioMVC.Helpers
 
         public static string NVD3ModelMultiBarChart { get { return "~/Scripts/novus-nvd3/src/models/multiBarChart.js"; } }
 
-        public static string Bootbox { get { return "~/Scripts/bootbox/bootbox.js"; } }
-
         public static string FileUploadIframeTransport { get { return "~/Scripts/jQueryFileUpload/jquery.iframe-transport.js"; } }
 
         public static string FileUpload { get { return "~/Scripts/jQueryFileUpload/jquery.fileupload.js"; } }
@@ -162,7 +160,7 @@ namespace GenioMVC.Helpers
 
         public static string Bootstrap4 { get { return "~/Scripts/bootstrap4/bootstrap.min.js"; } }
 
-        public static string Bootbox4 { get { return "~/Scripts/bootbox4/bootbox.js"; } }
+        public static string Bootbox { get { return "~/Scripts/bootbox/bootbox.all.min.js"; } }
 
         public static string Popper { get { return "~/Scripts/popper.js"; } }
 

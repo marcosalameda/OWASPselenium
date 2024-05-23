@@ -129,8 +129,8 @@ namespace GenioMVC.ViewModels.Insta
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("TPEQU.TPEQUCOD", new OrderedDictionary());
-					allSortOrders["TPEQU.TPEQUCOD"].Add("TPEQU.TPEQUCOD", "A");
+			allSortOrders.Add("TPEQU.TPEQUCOD", new OrderedDictionary());
+			allSortOrders["TPEQU.TPEQUCOD"].Add("TPEQU.TPEQUCOD", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Insta_TpequValTipoequi_"));
@@ -222,8 +222,8 @@ namespace GenioMVC.ViewModels.Insta
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("TPEQU.TPEQUCOD", new OrderedDictionary());
-					allSortOrders["TPEQU.TPEQUCOD"].Add("TPEQU.TPEQUCOD", "A");
+			allSortOrders.Add("TPEQU.TPEQUCOD", new OrderedDictionary());
+			allSortOrders["TPEQU.TPEQUCOD"].Add("TPEQU.TPEQUCOD", "A");
 
 
 
@@ -310,6 +310,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP INSTA_TPEQUTIPOEQUI]/
 
+                conditions = insta___tpequtipoequiConds;
                 return;
 			}
 

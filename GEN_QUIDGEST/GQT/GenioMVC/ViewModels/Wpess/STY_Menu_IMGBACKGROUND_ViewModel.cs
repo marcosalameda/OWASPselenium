@@ -176,8 +176,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.Fld
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("WPESS.DATE", new OrderedDictionary());
-					allSortOrders["WPESS.DATE"].Add("WPESS.DATE", "A");
+			allSortOrders.Add("WPESS.DATE", new OrderedDictionary());
+			allSortOrders["WPESS.DATE"].Add("WPESS.DATE", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "STY_Menu_IMGBACKGROUND_"));
@@ -270,8 +270,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.Fld
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("WPESS.DATE", new OrderedDictionary());
-					allSortOrders["WPESS.DATE"].Add("WPESS.DATE", "A");
+			allSortOrders.Add("WPESS.DATE", new OrderedDictionary());
+			allSortOrders["WPESS.DATE"].Add("WPESS.DATE", "A");
 
 
 
@@ -358,6 +358,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.Fld
 
 // USE /[MANUAL STY OVERRQLSTEXP IMGBACKGROUND]/
 
+                conditions = sty_menu_imgbackgroundConds;
                 return;
 			}
 

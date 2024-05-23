@@ -133,8 +133,8 @@ namespace GenioMVC.ViewModels.Conta
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("TPCON.TIPOCONT", new OrderedDictionary());
-					allSortOrders["TPCON.TIPOCONT"].Add("TPCON.TIPOCONT", "A");
+			allSortOrders.Add("TPCON.TIPOCONT", new OrderedDictionary());
+			allSortOrders["TPCON.TIPOCONT"].Add("TPCON.TIPOCONT", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Conta_TpconValTipocont_"));
@@ -226,8 +226,8 @@ namespace GenioMVC.ViewModels.Conta
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("TPCON.TIPOCONT", new OrderedDictionary());
-					allSortOrders["TPCON.TIPOCONT"].Add("TPCON.TIPOCONT", "A");
+			allSortOrders.Add("TPCON.TIPOCONT", new OrderedDictionary());
+			allSortOrders["TPCON.TIPOCONT"].Add("TPCON.TIPOCONT", "A");
 
 
 
@@ -329,6 +329,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpcon.FldCodtpcon, CSGenioAtpcon.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP CONTA_TPCONTIPOCONT]/
 
+                conditions = conta___tpcontipocontConds;
                 return;
 			}
 

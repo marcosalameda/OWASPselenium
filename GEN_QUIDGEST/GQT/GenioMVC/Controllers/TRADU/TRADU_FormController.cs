@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Tradu_ModalDBEdit(string partialView)
-		{
-			Tradu_ViewModel model = new Tradu_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Tradu_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW TRADU]/

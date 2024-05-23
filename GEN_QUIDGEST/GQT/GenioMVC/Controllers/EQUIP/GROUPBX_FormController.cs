@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Groupbx_ModalDBEdit(string partialView)
-		{
-			Groupbx_ViewModel model = new Groupbx_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Groupbx_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW GROUPBX]/

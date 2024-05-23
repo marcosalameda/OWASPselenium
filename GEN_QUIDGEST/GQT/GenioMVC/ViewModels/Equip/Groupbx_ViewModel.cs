@@ -18,6 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.ModelBinders;
+using GenioMVC.Helpers.Table.Properties;
 using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
@@ -108,7 +109,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// <summary>Campo : "Loan Frequency" Tipo:"AN"</summary>
 		[Display(Name = "LOAN_FREQUENCY00930", ResourceType = typeof(Resources.Resources))]
 		[DataArray("Freqempr", GenioMVC.Helpers.ArrayType.Numeric)]
-		public double? ValFrequenc { get; set; }
+		public decimal? ValFrequenc { get; set; }
 		[JsonIgnore]
 		public SelectList List_ValFrequenc { get; set; }
 
@@ -282,7 +283,7 @@ namespace GenioMVC.ViewModels.Equip
  				ValDesignat = ViewModelConversion.ToString(m.ValDesignat);
  				ValDtaquisi = ViewModelConversion.ToDateTime(m.ValDtaquisi);
  				ValValortot = ViewModelConversion.ToNumeric(m.ValValortot);
- 				ValFrequenc = ViewModelConversion.ToDouble(m.ValFrequenc);
+ 				ValFrequenc = ViewModelConversion.ToNumeric(m.ValFrequenc);
  				ValDtrefere = ViewModelConversion.ToDateTime(m.ValDtrefere);
  				ValFirst = ViewModelConversion.ToString(m.ValFirst);
  				ValBefore = ViewModelConversion.ToString(m.ValBefore);
@@ -319,7 +320,7 @@ namespace GenioMVC.ViewModels.Equip
 				m.ValDesignat = ViewModelConversion.ToString(ValDesignat);
 				m.ValDtaquisi = ViewModelConversion.ToDateTime(ValDtaquisi);
 				m.ValValortot = ViewModelConversion.ToNumeric(ValValortot);
-				m.ValFrequenc = ViewModelConversion.ToDouble(ValFrequenc);
+				m.ValFrequenc = ViewModelConversion.ToNumeric(ValFrequenc);
 				m.ValDtrefere = ViewModelConversion.ToDateTime(ValDtrefere);
 				m.ValFirst = ViewModelConversion.ToString(ValFirst);
 				m.ValBefore = ViewModelConversion.ToString(ValBefore);
@@ -708,7 +709,7 @@ namespace GenioMVC.ViewModels.Equip
 				IsTree = true,
 				Selector = new Func<Models.Tpequ, string>(x => x.ValTpequcod),
 				ParentSelector = new Func<Models.Tpequ, string>(x => x.ValTpequpai),
-				LevelSelector = new Func<Models.Tpequ, double>(x => x.ValNivel),
+				LevelSelector = new Func<Models.Tpequ, decimal>(x => x.ValNivel),
 				TextSelector = new Func<Models.Tpequ, string>(x => string.Format("{0} {1}", x.ValTpequcod, x.ValTipoequi))
 			});
 
@@ -946,7 +947,7 @@ namespace GenioMVC.ViewModels.Equip
 			// Limits Generation
 
 			// Area limit
-			groupbx_item_itemdes_DoLoad &= AddCriteriaAreaLimit(groupbx_item_itemdes_Conds, CSGenio.business.CSGenioAwareh.FldCodwareh, "wareh", this.ValCodwareh, false);
+			groupbx_item_itemdes_DoLoad &= AddCriteriaAreaLimit(groupbx_item_itemdes_Conds, CSGenio.business.CSGenioAwareh.FldCodwareh, "wareh", this.ValCodwareh, true);
 
 
             TableItemItemdes = new TableDBEdit<Models.Item>();

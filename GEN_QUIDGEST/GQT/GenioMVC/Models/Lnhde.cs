@@ -56,7 +56,7 @@ namespace GenioMVC.Models
 		[DisplayName("Order")]
 		/// <summary>Field : "Order" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValOrdem { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOrdem, 0)); } set { klass.ValOrdem = Convert.ToDouble(value); } }
+		public decimal? ValOrdem { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOrdem, 0)); } set { klass.ValOrdem = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValOrdem() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Lnhde.ValOrdem");
 
 		[DisplayName("")]
@@ -71,7 +71,7 @@ namespace GenioMVC.Models
 		[DisplayName("Amount")]
 		/// <summary>Field : "Amount" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValQuantida { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQuantida, 0)); } set { klass.ValQuantida = Convert.ToDouble(value); } }
+		public decimal? ValQuantida { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQuantida, 0)); } set { klass.ValQuantida = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValQuantida() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Lnhde.ValQuantida");
 
 		[DisplayName("")]

@@ -288,6 +288,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAflds.FldCodflds, CSGenioAflds.FldZz
 
 // USE /[MANUAL GQT OVERRQLSTEXP FEECA_DESCRIP]/
 
+                conditions = feeca___flds_descrip_Conds;
                 return;
 			}
 

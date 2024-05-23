@@ -166,8 +166,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAregio.FldCodregia, CSGenioAregio.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("REGIO.REGIAO", new OrderedDictionary());
-					allSortOrders["REGIO.REGIAO"].Add("REGIO.REGIAO", "A");
+			allSortOrders.Add("REGIO.REGIAO", new OrderedDictionary());
+			allSortOrders["REGIO.REGIAO"].Add("REGIO.REGIAO", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "PTN_Menu_411_"));
@@ -260,8 +260,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAregio.FldCodregia, CSGenioAregio.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("REGIO.REGIAO", new OrderedDictionary());
-					allSortOrders["REGIO.REGIAO"].Add("REGIO.REGIAO", "A");
+			allSortOrders.Add("REGIO.REGIAO", new OrderedDictionary());
+			allSortOrders["REGIO.REGIAO"].Add("REGIO.REGIAO", "A");
 
 
 
@@ -348,6 +348,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAregio.FldCodregia, CSGenioAregio.Fl
 
 // USE /[MANUAL PTN OVERRQLSTEXP 411]/
 
+                conditions = ptn_menu_411Conds;
                 return;
 			}
 

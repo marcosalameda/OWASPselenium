@@ -168,8 +168,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtradu.FldCodtradu, CSGenioAtradu.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("TRADU.REFERENC", new OrderedDictionary());
-					allSortOrders["TRADU.REFERENC"].Add("TRADU.REFERENC", "A");
+			allSortOrders.Add("TRADU.REFERENC", new OrderedDictionary());
+			allSortOrders["TRADU.REFERENC"].Add("TRADU.REFERENC", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "GQT_Menu_911_"));
@@ -262,8 +262,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtradu.FldCodtradu, CSGenioAtradu.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("TRADU.REFERENC", new OrderedDictionary());
-					allSortOrders["TRADU.REFERENC"].Add("TRADU.REFERENC", "A");
+			allSortOrders.Add("TRADU.REFERENC", new OrderedDictionary());
+			allSortOrders["TRADU.REFERENC"].Add("TRADU.REFERENC", "A");
 
 
 
@@ -350,6 +350,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtradu.FldCodtradu, CSGenioAtradu.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP 911]/
 
+                conditions = gqt_menu_911Conds;
                 return;
 			}
 

@@ -133,8 +133,8 @@ namespace GenioMVC.ViewModels.Indoc
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("CMPNY.DESIGNAT", new OrderedDictionary());
-					allSortOrders["CMPNY.DESIGNAT"].Add("CMPNY.DESIGNAT", "A");
+			allSortOrders.Add("CMPNY.DESIGNAT", new OrderedDictionary());
+			allSortOrders["CMPNY.DESIGNAT"].Add("CMPNY.DESIGNAT", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Dentr_CmpnyValDesignat_"));
@@ -226,8 +226,8 @@ namespace GenioMVC.ViewModels.Indoc
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("CMPNY.DESIGNAT", new OrderedDictionary());
-					allSortOrders["CMPNY.DESIGNAT"].Add("CMPNY.DESIGNAT", "A");
+			allSortOrders.Add("CMPNY.DESIGNAT", new OrderedDictionary());
+			allSortOrders["CMPNY.DESIGNAT"].Add("CMPNY.DESIGNAT", "A");
 
 
 
@@ -329,6 +329,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcmpny.FldCodempre, CSGenioAcmpny.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP DENTR_CMPNYDESIGNAT]/
 
+                conditions = dentr___cmpnydesignatConds;
                 return;
 			}
 

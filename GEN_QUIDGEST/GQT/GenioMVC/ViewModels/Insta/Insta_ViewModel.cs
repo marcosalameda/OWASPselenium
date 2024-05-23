@@ -18,6 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.ModelBinders;
+using GenioMVC.Helpers.Table.Properties;
 using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
@@ -633,7 +634,7 @@ namespace GenioMVC.ViewModels.Insta
 				IsTree = true,
 				Selector = new Func<Models.Tpequ, string>(x => x.ValTpequcod),
 				ParentSelector = new Func<Models.Tpequ, string>(x => x.ValTpequpai),
-				LevelSelector = new Func<Models.Tpequ, double>(x => x.ValNivel),
+				LevelSelector = new Func<Models.Tpequ, decimal>(x => x.ValNivel),
 				TextSelector = new Func<Models.Tpequ, string>(x => string.Format("{0} {1} {2}", x.ValTpequcod, x.ValTipoequi, x.ValQtdequip))
 			});
 
@@ -668,7 +669,7 @@ namespace GenioMVC.ViewModels.Insta
 			// Limits Generation
 
 			// Area limit
-			insta___equipregistnrDoLoad &= AddCriteriaAreaLimit(insta___equipregistnrConds, CSGenio.business.CSGenioAtpequ.FldCodtpequ, "tpequ", this.ValCodtpequ, false);
+			insta___equipregistnrDoLoad &= AddCriteriaAreaLimit(insta___equipregistnrConds, CSGenio.business.CSGenioAtpequ.FldCodtpequ, "tpequ", this.ValCodtpequ, true);
 
 
             TableEquipRegistnr = new TableDBEdit<Models.Equip>();

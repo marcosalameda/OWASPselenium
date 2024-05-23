@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Fotos_ModalDBEdit(string partialView)
-		{
-			Fotos_ViewModel model = new Fotos_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Fotos_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW FOTOS]/

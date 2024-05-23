@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Cate1_ModalDBEdit(string partialView)
-		{
-			Cate1_ViewModel model = new Cate1_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Cate1_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW CATE1]/

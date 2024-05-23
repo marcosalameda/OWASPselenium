@@ -779,13 +779,13 @@ qapi.prototype.DateDiffPart = function (startDate, endDate, unit)
 {
 	var diff = endDate - startDate;
 	if (unit === "D")
-		return Math.Floor(diff / 1000 / 3600 / 24);
+		return Math.floor(diff / 1000 / 3600 / 24);
 	if (unit === "H")
-		return Math.Floor(diff / 1000 / 3600);
+		return Math.floor(diff / 1000 / 3600);
 	if (unit === "M")
-		return Math.Floor(diff / 1000 / 60);
+		return Math.floor(diff / 1000 / 60);
 	if (unit === "S")
-		return Math.Floor(diff / 1000);
+		return Math.floor(diff / 1000);
 
 	return 0;
 }
@@ -1144,7 +1144,6 @@ qapi.prototype.isGuid = function (key)
 		return 1;
 	return 0;
 }
-
 /*********** Support data structures ***********/
 
 var FLAT_MVC_THEME_VARIABLES = {

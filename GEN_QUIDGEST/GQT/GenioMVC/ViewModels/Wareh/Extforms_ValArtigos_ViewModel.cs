@@ -132,8 +132,8 @@ namespace GenioMVC.ViewModels.Wareh
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("ITEM.ITEMDES", new OrderedDictionary());
-					allSortOrders["ITEM.ITEMDES"].Add("ITEM.ITEMDES", "A");
+			allSortOrders.Add("ITEM.ITEMDES", new OrderedDictionary());
+			allSortOrders["ITEM.ITEMDES"].Add("ITEM.ITEMDES", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValArtigos_"));
@@ -229,8 +229,8 @@ namespace GenioMVC.ViewModels.Wareh
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("ITEM.ITEMDES", new OrderedDictionary());
-					allSortOrders["ITEM.ITEMDES"].Add("ITEM.ITEMDES", "A");
+			allSortOrders.Add("ITEM.ITEMDES", new OrderedDictionary());
+			allSortOrders["ITEM.ITEMDES"].Add("ITEM.ITEMDES", "A");
 
 
 
@@ -317,6 +317,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAitem.FldCoditem, CSGenioAitem.FldZz
 
 // USE /[MANUAL GQT OVERRQLSTEXP EXTFORMS_PSEUDARTIGOS]/
 
+                conditions = extformspseudartigos_Conds;
                 return;
 			}
 

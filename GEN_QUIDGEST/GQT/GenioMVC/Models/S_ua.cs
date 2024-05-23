@@ -57,6 +57,11 @@ namespace GenioMVC.Models
 		public SelectList ArrayValmodulo { get { return new SelectList(CSGenio.business.ArrayS_module.GetDictionary(), "Key", "Value", ValModulo); } set { ValModulo = value.SelectedValue as string; } }
 		public bool ShouldSerializeValModulo() => this.SerializeAllFields || this.FieldsToSerialize.Contains("S_ua.ValModulo");
 
+		[DisplayName("")]
+		/// <summary>Field : "" Tipo: "C" Formula: + "KeyToString([S_UA->CODPSW]) + [S_UA->MODULO]"</summary>
+		public string ValNaodupli { get { return klass.ValNaodupli; } set { klass.ValNaodupli = value; } }
+		public bool ShouldSerializeValNaodupli() => this.SerializeAllFields || this.FieldsToSerialize.Contains("S_ua.ValNaodupli");
+
 		[DisplayName("Role")]
 		/// <summary>Field : "Role" Tipo: "AC" Formula:  ""</summary>
 		[DataArray("S_roles", GenioMVC.Helpers.ArrayType.Character)]
@@ -68,7 +73,7 @@ namespace GenioMVC.Models
 		[DisplayName("Level")]
 		/// <summary>Field : "Level" Tipo: "N" Formula: + "GetLevelFromRole([S_UA->NIVEL], [S_UA->ROLE])"</summary>
 		[NumericAttribute(0)]
-		public decimal? ValNivel { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNivel, 0)); } set { klass.ValNivel = Convert.ToDouble(value); } }
+		public decimal? ValNivel { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNivel, 0)); } set { klass.ValNivel = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValNivel() => this.SerializeAllFields || this.FieldsToSerialize.Contains("S_ua.ValNivel");
 
 		[DisplayName("Created by")]

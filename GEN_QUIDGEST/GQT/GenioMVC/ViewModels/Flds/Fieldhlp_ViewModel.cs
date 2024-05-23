@@ -18,6 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.ModelBinders;
+using GenioMVC.Helpers.Table.Properties;
 using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
@@ -214,7 +215,7 @@ namespace GenioMVC.ViewModels.Flds
 		[Display(Name = "CONDITIONAL01431", ResourceType = typeof(Resources.Resources))]
 		[UIHint("DBConditional")]
 		[ConditionalBinder]
-		public double ValConditio { get; set; }
+		public decimal ValConditio { get; set; }
 
 		/// <summary>Campo : "Text Enumeration" Tipo:"AC"</summary>
 		[Display(Name = "TEXT_ENUMERATION45668", ResourceType = typeof(Resources.Resources))]
@@ -257,7 +258,7 @@ namespace GenioMVC.ViewModels.Flds
 		/// <summary>Campo : "Numeric Enumeration" Tipo:"AN"</summary>
 		[Display(Name = "NUMERIC_ENUMERATION19068", ResourceType = typeof(Resources.Resources))]
 		[DataArray("Classnum", GenioMVC.Helpers.ArrayType.Numeric)]
-		public double? ValClassnum { get; set; }
+		public decimal? ValClassnum { get; set; }
 		[JsonIgnore]
 		public SelectList List_ValClassnum { get; set; }
 
@@ -417,14 +418,14 @@ namespace GenioMVC.ViewModels.Flds
  				ValCreatdat = ViewModelConversion.ToDateTime(m.ValCreatdat);
  				ValCreatins = ViewModelConversion.ToDateTime(m.ValCreatins);
  				ValCreathou = ViewModelConversion.ToString(m.ValCreathou);
- 				ValConditio = ViewModelConversion.ToDouble(m.ValConditio);
+ 				ValConditio = ViewModelConversion.ToNumeric(m.ValConditio);
  				ValClass = ViewModelConversion.ToString(m.ValClass);
  				ValRadiob = ViewModelConversion.ToString(m.ValRadiob);
  				ValLogo = ViewModelConversion.ToImage(m.ValLogo);
  				ValAttach = ViewModelConversion.ToString(m.ValAttach);
 				ValAttachfk = ViewModelConversion.ToString(m.ValAttachfk);
  				ValShwrc = ViewModelConversion.ToLogic(m.ValShwrc);
- 				ValClassnum = ViewModelConversion.ToDouble(m.ValClassnum);
+ 				ValClassnum = ViewModelConversion.ToNumeric(m.ValClassnum);
  				ValCodaero = ViewModelConversion.ToString(m.ValCodaero);
  				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
  				ValCodflds = ViewModelConversion.ToString(m.ValCodflds);
@@ -472,14 +473,14 @@ namespace GenioMVC.ViewModels.Flds
 				m.ValCreatdat = ViewModelConversion.ToDateTime(ValCreatdat);
 				m.ValCreatins = ViewModelConversion.ToDateTime(ValCreatins);
 				m.ValCreathou = ViewModelConversion.ToString(ValCreathou);
-				m.ValConditio = ViewModelConversion.ToDouble(ValConditio);
+				m.ValConditio = ViewModelConversion.ToNumeric(ValConditio);
 				m.ValClass = ViewModelConversion.ToString(ValClass);
 				m.ValRadiob = ViewModelConversion.ToString(ValRadiob);
 				m.ValAttach = ViewModelConversion.ToString(ValAttach);
 				m.ValAttachfk = ViewModelConversion.ToString(ValAttachfk);
 
 				m.ValShwrc = ViewModelConversion.ToLogic(ValShwrc);
-				m.ValClassnum = ViewModelConversion.ToDouble(ValClassnum);
+				m.ValClassnum = ViewModelConversion.ToNumeric(ValClassnum);
 				m.ValCodaero = ViewModelConversion.ToString(ValCodaero);
 				m.ValCodequip = ViewModelConversion.ToString(ValCodequip);
 				m.ValCodflds = ViewModelConversion.ToString(ValCodflds);

@@ -132,8 +132,8 @@ namespace GenioMVC.ViewModels.Equip
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("REPAR.NRREPARA", new OrderedDictionary());
-					allSortOrders["REPAR.NRREPARA"].Add("REPAR.NRREPARA", "A");
+			allSortOrders.Add("REPAR.NRREPARA", new OrderedDictionary());
+			allSortOrders["REPAR.NRREPARA"].Add("REPAR.NRREPARA", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValReparaco_"));
@@ -229,8 +229,8 @@ namespace GenioMVC.ViewModels.Equip
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("REPAR.NRREPARA", new OrderedDictionary());
-					allSortOrders["REPAR.NRREPARA"].Add("REPAR.NRREPARA", "A");
+			allSortOrders.Add("REPAR.NRREPARA", new OrderedDictionary());
+			allSortOrders["REPAR.NRREPARA"].Add("REPAR.NRREPARA", "A");
 
 
 
@@ -317,6 +317,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioArepar.FldCodrepar, CSGenioArepar.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP EQUIP_PSEUDREPARACO]/
 
+                conditions = equip___pseudreparacoConds;
                 return;
 			}
 

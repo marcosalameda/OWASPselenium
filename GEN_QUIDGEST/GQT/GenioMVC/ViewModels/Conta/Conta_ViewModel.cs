@@ -18,6 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.ModelBinders;
+using GenioMVC.Helpers.Table.Properties;
 using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
@@ -777,7 +778,7 @@ namespace GenioMVC.ViewModels.Conta
 			// Limits Generation
 
 			// Area limit
-			conta___tpcontipocontDoLoad &= AddCriteriaAreaLimit(conta___tpcontipocontConds, CSGenio.business.CSGenioAgenre.FldCodgenre, "genre", this.ValCodgenre, false);
+			conta___tpcontipocontDoLoad &= AddCriteriaAreaLimit(conta___tpcontipocontConds, CSGenio.business.CSGenioAgenre.FldCodgenre, "genre", this.ValCodgenre, true);
 
 
             TableTpconTipocont = new TableDBEdit<Models.Tpcon>();

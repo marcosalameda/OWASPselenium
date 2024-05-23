@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Regra_ModalDBEdit(string partialView)
-		{
-			Regra_ViewModel model = new Regra_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Regra_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW REGRA]/

@@ -127,8 +127,8 @@ namespace GenioMVC.ViewModels.Tblk
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("TRSB.NAME", new OrderedDictionary());
-					allSortOrders["TRSB.NAME"].Add("TRSB.NAME", "A");
+			allSortOrders.Add("TRSB.NAME", new OrderedDictionary());
+			allSortOrders["TRSB.NAME"].Add("TRSB.NAME", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Tblk_TrsbValName_"));
@@ -220,8 +220,8 @@ namespace GenioMVC.ViewModels.Tblk
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("TRSB.NAME", new OrderedDictionary());
-					allSortOrders["TRSB.NAME"].Add("TRSB.NAME", "A");
+			allSortOrders.Add("TRSB.NAME", new OrderedDictionary());
+			allSortOrders["TRSB.NAME"].Add("TRSB.NAME", "A");
 
 
 
@@ -298,6 +298,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtrsb.FldCodtrsb, CSGenioAtrsb.FldZz
 
 // USE /[MANUAL GQT OVERRQLSTEXP TBLK_NAME]/
 
+                conditions = tblk____trsb_name____Conds;
                 return;
 			}
 

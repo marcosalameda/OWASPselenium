@@ -127,8 +127,8 @@ namespace GenioMVC.ViewModels.Item
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("GITEM.ITEMDES", new OrderedDictionary());
-					allSortOrders["GITEM.ITEMDES"].Add("GITEM.ITEMDES", "A");
+			allSortOrders.Add("GITEM.ITEMDES", new OrderedDictionary());
+			allSortOrders["GITEM.ITEMDES"].Add("GITEM.ITEMDES", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Artiginv_GitemValItemdes_"));
@@ -220,8 +220,8 @@ namespace GenioMVC.ViewModels.Item
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("GITEM.ITEMDES", new OrderedDictionary());
-					allSortOrders["GITEM.ITEMDES"].Add("GITEM.ITEMDES", "A");
+			allSortOrders.Add("GITEM.ITEMDES", new OrderedDictionary());
+			allSortOrders["GITEM.ITEMDES"].Add("GITEM.ITEMDES", "A");
 
 
 
@@ -298,6 +298,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgitem.FldCodgitem, CSGenioAgitem.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP ARTIGINV_ITEMDES]/
 
+                conditions = artiginvgitemitemdes_Conds;
                 return;
 			}
 

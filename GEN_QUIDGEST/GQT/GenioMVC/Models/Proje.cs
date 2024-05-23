@@ -57,37 +57,37 @@ namespace GenioMVC.Models
 		[DisplayName("First")]
 		/// <summary>Field : "First" Tipo: "$D" Formula: CT "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](ASC)"</summary>
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValPrimeiro { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrimeiro, 2)); } set { klass.ValPrimeiro = Convert.ToDouble(value); } }
+		public decimal? ValPrimeiro { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrimeiro, 2)); } set { klass.ValPrimeiro = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPrimeiro() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Proje.ValPrimeiro");
 
 		[DisplayName("Before")]
 		/// <summary>Field : "Before" Tipo: "$D" Formula: CT "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](DESC)"</summary>
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValBefore { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValBefore, 2)); } set { klass.ValBefore = Convert.ToDouble(value); } }
+		public decimal? ValBefore { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValBefore, 2)); } set { klass.ValBefore = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValBefore() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Proje.ValBefore");
 
 		[DisplayName("Following")]
 		/// <summary>Field : "Following" Tipo: "$D" Formula: CS "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](ASC)"</summary>
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValFollowin { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValFollowin, 2)); } set { klass.ValFollowin = Convert.ToDouble(value); } }
+		public decimal? ValFollowin { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValFollowin, 2)); } set { klass.ValFollowin = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValFollowin() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Proje.ValFollowin");
 
 		[DisplayName("Last")]
 		/// <summary>Field : "Last" Tipo: "$D" Formula: CS "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](DESC)"</summary>
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValUltimo { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValUltimo, 2)); } set { klass.ValUltimo = Convert.ToDouble(value); } }
+		public decimal? ValUltimo { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValUltimo, 2)); } set { klass.ValUltimo = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValUltimo() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Proje.ValUltimo");
 
 		[DisplayName("Next - Previous =")]
 		/// <summary>Field : "Next - Previous =" Tipo: "$D" Formula: + "[PROJE->FOLLOWIN]-[PROJE->BEFORE]"</summary>
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValSaldo1 { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValSaldo1, 2)); } set { klass.ValSaldo1 = Convert.ToDouble(value); } }
+		public decimal? ValSaldo1 { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValSaldo1, 2)); } set { klass.ValSaldo1 = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValSaldo1() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Proje.ValSaldo1");
 
 		[DisplayName("Last - First =")]
 		/// <summary>Field : "Last - First =" Tipo: "$D" Formula: + "[PROJE->ULTIMO]-[PROJE->PRIMEIRO]"</summary>
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValSaldo2 { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValSaldo2, 2)); } set { klass.ValSaldo2 = Convert.ToDouble(value); } }
+		public decimal? ValSaldo2 { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValSaldo2, 2)); } set { klass.ValSaldo2 = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValSaldo2() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Proje.ValSaldo2");
 
 		[DisplayName("ZZSTATE")]

@@ -349,9 +349,9 @@ namespace CSGenio.business
 		private static FieldRef m_fldNridenti = new FieldRef("pwcom", "nridenti");
 
 		/// <summary>Field : "Identification" Tipo: "N" Formula: ++ "[PESS1->IDFUNCIO]"</summary>
-		public double ValNridenti
+		public decimal ValNridenti
 		{
-			get { return (double)returnValueField(FldNridenti); }
+			get { return (decimal)returnValueField(FldNridenti); }
 			set { insertNameValueField(FldNridenti, value); }
 		}
 

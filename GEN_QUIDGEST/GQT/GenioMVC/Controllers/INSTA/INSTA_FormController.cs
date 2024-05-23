@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Insta_ModalDBEdit(string partialView)
-		{
-			Insta_ViewModel model = new Insta_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Insta_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW INSTA]/

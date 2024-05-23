@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Roigf_ModalDBEdit(string partialView)
-		{
-			Roigf_ViewModel model = new Roigf_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Roigf_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW ROIGF]/

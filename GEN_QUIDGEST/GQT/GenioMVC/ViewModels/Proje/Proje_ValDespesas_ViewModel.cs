@@ -304,6 +304,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAexpen.FldCoddespe, CSGenioAexpen.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP PROJE_PSEUDDESPESAS]/
 
+                conditions = proje___pseuddespesasConds;
                 return;
 			}
 

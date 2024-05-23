@@ -127,8 +127,8 @@ namespace GenioMVC.ViewModels.Movim
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("ROOMS.ROOMNR", new OrderedDictionary());
-					allSortOrders["ROOMS.ROOMNR"].Add("ROOMS.ROOMNR", "A");
+			allSortOrders.Add("ROOMS.ROOMNR", new OrderedDictionary());
+			allSortOrders["ROOMS.ROOMNR"].Add("ROOMS.ROOMNR", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Movim_RoomsValRoomnr_"));
@@ -220,8 +220,8 @@ namespace GenioMVC.ViewModels.Movim
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("ROOMS.ROOMNR", new OrderedDictionary());
-					allSortOrders["ROOMS.ROOMNR"].Add("ROOMS.ROOMNR", "A");
+			allSortOrders.Add("ROOMS.ROOMNR", new OrderedDictionary());
+			allSortOrders["ROOMS.ROOMNR"].Add("ROOMS.ROOMNR", "A");
 
 
 
@@ -308,6 +308,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioArooms.FldCodrooms, CSGenioArooms.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP MOVIM_ROOMSROOMNR]/
 
+                conditions = movim___roomsroomnr__Conds;
                 return;
 			}
 

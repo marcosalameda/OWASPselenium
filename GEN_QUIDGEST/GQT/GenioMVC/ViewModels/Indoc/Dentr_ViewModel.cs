@@ -18,6 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.ModelBinders;
+using GenioMVC.Helpers.Table.Properties;
 using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
@@ -603,7 +604,7 @@ namespace GenioMVC.ViewModels.Indoc
 			// Limits Generation
 
 			// Area limit
-			dentr___cmpnydesignatDoLoad &= AddCriteriaAreaLimit(dentr___cmpnydesignatConds, CSGenio.business.CSGenioAcntry.FldCodcntry, "cntry", this.ValCodcntry, false);
+			dentr___cmpnydesignatDoLoad &= AddCriteriaAreaLimit(dentr___cmpnydesignatConds, CSGenio.business.CSGenioAcntry.FldCodcntry, "cntry", this.ValCodcntry, true);
 
 
             TableCmpnyDesignat = new TableDBEdit<Models.Cmpny>();
@@ -822,10 +823,10 @@ namespace GenioMVC.ViewModels.Indoc
 			// Limits Generation
 
 			// Area limit
-			dentr___pessoname____DoLoad &= AddCriteriaAreaLimit(dentr___pessoname____Conds, CSGenio.business.CSGenioAcntry.FldCodcntry, "cntry", this.ValCodcntry, false);
+			dentr___pessoname____DoLoad &= AddCriteriaAreaLimit(dentr___pessoname____Conds, CSGenio.business.CSGenioAcntry.FldCodcntry, "cntry", this.ValCodcntry, true);
 
 			// Area limit
-			dentr___pessoname____DoLoad &= AddCriteriaAreaLimit(dentr___pessoname____Conds, CSGenio.business.CSGenioAcmpny.FldCodempre, "cmpny", this.ValCodempre, false);
+			dentr___pessoname____DoLoad &= AddCriteriaAreaLimit(dentr___pessoname____Conds, CSGenio.business.CSGenioAcmpny.FldCodempre, "cmpny", this.ValCodempre, true);
 
 
             TablePessoName = new TableDBEdit<Models.Pesso>();

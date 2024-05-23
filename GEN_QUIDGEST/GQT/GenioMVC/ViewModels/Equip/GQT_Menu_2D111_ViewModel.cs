@@ -173,8 +173,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("EQUIP.REGISTNR", new OrderedDictionary());
-					allSortOrders["EQUIP.REGISTNR"].Add("EQUIP.REGISTNR", "A");
+			allSortOrders.Add("EQUIP.REGISTNR", new OrderedDictionary());
+			allSortOrders["EQUIP.REGISTNR"].Add("EQUIP.REGISTNR", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "GQT_Menu_2D111_"));
@@ -192,7 +192,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
 			// Limit "DM"
 			//Limiting DMs can now be used without filters, thanks to the implementation of the selectAll option
 			{
-				var limValue = (string[])Navigation.GetValue("tpequ_Selections");
+				var limValue = Navigation.GetValue<string[]>("tpequ_Selections");
 				if (limValue != null && limValue.Any())
 					crs.In(CSGenioAequip.FldCodtpequ, limValue);
 			}
@@ -275,8 +275,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("EQUIP.REGISTNR", new OrderedDictionary());
-					allSortOrders["EQUIP.REGISTNR"].Add("EQUIP.REGISTNR", "A");
+			allSortOrders.Add("EQUIP.REGISTNR", new OrderedDictionary());
+			allSortOrders["EQUIP.REGISTNR"].Add("EQUIP.REGISTNR", "A");
 
 
 
@@ -379,6 +379,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP 2D111]/
 
+                conditions = gqt_menu_2d111Conds;
                 return;
 			}
 

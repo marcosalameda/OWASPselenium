@@ -101,7 +101,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"sequennr"}, new int[] {0}, "equip", "codequip"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 1, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return GlobalFunctions.RIGHT("000000"+GlobalFunctions.NumericToString(((double)args[0]),0),6);
+				return GlobalFunctions.RIGHT("000000"+GlobalFunctions.NumericToString(((decimal)args[0]),0),6);
 			});
 			info.RegisterFieldDB(Qfield);
 
@@ -412,15 +412,15 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(11);
-			info.Pathways.Add("decom","decom");
 			info.Pathways.Add("wareh","wareh");
-			info.Pathways.Add("tpequ","tpequ");
-			info.Pathways.Add("cmpny","cmpny");
+			info.Pathways.Add("decom","decom");
 			info.Pathways.Add("item","item");
+			info.Pathways.Add("cmpny","cmpny");
+			info.Pathways.Add("tpequ","tpequ");
 			info.Pathways.Add("pess1","pess1");
-			info.Pathways.Add("famil","tpequ");
-			info.Pathways.Add("cntry","cmpny");
 			info.Pathways.Add("gitem","item");
+			info.Pathways.Add("cntry","cmpny");
+			info.Pathways.Add("famil","tpequ");
 			info.Pathways.Add("stake","pess1");
 			info.Pathways.Add("cate2","pess1");
 			info.Pathways.Add("room1","room1");
@@ -632,9 +632,9 @@ namespace CSGenio.business
 		private static FieldRef m_fldSequennr = new FieldRef("equip", "sequennr");
 
 		/// <summary>Field : "Sequential no." Tipo: "N" Formula:  ""</summary>
-		public double ValSequennr
+		public decimal ValSequennr
 		{
-			get { return (double)returnValueField(FldSequennr); }
+			get { return (decimal)returnValueField(FldSequennr); }
 			set { insertNameValueField(FldSequennr, value); }
 		}
 
@@ -764,9 +764,9 @@ namespace CSGenio.business
 		private static FieldRef m_fldValortot = new FieldRef("equip", "valortot");
 
 		/// <summary>Field : "Total value" Tipo: "$D" Formula: SR "[INSTA->VALUE]"</summary>
-		public double ValValortot
+		public decimal ValValortot
 		{
-			get { return (double)returnValueField(FldValortot); }
+			get { return (decimal)returnValueField(FldValortot); }
 			set { insertNameValueField(FldValortot, value); }
 		}
 
@@ -776,9 +776,9 @@ namespace CSGenio.business
 		private static FieldRef m_fldFrequenc = new FieldRef("equip", "frequenc");
 
 		/// <summary>Field : "Loan frequency" Tipo: "AN" Formula:  ""</summary>
-		public double ValFrequenc
+		public decimal ValFrequenc
 		{
-			get { return (double)returnValueField(FldFrequenc); }
+			get { return (decimal)returnValueField(FldFrequenc); }
 			set { insertNameValueField(FldFrequenc, value); }
 		}
 
@@ -908,9 +908,9 @@ namespace CSGenio.business
 		private static FieldRef m_fldQtdmovim = new FieldRef("equip", "qtdmovim");
 
 		/// <summary>Field : "Qtd. movimentações" Tipo: "N" Formula: SR "[MOVIM->1]"</summary>
-		public double ValQtdmovim
+		public decimal ValQtdmovim
 		{
-			get { return (double)returnValueField(FldQtdmovim); }
+			get { return (decimal)returnValueField(FldQtdmovim); }
 			set { insertNameValueField(FldQtdmovim, value); }
 		}
 

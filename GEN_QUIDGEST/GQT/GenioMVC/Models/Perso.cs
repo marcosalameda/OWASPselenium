@@ -67,15 +67,15 @@ namespace GenioMVC.Models
 		[DisplayName("Year")]
 		/// <summary>Field : "Year" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValYear { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValYear, 0)); } set { klass.ValYear = Convert.ToDouble(value); } }
+		public decimal? ValYear { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValYear, 0)); } set { klass.ValYear = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValYear() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Perso.ValYear");
 
 		[DisplayName("Month")]
 		/// <summary>Field : "Month" Tipo: "AN" Formula:  ""</summary>
 		[DataArray("Months", GenioMVC.Helpers.ArrayType.Numeric)]
-		public double ValMonth { get { return klass.ValMonth; } set { klass.ValMonth = value; } }
+		public decimal ValMonth { get { return klass.ValMonth; } set { klass.ValMonth = value; } }
 		[JsonIgnore]
-		public SelectList ArrayValmonth { get { return new SelectList(CSGenio.business.ArrayMonths.GetDictionary(), "Key", "Value", ValMonth); } set { ValMonth = Convert.ToDouble(value.SelectedValue); } }
+		public SelectList ArrayValmonth { get { return new SelectList(CSGenio.business.ArrayMonths.GetDictionary(), "Key", "Value", ValMonth); } set { ValMonth = Convert.ToDecimal(value.SelectedValue); } }
 		public bool ShouldSerializeValMonth() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Perso.ValMonth");
 
 		[DisplayName("Date of birth")]

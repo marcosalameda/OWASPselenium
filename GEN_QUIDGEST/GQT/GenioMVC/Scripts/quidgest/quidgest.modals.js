@@ -11,25 +11,26 @@
 
 function OpenModalForm(link, params, table, callbackSave, callbackCancel, callbackDelete, modalId)
 {
-    var formModal;
-
-    //If the form HTML already exists we want to remove it and readd it
-    //This will fix an issue where it might show up behind another pop up that is already open
-    //since now we garantee it is at the bottom of the DOM
-    if (modalId) {
-        if ($('#' + modalId))
-            $('#' + modalId).remove();
-
-        $('body').append('<div id="' + modalId + '" class="modal container-fluid hide" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true"></div>');
-        formModal = $('#' + modalId);
+    // If the form HTML already exists we want to remove it and readd it
+    // This will fix an issue where it might show up behind another pop up that is already open
+    //  since now we garantee it is at the bottom of the DOM
+    const targetModalId = modalId || 'form-modal'
+    var formModal = $('#' + targetModalId);
+    if (formModal.length)
+    {
+        formModal.modal('hide');
+        formModal.remove();
     }
-    else {        
-        if ($('#form-modal')) 
-            $('#form-modal').remove();
-        
-        $('body').append('<div id="form-modal" class="modal container-fluid hide" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true"></div>');
-        formModal = $('#form-modal');
-    }
+
+    formModal = $('<div></div>', {
+        id: targetModalId,
+        "class": "modal container-fluid hide",
+        "data-backdrop": "static",
+        "data-keyboard": "false",
+        tabindex: -1,
+        role: "dialog",
+        "aria-hidden": "true"
+    }).appendTo("body");
 
     // erase modal content
     formModal.html("");
@@ -86,7 +87,7 @@ function OpenModalForm(link, params, table, callbackSave, callbackCancel, callba
                     $("[data-modal-close=true]", formModal).last().click();
             })*/
         },
-        error: function (jqXHR, textStatus, errorThrown) {
+        error: function (/*jqXHR, textStatus, errorThrown*/) {
             var QErrorModalForm = '<div class="alert alert-error permissionErrorPopUp"><p><strong>' + quidgestGlobals.Resources.OCORREU_UM_ERRO_AO_P53091 + '</strong></p></div><div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">' + quidgestGlobals.Resources.FECHAR + '</button></div>';
 
             formModal.removeClass("loading");
@@ -107,18 +108,39 @@ function CloseModalForm(link, params, isCancel, repeatInsertion, modalId)
     var qForm = qFormVarName != undefined ? window[qFormVarName] : undefined;
     var isQForm = (qForm != undefined);
 
-    if (isQForm && !isCancel && qForm.FormMode === QFormMode.delete)
+    if (isQForm)
     {
-        CloseModalFormOnDelete(link, modalId);
-        return;
+        if(!isCancel && qForm.FormMode === QFormMode.delete)
+        {
+            CloseModalFormOnDelete(link, modalId);
+            return;
+        }
+
+        /**
+         * To prevent multiple executions of handlers from different actions (which can occur in the case of multiple clicks on the same button, 
+         *  especially if the system and network are slow), "submissionDisabled" is used to block some actions 
+         *  and only unlocks if the page is not changed to another. Without this block, multiple executions can cause various problems on the server,
+         *  including corrupting the levels of history.
+         */
+        if(qForm.submissionDisabled)
+            return;
+
+        qForm.submissionDisabled = true;
     }
 
-    var preValidaMode = isCancel ? 'CANCEL' : 'SUBMIT';
+   try
+   {
+        var preValidaMode = isCancel ? 'CANCEL' : 'SUBMIT';
 
-    $.when(isCancel ? (isQForm ? qForm.confirmDirtyFields() : true) : true, isQForm ? qForm.OnPreValida(preValidaMode, qFormVarName) : true, repeatInsertion)
+        $.when(isCancel ? (isQForm ? qForm.confirmDirtyFields() : true) : true, isQForm ? qForm.OnPreValida(preValidaMode, qFormVarName) : true, repeatInsertion)
         .then(function (confirmDirtyFields, prevalida, repeatInsertion) {
 
-            if (!confirmDirtyFields || !prevalida) return false;
+            if (!confirmDirtyFields || !prevalida) 
+            {
+                if(isQForm) 
+                    qForm.submissionDisabled = false;
+                return false;
+            }
 
             $.when(isQForm && !isCancel ? qForm.OnBeforeSave() : true, repeatInsertion).then(function (resBeforeSave, repeatInsertion) {
                 var inputs = getInputsForNestedForm(formModal);
@@ -134,6 +156,8 @@ function CloseModalForm(link, params, isCancel, repeatInsertion, modalId)
                     },
                     complete: function() {
                         QAnimation.removeLoading();
+                        if(isQForm)
+                            qForm.submissionDisabled = false;
                     },
                     success: function (data) {
                         if (data && data.Success) {
@@ -166,6 +190,7 @@ function CloseModalForm(link, params, isCancel, repeatInsertion, modalId)
                                         restoreQuidgestGlobals();
                                     }
                                     if (repeatInsertion) {
+                                        formModal.modal('hide'); //Hide the current pop form before open the new one
                                         OpenModalForm(temp_GET_link, {}, table);
                                     }
                                     else {
@@ -215,8 +240,15 @@ function CloseModalForm(link, params, isCancel, repeatInsertion, modalId)
                         }
                     }
                 });
-            });
-        });
+            }).fail(() => { if(isQForm) qForm.submissionDisabled = false; });
+        }).fail(() => { if(isQForm) qForm.submissionDisabled = false; });
+   }
+   catch(e)
+   {
+        console.error('Error while closing the modal form', e);
+        if(isQForm) 
+            qForm.submissionDisabled = false;
+   }
 }
 
 function CloseModalFormOnDelete(link, modalId) {
@@ -224,6 +256,16 @@ function CloseModalFormOnDelete(link, modalId) {
     var formModal = $('#' + modalId);
 
     var qForm = formModal.find('form').first().getQForm();
+    /**
+     * To prevent multiple executions of handlers from different actions (which can occur in the case of multiple clicks on the same button, 
+     *  especially if the system and network are slow), "submissionDisabled" is used to block some actions 
+     *  and only unlocks if the page is not changed to another. Without this block, multiple executions can cause various problems on the server,
+     *  including corrupting the levels of history.
+     */
+    if(qForm.submissionDisabled)
+        return;
+    qForm.submissionDisabled = true;
+
     $.ajax({
         url: link,
         type: "POST",
@@ -234,6 +276,7 @@ function CloseModalFormOnDelete(link, modalId) {
         },
         complete: function() {
             QAnimation.removeLoading();
+            qForm.submissionDisabled = false;
         },
         success: function (data) {
             if (data && data.Success) {
@@ -269,75 +312,109 @@ function CloseModalFormOnDelete(link, modalId) {
 function modalFormsBtnOnClickCallback(e, callbackSave) {
     e.preventDefault()
 
-    var modalId = $(this).data("modal-id") || "form-modal";
-    var url = "";
-    if ($(this).is("a"))
-        url = $(this).attr("href");
-    else if ($(this).is("button"))
-        url = $(this).data("modal-url");
-    else if ($(this).is("li")) // Insert direto no Chosen
-        url = $(this).attr("href");
-    else {
-        console.log("Not supposed to be here...");
+    const EXECUTION_DISABLED_ATTR = 'modal-execution-disabled';
+    const _this = $(this);
+
+    /**
+     * To prevent multiple executions of handlers (which can happen in cases of multiple clicks on the same button if the system and network are slow), 
+     *  a specific attribute is used to block the element that triggers the event and only unlocks if the page is not changed to another. 
+     * Without this block, multiple executions can cause various problems on the server, including corrupting the levels of history.
+     */
+    if (_this.data(EXECUTION_DISABLED_ATTR)) {
+        console.warn('Already processing, please wait...');
         return false;
     }
+    _this.data(EXECUTION_DISABLED_ATTR, true);
 
-    var closeModal = $(this).data("modal-close");
-    var isCancel = $(this).data("modal-cancel");
-    var isRefresh = $(this).data("modal-refresh");
-    var repeatInsertion = $(this).data("modal-repeat-insertion");
-    var table = $(this).data("table");
-    var skipPreValida = $(this).data("skip-prevalida");
+    const _fnEnableSubmission = () => _this.data(EXECUTION_DISABLED_ATTR, false);
 
-    if (closeModal) {
-        CloseModalForm(url, {}, isCancel, repeatInsertion, modalId);
-    }
-    else {
-        var preValida = function (target, mode) {
-            return QPreValida($(target), mode);
+
+    try
+    {
+        var modalId = $(this).data("modal-id") || "form-modal";
+        var url = "";
+        if ($(this).is("a"))
+            url = $(this).attr("href");
+        else if ($(this).is("button"))
+            url = $(this).data("modal-url");
+        else if ($(this).is("li")) // Insert direto no Chosen
+            url = $(this).attr("href");
+        else {
+            console.log("Not supposed to be here...");
+            _fnEnableSubmission();
+            return false;
         }
 
-        var _this = $(this),
-            _qForm = _this.closest('[data-form]');
+        var closeModal = $(this).data("modal-close");
+        var isCancel = $(this).data("modal-cancel");
+        var isRefresh = $(this).data("modal-refresh");
+        var repeatInsertion = $(this).data("modal-repeat-insertion");
+        var table = $(this).data("table");
+        var skipPreValida = $(this).data("skip-prevalida");
 
-        var formMode = $(this).data('modal-form-mode');
-
-        //Skip PreValida() for popup support forms for related tables (these have the attribute data-skip-prevalida="true")
-        if (skipPreValida) {
-            $.when(url, table, isRefresh, callbackSave, _qForm).done(function (href, table, isRefresh, callbackSave, _qForm) {
-                $.when(syncFormKeys(_qForm), $.localStorageFormSave($(_this).closest("[data-form]").first()), isRefresh, callbackSave)
-                    .done(function (res1, res2, isRefresh, callbackSave) {
-                        if (isRefresh) {
-                            //Destroy form variable
-                            $.localStorageFormRemove($(_this).closest("[data-form]").first());
-                            if ($('#' + modalId).find('[data-form]').data("QForm") !== undefined) {
-                                var qFormVarName = $('#' + modalId).find('[data-form]').data("QForm");
-                                if (window[qFormVarName] !== undefined) window[qFormVarName].Destroy();
-                            }
-                        }
-                        OpenModalForm(url, {}, table, callbackSave, undefined, undefined, modalId);
-                    });
-            });
-
+        if (closeModal) {
+            CloseModalForm(url, {}, isCancel, repeatInsertion, modalId);
+            _fnEnableSubmission();
         }
         else {
-            $.when(preValida(this, formMode || "POPUP"), url, table, isRefresh, callbackSave, _qForm).done(function (preValida, href, table, isRefresh, callbackSave, _qForm) {
-                if (preValida) {
+            var preValida = function (target, mode) {
+                return QPreValida($(target), mode);
+            }
+
+            var _qForm = _this.closest('[data-form]'),
+                formMode = _this.data('modal-form-mode');
+
+            //Skip PreValida() for popup support forms for related tables (these have the attribute data-skip-prevalida="true")
+            if (skipPreValida) {
+                $.when(url, table, isRefresh, callbackSave, _qForm).done(function (href, table, isRefresh, callbackSave, _qForm) {
                     $.when(syncFormKeys(_qForm), $.localStorageFormSave($(_this).closest("[data-form]").first()), isRefresh, callbackSave)
                         .done(function (res1, res2, isRefresh, callbackSave) {
                             if (isRefresh) {
                                 //Destroy form variable
                                 $.localStorageFormRemove($(_this).closest("[data-form]").first());
-                                if ($("#form-modal").find('[data-form]').data("QForm") !== undefined) {
-                                    var qFormVarName = $("#form-modal").find('[data-form]').data("QForm");
+                                if ($('#' + modalId).find('[data-form]').data("QForm") !== undefined) {
+                                    var qFormVarName = $('#' + modalId).find('[data-form]').data("QForm");
                                     if (window[qFormVarName] !== undefined) window[qFormVarName].Destroy();
                                 }
                             }
                             OpenModalForm(url, {}, table, callbackSave, undefined, undefined, modalId);
-                        });
-                }
-            });
+                            _fnEnableSubmission();
+                        })
+                        .fail(() => _fnEnableSubmission());
+                })
+                .fail(() => _fnEnableSubmission());
+
+            }
+            else {
+                $.when(preValida(this, formMode || "POPUP"), url, table, isRefresh, callbackSave, _qForm)
+                .done(function (preValida, href, table, isRefresh, callbackSave, _qForm) {
+                    if (preValida) {
+                        $.when(syncFormKeys(_qForm), $.localStorageFormSave($(_this).closest("[data-form]").first()), isRefresh, callbackSave)
+                            .done(function (res1, res2, isRefresh, callbackSave) {
+                                if (isRefresh) {
+                                    //Destroy form variable
+                                    $.localStorageFormRemove($(_this).closest("[data-form]").first());
+                                    if ($("#form-modal").find('[data-form]').data("QForm") !== undefined) {
+                                        var qFormVarName = $("#form-modal").find('[data-form]').data("QForm");
+                                        if (window[qFormVarName] !== undefined) window[qFormVarName].Destroy();
+                                    }
+                                }
+                                OpenModalForm(url, {}, table, callbackSave, undefined, undefined, modalId);
+                                _fnEnableSubmission();
+                            })
+                            .fail(() => _fnEnableSubmission());
+                    }
+                    else
+                        _fnEnableSubmission();
+                })
+                .fail(() => _fnEnableSubmission());
+            }
         }
+    }
+    catch(e)
+    {
+        console.error('Error while processing click for the modal form', e);
+        $(this).data(EXECUTION_DISABLED_ATTR, false);
     }
 };
 

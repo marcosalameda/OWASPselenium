@@ -127,8 +127,8 @@ namespace GenioMVC.ViewModels.Conta
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("GENRE.GENDER", new OrderedDictionary());
-					allSortOrders["GENRE.GENDER"].Add("GENRE.GENDER", "A");
+			allSortOrders.Add("GENRE.GENDER", new OrderedDictionary());
+			allSortOrders["GENRE.GENDER"].Add("GENRE.GENDER", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Conta_GenreValGender_"));
@@ -220,8 +220,8 @@ namespace GenioMVC.ViewModels.Conta
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("GENRE.GENDER", new OrderedDictionary());
-					allSortOrders["GENRE.GENDER"].Add("GENRE.GENDER", "A");
+			allSortOrders.Add("GENRE.GENDER", new OrderedDictionary());
+			allSortOrders["GENRE.GENDER"].Add("GENRE.GENDER", "A");
 
 
 
@@ -308,6 +308,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgenre.FldCodgenre, CSGenioAgenre.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP CONTA_GENREGENDER]/
 
+                conditions = conta___genregender__Conds;
                 return;
 			}
 

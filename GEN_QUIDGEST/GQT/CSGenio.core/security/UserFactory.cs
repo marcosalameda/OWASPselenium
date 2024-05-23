@@ -522,7 +522,7 @@ namespace GenioServer.security
 
                 user.Name = principal.Identity.Name;
                 user.Codpsw = psw.ValCodpsw;
-                user.Status = psw.ValStatus;
+                user.Status = (int)psw.ValStatus;
                 user.Auth2FA = !(string.IsNullOrEmpty(tpPsw2FA) || tpPsw2FA == GenioServer.security.Auth2FAModes.None.ToString());
                 user.Auth2FATp = user.Auth2FA ? tpPsw2FA: "";
                 bool hasAnyModule = false;

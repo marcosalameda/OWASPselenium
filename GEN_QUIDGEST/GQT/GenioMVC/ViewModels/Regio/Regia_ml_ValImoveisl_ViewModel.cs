@@ -308,6 +308,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApropr.FldCodpropr, CSGenioApropr.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP REGIA_ML_PSEUDIMOVEISL]/
 
+                conditions = regia_mlpseudimoveislConds;
                 return;
 			}
 

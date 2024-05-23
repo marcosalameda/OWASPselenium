@@ -91,7 +91,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL TBS MENU_GET 171]/
+// USE /[MANUAL TBS MENU_GET 171]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());

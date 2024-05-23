@@ -176,8 +176,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("EQUIP.REGISTNR", new OrderedDictionary());
-					allSortOrders["EQUIP.REGISTNR"].Add("EQUIP.REGISTNR", "A");
+			allSortOrders.Add("EQUIP.REGISTNR", new OrderedDictionary());
+			allSortOrders["EQUIP.REGISTNR"].Add("EQUIP.REGISTNR", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "STY_Menu_TABLE_"));
@@ -270,8 +270,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("EQUIP.REGISTNR", new OrderedDictionary());
-					allSortOrders["EQUIP.REGISTNR"].Add("EQUIP.REGISTNR", "A");
+			allSortOrders.Add("EQUIP.REGISTNR", new OrderedDictionary());
+			allSortOrders["EQUIP.REGISTNR"].Add("EQUIP.REGISTNR", "A");
 
 
 
@@ -358,6 +358,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
 
 // USE /[MANUAL STY OVERRQLSTEXP TABLE]/
 
+                conditions = sty_menu_tableConds;
                 return;
 			}
 
@@ -492,7 +493,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
             new TableSearchColumn("ValDtaquisi", CSGenioAequip.FldDtaquisi, typeof(DateTime?)),
             new TableSearchColumn("ValIfabatif", CSGenioAequip.FldIfabatif, typeof(bool)),
             new TableSearchColumn("ValValortot", CSGenioAequip.FldValortot, typeof(decimal?)),
-            new TableSearchColumn("ValFrequenc", CSGenioAequip.FldFrequenc, typeof(double), array : "FreqEmpr"),
+            new TableSearchColumn("ValFrequenc", CSGenioAequip.FldFrequenc, typeof(decimal), array : "FreqEmpr"),
             new TableSearchColumn("ValBought", CSGenioAequip.FldBought, typeof(bool)),
             new TableSearchColumn("Room1_ValRoomnr", CSGenioAroom1.FldRoomnr, typeof(string)),
             new TableSearchColumn("ValSitefabr", CSGenioAequip.FldSitefabr, typeof(string))

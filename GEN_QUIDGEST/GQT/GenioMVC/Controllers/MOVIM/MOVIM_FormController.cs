@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Movim_ModalDBEdit(string partialView)
-		{
-			Movim_ViewModel model = new Movim_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Movim_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW MOVIM]/

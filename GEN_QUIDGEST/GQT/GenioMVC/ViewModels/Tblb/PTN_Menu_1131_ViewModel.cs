@@ -176,8 +176,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtblb.FldCodtblb, CSGenioAtblb.FldZz
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("TBLB.TEXT", new OrderedDictionary());
-					allSortOrders["TBLB.TEXT"].Add("TBLB.TEXT", "A");
+			allSortOrders.Add("TBLB.TEXT", new OrderedDictionary());
+			allSortOrders["TBLB.TEXT"].Add("TBLB.TEXT", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "PTN_Menu_1131_"));
@@ -270,8 +270,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtblb.FldCodtblb, CSGenioAtblb.FldZz
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("TBLB.TEXT", new OrderedDictionary());
-					allSortOrders["TBLB.TEXT"].Add("TBLB.TEXT", "A");
+			allSortOrders.Add("TBLB.TEXT", new OrderedDictionary());
+			allSortOrders["TBLB.TEXT"].Add("TBLB.TEXT", "A");
 
 
 
@@ -358,6 +358,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtblb.FldCodtblb, CSGenioAtblb.FldZz
 
 // USE /[MANUAL PTN OVERRQLSTEXP 1131]/
 
+                conditions = ptn_menu_1131Conds;
                 return;
 			}
 
@@ -488,7 +489,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtblb.FldCodtblb, CSGenioAtblb.FldZz
             new TableSearchColumn("ValDatets", CSGenioAtblb.FldDatets, typeof(DateTime?)),
             new TableSearchColumn("ValTimehm", CSGenioAtblb.FldTimehm, typeof(string)),
             new TableSearchColumn("ValEnumt", CSGenioAtblb.FldEnumt, typeof(string), array : "typet"),
-            new TableSearchColumn("ValEnumn", CSGenioAtblb.FldEnumn, typeof(double), array : "typen")
+            new TableSearchColumn("ValEnumn", CSGenioAtblb.FldEnumn, typeof(decimal), array : "typen")
         };
     }
 }

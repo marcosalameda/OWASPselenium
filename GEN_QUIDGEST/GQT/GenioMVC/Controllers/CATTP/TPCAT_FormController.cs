@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Tpcat_ModalDBEdit(string partialView)
-		{
-			Tpcat_ViewModel model = new Tpcat_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Tpcat_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW TPCAT]/

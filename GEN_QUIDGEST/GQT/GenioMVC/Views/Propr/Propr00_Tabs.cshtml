@@ -185,7 +185,7 @@
 										@Html.LabelFor(model => model.ValDescript, new { label_id="IFF_PROPR03_PROPRDESCRIPT", @class = " i-text__label", id="LABEL_IFF_PROPR03_PROPRDESCRIPT"}, true, false)
 										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
 										<a href="javascript:OpenSuggestion('IFF_PROPR03_PROPRDESCRIPT','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-										<div data-field-name="ValDescript" data-identifier="IFF_PROPR03_PROPRDESCRIPT" pers-cs-area="Propr" pers-cs-field="ValDescript">
+										<div data-field-name="ValDescript" data-identifier="IFF_PROPR03_PROPRDESCRIPT" pers-cs-area="Propr" pers-cs-field="ValDescript"  help-id="IFF_PROPR03_PROPRDESCRIPT">
 										@if(Model.IsEditableMode) {
 											@Html.EditorFor(model => model.ValDescript, new {help_id = "IFF_PROPR03_PROPRDESCRIPT", @class = "input-xxlarge", data_identifier = "IFF_PROPR03_PROPRDESCRIPT", data_readonly = !Model.IsEditableMode })
 										} else {

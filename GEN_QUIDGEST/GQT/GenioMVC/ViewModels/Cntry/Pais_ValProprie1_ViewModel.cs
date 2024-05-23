@@ -128,8 +128,8 @@ namespace GenioMVC.ViewModels.Cntry
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("PROPR.NAME", new OrderedDictionary());
-					allSortOrders["PROPR.NAME"].Add("PROPR.NAME", "A");
+			allSortOrders.Add("PROPR.NAME", new OrderedDictionary());
+			allSortOrders["PROPR.NAME"].Add("PROPR.NAME", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValProprie1_"));
@@ -225,8 +225,8 @@ namespace GenioMVC.ViewModels.Cntry
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("PROPR.NAME", new OrderedDictionary());
-					allSortOrders["PROPR.NAME"].Add("PROPR.NAME", "A");
+			allSortOrders.Add("PROPR.NAME", new OrderedDictionary());
+			allSortOrders["PROPR.NAME"].Add("PROPR.NAME", "A");
 
 
 
@@ -313,6 +313,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApropr.FldCodpropr, CSGenioApropr.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP PAIS_PSEUDPROPRIE1]/
 
+                conditions = pais____pseudproprie1Conds;
                 return;
 			}
 

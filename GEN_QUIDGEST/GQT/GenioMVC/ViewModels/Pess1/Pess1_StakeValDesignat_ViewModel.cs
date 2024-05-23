@@ -127,8 +127,8 @@ namespace GenioMVC.ViewModels.Pess1
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("STAKE.DESIGNAT", new OrderedDictionary());
-					allSortOrders["STAKE.DESIGNAT"].Add("STAKE.DESIGNAT", "A");
+			allSortOrders.Add("STAKE.DESIGNAT", new OrderedDictionary());
+			allSortOrders["STAKE.DESIGNAT"].Add("STAKE.DESIGNAT", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Pess1_StakeValDesignat_"));
@@ -220,8 +220,8 @@ namespace GenioMVC.ViewModels.Pess1
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("STAKE.DESIGNAT", new OrderedDictionary());
-					allSortOrders["STAKE.DESIGNAT"].Add("STAKE.DESIGNAT", "A");
+			allSortOrders.Add("STAKE.DESIGNAT", new OrderedDictionary());
+			allSortOrders["STAKE.DESIGNAT"].Add("STAKE.DESIGNAT", "A");
 
 
 
@@ -308,6 +308,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAstake.FldCodparte, CSGenioAstake.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP PESS1_STAKEDESIGNAT]/
 
+                conditions = pess1___stakedesignatConds;
                 return;
 			}
 

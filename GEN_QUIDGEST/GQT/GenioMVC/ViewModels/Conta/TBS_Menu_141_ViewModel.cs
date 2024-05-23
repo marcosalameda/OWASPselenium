@@ -166,8 +166,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAconta.FldCodconta, CSGenioAconta.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("CONTA.CONTACTO", new OrderedDictionary());
-					allSortOrders["CONTA.CONTACTO"].Add("CONTA.CONTACTO", "A");
+			allSortOrders.Add("CONTA.CONTACTO", new OrderedDictionary());
+			allSortOrders["CONTA.CONTACTO"].Add("CONTA.CONTACTO", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "TBS_Menu_141_"));
@@ -260,8 +260,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAconta.FldCodconta, CSGenioAconta.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("CONTA.CONTACTO", new OrderedDictionary());
-					allSortOrders["CONTA.CONTACTO"].Add("CONTA.CONTACTO", "A");
+			allSortOrders.Add("CONTA.CONTACTO", new OrderedDictionary());
+			allSortOrders["CONTA.CONTACTO"].Add("CONTA.CONTACTO", "A");
 
 
 
@@ -348,6 +348,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAconta.FldCodconta, CSGenioAconta.Fl
 
 // USE /[MANUAL TBS OVERRQLSTEXP 141]/
 
+                conditions = tbs_menu_141Conds;
                 return;
 			}
 

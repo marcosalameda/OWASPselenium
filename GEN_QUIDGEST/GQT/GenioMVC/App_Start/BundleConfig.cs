@@ -107,7 +107,7 @@ namespace GenioMVC
                         UrlNames.JQuery3,
                         UrlNames.JQueryUnobtrusiveAjax,
                         UrlNames.JQueryUI,
-                        UrlNames.Bootbox4,
+                        UrlNames.Bootbox,
                         UrlNames.WidgetUI,
                         UrlNames.FileUploadUI,
                         UrlNames.FileUploadIframeTransport,
@@ -122,7 +122,7 @@ namespace GenioMVC
                         UrlNames.Popper,
                         UrlNames.Moment,
                         UrlNames.MomentTimeZone,
-						UrlNames.Bootbox4,
+						UrlNames.Bootbox,
                         UrlNames.Bootstrap4,
                         UrlNames.BootstrapDatetimePicker));
 

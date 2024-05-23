@@ -440,7 +440,6 @@ div.q-form-wizard-container
 		}
 	}
 
-
 	@if $wizard-steps == 'rectangle'
 	{
 		/***************************************************************************
@@ -831,8 +830,7 @@ div.q-form-wizard-container
 			{
 				width: 310px !important;
 			}
-		}
-	}
+		}	}
 	@else if $wizard-steps == 'circle'
 	{
 		/***************************************************************************
@@ -1443,8 +1441,7 @@ div.q-form-wizard-container
 			{
 				line-height: 1.4;
 			}
-		}
-	}
+		}	}
 	@else if $wizard-steps == 'arrow'
 	{
 		/***************************************************************************
@@ -1853,8 +1850,7 @@ div.q-form-wizard-container
 			{
 				width: 100%;
 			}
-		}
-	}
+		}	}
 
 
 	@if $wizard-content == 'compact'
@@ -1960,6 +1956,5 @@ div.q-form-wizard-container
 				width: 100%;
 				margin: 0 auto;
 			}
-		}
-	}
+		}	}
 }

@@ -306,6 +306,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAinsta.FldCodinsta, CSGenioAinsta.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP EQUIP_PSEUDINSTALAG]/
 
+                conditions = equip___pseudinstalagConds;
                 return;
 			}
 

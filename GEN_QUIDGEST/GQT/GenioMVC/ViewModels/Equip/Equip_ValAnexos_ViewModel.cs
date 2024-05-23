@@ -304,6 +304,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAanexd.FldCodanexd, CSGenioAanexd.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP EQUIP_PSEUDANEXOS]/
 
+                conditions = equip___pseudanexos__Conds;
                 return;
 			}
 

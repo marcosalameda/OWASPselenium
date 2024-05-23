@@ -337,6 +337,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApwreg.FldCodpwreg, CSGenioApwreg.Fl
 
 // USE /[MANUAL TBS OVERRQLSTEXP 181]/
 
+                conditions = tbs_menu_181Conds;
                 return;
 			}
 

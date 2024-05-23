@@ -165,10 +165,10 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwareh.FldCodwareh, CSGenioAwareh.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("WAREH.WAREHDES", new OrderedDictionary());
-					allSortOrders["WAREH.WAREHDES"].Add("WAREH.WAREHDES", "A");
-				allSortOrders.Add("WAREH.WAREHCOD", new OrderedDictionary());
-					allSortOrders["WAREH.WAREHCOD"].Add("WAREH.WAREHCOD", "A");
+			allSortOrders.Add("WAREH.WAREHDES", new OrderedDictionary());
+			allSortOrders["WAREH.WAREHDES"].Add("WAREH.WAREHDES", "A");
+			allSortOrders.Add("WAREH.WAREHCOD", new OrderedDictionary());
+			allSortOrders["WAREH.WAREHCOD"].Add("WAREH.WAREHCOD", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "GQT_Menu_491_"));
@@ -261,10 +261,10 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwareh.FldCodwareh, CSGenioAwareh.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("WAREH.WAREHDES", new OrderedDictionary());
-					allSortOrders["WAREH.WAREHDES"].Add("WAREH.WAREHDES", "A");
-				allSortOrders.Add("WAREH.WAREHCOD", new OrderedDictionary());
-					allSortOrders["WAREH.WAREHCOD"].Add("WAREH.WAREHCOD", "A");
+			allSortOrders.Add("WAREH.WAREHDES", new OrderedDictionary());
+			allSortOrders["WAREH.WAREHDES"].Add("WAREH.WAREHDES", "A");
+			allSortOrders.Add("WAREH.WAREHCOD", new OrderedDictionary());
+			allSortOrders["WAREH.WAREHCOD"].Add("WAREH.WAREHCOD", "A");
 
 
 
@@ -352,6 +352,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwareh.FldCodwareh, CSGenioAwareh.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP 491]/
 
+                conditions = gqt_menu_491Conds;
                 return;
 			}
 

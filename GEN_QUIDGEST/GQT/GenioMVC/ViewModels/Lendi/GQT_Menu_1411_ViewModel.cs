@@ -172,12 +172,12 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlendi.FldCodlendi, CSGenioAlendi.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("LENDI.START", new OrderedDictionary());
-					allSortOrders["LENDI.START"].Add("LENDI.START", "A");
-				allSortOrders.Add("LENDI.WARNDT", new OrderedDictionary());
-					allSortOrders["LENDI.WARNDT"].Add("LENDI.WARNDT", "A");
-				allSortOrders.Add("LENDI.END", new OrderedDictionary());
-					allSortOrders["LENDI.END"].Add("LENDI.END", "A");
+			allSortOrders.Add("LENDI.START", new OrderedDictionary());
+			allSortOrders["LENDI.START"].Add("LENDI.START", "A");
+			allSortOrders.Add("LENDI.WARNDT", new OrderedDictionary());
+			allSortOrders["LENDI.WARNDT"].Add("LENDI.WARNDT", "A");
+			allSortOrders.Add("LENDI.END", new OrderedDictionary());
+			allSortOrders["LENDI.END"].Add("LENDI.END", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "GQT_Menu_1411_"));
@@ -280,12 +280,12 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlendi.FldCodlendi, CSGenioAlendi.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("LENDI.START", new OrderedDictionary());
-					allSortOrders["LENDI.START"].Add("LENDI.START", "A");
-				allSortOrders.Add("LENDI.WARNDT", new OrderedDictionary());
-					allSortOrders["LENDI.WARNDT"].Add("LENDI.WARNDT", "A");
-				allSortOrders.Add("LENDI.END", new OrderedDictionary());
-					allSortOrders["LENDI.END"].Add("LENDI.END", "A");
+			allSortOrders.Add("LENDI.START", new OrderedDictionary());
+			allSortOrders["LENDI.START"].Add("LENDI.START", "A");
+			allSortOrders.Add("LENDI.WARNDT", new OrderedDictionary());
+			allSortOrders["LENDI.WARNDT"].Add("LENDI.WARNDT", "A");
+			allSortOrders.Add("LENDI.END", new OrderedDictionary());
+			allSortOrders["LENDI.END"].Add("LENDI.END", "A");
 
 
 
@@ -390,6 +390,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlendi.FldCodlendi, CSGenioAlendi.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP 1411]/
 
+                conditions = gqt_menu_1411Conds;
                 return;
 			}
 
@@ -519,7 +520,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlendi.FldCodlendi, CSGenioAlendi.Fl
             new TableSearchColumn("Pess2_ValName", CSGenioApess2.FldName, typeof(string)),
             new TableSearchColumn("ValLendinnr", CSGenioAlendi.FldLendinnr, typeof(decimal?), defaultSearch : true),
             new TableSearchColumn("ValStart", CSGenioAlendi.FldStart, typeof(DateTime?)),
-            new TableSearchColumn("Equip_ValFrequenc", CSGenioAequip.FldFrequenc, typeof(double), array : "FreqEmpr"),
+            new TableSearchColumn("Equip_ValFrequenc", CSGenioAequip.FldFrequenc, typeof(decimal), array : "FreqEmpr"),
             new TableSearchColumn("ValWarndt", CSGenioAlendi.FldWarndt, typeof(DateTime?)),
             new TableSearchColumn("ValEnd", CSGenioAlendi.FldEnd, typeof(DateTime?)),
             new TableSearchColumn("ValObservat", CSGenioAlendi.FldObservat, typeof(string))

@@ -298,6 +298,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAdecom.FldCoddeco, CSGenioAdecom.Fld
 
 // USE /[MANUAL GQT OVERRQLSTEXP EQUIP_DECOMDECOMNR]/
 
+                conditions = equip___decomdecomnr_Conds;
                 return;
 			}
 

@@ -18,6 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.ModelBinders;
+using GenioMVC.Helpers.Table.Properties;
 using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
@@ -559,7 +560,7 @@ namespace GenioMVC.ViewModels.Outpu
                 if (GlobalFunctions.emptyG(this.ValCodoutpt) == 1)
                 {
                     this.ValCodoutpt = "";
-                    TableOutptDocumenr.Value = 0;
+                    TableOutptDocumenr.Value = 0m;
                     Navigation.ClearValue("outpt");
                 }
                 else if (lazyLoad)
@@ -806,7 +807,7 @@ namespace GenioMVC.ViewModels.Outpu
 			// Limits Generation
 
 			// Area limit
-			ldsai___item_itemdes_DoLoad &= AddCriteriaAreaLimit(ldsai___item_itemdes_Conds, CSGenio.business.CSGenioAwareh.FldCodwareh, "wareh", this.ValCodwareh, false);
+			ldsai___item_itemdes_DoLoad &= AddCriteriaAreaLimit(ldsai___item_itemdes_Conds, CSGenio.business.CSGenioAwareh.FldCodwareh, "wareh", this.ValCodwareh, true);
 
 
             TableItemItemdes = new TableDBEdit<Models.Item>();
@@ -1184,7 +1185,7 @@ namespace GenioMVC.ViewModels.Outpu
                 if (GlobalFunctions.emptyG(this.ValCoddocsd) == 1)
                 {
                     this.ValCoddocsd = "";
-                    TableOudocNrdocsda.Value = 0;
+                    TableOudocNrdocsda.Value = 0m;
                     Navigation.ClearValue("oudoc");
                 }
                 else if (lazyLoad)

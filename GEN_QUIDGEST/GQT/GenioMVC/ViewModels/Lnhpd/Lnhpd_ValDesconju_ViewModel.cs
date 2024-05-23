@@ -300,6 +300,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP LNHPD_PSEUDDESCONJU]/
 
+                conditions = lnhpd___pseuddesconjuConds;
                 return;
 			}
 

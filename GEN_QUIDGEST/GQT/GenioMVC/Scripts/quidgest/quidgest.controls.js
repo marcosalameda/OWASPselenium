@@ -31,6 +31,12 @@ function QForm(element, formVarName) {
     this.Type = QFormType.FORM;
     this.isInitialized = false;
 	this.ignoreDirty = false;
+    
+    /**
+     * While a submission (e.g. Save or Cancel) is being executed, it is disabled to prevent more than one request from being made at the same time. 
+     * This prevents the history from having incorrect levels.
+     */
+    this.submissionDisabled = false;
 
     // Form loaded attribute - for web tests
     var getQFormLoaded = function () {
@@ -298,83 +304,128 @@ QForm.prototype.ReplaceHTML = function(dataView, replaceAll = true)
 };
 
 QForm.prototype.Submit = function (repeatInsertion) {
+    /**
+     * To prevent multiple executions of handlers from different actions (which can occur in the case of multiple clicks on the same button, 
+     *  especially if the system and network are slow), "submissionDisabled" is used to block some actions 
+     *  and only unlocks if the page is not changed to another. Without this block, multiple executions can cause various problems on the server,
+     *  including corrupting the levels of history.
+     */
+    if(this.submissionDisabled)
+        return;
+    this.submissionDisabled = true;
+
     var _thisForm = this;
-    $.when(_thisForm.OnPreValida('SUBMIT', _thisForm), repeatInsertion).then(function (prevalida, repeatInsertion) {
-        if (!prevalida) return false;
-        $.when(_thisForm.OnBeforeSave(), repeatInsertion).then(function (resBeforeSave, repeatInsertion) {
-            var formData = getInputsForNestedForm($(_thisForm.element));
-            $.extend(formData, { 'redirect': false });
-            var url = _thisForm.formSubmitURL;
-            if(repeatInsertion && _thisForm.formSubmitURL_repeatInsertion !== undefined) {
-                url = _thisForm.formSubmitURL_repeatInsertion;
+    try
+    {
+        $.when(_thisForm.OnPreValida('SUBMIT', _thisForm), repeatInsertion).then(function (prevalida, repeatInsertion) {
+            if (!prevalida) 
+            {
+                _thisForm.submissionDisabled = false;
+                return false;
             }
-            $.ajax({
-                url: url,
-                cache: false,
-                type: "POST",
-                dataType: "json",
-                data: $.param(formData, true),
-                beforeSend: function() {
-                    qAddLoading(1000);
-                },
-                complete: function() {
-                    qRemoveLoading();
-                },
-                success: function (data) {
-                    if (data.Success)
-                    {
-                        $.when(_thisForm.OnAfterSave(data), data).then(function(afterSave, data)
-                        {
-                            if (afterSave)
-                            {
-                                qAddLoading(1000);
-                                _thisForm.Redirect(data, repeatInsertion);
-                            }
-                        });
-                    }
-                    else
-                    {
-                        // If there was an error, we want to keep the values in the storage (they are being removed as soon as the save button is clicked).
-                        $.localStorageFormSave($(_thisForm.element));
 
-                        if (data.Message)
-                            console.log(data.Message);
-                        if (data.View)
-                            _thisForm.ReplaceHTML(data.View, false);
-                    }
-
-                    return data.Success;
+            $.when(_thisForm.OnBeforeSave(), repeatInsertion).then(function (resBeforeSave, repeatInsertion) {
+                var formData = getInputsForNestedForm($(_thisForm.element));
+                $.extend(formData, { 'redirect': false });
+                var url = _thisForm.formSubmitURL;
+                if(repeatInsertion && _thisForm.formSubmitURL_repeatInsertion !== undefined) {
+                    url = _thisForm.formSubmitURL_repeatInsertion;
                 }
-            });
-        });
-    });
+
+                $.ajax({
+                    url: url,
+                    cache: false,
+                    type: "POST",
+                    dataType: "json",
+                    data: $.param(formData, true),
+                    beforeSend: function() {
+                        qAddLoading(1000);
+                    },
+                    complete: function() {
+                        _thisForm.submissionDisabled = false;
+                        qRemoveLoading();
+                    },
+                    success: function (data) {
+                        if (data.Success)
+                        {
+                            $.when(_thisForm.OnAfterSave(data), data).then(function(afterSave, data)
+                            {
+                                if (afterSave)
+                                {
+                                    qAddLoading(1000);
+                                    _thisForm.Redirect(data, repeatInsertion);
+                                }
+                            });
+                        }
+                        else
+                        {
+                            // If there was an error, we want to keep the values in the storage (they are being removed as soon as the save button is clicked).
+                            $.localStorageFormSave($(_thisForm.element));
+
+                            if (data.Message)
+                                console.log(data.Message);
+                            if (data.View)
+                                _thisForm.ReplaceHTML(data.View, false);
+                        }
+
+                        return data.Success;
+                    }
+                });
+            }).fail(() => { _thisForm.submissionDisabled = false; });
+        }).fail(() => { _thisForm.submissionDisabled = false; });
+    } 
+    catch (e)
+    {
+        console.error('Error while submitting the form', e);
+        _thisForm.submissionDisabled = false;
+    }
 };
 
 QForm.prototype.DeleteSubmit = function () {
+    /**
+     * To prevent multiple executions of handlers from different actions (which can occur in the case of multiple clicks on the same button, 
+     *  especially if the system and network are slow), "submissionDisabled" is used to block some actions 
+     *  and only unlocks if the page is not changed to another. Without this block, multiple executions can cause various problems on the server,
+     *  including corrupting the levels of history.
+     */
+    if(this.submissionDisabled)
+        return;
+    this.submissionDisabled = true;
+
     var _thisForm = this;
     var url = _thisForm.formSubmitURL;
-    $.ajax({
-        url: url,
-        cache: false,
-        type: "POST",
-        dataType: "json",
-        data: $.param({ id:_thisForm.PrimaryKey.Value}, true),
-        beforeSend: function () {
-            qAddLoading(1000);
-        },
-        complete: function () {
-            qRemoveLoading();
-        },
-        success: function (data) {
-            if (data.Success) {
-                QUtils.NavigateTo = _thisForm.formRedirectURL;
+
+    try
+    {
+        $.ajax({
+            url: url,
+            cache: false,
+            type: "POST",
+            dataType: "json",
+            data: $.param({ id:_thisForm.PrimaryKey.Value}, true),
+            beforeSend: function () {
+                qAddLoading(1000);
+            },
+            complete: function () {
+                qRemoveLoading();
+            },
+            error: () => { _thisForm.submissionDisabled = false },
+            success: function (data) {
+                if (data.Success) {
+                    QUtils.NavigateTo = _thisForm.formRedirectURL;
+                }
+                else {
+                    QUtils.WindowReload();
+                }
+                return data.Success;
             }
-            else {
-                QUtils.WindowReload();
-            }
-            return data.Success;
-        }
-    });
+        });
+    }
+    catch (e)
+    {
+        console.error('Error while deleting the form', e);
+        _thisForm.submissionDisabled = false;
+    }
 };
 
 function SubmitMultipleFormsRegistration(url, mainForm, regForm, helpForm){
@@ -564,40 +615,63 @@ QForm.prototype.ChangeMode = function (newMode) {
     var _thisForm = this,
         changeFormModeURL = _thisForm.UrlAction.ChangeFormMode + '&mode=' + newMode;
 
-    if (_thisForm.FormMode === QFormMode.new || _thisForm.FormMode === QFormMode.duplicate) return;
+    if (_thisForm.FormMode === QFormMode.new || _thisForm.FormMode === QFormMode.duplicate || _thisForm.submissionDisabled)
+        return;
 
-    var fContinue = function (result) {
-        if (result) {
-            // Remove local storage cache
-            $.localStorageFormRemove(_thisForm.element);
-            var formModal = _thisForm.element.closest('#form-modal'),
-                table = $(formModal).data('reload-table');
-            delete window[_thisForm._formVariableName];
-            if (formModal.length !== 0) {
-                OpenModalForm(changeFormModeURL, {}, table);
+    /**
+     * To prevent multiple executions of handlers from different actions (which can occur in the case of multiple clicks on the same button, 
+     *  especially if the system and network are slow), "submissionDisabled" is used to block some actions 
+     *  and only unlocks if the page is not changed to another. Without this block, multiple executions can cause various problems on the server,
+     *  including corrupting the levels of history.
+     */
+    _thisForm.submissionDisabled = true;
+
+    try 
+    {
+        var fContinue = function (result) {
+            if (result) {
+                // Remove local storage cache
+                $.localStorageFormRemove(_thisForm.element);
+                var formModal = _thisForm.element.closest('#form-modal'),
+                    table = $(formModal).data('reload-table');
+                delete window[_thisForm._formVariableName];
+                if (formModal.length !== 0) {
+                    OpenModalForm(changeFormModeURL, {}, table);
+                }
+                else { QUtils.NavigateTo = changeFormModeURL; }
             }
-            else { QUtils.NavigateTo = changeFormModeURL; }
+            else
+                _thisForm.submissionDisabled = false;
+        };
+
+        // Confirm
+        if (_thisForm.FormMode === QFormMode.edit) {
+            displayMessage(quidgestGlobals.Resources.CONFIRM_EXIT_FORM_EDIT.replace('.', '.<br>'), MessageDefs.StatusEnum.Q, undefined,
+                [
+                    {
+                        label: quidgestGlobals.Resources.SAIR,
+                        callback: fContinue,
+                        icon: "check"
+                    },
+                    {
+                        label: quidgestGlobals.Resources.CANCELAR,
+                        callback: () => { _thisForm.submissionDisabled = false; },
+                        style: MessageDefs.ButtonTypes.Secondary,
+                        icon: "ban-circle"
+                    }
+                ],
+                {
+                    onEscapeCallback: () => { _thisForm.submissionDisabled = false; }
+                }
+            );
+        } else {
+            fContinue(true);
         }
     }
-
-    // Confirm
-    if (_thisForm.FormMode === QFormMode.edit) {
-        displayMessage(quidgestGlobals.Resources.CONFIRM_EXIT_FORM_EDIT.replace('.', '.<br>'), MessageDefs.StatusEnum.Q, undefined,
-            [
-                {
-                    label: quidgestGlobals.Resources.SAIR,
-                    callback: fContinue,
-					icon: "check"
-                },
-				{
-                    label: quidgestGlobals.Resources.CANCELAR,
-                    style: MessageDefs.ButtonTypes.Secondary,
-					icon: "ban-circle"
-                }
-            ]
-        );
-    } else {
-        fContinue(true);
+    catch (e)
+    {
+        console.error('Error while deleting the form', e);
+        _thisForm.submissionDisabled = false;
     }
 };
 
@@ -1081,10 +1155,14 @@ QForm.prototype.confirmDirtyFields = function () {
                 },
                 {
                     label: quidgestGlobals.Resources.NO,
+                    callback: () => deferred.resolve(false),
                     style: MessageDefs.ButtonTypes.Secondary,
 					icon: "ban-circle"
                 }
-            ]
+            ],
+            {
+                onEscapeCallback: () => deferred.resolve(false)
+            }
         )
     }
     else {
@@ -1098,23 +1176,44 @@ QForm.prototype.confirmDirtyFields = function () {
  *  The click event of the "Cancel" button on normal forms with a validation of changed fields.
  */
 QForm.prototype.Cancel = function () {
+    /**
+     * To prevent multiple executions of handlers from different actions (which can occur in the case of multiple clicks on the same button, 
+     *  especially if the system and network are slow), "submissionDisabled" is used to block some actions 
+     *  and only unlocks if the page is not changed to another. Without this block, multiple executions can cause various problems on the server,
+     *  including corrupting the levels of history.
+     */
+    if(this.submissionDisabled)
+        return;
+    this.submissionDisabled = true;
+    
     var qForm = this,
         formName = $(qForm.element).data('form'),
         cancelBtn = $('[data-form-actions="' + formName + '"]', qForm.element).find('[qbutton="cancel"]');
 
-    $.when(qForm.confirmDirtyFields()).then(function (result) {
-        if (result) {
-
-            $.ajax({
-                url: cancelBtn.data('href'),
-                type: "GET",
-            }).done(function (data) {
-                if (data) {
-                    QUtils.NavigateTo = data.Location;
-                }
-            });
-        }
-    });
+    try
+    {
+        $.when(qForm.confirmDirtyFields()).then(function (result) {
+            if (result) {
+                $.ajax({
+                    url: cancelBtn.data('href'),
+                    type: "GET",
+                }).done(function (data) {
+                    if (data) {
+                        QUtils.NavigateTo = data.Location;
+                    }
+                    else
+                        qForm.submissionDisabled = false;
+                }).fail(() => { qForm.submissionDisabled = false; });
+            }
+            else
+                qForm.submissionDisabled = false;
+        }).fail(() => { qForm.submissionDisabled = false; });
+    }
+    catch (e)
+    {
+        console.error('Error while canceling the form', e);
+        qForm.submissionDisabled = false;
+    }
 };
 
 QForm.prototype.EmitSyncOfControls = function () {

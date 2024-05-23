@@ -128,8 +128,8 @@ namespace GenioMVC.ViewModels.Outpu
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("OUTPT.DHDOCUME", new OrderedDictionary());
-					allSortOrders["OUTPT.DHDOCUME"].Add("OUTPT.DHDOCUME", "A");
+			allSortOrders.Add("OUTPT.DHDOCUME", new OrderedDictionary());
+			allSortOrders["OUTPT.DHDOCUME"].Add("OUTPT.DHDOCUME", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Ldsai_OutptValDocumenr_"));
@@ -221,8 +221,8 @@ namespace GenioMVC.ViewModels.Outpu
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("OUTPT.DHDOCUME", new OrderedDictionary());
-					allSortOrders["OUTPT.DHDOCUME"].Add("OUTPT.DHDOCUME", "A");
+			allSortOrders.Add("OUTPT.DHDOCUME", new OrderedDictionary());
+			allSortOrders["OUTPT.DHDOCUME"].Add("OUTPT.DHDOCUME", "A");
 
 
 
@@ -309,6 +309,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAoutpt.FldCodoutpt, CSGenioAoutpt.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP LDSAI_OUTPTDOCUMENR]/
 
+                conditions = ldsai___outptdocumenrConds;
                 return;
 			}
 

@@ -302,6 +302,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAagreg.FldCodaggre, CSGenioAagreg.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP ANO_PSEUDAGREGADO]/
 
+                conditions = ano_____pseudagregadoConds;
                 return;
 			}
 

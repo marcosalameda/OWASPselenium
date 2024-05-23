@@ -180,8 +180,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.Fld
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("WPESS.NAME", new OrderedDictionary());
-					allSortOrders["WPESS.NAME"].Add("WPESS.NAME", "A");
+			allSortOrders.Add("WPESS.NAME", new OrderedDictionary());
+			allSortOrders["WPESS.NAME"].Add("WPESS.NAME", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "STY_Menu_IMAGEMAGNIFIER_"));
@@ -277,8 +277,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.Fld
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("WPESS.NAME", new OrderedDictionary());
-					allSortOrders["WPESS.NAME"].Add("WPESS.NAME", "A");
+			allSortOrders.Add("WPESS.NAME", new OrderedDictionary());
+			allSortOrders["WPESS.NAME"].Add("WPESS.NAME", "A");
 
 
 
@@ -381,6 +381,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.Fld
 
 // USE /[MANUAL STY OVERRQLSTEXP IMAGEMAGNIFIER]/
 
+                conditions = sty_menu_imagemagnifierConds;
                 return;
 			}
 

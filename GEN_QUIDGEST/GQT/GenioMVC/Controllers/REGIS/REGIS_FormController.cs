@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Regis_ModalDBEdit(string partialView)
-		{
-			Regis_ViewModel model = new Regis_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Regis_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW REGIS]/

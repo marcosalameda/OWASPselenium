@@ -303,6 +303,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtabpr.FldCodtabpr, CSGenioAtabpr.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP TPEQU_PSEUDEVOLUCAO]/
 
+                conditions = tpequ___pseudevolucaoConds;
                 return;
 			}
 

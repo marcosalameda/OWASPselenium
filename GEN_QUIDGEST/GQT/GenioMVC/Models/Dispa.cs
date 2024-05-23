@@ -59,7 +59,7 @@ namespace GenioMVC.Models
 		[DisplayName("Dispatch number")]
 		/// <summary>Field : "Dispatch number" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValDispanr { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValDispanr, 0)); } set { klass.ValDispanr = Convert.ToDouble(value); } }
+		public decimal? ValDispanr { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValDispanr, 0)); } set { klass.ValDispanr = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValDispanr() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Dispa.ValDispanr");
 
 		[DisplayName("Prepared")]

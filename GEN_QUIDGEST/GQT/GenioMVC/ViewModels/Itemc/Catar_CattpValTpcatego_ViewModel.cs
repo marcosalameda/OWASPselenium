@@ -127,8 +127,8 @@ namespace GenioMVC.ViewModels.Itemc
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("CATTP.TPCATEGO", new OrderedDictionary());
-					allSortOrders["CATTP.TPCATEGO"].Add("CATTP.TPCATEGO", "A");
+			allSortOrders.Add("CATTP.TPCATEGO", new OrderedDictionary());
+			allSortOrders["CATTP.TPCATEGO"].Add("CATTP.TPCATEGO", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Catar_CattpValTpcatego_"));
@@ -220,8 +220,8 @@ namespace GenioMVC.ViewModels.Itemc
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("CATTP.TPCATEGO", new OrderedDictionary());
-					allSortOrders["CATTP.TPCATEGO"].Add("CATTP.TPCATEGO", "A");
+			allSortOrders.Add("CATTP.TPCATEGO", new OrderedDictionary());
+			allSortOrders["CATTP.TPCATEGO"].Add("CATTP.TPCATEGO", "A");
 
 
 
@@ -308,6 +308,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcattp.FldCodtpcat, CSGenioAcattp.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP CATAR_CATTPTPCATEGO]/
 
+                conditions = catar___cattptpcategoConds;
                 return;
 			}
 

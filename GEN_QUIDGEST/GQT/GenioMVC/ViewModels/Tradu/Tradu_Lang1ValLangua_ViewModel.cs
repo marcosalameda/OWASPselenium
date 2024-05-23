@@ -127,8 +127,8 @@ namespace GenioMVC.ViewModels.Tradu
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("LANG1.LANGUA", new OrderedDictionary());
-					allSortOrders["LANG1.LANGUA"].Add("LANG1.LANGUA", "A");
+			allSortOrders.Add("LANG1.LANGUA", new OrderedDictionary());
+			allSortOrders["LANG1.LANGUA"].Add("LANG1.LANGUA", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Tradu_Lang1ValLangua_"));
@@ -220,8 +220,8 @@ namespace GenioMVC.ViewModels.Tradu
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("LANG1.LANGUA", new OrderedDictionary());
-					allSortOrders["LANG1.LANGUA"].Add("LANG1.LANGUA", "A");
+			allSortOrders.Add("LANG1.LANGUA", new OrderedDictionary());
+			allSortOrders["LANG1.LANGUA"].Add("LANG1.LANGUA", "A");
 
 
 
@@ -298,6 +298,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlang1.FldCodlang, CSGenioAlang1.Fld
 
 // USE /[MANUAL GQT OVERRQLSTEXP TRADU_LANG1LANGUA]/
 
+                conditions = tradu___lang1langua__Conds;
                 return;
 			}
 

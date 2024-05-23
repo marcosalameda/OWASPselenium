@@ -96,7 +96,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL GQT MENU_GET 451]/
+// USE /[MANUAL GQT MENU_GET 451]/
 
             // Table List Export - check if user is exporting the Qlisting
             if (querystring["ExportList"] != null && Convert.ToBoolean(querystring["ExportList"]) && querystring["ExportType"] != null)
@@ -197,7 +197,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL GQT MENU_GET 4611]/
+// USE /[MANUAL GQT MENU_GET 4611]/
 
             // Table List Export - check if user is exporting the Qlisting
             if (querystring["ExportList"] != null && Convert.ToBoolean(querystring["ExportList"]) && querystring["ExportType"] != null)
@@ -296,7 +296,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL GQT MENU_GET 4A1]/
+// USE /[MANUAL GQT MENU_GET 4A1]/
 
             // Table List Export - check if user is exporting the Qlisting
             if (querystring["ExportList"] != null && Convert.ToBoolean(querystring["ExportList"]) && querystring["ExportType"] != null)
@@ -395,7 +395,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL PTN MENU_GET 131]/
+// USE /[MANUAL PTN MENU_GET 131]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -499,7 +499,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL PTN MENU_GET 141]/
+// USE /[MANUAL PTN MENU_GET 141]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -603,7 +603,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL PTN MENU_GET 221]/
+// USE /[MANUAL PTN MENU_GET 221]/
 
             // Table List Export - check if user is exporting the Qlisting
             if (querystring["ExportList"] != null && Convert.ToBoolean(querystring["ExportList"]) && querystring["ExportType"] != null)

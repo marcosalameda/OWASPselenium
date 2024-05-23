@@ -230,8 +230,8 @@ namespace CSGenio.business
                         {
                             checkFunctionArgs(obj, 2);
 
-                            double arg0 = Conversion.string2Double(obj[0]);
-                            double arg1 = Conversion.string2Double(obj[1]);
+                            decimal arg0 = Conversion.string2Numeric(obj[0]);
+                            decimal arg1 = Conversion.string2Numeric(obj[1]);
                             return GetGeoFromLatLng(arg0, arg1);
                         }
                     case 13:
@@ -565,12 +565,11 @@ namespace CSGenio.business
         /// </summary>
         /// <param name="a">objecto a converter</param>
         /// <returns>retorna o inteiro correspondente ao objecto</returns>
-        public static DateTime SumDays(DateTime data, double days)
+        public static DateTime SumDays(DateTime data, decimal days)
         {
-            if (data == DateTime.MinValue || double.IsNaN(days))
+            if (data == DateTime.MinValue)
                 return DateTime.MinValue;
-            return data.AddDays(days);
-
+            return data.AddDays((double)days);
         }
 
         /// <summary>
@@ -619,20 +618,20 @@ namespace CSGenio.business
         /// </summary>
         /// <param name="a">parametro que vai ser convertido</param>
         /// <returns>string com o Qvalue convertido</returns>
-         public static string IntToString(double a)
+        public static string IntToString(decimal a)
         {
-            return a.ToString();
+            return ((int)a).ToString();
         }
 
         /// <summary>
-        /// Método que permite converter um double to string
+        /// Método que permite converter um numérico para string
         /// </summary>
         /// <param name="valor">Qvalue que vai ser convertido</param>
         /// <param name="casasDecimais">número de digits decimais</param>
         /// <returns>string com o Qvalue convertido</returns>
-        public static string NumericToString(double Qvalue, int decimalDigits)
+        public static string NumericToString(decimal Qvalue, int decimalDigits)
         {
-            return Round(Qvalue,decimalDigits).ToString();
+            return Math.Round(Qvalue, decimalDigits).ToString();
         }
 
         /// <summary>
@@ -679,13 +678,13 @@ namespace CSGenio.business
         }
 
         /// <summary>
-        /// Verifica se um double está vazio
+        /// Verifica se um numérico está vazio
         /// </summary>
         /// <param name="valor">número a ser comparado</param>
         /// <returns>1 se está vazio, 0 caso contrário</returns>
         public static int emptyN(object Qvalue)
         {
-            if (Qvalue == null || Qvalue.Equals(0.0))
+            if (Qvalue == null || Qvalue.Equals(0m) || Qvalue.Equals(0d) || Qvalue.Equals(0))
                 return 1;
             else
                 return 0;
@@ -827,17 +826,9 @@ namespace CSGenio.business
         /// </summary>
         /// <param name="time">A hour em format __:__</param>
         /// <returns>O número de horas decorridos desde 00:00</returns>
-        public static double HoursToDouble(string time)
+        public static decimal HoursToDouble(string time)
         {
-            int h0 = 0, m0 = 0;
-            if (time.Length < 5)
-                return 0.0;
-            time = time.Replace('_','0');
-            Int32.TryParse(time.Substring(0, 2), out h0);
-            Int32.TryParse(time.Substring(3, 2), out m0);
-            if (h0 < 0 || h0 > 23 || m0 < 0 || m0 > 59)
-                return 0.0;
-            return (h0 * 60.0 + m0) / 60.0;
+            return HourFunctions.HoursToDouble(time);
         }
 
         /// <summary>
@@ -847,24 +838,9 @@ namespace CSGenio.business
         /// <param name="time">A hour em format __:__</param>
         /// <param name="minutos">O number de minutes a adicionar</param>
         /// <returns>A nova hour com os minutes adicionados</returns>
-        public static string HoursAdd(string time, double minutes)
+        public static string HoursAdd(string time, decimal minutes)
         {
-            if (time == null)
-                return "__:__";
-            int h0 = 0, m0 = 0;
-            if (time.Length < 5)
-                return "__:__";
-            time = time.Replace('_','0');
-            Int32.TryParse(time.Substring(0, 2), out h0);
-            Int32.TryParse(time.Substring(3, 2), out m0);
-            if (h0 < 0 || h0 > 23 || m0 < 0 || m0 > 59)
-                return "__:__";
-
-            int resInt = h0 * 60 + m0 + (int)minutes;
-            if (resInt < 0) resInt = 0;
-            if (resInt > 23*60+59) resInt = 23*60+59;
-
-            return (resInt/60).ToString("D2") + ':' + (resInt%60).ToString("D2");
+            return HourFunctions.HoursAdd(time, minutes);
         }
 
         /// <summary>
@@ -907,9 +883,9 @@ namespace CSGenio.business
         /// </summary>
         /// <param name="time">O número de horas decorridos desde 00:00</param>
         /// <returns>A hour em format __:__</returns>
-        public static string DoubleToHours(double time)
+        public static string DoubleToHours(decimal time)
         {
-            int minutosTotais = (int)Math.Round(time * 60.0);
+            int minutosTotais = (int)Math.Round(time * 60);
             int horasParte = minutosTotais / 60;
             int minutosParte = minutosTotais % 60;
             return horasParte.ToString("D2") + ':' + minutosParte.ToString("D2");
@@ -925,7 +901,7 @@ namespace CSGenio.business
         /// <param name="minute">minute</param>
         /// <param name="second">second</param>
         /// <returns>A DateTime with the specified parameters</returns>
-        public static DateTime CreateDateTime(double year, double month, double day, double hour, double minute, double second)
+        public static DateTime CreateDateTime(decimal year, decimal month, decimal day, decimal hour, decimal minute, decimal second)
         {
             try
             {
@@ -946,7 +922,7 @@ namespace CSGenio.business
         /// <param name="month">month</param>
         /// <param name="day">day</param>
         /// <returns>A DateTime with the specified parameters</returns>
-        public static DateTime CreateDateTime(double year, double month, double day)
+        public static DateTime CreateDateTime(decimal year, decimal month, decimal day)
         {
             return CreateDateTime(year, month, day, 0, 0, 0);
         }
@@ -957,7 +933,7 @@ namespace CSGenio.business
         /// <param name="date">A date</param>
         /// <param name="time">A time with format __:__</param>
         /// <returns>A DateTime with the specified parameters</returns>
-        [Obsolete("Use CreateDateTime(y,m,d,h,m,s) instead")]
+        [Obsolete("Use DateSetTime instead")]
         public static DateTime CriaDataHora(DateTime date, string time)
         {
             if (emptyD(date)==1) return DateTime.MinValue;
@@ -985,21 +961,13 @@ namespace CSGenio.business
         /// <returns>A DateTime with the specified parameters</returns>
         public static DateTime DateSetTime(DateTime date, string time)
         {
-            if (emptyD(date)==1) return DateTime.MinValue;
-            int hour = 0, minute = 0;
-            if (time.Length == 5)
-            {
-                // fix the string to replace placeholder characters
-                time = time.Replace('_', '0');
-                Int32.TryParse(time.Substring(0, 2), out hour);
-                Int32.TryParse(time.Substring(3, 2), out minute);
-                if (hour < 0 || hour > 23 || minute < 0 || minute > 59)
-                {
-                    hour = 0;
-                    minute = 0;
-                }
-            }
-            return CreateDateTime(date.Year, date.Month, date.Day, hour, minute, 0);
+            if (date == DateTime.MinValue)
+                return date;
+            const decimal epsilon = 0.1m;
+            decimal full = HourFunctions.HoursToDouble(time);
+            int hh = (int)full;            
+            int mm = (int)(epsilon + (full - hh) * 60m);
+            return CreateDateTime(date.Year, date.Month, date.Day, hh, mm, 0);
         }
 
         /// <summary>
@@ -1046,17 +1014,17 @@ namespace CSGenio.business
         /// <param name="endDate">endDate</param>
         /// <param name="unit">unit</param>
         /// <returns>Duration between startDate and endDate</returns>
-        public static double DateDiffPart(DateTime startDate, DateTime endDate, string unit)
+        public static decimal DateDiffPart(DateTime startDate, DateTime endDate, string unit)
         {
             TimeSpan diff = endDate.Subtract(startDate);
             if (unit == "D")
-                return Math.Floor(diff.TotalDays);
+                return (decimal)Math.Floor(diff.TotalDays);
             if (unit == "H")
-                return Math.Floor(diff.TotalHours);
+                return (decimal)Math.Floor(diff.TotalHours);
             if (unit == "M")
-                return Math.Floor(diff.TotalMinutes);
+                return (decimal)Math.Floor(diff.TotalMinutes);
             if (unit == "S")
-                return Math.Floor(diff.TotalSeconds);
+                return (decimal)Math.Floor(diff.TotalSeconds);
 
             return 0;
         }
@@ -1089,9 +1057,9 @@ namespace CSGenio.business
         /// <param name="date">Date to change</param>
         /// <param name="years">Number of years, each year equals 365 days</param>
         /// <returns>A DateTime with the specified duration added/subtracted</returns>
-        public static DateTime DateAddYears(DateTime date, int years)
+        public static DateTime DateAddYears(DateTime date, decimal years)
         {
-            return date.AddYears(years);
+            return date.AddYears((int)years);
         }
 
         /// <summary>
@@ -1100,9 +1068,9 @@ namespace CSGenio.business
         /// <param name="date">Date to change</param>
         /// <param name="months">Number of months, each month equals 30 days</param>
         /// <returns>A DateTime with the specified duration added/subtracted</returns>
-        public static DateTime DateAddMonths(DateTime date, int months)
+        public static DateTime DateAddMonths(DateTime date, decimal months)
         {
-            return date.AddMonths(months);
+            return date.AddMonths((int)months);
         }
 
         /// <summary>
@@ -1111,9 +1079,9 @@ namespace CSGenio.business
         /// <param name="date">Date to change</param>
         /// <param name="days">Number of days</param>
         /// <returns>A DateTime with the specified duration added/subtracted</returns>
-        public static DateTime DateAddDays(DateTime date, double days)
+        public static DateTime DateAddDays(DateTime date, decimal days)
         {
-            return date.AddDays(days);
+            return date.AddDays((double)days);
         }
 
         /// <summary>
@@ -1122,9 +1090,9 @@ namespace CSGenio.business
         /// <param name="date">Date to change</param>
         /// <param name="hours">Number of hours</param>
         /// <returns>A DateTime with the specified duration added/subtracted</returns>
-        public static DateTime DateAddHours(DateTime date, double hours)
+        public static DateTime DateAddHours(DateTime date, decimal hours)
         {
-            return date.AddHours(hours);
+            return date.AddHours((double)hours);
         }
 
         /// <summary>
@@ -1133,9 +1101,9 @@ namespace CSGenio.business
         /// <param name="date">Date to change</param>
         /// <param name="minutes">Number of minutes</param>
         /// <returns>A DateTime with the specified duration added/subtracted</returns>
-        public static DateTime DateAddMinutes(DateTime date, double minutes)
+        public static DateTime DateAddMinutes(DateTime date, decimal minutes)
         {
-            return date.AddMinutes(minutes);
+            return date.AddMinutes((double)minutes);
         }
 
         /// <summary>
@@ -1144,9 +1112,9 @@ namespace CSGenio.business
         /// <param name="date">Date to change</param>
         /// <param name="seconds">Number of seconds</param>
         /// <returns>A DateTime with the specified duration added/subtracted</returns>
-        public static DateTime DateAddSeconds(DateTime date, double seconds)
+        public static DateTime DateAddSeconds(DateTime date, decimal seconds)
         {
-            return date.AddSeconds(seconds);
+            return date.AddSeconds((double)seconds);
         }
 
         /// <summary>
@@ -1214,9 +1182,9 @@ namespace CSGenio.business
         /// </summary>
         /// <param name="duration">Duration to read</param>
         /// <returns>duration in days</returns>
-        public static double DurationTotalDays(TimeSpan duration)
+        public static decimal DurationTotalDays(TimeSpan duration)
         {
-            return duration.TotalDays;
+            return (decimal)duration.TotalDays;
         }
 
         /// <summary>
@@ -1224,9 +1192,9 @@ namespace CSGenio.business
         /// </summary>
         /// <param name="duration">Duration to read</param>
         /// <returns>duration in hours</returns>
-        public static double DurationTotalHours(TimeSpan duration)
+        public static decimal DurationTotalHours(TimeSpan duration)
         {
-            return duration.TotalHours;
+            return (decimal)duration.TotalHours;
         }
 
         /// <summary>
@@ -1234,9 +1202,9 @@ namespace CSGenio.business
         /// </summary>
         /// <param name="duration">Duration to read</param>
         /// <returns>duration in minutes</returns>
-        public static double DurationTotalMinutes(TimeSpan duration)
+        public static decimal DurationTotalMinutes(TimeSpan duration)
         {
-            return duration.TotalMinutes;
+            return (decimal)duration.TotalMinutes;
         }
 
         /// <summary>
@@ -1244,9 +1212,9 @@ namespace CSGenio.business
         /// </summary>
         /// <param name="duration">Duration to read</param>
         /// <returns>duration in seconds</returns>
-        public static double DurationTotalSeconds(TimeSpan duration)
+        public static decimal DurationTotalSeconds(TimeSpan duration)
         {
-            return duration.TotalSeconds;
+            return (decimal)duration.TotalSeconds;
         }
 
         /*****/
@@ -1262,23 +1230,23 @@ namespace CSGenio.business
         }
 
         /// <summary>
-        /// Função que dados dois doubles devolve o máximo
+        /// Função que dados dois numéricos devolve o máximo
         /// </summary>
-        /// <param name="obj1">double a comparar</param>
-        /// <param name="obj2">outro double a comparar</param>
+        /// <param name="obj1">numérico a comparar</param>
+        /// <param name="obj2">outro numérico a comparar</param>
         /// <returns>o máximo entre os dois</returns>
-        public static double maxN(double obj1, double obj2)
+        public static decimal maxN(decimal obj1, decimal obj2)
         {
             return (obj1 > obj2 ? obj1 : obj2);
         }
 
         /// <summary>
-        /// Função que dados dois doubles devolve o mínimo
+        /// Função que dados dois numéricos devolve o mínimo
         /// </summary>
-        /// <param name="obj1">double a comparar</param>
-        /// <param name="obj2">outro double a comparar</param>
+        /// <param name="obj1">numérico a comparar</param>
+        /// <param name="obj2">outro numérico a comparar</param>
         /// <returns>o mínimo entre os dois</returns>
-        public static double minN(double obj1, double obj2)
+        public static decimal minN(decimal obj1, decimal obj2)
         {
             return (obj1 < obj2 ? obj1 : obj2);
         }
@@ -1403,16 +1371,16 @@ namespace CSGenio.business
         }
 
         /// <summary>
-        /// Função que permite arredondar um double com o número de digits decimais definido
+        /// Função que permite arredondar um numérico com o número de digits decimais definido
         /// </summary>
         /// <param name="num">número a ser arredondamento</param>
         /// <param name="casas">número de digits decimais</param>
         /// <returns>o número arredondado</returns>
-        public static double Round(double num, int digits)
+        public static decimal Round(decimal num, int digits)
         {
             //HAP - Added casts due to diferences when field in Genio is from decimal type.
 			//Discussed with Rodrigo Serafim and Joao Ferro (2024/02/28) this solutions and it works with decimal and double/float
-			return (double)System.Math.Round((decimal)num, digits, MidpointRounding.AwayFromZero);
+			return System.Math.Round(num, digits, MidpointRounding.AwayFromZero);
         }
 
         /// <summary>
@@ -1420,7 +1388,7 @@ namespace CSGenio.business
         /// </summary>
         /// <param name="num"></param>
         /// <returns></returns>
-        public static double abs(double num)
+        public static decimal abs(decimal num)
         {
             return System.Math.Abs(num);
         }
@@ -1469,10 +1437,10 @@ namespace CSGenio.business
         /// <param name="pdescont">percentagem de desconto</param>
         /// <param name="prec">digits decimais de precisão</param>
         /// <returns>o Qvalue da incidencia</returns>
-        public static double Incidenc(double unitValue, double amount, double pdiscount, int prec)
+        public static decimal Incidenc(decimal unitValue, decimal amount, decimal pdiscount, int prec)
         {
-            double valorart = RoundQG(unitValue * amount, prec);
-            return valorart - RoundQG(pdiscount / 100.0 * valorart, prec);
+            decimal valorart = RoundQG(unitValue * amount, prec);
+            return valorart - RoundQG(pdiscount / 100.0m * valorart, prec);
         }
 
         /// <summary>
@@ -1484,11 +1452,11 @@ namespace CSGenio.business
         /// <param name="preciva">1 caso o incidenc seja o preço com iva, 0 caso seja o preço sem iva</param>
         /// <param name="prec">precisão</param>
         /// <returns>Qvalue do IVA</returns>
-        public static double VATValue(double incidenc, double rate_iva, int vatprice, int prec)
+        public static decimal VATValue(decimal incidenc, decimal rate_iva, int vatprice, int prec)
         {
             return RoundQG(vatprice==1
-                ? incidenc / (1.0 + rate_iva / 100.0) * (rate_iva / 100.0)
-                : incidenc * (rate_iva / 100.0), prec);
+                ? incidenc / (1.0m + rate_iva / 100.0m) * (rate_iva / 100.0m)
+                : incidenc * (rate_iva / 100.0m), prec);
         }
 
         /// <summary>
@@ -1499,11 +1467,11 @@ namespace CSGenio.business
         /// <param name="x">number a arrendondar</param>
         /// <param name="c">number de digits</param>
         /// <returns>Qvalue arredondado</returns>
-        public static double RoundQG(double x, int c)
+        public static decimal RoundQG(decimal x, int c)
         {
             //(RS 2010.11.03) Reimplementei to dar os mesmos resultados que no BO e no SQL
             if (c < 0) c = 0;
-            double folga = 0.001 * Math.Pow(0.1, c) * Math.Sign(x);
+            decimal folga = (decimal)(0.001 * Math.Pow(0.1, c) * Math.Sign(x));
             return Math.Round(x + folga, c, MidpointRounding.AwayFromZero);
         }
 
@@ -1588,7 +1556,7 @@ namespace CSGenio.business
         /// </summary>
         /// <param name="numero"></param>
         /// <returns>floor de número</returns>
-        public static double Floor(double number)
+        public static decimal Floor(decimal number)
         {
             return Math.Floor(number);
         }
@@ -1619,16 +1587,16 @@ namespace CSGenio.business
         /// <summary>
         /// FS >2008-03-26
         /// Permite calcular a diferença entre duas datas (DateTime).
-        ///Retorna um Qvalue (double) da diferença entre as duas datas.
+        ///Retorna um Qvalue (numerico) da diferença entre as duas datas.
         /// </summary>
         /// <param name="dt_inicio">data de início</param>
         /// <param name="dt_fim">data de fim</param>
         /// <param name="escala">em D(Dias), H(Horas), M(Minutos) ou S(Segundos)</param>
         /// <returns>a diferença entre as datas na scale escolhida</returns>
-        public static double Diferenca_entre_Datas(DateTime dt_start, DateTime dt_end, string scale)
+        public static decimal Diferenca_entre_Datas(DateTime dt_start, DateTime dt_end, string scale)
         {
             // RS (2010.11.04) Acertei a função to ficar com a mesma semantica que no backoffice
-            double diferenca_valor;
+            decimal diferenca_valor;
 
             if (emptyD(dt_start) == 1 || emptyD(dt_end) == 1)
                 return 0;
@@ -1638,27 +1606,27 @@ namespace CSGenio.business
             {
                 case "D":
                     {
-                        diferenca_valor = Math.Floor(diferenca_tempo.TotalDays);
+                        diferenca_valor = (decimal)Math.Floor(diferenca_tempo.TotalDays);
                         break;
                     }
                 case "H":
                     {
-                        diferenca_valor = Math.Floor(diferenca_tempo.TotalHours);
+                        diferenca_valor = (decimal)Math.Floor(diferenca_tempo.TotalHours);
                         break;
                     }
                 case "M":
                     {
-                        diferenca_valor = Math.Floor(diferenca_tempo.TotalMinutes);
+                        diferenca_valor = (decimal)Math.Floor(diferenca_tempo.TotalMinutes);
                         break;
                     }
                 case "S":
                     {
-                        diferenca_valor = Math.Floor(diferenca_tempo.TotalSeconds);
+                        diferenca_valor = (decimal)Math.Floor(diferenca_tempo.TotalSeconds);
                         break;
                     }
                 default:
                     {
-                        diferenca_valor = 0.0;
+                        diferenca_valor = 0;
                         break;
                     }
             }
@@ -2203,7 +2171,7 @@ namespace CSGenio.business
         public List<ExecuteQueryCore.RdxScript> HidrateScripts(List<ExecuteQueryCore.RdxScript> scripts, IVersionReader versionReader, bool zero = false)
         {
             int upgrindx;
-            double dbVersion; 
+            decimal dbVersion;
             
             try 
             {
@@ -2768,7 +2736,7 @@ namespace CSGenio.business
         /// <param name="level">The level.</param>
         /// <param name="roleId">The role identifier.</param>
         /// <returns></returns>
-        public static double GetLevelFromRole(double level, string roleId)
+        public static decimal GetLevelFromRole(decimal level, string roleId)
         {
             if (string.IsNullOrEmpty(roleId))
                 return level;

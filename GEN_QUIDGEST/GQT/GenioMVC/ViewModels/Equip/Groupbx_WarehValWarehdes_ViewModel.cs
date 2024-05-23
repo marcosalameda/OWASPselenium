@@ -128,8 +128,8 @@ namespace GenioMVC.ViewModels.Equip
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("WAREH.WAREHCOD", new OrderedDictionary());
-					allSortOrders["WAREH.WAREHCOD"].Add("WAREH.WAREHCOD", "A");
+			allSortOrders.Add("WAREH.WAREHCOD", new OrderedDictionary());
+			allSortOrders["WAREH.WAREHCOD"].Add("WAREH.WAREHCOD", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Groupbx_WarehValWarehdes_"));
@@ -221,8 +221,8 @@ namespace GenioMVC.ViewModels.Equip
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("WAREH.WAREHCOD", new OrderedDictionary());
-					allSortOrders["WAREH.WAREHCOD"].Add("WAREH.WAREHCOD", "A");
+			allSortOrders.Add("WAREH.WAREHCOD", new OrderedDictionary());
+			allSortOrders["WAREH.WAREHCOD"].Add("WAREH.WAREHCOD", "A");
 
 
 
@@ -309,6 +309,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwareh.FldCodwareh, CSGenioAwareh.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP GROUPBX_WAREHWAREHDES]/
 
+                conditions = groupbx_warehwarehdesConds;
                 return;
 			}
 

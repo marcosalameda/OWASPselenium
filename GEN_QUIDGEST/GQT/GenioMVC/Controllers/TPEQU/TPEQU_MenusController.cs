@@ -94,7 +94,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL GQT MENU_GET 2911]/
+// USE /[MANUAL GQT MENU_GET 2911]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -169,7 +169,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL GQT MENU_GET 2A1]/
+// USE /[MANUAL GQT MENU_GET 2A1]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -254,7 +254,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL GQT MENU_GET 2D11]/
+// USE /[MANUAL GQT MENU_GET 2D11]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -339,7 +339,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL GQT MENU_GET 2D21]/
+// USE /[MANUAL GQT MENU_GET 2D21]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());

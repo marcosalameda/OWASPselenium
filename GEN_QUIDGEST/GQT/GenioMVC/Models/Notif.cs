@@ -38,7 +38,7 @@ namespace GenioMVC.Models
 		[DisplayName("No. of the dadato")]
 		/// <summary>Field : "No. of the dadato" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValNrcomoda { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNrcomoda, 0)); } set { klass.ValNrcomoda = Convert.ToDouble(value); } }
+		public decimal? ValNrcomoda { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNrcomoda, 0)); } set { klass.ValNrcomoda = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValNrcomoda() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Notif.ValNrcomoda");
 
 		[DisplayName("Beginning")]

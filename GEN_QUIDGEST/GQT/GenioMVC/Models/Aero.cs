@@ -43,7 +43,7 @@ namespace GenioMVC.Models
 		[DisplayName("Code")]
 		/// <summary>Field : "Code" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValCodcmaer { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValCodcmaer, 0)); } set { klass.ValCodcmaer = Convert.ToDouble(value); } }
+		public decimal? ValCodcmaer { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValCodcmaer, 0)); } set { klass.ValCodcmaer = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValCodcmaer() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Aero.ValCodcmaer");
 
 		[DisplayName("ZZSTATE")]

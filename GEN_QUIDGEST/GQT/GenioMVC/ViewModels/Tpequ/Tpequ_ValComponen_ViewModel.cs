@@ -132,8 +132,8 @@ namespace GenioMVC.ViewModels.Tpequ
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("CMPKI.ORDER", new OrderedDictionary());
-					allSortOrders["CMPKI.ORDER"].Add("CMPKI.ORDER", "A");
+			allSortOrders.Add("CMPKI.ORDER", new OrderedDictionary());
+			allSortOrders["CMPKI.ORDER"].Add("CMPKI.ORDER", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValComponen_"));
@@ -229,8 +229,8 @@ namespace GenioMVC.ViewModels.Tpequ
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("CMPKI.ORDER", new OrderedDictionary());
-					allSortOrders["CMPKI.ORDER"].Add("CMPKI.ORDER", "A");
+			allSortOrders.Add("CMPKI.ORDER", new OrderedDictionary());
+			allSortOrders["CMPKI.ORDER"].Add("CMPKI.ORDER", "A");
 
 
 
@@ -317,6 +317,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcmpki.FldCodcmpki, CSGenioAcmpki.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP TPEQU_PSEUDCOMPONEN]/
 
+                conditions = tpequ___pseudcomponenConds;
                 return;
 			}
 

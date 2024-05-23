@@ -166,8 +166,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioApedid.FldCodpedid, CSGenioApedid.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("PEDID.DTPEDIDO", new OrderedDictionary());
-					allSortOrders["PEDID.DTPEDIDO"].Add("PEDID.DTPEDIDO", "A");
+			allSortOrders.Add("PEDID.DTPEDIDO", new OrderedDictionary());
+			allSortOrders["PEDID.DTPEDIDO"].Add("PEDID.DTPEDIDO", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "GQT_Menu_281_"));
@@ -260,8 +260,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioApedid.FldCodpedid, CSGenioApedid.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("PEDID.DTPEDIDO", new OrderedDictionary());
-					allSortOrders["PEDID.DTPEDIDO"].Add("PEDID.DTPEDIDO", "A");
+			allSortOrders.Add("PEDID.DTPEDIDO", new OrderedDictionary());
+			allSortOrders["PEDID.DTPEDIDO"].Add("PEDID.DTPEDIDO", "A");
 
 
 
@@ -348,6 +348,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApedid.FldCodpedid, CSGenioApedid.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP 281]/
 
+                conditions = gqt_menu_281Conds;
                 return;
 			}
 

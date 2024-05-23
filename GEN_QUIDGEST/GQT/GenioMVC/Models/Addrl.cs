@@ -48,15 +48,15 @@ namespace GenioMVC.Models
 		[DisplayName("Address Number")]
 		/// <summary>Field : "Address Number" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValAddressnumber { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValAddressnumber, 0)); } set { klass.ValAddressnumber = Convert.ToDouble(value); } }
+		public decimal? ValAddressnumber { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValAddressnumber, 0)); } set { klass.ValAddressnumber = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValAddressnumber() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Addrl.ValAddressnumber");
 
 		[DisplayName("Object Type")]
 		/// <summary>Field : "Object Type" Tipo: "AN" Formula:  ""</summary>
 		[DataArray("Objetype", GenioMVC.Helpers.ArrayType.Numeric)]
-		public double ValObjecttypecode { get { return klass.ValObjecttypecode; } set { klass.ValObjecttypecode = value; } }
+		public decimal ValObjecttypecode { get { return klass.ValObjecttypecode; } set { klass.ValObjecttypecode = value; } }
 		[JsonIgnore]
-		public SelectList ArrayValobjecttypecode { get { return new SelectList(CSGenio.business.ArrayObjetype.GetDictionary(), "Key", "Value", ValObjecttypecode); } set { ValObjecttypecode = Convert.ToDouble(value.SelectedValue); } }
+		public SelectList ArrayValobjecttypecode { get { return new SelectList(CSGenio.business.ArrayObjetype.GetDictionary(), "Key", "Value", ValObjecttypecode); } set { ValObjecttypecode = Convert.ToDecimal(value.SelectedValue); } }
 		public bool ShouldSerializeValObjecttypecode() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Addrl.ValObjecttypecode");
 
 		[DisplayName("objectTypeCode_display")]
@@ -67,9 +67,9 @@ namespace GenioMVC.Models
 		[DisplayName("Address Type Code")]
 		/// <summary>Field : "Address Type Code" Tipo: "AN" Formula:  ""</summary>
 		[DataArray("Addrtyco", GenioMVC.Helpers.ArrayType.Numeric)]
-		public double ValAddresstypecode { get { return klass.ValAddresstypecode; } set { klass.ValAddresstypecode = value; } }
+		public decimal ValAddresstypecode { get { return klass.ValAddresstypecode; } set { klass.ValAddresstypecode = value; } }
 		[JsonIgnore]
-		public SelectList ArrayValaddresstypecode { get { return new SelectList(CSGenio.business.ArrayAddrtyco.GetDictionary(), "Key", "Value", ValAddresstypecode); } set { ValAddresstypecode = Convert.ToDouble(value.SelectedValue); } }
+		public SelectList ArrayValaddresstypecode { get { return new SelectList(CSGenio.business.ArrayAddrtyco.GetDictionary(), "Key", "Value", ValAddresstypecode); } set { ValAddresstypecode = Convert.ToDecimal(value.SelectedValue); } }
 		public bool ShouldSerializeValAddresstypecode() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Addrl.ValAddresstypecode");
 
 		[DisplayName("ZZSTATE")]

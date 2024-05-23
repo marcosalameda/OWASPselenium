@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Repar_ModalDBEdit(string partialView)
-		{
-			Repar_ViewModel model = new Repar_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Repar_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW REPAR]/

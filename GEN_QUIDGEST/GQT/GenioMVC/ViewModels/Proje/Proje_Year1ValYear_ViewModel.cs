@@ -127,8 +127,8 @@ namespace GenioMVC.ViewModels.Proje
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("YEAR1.YEAR", new OrderedDictionary());
-					allSortOrders["YEAR1.YEAR"].Add("YEAR1.YEAR", "A");
+			allSortOrders.Add("YEAR1.YEAR", new OrderedDictionary());
+			allSortOrders["YEAR1.YEAR"].Add("YEAR1.YEAR", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Proje_Year1ValYear_"));
@@ -220,8 +220,8 @@ namespace GenioMVC.ViewModels.Proje
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("YEAR1.YEAR", new OrderedDictionary());
-					allSortOrders["YEAR1.YEAR"].Add("YEAR1.YEAR", "A");
+			allSortOrders.Add("YEAR1.YEAR", new OrderedDictionary());
+			allSortOrders["YEAR1.YEAR"].Add("YEAR1.YEAR", "A");
 
 
 
@@ -298,6 +298,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAyear1.FldCodyear, CSGenioAyear1.Fld
 
 // USE /[MANUAL GQT OVERRQLSTEXP PROJE_YEAR1YEAR]/
 
+                conditions = proje___year1year____Conds;
                 return;
 			}
 

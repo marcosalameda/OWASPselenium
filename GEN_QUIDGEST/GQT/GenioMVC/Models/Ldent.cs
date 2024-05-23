@@ -47,7 +47,7 @@ namespace GenioMVC.Models
 		[DisplayName("Line")]
 		/// <summary>Field : "Line" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(1)]
-		public decimal? ValLine { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLine, 1)); } set { klass.ValLine = Convert.ToDouble(value); } }
+		public decimal? ValLine { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLine, 1)); } set { klass.ValLine = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValLine() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Ldent.ValLine");
 
 		[DisplayName(">ARMAZEM")]
@@ -71,7 +71,7 @@ namespace GenioMVC.Models
 		[DisplayName("Qtd entry")]
 		/// <summary>Field : "Qtd entry" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValQtdentra { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQtdentra, 0)); } set { klass.ValQtdentra = Convert.ToDouble(value); } }
+		public decimal? ValQtdentra { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQtdentra, 0)); } set { klass.ValQtdentra = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValQtdentra() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Ldent.ValQtdentra");
 
 		[DisplayName("Instant entrance")]

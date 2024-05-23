@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Comod_ModalDBEdit(string partialView)
-		{
-			Comod_ViewModel model = new Comod_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Comod_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW COMOD]/

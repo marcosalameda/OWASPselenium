@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Imgmagn_ModalDBEdit(string partialView)
-		{
-			Imgmagn_ViewModel model = new Imgmagn_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Imgmagn_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW IMGMAGN]/

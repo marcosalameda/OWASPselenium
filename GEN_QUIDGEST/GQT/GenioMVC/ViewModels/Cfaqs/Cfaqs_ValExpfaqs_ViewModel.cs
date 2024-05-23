@@ -303,6 +303,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAfaqs.FldCodfaqs, CSGenioAfaqs.FldZz
 
 // USE /[MANUAL GQT OVERRQLSTEXP CFAQS_PSEUDEXPFAQS]/
 
+                conditions = cfaqs___pseudexpfaqs_Conds;
                 return;
 			}
 

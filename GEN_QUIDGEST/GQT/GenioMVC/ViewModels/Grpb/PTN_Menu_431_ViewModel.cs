@@ -164,8 +164,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgrpb.FldCodgrpb, CSGenioAgrpb.FldZz
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("GRPB.NAME", new OrderedDictionary());
-					allSortOrders["GRPB.NAME"].Add("GRPB.NAME", "A");
+			allSortOrders.Add("GRPB.NAME", new OrderedDictionary());
+			allSortOrders["GRPB.NAME"].Add("GRPB.NAME", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "PTN_Menu_431_"));
@@ -258,8 +258,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgrpb.FldCodgrpb, CSGenioAgrpb.FldZz
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("GRPB.NAME", new OrderedDictionary());
-					allSortOrders["GRPB.NAME"].Add("GRPB.NAME", "A");
+			allSortOrders.Add("GRPB.NAME", new OrderedDictionary());
+			allSortOrders["GRPB.NAME"].Add("GRPB.NAME", "A");
 
 
 
@@ -346,6 +346,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgrpb.FldCodgrpb, CSGenioAgrpb.FldZz
 
 // USE /[MANUAL PTN OVERRQLSTEXP 431]/
 
+                conditions = ptn_menu_431Conds;
                 return;
 			}
 

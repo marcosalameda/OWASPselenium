@@ -159,7 +159,7 @@ namespace GenioMVC.Helpers.Table.Renderer
 						}
 						else
 						{
-							Dictionary<double, string> dic = (Dictionary<double, string>)dictionary;
+							Dictionary<decimal, string> dic = (Dictionary<decimal, string>)dictionary;
 							selectList = new System.Web.Mvc.SelectList(dic.ToDictionary(p => p.Key, p => GenioMVC.Helpers.Helpers.GetTextFromResources(p.Value)), "Key", "Value", value);
 						}
 						input = System.Web.Mvc.Html.SelectExtensions.DropDownList(this.DbEdit.HtmlHelper, id, selectList, TableString.Choice.ToString(), new { @value = value, @class = "i-select chosen-dropdown", @elem_identifier = "ChosenDropdown", data_placeholder = TableString.Choice.ToString(), data_no_results_text = TableString.NoResults.ToString(), @style = "width: 100%", data_is_array = true, title = Resources.Resources.SELECIONAR08804 + " " + tc.ColumnTitle });

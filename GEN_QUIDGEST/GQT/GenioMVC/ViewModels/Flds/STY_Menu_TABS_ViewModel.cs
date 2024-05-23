@@ -356,6 +356,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAflds.FldCodflds, CSGenioAflds.FldZz
 
 // USE /[MANUAL STY OVERRQLSTEXP TABS]/
 
+                conditions = sty_menu_tabsConds;
                 return;
 			}
 

@@ -128,8 +128,8 @@ namespace GenioMVC.ViewModels.Evcat
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("CATE1.CATEGORY", new OrderedDictionary());
-					allSortOrders["CATE1.CATEGORY"].Add("CATE1.CATEGORY", "A");
+			allSortOrders.Add("CATE1.CATEGORIA", new OrderedDictionary());
+			allSortOrders["CATE1.CATEGORIA"].Add("CATE1.CATEGORIA", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Evcat_Cate1ValCategoria_"));
@@ -221,8 +221,8 @@ namespace GenioMVC.ViewModels.Evcat
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("CATE1.CATEGORY", new OrderedDictionary());
-					allSortOrders["CATE1.CATEGORY"].Add("CATE1.CATEGORY", "A");
+			allSortOrders.Add("CATE1.CATEGORIA", new OrderedDictionary());
+			allSortOrders["CATE1.CATEGORIA"].Add("CATE1.CATEGORIA", "A");
 
 
 
@@ -309,6 +309,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcate1.FldCodcateg, CSGenioAcate1.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP EVCAT_CATE1CATEGORY]/
 
+                conditions = evcat___cate1categoryConds;
                 return;
 			}
 

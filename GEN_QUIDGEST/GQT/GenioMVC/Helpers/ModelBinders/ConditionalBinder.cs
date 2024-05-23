@@ -34,6 +34,28 @@ namespace GenioMVC.Helpers.ModelBinders
 
 				return true;
 			}
+			if (propertyDescriptor.PropertyType == typeof(decimal))
+			{
+				if (bindingContext.ValueProvider.GetValue(propertyDescriptor.Name) == null)
+					return false;
+
+				string value = bindingContext.ValueProvider.GetValue(propertyDescriptor.Name).AttemptedValue.ToString();
+
+				if (value == "1")
+					propertyDescriptor.SetValue(bindingContext.Model, 1m);
+				else if (value == "0")
+					propertyDescriptor.SetValue(bindingContext.Model, 0m);
+				else
+				{ // OLD ...
+					bool result;
+					Boolean.TryParse(value, out result);
+
+					propertyDescriptor.SetValue(bindingContext.Model,
+						result ? 1m : 0m);
+				}
+
+				return true;
+			}
 
 			return false;
 		}

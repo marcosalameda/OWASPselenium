@@ -336,6 +336,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAglob.FldCodglob, CSGenioAglob.FldZz
 
 // USE /[MANUAL TBS OVERRQLSTEXP 171]/
 
+                conditions = tbs_menu_171Conds;
                 return;
 			}
 

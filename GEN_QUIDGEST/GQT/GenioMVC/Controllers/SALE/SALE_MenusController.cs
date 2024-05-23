@@ -96,7 +96,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL GQT MENU_GET 511]/
+// USE /[MANUAL GQT MENU_GET 511]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -171,7 +171,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL GQT MENU_GET 521]/
+// USE /[MANUAL GQT MENU_GET 521]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -246,7 +246,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL GQT MENU_GET 531]/
+// USE /[MANUAL GQT MENU_GET 531]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -322,7 +322,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL STY MENU_GET HWIZARD]/
+// USE /[MANUAL STY MENU_GET HWIZARD]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -419,7 +419,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL STY MENU_GET VWIZARD]/
+// USE /[MANUAL STY MENU_GET VWIZARD]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -516,7 +516,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL STY MENU_GET PWIZARD]/
+// USE /[MANUAL STY MENU_GET PWIZARD]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());

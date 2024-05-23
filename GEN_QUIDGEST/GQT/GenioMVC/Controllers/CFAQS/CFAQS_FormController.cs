@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Cfaqs_ModalDBEdit(string partialView)
-		{
-			Cfaqs_ViewModel model = new Cfaqs_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Cfaqs_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW CFAQS]/

@@ -175,8 +175,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlendi.FldCodlendi, CSGenioAlendi.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("LENDI.START", new OrderedDictionary());
-					allSortOrders["LENDI.START"].Add("LENDI.START", "A");
+			allSortOrders.Add("LENDI.START", new OrderedDictionary());
+			allSortOrders["LENDI.START"].Add("LENDI.START", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "PTN_Menu_1211_"));
@@ -269,8 +269,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlendi.FldCodlendi, CSGenioAlendi.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("LENDI.START", new OrderedDictionary());
-					allSortOrders["LENDI.START"].Add("LENDI.START", "A");
+			allSortOrders.Add("LENDI.START", new OrderedDictionary());
+			allSortOrders["LENDI.START"].Add("LENDI.START", "A");
 
 
 
@@ -357,6 +357,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlendi.FldCodlendi, CSGenioAlendi.Fl
 
 // USE /[MANUAL PTN OVERRQLSTEXP 1211]/
 
+                conditions = ptn_menu_1211Conds;
                 return;
 			}
 

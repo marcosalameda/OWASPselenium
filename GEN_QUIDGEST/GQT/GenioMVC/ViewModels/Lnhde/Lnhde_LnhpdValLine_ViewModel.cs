@@ -319,6 +319,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlnhpd.FldCodlnhpd, CSGenioAlnhpd.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP LNHDE_LNHPDLINE]/
 
+                conditions = lnhde___lnhpdline____Conds;
                 return;
 			}
 

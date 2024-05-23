@@ -184,8 +184,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAsale.FldCodvenda, CSGenioAsale.FldZ
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("SALE.STARTDT", new OrderedDictionary());
-					allSortOrders["SALE.STARTDT"].Add("SALE.STARTDT", "A");
+			allSortOrders.Add("SALE.STARTDT", new OrderedDictionary());
+			allSortOrders["SALE.STARTDT"].Add("SALE.STARTDT", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "GQT_Menu_531_"));
@@ -278,8 +278,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAsale.FldCodvenda, CSGenioAsale.FldZ
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("SALE.STARTDT", new OrderedDictionary());
-					allSortOrders["SALE.STARTDT"].Add("SALE.STARTDT", "A");
+			allSortOrders.Add("SALE.STARTDT", new OrderedDictionary());
+			allSortOrders["SALE.STARTDT"].Add("SALE.STARTDT", "A");
 
 
 
@@ -366,6 +366,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAsale.FldCodvenda, CSGenioAsale.FldZ
 
 // USE /[MANUAL GQT OVERRQLSTEXP 531]/
 
+                conditions = gqt_menu_531Conds;
                 return;
 			}
 

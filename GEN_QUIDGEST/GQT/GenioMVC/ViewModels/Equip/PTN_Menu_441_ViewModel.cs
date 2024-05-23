@@ -336,6 +336,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
 
 // USE /[MANUAL PTN OVERRQLSTEXP 441]/
 
+                conditions = ptn_menu_441Conds;
                 return;
 			}
 

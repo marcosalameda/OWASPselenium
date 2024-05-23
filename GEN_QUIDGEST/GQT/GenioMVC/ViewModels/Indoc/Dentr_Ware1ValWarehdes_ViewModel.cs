@@ -127,8 +127,8 @@ namespace GenioMVC.ViewModels.Indoc
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("WARE1.WAREHDES", new OrderedDictionary());
-					allSortOrders["WARE1.WAREHDES"].Add("WARE1.WAREHDES", "A");
+			allSortOrders.Add("WARE1.WAREHDES", new OrderedDictionary());
+			allSortOrders["WARE1.WAREHDES"].Add("WARE1.WAREHDES", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Dentr_Ware1ValWarehdes_"));
@@ -220,8 +220,8 @@ namespace GenioMVC.ViewModels.Indoc
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("WARE1.WAREHDES", new OrderedDictionary());
-					allSortOrders["WARE1.WAREHDES"].Add("WARE1.WAREHDES", "A");
+			allSortOrders.Add("WARE1.WAREHDES", new OrderedDictionary());
+			allSortOrders["WARE1.WAREHDES"].Add("WARE1.WAREHDES", "A");
 
 
 
@@ -308,6 +308,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAware1.FldCodwareh, CSGenioAware1.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP DENTR_WARE1WAREHDES]/
 
+                conditions = dentr___ware1warehdesConds;
                 return;
 			}
 

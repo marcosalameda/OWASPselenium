@@ -165,8 +165,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlangu.FldCodlang, CSGenioAlangu.Fld
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("LANGU.LANGUA", new OrderedDictionary());
-					allSortOrders["LANGU.LANGUA"].Add("LANGU.LANGUA", "A");
+			allSortOrders.Add("LANGU.LANGUA", new OrderedDictionary());
+			allSortOrders["LANGU.LANGUA"].Add("LANGU.LANGUA", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "GQT_Menu_921_"));
@@ -259,8 +259,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlangu.FldCodlang, CSGenioAlangu.Fld
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("LANGU.LANGUA", new OrderedDictionary());
-					allSortOrders["LANGU.LANGUA"].Add("LANGU.LANGUA", "A");
+			allSortOrders.Add("LANGU.LANGUA", new OrderedDictionary());
+			allSortOrders["LANGU.LANGUA"].Add("LANGU.LANGUA", "A");
 
 
 
@@ -347,6 +347,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlangu.FldCodlang, CSGenioAlangu.Fld
 
 // USE /[MANUAL GQT OVERRQLSTEXP 921]/
 
+                conditions = gqt_menu_921Conds;
                 return;
 			}
 

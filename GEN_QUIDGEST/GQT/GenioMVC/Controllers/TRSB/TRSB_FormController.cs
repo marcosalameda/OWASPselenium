@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Trsb_ModalDBEdit(string partialView)
-		{
-			Trsb_ViewModel model = new Trsb_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Trsb_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW TRSB]/

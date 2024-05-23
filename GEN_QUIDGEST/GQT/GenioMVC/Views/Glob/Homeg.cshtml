@@ -43,7 +43,7 @@ else {
 								@Html.LabelFor(model => model.ValHome, new { label_id="IFF_HOMEG___GLOB_HOME____", @class = " i-text__label hidden-label", id="LABEL_IFF_HOMEG___GLOB_HOME____"}, true, false)
 								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
 								<a href="javascript:OpenSuggestion('IFF_HOMEG___GLOB_HOME____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-								<div data-field-name="ValHome" data-identifier="IFF_HOMEG___GLOB_HOME____" pers-cs-area="Glob" pers-cs-field="ValHome">
+								<div data-field-name="ValHome" data-identifier="IFF_HOMEG___GLOB_HOME____" pers-cs-area="Glob" pers-cs-field="ValHome"  help-id="IFF_HOMEG___GLOB_HOME____">
 								@if(Model.IsEditableMode) {
 									@Html.EditorFor(model => model.ValHome, new {help_id = "IFF_HOMEG___GLOB_HOME____", @class = "input-xxlarge", data_identifier = "IFF_HOMEG___GLOB_HOME____", data_readonly = !Model.IsEditableMode })
 								} else {

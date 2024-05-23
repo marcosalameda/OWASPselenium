@@ -970,6 +970,8 @@ namespace GenioMVC.Helpers
             string mode = "Insert";
             string inputType = "file";
             string fldSize = html.ViewData["fieldSize"] == null ? "" : html.ViewData["fieldSize"].ToString();
+            string maxFileSize = html.ViewData["maxSize"] == null ? "null" : html.ViewData["maxSize"].ToString();
+            string allowedTypes = html.ViewData["allowedTypes"] == null ? "" : html.ViewData["allowedTypes"].ToString();
 
             if (versioning)
             {
@@ -980,19 +982,19 @@ namespace GenioMVC.Helpers
                     a.InnerHtml += Resources.Resources.SUBMETER21206;
                     mode = "Submit";
                     inputType = "text";
-                    a.Attributes.Add("data-url", urlHelper.Action("SubmitVersion", baseArea, new { fieldSize = fldSize, isRequired }));
+                    a.Attributes.Add("data-url", urlHelper.Action("SubmitVersion", baseArea, new { fieldSize = fldSize, isRequired, maxFileSize, allowedTypes }));
                 }
                 else if (docProps.IsEmpty())
                 {
                     a.InnerHtml += Resources.Resources.ANEXAR20848;
-                    a.Attributes.Add("data-url", urlHelper.Action("SetFile", baseArea, new { fieldSize = fldSize, isRequired }));
+                    a.Attributes.Add("data-url", urlHelper.Action("SetFile", baseArea, new { fieldSize = fldSize, isRequired, maxFileSize, allowedTypes }));
                 }
                 else
                 {
                     a.InnerHtml += Resources.Resources.EDITAR11616;
                     mode = "Checkout";
                     inputType = "text";
-                    a.Attributes.Add("data-url", urlHelper.Action("CheckoutDocum", baseArea, new { fieldSize = fldSize, isRequired }));
+                    a.Attributes.Add("data-url", urlHelper.Action("CheckoutDocum", baseArea, new { fieldSize = fldSize, isRequired, maxFileSize, allowedTypes }));
 					// Last updated by [HTA] at [2019.10.01]
 					string querystring = "?area=" + baseArea + "&areakey=" + baseAreaKey + "&openPane=true";
 					a.Attributes.Add("data-extra", urlHelper.Action("PrepareFileLink", "Home") + querystring);
@@ -1002,7 +1004,7 @@ namespace GenioMVC.Helpers
             else
             {
                 a.InnerHtml += Resources.Resources.ANEXAR20848;
-                a.Attributes.Add("data-url", urlHelper.Action("SetFile", baseArea, new { fieldSize = fldSize, isRequired }));
+                a.Attributes.Add("data-url", urlHelper.Action("SetFile", baseArea, new { fieldSize = fldSize, isRequired, maxFileSize, allowedTypes }));
             }
 
             a.Attributes.Add("data-action", "attach");
@@ -1027,13 +1029,15 @@ namespace GenioMVC.Helpers
         private static MvcHtmlString CreateDeleteFileLink<TModel>(HtmlHelper<TModel> html, string documentFk, string baseArea, bool externalDoc, string modelValue, GenioMVC.ViewModels.DocumsProperties_ViewModel docProps, UrlHelper urlHelper, bool isRequired)
         {
             string fldSize = html.ViewData["fieldSize"] == null ? "" : html.ViewData["fieldSize"].ToString();
+            string maxFileSize = html.ViewData["maxSize"] == null ? "null" : html.ViewData["maxSize"].ToString();
+            string allowedTypes = html.ViewData["allowedTypes"] == null ? "" : html.ViewData["allowedTypes"].ToString();
             TagBuilder div = new TagBuilder("div");
             div.AddCssClass("dropdown-item");
             if ((!externalDoc && GlobalFunctions.emptyG(documentFk) == 1) || (externalDoc && String.IsNullOrEmpty(modelValue)) || docProps.IsCheckout)
                 div.AddCssClass("disabled");
             IDictionary<string, object> htmlProperties = new Dictionary<string, object>();
             htmlProperties.Add("href", "#");
-            htmlProperties.Add("data-url", urlHelper.Action("DeleteFile", baseArea,  new { fieldSize = fldSize, isRequired }));
+            htmlProperties.Add("data-url", urlHelper.Action("DeleteFile", baseArea,  new { fieldSize = fldSize, isRequired, maxFileSize, allowedTypes }));
             htmlProperties.Add("data-action", "delete");
             htmlProperties.Add("title", Resources.Resources.APAGAR04097);
             HtmlString deleteLink = html.ActionLinkWithIcon(Resources.Resources.APAGAR04097, null, null, "glyphicons glyphicons-remove-circle e-icon", null, htmlProperties);
@@ -2078,6 +2082,13 @@ namespace GenioMVC.Helpers
                 if (value==1.0)
                     input.Attributes.Add("checked", "checked");
                 input.Attributes.Add("original-value", value==1.0 ? "1" : "0");
+            }
+            else if(modelMeta.Model is decimal)
+            {
+                decimal value = decimal.Parse(modelMeta.Model.ToString());
+                if (value==1)
+                    input.Attributes.Add("checked", "checked");
+                input.Attributes.Add("original-value", value==1 ? "1" : "0");
             }
 
             input.Attributes.Add("value", "true");

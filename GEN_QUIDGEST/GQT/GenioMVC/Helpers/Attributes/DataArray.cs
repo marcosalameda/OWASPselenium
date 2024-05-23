@@ -53,7 +53,7 @@ namespace GenioMVC.Helpers
 
 		public Dictionary<string, string> MapNumericArray(MethodInfo m)
 		{
-			Dictionary<double, string> dic = m.Invoke(null, null) as Dictionary<double, string>;
+			Dictionary<decimal, string> dic = m.Invoke(null, null) as Dictionary<decimal, string>;
 			return dic.ToDictionary(p => p.Key.ToString(), p => Helpers.GetTextFromResources(p.Value));
 		}
 

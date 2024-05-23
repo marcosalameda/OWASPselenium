@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Propr00_ModalDBEdit(string partialView)
-		{
-			Propr00_ViewModel model = new Propr00_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Propr00_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW PROPR00]/

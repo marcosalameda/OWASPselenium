@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Fieldhlp_ModalDBEdit(string partialView)
-		{
-			Fieldhlp_ViewModel model = new Fieldhlp_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Fieldhlp_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW FIELDHLP]/

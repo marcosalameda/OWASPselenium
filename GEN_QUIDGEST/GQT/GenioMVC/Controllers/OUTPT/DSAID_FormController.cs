@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Dsaid_ModalDBEdit(string partialView)
-		{
-			Dsaid_ViewModel model = new Dsaid_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Dsaid_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW DSAID]/

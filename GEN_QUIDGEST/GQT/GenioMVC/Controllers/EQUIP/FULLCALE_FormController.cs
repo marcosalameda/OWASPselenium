@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Fullcale_ModalDBEdit(string partialView)
-		{
-			Fullcale_ViewModel model = new Fullcale_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Fullcale_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW FULLCALE]/

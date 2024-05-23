@@ -133,14 +133,14 @@ namespace GenioMVC.ViewModels.Equip
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("VISIT.TITLE", new OrderedDictionary());
-					allSortOrders["VISIT.TITLE"].Add("VISIT.TITLE", "A");
-				allSortOrders.Add("VISIT.STARTDT", new OrderedDictionary());
-					allSortOrders["VISIT.STARTDT"].Add("VISIT.STARTDT", "A");
-				allSortOrders.Add("VISIT.DTFIM", new OrderedDictionary());
-					allSortOrders["VISIT.DTFIM"].Add("VISIT.DTFIM", "A");
-				allSortOrders.Add("VISIT.COLOR", new OrderedDictionary());
-					allSortOrders["VISIT.COLOR"].Add("VISIT.COLOR", "A");
+			allSortOrders.Add("VISIT.TITLE", new OrderedDictionary());
+			allSortOrders["VISIT.TITLE"].Add("VISIT.TITLE", "A");
+			allSortOrders.Add("VISIT.STARTDT", new OrderedDictionary());
+			allSortOrders["VISIT.STARTDT"].Add("VISIT.STARTDT", "A");
+			allSortOrders.Add("VISIT.DTFIM", new OrderedDictionary());
+			allSortOrders["VISIT.DTFIM"].Add("VISIT.DTFIM", "A");
+			allSortOrders.Add("VISIT.COLOR", new OrderedDictionary());
+			allSortOrders["VISIT.COLOR"].Add("VISIT.COLOR", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValVisequip_"));
@@ -236,14 +236,14 @@ namespace GenioMVC.ViewModels.Equip
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("VISIT.TITLE", new OrderedDictionary());
-					allSortOrders["VISIT.TITLE"].Add("VISIT.TITLE", "A");
-				allSortOrders.Add("VISIT.STARTDT", new OrderedDictionary());
-					allSortOrders["VISIT.STARTDT"].Add("VISIT.STARTDT", "A");
-				allSortOrders.Add("VISIT.DTFIM", new OrderedDictionary());
-					allSortOrders["VISIT.DTFIM"].Add("VISIT.DTFIM", "A");
-				allSortOrders.Add("VISIT.COLOR", new OrderedDictionary());
-					allSortOrders["VISIT.COLOR"].Add("VISIT.COLOR", "A");
+			allSortOrders.Add("VISIT.TITLE", new OrderedDictionary());
+			allSortOrders["VISIT.TITLE"].Add("VISIT.TITLE", "A");
+			allSortOrders.Add("VISIT.STARTDT", new OrderedDictionary());
+			allSortOrders["VISIT.STARTDT"].Add("VISIT.STARTDT", "A");
+			allSortOrders.Add("VISIT.DTFIM", new OrderedDictionary());
+			allSortOrders["VISIT.DTFIM"].Add("VISIT.DTFIM", "A");
+			allSortOrders.Add("VISIT.COLOR", new OrderedDictionary());
+			allSortOrders["VISIT.COLOR"].Add("VISIT.COLOR", "A");
 
 
 
@@ -333,6 +333,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAvisit.FldCodvisit, CSGenioAvisit.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP EQUIP_PSEUDVISEQUIP]/
 
+                conditions = equip___pseudvisequipConds;
                 return;
 			}
 

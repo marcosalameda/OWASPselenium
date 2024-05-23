@@ -18,6 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.ModelBinders;
+using GenioMVC.Helpers.Table.Properties;
 using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
@@ -163,7 +164,7 @@ namespace GenioMVC.ViewModels.Flds
 		/// <summary>Campo : "Numeric enumeration" Tipo:"AN"</summary>
 		[Display(Name = "NUMERIC_ENUMERATION46756", ResourceType = typeof(Resources.Resources))]
 		[DataArray("Classnum", GenioMVC.Helpers.ArrayType.Numeric)]
-		public double? ValClassnum { get; set; }
+		public decimal? ValClassnum { get; set; }
 		[JsonIgnore]
 		public SelectList List_ValClassnum { get; set; }
 
@@ -365,7 +366,7 @@ namespace GenioMVC.ViewModels.Flds
  				ValEmailfld = ViewModelConversion.ToString(m.ValEmailfld);
  				ValIbanfiel = ViewModelConversion.ToString(m.ValIbanfiel);
  				ValUpprtext = ViewModelConversion.ToString(m.ValUpprtext);
- 				ValClassnum = ViewModelConversion.ToDouble(m.ValClassnum);
+ 				ValClassnum = ViewModelConversion.ToNumeric(m.ValClassnum);
  				ValClass = ViewModelConversion.ToString(m.ValClass);
  				ValLogicenu = ViewModelConversion.ToInteger(m.ValLogicenu);
  				ValLogo = ViewModelConversion.ToImage(m.ValLogo);
@@ -414,7 +415,7 @@ namespace GenioMVC.ViewModels.Flds
 				m.ValEmailfld = ViewModelConversion.ToString(ValEmailfld);
 				m.ValIbanfiel = ViewModelConversion.ToString(ValIbanfiel);
 				m.ValUpprtext = ViewModelConversion.ToString(ValUpprtext);
-				m.ValClassnum = ViewModelConversion.ToDouble(ValClassnum);
+				m.ValClassnum = ViewModelConversion.ToNumeric(ValClassnum);
 				m.ValClass = ViewModelConversion.ToString(ValClass);
 				m.ValLogicenu = ViewModelConversion.ToInteger(ValLogicenu);
 				m.ValAttach = ViewModelConversion.ToString(ValAttach);

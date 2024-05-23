@@ -1094,48 +1094,6 @@ namespace GenioMVC.Controllers
 		}
 
 		/// <summary>
-		/// Inserts into a database the tuple (query, documentid)
-		/// </summary>
-		/// <param name="documentid">The id of the document</param>
-		/// <param name="query">The query made by the user</param>
-		protected void insertTrainData(string documentid, string query)
-		{
-			if (!string.IsNullOrEmpty(query) && !query.Equals("*:*"))
-			{
-				try
-				{
-					//A base de dados SOLR deve estar definida nas configurações
-					var sp = CSGenio.persistence.PersistentSupport.getPersistentSupportAux("SOLR", UserContext.Current.User.Name);
-					sp.openConnection();
-
-					//verificar se este acesso ao documento já foi guardado
-					SelectQuery sql = new SelectQuery().Select("Access_files", "DocumentID")
-						.From("Access_files")
-						.Where(CriteriaSet.And()
-							.Equal("Access_files", "DocumentID", documentid)
-							.Equal("Access_files", "Query", query)
-							)
-						.PageSize(1);
-					object res = sp.ExecuteScalar(sql);
-					if (res != null)
-					{
-						//guardar o acesso no set de treino do SOLR
-						InsertQuery iq = new InsertQuery().Into("Access_files")
-							.Value("Query", query.Replace(",", " "))
-							.Value("DocumentID", documentid);
-						sp.Execute(iq);
-					}
-
-					sp.closeConnection();
-				}
-				catch (Exception ie)
-				{
-					Log.Error(ie.Message);
-				}
-			}
-		}
-
-		/// <summary>
 		/// Created by [ BPM ] at [ 2020.07.30 ]
 		/// Last updated by [ BPM ] at [2020.11.05]
 		/// </summary>
@@ -1812,7 +1770,7 @@ namespace GenioMVC.Controllers
 		/// <param name="isRequired">Whether or not the field is required</param>
 		/// <returns>Document version submit menu partial view</returns>
 		[NonAction]
-		protected ActionResult SubmitVersion(string ticket, string fieldSize = "", string dataIdentifier = "", bool isRequired = false)
+		protected ActionResult SubmitVersion(string ticket, string fieldSize = "", string dataIdentifier = "", bool isRequired = false, int? maxFileSize = null, string allowedTypes = null)
 		{
 			object[] objs = QResources.DecryptTicketBase64(ticket);
 
@@ -1828,6 +1786,10 @@ namespace GenioMVC.Controllers
 			if (!string.IsNullOrEmpty(dataIdentifier))
 				ViewData["data_identifier"] = dataIdentifier;
 			ViewData["isRequired"] = isRequired;
+			if (maxFileSize != null)
+				ViewData["maxSize"] = maxFileSize;
+			if (!string.IsNullOrEmpty(allowedTypes))
+				ViewData["allowedTypes"] = allowedTypes;
 
 			Resource rec = objs[2] as Resource;
 
@@ -1863,7 +1825,7 @@ namespace GenioMVC.Controllers
 		/// <param name="viewType">DocumentViewTypeMode type that defines if it is a download os a preview</param>
 		/// <returns>JSON response</returns>
 		[NonAction]
-		protected ActionResult CheckoutDocum(string ticket, bool usesTemplates, string fieldSize = "", string dataIdentifier = "", bool isRequired = false, DocumentViewTypeMode viewType = DocumentViewTypeMode.Print)
+		protected ActionResult CheckoutDocum(string ticket, bool usesTemplates, string fieldSize = "", string dataIdentifier = "", bool isRequired = false, DocumentViewTypeMode viewType = DocumentViewTypeMode.Print, int? maxFileSize = null, string allowedTypes = null)
 		{
 			object[] objs = QResources.DecryptTicketBase64(ticket);
 
@@ -1880,6 +1842,10 @@ namespace GenioMVC.Controllers
 				ViewData["data_identifier"] = dataIdentifier;
 			ViewData["isRequired"] = isRequired;
 			ViewData["viewType"] = viewType;
+			if (maxFileSize != null)
+				ViewData["maxSize"] = maxFileSize;
+			if (!string.IsNullOrEmpty(allowedTypes))
+				ViewData["allowedTypes"] = allowedTypes;
 
 			Resource rec = objs[2] as Resource;
 
@@ -1924,7 +1890,7 @@ namespace GenioMVC.Controllers
 		/// <param name="isRequired">Whether or not the field is required</param>
 		/// <returns>JSON response</returns>
 		[NonAction]
-		protected ActionResult DeleteFile(string ticket, bool usesTemplates, VersionDeleteAction action = VersionDeleteAction.All, string fieldSize = "", string dataIdentifier = "", bool isRequired = false)
+		protected ActionResult DeleteFile(string ticket, bool usesTemplates, VersionDeleteAction action = VersionDeleteAction.All, string fieldSize = "", string dataIdentifier = "", bool isRequired = false, int? maxFileSize = null, string allowedTypes = null)
 		{
 			try
 			{
@@ -1942,6 +1908,10 @@ namespace GenioMVC.Controllers
 				if (!string.IsNullOrEmpty(dataIdentifier))
 					ViewData["data_identifier"] = dataIdentifier;
 				ViewData["isRequired"] = isRequired;
+				if (maxFileSize != null)
+					ViewData["maxSize"] = maxFileSize;
+				if (!string.IsNullOrEmpty(allowedTypes))
+					ViewData["allowedTypes"] = allowedTypes;
 
 				Resource rec = objs[2] as Resource;
 
@@ -2031,7 +2001,7 @@ namespace GenioMVC.Controllers
 		/// <param name="viewType">DocumentViewTypeMode type that defines if it is a download os a preview</param>
 		/// <returns>JSON response</returns>
 		[NonAction]
-		protected ActionResult SetFile(string ticket, bool usesTemplates, VersionSubmitAction mode = VersionSubmitAction.Insert, string version = "1", string fieldSize = "", string dataIdentifier = "", bool isRequired = false, DocumentViewTypeMode viewType = DocumentViewTypeMode.Print)
+		protected ActionResult SetFile(string ticket, bool usesTemplates, VersionSubmitAction mode = VersionSubmitAction.Insert, string version = "1", string fieldSize = "", string dataIdentifier = "", bool isRequired = false, DocumentViewTypeMode viewType = DocumentViewTypeMode.Print, int? maxFileSize = null, string allowedTypes = null)
 		{
 			try
 			{
@@ -2050,6 +2020,10 @@ namespace GenioMVC.Controllers
 					ViewData["data_identifier"] = dataIdentifier;
 				ViewData["isRequired"] = isRequired;
 				ViewData["viewType"] = viewType;
+                if (maxFileSize != null)
+                    ViewData["maxSize"] = maxFileSize;
+                if (!string.IsNullOrEmpty(allowedTypes))
+                    ViewData["allowedTypes"] = allowedTypes;
 
 				Resource rec = objs[2] as Resource;
 
@@ -2713,7 +2687,7 @@ namespace GenioMVC.Controllers
 
 		[HttpGet]
 		[AuthorizeForUsers]
-		public JsonResult GetLevelFromRole(double level, string roleId)
+		public JsonResult GetLevelFromRole(decimal level, string roleId)
 		{
 			var value = GlobalFunctions.GetLevelFromRole(level, roleId);
 			return Json(new { Success = true, Operation = "GetLevelFromRole", Value = value }, JsonRequestBehavior.AllowGet);

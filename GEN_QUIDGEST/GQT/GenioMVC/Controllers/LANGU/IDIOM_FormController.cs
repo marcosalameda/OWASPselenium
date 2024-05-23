@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Idiom_ModalDBEdit(string partialView)
-		{
-			Idiom_ViewModel model = new Idiom_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Idiom_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW IDIOM]/

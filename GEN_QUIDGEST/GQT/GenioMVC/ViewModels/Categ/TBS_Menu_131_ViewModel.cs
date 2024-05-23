@@ -165,10 +165,10 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcateg.FldCodcateg, CSGenioAcateg.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("CATEG.CATEGORY", new OrderedDictionary());
-					allSortOrders["CATEG.CATEGORY"].Add("CATEG.CATEGORY", "A");
-				allSortOrders.Add("CATEG.ABBREVIA", new OrderedDictionary());
-					allSortOrders["CATEG.ABBREVIA"].Add("CATEG.ABBREVIA", "A");
+			allSortOrders.Add("CATEG.CATEGORIA", new OrderedDictionary());
+			allSortOrders["CATEG.CATEGORIA"].Add("CATEG.CATEGORIA", "A");
+			allSortOrders.Add("CATEG.ABBREVIATION", new OrderedDictionary());
+			allSortOrders["CATEG.ABBREVIATION"].Add("CATEG.ABBREVIATION", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "TBS_Menu_131_"));
@@ -261,10 +261,10 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcateg.FldCodcateg, CSGenioAcateg.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("CATEG.CATEGORY", new OrderedDictionary());
-					allSortOrders["CATEG.CATEGORY"].Add("CATEG.CATEGORY", "A");
-				allSortOrders.Add("CATEG.ABBREVIA", new OrderedDictionary());
-					allSortOrders["CATEG.ABBREVIA"].Add("CATEG.ABBREVIA", "A");
+			allSortOrders.Add("CATEG.CATEGORIA", new OrderedDictionary());
+			allSortOrders["CATEG.CATEGORIA"].Add("CATEG.CATEGORIA", "A");
+			allSortOrders.Add("CATEG.ABBREVIATION", new OrderedDictionary());
+			allSortOrders["CATEG.ABBREVIATION"].Add("CATEG.ABBREVIATION", "A");
 
 
 
@@ -352,6 +352,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcateg.FldCodcateg, CSGenioAcateg.Fl
 
 // USE /[MANUAL TBS OVERRQLSTEXP 131]/
 
+                conditions = tbs_menu_131Conds;
                 return;
 			}
 

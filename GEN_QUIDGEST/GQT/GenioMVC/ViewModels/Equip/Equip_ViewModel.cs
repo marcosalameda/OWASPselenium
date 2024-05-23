@@ -18,6 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.ModelBinders;
+using GenioMVC.Helpers.Table.Properties;
 using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
@@ -86,7 +87,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// <summary>Campo : "Loan Frequency" Tipo:"AN"</summary>
 		[Display(Name = "LOAN_FREQUENCY00930", ResourceType = typeof(Resources.Resources))]
 		[DataArray("Freqempr", GenioMVC.Helpers.ArrayType.Numeric)]
-		public double? ValFrequenc { get; set; }
+		public decimal? ValFrequenc { get; set; }
 		[JsonIgnore]
 		public SelectList List_ValFrequenc { get; set; }
 
@@ -376,7 +377,7 @@ namespace GenioMVC.ViewModels.Equip
  				ValRegistnr = ViewModelConversion.ToString(m.ValRegistnr);
  				ValSitefabr = ViewModelConversion.ToString(m.ValSitefabr);
  				ValDesignat = ViewModelConversion.ToString(m.ValDesignat);
- 				ValFrequenc = ViewModelConversion.ToDouble(m.ValFrequenc);
+ 				ValFrequenc = ViewModelConversion.ToNumeric(m.ValFrequenc);
  				ValValortot = ViewModelConversion.ToNumeric(m.ValValortot);
  				ValDtaquisi = ViewModelConversion.ToDateTime(m.ValDtaquisi);
  				ValDtdeco = ViewModelConversion.ToDateTime(m.ValDtdeco);
@@ -421,7 +422,7 @@ namespace GenioMVC.ViewModels.Equip
 				m.ValRegistnr = ViewModelConversion.ToString(ValRegistnr);
 				m.ValSitefabr = ViewModelConversion.ToString(ValSitefabr);
 				m.ValDesignat = ViewModelConversion.ToString(ValDesignat);
-				m.ValFrequenc = ViewModelConversion.ToDouble(ValFrequenc);
+				m.ValFrequenc = ViewModelConversion.ToNumeric(ValFrequenc);
 				m.ValValortot = ViewModelConversion.ToNumeric(ValValortot);
 				m.ValDtaquisi = ViewModelConversion.ToDateTime(ValDtaquisi);
 				m.ValDtdeco = ViewModelConversion.ToDateTime(ValDtdeco);
@@ -809,7 +810,7 @@ namespace GenioMVC.ViewModels.Equip
 			// Limits Generation
 
 			// Area limit
-			equip___pess1name____DoLoad &= AddCriteriaAreaLimit(equip___pess1name____Conds, CSGenio.business.CSGenioAcmpny.FldCodempre, "cmpny", this.ValCodempre, false);
+			equip___pess1name____DoLoad &= AddCriteriaAreaLimit(equip___pess1name____Conds, CSGenio.business.CSGenioAcmpny.FldCodempre, "cmpny", this.ValCodempre, true);
 
 
             TablePess1Name = new TableDBEdit<Models.Pess1>();
@@ -1053,7 +1054,7 @@ namespace GenioMVC.ViewModels.Equip
 			// Limits Generation
 
 			// Area limit
-			equip___pess1name____DoLoad &= AddCriteriaAreaLimit(equip___pess1name____Conds, CSGenio.business.CSGenioAcmpny.FldCodempre, "cmpny", this.ValCodempre, false);
+			equip___pess1name____DoLoad &= AddCriteriaAreaLimit(equip___pess1name____Conds, CSGenio.business.CSGenioAcmpny.FldCodempre, "cmpny", this.ValCodempre, true);
 
 			if(!equip___pess1name____DoLoad) return;
             List<ColumnSort> sorts = new List<ColumnSort>();
@@ -1358,7 +1359,7 @@ namespace GenioMVC.ViewModels.Equip
 				IsTree = true,
 				Selector = new Func<Models.Tpequ, string>(x => x.ValTpequcod),
 				ParentSelector = new Func<Models.Tpequ, string>(x => x.ValTpequpai),
-				LevelSelector = new Func<Models.Tpequ, double>(x => x.ValNivel),
+				LevelSelector = new Func<Models.Tpequ, decimal>(x => x.ValNivel),
 				TextSelector = new Func<Models.Tpequ, string>(x => string.Format("{0} {1}", x.ValTpequcod, x.ValTipoequi))
 			});
 
@@ -1596,7 +1597,7 @@ namespace GenioMVC.ViewModels.Equip
 			// Limits Generation
 
 			// Area limit
-			equip___item_itemdes_DoLoad &= AddCriteriaAreaLimit(equip___item_itemdes_Conds, CSGenio.business.CSGenioAwareh.FldCodwareh, "wareh", this.ValCodwareh, false);
+			equip___item_itemdes_DoLoad &= AddCriteriaAreaLimit(equip___item_itemdes_Conds, CSGenio.business.CSGenioAwareh.FldCodwareh, "wareh", this.ValCodwareh, true);
 
 
             TableItemItemdes = new TableDBEdit<Models.Item>();
@@ -2221,7 +2222,7 @@ namespace GenioMVC.ViewModels.Equip
                 if (GlobalFunctions.emptyG(this.ValCoddeco) == 1)
                 {
                     this.ValCoddeco = "";
-                    TableDecomDecomnr.Value = 0;
+                    TableDecomDecomnr.Value = 0m;
                     Navigation.ClearValue("decom");
                 }
                 else if (lazyLoad)

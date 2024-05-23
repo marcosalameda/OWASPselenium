@@ -175,8 +175,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("TPEQU.TPEQUCOD", new OrderedDictionary());
-					allSortOrders["TPEQU.TPEQUCOD"].Add("TPEQU.TPEQUCOD", "A");
+			allSortOrders.Add("TPEQU.TPEQUCOD", new OrderedDictionary());
+			allSortOrders["TPEQU.TPEQUCOD"].Add("TPEQU.TPEQUCOD", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "GQT_Menu_2911_"));
@@ -269,8 +269,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("TPEQU.TPEQUCOD", new OrderedDictionary());
-					allSortOrders["TPEQU.TPEQUCOD"].Add("TPEQU.TPEQUCOD", "A");
+			allSortOrders.Add("TPEQU.TPEQUCOD", new OrderedDictionary());
+			allSortOrders["TPEQU.TPEQUCOD"].Add("TPEQU.TPEQUCOD", "A");
 
 
 
@@ -357,6 +357,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP 2911]/
 
+                conditions = gqt_menu_2911Conds;
                 return;
 			}
 
@@ -481,7 +482,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.Fl
             new TableSearchColumn("ValTipoequi", CSGenioAtpequ.FldTipoequi, typeof(string), defaultSearch : true),
             new TableSearchColumn("Famil_ValFamily", CSGenioAfamil.FldFamily, typeof(string)),
             new TableSearchColumn("ValTpequpai", CSGenioAtpequ.FldTpequpai, typeof(string), visible : false),
-            new TableSearchColumn("ValNivel", CSGenioAtpequ.FldNivel, typeof(double), visible : false),
+            new TableSearchColumn("ValNivel", CSGenioAtpequ.FldNivel, typeof(decimal), visible : false),
             new TableSearchColumn("ValBackcolo", CSGenioAtpequ.FldBackcolo, typeof(string), visible : false),
             new TableSearchColumn("ValCorletra", CSGenioAtpequ.FldCorletra, typeof(string), visible : false),
             new TableSearchColumn("ValPrecomax", CSGenioAtpequ.FldPrecomax, typeof(decimal?), visible : false),

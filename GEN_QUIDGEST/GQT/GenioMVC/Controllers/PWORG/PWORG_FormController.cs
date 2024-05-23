@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Pworg_ModalDBEdit(string partialView)
-		{
-			Pworg_ViewModel model = new Pworg_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Pworg_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW PWORG]/

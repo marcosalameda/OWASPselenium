@@ -52,7 +52,7 @@ namespace GenioMVC.Models
 
 		[DisplayName("Level")]
 		/// <summary>Field : "Level" Tipo: "TN" Formula:  ""</summary>
-		public double ValNivel { get { return klass.ValNivel; } set { klass.ValNivel = value; } }
+		public decimal ValNivel { get { return klass.ValNivel; } set { klass.ValNivel = value; } }
 		public bool ShouldSerializeValNivel() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Space.ValNivel");
 
 		[DisplayName("Dependency")]

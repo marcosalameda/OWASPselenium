@@ -45,31 +45,31 @@ namespace GenioMVC.ViewModels.Psw
 
 		private static List<string> modulos = new List<string>() { "GQT", "PTN", "STY", "TBS", "REG", "IMO", "WMS" };
 
-		public IDictionary<double, string> GqtLevels { get; private set; }
+		public IDictionary<decimal, string> GqtLevels { get; private set; }
 		public decimal? GQTLevel { get; set; }
 		public SelectList UserGQT { get; set; }
 
-		public IDictionary<double, string> PtnLevels { get; private set; }
+		public IDictionary<decimal, string> PtnLevels { get; private set; }
 		public decimal? PTNLevel { get; set; }
 		public SelectList UserPTN { get; set; }
 
-		public IDictionary<double, string> StyLevels { get; private set; }
+		public IDictionary<decimal, string> StyLevels { get; private set; }
 		public decimal? STYLevel { get; set; }
 		public SelectList UserSTY { get; set; }
 
-		public IDictionary<double, string> TbsLevels { get; private set; }
+		public IDictionary<decimal, string> TbsLevels { get; private set; }
 		public decimal? TBSLevel { get; set; }
 		public SelectList UserTBS { get; set; }
 
-		public IDictionary<double, string> RegLevels { get; private set; }
+		public IDictionary<decimal, string> RegLevels { get; private set; }
 		public decimal? REGLevel { get; set; }
 		public SelectList UserREG { get; set; }
 
-		public IDictionary<double, string> ImoLevels { get; private set; }
+		public IDictionary<decimal, string> ImoLevels { get; private set; }
 		public decimal? IMOLevel { get; set; }
 		public SelectList UserIMO { get; set; }
 
-		public IDictionary<double, string> WmsLevels { get; private set; }
+		public IDictionary<decimal, string> WmsLevels { get; private set; }
 		public decimal? WMSLevel { get; set; }
 		public SelectList UserWMS { get; set; }
 
@@ -226,7 +226,7 @@ namespace GenioMVC.ViewModels.Psw
 			Characs = new List<string>();
 
 			GenioMVC.Models.S_ua selectedAuth = null;
-			GqtLevels = new Dictionary<double, string>();
+			GqtLevels = new Dictionary<decimal, string>();
 			GqtLevels.Add(LevelAccess.DESAUTORIZADO.LevelValue, Resources.Resources.DESAUTORIZADO34584);
 			GqtLevels.Add(LevelAccess.NV1.LevelValue, Resources.Resources.QUERY30986);
 			GqtLevels.Add(LevelAccess.NV2.LevelValue, Resources.Resources.VENDEDOR34177);
@@ -236,7 +236,7 @@ namespace GenioMVC.ViewModels.Psw
 			selectedAuth = this.AuthorizationList.FirstOrDefault(x => x.ValModulo == "GQT");
 			GQTLevel = selectedAuth == null ? LevelAccess.DESAUTORIZADO.LevelValue : selectedAuth.ValNivel;
 			this.UserGQT = new SelectList(GqtLevels, "Key", "Value", GQTLevel);
-			PtnLevels = new Dictionary<double, string>();
+			PtnLevels = new Dictionary<decimal, string>();
 			PtnLevels.Add(LevelAccess.DESAUTORIZADO.LevelValue, Resources.Resources.DESAUTORIZADO34584);
 			PtnLevels.Add(LevelAccess.NV1.LevelValue, Resources.Resources.QUERY30986);
 			PtnLevels.Add(LevelAccess.NV99.LevelValue, Resources.Resources.ADMINISTRATOR27313);
@@ -244,7 +244,7 @@ namespace GenioMVC.ViewModels.Psw
 			selectedAuth = this.AuthorizationList.FirstOrDefault(x => x.ValModulo == "PTN");
 			PTNLevel = selectedAuth == null ? LevelAccess.DESAUTORIZADO.LevelValue : selectedAuth.ValNivel;
 			this.UserPTN = new SelectList(PtnLevels, "Key", "Value", PTNLevel);
-			StyLevels = new Dictionary<double, string>();
+			StyLevels = new Dictionary<decimal, string>();
 			StyLevels.Add(LevelAccess.DESAUTORIZADO.LevelValue, Resources.Resources.DESAUTORIZADO34584);
 			StyLevels.Add(LevelAccess.NV1.LevelValue, Resources.Resources.QUERY30986);
 			StyLevels.Add(LevelAccess.NV99.LevelValue, Resources.Resources.ADMINISTRATOR27313);
@@ -252,7 +252,7 @@ namespace GenioMVC.ViewModels.Psw
 			selectedAuth = this.AuthorizationList.FirstOrDefault(x => x.ValModulo == "STY");
 			STYLevel = selectedAuth == null ? LevelAccess.DESAUTORIZADO.LevelValue : selectedAuth.ValNivel;
 			this.UserSTY = new SelectList(StyLevels, "Key", "Value", STYLevel);
-			TbsLevels = new Dictionary<double, string>();
+			TbsLevels = new Dictionary<decimal, string>();
 			TbsLevels.Add(LevelAccess.DESAUTORIZADO.LevelValue, Resources.Resources.DESAUTORIZADO34584);
 			TbsLevels.Add(LevelAccess.NV1.LevelValue, Resources.Resources.QUERY30986);
 			TbsLevels.Add(LevelAccess.NV99.LevelValue, Resources.Resources.ADMINISTRATOR27313);
@@ -260,7 +260,7 @@ namespace GenioMVC.ViewModels.Psw
 			selectedAuth = this.AuthorizationList.FirstOrDefault(x => x.ValModulo == "TBS");
 			TBSLevel = selectedAuth == null ? LevelAccess.DESAUTORIZADO.LevelValue : selectedAuth.ValNivel;
 			this.UserTBS = new SelectList(TbsLevels, "Key", "Value", TBSLevel);
-			RegLevels = new Dictionary<double, string>();
+			RegLevels = new Dictionary<decimal, string>();
 			RegLevels.Add(LevelAccess.DESAUTORIZADO.LevelValue, Resources.Resources.DESAUTORIZADO34584);
 			RegLevels.Add(LevelAccess.NV1.LevelValue, Resources.Resources.QUERY30986);
 			RegLevels.Add(LevelAccess.NV99.LevelValue, Resources.Resources.ADMINISTRATOR27313);
@@ -268,7 +268,7 @@ namespace GenioMVC.ViewModels.Psw
 			selectedAuth = this.AuthorizationList.FirstOrDefault(x => x.ValModulo == "REG");
 			REGLevel = selectedAuth == null ? LevelAccess.DESAUTORIZADO.LevelValue : selectedAuth.ValNivel;
 			this.UserREG = new SelectList(RegLevels, "Key", "Value", REGLevel);
-			ImoLevels = new Dictionary<double, string>();
+			ImoLevels = new Dictionary<decimal, string>();
 			ImoLevels.Add(LevelAccess.DESAUTORIZADO.LevelValue, Resources.Resources.DESAUTORIZADO34584);
 			ImoLevels.Add(LevelAccess.NV1.LevelValue, Resources.Resources.QUERY30986);
 			ImoLevels.Add(LevelAccess.NV20.LevelValue, Resources.Resources.MANAGER60821);
@@ -277,7 +277,7 @@ namespace GenioMVC.ViewModels.Psw
 			selectedAuth = this.AuthorizationList.FirstOrDefault(x => x.ValModulo == "IMO");
 			IMOLevel = selectedAuth == null ? LevelAccess.DESAUTORIZADO.LevelValue : selectedAuth.ValNivel;
 			this.UserIMO = new SelectList(ImoLevels, "Key", "Value", IMOLevel);
-			WmsLevels = new Dictionary<double, string>();
+			WmsLevels = new Dictionary<decimal, string>();
 			WmsLevels.Add(LevelAccess.DESAUTORIZADO.LevelValue, Resources.Resources.DESAUTORIZADO34584);
 			WmsLevels.Add(LevelAccess.NV20.LevelValue, Resources.Resources.MANAGER60821);
 			WmsLevels.Add(LevelAccess.NV99.LevelValue, Resources.Resources.ADMINISTRATOR27313);
@@ -376,7 +376,7 @@ namespace GenioMVC.ViewModels.Psw
 			userauth = CSGenio.business.CSGenioAs_ua.search(sp, Valcodua, u);
 			userauth.ValDatamuda = DateTime.Now;
 			userauth.ValModulo = "GQT";
-			userauth.ValNivel = Convert.ToDouble(GQTLevel);
+			userauth.ValNivel = Convert.ToDecimal(GQTLevel);
 			userauth.ValRole = GQTLevel.ToString();
 			userauth.change(sp, (CriteriaSet)null);
 
@@ -384,7 +384,7 @@ namespace GenioMVC.ViewModels.Psw
 			userauth = CSGenio.business.CSGenioAs_ua.search(sp, Valcodua, u);
 			userauth.ValDatamuda = DateTime.Now;
 			userauth.ValModulo = "PTN";
-			userauth.ValNivel = Convert.ToDouble(PTNLevel);
+			userauth.ValNivel = Convert.ToDecimal(PTNLevel);
 			userauth.ValRole = PTNLevel.ToString();
 			userauth.change(sp, (CriteriaSet)null);
 
@@ -392,7 +392,7 @@ namespace GenioMVC.ViewModels.Psw
 			userauth = CSGenio.business.CSGenioAs_ua.search(sp, Valcodua, u);
 			userauth.ValDatamuda = DateTime.Now;
 			userauth.ValModulo = "STY";
-			userauth.ValNivel = Convert.ToDouble(STYLevel);
+			userauth.ValNivel = Convert.ToDecimal(STYLevel);
 			userauth.ValRole = STYLevel.ToString();
 			userauth.change(sp, (CriteriaSet)null);
 
@@ -400,7 +400,7 @@ namespace GenioMVC.ViewModels.Psw
 			userauth = CSGenio.business.CSGenioAs_ua.search(sp, Valcodua, u);
 			userauth.ValDatamuda = DateTime.Now;
 			userauth.ValModulo = "TBS";
-			userauth.ValNivel = Convert.ToDouble(TBSLevel);
+			userauth.ValNivel = Convert.ToDecimal(TBSLevel);
 			userauth.ValRole = TBSLevel.ToString();
 			userauth.change(sp, (CriteriaSet)null);
 
@@ -408,7 +408,7 @@ namespace GenioMVC.ViewModels.Psw
 			userauth = CSGenio.business.CSGenioAs_ua.search(sp, Valcodua, u);
 			userauth.ValDatamuda = DateTime.Now;
 			userauth.ValModulo = "REG";
-			userauth.ValNivel = Convert.ToDouble(REGLevel);
+			userauth.ValNivel = Convert.ToDecimal(REGLevel);
 			userauth.ValRole = REGLevel.ToString();
 			userauth.change(sp, (CriteriaSet)null);
 
@@ -416,7 +416,7 @@ namespace GenioMVC.ViewModels.Psw
 			userauth = CSGenio.business.CSGenioAs_ua.search(sp, Valcodua, u);
 			userauth.ValDatamuda = DateTime.Now;
 			userauth.ValModulo = "IMO";
-			userauth.ValNivel = Convert.ToDouble(IMOLevel);
+			userauth.ValNivel = Convert.ToDecimal(IMOLevel);
 			userauth.ValRole = IMOLevel.ToString();
 			userauth.change(sp, (CriteriaSet)null);
 
@@ -424,7 +424,7 @@ namespace GenioMVC.ViewModels.Psw
 			userauth = CSGenio.business.CSGenioAs_ua.search(sp, Valcodua, u);
 			userauth.ValDatamuda = DateTime.Now;
 			userauth.ValModulo = "WMS";
-			userauth.ValNivel = Convert.ToDouble(WMSLevel);
+			userauth.ValNivel = Convert.ToDecimal(WMSLevel);
 			userauth.ValRole = WMSLevel.ToString();
 			userauth.change(sp, (CriteriaSet)null);
 

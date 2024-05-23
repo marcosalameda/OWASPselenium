@@ -93,7 +93,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL GQT MENU_GET 261]/
+// USE /[MANUAL GQT MENU_GET 261]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -168,7 +168,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL STY MENU_GET LEAFLET]/
+// USE /[MANUAL STY MENU_GET LEAFLET]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -243,7 +243,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL STY MENU_GET LEAFTLETDRAW]/
+// USE /[MANUAL STY MENU_GET LEAFTLETDRAW]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());

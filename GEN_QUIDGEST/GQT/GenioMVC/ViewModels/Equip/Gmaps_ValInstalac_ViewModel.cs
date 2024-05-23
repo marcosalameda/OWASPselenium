@@ -307,6 +307,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAinsta.FldCodinsta, CSGenioAinsta.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP GMAPS_PSEUDINSTALAC]/
 
+                conditions = gmaps___pseudinstalacConds;
                 return;
 			}
 

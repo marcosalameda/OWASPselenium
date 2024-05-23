@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Faqs_ModalDBEdit(string partialView)
-		{
-			Faqs_ViewModel model = new Faqs_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Faqs_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW FAQS]/

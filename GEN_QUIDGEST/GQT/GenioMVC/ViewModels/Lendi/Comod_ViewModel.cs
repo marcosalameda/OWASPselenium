@@ -18,6 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.ModelBinders;
+using GenioMVC.Helpers.Table.Properties;
 using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
@@ -61,12 +62,12 @@ namespace GenioMVC.ViewModels.Lendi
 		/// <summary>Campo : "Loan Frequency" Tipo:"AN"</summary>
 		[Display(Name = "LOAN_FREQUENCY00930", ResourceType = typeof(Resources.Resources))]
 		[DataArray("Freqempr", GenioMVC.Helpers.ArrayType.Numeric)]
-		public double? EquipValFrequenc { get { return funcEquipValFrequenc != null ? funcEquipValFrequenc() : _auxEquipValFrequenc; } set { funcEquipValFrequenc = () => value; } }
+		public decimal? EquipValFrequenc { get { return funcEquipValFrequenc != null ? funcEquipValFrequenc() : _auxEquipValFrequenc; } set { funcEquipValFrequenc = () => value; } }
 		[JsonIgnore]
 		public SelectList List_EquipValFrequenc { get; set; }
 		[JsonIgnore]
-		public Func<double?> funcEquipValFrequenc { get; set; }
-		private double? _auxEquipValFrequenc { get; set; }
+		public Func<decimal?> funcEquipValFrequenc { get; set; }
+		private decimal? _auxEquipValFrequenc { get; set; }
 
 		/// <summary>Campo : "Lending No" Tipo:"N"</summary>
 		[Display(Name = "LENDING_NO14727", ResourceType = typeof(Resources.Resources))]
@@ -241,7 +242,7 @@ namespace GenioMVC.ViewModels.Lendi
 			try
 			{
  				funcEquipValDesignat = () => ViewModelConversion.ToString(m.Equip.ValDesignat);
- 				funcEquipValFrequenc = () => ViewModelConversion.ToDouble(m.Equip.ValFrequenc);
+ 				funcEquipValFrequenc = () => ViewModelConversion.ToNumeric(m.Equip.ValFrequenc);
  				ValLendinnr = ViewModelConversion.ToNumeric(m.ValLendinnr);
  				ValStart = ViewModelConversion.ToDateTime(m.ValStart);
  				ValWarndt = ViewModelConversion.ToDateTime(m.ValWarndt);
@@ -847,7 +848,7 @@ namespace GenioMVC.ViewModels.Lendi
 			// Limits Generation
 
 			// Area limit
-			comod___equipregistnrDoLoad &= AddCriteriaAreaLimit(comod___equipregistnrConds, CSGenio.business.CSGenioApess1.FldCodpesso, "pess1", this.ValCodpess1, false);
+			comod___equipregistnrDoLoad &= AddCriteriaAreaLimit(comod___equipregistnrConds, CSGenio.business.CSGenioApess1.FldCodpesso, "pess1", this.ValCodpess1, true);
 
 
             TableEquipRegistnr = new TableDBEdit<Models.Equip>();
@@ -1020,7 +1021,7 @@ namespace GenioMVC.ViewModels.Lendi
                     this.funcEquipValDesignat = () => tempValue;
                 }
                 {
-                    var tempValue = ViewModelConversion.ToDouble(row["equip.frequenc"]);
+                    var tempValue = ViewModelConversion.ToNumeric(row["equip.frequenc"]);
                     this.funcEquipValFrequenc = () => tempValue;
                 }
 

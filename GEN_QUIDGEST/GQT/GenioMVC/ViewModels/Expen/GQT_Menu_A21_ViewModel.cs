@@ -170,8 +170,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAexpen.FldCoddespe, CSGenioAexpen.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("EXPEN.DESCRIPT", new OrderedDictionary());
-					allSortOrders["EXPEN.DESCRIPT"].Add("EXPEN.DESCRIPT", "A");
+			allSortOrders.Add("EXPEN.DESCRIPT", new OrderedDictionary());
+			allSortOrders["EXPEN.DESCRIPT"].Add("EXPEN.DESCRIPT", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "GQT_Menu_A21_"));
@@ -264,8 +264,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAexpen.FldCoddespe, CSGenioAexpen.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("EXPEN.DESCRIPT", new OrderedDictionary());
-					allSortOrders["EXPEN.DESCRIPT"].Add("EXPEN.DESCRIPT", "A");
+			allSortOrders.Add("EXPEN.DESCRIPT", new OrderedDictionary());
+			allSortOrders["EXPEN.DESCRIPT"].Add("EXPEN.DESCRIPT", "A");
 
 
 
@@ -352,6 +352,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAexpen.FldCoddespe, CSGenioAexpen.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP A21]/
 
+                conditions = gqt_menu_a21Conds;
                 return;
 			}
 

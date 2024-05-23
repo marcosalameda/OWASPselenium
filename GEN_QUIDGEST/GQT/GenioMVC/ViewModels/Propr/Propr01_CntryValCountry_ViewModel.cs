@@ -127,8 +127,8 @@ namespace GenioMVC.ViewModels.Propr
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("CNTRY.COUNTRY", new OrderedDictionary());
-					allSortOrders["CNTRY.COUNTRY"].Add("CNTRY.COUNTRY", "A");
+			allSortOrders.Add("CNTRY.COUNTRY", new OrderedDictionary());
+			allSortOrders["CNTRY.COUNTRY"].Add("CNTRY.COUNTRY", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Propr01_CntryValCountry_"));
@@ -220,8 +220,8 @@ namespace GenioMVC.ViewModels.Propr
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("CNTRY.COUNTRY", new OrderedDictionary());
-					allSortOrders["CNTRY.COUNTRY"].Add("CNTRY.COUNTRY", "A");
+			allSortOrders.Add("CNTRY.COUNTRY", new OrderedDictionary());
+			allSortOrders["CNTRY.COUNTRY"].Add("CNTRY.COUNTRY", "A");
 
 
 
@@ -308,6 +308,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcntry.FldCodcntry, CSGenioAcntry.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP PROPR01_CNTRYCOUNTRY]/
 
+                conditions = propr01_cntrycountry_Conds;
                 return;
 			}
 

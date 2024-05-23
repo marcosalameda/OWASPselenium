@@ -56,7 +56,7 @@ namespace GenioMVC.Models
 		[DisplayName("Amount")]
 		/// <summary>Field : "Amount" Tipo: "N" Formula: SR "[LNHDE->QUANTIDA]"</summary>
 		[NumericAttribute(0)]
-		public decimal? ValQtdtpequ { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQtdtpequ, 0)); } set { klass.ValQtdtpequ = Convert.ToDouble(value); } }
+		public decimal? ValQtdtpequ { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQtdtpequ, 0)); } set { klass.ValQtdtpequ = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValQtdtpequ() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Lnhag.ValQtdtpequ");
 
 		[DisplayName("ZZSTATE")]

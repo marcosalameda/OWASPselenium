@@ -21,7 +21,7 @@ public class EquipForm: PageObject {
 	public LookupControl IFF_EQUIP___WAREHWAREHDES => new LookupControl(driver, "CONTAINER_IFF_EQUIP___WAREHWAREHDES", "ValCodwareh_chzn");
 	public LookupControl IFF_EQUIP___ITEM_ITEMDES_ => new LookupControl(driver, "CONTAINER_IFF_EQUIP___ITEM_ITEMDES_", "ValCoditem_chzn");
 	public BaseInputControl LED_EQUIP___EQUIPDESIGNAT => new BaseInputControl(driver, "[data-identifier='LED_EQUIP___EQUIPDESIGNAT']");
-	public EnumControl LED_EQUIP___EQUIPFREQUENC => new EnumControl(driver, "CONTAINER_LED_EQUIP___EQUIPFREQUENC", "ValFrequenc_chzn_Equip");
+	public EnumControl IFF_EQUIP___EQUIPFREQUENC => new EnumControl(driver, "CONTAINER_IFF_EQUIP___EQUIPFREQUENC", "ValFrequenc_chzn_Equip");
 	public BaseInputControl LED_EQUIP___EQUIPVALORTOT => new BaseInputControl(driver, "[data-identifier='LED_EQUIP___EQUIPVALORTOT']");
 	public BaseInputControl LED_EQUIP___EQUIPDTAQUISI => new BaseInputControl(driver, "[data-identifier='LED_EQUIP___EQUIPDTAQUISI']");
 	public BaseInputControl LED_EQUIP___EQUIPDTDECO__ => new BaseInputControl(driver, "[data-identifier='LED_EQUIP___EQUIPDTDECO__']");

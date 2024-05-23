@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Rordf_ModalDBEdit(string partialView)
-		{
-			Rordf_ViewModel model = new Rordf_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Rordf_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW RORDF]/

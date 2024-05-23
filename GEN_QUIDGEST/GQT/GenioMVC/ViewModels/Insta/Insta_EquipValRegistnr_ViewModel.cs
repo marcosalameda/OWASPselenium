@@ -139,8 +139,8 @@ namespace GenioMVC.ViewModels.Insta
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("EQUIP.DESIGNAT", new OrderedDictionary());
-					allSortOrders["EQUIP.DESIGNAT"].Add("EQUIP.DESIGNAT", "A");
+			allSortOrders.Add("EQUIP.DESIGNAT", new OrderedDictionary());
+			allSortOrders["EQUIP.DESIGNAT"].Add("EQUIP.DESIGNAT", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Insta_EquipValRegistnr_"));
@@ -232,8 +232,8 @@ namespace GenioMVC.ViewModels.Insta
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("EQUIP.DESIGNAT", new OrderedDictionary());
-					allSortOrders["EQUIP.DESIGNAT"].Add("EQUIP.DESIGNAT", "A");
+			allSortOrders.Add("EQUIP.DESIGNAT", new OrderedDictionary());
+			allSortOrders["EQUIP.DESIGNAT"].Add("EQUIP.DESIGNAT", "A");
 
 
 
@@ -335,6 +335,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP INSTA_EQUIPREGISTNR]/
 
+                conditions = insta___equipregistnrConds;
                 return;
 			}
 

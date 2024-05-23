@@ -127,8 +127,8 @@ namespace GenioMVC.ViewModels.Propr
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("TPPRO.TPPROPRI", new OrderedDictionary());
-					allSortOrders["TPPRO.TPPROPRI"].Add("TPPRO.TPPROPRI", "A");
+			allSortOrders.Add("TPPRO.TPPROPRI", new OrderedDictionary());
+			allSortOrders["TPPRO.TPPROPRI"].Add("TPPRO.TPPROPRI", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Propr00_TpproValTppropri_"));
@@ -220,8 +220,8 @@ namespace GenioMVC.ViewModels.Propr
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("TPPRO.TPPROPRI", new OrderedDictionary());
-					allSortOrders["TPPRO.TPPROPRI"].Add("TPPRO.TPPROPRI", "A");
+			allSortOrders.Add("TPPRO.TPPROPRI", new OrderedDictionary());
+			allSortOrders["TPPRO.TPPROPRI"].Add("TPPRO.TPPROPRI", "A");
 
 
 
@@ -308,6 +308,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtppro.FldCodtppro, CSGenioAtppro.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP PROPR00_TPPROTPPROPRI]/
 
+                conditions = propr00_tpprotppropriConds;
                 return;
 			}
 

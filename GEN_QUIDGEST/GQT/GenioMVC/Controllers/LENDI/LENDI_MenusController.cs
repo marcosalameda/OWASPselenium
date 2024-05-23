@@ -101,7 +101,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL GQT MENU_GET 111]/
+// USE /[MANUAL GQT MENU_GET 111]/
 
             // Table List Export - check if user is exporting the Qlisting
             if (querystring["ExportList"] != null && Convert.ToBoolean(querystring["ExportList"]) && querystring["ExportType"] != null)
@@ -276,7 +276,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL GQT MENU_GET 1211]/
+// USE /[MANUAL GQT MENU_GET 1211]/
 
             // Table List Export - check if user is exporting the Qlisting
             if (querystring["ExportList"] != null && Convert.ToBoolean(querystring["ExportList"]) && querystring["ExportType"] != null)
@@ -379,7 +379,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL GQT MENU_GET 1311]/
+// USE /[MANUAL GQT MENU_GET 1311]/
 
             // Table List Export - check if user is exporting the Qlisting
             if (querystring["ExportList"] != null && Convert.ToBoolean(querystring["ExportList"]) && querystring["ExportType"] != null)
@@ -495,7 +495,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL GQT MENU_GET 1411]/
+// USE /[MANUAL GQT MENU_GET 1411]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -575,7 +575,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL GQT MENU_GET DEVOL]/
+// USE /[MANUAL GQT MENU_GET DEVOL]/
 
             // Table List Export - check if user is exporting the Qlisting
             if (querystring["ExportList"] != null && Convert.ToBoolean(querystring["ExportList"]) && querystring["ExportType"] != null)
@@ -676,7 +676,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL GQT MENU_GET 1711]/
+// USE /[MANUAL GQT MENU_GET 1711]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -751,7 +751,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL PTN MENU_GET 1111]/
+// USE /[MANUAL PTN MENU_GET 1111]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -826,7 +826,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL PTN MENU_GET 1121]/
+// USE /[MANUAL PTN MENU_GET 1121]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -911,7 +911,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL PTN MENU_GET 1211]/
+// USE /[MANUAL PTN MENU_GET 1211]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());

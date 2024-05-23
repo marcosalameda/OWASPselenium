@@ -626,7 +626,7 @@ namespace GenioMVC.ViewModels
                             else if (objectDic is Dictionary<int, string>)
                                 dic = (objectDic as Dictionary<int, string>).ToDictionary(p => p.Key.ToString(), p => GenioMVC.Helpers.Helpers.GetTextFromResources(p.Value));
                             else
-                                dic = (objectDic as Dictionary<double, string>).ToDictionary(p => p.Key.ToString(), p => GenioMVC.Helpers.Helpers.GetTextFromResources(p.Value));
+                                dic = (objectDic as Dictionary<decimal, string>).ToDictionary(p => p.Key.ToString(), p => GenioMVC.Helpers.Helpers.GetTextFromResources(p.Value));
 
                             //Get enumeration codes
                             //Values must be an array because the number of values depends on the operation
@@ -813,7 +813,7 @@ namespace GenioMVC.ViewModels
                         }
                         else
                         {
-                            dic = (objectDic as Dictionary<double, string>).ToDictionary(p => p.Key.ToString(), p => GenioMVC.Helpers.Helpers.GetTextFromResources(p.Value));
+                            dic = (objectDic as Dictionary<decimal, string>).ToDictionary(p => p.Key.ToString(), p => GenioMVC.Helpers.Helpers.GetTextFromResources(p.Value));
                         }
                         foreach (var pair in dic)
                         {
@@ -1147,13 +1147,20 @@ namespace GenioMVC.ViewModels
         /// </summary>
         /// <param name="crs">The CriteriaSet to which the condition will be added.</param>
         /// <param name="fieldref">The FieldRef indicating the field for the query condition.</param>
+        /// <param name="operationType">The type of the limit operation.</param>
         /// <param name="key">The key from which to retrieve the historical value for the condition.</param>
         /// <param name="isMandatory">Indicates whether the limit is mandatory.</param>
         /// <returns>True if the condition was successfully added or not needed, False if it's a mandatory limit and the value is empty.</returns>
-        protected bool AddCriteriaHistoryLimit(CriteriaSet crs, FieldRef fieldref, string key, bool isMandatory)
+        protected bool AddCriteriaHistoryLimit(
+            CriteriaSet crs,
+            FieldRef fieldref,
+            OperationType operationType,
+            string key,
+            bool isMandatory
+        )
         {
             var histValue = Navigation.GetValue(key);
-			var fieldInfo = CSGenio.business.Area.GetFieldInfo(fieldref);
+            var fieldInfo = CSGenio.business.Area.GetFieldInfo(fieldref);
 
             // Add an 'In' condition if the value is an array
             if (histValue is Array arrayValue)
@@ -1163,13 +1170,34 @@ namespace GenioMVC.ViewModels
             // Handle empty value based on 'isMandatory'
             else if (histValue == null)
             {
-                return isMandatory ? false : true;
+                return !isMandatory;
             }
-            // Add an 'Equal' condition if the value is not empty
-            else
+
+            // Add the condition according to the operation type
+            var value = QueryUtils.ToValidDbValue(histValue, fieldInfo);
+
+            switch (operationType)
             {
-				var value = QueryUtils.ToValidDbValue(histValue, fieldInfo);
-                crs.Equal(fieldref, value);
+                case OperationType.EQUAL:
+                    crs.Equal(fieldref, value);
+                    break;
+                case OperationType.LESS:
+                    crs.Lesser(fieldref, value);
+                    break;
+                case OperationType.LESSEQUAL:
+                    crs.LesserOrEqual(fieldref, value);
+                    break;
+                case OperationType.GREAT:
+                    crs.Greater(fieldref, value);
+                    break;
+                case OperationType.GREATEQUAL:
+                    crs.GreaterOrEqual(fieldref, value);
+                    break;
+                case OperationType.DIFF:
+                    crs.NotEqual(fieldref, value);
+                    break;
+                default:
+                    throw new InvalidOperationException("Invalid operation type: " + operationType);
             }
 
             // Successfully applied the limit
@@ -1545,7 +1573,7 @@ namespace GenioMVC.ViewModels
 
     public static class ViewModelConversion
     {
-        public static double ToDouble(object value)
+        public static decimal ToDouble(object value)
         {
             return DBConversion.ToNumeric(value);
         }
@@ -1555,7 +1583,7 @@ namespace GenioMVC.ViewModels
             if (value == null || value == DBNull.Value)
                 return 0.0M;
             if (value is double)
-                return Convert.ToDecimal((double)value);
+                return Convert.ToDecimal(value);
             if (value is int)
                 return (decimal)((int)value);
             if (value is decimal)
@@ -1624,7 +1652,7 @@ namespace GenioMVC.ViewModels
             return value.ToString(CultureInfo.InvariantCulture);
         }
 
-        public static object ToDouble(double value)
+        public static object ToDouble(decimal value)
         {
             return value.ToString(CultureInfo.InvariantCulture);
         }
@@ -1669,10 +1697,14 @@ namespace GenioMVC.ViewModels
             // TODO: O que devia retornar ???
             if (value == null)
                 return new HtmlString("''");
-            if(value is byte[])
+            if (value is byte[])
                 return new HtmlString("'" + HttpUtility.JavaScriptStringEncode(System.Text.Encoding.Default.GetString(value as byte[])) + "'");
-            else
-                return new HtmlString("'" + HttpUtility.JavaScriptStringEncode(Convert.ToString(value)) + "'");
+            return new HtmlString("'" + HttpUtility.JavaScriptStringEncode(Convert.ToString(value)) + "'");
+        }
+
+        public static IHtmlString ToImage(object value)
+        {
+            return ToBinary(value);
         }
 
         public static object ToGeographicShape(object value)

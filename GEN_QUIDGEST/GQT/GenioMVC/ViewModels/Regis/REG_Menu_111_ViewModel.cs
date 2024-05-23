@@ -168,8 +168,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAregis.FldCodregis, CSGenioAregis.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("REGIS.NAME", new OrderedDictionary());
-					allSortOrders["REGIS.NAME"].Add("REGIS.NAME", "A");
+			allSortOrders.Add("REGIS.NAME", new OrderedDictionary());
+			allSortOrders["REGIS.NAME"].Add("REGIS.NAME", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "REG_Menu_111_"));
@@ -262,8 +262,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAregis.FldCodregis, CSGenioAregis.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("REGIS.NAME", new OrderedDictionary());
-					allSortOrders["REGIS.NAME"].Add("REGIS.NAME", "A");
+			allSortOrders.Add("REGIS.NAME", new OrderedDictionary());
+			allSortOrders["REGIS.NAME"].Add("REGIS.NAME", "A");
 
 
 
@@ -350,6 +350,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAregis.FldCodregis, CSGenioAregis.Fl
 
 // USE /[MANUAL REG OVERRQLSTEXP 111]/
 
+                conditions = reg_menu_111Conds;
                 return;
 			}
 

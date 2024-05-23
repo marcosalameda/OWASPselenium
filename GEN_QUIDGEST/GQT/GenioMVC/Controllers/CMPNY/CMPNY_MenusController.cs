@@ -93,7 +93,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL GQT MENU_GET 6111]/
+// USE /[MANUAL GQT MENU_GET 6111]/
 
             // Table List Export - check if user is exporting the Qlisting
             if (querystring["ExportList"] != null && Convert.ToBoolean(querystring["ExportList"]) && querystring["ExportType"] != null)
@@ -192,7 +192,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL GQT MENU_GET 621]/
+// USE /[MANUAL GQT MENU_GET 621]/
 
             // Table List Export - check if user is exporting the Qlisting
             if (querystring["ExportList"] != null && Convert.ToBoolean(querystring["ExportList"]) && querystring["ExportType"] != null)
@@ -291,7 +291,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL TBS MENU_GET 111]/
+// USE /[MANUAL TBS MENU_GET 111]/
 
             // Table List Export - check if user is exporting the Qlisting
             if (querystring["ExportList"] != null && Convert.ToBoolean(querystring["ExportList"]) && querystring["ExportType"] != null)

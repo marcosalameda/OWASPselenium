@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Grpb____pseudtblb_____ModalDBEdit(string partialView)
-		{
-			Grpb____pseudtblb_____ViewModel model = new Grpb____pseudtblb_____ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Grpb____pseudtblb_____Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW GRPB____PSEUDTBLB____]/

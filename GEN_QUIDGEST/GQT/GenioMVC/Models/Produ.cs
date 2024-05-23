@@ -82,31 +82,31 @@ namespace GenioMVC.Models
 		[DisplayName("Weight")]
 		/// <summary>Field : "Weight" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(2)]
-		public decimal? ValWeight { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValWeight, 2)); } set { klass.ValWeight = Convert.ToDouble(value); } }
+		public decimal? ValWeight { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValWeight, 2)); } set { klass.ValWeight = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValWeight() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Produ.ValWeight");
 
 		[DisplayName("Price")]
 		/// <summary>Field : "Price" Tipo: "$D" Formula:  ""</summary>
 		[CurrencyAttribute("EUR", 4)]
-		public decimal? ValPrice { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrice, 4)); } set { klass.ValPrice = Convert.ToDouble(value); } }
+		public decimal? ValPrice { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrice, 4)); } set { klass.ValPrice = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPrice() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Produ.ValPrice");
 
 		[DisplayName("Inputs")]
 		/// <summary>Field : "Inputs" Tipo: "N" Formula: SR "[RELIN->RECEIVED]"</summary>
 		[NumericAttribute(0)]
-		public decimal? ValInputs { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValInputs, 0)); } set { klass.ValInputs = Convert.ToDouble(value); } }
+		public decimal? ValInputs { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValInputs, 0)); } set { klass.ValInputs = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValInputs() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Produ.ValInputs");
 
 		[DisplayName("Outputs")]
 		/// <summary>Field : "Outputs" Tipo: "N" Formula: SR "[DILIN->DELIVERE]"</summary>
 		[NumericAttribute(0)]
-		public decimal? ValOutputs { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOutputs, 0)); } set { klass.ValOutputs = Convert.ToDouble(value); } }
+		public decimal? ValOutputs { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOutputs, 0)); } set { klass.ValOutputs = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValOutputs() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Produ.ValOutputs");
 
 		[DisplayName("Stock")]
 		/// <summary>Field : "Stock" Tipo: "N" Formula: SR "[RELIN->RECEIVED]-[DILIN->DELIVERE]"</summary>
 		[NumericAttribute(0)]
-		public decimal? ValStock { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValStock, 0)); } set { klass.ValStock = Convert.ToDouble(value); } }
+		public decimal? ValStock { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValStock, 0)); } set { klass.ValStock = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValStock() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Produ.ValStock");
 
 		[DisplayName("Image")]

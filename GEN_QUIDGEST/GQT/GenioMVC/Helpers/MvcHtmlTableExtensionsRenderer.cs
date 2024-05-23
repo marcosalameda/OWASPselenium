@@ -718,7 +718,7 @@ namespace System.Web.Mvc.Html
                                         selectList = new SelectList(dic.ToDictionary(p => p.Key, p => GenioMVC.Helpers.Helpers.GetTextFromResources(p.Value)), "Key", "Value", value);
                                     }
                                     else {
-                                        Dictionary<double, string> dic = (Dictionary<double, string>)dictionary;
+                                        Dictionary<decimal, string> dic = (Dictionary<decimal, string>)dictionary;
                                         selectList = new System.Web.Mvc.SelectList(dic.ToDictionary(p => p.Key, p => GenioMVC.Helpers.Helpers.GetTextFromResources(p.Value)), "Key", "Value", value);
                                     }
 									input = Html.SelectExtensions.DropDownList(t.GetHtmlHelper, id, selectList, GenioMVC.Resources.Resources.ESCOLHA___40245, new { @value=value, @class = "i-select chosen-dropdown", @elem_identifier = "ChosenDropdown", data_placeholder = GenioMVC.Resources.Resources.ESCOLHA___40245, data_no_results_text = GenioMVC.Resources.Resources.NAO_HA_RESULTADOS_PA53055, @style="font-weight:normal" });

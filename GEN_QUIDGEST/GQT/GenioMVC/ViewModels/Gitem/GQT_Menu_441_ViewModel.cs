@@ -165,10 +165,10 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgitem.FldCodgitem, CSGenioAgitem.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("GITEM.ITEMDES", new OrderedDictionary());
-					allSortOrders["GITEM.ITEMDES"].Add("GITEM.ITEMDES", "A");
-				allSortOrders.Add("GITEM.ITEMGCOD", new OrderedDictionary());
-					allSortOrders["GITEM.ITEMGCOD"].Add("GITEM.ITEMGCOD", "A");
+			allSortOrders.Add("GITEM.ITEMDES", new OrderedDictionary());
+			allSortOrders["GITEM.ITEMDES"].Add("GITEM.ITEMDES", "A");
+			allSortOrders.Add("GITEM.ITEMGCOD", new OrderedDictionary());
+			allSortOrders["GITEM.ITEMGCOD"].Add("GITEM.ITEMGCOD", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "GQT_Menu_441_"));
@@ -261,10 +261,10 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgitem.FldCodgitem, CSGenioAgitem.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("GITEM.ITEMDES", new OrderedDictionary());
-					allSortOrders["GITEM.ITEMDES"].Add("GITEM.ITEMDES", "A");
-				allSortOrders.Add("GITEM.ITEMGCOD", new OrderedDictionary());
-					allSortOrders["GITEM.ITEMGCOD"].Add("GITEM.ITEMGCOD", "A");
+			allSortOrders.Add("GITEM.ITEMDES", new OrderedDictionary());
+			allSortOrders["GITEM.ITEMDES"].Add("GITEM.ITEMDES", "A");
+			allSortOrders.Add("GITEM.ITEMGCOD", new OrderedDictionary());
+			allSortOrders["GITEM.ITEMGCOD"].Add("GITEM.ITEMGCOD", "A");
 
 
 
@@ -352,6 +352,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgitem.FldCodgitem, CSGenioAgitem.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP 441]/
 
+                conditions = gqt_menu_441Conds;
                 return;
 			}
 

@@ -132,8 +132,8 @@ namespace GenioMVC.ViewModels.Equip
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("TPEQU.TPEQUCOD", new OrderedDictionary());
-					allSortOrders["TPEQU.TPEQUCOD"].Add("TPEQU.TPEQUCOD", "A");
+			allSortOrders.Add("TPEQU.TPEQUCOD", new OrderedDictionary());
+			allSortOrders["TPEQU.TPEQUCOD"].Add("TPEQU.TPEQUCOD", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Groupbx_TpequValTipoequi_"));
@@ -225,8 +225,8 @@ namespace GenioMVC.ViewModels.Equip
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("TPEQU.TPEQUCOD", new OrderedDictionary());
-					allSortOrders["TPEQU.TPEQUCOD"].Add("TPEQU.TPEQUCOD", "A");
+			allSortOrders.Add("TPEQU.TPEQUCOD", new OrderedDictionary());
+			allSortOrders["TPEQU.TPEQUCOD"].Add("TPEQU.TPEQUCOD", "A");
 
 
 
@@ -313,6 +313,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP GROUPBX_TPEQUTIPOEQUI]/
 
+                conditions = groupbx_tpequtipoequiConds;
                 return;
 			}
 
@@ -432,7 +433,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.Fl
             new TableSearchColumn("ValTpequcod", CSGenioAtpequ.FldTpequcod, typeof(string)),
             new TableSearchColumn("ValTipoequi", CSGenioAtpequ.FldTipoequi, typeof(string)),
             new TableSearchColumn("ValTpequpai", CSGenioAtpequ.FldTpequpai, typeof(string), visible : false),
-            new TableSearchColumn("ValNivel", CSGenioAtpequ.FldNivel, typeof(double), visible : false),
+            new TableSearchColumn("ValNivel", CSGenioAtpequ.FldNivel, typeof(decimal), visible : false),
             new TableSearchColumn("ValBackcolo", CSGenioAtpequ.FldBackcolo, typeof(string), visible : false),
             new TableSearchColumn("ValCorletra", CSGenioAtpequ.FldCorletra, typeof(string), visible : false)
         };

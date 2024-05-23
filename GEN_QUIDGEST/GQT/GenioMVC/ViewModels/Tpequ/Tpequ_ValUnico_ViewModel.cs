@@ -294,6 +294,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP TPEQU_PSEUDUNICO]/
 
+                conditions = tpequ___pseudunico___Conds;
                 return;
 			}
 

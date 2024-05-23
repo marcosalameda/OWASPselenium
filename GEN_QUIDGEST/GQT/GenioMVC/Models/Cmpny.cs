@@ -78,7 +78,7 @@ namespace GenioMVC.Models
 		[DisplayName("Number of people")]
 		/// <summary>Field : "Number of people" Tipo: "N" Formula: SR "[PESSO->1]"</summary>
 		[NumericAttribute(0)]
-		public decimal? ValQtdpesso { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQtdpesso, 0)); } set { klass.ValQtdpesso = Convert.ToDouble(value); } }
+		public decimal? ValQtdpesso { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQtdpesso, 0)); } set { klass.ValQtdpesso = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValQtdpesso() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Cmpny.ValQtdpesso");
 
 		[DisplayName("Headquarter location")]

@@ -53,25 +53,25 @@ namespace GenioMVC.Models
 		[DisplayName("Numeric")]
 		/// <summary>Field : "Numeric" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValNpassage { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNpassage, 0)); } set { klass.ValNpassage = Convert.ToDouble(value); } }
+		public decimal? ValNpassage { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNpassage, 0)); } set { klass.ValNpassage = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValNpassage() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Flds.ValNpassage");
 
 		[DisplayName("Numeric Decimal")]
 		/// <summary>Field : "Numeric Decimal" Tipo: "ND" Formula:  ""</summary>
 		[NumericAttribute(2)]
-		public decimal? ValDuration { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValDuration, 2)); } set { klass.ValDuration = Convert.ToDouble(value); } }
+		public decimal? ValDuration { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValDuration, 2)); } set { klass.ValDuration = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValDuration() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Flds.ValDuration");
 
 		[DisplayName("Currency")]
 		/// <summary>Field : "Currency" Tipo: "$" Formula:  ""</summary>
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValPrice { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrice, 2)); } set { klass.ValPrice = Convert.ToDouble(value); } }
+		public decimal? ValPrice { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrice, 2)); } set { klass.ValPrice = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPrice() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Flds.ValPrice");
 
 		[DisplayName("Currency Decimal")]
 		/// <summary>Field : "Currency Decimal" Tipo: "$D" Formula:  ""</summary>
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValPrecobil { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrecobil, 2)); } set { klass.ValPrecobil = Convert.ToDouble(value); } }
+		public decimal? ValPrecobil { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrecobil, 2)); } set { klass.ValPrecobil = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPrecobil() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Flds.ValPrecobil");
 
 		[DisplayName("Date (DD/MM/YY)")]
@@ -104,7 +104,7 @@ namespace GenioMVC.Models
 		[DisplayName("Year")]
 		/// <summary>Field : "Year" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValYear { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValYear, 0)); } set { klass.ValYear = Convert.ToDouble(value); } }
+		public decimal? ValYear { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValYear, 0)); } set { klass.ValYear = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValYear() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Flds.ValYear");
 
 		[DisplayName("Logical")]
@@ -114,7 +114,7 @@ namespace GenioMVC.Models
 
 		[DisplayName("Conditional")]
 		/// <summary>Field : "Conditional" Tipo: "IF" Formula:  ""</summary>
-		public double ValConditio { get { return klass.ValConditio; } set { klass.ValConditio = value; } }
+		public decimal ValConditio { get { return klass.ValConditio; } set { klass.ValConditio = value; } }
 		public bool ShouldSerializeValConditio() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Flds.ValConditio");
 
 		[DisplayName("Text Enumeration")]
@@ -128,9 +128,9 @@ namespace GenioMVC.Models
 		[DisplayName("Numeric Enumeration")]
 		/// <summary>Field : "Numeric Enumeration" Tipo: "AN" Formula:  ""</summary>
 		[DataArray("Classnum", GenioMVC.Helpers.ArrayType.Numeric)]
-		public double ValClassnum { get { return klass.ValClassnum; } set { klass.ValClassnum = value; } }
+		public decimal ValClassnum { get { return klass.ValClassnum; } set { klass.ValClassnum = value; } }
 		[JsonIgnore]
-		public SelectList ArrayValclassnum { get { return new SelectList(CSGenio.business.ArrayClassnum.GetDictionary(), "Key", "Value", ValClassnum); } set { ValClassnum = Convert.ToDouble(value.SelectedValue); } }
+		public SelectList ArrayValclassnum { get { return new SelectList(CSGenio.business.ArrayClassnum.GetDictionary(), "Key", "Value", ValClassnum); } set { ValClassnum = Convert.ToDecimal(value.SelectedValue); } }
 		public bool ShouldSerializeValClassnum() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Flds.ValClassnum");
 
 		[DisplayName("Logical Enumeration")]

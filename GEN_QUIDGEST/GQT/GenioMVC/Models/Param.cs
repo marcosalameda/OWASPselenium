@@ -60,9 +60,9 @@ namespace GenioMVC.Models
 		[DisplayName("Decimal places")]
 		/// <summary>Field : "Decimal places" Tipo: "AN" Formula:  ""</summary>
 		[DataArray("Decplace", GenioMVC.Helpers.ArrayType.Numeric)]
-		public double ValDecimalplaces { get { return klass.ValDecimalplaces; } set { klass.ValDecimalplaces = value; } }
+		public decimal ValDecimalplaces { get { return klass.ValDecimalplaces; } set { klass.ValDecimalplaces = value; } }
 		[JsonIgnore]
-		public SelectList ArrayValdecimalplaces { get { return new SelectList(CSGenio.business.ArrayDecplace.GetDictionary(), "Key", "Value", ValDecimalplaces); } set { ValDecimalplaces = Convert.ToDouble(value.SelectedValue); } }
+		public SelectList ArrayValdecimalplaces { get { return new SelectList(CSGenio.business.ArrayDecplace.GetDictionary(), "Key", "Value", ValDecimalplaces); } set { ValDecimalplaces = Convert.ToDecimal(value.SelectedValue); } }
 		public bool ShouldSerializeValDecimalplaces() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Param.ValDecimalplaces");
 
 		[DisplayName("ZZSTATE")]

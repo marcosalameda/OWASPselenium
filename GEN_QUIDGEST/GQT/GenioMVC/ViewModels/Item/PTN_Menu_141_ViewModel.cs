@@ -339,6 +339,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAitem.FldCoditem, CSGenioAitem.FldZz
 
 // USE /[MANUAL PTN OVERRQLSTEXP 141]/
 
+                conditions = ptn_menu_141Conds;
                 return;
 			}
 

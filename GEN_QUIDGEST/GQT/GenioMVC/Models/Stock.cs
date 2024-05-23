@@ -38,7 +38,7 @@ namespace GenioMVC.Models
 		[DisplayName("Sequence")]
 		/// <summary>Field : "Sequence" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValSequence { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValSequence, 0)); } set { klass.ValSequence = Convert.ToDouble(value); } }
+		public decimal? ValSequence { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValSequence, 0)); } set { klass.ValSequence = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValSequence() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Stock.ValSequence");
 
 		[DisplayName("Date")]
@@ -83,13 +83,13 @@ namespace GenioMVC.Models
 		[DisplayName("Quantity")]
 		/// <summary>Field : "Quantity" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValQuantity { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQuantity, 0)); } set { klass.ValQuantity = Convert.ToDouble(value); } }
+		public decimal? ValQuantity { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQuantity, 0)); } set { klass.ValQuantity = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValQuantity() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Stock.ValQuantity");
 
 		[DisplayName("Balance")]
 		/// <summary>Field : "Balance" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValBalance { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValBalance, 0)); } set { klass.ValBalance = Convert.ToDouble(value); } }
+		public decimal? ValBalance { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValBalance, 0)); } set { klass.ValBalance = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValBalance() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Stock.ValBalance");
 
 		[DisplayName("Reference")]

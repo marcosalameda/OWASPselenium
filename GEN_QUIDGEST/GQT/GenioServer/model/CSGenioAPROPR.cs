@@ -448,9 +448,9 @@ namespace CSGenio.business
 		private static FieldRef m_fldPrecoest = new FieldRef("propr", "precoest");
 
 		/// <summary>Field : "Estimated price" Tipo: "$D" Formula:  ""</summary>
-		public double ValPrecoest
+		public decimal ValPrecoest
 		{
-			get { return (double)returnValueField(FldPrecoest); }
+			get { return (decimal)returnValueField(FldPrecoest); }
 			set { insertNameValueField(FldPrecoest, value); }
 		}
 
@@ -556,9 +556,9 @@ namespace CSGenio.business
 		private static FieldRef m_fldQtd_wc = new FieldRef("propr", "qtd_wc");
 
 		/// <summary>Field : "Bathrooms" Tipo: "N" Formula:  ""</summary>
-		public double ValQtd_wc
+		public decimal ValQtd_wc
 		{
-			get { return (double)returnValueField(FldQtd_wc); }
+			get { return (decimal)returnValueField(FldQtd_wc); }
 			set { insertNameValueField(FldQtd_wc, value); }
 		}
 
@@ -568,9 +568,9 @@ namespace CSGenio.business
 		private static FieldRef m_fldQtdquart = new FieldRef("propr", "qtdquart");
 
 		/// <summary>Field : "Rooms" Tipo: "N" Formula:  ""</summary>
-		public double ValQtdquart
+		public decimal ValQtdquart
 		{
-			get { return (double)returnValueField(FldQtdquart); }
+			get { return (decimal)returnValueField(FldQtdquart); }
 			set { insertNameValueField(FldQtdquart, value); }
 		}
 
@@ -580,9 +580,9 @@ namespace CSGenio.business
 		private static FieldRef m_fldM2 = new FieldRef("propr", "m2");
 
 		/// <summary>Field : "Square meters" Tipo: "N" Formula:  ""</summary>
-		public double ValM2
+		public decimal ValM2
 		{
-			get { return (double)returnValueField(FldM2); }
+			get { return (decimal)returnValueField(FldM2); }
 			set { insertNameValueField(FldM2, value); }
 		}
 

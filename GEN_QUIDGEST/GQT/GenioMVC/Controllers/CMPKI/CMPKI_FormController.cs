@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Cmpki_ModalDBEdit(string partialView)
-		{
-			Cmpki_ViewModel model = new Cmpki_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Cmpki_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW CMPKI]/

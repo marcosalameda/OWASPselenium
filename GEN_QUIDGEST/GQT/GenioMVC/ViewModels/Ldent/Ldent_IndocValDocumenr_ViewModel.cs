@@ -128,8 +128,8 @@ namespace GenioMVC.ViewModels.Ldent
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("INDOC.DHDOCUME", new OrderedDictionary());
-					allSortOrders["INDOC.DHDOCUME"].Add("INDOC.DHDOCUME", "A");
+			allSortOrders.Add("INDOC.DHDOCUME", new OrderedDictionary());
+			allSortOrders["INDOC.DHDOCUME"].Add("INDOC.DHDOCUME", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Ldent_IndocValDocumenr_"));
@@ -221,8 +221,8 @@ namespace GenioMVC.ViewModels.Ldent
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("INDOC.DHDOCUME", new OrderedDictionary());
-					allSortOrders["INDOC.DHDOCUME"].Add("INDOC.DHDOCUME", "A");
+			allSortOrders.Add("INDOC.DHDOCUME", new OrderedDictionary());
+			allSortOrders["INDOC.DHDOCUME"].Add("INDOC.DHDOCUME", "A");
 
 
 
@@ -309,6 +309,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAindoc.FldCoddentr, CSGenioAindoc.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP LDENT_INDOCDOCUMENR]/
 
+                conditions = ldent___indocdocumenrConds;
                 return;
 			}
 

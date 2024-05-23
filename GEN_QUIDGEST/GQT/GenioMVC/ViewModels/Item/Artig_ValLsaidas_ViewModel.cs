@@ -130,8 +130,8 @@ namespace GenioMVC.ViewModels.Item
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("OUTPU.EXITDT", new OrderedDictionary());
-					allSortOrders["OUTPU.EXITDT"].Add("OUTPU.EXITDT", "D");
+			allSortOrders.Add("OUTPU.EXITDT", new OrderedDictionary());
+			allSortOrders["OUTPU.EXITDT"].Add("OUTPU.EXITDT", "D");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValLsaidas_"));
@@ -227,8 +227,8 @@ namespace GenioMVC.ViewModels.Item
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("OUTPU.EXITDT", new OrderedDictionary());
-					allSortOrders["OUTPU.EXITDT"].Add("OUTPU.EXITDT", "D");
+			allSortOrders.Add("OUTPU.EXITDT", new OrderedDictionary());
+			allSortOrders["OUTPU.EXITDT"].Add("OUTPU.EXITDT", "D");
 
 
 
@@ -315,6 +315,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAoutpu.FldCodoutpu, CSGenioAoutpu.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP ARTIG_PSEUDLSAIDAS]/
 
+                conditions = artig___pseudlsaidas_Conds;
                 return;
 			}
 

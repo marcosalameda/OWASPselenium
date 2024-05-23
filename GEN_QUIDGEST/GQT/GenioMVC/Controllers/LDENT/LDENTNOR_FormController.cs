@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Ldentnor_ModalDBEdit(string partialView)
-		{
-			Ldentnor_ViewModel model = new Ldentnor_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Ldentnor_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW LDENTNOR]/

@@ -18,6 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.ModelBinders;
+using GenioMVC.Helpers.Table.Properties;
 using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
@@ -532,7 +533,7 @@ namespace GenioMVC.ViewModels.Lnhpd
                 if (GlobalFunctions.emptyG(this.ValCodpedid) == 1)
                 {
                     this.ValCodpedid = "";
-                    TablePedidNrpedido.Value = 0;
+                    TablePedidNrpedido.Value = 0m;
                     Navigation.ClearValue("pedid");
                 }
                 else if (lazyLoad)

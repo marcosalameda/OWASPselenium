@@ -77,7 +77,7 @@ namespace GenioMVC.ViewModels.Fami1
 				IsTree = true,
 				Selector = new Func<Models.Tpeq1, string>(x => x.ValTpequcod),
 				ParentSelector = new Func<Models.Tpeq1, string>(x => x.ValTpequpai),
-				LevelSelector = new Func<Models.Tpeq1, double>(x => x.ValNivel),
+				LevelSelector = new Func<Models.Tpeq1, decimal>(x => x.ValNivel),
 				TextSelector = new Func<Models.Tpeq1, string>(x => string.Format("{0} {1} {2} {3}", x.ValTpequcod, x.ValNivel, x.ValTipoequi, x.ValTpequpai))
 			});
 

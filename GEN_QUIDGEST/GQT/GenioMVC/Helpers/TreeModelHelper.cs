@@ -113,7 +113,7 @@ namespace GenioMVC.Helpers
 		/// <summary>
 		/// Reflection para obter o valor do nível do TreeNode
 		/// </summary>
-		public Func<T, double> LevelSelector { get; set; }
+		public Func<T, decimal> LevelSelector { get; set; }
 
 		/// <summary>
 		/// Campo para obter o valor do nível do TreeNode

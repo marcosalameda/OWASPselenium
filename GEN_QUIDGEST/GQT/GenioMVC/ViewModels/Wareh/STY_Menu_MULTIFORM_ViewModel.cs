@@ -356,6 +356,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwareh.FldCodwareh, CSGenioAwareh.Fl
 
 // USE /[MANUAL STY OVERRQLSTEXP MULTIFORM]/
 
+                conditions = sty_menu_multiformConds;
                 return;
 			}
 

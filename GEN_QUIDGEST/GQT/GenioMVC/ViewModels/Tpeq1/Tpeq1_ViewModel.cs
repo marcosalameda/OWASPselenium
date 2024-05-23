@@ -18,6 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.ModelBinders;
+using GenioMVC.Helpers.Table.Properties;
 using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
@@ -50,7 +51,7 @@ namespace GenioMVC.ViewModels.Tpeq1
 		/// <summary>Campo : "Level:" Tipo:"TN"</summary>
 		[Display(Name = "LEVEL_43678", ResourceType = typeof(Resources.Resources))]
 		[NumericAttribute(0)]
-		public double ValNivel { get; set; }
+		public decimal ValNivel { get; set; }
 
 		/// <summary>Campo : "Type of equipment" Tipo:"C"</summary>
 		[Display(Name = "TYPE_OF_EQUIPMENT64921", ResourceType = typeof(Resources.Resources))]
@@ -229,7 +230,7 @@ namespace GenioMVC.ViewModels.Tpeq1
 			try
 			{
  				ValTpequcod = ViewModelConversion.ToString(m.ValTpequcod);
- 				ValNivel = ViewModelConversion.ToDouble(m.ValNivel);
+ 				ValNivel = ViewModelConversion.ToNumeric(m.ValNivel);
  				ValTipoequi = ViewModelConversion.ToString(m.ValTipoequi);
  				ValTpequpai = ViewModelConversion.ToString(m.ValTpequpai);
  				ValBackcolo = ViewModelConversion.ToString(m.ValBackcolo);
@@ -259,7 +260,7 @@ namespace GenioMVC.ViewModels.Tpeq1
 			try
 			{
 				m.ValTpequcod = ViewModelConversion.ToString(ValTpequcod);
-				m.ValNivel = ViewModelConversion.ToDouble(ValNivel);
+				m.ValNivel = ViewModelConversion.ToNumeric(ValNivel);
 				m.ValTipoequi = ViewModelConversion.ToString(ValTipoequi);
 				m.ValTpequpai = ViewModelConversion.ToString(ValTpequpai);
 				m.ValBackcolo = ViewModelConversion.ToString(ValBackcolo);

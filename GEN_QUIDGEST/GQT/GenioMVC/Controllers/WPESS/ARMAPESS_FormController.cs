@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Armapess_ModalDBEdit(string partialView)
-		{
-			Armapess_ViewModel model = new Armapess_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Armapess_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW ARMAPESS]/

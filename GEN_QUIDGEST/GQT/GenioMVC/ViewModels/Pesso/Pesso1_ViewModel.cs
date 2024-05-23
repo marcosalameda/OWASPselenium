@@ -18,6 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.ModelBinders;
+using GenioMVC.Helpers.Table.Properties;
 using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
@@ -167,6 +168,10 @@ namespace GenioMVC.ViewModels.Pesso
 		#endregion
 
 		#region Fields for formulas
+		// Field to formula
+		/// <summary>Field : "Email" Tipo: "C"</summary>
+		[AllowHtml]
+		public string ValEmail2 { get; set; }
 		#endregion
 
 		public string ValCodpesso { get; set; }
@@ -291,6 +296,7 @@ namespace GenioMVC.ViewModels.Pesso
  				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
  				ValCodregia = ViewModelConversion.ToString(m.ValCodregia);
  				ValCodcateg = ViewModelConversion.ToString(m.ValCodcateg);
+ 				ValEmail2 = ViewModelConversion.ToString(m.ValEmail2);
  				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
 			}
 			catch (Exception)
@@ -324,6 +330,7 @@ namespace GenioMVC.ViewModels.Pesso
 				m.ValCodcntry = ViewModelConversion.ToString(ValCodcntry);
 				m.ValCodregia = ViewModelConversion.ToString(ValCodregia);
 				m.ValCodcateg = ViewModelConversion.ToString(ValCodcateg);
+				m.ValEmail2 = ViewModelConversion.ToString(ValEmail2);
 				m.ValCodpesso = ViewModelConversion.ToString(ValCodpesso);
 			}
 			catch (Exception)
@@ -898,7 +905,7 @@ namespace GenioMVC.ViewModels.Pesso
 			// Limits Generation
 
 			// History limit
-			pesso1__regi1regiao__DoLoad &= AddCriteriaHistoryLimit(pesso1__regi1regiao__Conds, CSGenio.business.CSGenioAregi1.FldCodcntry, "pais", true);
+			pesso1__regi1regiao__DoLoad &= AddCriteriaHistoryLimit(pesso1__regi1regiao__Conds, CSGenio.business.CSGenioAregi1.FldCodcntry, OperationType.EQUAL, "pais", true);
 
 
             TableRegi1Regiao = new TableDBEdit<Models.Regi1>();

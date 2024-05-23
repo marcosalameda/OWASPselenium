@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Rogl1_ModalDBEdit(string partialView)
-		{
-			Rogl1_ViewModel model = new Rogl1_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Rogl1_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW ROGL1]/

@@ -95,7 +95,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL STY MENU_GET IMGBACKGROUND]/
+// USE /[MANUAL STY MENU_GET IMGBACKGROUND]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -170,7 +170,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL STY MENU_GET PESSCARD]/
+// USE /[MANUAL STY MENU_GET PESSCARD]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -245,7 +245,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL STY MENU_GET CARDIMGTOP]/
+// USE /[MANUAL STY MENU_GET CARDIMGTOP]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -320,7 +320,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL STY MENU_GET CARDIMGTHUMB]/
+// USE /[MANUAL STY MENU_GET CARDIMGTHUMB]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -396,7 +396,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL STY MENU_GET IMAGEMAGNIFIER]/
+// USE /[MANUAL STY MENU_GET IMAGEMAGNIFIER]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());

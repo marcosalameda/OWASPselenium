@@ -129,8 +129,8 @@ namespace GenioMVC.ViewModels.Pedid
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("LNHDE.ORDEM", new OrderedDictionary());
-					allSortOrders["LNHDE.ORDEM"].Add("LNHDE.ORDEM", "A");
+			allSortOrders.Add("LNHDE.ORDEM", new OrderedDictionary());
+			allSortOrders["LNHDE.ORDEM"].Add("LNHDE.ORDEM", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValDesagreg_"));
@@ -226,8 +226,8 @@ namespace GenioMVC.ViewModels.Pedid
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("LNHDE.ORDEM", new OrderedDictionary());
-					allSortOrders["LNHDE.ORDEM"].Add("LNHDE.ORDEM", "A");
+			allSortOrders.Add("LNHDE.ORDEM", new OrderedDictionary());
+			allSortOrders["LNHDE.ORDEM"].Add("LNHDE.ORDEM", "A");
 
 
 
@@ -314,6 +314,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlnhde.FldCodlnhde, CSGenioAlnhde.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP PEDID_PSEUDDESAGREG]/
 
+                conditions = pedid___pseuddesagregConds;
                 return;
 			}
 

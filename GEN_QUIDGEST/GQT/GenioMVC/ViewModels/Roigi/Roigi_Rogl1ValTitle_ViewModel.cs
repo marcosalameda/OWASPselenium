@@ -127,8 +127,8 @@ namespace GenioMVC.ViewModels.Roigi
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("ROGL1.TITLE", new OrderedDictionary());
-					allSortOrders["ROGL1.TITLE"].Add("ROGL1.TITLE", "A");
+			allSortOrders.Add("ROGL1.TITLE", new OrderedDictionary());
+			allSortOrders["ROGL1.TITLE"].Add("ROGL1.TITLE", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Roigi_Rogl1ValTitle_"));
@@ -220,8 +220,8 @@ namespace GenioMVC.ViewModels.Roigi
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("ROGL1.TITLE", new OrderedDictionary());
-					allSortOrders["ROGL1.TITLE"].Add("ROGL1.TITLE", "A");
+			allSortOrders.Add("ROGL1.TITLE", new OrderedDictionary());
+			allSortOrders["ROGL1.TITLE"].Add("ROGL1.TITLE", "A");
 
 
 
@@ -298,6 +298,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioArogl1.FldCodrogl1, CSGenioArogl1.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP ROIGI_TITLE]/
 
+                conditions = roigi___rogl1title___Conds;
                 return;
 			}
 

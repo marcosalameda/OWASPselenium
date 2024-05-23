@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Fami1_ModalDBEdit(string partialView)
-		{
-			Fami1_ViewModel model = new Fami1_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Fami1_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW FAMI1]/

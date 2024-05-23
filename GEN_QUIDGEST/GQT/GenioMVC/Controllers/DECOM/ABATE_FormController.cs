@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Abate_ModalDBEdit(string partialView)
-		{
-			Abate_ViewModel model = new Abate_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Abate_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW ABATE]/

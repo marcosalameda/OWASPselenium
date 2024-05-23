@@ -586,9 +586,9 @@ namespace CSGenio.business
 		private static FieldRef m_fldAttempts = new FieldRef("psw", "attempts");
 
 		/// <summary>Field : "Login attempts" Tipo: "N" Formula:  ""</summary>
-		public double ValAttempts
+		public decimal ValAttempts
 		{
-			get { return (double)returnValueField(FldAttempts); }
+			get { return (decimal)returnValueField(FldAttempts); }
 			set { insertNameValueField(FldAttempts, value); }
 		}
 
@@ -610,9 +610,9 @@ namespace CSGenio.business
 		private static FieldRef m_fldStatus = new FieldRef("psw", "status");
 
 		/// <summary>Field : "Status" Tipo: "N" Formula:  ""</summary>
-		public double ValStatus
+		public decimal ValStatus
 		{
-			get { return (double)returnValueField(FldStatus); }
+			get { return (decimal)returnValueField(FldStatus); }
 			set { insertNameValueField(FldStatus, value); }
 		}
 

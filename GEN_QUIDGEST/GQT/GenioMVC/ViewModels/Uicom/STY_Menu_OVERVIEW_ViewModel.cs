@@ -167,8 +167,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAuicom.FldCoduicom, CSGenioAuicom.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("UICOM.NAME", new OrderedDictionary());
-					allSortOrders["UICOM.NAME"].Add("UICOM.NAME", "A");
+			allSortOrders.Add("UICOM.NAME", new OrderedDictionary());
+			allSortOrders["UICOM.NAME"].Add("UICOM.NAME", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "STY_Menu_OVERVIEW_"));
@@ -261,8 +261,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAuicom.FldCoduicom, CSGenioAuicom.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("UICOM.NAME", new OrderedDictionary());
-					allSortOrders["UICOM.NAME"].Add("UICOM.NAME", "A");
+			allSortOrders.Add("UICOM.NAME", new OrderedDictionary());
+			allSortOrders["UICOM.NAME"].Add("UICOM.NAME", "A");
 
 
 
@@ -349,6 +349,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAuicom.FldCoduicom, CSGenioAuicom.Fl
 
 // USE /[MANUAL STY OVERRQLSTEXP OVERVIEW]/
 
+                conditions = sty_menu_overviewConds;
                 return;
 			}
 

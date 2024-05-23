@@ -336,6 +336,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwareh.FldCodwareh, CSGenioAwareh.Fl
 
 // USE /[MANUAL STY OVERRQLSTEXP ALERTS]/
 
+                conditions = sty_menu_alertsConds;
                 return;
 			}
 

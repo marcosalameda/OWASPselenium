@@ -130,8 +130,8 @@ namespace GenioMVC.ViewModels.Item
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("LDENT.DHENTRA", new OrderedDictionary());
-					allSortOrders["LDENT.DHENTRA"].Add("LDENT.DHENTRA", "D");
+			allSortOrders.Add("LDENT.DHENTRA", new OrderedDictionary());
+			allSortOrders["LDENT.DHENTRA"].Add("LDENT.DHENTRA", "D");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValLentrada_"));
@@ -227,8 +227,8 @@ namespace GenioMVC.ViewModels.Item
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("LDENT.DHENTRA", new OrderedDictionary());
-					allSortOrders["LDENT.DHENTRA"].Add("LDENT.DHENTRA", "D");
+			allSortOrders.Add("LDENT.DHENTRA", new OrderedDictionary());
+			allSortOrders["LDENT.DHENTRA"].Add("LDENT.DHENTRA", "D");
 
 
 
@@ -315,6 +315,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAldent.FldCodldent, CSGenioAldent.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP ARTIG_PSEUDLENTRADA]/
 
+                conditions = artig___pseudlentradaConds;
                 return;
 			}
 

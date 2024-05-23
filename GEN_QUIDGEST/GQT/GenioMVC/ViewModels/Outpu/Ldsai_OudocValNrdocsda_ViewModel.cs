@@ -129,8 +129,8 @@ namespace GenioMVC.ViewModels.Outpu
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("OUDOC.NRDOCSDA", new OrderedDictionary());
-					allSortOrders["OUDOC.NRDOCSDA"].Add("OUDOC.NRDOCSDA", "A");
+			allSortOrders.Add("OUDOC.NRDOCSDA", new OrderedDictionary());
+			allSortOrders["OUDOC.NRDOCSDA"].Add("OUDOC.NRDOCSDA", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Ldsai_OudocValNrdocsda_"));
@@ -222,8 +222,8 @@ namespace GenioMVC.ViewModels.Outpu
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("OUDOC.NRDOCSDA", new OrderedDictionary());
-					allSortOrders["OUDOC.NRDOCSDA"].Add("OUDOC.NRDOCSDA", "A");
+			allSortOrders.Add("OUDOC.NRDOCSDA", new OrderedDictionary());
+			allSortOrders["OUDOC.NRDOCSDA"].Add("OUDOC.NRDOCSDA", "A");
 
 
 
@@ -310,6 +310,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAoudoc.FldCoddocsd, CSGenioAoudoc.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP LDSAI_OUDOCNRDOCSDA]/
 
+                conditions = ldsai___oudocnrdocsdaConds;
                 return;
 			}
 

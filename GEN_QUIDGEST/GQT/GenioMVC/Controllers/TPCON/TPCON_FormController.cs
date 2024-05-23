@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Tpcon_ModalDBEdit(string partialView)
-		{
-			Tpcon_ViewModel model = new Tpcon_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Tpcon_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW TPCON]/

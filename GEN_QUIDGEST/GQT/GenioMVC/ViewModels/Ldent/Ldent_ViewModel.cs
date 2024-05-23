@@ -18,6 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.ModelBinders;
+using GenioMVC.Helpers.Table.Properties;
 using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
@@ -554,7 +555,7 @@ namespace GenioMVC.ViewModels.Ldent
                 if (GlobalFunctions.emptyG(this.ValCoddentr) == 1)
                 {
                     this.ValCoddentr = "";
-                    TableIndocDocumenr.Value = 0;
+                    TableIndocDocumenr.Value = 0m;
                     Navigation.ClearValue("indoc");
                 }
                 else if (lazyLoad)
@@ -801,7 +802,7 @@ namespace GenioMVC.ViewModels.Ldent
 			// Limits Generation
 
 			// Area limit
-			ldent___item_itemdes_DoLoad &= AddCriteriaAreaLimit(ldent___item_itemdes_Conds, CSGenio.business.CSGenioAwareh.FldCodwareh, "wareh", this.ValCodwareh, false);
+			ldent___item_itemdes_DoLoad &= AddCriteriaAreaLimit(ldent___item_itemdes_Conds, CSGenio.business.CSGenioAwareh.FldCodwareh, "wareh", this.ValCodwareh, true);
 
 
             TableItemItemdes = new TableDBEdit<Models.Item>();

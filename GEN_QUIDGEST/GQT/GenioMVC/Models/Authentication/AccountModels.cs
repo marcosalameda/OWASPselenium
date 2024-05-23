@@ -153,15 +153,15 @@ namespace GenioMVC.Models
 		}
 
 		/// <summary>
-        /// Determines whether username and password authentication is enabled.
-        /// </summary>
-        /// <remarks>
-        /// This property returns true if either QuidgestIdentityProvider or LdapIdentityProvider is present in the list of identity providers.
-        /// This is used to determine if username and password authentication is enabled, assuming that either QuidgestIdentityProvider
-        /// or LdapIdentityProvider supports this method of authentication.
-        /// </remarks>
-        public bool HasUsernameAuth
-        {
+		/// Determines whether username and password authentication is enabled.
+		/// </summary>
+		/// <remarks>
+		/// This property returns true if either QuidgestIdentityProvider or LdapIdentityProvider is present in the list of identity providers.
+		/// This is used to determine if username and password authentication is enabled, assuming that either QuidgestIdentityProvider
+		/// or LdapIdentityProvider supports this method of authentication.
+		/// </remarks>
+		public bool HasUsernameAuth
+		{
 			get { return SecurityFactory.HasUsernameAuth(); }
 		}
 	}

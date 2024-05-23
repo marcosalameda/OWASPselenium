@@ -130,8 +130,8 @@ namespace GenioMVC.ViewModels.Equip
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("MOVIM.DHMUDANC", new OrderedDictionary());
-					allSortOrders["MOVIM.DHMUDANC"].Add("MOVIM.DHMUDANC", "D");
+			allSortOrders.Add("MOVIM.DHMUDANC", new OrderedDictionary());
+			allSortOrders["MOVIM.DHMUDANC"].Add("MOVIM.DHMUDANC", "D");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValMovimels_"));
@@ -227,8 +227,8 @@ namespace GenioMVC.ViewModels.Equip
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("MOVIM.DHMUDANC", new OrderedDictionary());
-					allSortOrders["MOVIM.DHMUDANC"].Add("MOVIM.DHMUDANC", "D");
+			allSortOrders.Add("MOVIM.DHMUDANC", new OrderedDictionary());
+			allSortOrders["MOVIM.DHMUDANC"].Add("MOVIM.DHMUDANC", "D");
 
 
 
@@ -315,6 +315,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAmovim.FldCodmovim, CSGenioAmovim.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP EQUIP_PSEUDMOVIMELS]/
 
+                conditions = equip___pseudmovimelsConds;
                 return;
 			}
 

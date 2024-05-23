@@ -58,25 +58,25 @@ namespace GenioMVC.Models
 		[DisplayName("Numeric (Integer)")]
 		/// <summary>Field : "Numeric (Integer)" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValNumint { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNumint, 0)); } set { klass.ValNumint = Convert.ToDouble(value); } }
+		public decimal? ValNumint { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNumint, 0)); } set { klass.ValNumint = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValNumint() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Tblb.ValNumint");
 
 		[DisplayName("Numeric (Decimal)")]
 		/// <summary>Field : "Numeric (Decimal)" Tipo: "ND" Formula:  ""</summary>
 		[NumericAttribute(3)]
-		public decimal? ValNumdec { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNumdec, 3)); } set { klass.ValNumdec = Convert.ToDouble(value); } }
+		public decimal? ValNumdec { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNumdec, 3)); } set { klass.ValNumdec = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValNumdec() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Tblb.ValNumdec");
 
 		[DisplayName("Currency (Interger)")]
 		/// <summary>Field : "Currency (Interger)" Tipo: "$" Formula:  ""</summary>
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValCurint { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValCurint, 2)); } set { klass.ValCurint = Convert.ToDouble(value); } }
+		public decimal? ValCurint { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValCurint, 2)); } set { klass.ValCurint = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValCurint() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Tblb.ValCurint");
 
 		[DisplayName("Currency (Decimal)")]
 		/// <summary>Field : "Currency (Decimal)" Tipo: "$D" Formula:  ""</summary>
 		[CurrencyAttribute("EUR", 4)]
-		public decimal? ValCurdec { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValCurdec, 4)); } set { klass.ValCurdec = Convert.ToDouble(value); } }
+		public decimal? ValCurdec { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValCurdec, 4)); } set { klass.ValCurdec = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValCurdec() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Tblb.ValCurdec");
 
 		[DisplayName("Boolean")]
@@ -122,9 +122,9 @@ namespace GenioMVC.Models
 		[DisplayName("Enumeration (Numeric)")]
 		/// <summary>Field : "Enumeration (Numeric)" Tipo: "AN" Formula:  ""</summary>
 		[DataArray("Typen", GenioMVC.Helpers.ArrayType.Numeric)]
-		public double ValEnumn { get { return klass.ValEnumn; } set { klass.ValEnumn = value; } }
+		public decimal ValEnumn { get { return klass.ValEnumn; } set { klass.ValEnumn = value; } }
 		[JsonIgnore]
-		public SelectList ArrayValenumn { get { return new SelectList(CSGenio.business.ArrayTypen.GetDictionary(), "Key", "Value", ValEnumn); } set { ValEnumn = Convert.ToDouble(value.SelectedValue); } }
+		public SelectList ArrayValenumn { get { return new SelectList(CSGenio.business.ArrayTypen.GetDictionary(), "Key", "Value", ValEnumn); } set { ValEnumn = Convert.ToDecimal(value.SelectedValue); } }
 		public bool ShouldSerializeValEnumn() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Tblb.ValEnumn");
 
 		[DisplayName("ZZSTATE")]

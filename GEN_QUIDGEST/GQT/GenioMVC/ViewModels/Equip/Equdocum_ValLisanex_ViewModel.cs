@@ -306,6 +306,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAanexd.FldCodanexd, CSGenioAanexd.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP EQUDOCUM_PSEUDLISANEX]/
 
+                conditions = equdocumpseudlisanex_Conds;
                 return;
 			}
 

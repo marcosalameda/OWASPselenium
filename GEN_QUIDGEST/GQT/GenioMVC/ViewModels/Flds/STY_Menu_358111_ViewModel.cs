@@ -186,8 +186,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAflds.FldCodflds, CSGenioAflds.FldZz
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("FLDS.DURATION", new OrderedDictionary());
-					allSortOrders["FLDS.DURATION"].Add("FLDS.DURATION", "A");
+			allSortOrders.Add("FLDS.DURATION", new OrderedDictionary());
+			allSortOrders["FLDS.DURATION"].Add("FLDS.DURATION", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "STY_Menu_358111_"));
@@ -283,8 +283,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAflds.FldCodflds, CSGenioAflds.FldZz
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("FLDS.DURATION", new OrderedDictionary());
-					allSortOrders["FLDS.DURATION"].Add("FLDS.DURATION", "A");
+			allSortOrders.Add("FLDS.DURATION", new OrderedDictionary());
+			allSortOrders["FLDS.DURATION"].Add("FLDS.DURATION", "A");
 
 
 
@@ -387,6 +387,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAflds.FldCodflds, CSGenioAflds.FldZz
 
 // USE /[MANUAL STY OVERRQLSTEXP 358111]/
 
+                conditions = sty_menu_358111Conds;
                 return;
 			}
 
@@ -519,9 +520,9 @@ FieldRef[] fields = new FieldRef[] { CSGenioAflds.FldCodflds, CSGenioAflds.FldZz
             new TableSearchColumn("ValTime", CSGenioAflds.FldTime, typeof(string)),
             new TableSearchColumn("ValYear", CSGenioAflds.FldYear, typeof(decimal?)),
             new TableSearchColumn("ValPrimviag", CSGenioAflds.FldPrimviag, typeof(bool)),
-            new TableSearchColumn("ValConditio", CSGenioAflds.FldConditio, typeof(double)),
+            new TableSearchColumn("ValConditio", CSGenioAflds.FldConditio, typeof(decimal)),
             new TableSearchColumn("ValClass", CSGenioAflds.FldClass, typeof(string), array : "CLASS"),
-            new TableSearchColumn("ValClassnum", CSGenioAflds.FldClassnum, typeof(double), array : "CLASSNUM"),
+            new TableSearchColumn("ValClassnum", CSGenioAflds.FldClassnum, typeof(decimal), array : "CLASSNUM"),
             new TableSearchColumn("ValLogicenu", CSGenioAflds.FldLogicenu, typeof(int), array : "PRIMVIAG"),
             new TableSearchColumn("ValAttach", CSGenioAflds.FldAttach, typeof(string)),
             new TableSearchColumn("ValCreatuse", CSGenioAflds.FldCreatuse, typeof(string)),

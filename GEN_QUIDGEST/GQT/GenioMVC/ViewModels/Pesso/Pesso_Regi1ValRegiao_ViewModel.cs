@@ -123,7 +123,7 @@ namespace GenioMVC.ViewModels.Pesso
 			// Limits Generation
 
 			// History limit
-			tableReload &= AddCriteriaHistoryLimit(crs, CSGenio.business.CSGenioAregi1.FldCodcntry, "pais", true);
+			tableReload &= AddCriteriaHistoryLimit(crs, CSGenio.business.CSGenioAregi1.FldCodcntry, OperationType.EQUAL, "pais", true);
 
 			// Area limit
 			tableReload &= AddCriteriaAreaLimit(crs, CSGenio.business.CSGenioApais1.FldCodcntry, "pais1", this.ValCodcntry, true);
@@ -136,8 +136,8 @@ namespace GenioMVC.ViewModels.Pesso
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("REGI1.REGIAO", new OrderedDictionary());
-					allSortOrders["REGI1.REGIAO"].Add("REGI1.REGIAO", "A");
+			allSortOrders.Add("REGI1.REGIAO", new OrderedDictionary());
+			allSortOrders["REGI1.REGIAO"].Add("REGI1.REGIAO", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Pesso_Regi1ValRegiao_"));
@@ -229,8 +229,8 @@ namespace GenioMVC.ViewModels.Pesso
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("REGI1.REGIAO", new OrderedDictionary());
-					allSortOrders["REGI1.REGIAO"].Add("REGI1.REGIAO", "A");
+			allSortOrders.Add("REGI1.REGIAO", new OrderedDictionary());
+			allSortOrders["REGI1.REGIAO"].Add("REGI1.REGIAO", "A");
 
 
 
@@ -346,6 +346,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAregi1.FldCodregia, CSGenioAregi1.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP PESSO_REGI1REGIAO]/
 
+                conditions = pesso___regi1regiao__Conds;
                 return;
 			}
 

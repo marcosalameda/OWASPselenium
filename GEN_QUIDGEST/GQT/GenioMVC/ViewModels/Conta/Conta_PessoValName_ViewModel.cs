@@ -127,8 +127,8 @@ namespace GenioMVC.ViewModels.Conta
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("PESSO.NAME", new OrderedDictionary());
-					allSortOrders["PESSO.NAME"].Add("PESSO.NAME", "A");
+			allSortOrders.Add("PESSO.NAME", new OrderedDictionary());
+			allSortOrders["PESSO.NAME"].Add("PESSO.NAME", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Conta_PessoValName_"));
@@ -220,8 +220,8 @@ namespace GenioMVC.ViewModels.Conta
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("PESSO.NAME", new OrderedDictionary());
-					allSortOrders["PESSO.NAME"].Add("PESSO.NAME", "A");
+			allSortOrders.Add("PESSO.NAME", new OrderedDictionary());
+			allSortOrders["PESSO.NAME"].Add("PESSO.NAME", "A");
 
 
 
@@ -308,6 +308,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApesso.FldCodpesso, CSGenioApesso.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP CONTA_PESSONAME]/
 
+                conditions = conta___pessoname____Conds;
                 return;
 			}
 

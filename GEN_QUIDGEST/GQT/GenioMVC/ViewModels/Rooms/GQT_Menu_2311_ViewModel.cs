@@ -176,10 +176,10 @@ FieldRef[] fields = new FieldRef[] { CSGenioArooms.FldCodrooms, CSGenioArooms.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("ROOMS.ROOMNR", new OrderedDictionary());
-					allSortOrders["ROOMS.ROOMNR"].Add("ROOMS.ROOMNR", "A");
-				allSortOrders.Add("ROOMS.DESIGNAT", new OrderedDictionary());
-					allSortOrders["ROOMS.DESIGNAT"].Add("ROOMS.DESIGNAT", "A");
+			allSortOrders.Add("ROOMS.ROOMNR", new OrderedDictionary());
+			allSortOrders["ROOMS.ROOMNR"].Add("ROOMS.ROOMNR", "A");
+			allSortOrders.Add("ROOMS.DESIGNAT", new OrderedDictionary());
+			allSortOrders["ROOMS.DESIGNAT"].Add("ROOMS.DESIGNAT", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "GQT_Menu_2311_"));
@@ -273,10 +273,10 @@ FieldRef[] fields = new FieldRef[] { CSGenioArooms.FldCodrooms, CSGenioArooms.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("ROOMS.ROOMNR", new OrderedDictionary());
-					allSortOrders["ROOMS.ROOMNR"].Add("ROOMS.ROOMNR", "A");
-				allSortOrders.Add("ROOMS.DESIGNAT", new OrderedDictionary());
-					allSortOrders["ROOMS.DESIGNAT"].Add("ROOMS.DESIGNAT", "A");
+			allSortOrders.Add("ROOMS.ROOMNR", new OrderedDictionary());
+			allSortOrders["ROOMS.ROOMNR"].Add("ROOMS.ROOMNR", "A");
+			allSortOrders.Add("ROOMS.DESIGNAT", new OrderedDictionary());
+			allSortOrders["ROOMS.DESIGNAT"].Add("ROOMS.DESIGNAT", "A");
 
 
 
@@ -369,6 +369,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioArooms.FldCodrooms, CSGenioArooms.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP 2311]/
 
+                conditions = gqt_menu_2311Conds;
                 return;
 			}
 

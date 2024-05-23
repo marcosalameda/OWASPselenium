@@ -306,6 +306,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioArepar.FldCodrepar, CSGenioArepar.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP TIMEQUIP_PSEUDREPARACO]/
 
+                conditions = timequippseudreparacoConds;
                 return;
 			}
 

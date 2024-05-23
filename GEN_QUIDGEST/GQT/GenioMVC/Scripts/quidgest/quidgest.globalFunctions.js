@@ -1846,48 +1846,77 @@ function onNavigation(event, target, mode) {
 	event.preventDefault();
 	event.stopPropagation();
 
-	//Determine if form mode has a loading animation
-	mode = (mode || '').toUpperCase()
-	hasLoadingAnimation = (mode === 'DUP' || mode === 'SHOW' || mode === 'NEW' || mode === 'DELETE')
+	const EXECUTION_DISABLED_ATTR = 'navigation-execution-disabled';
 
-	var href = target.getAttribute("href"),
-		isModalForm = (target.getAttribute("data-modal-form") == "True" || target.getAttribute("data-modal-form") == "true"),
-		_qForm = $(target).closest('[data-form]'),
-		skipPreValida = $(target).data("skip-prevalida");
+    /**
+     * To prevent multiple executions of handlers (which can happen in cases of multiple clicks on the same button if the system and network are slow), 
+     *  a specific attribute is used to block the element that triggers the event and only unlocks if the page is not changed to another. 
+	 * Without this block, multiple executions can cause various problems on the server, including corrupting the levels of history.
+     */
+	if ($(target).data(EXECUTION_DISABLED_ATTR)) {
+        console.warn('Already processing, please wait...');
+        return false;
+    }
+    $(target).data(EXECUTION_DISABLED_ATTR, true);
 
-	var preValida = function (isModalForm, target, mode) {
-		if (!isModalForm) return QPreValida($(target), mode);
-		else return true;
-	}
+	const _fnEnableSubmission = () => $(target).data(EXECUTION_DISABLED_ATTR, false);
 
-	// The insertion of the new record in the upper table does not require saving the form (PreValida + Apply)
-	// Between copying and/or opening a link in a new tab, it is preferable that controlled exit be made
-	// The most common case is insertion in required dbedit field
-	if (skipPreValida) {
-		window.qVar_isControlledRedirect = true;
-		$.when(syncFormKeys(_qForm)).then(function () {
-			//Navigate to href
-			if (!isModalForm) { //Os modal forms tenham o load proprio - Deve ser revisto para fazer load a partir daqui!
-				//Add loading animation if necessary here since the navigation will happen
-				if (hasLoadingAnimation)
-					qAddLoading(0);
-				window.location = href;
-			}
-		});
-	} else {
-		$.when(preValida(isModalForm, target, mode), href, isModalForm, _qForm).then(function (preValida, href, isModalForm, _qForm) {
-			window.qVar_isControlledRedirect = preValida;
+	try
+	{
+		//Determine if form mode has a loading animation
+		mode = (mode || '').toUpperCase()
+		hasLoadingAnimation = (mode === 'DUP' || mode === 'SHOW' || mode === 'NEW' || mode === 'DELETE')
+
+		var href = target.getAttribute("href"),
+			isModalForm = (target.getAttribute("data-modal-form") == "True" || target.getAttribute("data-modal-form") == "true"),
+			_qForm = $(target).closest('[data-form]'),
+			skipPreValida = $(target).data("skip-prevalida");
+
+		var preValida = function (isModalForm, target, mode) {
+			if (!isModalForm) return QPreValida($(target), mode);
+			else return true;
+		}
+
+		// The insertion of the new record in the upper table does not require saving the form (PreValida + Apply)
+		// Between copying and/or opening a link in a new tab, it is preferable that controlled exit be made
+		// The most common case is insertion in required dbedit field
+		if (skipPreValida) {
+			window.qVar_isControlledRedirect = true;
 			$.when(syncFormKeys(_qForm)).then(function () {
 				//Navigate to href
-				if (!isModalForm && preValida) { //Os modal forms tenham o load proprio - Deve ser revisto para fazer load a partir daqui!
+				if (!isModalForm) { //Os modal forms tenham o load proprio - Deve ser revisto para fazer load a partir daqui!
 					//Add loading animation if necessary here since the navigation will happen
 					if (hasLoadingAnimation)
 						qAddLoading(0);
+					_fnEnableSubmission();
 					window.location = href;
 				}
-			});
-		});
+				else
+					_fnEnableSubmission();
+			}).fail(() => _fnEnableSubmission());
+		} else {
+			$.when(preValida(isModalForm, target, mode), href, isModalForm, _qForm).then(function (preValida, href, isModalForm, _qForm) {
+				window.qVar_isControlledRedirect = preValida;
+				$.when(syncFormKeys(_qForm)).then(function () {
+					//Navigate to href
+					if (!isModalForm && preValida) { //Os modal forms tenham o load proprio - Deve ser revisto para fazer load a partir daqui!
+						//Add loading animation if necessary here since the navigation will happen
+						if (hasLoadingAnimation)
+							qAddLoading(0);
+						_fnEnableSubmission();
+						window.location = href;
+					}
+					else 
+						_fnEnableSubmission();
+				}).fail(() => _fnEnableSubmission());
+			}).fail(() => _fnEnableSubmission());
+		}
 	}
+	catch(e)
+    {
+        console.error('Error while processing navigation handler', e);
+        $(target).data(EXECUTION_DISABLED_ATTR, false);
+    }
 }
 
 function extendQuidgestGlobals(object){
@@ -2436,8 +2465,10 @@ function activatePopovers(typeHelper) {
 		}
 		else if ($(this).is(".b-icon-text"))
 			labelDiv = $(this).parent();
-		else if (["MenuList", "List"].includes($(this).attr("elem-identifier")))
-			labelDiv = $(this).css("width", "fit-content");
+		else if (["MenuList", "List"].includes($(this).attr("elem-identifier"))){
+			labelDiv = $(this).find("[list-header]");
+			$(this).css("width", "fit-content");
+		}
 		else {
 			labelDiv = $(this).parent().find("label");
 
@@ -2469,10 +2500,7 @@ function activatePopovers(typeHelper) {
 
 		if (typeHelper == "popover" && verboseDesc && helpText) {
 			$(this).tooltip('dispose')
-
-			$(`[data-original-title="${helpText}"]`).each(function () {
-				$(this).attr('data-original-title', null)
-			})
+			$(this).attr('data-original-title', null)
 		}
 		else {
 			$(this).tooltip({
@@ -4351,12 +4379,36 @@ function displayMessage(message, status, title, buttons, options) {
 		var content = "<form class=\"bootbox-form\">";
 		for (var i = 0; i < inputs.length; i++) {
 			var currInput = inputs[i];
+			var typefield = "input";
+			var rows = 3;
+			var fieldText = "";
+			var callback;
 			var classToUse = "bootbox-input form-control ";
+
+			if (currInput.class != null)
+				classToUse = currInput.class;
+
 			if (currInput.type == "text") {
-				classToUse += "bootbox-input-text";
+				if (currInput.class == null)
+					classToUse += "bootbox-input-text";
 			}
 
-			content += "<input class=\"" + classToUse + "\" id = \"" + currInput.name + "\" name=\"" + currInput.name + "\" autocomplete=\"off\" type=\"" + currInput.text + "\">";
+			if (currInput.typefield == "textarea" && currInput.class == null)
+				classToUse = "i-textarea__field i-textarea";
+
+			if (currInput.rows != null)
+				rows = "\" rows=\""+ currInput.rows +"\"";
+
+			if (currInput.typefield != null)
+				typefield = currInput.typefield;
+
+			if (currInput.textfield != null)
+				fieldText = currInput.textfield;
+
+			if (currInput.callback != null)
+				callback = "onclick=\"" + currInput.callback + "\"";
+
+			content += "<" + typefield + " class=\"" + classToUse + "\" id = \"" + currInput.name + "\" " + rows + " name=\"" + currInput.name + "\" autocomplete=\"off\" type=\"" + currInput.type + "\" " + callback + ">" + fieldText +"\</" + typefield + ">";
 		}
 		content += "</form>";
 		return content;

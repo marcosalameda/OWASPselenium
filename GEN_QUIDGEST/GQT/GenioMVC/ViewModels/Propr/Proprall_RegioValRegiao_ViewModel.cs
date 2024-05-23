@@ -133,8 +133,8 @@ namespace GenioMVC.ViewModels.Propr
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("REGIO.REGIAO", new OrderedDictionary());
-					allSortOrders["REGIO.REGIAO"].Add("REGIO.REGIAO", "A");
+			allSortOrders.Add("REGIO.REGIAO", new OrderedDictionary());
+			allSortOrders["REGIO.REGIAO"].Add("REGIO.REGIAO", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Proprall_RegioValRegiao_"));
@@ -226,8 +226,8 @@ namespace GenioMVC.ViewModels.Propr
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("REGIO.REGIAO", new OrderedDictionary());
-					allSortOrders["REGIO.REGIAO"].Add("REGIO.REGIAO", "A");
+			allSortOrders.Add("REGIO.REGIAO", new OrderedDictionary());
+			allSortOrders["REGIO.REGIAO"].Add("REGIO.REGIAO", "A");
 
 
 
@@ -329,6 +329,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAregio.FldCodregia, CSGenioAregio.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP PROPRALL_REGIOREGIAO]/
 
+                conditions = proprallregioregiao__Conds;
                 return;
 			}
 

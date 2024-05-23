@@ -312,6 +312,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpeq1.FldCodtpequ, CSGenioAtpeq1.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP FAMI1_PSEUDTIPOSEQU]/
 
+                conditions = fami1___pseudtiposequConds;
                 return;
 			}
 
@@ -432,7 +433,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpeq1.FldCodtpequ, CSGenioAtpeq1.Fl
             new TableSearchColumn("ValTipoequi", CSGenioAtpeq1.FldTipoequi, typeof(string)),
             new TableSearchColumn("ValTpequcod", CSGenioAtpeq1.FldTpequcod, typeof(string)),
             new TableSearchColumn("ValTpequpai", CSGenioAtpeq1.FldTpequpai, typeof(string)),
-            new TableSearchColumn("ValNivel", CSGenioAtpeq1.FldNivel, typeof(double)),
+            new TableSearchColumn("ValNivel", CSGenioAtpeq1.FldNivel, typeof(decimal)),
             new TableSearchColumn("ValBackcolo", CSGenioAtpeq1.FldBackcolo, typeof(string)),
             new TableSearchColumn("ValCorletra", CSGenioAtpeq1.FldCorletra, typeof(string)),
             new TableSearchColumn("ValPrecomax", CSGenioAtpeq1.FldPrecomax, typeof(decimal?)),

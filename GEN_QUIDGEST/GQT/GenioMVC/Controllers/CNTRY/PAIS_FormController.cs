@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Pais_ModalDBEdit(string partialView)
-		{
-			Pais_ViewModel model = new Pais_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Pais_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW PAIS]/

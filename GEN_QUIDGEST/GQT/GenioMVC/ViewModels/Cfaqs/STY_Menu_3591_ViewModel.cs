@@ -338,6 +338,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcfaqs.FldCodcfaqs, CSGenioAcfaqs.Fl
 
 // USE /[MANUAL STY OVERRQLSTEXP 3591]/
 
+                conditions = sty_menu_3591Conds;
                 return;
 			}
 

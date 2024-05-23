@@ -18,6 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.ModelBinders;
+using GenioMVC.Helpers.Table.Properties;
 using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
@@ -567,7 +568,7 @@ namespace GenioMVC.ViewModels.Lnhde
                 if (GlobalFunctions.emptyG(this.ValCodpedid) == 1)
                 {
                     this.ValCodpedid = "";
-                    TablePedidNrpedido.Value = 0;
+                    TablePedidNrpedido.Value = 0m;
                     Navigation.ClearValue("pedid");
                 }
                 else if (lazyLoad)
@@ -611,7 +612,7 @@ namespace GenioMVC.ViewModels.Lnhde
 			// Limits Generation
 
 			// Area limit
-			lnhde___lnhpdline____DoLoad &= AddCriteriaAreaLimit(lnhde___lnhpdline____Conds, CSGenio.business.CSGenioApedid.FldCodpedid, "pedid", this.ValCodpedid, false);
+			lnhde___lnhpdline____DoLoad &= AddCriteriaAreaLimit(lnhde___lnhpdline____Conds, CSGenio.business.CSGenioApedid.FldCodpedid, "pedid", this.ValCodpedid, true);
 
 
             TableLnhpdLine = new TableDBEdit<Models.Lnhpd>();
@@ -785,7 +786,7 @@ namespace GenioMVC.ViewModels.Lnhde
                 if (GlobalFunctions.emptyG(this.ValCodlnhpd) == 1)
                 {
                     this.ValCodlnhpd = "";
-                    TableLnhpdLine.Value = 0;
+                    TableLnhpdLine.Value = 0m;
                     Navigation.ClearValue("lnhpd");
                 }
                 else if (lazyLoad)
@@ -1046,7 +1047,7 @@ namespace GenioMVC.ViewModels.Lnhde
 				IsTree = true,
 				Selector = new Func<Models.Tpeq1, string>(x => x.ValTpequcod),
 				ParentSelector = new Func<Models.Tpeq1, string>(x => x.ValTpequpai),
-				LevelSelector = new Func<Models.Tpeq1, double>(x => x.ValNivel),
+				LevelSelector = new Func<Models.Tpeq1, decimal>(x => x.ValNivel),
 				TextSelector = new Func<Models.Tpeq1, string>(x => string.Format("{0} {1}", x.ValTpequcod, x.ValTipoequi))
 			});
 

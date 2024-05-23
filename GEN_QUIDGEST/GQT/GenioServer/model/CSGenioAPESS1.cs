@@ -719,9 +719,9 @@ namespace CSGenio.business
 		private static FieldRef m_fldIdade = new FieldRef("pess1", "idade");
 
 		/// <summary>Field : "Age" Tipo: "N" Formula:  ""</summary>
-		public double ValIdade
+		public decimal ValIdade
 		{
-			get { return (double)returnValueField(FldIdade); }
+			get { return (decimal)returnValueField(FldIdade); }
 			set { insertNameValueField(FldIdade, value); }
 		}
 
@@ -731,9 +731,9 @@ namespace CSGenio.business
 		private static FieldRef m_fldIdfuncio = new FieldRef("pess1", "idfuncio");
 
 		/// <summary>Field : "Official No." Tipo: "N" Formula:  ""</summary>
-		public double ValIdfuncio
+		public decimal ValIdfuncio
 		{
-			get { return (double)returnValueField(FldIdfuncio); }
+			get { return (decimal)returnValueField(FldIdfuncio); }
 			set { insertNameValueField(FldIdfuncio, value); }
 		}
 
@@ -911,9 +911,9 @@ namespace CSGenio.business
 		private static FieldRef m_fldExtminzm = new FieldRef("pess1", "extminzm");
 
 		/// <summary>Field : "Minimum zoom to load features" Tipo: "N" Formula:  ""</summary>
-		public double ValExtminzm
+		public decimal ValExtminzm
 		{
-			get { return (double)returnValueField(FldExtminzm); }
+			get { return (decimal)returnValueField(FldExtminzm); }
 			set { insertNameValueField(FldExtminzm, value); }
 		}
 
@@ -935,9 +935,9 @@ namespace CSGenio.business
 		private static FieldRef m_fldZoomlvl = new FieldRef("pess1", "zoomlvl");
 
 		/// <summary>Field : "Zoom level" Tipo: "N" Formula:  ""</summary>
-		public double ValZoomlvl
+		public decimal ValZoomlvl
 		{
-			get { return (double)returnValueField(FldZoomlvl); }
+			get { return (decimal)returnValueField(FldZoomlvl); }
 			set { insertNameValueField(FldZoomlvl, value); }
 		}
 
@@ -947,9 +947,9 @@ namespace CSGenio.business
 		private static FieldRef m_fldOutweigh = new FieldRef("pess1", "outweigh");
 
 		/// <summary>Field : "Outline weight" Tipo: "N" Formula:  ""</summary>
-		public double ValOutweigh
+		public decimal ValOutweigh
 		{
-			get { return (double)returnValueField(FldOutweigh); }
+			get { return (decimal)returnValueField(FldOutweigh); }
 			set { insertNameValueField(FldOutweigh, value); }
 		}
 

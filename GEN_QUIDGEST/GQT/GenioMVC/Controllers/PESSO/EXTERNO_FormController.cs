@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Externo_ModalDBEdit(string partialView)
-		{
-			Externo_ViewModel model = new Externo_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Externo_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW EXTERNO]/

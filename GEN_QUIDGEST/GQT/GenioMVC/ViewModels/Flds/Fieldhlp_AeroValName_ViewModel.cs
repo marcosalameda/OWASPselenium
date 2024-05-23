@@ -127,8 +127,8 @@ namespace GenioMVC.ViewModels.Flds
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("AERO.NAME", new OrderedDictionary());
-					allSortOrders["AERO.NAME"].Add("AERO.NAME", "A");
+			allSortOrders.Add("AERO.NAME", new OrderedDictionary());
+			allSortOrders["AERO.NAME"].Add("AERO.NAME", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Fieldhlp_AeroValName_"));
@@ -220,8 +220,8 @@ namespace GenioMVC.ViewModels.Flds
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("AERO.NAME", new OrderedDictionary());
-					allSortOrders["AERO.NAME"].Add("AERO.NAME", "A");
+			allSortOrders.Add("AERO.NAME", new OrderedDictionary());
+			allSortOrders["AERO.NAME"].Add("AERO.NAME", "A");
 
 
 
@@ -298,6 +298,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAaero.FldCodaero, CSGenioAaero.FldZz
 
 // USE /[MANUAL GQT OVERRQLSTEXP FIELDHLP_NAME]/
 
+                conditions = fieldhlpaero_name____Conds;
                 return;
 			}
 

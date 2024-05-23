@@ -100,19 +100,19 @@ namespace GenioMVC.Models
 		[DisplayName("Qtd hours")]
 		/// <summary>Field : "Qtd hours" Tipo: "N" Formula: + "iif(emptyD([INSTA->SINCE])==1 || emptyD([INSTA->UNTIL])==1,0,Diferenca_entre_Datas([INSTA->SINCE],[INSTA->UNTIL],"H"))"</summary>
 		[NumericAttribute(2)]
-		public decimal? ValHours { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValHours, 2)); } set { klass.ValHours = Convert.ToDouble(value); } }
+		public decimal? ValHours { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValHours, 2)); } set { klass.ValHours = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValHours() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Insta.ValHours");
 
 		[DisplayName("Hourly price")]
 		/// <summary>Field : "Hourly price" Tipo: "$D" Formula: CT "TABPR[INSTA->SINCE][TABPR->SINCE][TABPR->PRECOHOR][INSTA->CODTPEQU][TABPR->CODTPEQ1](DESC)"</summary>
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValPrecohor { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrecohor, 2)); } set { klass.ValPrecohor = Convert.ToDouble(value); } }
+		public decimal? ValPrecohor { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrecohor, 2)); } set { klass.ValPrecohor = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPrecohor() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Insta.ValPrecohor");
 
 		[DisplayName("Value")]
 		/// <summary>Field : "Value" Tipo: "$D" Formula: + "[INSTA->HOURS]*[INSTA->PRECOHOR]"</summary>
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValValue { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValValue, 2)); } set { klass.ValValue = Convert.ToDouble(value); } }
+		public decimal? ValValue { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValValue, 2)); } set { klass.ValValue = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValValue() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Insta.ValValue");
 
 		[DisplayName("Geographic coordinate")]

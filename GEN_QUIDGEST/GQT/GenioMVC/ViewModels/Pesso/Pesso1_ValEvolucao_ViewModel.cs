@@ -130,8 +130,8 @@ namespace GenioMVC.ViewModels.Pesso
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("EVCAT.SINCE", new OrderedDictionary());
-					allSortOrders["EVCAT.SINCE"].Add("EVCAT.SINCE", "D");
+			allSortOrders.Add("EVCAT.SINCE", new OrderedDictionary());
+			allSortOrders["EVCAT.SINCE"].Add("EVCAT.SINCE", "D");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValEvolucao_"));
@@ -227,8 +227,8 @@ namespace GenioMVC.ViewModels.Pesso
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("EVCAT.SINCE", new OrderedDictionary());
-					allSortOrders["EVCAT.SINCE"].Add("EVCAT.SINCE", "D");
+			allSortOrders.Add("EVCAT.SINCE", new OrderedDictionary());
+			allSortOrders["EVCAT.SINCE"].Add("EVCAT.SINCE", "D");
 
 
 
@@ -315,6 +315,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAevcat.FldCodprogr, CSGenioAevcat.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP PESSO1_PSEUDEVOLUCAO]/
 
+                conditions = pesso1__pseudevolucaoConds;
                 return;
 			}
 

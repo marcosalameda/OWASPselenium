@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Armaz03_ModalDBEdit(string partialView)
-		{
-			Armaz03_ViewModel model = new Armaz03_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Armaz03_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW ARMAZ03]/

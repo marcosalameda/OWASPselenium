@@ -18,6 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.ModelBinders;
+using GenioMVC.Helpers.Table.Properties;
 using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
@@ -813,10 +814,10 @@ namespace GenioMVC.ViewModels.Expen
 			// Limits Generation
 
 			// Area limit
-			despe___agregvalue___DoLoad &= AddCriteriaAreaLimit(despe___agregvalue___Conds, CSGenio.business.CSGenioAyear.FldCodyear, "year", this.ValCodyear, false);
+			despe___agregvalue___DoLoad &= AddCriteriaAreaLimit(despe___agregvalue___Conds, CSGenio.business.CSGenioAyear.FldCodyear, "year", this.ValCodyear, true);
 
 			// Area limit
-			despe___agregvalue___DoLoad &= AddCriteriaAreaLimit(despe___agregvalue___Conds, CSGenio.business.CSGenioAproje.FldCodproje, "proje", this.ValCodproje, false);
+			despe___agregvalue___DoLoad &= AddCriteriaAreaLimit(despe___agregvalue___Conds, CSGenio.business.CSGenioAproje.FldCodproje, "proje", this.ValCodproje, true);
 
 
             TableAgregValue = new TableDBEdit<Models.Agreg>();
@@ -1003,7 +1004,7 @@ namespace GenioMVC.ViewModels.Expen
                 if (GlobalFunctions.emptyG(this.ValCodaggre) == 1)
                 {
                     this.ValCodaggre = "";
-                    TableAgregValue.Value = 0;
+                    TableAgregValue.Value = 0m;
                     Navigation.ClearValue("agreg");
                 }
                 else if (lazyLoad)

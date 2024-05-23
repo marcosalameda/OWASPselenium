@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Infields_ModalDBEdit(string partialView)
-		{
-			Infields_ViewModel model = new Infields_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Infields_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW INFIELDS]/

@@ -127,8 +127,8 @@ namespace GenioMVC.ViewModels.Anexd
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("LANGU.LANGUA", new OrderedDictionary());
-					allSortOrders["LANGU.LANGUA"].Add("LANGU.LANGUA", "A");
+			allSortOrders.Add("LANGU.LANGUA", new OrderedDictionary());
+			allSortOrders["LANGU.LANGUA"].Add("LANGU.LANGUA", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Anexd_LanguValLangua_"));
@@ -220,8 +220,8 @@ namespace GenioMVC.ViewModels.Anexd
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("LANGU.LANGUA", new OrderedDictionary());
-					allSortOrders["LANGU.LANGUA"].Add("LANGU.LANGUA", "A");
+			allSortOrders.Add("LANGU.LANGUA", new OrderedDictionary());
+			allSortOrders["LANGU.LANGUA"].Add("LANGU.LANGUA", "A");
 
 
 
@@ -298,6 +298,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlangu.FldCodlang, CSGenioAlangu.Fld
 
 // USE /[MANUAL GQT OVERRQLSTEXP ANEXD_LANGULANGUA]/
 
+                conditions = anexd___langulangua__Conds;
                 return;
 			}
 

@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Extforms_ModalDBEdit(string partialView)
-		{
-			Extforms_ViewModel model = new Extforms_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Extforms_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW EXTFORMS]/

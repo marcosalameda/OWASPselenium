@@ -127,8 +127,8 @@ namespace GenioMVC.ViewModels.Tpeq1
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("FAMI1.FAMILY", new OrderedDictionary());
-					allSortOrders["FAMI1.FAMILY"].Add("FAMI1.FAMILY", "A");
+			allSortOrders.Add("FAMI1.FAMILY", new OrderedDictionary());
+			allSortOrders["FAMI1.FAMILY"].Add("FAMI1.FAMILY", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Tpeq1_Fami1ValFamily_"));
@@ -220,8 +220,8 @@ namespace GenioMVC.ViewModels.Tpeq1
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("FAMI1.FAMILY", new OrderedDictionary());
-					allSortOrders["FAMI1.FAMILY"].Add("FAMI1.FAMILY", "A");
+			allSortOrders.Add("FAMI1.FAMILY", new OrderedDictionary());
+			allSortOrders["FAMI1.FAMILY"].Add("FAMI1.FAMILY", "A");
 
 
 
@@ -298,6 +298,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAfami1.FldCodfamil, CSGenioAfami1.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP TPEQ1_FAMI1FAMILY]/
 
+                conditions = tpeq1___fami1family__Conds;
                 return;
 			}
 

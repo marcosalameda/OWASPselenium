@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Timequip_ModalDBEdit(string partialView)
-		{
-			Timequip_ViewModel model = new Timequip_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Timequip_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW TIMEQUIP]/

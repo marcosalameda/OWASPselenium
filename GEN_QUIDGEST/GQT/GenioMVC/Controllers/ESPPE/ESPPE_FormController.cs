@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Esppe_ModalDBEdit(string partialView)
-		{
-			Esppe_ViewModel model = new Esppe_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Esppe_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW ESPPE]/

@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Homeg_ModalDBEdit(string partialView)
-		{
-			Homeg_ViewModel model = new Homeg_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Homeg_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW HOMEG]/

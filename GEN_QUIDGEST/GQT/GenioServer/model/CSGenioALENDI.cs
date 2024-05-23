@@ -123,7 +123,7 @@ namespace CSGenio.business
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"start"}, new int[] {0}, "lendi", "codlendi"));
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"frequenc"}, new int[] {1}, "equip", "codequip"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 2, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return GlobalFunctions.SumDays(((DateTime)args[0]),((double)args[1]));
+				return GlobalFunctions.SumDays(((DateTime)args[0]),((decimal)args[1]));
 			});
 			info.RegisterFieldDB(Qfield);
 
@@ -204,7 +204,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"dayslimi"}, new int[] {0}, "lendi", "codlendi"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 1, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return ((((double)args[0])<0)?(1):(0));
+				return ((((decimal)args[0])<0)?(1):(0));
 			});
 			info.RegisterFieldDB(Qfield);
 
@@ -240,19 +240,19 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(13);
-			info.Pathways.Add("pess2","pess2");
 			info.Pathways.Add("pess1","pess1");
+			info.Pathways.Add("pess2","pess2");
 			info.Pathways.Add("equip","equip");
-			info.Pathways.Add("stake","pess2");
-			info.Pathways.Add("cmpny","pess2");
-			info.Pathways.Add("cntry","pess2");
+			info.Pathways.Add("stake","pess1");
 			info.Pathways.Add("cate2","pess1");
-			info.Pathways.Add("decom","equip");
+			info.Pathways.Add("cmpny","pess1");
+			info.Pathways.Add("cntry","pess1");
 			info.Pathways.Add("wareh","equip");
-			info.Pathways.Add("tpequ","equip");
+			info.Pathways.Add("decom","equip");
 			info.Pathways.Add("item","equip");
-			info.Pathways.Add("famil","equip");
+			info.Pathways.Add("tpequ","equip");
 			info.Pathways.Add("gitem","equip");
+			info.Pathways.Add("famil","equip");
 		}
 
 		/// <summary>
@@ -448,9 +448,9 @@ namespace CSGenio.business
 		private static FieldRef m_fldLendinnr = new FieldRef("lendi", "lendinnr");
 
 		/// <summary>Field : "Number of lending" Tipo: "N" Formula:  ""</summary>
-		public double ValLendinnr
+		public decimal ValLendinnr
 		{
-			get { return (double)returnValueField(FldLendinnr); }
+			get { return (decimal)returnValueField(FldLendinnr); }
 			set { insertNameValueField(FldLendinnr, value); }
 		}
 
@@ -532,9 +532,9 @@ namespace CSGenio.business
 		private static FieldRef m_fldDayslimi = new FieldRef("lendi", "dayslimi");
 
 		/// <summary>Field : "Days for return period" Tipo: "N" Formula: +H "iif(emptyD([LENDI->END])==1,0,Diferenca_entre_Datas([Today],[LENDI->END],"D"))"</summary>
-		public double ValDayslimi
+		public decimal ValDayslimi
 		{
-			get { return (double)returnValueField(FldDayslimi); }
+			get { return (decimal)returnValueField(FldDayslimi); }
 			set { insertNameValueField(FldDayslimi, value); }
 		}
 

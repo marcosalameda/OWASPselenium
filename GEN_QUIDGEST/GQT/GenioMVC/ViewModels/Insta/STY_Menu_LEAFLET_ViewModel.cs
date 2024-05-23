@@ -176,8 +176,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAinsta.FldCodinsta, CSGenioAinsta.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("INSTA.DESIGNAT", new OrderedDictionary());
-					allSortOrders["INSTA.DESIGNAT"].Add("INSTA.DESIGNAT", "A");
+			allSortOrders.Add("INSTA.DESIGNAT", new OrderedDictionary());
+			allSortOrders["INSTA.DESIGNAT"].Add("INSTA.DESIGNAT", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "STY_Menu_LEAFLET_"));
@@ -270,8 +270,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAinsta.FldCodinsta, CSGenioAinsta.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("INSTA.DESIGNAT", new OrderedDictionary());
-					allSortOrders["INSTA.DESIGNAT"].Add("INSTA.DESIGNAT", "A");
+			allSortOrders.Add("INSTA.DESIGNAT", new OrderedDictionary());
+			allSortOrders["INSTA.DESIGNAT"].Add("INSTA.DESIGNAT", "A");
 
 
 
@@ -358,6 +358,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAinsta.FldCodinsta, CSGenioAinsta.Fl
 
 // USE /[MANUAL STY OVERRQLSTEXP LEAFLET]/
 
+                conditions = sty_menu_leafletConds;
                 return;
 			}
 

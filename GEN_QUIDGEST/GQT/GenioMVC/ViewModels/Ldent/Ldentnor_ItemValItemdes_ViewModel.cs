@@ -134,8 +134,8 @@ namespace GenioMVC.ViewModels.Ldent
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("ITEM.ITEMDES", new OrderedDictionary());
-					allSortOrders["ITEM.ITEMDES"].Add("ITEM.ITEMDES", "A");
+			allSortOrders.Add("ITEM.ITEMDES", new OrderedDictionary());
+			allSortOrders["ITEM.ITEMDES"].Add("ITEM.ITEMDES", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Ldentnor_ItemValItemdes_"));
@@ -227,8 +227,8 @@ namespace GenioMVC.ViewModels.Ldent
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("ITEM.ITEMDES", new OrderedDictionary());
-					allSortOrders["ITEM.ITEMDES"].Add("ITEM.ITEMDES", "A");
+			allSortOrders.Add("ITEM.ITEMDES", new OrderedDictionary());
+			allSortOrders["ITEM.ITEMDES"].Add("ITEM.ITEMDES", "A");
 
 
 
@@ -330,6 +330,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAitem.FldCoditem, CSGenioAitem.FldZz
 
 // USE /[MANUAL GQT OVERRQLSTEXP LDENTNOR_ITEMITEMDES]/
 
+                conditions = ldentnoritem_itemdes_Conds;
                 return;
 			}
 

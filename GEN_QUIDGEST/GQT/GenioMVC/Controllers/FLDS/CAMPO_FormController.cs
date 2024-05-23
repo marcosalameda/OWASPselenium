@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Campo_ModalDBEdit(string partialView)
-		{
-			Campo_ViewModel model = new Campo_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Campo_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW CAMPO]/

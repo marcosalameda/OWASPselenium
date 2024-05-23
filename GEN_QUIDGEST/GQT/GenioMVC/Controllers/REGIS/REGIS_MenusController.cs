@@ -89,7 +89,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-            // USE /[MANUAL REG MENU_GET 111]/
+// USE /[MANUAL REG MENU_GET 111]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());

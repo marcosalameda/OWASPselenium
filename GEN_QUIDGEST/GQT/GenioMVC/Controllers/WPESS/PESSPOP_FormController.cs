@@ -93,18 +93,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		[AuthorizeForUsers]
-		public ActionResult Pesspop_ModalDBEdit(string partialView)
-		{
-			Pesspop_ViewModel model = new Pesspop_ViewModel();
-			model.setModes(Request.QueryString["m"]);
-			model.Navigation = Navigation;
-			model.Load(Request.Form, true, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
 		#region Pesspop_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW PESSPOP]/

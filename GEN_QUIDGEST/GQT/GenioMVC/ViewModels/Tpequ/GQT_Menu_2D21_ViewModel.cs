@@ -175,8 +175,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("TPEQU.TIPOEQUI", new OrderedDictionary());
-					allSortOrders["TPEQU.TIPOEQUI"].Add("TPEQU.TIPOEQUI", "A");
+			allSortOrders.Add("TPEQU.TIPOEQUI", new OrderedDictionary());
+			allSortOrders["TPEQU.TIPOEQUI"].Add("TPEQU.TIPOEQUI", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "GQT_Menu_2D21_"));
@@ -269,8 +269,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.Fl
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("TPEQU.TIPOEQUI", new OrderedDictionary());
-					allSortOrders["TPEQU.TIPOEQUI"].Add("TPEQU.TIPOEQUI", "A");
+			allSortOrders.Add("TPEQU.TIPOEQUI", new OrderedDictionary());
+			allSortOrders["TPEQU.TIPOEQUI"].Add("TPEQU.TIPOEQUI", "A");
 
 
 
@@ -357,6 +357,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.Fl
 
 // USE /[MANUAL GQT OVERRQLSTEXP 2D21]/
 
+                conditions = gqt_menu_2d21Conds;
                 return;
 			}
 
@@ -481,7 +482,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.Fl
             new TableSearchColumn("ValTipoequi", CSGenioAtpequ.FldTipoequi, typeof(string), defaultSearch : true),
             new TableSearchColumn("ValTpequcod", CSGenioAtpequ.FldTpequcod, typeof(string)),
             new TableSearchColumn("ValTpequpai", CSGenioAtpequ.FldTpequpai, typeof(string)),
-            new TableSearchColumn("ValNivel", CSGenioAtpequ.FldNivel, typeof(double)),
+            new TableSearchColumn("ValNivel", CSGenioAtpequ.FldNivel, typeof(decimal)),
             new TableSearchColumn("ValBackcolo", CSGenioAtpequ.FldBackcolo, typeof(string)),
             new TableSearchColumn("ValCorletra", CSGenioAtpequ.FldCorletra, typeof(string)),
             new TableSearchColumn("ValPrecomax", CSGenioAtpequ.FldPrecomax, typeof(decimal?)),

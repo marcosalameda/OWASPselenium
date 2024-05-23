@@ -18,6 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.ModelBinders;
+using GenioMVC.Helpers.Table.Properties;
 using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
@@ -609,7 +610,7 @@ namespace GenioMVC.ViewModels.Equip
 			// Limits Generation
 
 			// Area limit
-			accordi_pess1name____DoLoad &= AddCriteriaAreaLimit(accordi_pess1name____Conds, CSGenio.business.CSGenioAcmpny.FldCodempre, "cmpny", this.ValCodempre, false);
+			accordi_pess1name____DoLoad &= AddCriteriaAreaLimit(accordi_pess1name____Conds, CSGenio.business.CSGenioAcmpny.FldCodempre, "cmpny", this.ValCodempre, true);
 
 
             TablePess1Name = new TableDBEdit<Models.Pess1>();
@@ -853,7 +854,7 @@ namespace GenioMVC.ViewModels.Equip
 			// Limits Generation
 
 			// Area limit
-			accordi_pess1name____DoLoad &= AddCriteriaAreaLimit(accordi_pess1name____Conds, CSGenio.business.CSGenioAcmpny.FldCodempre, "cmpny", this.ValCodempre, false);
+			accordi_pess1name____DoLoad &= AddCriteriaAreaLimit(accordi_pess1name____Conds, CSGenio.business.CSGenioAcmpny.FldCodempre, "cmpny", this.ValCodempre, true);
 
 			if(!accordi_pess1name____DoLoad) return;
             List<ColumnSort> sorts = new List<ColumnSort>();

@@ -88,13 +88,13 @@ namespace GenioMVC.Models
 		[DisplayName("Latitude")]
 		/// <summary>Field : "Latitude" Tipo: "ND" Formula:  ""</summary>
 		[NumericAttribute(6)]
-		public decimal? ValLatitude { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLatitude, 6)); } set { klass.ValLatitude = Convert.ToDouble(value); } }
+		public decimal? ValLatitude { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLatitude, 6)); } set { klass.ValLatitude = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValLatitude() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Faci1.ValLatitude");
 
 		[DisplayName("Longitude")]
 		/// <summary>Field : "Longitude" Tipo: "ND" Formula:  ""</summary>
 		[NumericAttribute(6)]
-		public decimal? ValLongitud { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLongitud, 6)); } set { klass.ValLongitud = Convert.ToDouble(value); } }
+		public decimal? ValLongitud { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLongitud, 6)); } set { klass.ValLongitud = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValLongitud() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Faci1.ValLongitud");
 
 		[DisplayName("Geographical coordinate")]

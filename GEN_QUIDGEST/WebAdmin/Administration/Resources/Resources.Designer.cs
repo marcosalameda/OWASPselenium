@@ -27232,6 +27232,15 @@ namespace Administration.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Executar"
+        /// </summary>
+        public static string EXECUTAR63244 {
+            get {
+                return ResourceManager.GetString("EXECUTAR63244", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Agosto"
         /// </summary>
         public static string AGOSTO05568 {
@@ -49458,15 +49467,6 @@ namespace Administration.Resources {
         public static string QUEBRA_DE_PAGINA16720 {
             get {
                 return ResourceManager.GetString("QUEBRA_DE_PAGINA16720", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Executar"
-        /// </summary>
-        public static string EXECUTAR63244 {
-            get {
-                return ResourceManager.GetString("EXECUTAR63244", resourceCulture);
             }
         }
 

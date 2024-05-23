@@ -9203,6 +9203,9 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</valu
   <data name="Y_POSITION09776" xml:space="preserve">
     <value>Y position</value>
   </data>
+  <data name="EXECUTAR63244" xml:space="preserve">
+    <value>Execute</value>
+  </data>
   <data name="AGOSTO05568" xml:space="preserve">
     <value>Agosto</value>
   </data>
@@ -16616,9 +16619,6 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</value>
   </data>
   <data name="QUEBRA_DE_PAGINA16720" xml:space="preserve">
     <value>Page break</value>
-  </data>
-  <data name="EXECUTAR63244" xml:space="preserve">
-    <value>Execute</value>
   </data>
   <data name="FILTROS_ACTIVOS57698" xml:space="preserve">
     <value>Active filters</value>

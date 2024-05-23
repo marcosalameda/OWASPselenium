@@ -9081,6 +9081,9 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="Y position" code="Y_POSITION09776">
     <ENUS>Y position</ENUS>
   </msg>
+  <msg id="Executar" code="EXECUTAR63244">
+    <ENUS>Execute</ENUS>
+  </msg>
   <msg id="Agosto" code="AGOSTO05568">
     <ENUS>Agosto</ENUS>
   </msg>
@@ -16493,9 +16496,6 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</ENUS>
   </msg>
   <msg id="Quebra de Página" code="QUEBRA_DE_PAGINA16720">
     <ENUS>Page break</ENUS>
-  </msg>
-  <msg id="Executar" code="EXECUTAR63244">
-    <ENUS>Execute</ENUS>
   </msg>
   <msg id="Filtros activos" code="FILTROS_ACTIVOS57698">
     <ENUS>Active filters</ENUS>

@@ -92,6 +92,7 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "BY_OMISSION13050";
 
 			Qfield.Dupmsg = "";
+            Qfield.SufNDup = "documenr";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -

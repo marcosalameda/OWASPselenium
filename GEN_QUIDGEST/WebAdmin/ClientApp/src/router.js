@@ -126,6 +126,12 @@ export function setupRouter(i18n) {
         component: () => import(/* webpackChunkName: "manage_message" */ './views/Notifications/ManageMessage.vue'),
         props: true
     },
+    {
+      path: '/:culture/:system/ManageBlacklist',
+      name: 'manage_blacklist',
+      component: () => import(/* webpackChunkName: "manage_blacklist" */ './views/System_setup/ManageBlacklist.vue'),
+      props: true
+    },
   ];
 
     const router = createRouter({

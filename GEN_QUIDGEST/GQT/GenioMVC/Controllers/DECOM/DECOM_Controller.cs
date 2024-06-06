@@ -43,6 +43,7 @@ namespace GenioMVC.Controllers
         #region Programmers code...
 
 
+
         private List<string> GetActionIds(CriteriaSet crs, CSGenio.persistence.PersistentSupport sp = null)
         {
             CSGenio.business.Area area = CSGenio.business.Area.createArea<CSGenioAdecom>(UserContext.Current.User, UserContext.Current.User.CurrentModule);

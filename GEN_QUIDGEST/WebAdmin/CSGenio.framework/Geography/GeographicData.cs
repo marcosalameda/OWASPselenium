@@ -86,38 +86,46 @@ namespace CSGenio.framework.Geography
 
 		public IEnumerable<IGeometry> GetGeometryCollection()
 		{
-			if (!geoCollection.Any() && shapes.Any())
+			/*
+				A lock was added to mitigate an issue where, in the case of a dozen simultaneous requests 
+					for GetGlob, which is cached and contains geography fields, sometimes a corrupted element 
+					with a null value was added while cloning the glob.
+			*/
+			lock (geoCollection)
 			{
-				IGeometryFactory gf = NtsGeometryServices.Instance.CreateGeometryFactory(SRID);
-
-				foreach (GeographicShape shape in shapes)
+				if (!geoCollection.Any() && shapes.Any())
 				{
-					switch (shape.type)
-					{
-						case GeographicShape.LINESTRING:
-							IGeometry polyline = CreatePolyline(gf, shape);
-							if (polyline != null)
-								geoCollection.Add(polyline);
-							break;
-						case GeographicShape.POLYGON:
-						case GeographicShape.RECTANGLE:
-							IGeometry polygon = CreatePolygon(gf, shape);
-							if (polygon != null)
-								geoCollection.Add(polygon);
-							break;
-						case GeographicShape.POINT:
-							if (shape.latlng != null)
-							{
-								double lat = shape.latlng.lat;
-								double lng = shape.latlng.lng;
+					IGeometryFactory gf = NtsGeometryServices.Instance.CreateGeometryFactory(SRID);
 
-								var coord = new Coordinate(lng, lat);
-								IPoint point = gf.CreatePoint(coord);
-								geoCollection.Add(point);
-							}
-							break;
-						default:
-							throw new NotImplementedException();
+					foreach (GeographicShape shape in shapes)
+					{
+						switch (shape.type)
+						{
+							case GeographicShape.LINESTRING:
+								IGeometry polyline = CreatePolyline(gf, shape);
+								if (polyline != null)
+									geoCollection.Add(polyline);
+								break;
+							case GeographicShape.POLYGON:
+							case GeographicShape.RECTANGLE:
+								IGeometry polygon = CreatePolygon(gf, shape);
+								if (polygon != null)
+									geoCollection.Add(polygon);
+								break;
+							case GeographicShape.POINT:
+								if (shape.latlng != null)
+								{
+									double lat = shape.latlng.lat;
+									double lng = shape.latlng.lng;
+
+									var coord = new Coordinate(lng, lat);
+									IPoint point = gf.CreatePoint(coord);
+									geoCollection.Add(point);
+								}
+								break;
+							default:
+								throw new NotImplementedException();
+						}
 					}
 				}
 			}

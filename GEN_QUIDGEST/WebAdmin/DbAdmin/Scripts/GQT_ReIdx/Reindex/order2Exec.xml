@@ -117,7 +117,7 @@
 	<Function Id="UPGRADECLIENT2" Name="Upgrade Client" Type="SQL" Help="" Connection="Normal" Selected="true" TimeoutMult="10" Selectable="false">
 	  <Scripts>
  		<!-- User defined ReIndexItems -->
-     </Scripts>
+      </Scripts>
 	</Function>
 	
 	<Function Id="UPDATEFORMULAFIELDS" Name="Update FormulaFields" Help="" Connection="Normal" Selected="true" TimeoutMult="10" Selectable="true">

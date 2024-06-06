@@ -2621,7 +2621,7 @@ namespace CSGenio.business
             }
             catch (GenioException ex)
 			{
-				throw new BusinessException(ex.UserMessage, "DbArea.inserir_WS", "Error inserting record in DbArea: " + ex.Message, ex);
+				throw new BusinessException(ex.UserMessage, "DbArea.inserir_WS", "Error inserting record in DbArea: " + ex.Message, ex, ex.ErrorStack);
 			}
 
             if (Qresult.Status != Status.W)

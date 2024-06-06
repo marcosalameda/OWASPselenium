@@ -135,12 +135,12 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(6);
-			info.Pathways.Add("pess1","pess1");
 			info.Pathways.Add("pess2","pess2");
-			info.Pathways.Add("stake","pess1");
+			info.Pathways.Add("pess1","pess1");
+			info.Pathways.Add("stake","pess2");
+			info.Pathways.Add("cmpny","pess2");
+			info.Pathways.Add("cntry","pess2");
 			info.Pathways.Add("cate2","pess1");
-			info.Pathways.Add("cmpny","pess1");
-			info.Pathways.Add("cntry","pess1");
 		}
 
 		/// <summary>

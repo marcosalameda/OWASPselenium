@@ -2,6 +2,8 @@ using CSGenio.framework;
 using System.ComponentModel.DataAnnotations;
 using System.Xml.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using CSGenio.config;
+using IConfigurationManager = CSGenio.config.IConfigurationManager;
 
 namespace Administration.AuxClass
 {
@@ -42,21 +44,12 @@ namespace Administration.AuxClass
             return sizeIdxDb;
         }	
 
-		public static int GetConfigVersion()
+		public static int GetConfigVersion(IConfigurationManager configManager)
         {
             try
             {
-                string pathConfig = Configuration.GetConfigPath();
-                pathConfig = Path.Combine(pathConfig, "Configuracoes.xml");
-
-                //read configuration document
-                XDocument xmlConfig = XDocument.Load(pathConfig);
-                XAttribute version = xmlConfig.Descendants().Attributes("configVersion").FirstOrDefault();
-                if (version == null)
-                    return 0;
-
-                //parse configuration verion
-                return Int32.Parse(version.Value);
+                var config = configManager.GetExistingConfig();
+                return int.Parse(config.ConfigVersion);
             }
             catch (Exception)
             {
@@ -64,26 +57,23 @@ namespace Administration.AuxClass
             }
         }
         
-        public static bool CheckXMLIsValid()
+        public static bool CheckXMLIsValid(IConfigurationManager configManager)
         {
-            string pathConfig = Configuration.GetConfigPath();
-            pathConfig = Path.Combine(pathConfig, "Configuracoes.xml");
-            
+
             //check if file exists
-            if (!System.IO.File.Exists(pathConfig))
+            if (!configManager.Exists())
                 return false;
 
-            int version = GetConfigVersion();
+            int version = GetConfigVersion(configManager);
             if (version == -1 || version != GenioServer.framework.ConfigXMLMigration.CurConfigurationVerion)
                 return false;
 
             return true;
         }
 		
-		public static CSGenio.persistence.PersistentSupport GetPersistentSupport(string year)
+		public static CSGenio.persistence.PersistentSupport GetPersistentSupport(IConfigurationManager configManager, string year)
         {
-            string pathConfig = Configuration.GetConfigPath();
-            CSGenio.ConfigurationXML conf = CSGenio.ConfigurationXML.readXML(pathConfig + Path.DirectorySeparatorChar + "Configuracoes.xml");
+            var conf = configManager.GetExistingConfig();
             var dataSystem = conf.DataSystems.FirstOrDefault(ds => ds.Name == year);
             return CSGenio.persistence.PersistentSupport.getPersistentSupport(dataSystem.Name);
         }

@@ -122,22 +122,10 @@ namespace CSGenio.framework
 			ROLE_A.Add(ROLE_20);         
 			ROLE_A.Add(ADMINISTRATION);         
 			ROLE_A.Add(ROLE_20);         
-			ROLE_A.Add(ADMINISTRATION);         
-			ROLE_A.Add(ROLE_20);         
-			ROLE_A.Add(ADMINISTRATION);         
-			ROLE_A.Add(ROLE_20);         
 
 			ROLE_ADMINISTRATOR.Add(ROLE_SYSADMIN);         
 			ROLE_ADMINISTRATOR.Add(ROLE_SYSADMIN);         
-			ROLE_ADMINISTRATOR.Add(ROLE_SYSADMIN);         
-			ROLE_ADMINISTRATOR.Add(ROLE_SYSADMIN);         
 
-			ROLE_EDIT.Add(ROLE_MANAGER);         
-			ROLE_EDIT.Add(ROLE_SYSADMIN);         
-			ROLE_EDIT.Add(ROLE_ADMINISTRATOR);         
-			ROLE_EDIT.Add(ROLE_MANAGER);         
-			ROLE_EDIT.Add(ROLE_SYSADMIN);         
-			ROLE_EDIT.Add(ROLE_ADMINISTRATOR);         
 			ROLE_EDIT.Add(ROLE_MANAGER);         
 			ROLE_EDIT.Add(ROLE_SYSADMIN);         
 			ROLE_EDIT.Add(ROLE_ADMINISTRATOR);         
@@ -149,18 +137,10 @@ namespace CSGenio.framework
 			ROLE_EDIT_PESSO.Add(ROLE_ADMINISTRATOR);         
 			ROLE_EDIT_PESSO.Add(ROLE_20);         
 			ROLE_EDIT_PESSO.Add(ROLE_ADMINISTRATOR);         
-			ROLE_EDIT_PESSO.Add(ROLE_20);         
-			ROLE_EDIT_PESSO.Add(ROLE_ADMINISTRATOR);         
-			ROLE_EDIT_PESSO.Add(ROLE_20);         
-			ROLE_EDIT_PESSO.Add(ROLE_ADMINISTRATOR);         
 
 			ROLE_EMPLOYEE.Add(ROLE_MANAGER);         
 			ROLE_EMPLOYEE.Add(ROLE_MANAGER);         
-			ROLE_EMPLOYEE.Add(ROLE_MANAGER);         
-			ROLE_EMPLOYEE.Add(ROLE_MANAGER);         
 
-			ROLE_MANAGER.Add(ROLE_ADMINISTRATOR);         
-			ROLE_MANAGER.Add(ROLE_ADMINISTRATOR);         
 			ROLE_MANAGER.Add(ROLE_ADMINISTRATOR);         
 			ROLE_MANAGER.Add(ROLE_ADMINISTRATOR);         
 
@@ -169,17 +149,7 @@ namespace CSGenio.framework
 			ROLE_VIEW.Add(ROLE_EMPLOYEE);         
 			ROLE_VIEW.Add(ROLE_EDIT);         
 			ROLE_VIEW.Add(ROLE_EMPLOYEE);         
-			ROLE_VIEW.Add(ROLE_EDIT);         
-			ROLE_VIEW.Add(ROLE_EMPLOYEE);         
-			ROLE_VIEW.Add(ROLE_EDIT);         
-			ROLE_VIEW.Add(ROLE_EMPLOYEE);         
 
-			ROLE_VIEW_PESSO.Add(ROLE_EDIT_PESSO);         
-			ROLE_VIEW_PESSO.Add(ROLE_1);         
-			ROLE_VIEW_PESSO.Add(ROLE_EMPLOYEE);         
-			ROLE_VIEW_PESSO.Add(ROLE_EDIT_PESSO);         
-			ROLE_VIEW_PESSO.Add(ROLE_1);         
-			ROLE_VIEW_PESSO.Add(ROLE_EMPLOYEE);         
 			ROLE_VIEW_PESSO.Add(ROLE_EDIT_PESSO);         
 			ROLE_VIEW_PESSO.Add(ROLE_1);         
 			ROLE_VIEW_PESSO.Add(ROLE_EMPLOYEE);         

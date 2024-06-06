@@ -62,6 +62,7 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
+            Qfield.SufNDup = "line";
 //Actualiza as seguintes réplicas:
 			Qfield.ReplicaDestinationList = new List<ReplicaDestination>();
 			Qfield.ReplicaDestinationList.Add( new ReplicaDestination("GQT", "gqtlnhde", "codlnhpd", "codpedid"));

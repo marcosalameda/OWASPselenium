@@ -29,7 +29,33 @@ namespace CSGenio.business
             DataMatrix dm;
             sp.openConnection();
 
-            /* --- GQTAddress --- */
+            /* --- GQTAAA --- */
+            dm = sp.Execute(
+                new SelectQuery()
+                .Select(CSGenioAaaa.FldCodaaa)
+                .From(CSGenioAaaa.AreaAAA)
+                .Where(CriteriaSet.And().In(CSGenioAaaa.FldZzstate, zzstateToRemove))
+                );
+
+            for (int i = 0; i < dm.NumRows; i++)
+            {
+                CSGenioAaaa model = new CSGenioAaaa(user);
+                model.ValCodaaa = dm.GetKey(i, 0);
+
+                try
+                {
+                    model.delete(sp);
+                }
+                //Not every exception should be allowed to continue record deletion, only business exceptions need to be caught and allow to deletion continue.
+                //If there are other types of exceptions, such as database connection problems, for example, execution should be stopped immediately
+                catch(BusinessException ex)
+                {
+                    Log.Error((ex.UserMessage != null) ? ex.UserMessage : ex.Message);
+                }
+            }
+                
+
+            /* --- GQTAddress0 --- */
             dm = sp.Execute(
                 new SelectQuery()
                 .Select(CSGenioAaddre.FldCodaddre)
@@ -3347,5 +3373,5 @@ namespace CSGenio.business
 
 
  
-       }
+        }
 }

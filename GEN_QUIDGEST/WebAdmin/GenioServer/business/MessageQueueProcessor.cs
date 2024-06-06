@@ -542,11 +542,7 @@ namespace GenioServer.business
             }
             bool res = false;
             value = DateTime.MinValue;
-            string[] formats = {"M/d/yyyy h:mm:ss tt", "M/d/yyyy h:mm tt",
-                       "MM/dd/yyyy hh:mm:ss", "M/d/yyyy h:mm:ss", "dd/MM/yyyy",
-                       "M/d/yyyy hh:mm tt", "M/d/yyyy hh tt",
-                       "M/d/yyyy h:mm", "M/d/yyyy h:mm",
-                       "MM/dd/yyyy hh:mm", "M/dd/yyyy hh:mm", "dd/MM/yyyy hh:mm:ss"};
+            string[] formats = { "dd/MM/yyyy", "dd/MM/yyyy HH:mm", "dd/MM/yyyy HH:mm:ss" };
             if (node != null)
             {
                 res = true;
@@ -893,6 +889,9 @@ namespace GenioServer.business
             if (mQueueACK.Equals(MQueueACK.ReplyPROGRESS))
                 QueueAckObj.progress = progress;
 
+            if(queueXml == null)
+                return new QueueResponse { Ack = MQueueACK.ReplyIGNORE };
+
             //TODO: passar a gravar as mensagens na BD e só apagar quando o retorno do envio = OK!
             if (queueXml.ChildNodes.Count > 0)
             {
@@ -1082,7 +1081,7 @@ namespace GenioServer.business
         /// <param name="orderExec">Ordered execution list</param>
         /// <param name="zero">if true, reindex with /zero</param>
         /// <param name="changedExecutionScript">Callback funtion for progress tracing</param>
-        private void TracedReindex(string year, string username, string password, List<ExecuteQueryCore.RdxScript> orderExec, bool zero, ExecuteQueryCore.ChangedEventHandler changedExecutionScript = null)
+        public void TracedReindex(string year, string username, string password, List<ExecuteQueryCore.RdxScript> orderExec, bool zero, ExecuteQueryCore.ChangedEventHandler changedExecutionScript = null)
         {
             ExecuteQueryCore.RdxParamUpgradeSchema param = new ExecuteQueryCore.RdxParamUpgradeSchema();
             param.Year = year;

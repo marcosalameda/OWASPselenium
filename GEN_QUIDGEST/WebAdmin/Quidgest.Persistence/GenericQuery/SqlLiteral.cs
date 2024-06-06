@@ -6,6 +6,7 @@ namespace Quidgest.Persistence.GenericQuery
 {
     /// <summary>
     /// Represents a literal value. It must be used only for literal, otherwise it will work like 'SqlValue'(Creating parameters).
+    /// This should only be used for edge cases not supported by SqlValue
     /// </summary>
     public class SqlLiteral : ISqlExpression
     {

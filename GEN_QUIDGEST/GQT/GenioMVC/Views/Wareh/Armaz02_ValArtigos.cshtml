@@ -31,17 +31,13 @@
             column.Expression(p => p.ValCoditem, true).Hidden();
 
 // USE /[MANUAL GQT CUSTOM_COLUMN ARMAZ02_ARTIGOS_ITEM_ITEMDES]/
-		column.Expression(p => p.ValItemdes).Title(@Resources.ARTICLE60065).Field("ValItemdes").Size(30);
+		column.Expression(p => p.ValItemdes).Title(@Resources.ARTICLES59822).Field("ValItemdes").Size(30);
 // USE /[MANUAL GQT CUSTOM_COLUMN ARMAZ02_ARTIGOS_ITEM_ITEMCOD]/
 		column.Expression(p => p.ValItemcod).Title(@Resources.CODE49225).Field("ValItemcod").Size(15);
-// USE /[MANUAL GQT CUSTOM_COLUMN ARMAZ02_ARTIGOS_ITEM_ENTRIES]/
-		column.Expression(p => p.ValEntries).Title(@Resources.ENTRIES32319).Field("ValEntries").Size(10);
-// USE /[MANUAL GQT CUSTOM_COLUMN ARMAZ02_ARTIGOS_ITEM_EXITS]/
-		column.Expression(p => p.ValExits).Title(@Resources.OUTPUTS47833).Field("ValExits").Size(10);
-// USE /[MANUAL GQT CUSTOM_COLUMN ARMAZ02_ARTIGOS_ITEM_EXISTENC]/
-		column.Expression(p => p.ValExistenc).Title(@Resources.STOCKS47349).Field("ValExistenc").Size(10);
-// USE /[MANUAL GQT CUSTOM_COLUMN ARMAZ02_ARTIGOS_ITEM_IMAGE]/
-		column.Expression(p => Html.ImageMagnifierZoom(p.ValImage, new {alt=@Resources.IMAGE65174,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCoditem, modelname = "Item", fldname = "ValImage" }))).Title(@Resources.IMAGE65174).Field("ValImage").Size(3);
+// USE /[MANUAL GQT CUSTOM_COLUMN ARMAZ02_ARTIGOS_ITEM_VALID]/
+		column.Expression(p => p.ValValid).Title(@Resources.IN_USE42606).Field("ValValid").Size(1);
+// USE /[MANUAL GQT CUSTOM_COLUMN ARMAZ02_ARTIGOS_ITEM_ITEMTYPE]/
+		column.Expression(p => p.ArrayValitemtype).Title(@Resources.TYPE00312).Field("ValItemtype", "ArrayTipoarti").Size(1);
             column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
         })
         .SetLimits(this.Model.tableLimits)

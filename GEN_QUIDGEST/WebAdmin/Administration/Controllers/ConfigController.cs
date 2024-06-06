@@ -9,6 +9,11 @@ using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.Mvc;
 using DbAdmin;
 using CSGenio.config;
+using System.Data.SqlClient;
+using CSGenio.persistence;
+using System.Data;
+using Quidgest.Persistence.GenericQuery;
+
 
 namespace Administration.Controllers
 {
@@ -28,7 +33,7 @@ namespace Administration.Controllers
             if(!configManager.Exists())
                 return Json(new { redirect = "dashboard" });
 
-            if (!AuxFunctions.CheckXMLIsValid())
+            if (!AuxFunctions.CheckXMLIsValid(configManager))
                 return Json(new { redirect = "config_migration" });
 
             var model = new Models.ConfigModel();
@@ -299,6 +304,7 @@ namespace Administration.Controllers
             model.PasswordStrength = security.PasswordStrength;
             model.PasswordAlgorithms = security.PasswordAlgorithms;
             model.SessionTimeOut = security.SessionTimeOut;
+            model.UsePasswordBlacklist = security.UsePasswordBlacklist;
 
             model.IdentityProviders = new List<Models.IdentityProviderCfg>();
             int rownum = 0;
@@ -725,6 +731,7 @@ namespace Administration.Controllers
 					security.PasswordStrength = model.PasswordStrength;
 					security.PasswordAlgorithms = model.PasswordAlgorithms;
 					security.MaxAttempts = model.MaxAttempts;
+                    security.UsePasswordBlacklist = model.UsePasswordBlacklist;
 
 					configManager.StoreConfig(conf);
 				}
@@ -965,5 +972,131 @@ namespace Administration.Controllers
 
             return Json(new { Success = true });            
         }
+
+
+        private int CountBlacklistedPasswords(PersistentSupport sp)
+        {
+            SelectQuery select = new SelectQuery()
+                .Select(SqlFunctions.Count(1), "COUNT")
+                .From("PswBlacklist");
+            return DBConversion.ToInteger(sp.executeScalar(select));
+        }
+
+        [HttpGet]
+        public IActionResult ManagePasswordBlacklist()
+        {
+            PersistentSupport sp = PersistentSupport.getPersistentSupport(CurrentYear);
+            sp.openConnection();
+            var numPasswords = CountBlacklistedPasswords(sp);
+            sp.closeConnection();
+
+            return Json(new { Success = true, numPasswords});
+        }
+
+        [HttpPost]
+        public IActionResult BlacklistUpload(IFormFile file)
+        {
+            PersistentSupport sp = PersistentSupport.getPersistentSupport(CurrentYear);
+            sp.openConnection();
+
+            using var stream = new StreamReader(file.OpenReadStream());
+
+            if(sp.DatabaseType == DatabaseType.SQLSERVER2008 
+                || sp.DatabaseType == DatabaseType.SQLSERVER2005
+                || sp.DatabaseType == DatabaseType.SQLSERVER2000)
+            {
+                string ?line;
+                DataTable dt = new DataTable();
+                var col0 = new DataColumn("pass");
+                dt.Columns.Add(col0);
+                while((line = stream.ReadLine()) != null) 
+                {
+                    var row = dt.NewRow();
+                    row.SetField(col0, line.ToLowerInvariant());
+                    dt.Rows.Add(row);
+                }
+
+                using var copy = new SqlBulkCopy(sp.Connection as SqlConnection);
+                copy.DestinationTableName = "PswBlacklist";
+                copy.WriteToServer(dt);
+            }
+            else
+            {
+                string ?line;
+                while((line = stream.ReadLine()) != null) 
+                {
+                    InsertQuery ins = new InsertQuery()
+                        .Into("PswBlacklist")
+                        .Value("pass", line.ToLowerInvariant());
+                    sp.Execute(ins);
+                }
+            }
+
+            var numPasswords = CountBlacklistedPasswords(sp);
+            sp.closeConnection();
+            return Json(new { Success = true, numPasswords });
+        }
+
+        [HttpGet]
+        public IResult BlacklistDownload()
+        {
+            PersistentSupport sp = PersistentSupport.getPersistentSupport(CurrentYear);
+            sp.openConnection();
+
+            SelectQuery select = new SelectQuery()
+                .Select("PswBlacklist", "pass")
+                .From("PswBlacklist");
+
+            var rows = sp.executeReaderOneColumn(select);
+            var memory = new MemoryStream();
+            using var stream = new StreamWriter(memory, Encoding.UTF8);
+            foreach(var row in rows)
+                stream.WriteLine(row.ToString());
+            stream.Close();
+
+            var memout = new MemoryStream(memory.GetBuffer(), false);
+            return Results.File(memout, "text/plain", "blacklist.txt");
+        }
+
+        public record PasswordReq(string password);
+
+        [HttpPost]
+        public IActionResult BlacklistPasswordCheck([FromBody] PasswordReq req)
+        {
+            PersistentSupport sp = PersistentSupport.getPersistentSupport(CurrentYear);
+            sp.openConnection();
+            var found = GenioServer.security.PasswordFactory.CheckBlacklisted(sp, req.password);
+            sp.closeConnection();
+
+            return Json(new { Success = true, found });
+        }
+
+        [HttpPost]
+        public IActionResult BlacklistPasswordAdd([FromBody] PasswordReq req)
+        {
+            PersistentSupport sp = PersistentSupport.getPersistentSupport(CurrentYear);
+            sp.openConnection();
+            InsertQuery ins = new InsertQuery()
+                .Into("PswBlacklist")
+                .Value("pass", req.password);
+            sp.Execute(ins);
+            var numPasswords = CountBlacklistedPasswords(sp);
+            sp.closeConnection();
+            return Json(new { Success = true, numPasswords });
+        }
+
+        [HttpPost]
+        public IActionResult BlacklistPasswordClear()
+        {
+            PersistentSupport sp = PersistentSupport.getPersistentSupport(CurrentYear);
+            sp.openConnection();
+            DeleteQuery del = new DeleteQuery().Delete("PswBlacklist");
+            sp.Execute(del);
+            var numPasswords = CountBlacklistedPasswords(sp);
+            sp.closeConnection();
+            return Json(new { Success = true, numPasswords });
+        }
+
+
     }
 }

@@ -40,8 +40,8 @@
         .TableList(hasFilters: false)
         .RequestLink(@Url.Action("Proje_ValDespesas", new { id = Model.ValCodproje, partialView = "Proje_ValDespesas"}))
         .Form("Despe", false, false)
-        .SetFollowUp("Despe_Show", "Expen" , (Func<GenioMVC.Models.Expen, object>)(item => new { id = item.ValCoddespe }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
         .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
+        .MultipleSelection()
 		;
         
 }

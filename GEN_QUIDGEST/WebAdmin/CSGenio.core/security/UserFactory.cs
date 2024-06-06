@@ -199,6 +199,9 @@ namespace GenioServer.security
                 userPsw.ValPswtype = Configuration.Security.PasswordAlgorithms.ToString();
 				userPsw.ValDatexp = CalculateExpirationDate();
                 string error = PasswordFactory.CheckValidPassToCreate(userPsw.ValNome, password.New, password.Confirm, user.Language);
+                if(Configuration.Security.UsePasswordBlacklist && PasswordFactory.CheckBlacklisted(sp, password.New))
+                    error = Translations.GetByCode("PASSWORD_VULNERAVEL_00083", user.Language);
+
                 if (error != "")
                     throw new InvalidPasswordException(error, "UserRegistration.CreateNewUser", error);
             }
@@ -219,6 +222,9 @@ namespace GenioServer.security
                 userPsw.ValSalt = "";
                 userPsw.ValPswtype = Configuration.Security.PasswordAlgorithms.ToString();
                 string error = PasswordFactory.CheckValidPassToCreate(userPsw.ValNome, password.New, password.Confirm, user.Language);
+                if(Configuration.Security.UsePasswordBlacklist && PasswordFactory.CheckBlacklisted(sp, password.New))
+                    error = Translations.GetByCode("PASSWORD_VULNERAVEL_00083", user.Language);
+
                 if (error != "")
                     throw new InvalidPasswordException(error, "UserRegistration.CreateNewUser", error);
             }

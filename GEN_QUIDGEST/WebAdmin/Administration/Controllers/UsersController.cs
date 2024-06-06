@@ -11,7 +11,7 @@ using DbAdmin;
 
 namespace Administration.Controllers
 {
-    public class UsersController : ControllerBase
+    public class UsersController(CSGenio.config.IConfigurationManager configManager) : ControllerBase
     {
         [HttpGet]
         public IActionResult Index()
@@ -125,15 +125,7 @@ namespace Administration.Controllers
                 List<object> dataResult = new List<object>();
 
                 // Init Persistent Support
-                string pathConfig = CSGenio.framework.Configuration.GetConfigPath();
-                ConfigurationXML conf = ConfigurationXML.readXML(pathConfig + Path.DirectorySeparatorChar + "Configuracoes.xml");
-
-                var dataSystem = conf.DataSystems.FirstOrDefault(ds => ds.Name == CurrentYear); // Default == null
-
-                if (dataSystem == null)
-                    throw new FrameworkException(Resources.Resources.FICHEIRO_DE_CONFIGUR13972, "UserController -> GetUserList", Resources.Resources.FICHEIRO_DE_CONFIGUR13972);
-
-                var sp = PersistentSupport.getPersistentSupport(dataSystem.Name);
+                var sp = AuxFunctions.GetPersistentSupport(configManager, CurrentYear);
 
                 sp.openConnection();
                 DataMatrix dataSet = sp.Execute(selQuery);
@@ -249,7 +241,7 @@ namespace Administration.Controllers
         public IActionResult ImportUsersFromAD(string dominio)
         {
             User user = SysConfiguration.CreateWebAdminUser();
-            PersistentSupport sp = AuxFunctions.GetPersistentSupport(CurrentYear);
+            PersistentSupport sp = AuxFunctions.GetPersistentSupport(configManager, CurrentYear);
             StatusMessage st =  new GlobalFunctions(user, user.CurrentModule, sp).ImportUsersFromAD(dominio);
             return Json(new { Status = st.Status.ToString(), });
         }
@@ -277,7 +269,7 @@ namespace Administration.Controllers
             //Page 1
             SelectQuery p1Query = new SelectQuery()
                     .Select(CSGenioApsw.FldNome, Resources.Resources.NOME_DE_UTILIZADOR58858)
-                    .Select(SqlFunctions.Iif(CriteriaSet.Or().Equal(CSGenioApsw.FldStatus, "1").Equal(CSGenioApsw.FldZzstate, "1"),
+                    .Select(SqlFunctions.Iif(CriteriaSet.Or().NotEqual(CSGenioApsw.FldStatus, "0").NotEqual(CSGenioApsw.FldZzstate, "0"),
                     Resources.Resources.INACTIVE23138, Resources.Resources.ACTIVE03270), Resources.Resources.ESTADO07788)
                     .From(Area.AreaPSW.Table, Area.AreaPSW.Alias)
                     .OrderBy(CSGenioApsw.FldNome, SortOrder.Ascending);

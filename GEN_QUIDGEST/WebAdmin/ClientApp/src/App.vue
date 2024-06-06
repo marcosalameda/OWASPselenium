@@ -125,9 +125,6 @@
       }
     },
     methods: {
-      navigateTo: function (name) {
-        this.$router.push({ name: name, params: { culture: this.currentLang, system: this.currentYear } }, () => { }, () => { });
-      },
         setYears: function (years, defaultYear) {
             var vm = this,
                 _years = years || [];

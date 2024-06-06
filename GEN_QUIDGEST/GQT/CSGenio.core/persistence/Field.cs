@@ -121,6 +121,11 @@ namespace CSGenio.framework
         /// Unique prefix
         /// </summary>
         public string PrefNDup { get; set; }
+		
+		/// <summary>
+        /// Unique suffix (The field that has this field as its unique prefix)
+        /// </summary>
+        public string SufNDup { get; set; }
 
         /// <summary>
         /// Unique message

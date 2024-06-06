@@ -24,7 +24,7 @@ using DbAdmin;
 
 namespace Administration.Controllers
 {
-    public class DbAdminController : ControllerBase
+    public class DbAdminController(CSGenio.config.IConfigurationManager configManager) : ControllerBase
     {
         private static RdxParamUpgradeSchema RdxItem = null;
         private static CancellationTokenSource reindexCTknSrc = null;
@@ -233,13 +233,11 @@ namespace Administration.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            if (!AuxFunctions.CheckXMLIsValid())
+            if (!AuxFunctions.CheckXMLIsValid(configManager))
                 return Json(new { redirect = "config_migration" });
 
             var Year = CurrentYear;
-            string pathConfig = CSGenio.framework.Configuration.GetConfigPath();
-            ConfigurationXML conf = ConfigurationXML.readXML(pathConfig + Path.DirectorySeparatorChar + "Configuracoes.xml");
-            CSGenio.framework.Configuration.ReadConfiguration(conf);
+            ConfigurationXML conf = configManager.GetExistingConfig();
 
             var dataSystem = conf.DataSystems.FirstOrDefault(ds => ds.Name == Year); // Default == null
 

@@ -468,12 +468,12 @@ namespace GenioMVC.Controllers
 			string saveMsg = TempData["NEW_SAVE_LIST"] as string;
 
 			if (!internalRedirect || !Request.IsAjaxRequest())
-				SuccessMessage(String.IsNullOrEmpty(saveMsg) ? Resources.Resources.ALTERACOES_EFECTUADA64514 + GetHumanKeyToQMessage("regis", Convert.ToString(Navigation.CurrentLevel.GetEntry("regis"))) : saveMsg);
+				SuccessMessage(String.IsNullOrEmpty(saveMsg) ? Resources.Resources.ALTERACOES_EFETUADAS10166 + GetHumanKeyToQMessage("regis", Convert.ToString(Navigation.CurrentLevel.GetEntry("regis"))) : saveMsg);
 
 			Navigation.RemoveHistoryLevel();
 
 			if (Request.IsAjaxRequest()) // Ajax result for nested form
-				return Json(new { Success = true, Operation = "Edit", Message = String.IsNullOrEmpty(saveMsg) ? Resources.Resources.ALTERACOES_EFECTUADA64514 : saveMsg, Warnings = warningMsgs }, JsonRequestBehavior.AllowGet);
+				return Json(new { Success = true, Operation = "Edit", Message = String.IsNullOrEmpty(saveMsg) ? Resources.Resources.ALTERACOES_EFETUADAS10166 : saveMsg, Warnings = warningMsgs }, JsonRequestBehavior.AllowGet);
 
 			//verify if the current level has a skipifjustone option, and remove it from history
 			if (Navigation.CurrentLevel.CheckEntry("SkipIfJustOne"))

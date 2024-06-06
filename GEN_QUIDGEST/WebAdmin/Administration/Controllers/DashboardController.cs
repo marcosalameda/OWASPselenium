@@ -45,7 +45,7 @@ namespace Administration.Controllers
             model.HasConfig = true;
 
             //check if config have the last version
-            if (!AuxFunctions.CheckXMLIsValid())
+            if (!AuxFunctions.CheckXMLIsValid(configManager))
                 model.ResultErrors = calculateErrors(model);
             else { model.HasValidConfig = true; }
 

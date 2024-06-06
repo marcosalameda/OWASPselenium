@@ -422,7 +422,7 @@ namespace GenioMVC.Controllers
             if (CSGenio.framework.Log.IsDebugEnabled)
                 CSGenio.framework.Log.Debug("Controller success " + (DateTime.Now.Ticks - st) / TimeSpan.TicksPerMillisecond + "ms");
             if (Request.IsAjaxRequest())
-                return Json(new { Success = true, Operation = "Edit", Message = Resources.Resources.ALTERACOES_EFECTUADA64514 });
+                return Json(new { Success = true, Operation = "Edit", Message = Resources.Resources.ALTERACOES_EFETUADAS10166 });
 
             Navigation.RemoveHistoryLevel();
 

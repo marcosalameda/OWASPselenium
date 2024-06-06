@@ -4,24 +4,17 @@ using CSGenio;
 using CSGenio.business;
 using CSGenio.framework;
 using CSGenio.persistence;
-using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Net;
-using System.Net.Http;
 using Microsoft.AspNetCore.Mvc;
 using GenioServer.security;
 using DbAdmin;
 
+
 namespace Administration.Controllers
 {
-    public class ManageUsersController : ControllerBase
+    public class ManageUsersController(CSGenio.config.IConfigurationManager configManager) : ControllerBase
     {
         [HttpGet]
         public IActionResult Index()
@@ -76,8 +69,7 @@ namespace Administration.Controllers
 
         private void loadDBUser(ref ManageUsersModel model)
         {
-            string pathConfig = CSGenio.framework.Configuration.GetConfigPath();
-            ConfigurationXML conf = ConfigurationXML.readXML(pathConfig + Path.DirectorySeparatorChar + "Configuracoes.xml");
+            var conf = configManager.GetExistingConfig();
             var dataSystem = conf.DataSystems.FirstOrDefault(ds => ds.Name == CurrentYear); // Default == null
 
             if (dataSystem == null)
@@ -181,8 +173,7 @@ namespace Administration.Controllers
             if (!ModelState.IsValid)
                 return Json(new { Success = false, model = new { ResultMsg = Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860 } });
 
-            string pathConfig = CSGenio.framework.Configuration.GetConfigPath();
-            ConfigurationXML conf = ConfigurationXML.readXML(pathConfig + Path.DirectorySeparatorChar + "Configuracoes.xml");
+            var conf = configManager.GetExistingConfig();
             var dataSystem = conf.DataSystems.FirstOrDefault(ds => ds.Name == CurrentYear); // Default == null
 
             if (dataSystem == null)
@@ -194,7 +185,7 @@ namespace Administration.Controllers
                 var sp = CSGenio.persistence.PersistentSupport.getPersistentSupport(dataSystem.Name);
                 sp.openConnection();
 
-                //verificar se já exists um user com o mesmo name
+                //check if a user with the same name already exists
                 SelectQuery userQuery = new SelectQuery()
                     .Select(CSGenioApsw.FldCodpsw)
                     .From("USERLOGIN", "psw")
@@ -238,7 +229,7 @@ namespace Administration.Controllers
                 }
                 else
                 {
-                    //Verificar se é novo user
+                    //Check if this is a new user
                     string error = saveUser(ref model, sp);
                     if (error != "")
                     {
@@ -266,49 +257,24 @@ namespace Administration.Controllers
                         foreach (var moduleRole in model.Privileges)
                         {
                             var role = Role.GetRole(moduleRole.Role);
-                            //Check if there are roles that make this role useless and add it to the ignore list
-                            var rolesAbove = model.Privileges
-                                .Where(x => x.Module == moduleRole.Module && role.Id != x.Role && role.HasRole(x.Role))
-                                .Select(x => new { parent = x.Designation, child = moduleRole.Designation });
+                            var rolesAbove = GetRolesAbove(model, moduleRole);
                             ignoredRoles.AddRange(rolesAbove);
 
                             //Check if the role we are trying to insert exists.
                             if (!existing.Any(x => x.IsRole(moduleRole.Module, role)) && !rolesAbove.Any())
-                            {
                                 //Insert the necessary UserAuthorization record
                                 CSGenioAuserauthorization.InsertRole(sp, adminUser, model.CodUser, moduleRole.Module, role);
-                            }
-
                         }
 
                         //Delete redundant roles
-                        foreach(var moduleRole in existing)
-                        {
-
-                            Role role = Role.GetRole(moduleRole.ValRole);
-                            
-                            //Check if a role was deleted and is invalid
-                            if (role == Role.INVALID) {
-                                moduleRole.delete(sp);
-                            }
-                            //Check if a role was removed, or some other higher role was inserted
-                            else if (!model.Privileges.Any(x => x.Module == moduleRole.ValModulo && x.Role == role.Id) ||
-                                model.Privileges.Any(x => x.Module == moduleRole.ValModulo && role.HasRole(x.Role) && role.Id != x.Role)
-                                )
-                            {
-                                moduleRole.delete(sp);
-                            }
-                        }
+                        var redundantRoles = GetRedundantRoles(existing, model);
+                        foreach(var moduleRole in redundantRoles)
+                            moduleRole.delete(sp);
 
                         //JGF 2021.06.02 Check for possible duplicates and delete them
-                        var possibleDuplicates = CSGenioAuserauthorization.searchList(sp, adminUser, criteriaSet);
-                        foreach(var record in possibleDuplicates)
-                        {
-                            Role role = Role.GetRole(record.ValRole);
-                            if (possibleDuplicates.Any(x => x.IsRole(record.ValModulo, role) && x.ValCodua.CompareTo(record.ValCodua) > 0)) //Hack to check for duplicates
-                                record.delete(sp);
-                        }
-
+                        var duplicateRoles = GetDuplicateRoles (existing);
+                        foreach (var moduleRole in duplicateRoles)
+                            moduleRole.delete(sp);
                     }
                 }
 
@@ -325,6 +291,61 @@ namespace Administration.Controllers
             return MainGet(model);*/
         }
 
+        /// <summary>
+        /// Checks if there are roles that make this role useless and adds them to a List 
+        /// </summary>
+        /// <param name="model">Manage users model</param>
+        /// <param name="moduleRole">Role to check</param>
+        /// <returns>List of roles that are above the role to check and therefore useless</returns>
+        private static List<ModuleRoleModel> GetRolesAbove(ManageUsersModel model, ModuleRoleModel moduleRole)
+        {
+            var role = Role.GetRole(moduleRole.Role);
+            List<ModuleRoleModel> rolesAbove = model.Privileges
+                .Where(x => x.Module == moduleRole.Module && role.Id != x.Role && role.HasRole(x.Role)).ToList();
+            return rolesAbove;
+        }
+
+        /// <summary>
+        /// Finds the redundant role records a user is trying to save.
+        /// </summary>
+        /// <param name="existing">List of roles to save</param>
+        /// <param name="model">Manage users model</param>
+        /// <returns>List of the roles that are redundant and therefore useless</returns>
+        private static List<CSGenioAuserauthorization> GetRedundantRoles(List<CSGenioAuserauthorization> existing, ManageUsersModel model)
+        {
+            var redundantRoles = new List<CSGenioAuserauthorization>();
+            foreach(var moduleRole in existing)
+            {
+                Role role = Role.GetRole(moduleRole.ValRole);
+                //Check if a role was deleted and is invalid
+                if (role == Role.INVALID)
+                    redundantRoles.Add(moduleRole);
+
+                //Check if a role was removed, or some other higher role was inserted
+                else if (!model.Privileges.Any(x => x.Module == moduleRole.ValModulo && x.Role == role.Id) ||
+                    model.Privileges.Any(x => x.Module == moduleRole.ValModulo && role.HasRole(x.Role) && role.Id != x.Role)
+                    )
+                    redundantRoles.Add(moduleRole);
+            }
+            return redundantRoles;
+        }
+
+        // <summary>
+        /// Finds duplicate roles a user is trying to save.
+        /// </summary>
+        /// <param name="existing">List of roles to save</param>
+        /// <returns>List of roles that are duplicated and therefore useless</returns>
+        private static List<CSGenioAuserauthorization> GetDuplicateRoles(List<CSGenioAuserauthorization> existing)
+        {
+            var duplicateRoles = new List<CSGenioAuserauthorization>();
+            foreach(var record in existing)
+                {
+                    Role role = Role.GetRole(record.ValRole);
+                    if (existing.Any(x => x.IsRole(record.ValModulo, role) && x.ValCodua.CompareTo(record.ValCodua) > 0)) //Hack to check for duplicates
+                        duplicateRoles.Add(record);
+                }
+            return duplicateRoles;
+        }
 
         [HttpPost]
         public void DeleteRole(string codpsw, string module, string roleId)
@@ -429,12 +450,8 @@ namespace Administration.Controllers
                 }
                 if (model.PasswordChange)
                 {
-                    userPsw.ValPassword = GenioServer.security.PasswordFactory.Encrypt(model.PasswordNew);
-                    userPsw.ValSalt = "";
-                    userPsw.ValPswtype = CSGenio.framework.Configuration.Security.PasswordAlgorithms.ToString();
-                    string error = GenioServer.security.PasswordFactory.CheckValidPassToChange(userPsw.ValNome, "", model.PasswordNew, model.PasswordConfirm, "", userPsw.ValSalt, userPsw.ValPswtype);
-                    if (error != "")
-                        return error;
+                    var factory = new UserFactory(sp, user);
+                    userPsw = factory.ChangePassword(userPsw, new(model.PasswordNew, model.PasswordConfirm));
                 }
                 
                 userPsw.ValOpermuda = "WebAdmin";

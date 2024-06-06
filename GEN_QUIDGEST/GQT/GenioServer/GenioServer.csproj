@@ -112,6 +112,7 @@
     <Compile Include="framework\OverrideQueryDefinition.cs" />
     <Compile Include="model\CSGenioAPWCOM.cs" />
     <Compile Include="model\CSGenioAADDRL.cs" />
+    <Compile Include="model\CSGenioAAA1.cs" />
     <Compile Include="model\CSGenioAGENRE.cs" />
     <Compile Include="model\CSGenioAFEECA.cs" />
     <Compile Include="model\CSGenioANOTIF.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="model\CSGenioAYEAR.cs" />
     <Compile Include="model\CSGenioATABPR.cs" />
     <Compile Include="model\CSGenioAREGIO.cs" />
+    <Compile Include="model\CSGenioAAAA.cs" />
     <Compile Include="model\CSGenioATPEQ1.cs" />
     <Compile Include="model\CSGenioAFAQS.cs" />
     <Compile Include="model\CSGenioATPCON.cs" />

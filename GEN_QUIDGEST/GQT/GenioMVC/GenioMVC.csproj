@@ -25,6 +25,10 @@
     <TargetFrameworkProfile />
     <Use64BitIISExpress />
     <RuntimeIdentifiers>win</RuntimeIdentifiers>
+	<!-- Suppress warning CS1685: The predefined type 'System.ObsoleteAttribute' is defined in multiple assemblies in the global alias 
+	This warning is a bug and Microsoft said it does not cause issues but it's not a priority to fix. 
+	https://developercommunity.visualstudio.com/t/warning-CS1685:-The-predefined-type-Sys/10152556?space=61&entry=problem -->
+	<NoWarn>$(NoWarn);CS1685</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -281,6 +285,8 @@
     <Compile Include="Controllers\Pwcom\*.cs" />
     <Compile Include="ViewModels\Addrl\*_ViewModel.cs" />
     <Compile Include="Controllers\Addrl\*.cs" />
+    <Compile Include="ViewModels\Aa1\*_ViewModel.cs" />
+    <Compile Include="Controllers\Aa1\*.cs" />
     <Compile Include="ViewModels\Genre\*_ViewModel.cs" />
     <Compile Include="Controllers\Genre\*.cs" />
     <Compile Include="ViewModels\Feeca\*_ViewModel.cs" />
@@ -339,6 +345,8 @@
     <Compile Include="Controllers\Tabpr\*.cs" />
     <Compile Include="ViewModels\Regio\*_ViewModel.cs" />
     <Compile Include="Controllers\Regio\*.cs" />
+    <Compile Include="ViewModels\Aaa\*_ViewModel.cs" />
+    <Compile Include="Controllers\Aaa\*.cs" />
     <Compile Include="ViewModels\Tpeq1\*_ViewModel.cs" />
     <Compile Include="Controllers\Tpeq1\*.cs" />
     <Compile Include="ViewModels\Faqs\*_ViewModel.cs" />
@@ -632,7 +640,7 @@
     <Compile Include="App_Start\MagicalUnicornCustomErrorHandling.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="CustomEngines\ExtendedRazorEngine.cs" />
-    <Content Include="Bin\\layoutConfig.xml">
+    <Content Include="layoutConfig.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="menus.xml">

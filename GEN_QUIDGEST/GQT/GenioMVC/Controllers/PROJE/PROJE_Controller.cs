@@ -43,6 +43,29 @@ namespace GenioMVC.Controllers
         #region Programmers code...
 
 
+		// GET: /Proje/Proje_BR_DEL_EXP
+		// <returns>Json(new { success = "OK", message = "" }, JsonRequestBehavior.AllowGet)</returns>
+		public JsonResult Proje_BR_DEL_EXP(string id)
+		{
+			try
+			{
+//Platform: MVC | Type: CONTROLLER_ROUTINE_BODY | Module: GQT | Parameter: DEL_EXP | File:  | Order: 0
+//BEGIN_MANUALCODE_CODMANUA:c326a551-a5b1-4db7-9a74-023fe8665cb4
+return Json(new { success = "OK", message = "Routine success" });
+//END_MANUALCODE
+			}
+			catch (BusinessException ex)
+			{
+				return Json(new { success = "E", message = ex.UserMessage }, JsonRequestBehavior.AllowGet);
+			}
+			catch (Exception ex)
+			{
+				Log.Error("Error in action Proje_BR_DEL_EXP: " + ex.Message);
+				return Json(new { success = "E", message = Resources.Resources.PEDIMOS_DESCULPA__OC63848 }, JsonRequestBehavior.AllowGet);
+			}
+		}
+
+
         private List<string> GetActionIds(CriteriaSet crs, CSGenio.persistence.PersistentSupport sp = null)
         {
             CSGenio.business.Area area = CSGenio.business.Area.createArea<CSGenioAproje>(UserContext.Current.User, UserContext.Current.User.CurrentModule);

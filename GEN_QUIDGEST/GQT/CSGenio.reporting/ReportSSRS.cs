@@ -304,6 +304,9 @@ namespace CSGenio.reporting
                                 case "language":
                                     val = user.Language;
                                     break;
+                                case "module":
+                                    val = user.CurrentModule;
+                                    break;
                                 default: key = null; break;
                             }
 
@@ -593,7 +596,7 @@ namespace CSGenio.reporting
                         .Select("glob", nomeCampoSemGlob)
                         .From(Configuration.Program + "glob", "glob");
 
-                    result.Add(new ReportParameter("g_" + nomeCampoSemGlob, new List<string>() { sp.ExecuteScalar(qs) as string }.ToArray()));
+                    result.Add(new ReportParameter("g_" + nomeCampoSemGlob, new List<string>() { Convert.ToString(sp.ExecuteScalar(qs)) }.ToArray()));
                 }
             }
             catch (GenioException ex)

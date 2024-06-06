@@ -605,7 +605,7 @@ namespace GenioMVC.Controllers
 
             if(progress.Finished) {
                 if(progress.Percent == 100) {
-                    return Json(new { Success = true, percent = 100, message = Resources.Resources.ALTERACOES_EFECTUADA64514, finished = true, ongoing = false });
+                    return Json(new { Success = true, percent = 100, message = Resources.Resources.ALTERACOES_EFETUADAS10166, finished = true, ongoing = false });
                 }
                 else {
                     if(progress.Errors != null){
@@ -825,7 +825,7 @@ namespace GenioMVC.Controllers
                 return Json(new { Success = false, Message = CSGenio.framework.Translations.Get(errorMessage, UserContext.Current.User.Language) });
             }
 
-            return Json(new { Success = true, Message = Resources.Resources.ALTERACOES_EFECTUADA64514, RedirectURL = alternativeRedirect });
+            return Json(new { Success = true, Message = Resources.Resources.ALTERACOES_EFETUADAS10166, RedirectURL = alternativeRedirect });
         }
 
 
@@ -1054,7 +1054,7 @@ namespace GenioMVC.Controllers
 
             if(progress.Finished) {
                 if(progress.Percent == 100) {
-                    return Json(new { Success = true, percent = 100, message = Resources.Resources.ALTERACOES_EFECTUADA64514, finished = true, ongoing = false });
+                    return Json(new { Success = true, percent = 100, message = Resources.Resources.ALTERACOES_EFETUADAS10166, finished = true, ongoing = false });
                 }
                 else {
                     if(progress.Errors != null){

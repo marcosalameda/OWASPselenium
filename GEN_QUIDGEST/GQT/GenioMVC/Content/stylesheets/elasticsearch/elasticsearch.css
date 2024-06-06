@@ -1,11 +1,5 @@
-﻿.ui-autocomplete {
-    max-height: 300px;
-    overflow-y: auto;
-    /* prevent horizontal scrollbar */
-    overflow-x: hidden;
-    /* padding for vertical scrollbar */
-    padding-right: 20px;
-} 
+﻿
+
 
 /*#region Button search type*/
 .display-flex {
@@ -17,111 +11,164 @@
 }
 /*#region Button search type*/
 
-.ui-menu-item .clsDominio {
-    font-size: 1em;
-    font-style: italic;
-    line-height: 110%;
-    color: #666;
-}
-
-.ui-menu-item .clsTitulo {
-    font-size: 0.9em;
-    font-weight: bold;
-}
-
-.ui-menu-item .clsDetalhes {
-    font-size: 0.7em;
-    font-style: italic;
-    line-height: 110%;
-    color: #666;
-}
-
-.ui-menu-item .clsImagem {
-    float: left;
-    margin-right: 5px;
-}
-
-.ui-menu-item .clear {
-    clear: both;
-}
-
-/* Start with fallback for browsers that don't support -webkit-line-clamp */
-.textEllipsis {
-    overflow: hidden;
-}
-
-    .textEllipsis:after {
-        content: "";
-        text-align: right;
-    }
-
-/* Now add in code for the browsers that support -webkit-line-clamp and overwrite the non-supportive stuff */
-@supports (-webkit-line-clamp: 2) {
-    .textEllipsis {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: initial;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-    }
-
-        .textEllipsis:after {
-            display: none;
-        }
-}
-
-/*#region Cards results*/
-span.textEllipsis {
-    font-weight: 400;
-}
-dt {
-    margin-top: 0.4rem;
-}
-.card-body {
-    width: 100%;
-    content: "";
-    display: table;
-    line-height: 0;
-}
-.card-body:hover {
-    box-shadow: 5px 5px 10px #999;
-    transition: all .2s ease;
-    cursor: pointer;
-}
 .c-card{
     border: none;
 }
 
-.c-card .f-search__engine--result-thumbnail {
-    float: left;
-    float: left !important;
+.f-search__engine {
+    display: flex;
+    justify-content: center;
+    background-color: transparent;
+    margin-top: 0;
+    padding: .25rem 0;
 }
 
-.f-search__engine {
-    background-color: #f2f2f2;
-    margin-top: -.5rem;
-    padding: 2rem 1rem 1rem 1rem;
-    margin-right: -0.95rem;
-    margin-left: -0.95rem;
+    .f-search__engine button#searchButton {
+        border-top-right-radius: 0.25rem;
+        border-bottom-right-radius: 0.25rem;
+    }
+
+    .f-search__engine .i-input-group__field {
+        height: inherit;
+    }
+
+    .f-search__engine .btn.b-icon-text--primary.dropdown-toggle.i-input-group__button-dropdown {
+        padding-right: .75rem;
+    }
+
+.ui-menu .ui-menu-item {
+    margin-bottom: 0.25rem;
 }
-.f-search__engine--result-text.float-left {
-    width: 54%;
+
+.search-container .c-accordion__panel {
+    border: none;
+    border-bottom: 1px solid #D4D3D5;
+    border-radius: 0;
 }
-span.f-search__engine--result-subtitle{
-    display: none;
+
+.search-container .c-accordion__panel-header {
+    padding: 0.25rem 0;
+    border: none;
 }
-i.glyphicons.glyphicons-eye-open.e-icon.mt-4 {
-    display: none;
+
+.search-container .c-accordion__panel-title {
+    font-weight: 500;
+    text-transform: none;
 }
-/*#endregion Cards results*/
-/*#region filters*/
+
+    .search-container .c-accordion__panel-title span {
+        font-size: .8rem !important;
+    }
+
+.search-container .c-accordion__panel-body {
+    padding: 0;
+}
+
+.search-container .badge-primary {
+    color: #00114b;
+    background-color: #fff;
+    padding: 0.25rem 0;
+    font-weight: 400;
+    border-bottom: 1px solid #D4D3D5;
+    border-radius: 0;
+}
+
+    .search-container .badge-primary:hover {
+        color: #1699c8;
+    }
+
+.search-container .badge.badge-info {
+    font-size: 90%;
+    color: #fff;
+    background-color: #00114b;
+}
+
+    .search-container .badge.badge-info i.glyphicons.glyphicons-remove-circle {
+        display: none;
+    }
+
+.search-container .badge.e-badge--secondary {
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+    .search-container .badge.e-badge--secondary i.glyphicons.glyphicons-remove-circle {
+        display: inline-block;
+        color: #fff;
+    }
+
+dl.list-group-horizontal {
+    font-size: 90%;
+}
+
+.textEllipsis {
+    white-space: pre-wrap;
+}
+
+.f-search__engine--result {
+    color: #0D1427;
+}
+
+.search-container .list-group.c-list {
+    margin-top: .5rem;
+}
+
+.search-container div.b-btn-group.float-right {
+    transform: translate(-15px, -3px);
+}
+.search-container div.b-btn-group.float-right {
+    transform: translate(0px, -2px);
+    margin-left: .5rem;
+}
+
 .nav-list.form-check {
-    margin-bottom: 0.2rem;
+    border-bottom: 1px solid #d4d3d5;
 }
-.c-accordion__panel-icon {
-    margin-top: 0.12rem !important;
+
+.search-container .badge-primary {
+    border-bottom: none;
 }
-.c-accordion__panel-icon {
-    margin-top: 0.12rem !important;
+
+.search-container .table-title.c-table__title,
+.f-search__engine--result-filter .f-search__engine--result:not(:last-child) {
+    color: #0D1427;
+    font-size: .9rem;
+    text-transform: uppercase;
+    font-weight: 700;
 }
-/*#enregion filters*/
+
+table.table.card-list-table {
+    font-size: .8rem;
+}
+
+.dropdown-menu {
+    z-index: 1050 !important; /* Um valor alto para garantir que esteja acima dos outros elementos */
+}
+
+.list-group-item {
+    padding: 0.25rem;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.125);
+    margin-bottom: .5rem;
+    border-radius: .25rem;
+}
+
+.table.card-list-table th {
+    padding: 0.25rem;
+    border: none;
+    color: #343a40;
+    font-weight: 400;
+    font-size: .75rem;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+.table.card-list-table td {
+    padding: 0.25rem;
+    color: #343a40;
+    border-color: rgba(0, 0, 0, 0.125);
+}
+
+.table.card-list-table b {
+    font-weight: normal;
+}

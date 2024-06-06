@@ -50,6 +50,10 @@
         <row>
           <select-input v-model="Security.PasswordAlgorithms" v-if="SelectLists" :options="SelectLists.PasswordAlgorithms" :label="Resources.ALGORITMO_DE_ENCRIPT09649"></select-input>
         </row>
+        <row>
+          <checkbox-input v-model="Security.UsePasswordBlacklist" :label="Resources.USE_PASSWORD_BLACKLI22314"></checkbox-input>
+          <a class="nav-link" href="#" @click.prevent="navigateTo('manage_blacklist')">{{ Resources.MANAGE_PASSWORD_BLAC01612 }}</a>
+        </row>
       </template>
     </card>
     <br />
@@ -374,7 +378,7 @@
         QUtils.postData('Config', 'SaveConfigSecurity', vm.Security, null, function (data) {
           QUtils.log("SaveConfigSecurity - Response", data);
           if (data.Success) {
-            bootbox.alert(vm.Resources.ALTERACOES_EFECTUADA64514);
+            bootbox.alert(vm.Resources.ALTERACOES_EFETUADAS10166);
           } else {
             bootbox.alert(data.Message);
           }

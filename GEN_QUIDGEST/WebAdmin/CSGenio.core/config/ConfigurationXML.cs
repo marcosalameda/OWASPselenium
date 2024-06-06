@@ -712,6 +712,7 @@ namespace CSGenio
             security.m_users = m_users.Select(identity => (UserCfgEl)identity.Clone()).ToList();
             security.m_maxAttempts = m_maxAttempts;
             security.m_sessionTimeOut = m_sessionTimeOut;
+            security.UsePasswordBlacklist = UsePasswordBlacklist;
 
             return security;
         }
@@ -833,6 +834,8 @@ namespace CSGenio
             set { m_sessionTimeOut = value; }
         }
         
+        [XmlAttribute("usePasswordBlacklist")]
+        public bool UsePasswordBlacklist { get; set; } = false;
     }
 
     [XmlRoot("AppPath")]

@@ -62,6 +62,7 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
+            Qfield.SufNDup = "line";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -191,8 +192,8 @@ namespace CSGenio.business
 			//------------------------------
 			//Actualiza as seguintes somas relacionadas:
 			info.RelatedSumArgs = new List<RelatedSumArgument>();
-			info.RelatedSumArgs.Add( new RelatedSumArgument("ldent", "item", "entries", "qtdentra", '+', true));
 			info.RelatedSumArgs.Add( new RelatedSumArgument("ldent", "item", "existenc", "qtdentra", '+', true));
+			info.RelatedSumArgs.Add( new RelatedSumArgument("ldent", "item", "entries", "qtdentra", '+', true));
 
 
 

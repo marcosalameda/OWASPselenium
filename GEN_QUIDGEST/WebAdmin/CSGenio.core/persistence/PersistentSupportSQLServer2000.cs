@@ -157,7 +157,7 @@ namespace CSGenio.persistence
         public override void Drop(string schema)
         {
             if (string.IsNullOrEmpty(schema))
-                throw new ArgumentNullException("schema", "This argument is Madatory") ;
+                throw new ArgumentNullException("schema", "This argument is Mandatory") ;
 
             try
             {

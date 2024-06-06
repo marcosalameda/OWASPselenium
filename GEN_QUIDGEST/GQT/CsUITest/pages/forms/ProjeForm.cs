@@ -20,6 +20,7 @@ public class ProjeForm: PageObject {
 	public BaseInputControl LED_PROJE___PROJESALDO1__ => new BaseInputControl(driver, "[data-identifier='LED_PROJE___PROJESALDO1__']");
 	public BaseInputControl LED_PROJE___PROJESALDO2__ => new BaseInputControl(driver, "[data-identifier='LED_PROJE___PROJESALDO2__']");
 	public ListControl IFF_PROJE___PSEUDDESPESAS => new ListControl(driver, "ValDespesas", "#Proje_ValDespesas");
+	public IWebElement IFF_PROJE___PSEUDDEL_EXP_ => throw new NotImplementedException();
 	public ListControl IFF_PROJE___PSEUDAGREGADO => new ListControl(driver, "ValAgregado", "#Proje_ValAgregado");
 
 	private IWebElement saveBtn => form.FindElement(By.CssSelector(".form-actions [qbutton='ok']"));

@@ -196,7 +196,7 @@ namespace GenioMVC
             try
             {
                 //ler o file
-                string filename = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "layoutConfig.xml");
+                string filename = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "layoutConfig.xml");
                 using (System.IO.StreamReader input = new System.IO.StreamReader(filename))
                 {
                     System.Xml.Serialization.XmlSerializer s = new System.Xml.Serialization.XmlSerializer(typeof(LayoutConfig));

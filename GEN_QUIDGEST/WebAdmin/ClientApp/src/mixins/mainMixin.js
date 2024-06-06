@@ -4,6 +4,10 @@ import { QUtils } from '@/utils/mainUtils';
 
 export const reusableMixin = {
   methods: {
+    navigateTo: function (name) { 
+        var vm = this;
+        vm.$router.push({ name: name, params: { culture: vm.currentLang, system: vm.currentYear } });
+    },
     isEmptyArray: function (arr) {
       return !(arr && arr.length > 0);
     },

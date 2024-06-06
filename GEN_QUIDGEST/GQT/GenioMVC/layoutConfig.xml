@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LayoutConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<DbEditActionPlacement>left</DbEditActionPlacement> <!-- left, right -->
+	<FormAnchorsPosition>sidebar</FormAnchorsPosition> <!-- form-header, sidebar -->
+	<DbEditPagerPlacement>left</DbEditPagerPlacement> <!-- left, right -->
+	<DbEditMultipleActionPlacement>left</DbEditMultipleActionPlacement> <!-- left, right -->
+	<LoginStyle>single_page</LoginStyle> <!-- single_page, embeded_page -->
+	<MenuStyle>simple_navbar</MenuStyle> <!-- simple_navbar, ribbon, double_navbar -->
+	<LogonPlacement>in_header</LogonPlacement> <!-- in_header, in_navmenu -->
+	<LanguagePlacement>in_footer</LanguagePlacement> <!-- in_header, in_footer -->
+	<UserRegisterStyle>button</UserRegisterStyle> <!-- button, hyperlink -->
+	<HeaderEnable>true</HeaderEnable> <!-- true, false -->
+	<FooterEnable>true</FooterEnable> <!-- true, false -->
+	<BreadcrumbsContent>detailed</BreadcrumbsContent> <!-- simplified, detailed, hidden -->
+	<LogoEnable>true</LogoEnable> <!-- true, false -->
+	<BrandIconEnable>false</BrandIconEnable> <!-- true, false -->
+	<LoginBrandEnable>true</LoginBrandEnable> <!-- true, false -->
+	<ContainerWidth>whole_page</ContainerWidth> <!-- whole_page, reduced -->
+	<RowActionDisplay>dropdown</RowActionDisplay> <!-- inline, dropdown -->
+	<DefaultSidebarState>opened</DefaultSidebarState> <!-- opened, closed -->
+	<MenuSearchEnable>true</MenuSearchEnable> <!-- true, false -->
+	<BookmarkEnable>true</BookmarkEnable> <!-- true, false -->
+	<MenuAlign>left</MenuAlign> <!-- left, right -->
+	<ShowPasswordToggle>true</ShowPasswordToggle> <!-- true, false -->
+	<AuthenticationStyle>default</AuthenticationStyle> <!-- default, light, secondary -->
+	<ListShortHelpControl>subtitle</ListShortHelpControl> <!-- tooltip, popover, subtitle, info-banner -->
+	<ListDetailHelpControl>popover</ListDetailHelpControl> <!-- popover, subtitle, info-banner -->
+	<InputShortHelpControl>tooltip</InputShortHelpControl> <!-- tooltip, popover, subtext -->
+	<InputDetailHelpControl>popover</InputDetailHelpControl> <!-- popover -->
+	<GroupShortHelpControl>tooltip</GroupShortHelpControl> <!-- tooltip, popover, subtitle -->
+	<GroupDetailHelpControl>popover</GroupDetailHelpControl> <!-- popover, subtitle -->
+</LayoutConfig>

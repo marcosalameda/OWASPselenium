@@ -201,6 +201,17 @@ namespace CSGenio.framework
                 .Select(sm => sm.Message) );
 		}
 
+		/// <summary>
+		/// Gets all status messages.
+		/// </summary>
+		/// <returns>Array containing all status messages concatenated</returns>
+		public string[] GetStackMessages()
+		{
+			return _statusMessageStack
+				.Where(sm => !string.IsNullOrEmpty(sm.Message))
+				.Select(sm => sm.Message).ToArray();
+		}
+
 		#region Static functions
 		public static StatusMessage GetAggregator()
 		{

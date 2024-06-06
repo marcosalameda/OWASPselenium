@@ -468,12 +468,12 @@ namespace GenioMVC.Controllers
 			string saveMsg = TempData["NEW_SAVE_LIST"] as string;
 
 			if (!internalRedirect || !Request.IsAjaxRequest())
-				SuccessMessage(String.IsNullOrEmpty(saveMsg) ? Resources.Resources.ALTERACOES_EFECTUADA64514 + GetHumanKeyToQMessage("proje", Convert.ToString(Navigation.CurrentLevel.GetEntry("proje"))) : saveMsg);
+				SuccessMessage(String.IsNullOrEmpty(saveMsg) ? Resources.Resources.ALTERACOES_EFETUADAS10166 + GetHumanKeyToQMessage("proje", Convert.ToString(Navigation.CurrentLevel.GetEntry("proje"))) : saveMsg);
 
 			Navigation.RemoveHistoryLevel();
 
 			if (Request.IsAjaxRequest()) // Ajax result for nested form
-				return Json(new { Success = true, Operation = "Edit", Message = String.IsNullOrEmpty(saveMsg) ? Resources.Resources.ALTERACOES_EFECTUADA64514 : saveMsg, Warnings = warningMsgs }, JsonRequestBehavior.AllowGet);
+				return Json(new { Success = true, Operation = "Edit", Message = String.IsNullOrEmpty(saveMsg) ? Resources.Resources.ALTERACOES_EFETUADAS10166 : saveMsg, Warnings = warningMsgs }, JsonRequestBehavior.AllowGet);
 
 			//verify if the current level has a skipifjustone option, and remove it from history
 			if (Navigation.CurrentLevel.CheckEntry("SkipIfJustOne"))
@@ -1020,7 +1020,7 @@ namespace GenioMVC.Controllers
 			return PartialView(partialView, model);
 		}
 
- 
+  
 		//
 		// GET: /Proje/Proje_ValAgregado
 		// POST: /Proje/Proje_ValAgregado
@@ -1074,6 +1074,80 @@ namespace GenioMVC.Controllers
 			};
 
 			return GenericHandlePostFormApply(eventSink, model);
+		}
+
+		/// <summary>
+		/// Server-side component of action #1 (RECALC) of trigger UPDATEFORM
+		/// Button ${field.Ajcampo.ToUpper()}
+		/// </summary>
+		/// <param name="data">The client-side context of the trigger.</param>
+		/// <returns>
+		/// Success message
+		/// </returns>
+		[AuthorizeForUsers]
+		public ActionResult Proje_BT_${field.Ajcampo.ToUpper()}_UPDATEFORM_1(string key, Proje_ViewModel vm)
+		{
+			User user = UserContext.Current.User;
+			PersistentSupport sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
+
+			try 
+			{
+				var model = Models.Proje.Find(key, "F${field.Form.ToUpper()}");
+				vm.MapToModel(model);
+				// Context
+				var context = new CSGenio.business.Triggers.TriggerContext()
+				{
+					Area = model.klass,
+					PersistentSupport = sp,
+					User = user,
+				};
+
+				// Should open a local transaction
+				// if the context did not provide an open transaction.
+				bool openLocalTransaction = sp.TransactionIsClosed;
+
+				// Should keep the connection alive
+				// if the context provided an open connection but not an open transaction.
+				bool keepConnectionAlive = !sp.ConnectionIsClosed && sp.TransactionIsClosed;
+
+				if (openLocalTransaction)
+					sp.openTransaction();
+
+				// Trigger UPDATEFORM
+				CSGenio.business.Triggers.ITrigger trigger_UPDATEFORM = new CSGenio.business.Triggers.TriggerUpdateform(context);
+				CSGenio.business.Triggers.IAction action = trigger_UPDATEFORM.GetAction(1);
+				trigger_UPDATEFORM.ExecuteAction(action);
+
+				// If a local transaction was opened, it should also be closed.
+				if (openLocalTransaction)
+				{
+					sp.closeTransaction();
+
+					// Reopen the connection if it needs to be kept alive.
+					if (keepConnectionAlive)
+						sp.openConnection();
+				}
+
+			}
+			catch(Exception)
+			{
+				sp.rollbackTransaction();
+				return Json(
+					new {
+						success = "E",
+						message = Resources.Resources.PEDIMOS_DESCULPA__OC63848
+					},
+                    JsonRequestBehavior.AllowGet
+				);
+			}
+
+			return Json(
+				new {
+					success = "OK",
+					message = Resources.Resources.A_OPERACAO_FOI_CONCL36721
+				},
+				JsonRequestBehavior.AllowGet
+			);
 		}
 	}
 }

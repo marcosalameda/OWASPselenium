@@ -821,6 +821,8 @@ namespace Administration.Models
 
         [Display(Name = "TIME_OUT_DA_SESSAO36825", ResourceType = typeof(Resources.Resources))]
         public int SessionTimeOut { get; set; }
+
+        public bool UsePasswordBlacklist { get; set; }
     }
 
     public class PathCfg

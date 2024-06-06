@@ -62,6 +62,7 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "TYPE_OF_EQUIPMENT18080";
 
 			Qfield.Dupmsg = "";
+            Qfield.SufNDup = "order";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -

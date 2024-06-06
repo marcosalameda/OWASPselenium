@@ -4,6 +4,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using CSGenio.framework;
+using CSGenio.persistence;
+using Quidgest.Persistence.GenericQuery;
+
 
 namespace GenioServer.security
 {
@@ -251,7 +254,7 @@ namespace GenioServer.security
         {
             if (strEncripted == password_encriptarQuid(strPassword, strEncripted))
                 return true;
-            else if (strEncripted != null && strEncripted.Length == 20)
+            else if (strEncripted != null && strEncripted.Length == 20 && strPassword != null)
             {
                 // encripta a password com a mesma semente
                 string aux = password_encriptarComBug(strPassword.ToUpper(), strEncripted[18], strEncripted[19]);
@@ -494,6 +497,23 @@ namespace GenioServer.security
             }
 
             return null;
+        }
+
+
+        /// <summary>
+        /// Check if the password is part of the blacklist
+        /// </summary>
+        /// <param name="sp">The database connection</param>
+        /// <param name="password">The password to check</param>
+        /// <returns>True if the password is blacklisted, false otherwise</returns>
+        public static bool CheckBlacklisted(PersistentSupport sp, string password)
+        {
+            SelectQuery select = new SelectQuery()
+                .Select(SqlFunctions.Count(1), "COUNT")
+                .From("PswBlacklist")
+                .Where(CriteriaSet.And().Equal("PswBlacklist", "pass", password.ToLowerInvariant()));
+            var ct = DBConversion.ToInteger(sp.executeScalar(select));
+            return ct > 0;
         }
     }
 }

@@ -116,7 +116,7 @@ else {
 								@Html.LabelFor(model => model.ValSaldo1, new { label_id="LED_PROJE___PROJESALDO1__", @class = " i-text__label", id="LABEL_LED_PROJE___PROJESALDO1__"}, true, false)
 								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
 								<a href="javascript:OpenSuggestion('LED_PROJE___PROJESALDO1__','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-								@Html.NumberFor(model => model.ValSaldo1, new {help_id = "LED_PROJE___PROJESALDO1__", @class = "i-input-group__field text-right i-text__field i-text input-medium", data_refresh = "true", data_tipoform = "+", data_identifier = "LED_PROJE___PROJESALDO1__", @pers_cs_area = "Proje", @pers_cs_field = "ValSaldo1", @db_field = "ValSaldo1", fixed_field = "true", @readonly = "readonly", title = @Resources.NEXT___PREVIOUS__43778, data_currency = "True", data_number_integer = "7", data_number_decimals = "2", data_number_format = "9999999.99" })
+								@Html.NumberFor(model => model.ValSaldo1, new {help_id = "LED_PROJE___PROJESALDO1__", @class = "i-input-group__field text-right i-text__field i-text input-small", data_refresh = "true", data_tipoform = "+", data_identifier = "LED_PROJE___PROJESALDO1__", @pers_cs_area = "Proje", @pers_cs_field = "ValSaldo1", @db_field = "ValSaldo1", fixed_field = "true", @readonly = "readonly", title = @Resources.NEXT___PREVIOUS__43778, data_currency = "True", data_number_integer = "7", data_number_decimals = "2", data_number_format = "9999999.99" })
 								@Html.ValidationMessageFor(model => model.ValSaldo1)
 							</div>
 						</div>
@@ -126,7 +126,7 @@ else {
 								@Html.LabelFor(model => model.ValSaldo2, new { label_id="LED_PROJE___PROJESALDO2__", @class = " i-text__label", id="LABEL_LED_PROJE___PROJESALDO2__"}, true, false)
 								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
 								<a href="javascript:OpenSuggestion('LED_PROJE___PROJESALDO2__','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-								@Html.NumberFor(model => model.ValSaldo2, new {help_id = "LED_PROJE___PROJESALDO2__", @class = "i-input-group__field text-right i-text__field i-text input-medium", data_refresh = "true", data_tipoform = "+", data_identifier = "LED_PROJE___PROJESALDO2__", @pers_cs_area = "Proje", @pers_cs_field = "ValSaldo2", @db_field = "ValSaldo2", fixed_field = "true", @readonly = "readonly", title = @Resources.LAST___FIRST__42481, data_currency = "True", data_number_integer = "7", data_number_decimals = "2", data_number_format = "9999999.99" })
+								@Html.NumberFor(model => model.ValSaldo2, new {help_id = "LED_PROJE___PROJESALDO2__", @class = "i-input-group__field text-right i-text__field i-text input-small", data_refresh = "true", data_tipoform = "+", data_identifier = "LED_PROJE___PROJESALDO2__", @pers_cs_area = "Proje", @pers_cs_field = "ValSaldo2", @db_field = "ValSaldo2", fixed_field = "true", @readonly = "readonly", title = @Resources.LAST___FIRST__42481, data_currency = "True", data_number_integer = "7", data_number_decimals = "2", data_number_format = "9999999.99" })
 								@Html.ValidationMessageFor(model => model.ValSaldo2)
 							</div>
 						</div>
@@ -140,6 +140,15 @@ else {
 								<div id="Proje_ValDespesas" data-identifier="IFF_PROJE___PSEUDDESPESAS"  data-extra-options="" > 
 									@{ Html.RenderAction("Proje_ValDespesas", "Proje", new { id = Model.ValCodproje, partialView = "Proje_ValDespesas"}); }
 								</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+										<div class="i-dbedit"> <button type="submit" id="proje_Del_exp" onclick="Proje_BR_DEL_EXP('@Model.ValCodproje'); return false;" name="DEL_EXP" data-identifier = "IFF_PROJE___PSEUDDEL_EXP_" class="b-icon-text b-icon-text--secondary" data-frtnb="Proje" data-frtnb-text="@Resources.DELETE_EXPENSES44198" data-frtnb-icon="~/Content/img/delete.svg" ><img src='~/Content/img/delete.svg' alt="@Resources.DELETE_EXPENSES44198"/>@Resources.DELETE_EXPENSES44198</button></div>
 						</div>
 					</div>
 				</div>

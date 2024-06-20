@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Notif
         /// Initializes a new instance of the <see cref="Notif_Pess2ValName_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Notif_Pess2ValName_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Notif_Pess2ValName_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodnotif = currentNavigation.CurrentLevel.GetEntry("notif")?.ToString();
         }
 
         /// <inheritdoc/>

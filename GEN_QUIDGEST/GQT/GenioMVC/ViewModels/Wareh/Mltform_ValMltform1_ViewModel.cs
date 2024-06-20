@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Wareh
         /// Initializes a new instance of the <see cref="Mltform_ValMltform1_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Mltform_ValMltform1_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Mltform_ValMltform1_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodwareh = currentNavigation.CurrentLevel.GetEntry("wareh")?.ToString();
         }
 
         /// <inheritdoc/>

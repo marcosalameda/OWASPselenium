@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Grpb
         /// Initializes a new instance of the <see cref="Grpb_ValTblb_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Grpb_ValTblb_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Grpb_ValTblb_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodgrpb = currentNavigation.CurrentLevel.GetEntry("grpb")?.ToString();
         }
 
         /// <inheritdoc/>

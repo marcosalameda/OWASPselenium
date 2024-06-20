@@ -100,8 +100,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.Fld
         /// Initializes a new instance of the <see cref="STY_Menu_PESSCARD_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public STY_Menu_PESSCARD_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public STY_Menu_PESSCARD_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
             this.RoleToShow = CSGenio.framework.Role.ROLE_1;
         }

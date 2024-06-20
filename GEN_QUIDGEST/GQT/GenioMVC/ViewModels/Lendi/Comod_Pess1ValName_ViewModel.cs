@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Lendi
         /// Initializes a new instance of the <see cref="Comod_Pess1ValName_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Comod_Pess1ValName_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Comod_Pess1ValName_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodlendi = currentNavigation.CurrentLevel.GetEntry("lendi")?.ToString();
         }
 
         /// <inheritdoc/>

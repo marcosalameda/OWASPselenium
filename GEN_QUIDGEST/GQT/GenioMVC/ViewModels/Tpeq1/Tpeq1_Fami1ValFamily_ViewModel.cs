@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Tpeq1
         /// Initializes a new instance of the <see cref="Tpeq1_Fami1ValFamily_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Tpeq1_Fami1ValFamily_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Tpeq1_Fami1ValFamily_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodtpequ = currentNavigation.CurrentLevel.GetEntry("tpeq1")?.ToString();
         }
 
         /// <inheritdoc/>

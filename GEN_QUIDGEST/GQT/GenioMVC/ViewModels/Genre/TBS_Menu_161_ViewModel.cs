@@ -100,8 +100,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgenre.FldCodgenre, CSGenioAgenre.Fl
         /// Initializes a new instance of the <see cref="TBS_Menu_161_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public TBS_Menu_161_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public TBS_Menu_161_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
             this.RoleToShow = CSGenio.framework.Role.ROLE_1;
         }

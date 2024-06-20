@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Wareh
         /// Initializes a new instance of the <see cref="Armaz02_ValArtigos_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Armaz02_ValArtigos_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Armaz02_ValArtigos_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodwareh = currentNavigation.CurrentLevel.GetEntry("wareh")?.ToString();
         }
 
         /// <inheritdoc/>
@@ -73,10 +73,12 @@ namespace GenioMVC.ViewModels.Wareh
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAitem.FldItemdes, FieldType.TEXTO, Resources.Resources.ARTICLES59822, 30, 0, true),
+                new Exports.QColumn(CSGenioAitem.FldItemdes, FieldType.TEXTO, Resources.Resources.ARTICLE60065, 30, 0, true),
                 new Exports.QColumn(CSGenioAitem.FldItemcod, FieldType.TEXTO, Resources.Resources.CODE49225, 15, 0, true),
-                new Exports.QColumn(CSGenioAitem.FldValid, FieldType.LOGICO, Resources.Resources.IN_USE42606, 1, 0, true),
-                new Exports.QColumn(CSGenioAitem.FldItemtype, FieldType.ARRAY_COD_TEXTO, Resources.Resources.TYPE00312, 1, 0, true, "TipoArti"),
+                new Exports.QColumn(CSGenioAitem.FldEntries, FieldType.NUMERO, Resources.Resources.ENTRIES32319, 10, 0, true),
+                new Exports.QColumn(CSGenioAitem.FldExits, FieldType.NUMERO, Resources.Resources.OUTPUTS47833, 10, 0, true),
+                new Exports.QColumn(CSGenioAitem.FldExistenc, FieldType.NUMERO, Resources.Resources.STOCKS47349, 10, 0, true),
+                !ajaxRequest ? new Exports.QColumn(CSGenioAitem.FldImage, FieldType.IMAGEM_JPEG, Resources.Resources.IMAGE65174, 3, 1, true):null,
             };
 
             columns.RemoveAll(item => item == null);
@@ -130,8 +132,8 @@ namespace GenioMVC.ViewModels.Wareh
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("ITEM.ITEMCOD", new OrderedDictionary());
-			allSortOrders["ITEM.ITEMCOD"].Add("ITEM.ITEMCOD", "A");
+			allSortOrders.Add("ITEM.ITEMDES", new OrderedDictionary());
+			allSortOrders["ITEM.ITEMDES"].Add("ITEM.ITEMDES", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValArtigos_"));
@@ -227,8 +229,8 @@ namespace GenioMVC.ViewModels.Wareh
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("ITEM.ITEMCOD", new OrderedDictionary());
-			allSortOrders["ITEM.ITEMCOD"].Add("ITEM.ITEMCOD", "A");
+			allSortOrders.Add("ITEM.ITEMDES", new OrderedDictionary());
+			allSortOrders["ITEM.ITEMDES"].Add("ITEM.ITEMDES", "A");
 
 
 
@@ -244,11 +246,11 @@ namespace GenioMVC.ViewModels.Wareh
 			if (sorts == null || sorts.Count == 0)
 			{
 				sorts = new List<ColumnSort>();
-				sorts.Add(new ColumnSort(new ColumnReference(CSGenioAitem.FldItemcod), SortOrder.Ascending));
+				sorts.Add(new ColumnSort(new ColumnReference(CSGenioAitem.FldItemdes), SortOrder.Ascending));
 
 			}
 
-FieldRef[] fields = new FieldRef[] { CSGenioAitem.FldCoditem, CSGenioAitem.FldZzstate, CSGenioAitem.FldItemdes, CSGenioAitem.FldItemcod, CSGenioAitem.FldValid, CSGenioAitem.FldItemtype };
+FieldRef[] fields = new FieldRef[] { CSGenioAitem.FldCoditem, CSGenioAitem.FldZzstate, CSGenioAitem.FldItemdes, CSGenioAitem.FldItemcod, CSGenioAitem.FldEntries, CSGenioAitem.FldExits, CSGenioAitem.FldExistenc, CSGenioAitem.FldImage };
 
 
 			//columns by users list (TemplateDBEditViewModel)
@@ -428,15 +430,16 @@ FieldRef[] fields = new FieldRef[] { CSGenioAitem.FldCoditem, CSGenioAitem.FldZz
 
         private static readonly string[] _fieldsToSerialize =
         {
-            "Item", "Item.ValCoditem", "Item.ValZzstate", "Item.ValItemdes", "Item.ValItemcod", "Item.ValValid", "Item.ValItemtype", "Item.ValCodgitem", "Item.ValCodwareh"
+            "Item", "Item.ValCoditem", "Item.ValZzstate", "Item.ValItemdes", "Item.ValItemcod", "Item.ValEntries", "Item.ValExits", "Item.ValExistenc", "Item.ValImage", "Item.ValCodgitem", "Item.ValCodwareh"
         };
 
         private static readonly List<TableSearchColumn> _searchableColumns = new List<TableSearchColumn>
         {
-            new TableSearchColumn("ValItemdes", CSGenioAitem.FldItemdes, typeof(string), defaultSearch : true),
+            new TableSearchColumn("ValItemdes", CSGenioAitem.FldItemdes, typeof(string)),
             new TableSearchColumn("ValItemcod", CSGenioAitem.FldItemcod, typeof(string)),
-            new TableSearchColumn("ValValid", CSGenioAitem.FldValid, typeof(bool)),
-            new TableSearchColumn("ValItemtype", CSGenioAitem.FldItemtype, typeof(string), array : "TipoArti")
+            new TableSearchColumn("ValEntries", CSGenioAitem.FldEntries, typeof(decimal?)),
+            new TableSearchColumn("ValExits", CSGenioAitem.FldExits, typeof(decimal?)),
+            new TableSearchColumn("ValExistenc", CSGenioAitem.FldExistenc, typeof(decimal?))
         };
     }
 }

@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Tpcon
         /// Initializes a new instance of the <see cref="Tpcon_GenreValGender_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Tpcon_GenreValGender_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Tpcon_GenreValGender_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodtpcon = currentNavigation.CurrentLevel.GetEntry("tpcon")?.ToString();
         }
 
         /// <inheritdoc/>

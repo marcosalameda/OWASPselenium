@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Propr
         /// Initializes a new instance of the <see cref="Propr00_PessoValName_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Propr00_PessoValName_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Propr00_PessoValName_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodpropr = currentNavigation.CurrentLevel.GetEntry("propr")?.ToString();
         }
 
         /// <inheritdoc/>

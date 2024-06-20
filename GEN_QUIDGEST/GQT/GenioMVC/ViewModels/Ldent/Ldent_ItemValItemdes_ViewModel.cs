@@ -65,9 +65,9 @@ namespace GenioMVC.ViewModels.Ldent
         /// Initializes a new instance of the <see cref="Ldent_ItemValItemdes_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Ldent_ItemValItemdes_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Ldent_ItemValItemdes_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodldent = currentNavigation.CurrentLevel.GetEntry("ldent")?.ToString();
         }
 
         /// <inheritdoc/>
@@ -75,7 +75,7 @@ namespace GenioMVC.ViewModels.Ldent
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAitem.FldItemdes, FieldType.TEXTO, Resources.Resources.ARTICLES59822, 30, 0, true),
+                new Exports.QColumn(CSGenioAitem.FldItemdes, FieldType.TEXTO, Resources.Resources.ARTICLE60065, 30, 0, true),
                 new Exports.QColumn(CSGenioAitem.FldItemcod, FieldType.TEXTO, Resources.Resources.CODE49225, 15, 0, true),
                 new Exports.QColumn(CSGenioAitem.FldValid, FieldType.LOGICO, Resources.Resources.IN_USE42606, 1, 0, true),
                 new Exports.QColumn(CSGenioAitem.FldItemtype, FieldType.ARRAY_COD_TEXTO, Resources.Resources.TYPE00312, 1, 0, true, "TipoArti"),

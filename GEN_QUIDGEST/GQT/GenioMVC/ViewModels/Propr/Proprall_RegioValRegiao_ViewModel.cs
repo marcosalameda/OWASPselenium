@@ -65,9 +65,9 @@ namespace GenioMVC.ViewModels.Propr
         /// Initializes a new instance of the <see cref="Proprall_RegioValRegiao_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Proprall_RegioValRegiao_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Proprall_RegioValRegiao_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodpropr = currentNavigation.CurrentLevel.GetEntry("propr")?.ToString();
         }
 
         /// <inheritdoc/>

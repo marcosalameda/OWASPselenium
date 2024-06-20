@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Feeca
         /// Initializes a new instance of the <see cref="Feeca_FldsValDescrip_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Feeca_FldsValDescrip_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Feeca_FldsValDescrip_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodfeeca = currentNavigation.CurrentLevel.GetEntry("feeca")?.ToString();
         }
 
         /// <inheritdoc/>

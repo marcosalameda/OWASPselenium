@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Evcat
         /// Initializes a new instance of the <see cref="Evcat_PessoValName_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Evcat_PessoValName_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Evcat_PessoValName_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodprogr = currentNavigation.CurrentLevel.GetEntry("evcat")?.ToString();
         }
 
         /// <inheritdoc/>

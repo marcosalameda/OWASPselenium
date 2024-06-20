@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Pwreg
         /// Initializes a new instance of the <see cref="Pwreg_PswValNome_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Pwreg_PswValNome_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Pwreg_PswValNome_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodpwreg = currentNavigation.CurrentLevel.GetEntry("pwreg")?.ToString();
         }
 
         /// <inheritdoc/>

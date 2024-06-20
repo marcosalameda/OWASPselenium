@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Proje
         /// Initializes a new instance of the <see cref="Proje_ValDespesas_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Proje_ValDespesas_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Proje_ValDespesas_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodproje = currentNavigation.CurrentLevel.GetEntry("proje")?.ToString();
         }
 
         /// <inheritdoc/>

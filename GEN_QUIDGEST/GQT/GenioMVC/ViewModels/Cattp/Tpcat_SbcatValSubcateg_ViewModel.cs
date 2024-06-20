@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Cattp
         /// Initializes a new instance of the <see cref="Tpcat_SbcatValSubcateg_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Tpcat_SbcatValSubcateg_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Tpcat_SbcatValSubcateg_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodtpcat = currentNavigation.CurrentLevel.GetEntry("cattp")?.ToString();
         }
 
         /// <inheritdoc/>

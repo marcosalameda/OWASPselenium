@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Cmpki
         /// Initializes a new instance of the <see cref="Cmpki_TpequValTipoequi_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Cmpki_TpequValTipoequi_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Cmpki_TpequValTipoequi_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodcmpki = currentNavigation.CurrentLevel.GetEntry("cmpki")?.ToString();
         }
 
         /// <inheritdoc/>

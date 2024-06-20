@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Roigf
         /// Initializes a new instance of the <see cref="Roigf_Rogl1ValTitle_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Roigf_Rogl1ValTitle_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Roigf_Rogl1ValTitle_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodroigf = currentNavigation.CurrentLevel.GetEntry("roigf")?.ToString();
         }
 
         /// <inheritdoc/>

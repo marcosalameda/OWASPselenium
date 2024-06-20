@@ -88,7 +88,6 @@ namespace GenioMVC.ViewModels.Proje
 		[Display(Name = "EXPENSES11381", ResourceType = typeof(Resources.Resources))]
 		public TablePartial<GenioMVC.Models.Expen> ValDespesas { get; set; }
 
-
 		/// <summary>Campo : "Decomission by year" Tipo:"DP"</summary>
 		[Display(Name = "DECOMISSION_BY_YEAR07152", ResourceType = typeof(Resources.Resources))]
 		public TablePartial<GenioMVC.Models.Agreg> ValAgregado { get; set; }

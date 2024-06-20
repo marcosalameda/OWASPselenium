@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Regio
         /// Initializes a new instance of the <see cref="Regia_ml_Pais1ValCountry_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Regia_ml_Pais1ValCountry_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Regia_ml_Pais1ValCountry_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodregia = currentNavigation.CurrentLevel.GetEntry("regio")?.ToString();
         }
 
         /// <inheritdoc/>

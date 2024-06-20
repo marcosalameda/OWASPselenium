@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Visit
         /// Initializes a new instance of the <see cref="Visit2_EquipValRegistnr_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Visit2_EquipValRegistnr_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Visit2_EquipValRegistnr_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodvisit = currentNavigation.CurrentLevel.GetEntry("visit")?.ToString();
         }
 
         /// <inheritdoc/>

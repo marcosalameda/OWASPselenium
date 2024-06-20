@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Ldent
         /// Initializes a new instance of the <see cref="Ldentnor_WarehValWarehdes_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Ldentnor_WarehValWarehdes_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Ldentnor_WarehValWarehdes_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodldent = currentNavigation.CurrentLevel.GetEntry("ldent")?.ToString();
         }
 
         /// <inheritdoc/>

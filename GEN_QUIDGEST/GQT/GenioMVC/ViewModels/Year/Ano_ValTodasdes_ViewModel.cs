@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Year
         /// Initializes a new instance of the <see cref="Ano_ValTodasdes_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Ano_ValTodasdes_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Ano_ValTodasdes_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodyear = currentNavigation.CurrentLevel.GetEntry("year")?.ToString();
         }
 
         /// <inheritdoc/>

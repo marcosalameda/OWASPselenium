@@ -248,9 +248,12 @@ namespace GenioMVC.Controllers
 				{
 					sp.openConnection();
 					var userOldValues = CSGenioApsw.search(sp, user.Codpsw, user, new string[] { CSGenioApsw.FldPassword.Field, CSGenioApsw.FldSalt.Field, CSGenioApsw.FldPswtype.Field });
-					error = PasswordFactory.CheckValidPassToChange(user.Name, model.OldPassword, model.NewPassword, model.ConfirmPassword, userOldValues.ValPassword, userOldValues.ValSalt, userOldValues.ValPswtype, user.Language);
-					if(Configuration.Security.UsePasswordBlacklist && PasswordFactory.CheckBlacklisted(sp, model.NewPassword))
-						error = Resources.Resources.PASSWORD_VULNERAVEL_00083;
+					var factory = new UserFactory(sp, user);
+					factory.ChangePassword(userOldValues, model.NewPassword, model.ConfirmPassword, model.OldPassword);
+				}
+				catch(InvalidPasswordException ipe)
+				{
+					error = ipe.Message;
 				}
 				catch
 				{

@@ -285,8 +285,6 @@
     <Compile Include="Controllers\Pwcom\*.cs" />
     <Compile Include="ViewModels\Addrl\*_ViewModel.cs" />
     <Compile Include="Controllers\Addrl\*.cs" />
-    <Compile Include="ViewModels\Aa1\*_ViewModel.cs" />
-    <Compile Include="Controllers\Aa1\*.cs" />
     <Compile Include="ViewModels\Genre\*_ViewModel.cs" />
     <Compile Include="Controllers\Genre\*.cs" />
     <Compile Include="ViewModels\Feeca\*_ViewModel.cs" />
@@ -345,8 +343,6 @@
     <Compile Include="Controllers\Tabpr\*.cs" />
     <Compile Include="ViewModels\Regio\*_ViewModel.cs" />
     <Compile Include="Controllers\Regio\*.cs" />
-    <Compile Include="ViewModels\Aaa\*_ViewModel.cs" />
-    <Compile Include="Controllers\Aaa\*.cs" />
     <Compile Include="ViewModels\Tpeq1\*_ViewModel.cs" />
     <Compile Include="Controllers\Tpeq1\*.cs" />
     <Compile Include="ViewModels\Faqs\*_ViewModel.cs" />

@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Equip
         /// Initializes a new instance of the <see cref="Accordi_ValInstalag_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Accordi_ValInstalag_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Accordi_ValInstalag_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodequip = currentNavigation.CurrentLevel.GetEntry("equip")?.ToString();
         }
 
         /// <inheritdoc/>

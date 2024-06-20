@@ -65,9 +65,9 @@ namespace GenioMVC.ViewModels.Repar
         /// Initializes a new instance of the <see cref="Repar_SpeciValEspecial_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Repar_SpeciValEspecial_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Repar_SpeciValEspecial_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodrepar = currentNavigation.CurrentLevel.GetEntry("repar")?.ToString();
         }
 
         /// <inheritdoc/>

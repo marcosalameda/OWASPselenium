@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Lnhpd
         /// Initializes a new instance of the <see cref="Lnhpd_TpequValTipoequi_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Lnhpd_TpequValTipoequi_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Lnhpd_TpequValTipoequi_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodlnhpd = currentNavigation.CurrentLevel.GetEntry("lnhpd")?.ToString();
         }
 
         /// <inheritdoc/>

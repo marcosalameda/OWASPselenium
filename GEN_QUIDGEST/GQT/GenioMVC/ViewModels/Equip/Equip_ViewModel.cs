@@ -166,7 +166,7 @@ namespace GenioMVC.ViewModels.Equip
 		[DataType(DataType.MultilineText)]
 		public string ValMoviment { get; set; }
 
-		/// <summary>Campo : "Choose room" Tipo:"DV"</summary>
+		/// <summary>Campo : "Choose room" Tipo:"DW"</summary>
 		[Display(Name = "CHOOSE_ROOM04275", ResourceType = typeof(Resources.Resources))]
 		public List<GenioMVC.Models.Rooms> List_Movimevv { get; set; }
 		public List<GenioMVC.Models.Rooms> List_MovimevvSelected { get; set; }
@@ -177,16 +177,20 @@ namespace GenioMVC.ViewModels.Equip
 		[Display(Name = "MULTIPLE_VALUES_EXTE07457", ResourceType = typeof(Resources.Resources))]
 		public string List_Roomsmve { get; set; }
 
+		/// <summary>Campo : "Equipment movement history:" Tipo:"DP"</summary>
+		[Display(Name = "EQUIPMENT_MOVEMENT_H06876", ResourceType = typeof(Resources.Resources))]
+		public TablePartial<GenioMVC.Models.Movim> ValMovimels { get; set; }
+
 		/// <summary>Campo : "Photo" Tipo:"IJ"</summary>
 		[Display(Name = "PHOTO51874", ResourceType = typeof(Resources.Resources))]
 		[UIHint("DBJpegImage")]
-		[Newtonsoft.Json.JsonConverter(typeof(Helpers.ResizeImageSerializer), 100, 50, false, true)]
+		[Newtonsoft.Json.JsonConverter(typeof(Helpers.ResizeImageSerializer), 30, 50, false, true)]
 		public byte[] ValPhotogra { get; set; }
 
 		/// <summary>Campo : "Photo" Tipo:"IJ"</summary>
 		[Display(Name = "PHOTO51874", ResourceType = typeof(Resources.Resources))]
 		[UIHint("DBJpegImage")]
-		[Newtonsoft.Json.JsonConverter(typeof(Helpers.ResizeImageSerializer), 100, 50, false, true)]
+		[Newtonsoft.Json.JsonConverter(typeof(Helpers.ResizeImageSerializer), 30, 50, false, true)]
 		public byte[] ValLastpho { get; set; }
 
 		/// <summary>Campo : "Facilities:" Tipo:"DP"</summary>
@@ -201,14 +205,6 @@ namespace GenioMVC.ViewModels.Equip
 		[Display(Name = "EQUIPMENT_REPAIRS62266", ResourceType = typeof(Resources.Resources))]
 		public TablePartial<GenioMVC.Models.Repar> ValReparaco { get; set; }
 
-		/// <summary>Campo : "Photos" Tipo:"DP"</summary>
-		[Display(Name = "PHOTOS39221", ResourceType = typeof(Resources.Resources))]
-		public TablePartial<GenioMVC.Models.Photo> ValFotoequi { get; set; }
-
-		/// <summary>Campo : "Visits:" Tipo:"DP"</summary>
-		[Display(Name = "VISITS_63312", ResourceType = typeof(Resources.Resources))]
-		public TablePartial<GenioMVC.Models.Visit> ValVisequip { get; set; }
-
 		/// <summary>Campo : "Decomission No." Tipo:"N"</summary>
 		[Display(Name = "DECOMISSION_NO_16646", ResourceType = typeof(Resources.Resources))]
 		public TableDBEdit<GenioMVC.Models.Decom>  TableDecomDecomnr { get; set; }
@@ -217,6 +213,14 @@ namespace GenioMVC.ViewModels.Equip
 		[Display(Name = "DOWNED_EQUIPMENT43331", ResourceType = typeof(Resources.Resources))]
 		public bool ValIfabatif { get; set; }
 
+		/// <summary>Campo : "Photos" Tipo:"DP"</summary>
+		[Display(Name = "PHOTOS39221", ResourceType = typeof(Resources.Resources))]
+		public TablePartial<GenioMVC.Models.Photo> ValFotoequi { get; set; }
+
+		/// <summary>Campo : "Visits:" Tipo:"DP"</summary>
+		[Display(Name = "VISITS_63312", ResourceType = typeof(Resources.Resources))]
+		public TablePartial<GenioMVC.Models.Visit> ValVisequip { get; set; }
+
 		/// <summary>Campo : "Digital Attachments" Tipo:"DP"</summary>
 		[Display(Name = "DIGITAL_ATTACHMENTS64891", ResourceType = typeof(Resources.Resources))]
 		public TablePartial<GenioMVC.Models.Anexd> ValAnexos { get; set; }
@@ -224,10 +228,6 @@ namespace GenioMVC.ViewModels.Equip
 		/// <summary>Campo : "Timeline" Tipo:"FT"</summary>
 		[Display(Name = "TIMELINE45857", ResourceType = typeof(Resources.Resources))]
 		public string ValTlequipa { get; set; }
-
-		/// <summary>Campo : "Equipment movement history:" Tipo:"DP"</summary>
-		[Display(Name = "EQUIPMENT_MOVEMENT_H06876", ResourceType = typeof(Resources.Resources))]
-		public TablePartial<GenioMVC.Models.Movim> ValMovimels { get; set; }
 
 
 		#region Navigations
@@ -2001,7 +2001,7 @@ namespace GenioMVC.ViewModels.Equip
 
         private readonly string[] _fieldsToSerialize_EQUIP___ROOM1ROOMNR__ = { "Room1", "Room1.ValCodrooms", "Room1.ValZzstate" };
 		/// <summary>
-		/// List_Movimevv -> (DV)
+		/// List_Movimevv -> (DW)
 		/// </summary>
 		/// <param name="qs"></param>
 		public void Load_Equip___pseudmovimevv(NameValueCollection qs)

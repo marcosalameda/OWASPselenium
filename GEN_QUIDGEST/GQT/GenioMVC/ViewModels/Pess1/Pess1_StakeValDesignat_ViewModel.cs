@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Pess1
         /// Initializes a new instance of the <see cref="Pess1_StakeValDesignat_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Pess1_StakeValDesignat_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Pess1_StakeValDesignat_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodpesso = currentNavigation.CurrentLevel.GetEntry("pess1")?.ToString();
         }
 
         /// <inheritdoc/>

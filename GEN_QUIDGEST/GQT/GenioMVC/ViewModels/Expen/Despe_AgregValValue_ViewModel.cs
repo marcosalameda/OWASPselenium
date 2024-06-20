@@ -66,9 +66,9 @@ namespace GenioMVC.ViewModels.Expen
         /// Initializes a new instance of the <see cref="Despe_AgregValValue_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Despe_AgregValValue_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Despe_AgregValValue_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCoddespe = currentNavigation.CurrentLevel.GetEntry("expen")?.ToString();
         }
 
         /// <inheritdoc/>

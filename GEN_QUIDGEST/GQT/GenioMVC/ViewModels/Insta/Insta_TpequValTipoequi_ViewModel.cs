@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Insta
         /// Initializes a new instance of the <see cref="Insta_TpequValTipoequi_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Insta_TpequValTipoequi_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Insta_TpequValTipoequi_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodinsta = currentNavigation.CurrentLevel.GetEntry("insta")?.ToString();
         }
 
         /// <inheritdoc/>

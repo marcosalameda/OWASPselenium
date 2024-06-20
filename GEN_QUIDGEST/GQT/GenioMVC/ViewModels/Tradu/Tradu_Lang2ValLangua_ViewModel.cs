@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Tradu
         /// Initializes a new instance of the <see cref="Tradu_Lang2ValLangua_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Tradu_Lang2ValLangua_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Tradu_Lang2ValLangua_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodtradu = currentNavigation.CurrentLevel.GetEntry("tradu")?.ToString();
         }
 
         /// <inheritdoc/>

@@ -65,9 +65,9 @@ namespace GenioMVC.ViewModels.Conta
         /// Initializes a new instance of the <see cref="Conta_TpconValTipocont_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Conta_TpconValTipocont_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Conta_TpconValTipocont_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodconta = currentNavigation.CurrentLevel.GetEntry("conta")?.ToString();
         }
 
         /// <inheritdoc/>

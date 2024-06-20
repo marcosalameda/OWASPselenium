@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Flds
         /// Initializes a new instance of the <see cref="Fieldhlp_AeroValName_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Fieldhlp_AeroValName_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Fieldhlp_AeroValName_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodflds = currentNavigation.CurrentLevel.GetEntry("flds")?.ToString();
         }
 
         /// <inheritdoc/>

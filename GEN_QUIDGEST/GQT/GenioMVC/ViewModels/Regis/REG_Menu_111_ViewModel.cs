@@ -100,8 +100,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAregis.FldCodregis, CSGenioAregis.Fl
         /// Initializes a new instance of the <see cref="REG_Menu_111_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public REG_Menu_111_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public REG_Menu_111_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
             this.RoleToShow = CSGenio.framework.Role.UNAUTHORIZED;
         }

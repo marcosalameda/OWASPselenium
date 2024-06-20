@@ -65,9 +65,9 @@ namespace GenioMVC.ViewModels.Insta
         /// Initializes a new instance of the <see cref="Leaflett_EquipValRegistnr_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Leaflett_EquipValRegistnr_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Leaflett_EquipValRegistnr_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodinsta = currentNavigation.CurrentLevel.GetEntry("insta")?.ToString();
         }
 
         /// <inheritdoc/>

@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Equip
         /// Initializes a new instance of the <see cref="Equip_CmpnyValDesignat_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Equip_CmpnyValDesignat_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Equip_CmpnyValDesignat_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodequip = currentNavigation.CurrentLevel.GetEntry("equip")?.ToString();
         }
 
         /// <inheritdoc/>

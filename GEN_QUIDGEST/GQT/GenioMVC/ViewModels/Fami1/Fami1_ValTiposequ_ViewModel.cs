@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Fami1
         /// Initializes a new instance of the <see cref="Fami1_ValTiposequ_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Fami1_ValTiposequ_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Fami1_ValTiposequ_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodfamil = currentNavigation.CurrentLevel.GetEntry("fami1")?.ToString();
         }
 
         /// <inheritdoc/>

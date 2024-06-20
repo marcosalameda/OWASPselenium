@@ -38,6 +38,10 @@ namespace GenioMVC.ViewModels.Flds
 		[Newtonsoft.Json.JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		/// <summary>Campo : "Show record" Tipo:"L"</summary>
+		[Display(Name = "SHOW_RECORD53851", ResourceType = typeof(Resources.Resources))]
+		public bool ValShwrc { get; set; }
+
 		/// <summary>Campo : "Text Field" Tipo:"C"</summary>
 		[Display(Name = "TEXT_FIELD41810", ResourceType = typeof(Resources.Resources))]
 		[AllowHtml]
@@ -49,6 +53,39 @@ namespace GenioMVC.ViewModels.Flds
 		[AllowHtml]
 		[DataType(DataType.MultilineText)]
 		public string ValDescrip { get; set; }
+
+		/// <summary>Campo : "Logical" Tipo:"L"</summary>
+		[Display(Name = "LOGICAL47485", ResourceType = typeof(Resources.Resources))]
+		public bool ValPrimviag { get; set; }
+
+		/// <summary>Campo : "Yes or no" Tipo:"AL"</summary>
+		[Display(Name = "YES_OR_NO49030", ResourceType = typeof(Resources.Resources))]
+		[DataArray("Primviag", GenioMVC.Helpers.ArrayType.Logical)]
+		public int ValLogicenu { get; set; }
+		[JsonIgnore]
+		public SelectList List_ValLogicenu { get; set; }
+
+		/// <summary>Campo : "Numeric Enumeration" Tipo:"AN"</summary>
+		[Display(Name = "NUMERIC_ENUMERATION19068", ResourceType = typeof(Resources.Resources))]
+		[DataArray("Classnum", GenioMVC.Helpers.ArrayType.Numeric)]
+		public decimal? ValClassnum { get; set; }
+		[JsonIgnore]
+		public SelectList List_ValClassnum { get; set; }
+
+		/// <summary>Campo : "Radio Btn" Tipo:"AC"</summary>
+		[Display(Name = "RADIO_BTN20980", ResourceType = typeof(Resources.Resources))]
+		[AllowHtml]
+		[DataArray("Radiobtn", GenioMVC.Helpers.ArrayType.Character)]
+		public string ValRadiob { get; set; }
+		[JsonIgnore]
+		public SelectList List_ValRadiob { get; set; }
+
+		/// <summary>Campo : "Manual filling field" Tipo:"PM"</summary>
+		[Display(Name = "MANUAL_FILLING_FIELD38373", ResourceType = typeof(Resources.Resources))]
+		public object PseudValField001 { get { return funcPseudValField001 != null ? funcPseudValField001() : _auxPseudValField001; } set { funcPseudValField001 = () => value; } }
+		[JsonIgnore]
+		public Func<object> funcPseudValField001 { get; set; }
+		private object _auxPseudValField001 { get; set; }
 
 		/// <summary>Campo : "Year" Tipo:"N"</summary>
 		[Display(Name = "YEAR61794", ResourceType = typeof(Resources.Resources))]
@@ -77,17 +114,17 @@ namespace GenioMVC.ViewModels.Flds
 		[DateAttribute("DS")]
 		public DateTime? ValDateseco { get; set; }
 
-		/// <summary>Campo : "Numeric" Tipo:"N"</summary>
-		[Display(Name = "NUMERIC19292", ResourceType = typeof(Resources.Resources))]
-		[DisplayFormat( ApplyFormatInEditMode=true, DataFormatString="{0:N0}" )]
-		[NumericAttribute(0)]
-		public decimal? ValNpassage { get; set; }
-
 		/// <summary>Campo : "Numeric decimal" Tipo:"ND"</summary>
 		[Display(Name = "NUMERIC_DECIMAL49512", ResourceType = typeof(Resources.Resources))]
 		[DisplayFormat( ApplyFormatInEditMode=true, DataFormatString="{0:N2}" )]
 		[NumericAttribute(2)]
 		public decimal? ValDuration { get; set; }
+
+		/// <summary>Campo : "Numeric" Tipo:"N"</summary>
+		[Display(Name = "NUMERIC19292", ResourceType = typeof(Resources.Resources))]
+		[DisplayFormat( ApplyFormatInEditMode=true, DataFormatString="{0:N0}" )]
+		[NumericAttribute(0)]
+		public decimal? ValNpassage { get; set; }
 
 		/// <summary>Campo : "Currency Decimal" Tipo:"$D"</summary>
 		[Display(Name = "CURRENCY_DECIMAL48296", ResourceType = typeof(Resources.Resources))]
@@ -173,25 +210,33 @@ namespace GenioMVC.ViewModels.Flds
 		[StringLength(50, ErrorMessageResourceName = "O_COMPRIMENTO_MAXIMO21747", ErrorMessageResourceType = typeof(Resources.Resources))]
 		public string ValClrpicke { get; set; }
 
-		/// <summary>Campo : "Logical" Tipo:"L"</summary>
-		[Display(Name = "LOGICAL47485", ResourceType = typeof(Resources.Resources))]
-		public bool ValPrimviag { get; set; }
+		/// <summary>Campo : "Logo (External File Image)" Tipo:"IX"</summary>
+		[Display(Name = "LOGO__EXTERNAL_FILE_58162", ResourceType = typeof(Resources.Resources))]
+		public string ValLogoexte { get; set; }
 
-		/// <summary>Campo : "" Tipo:"AL"</summary>
-		[DataArray("Primviag", GenioMVC.Helpers.ArrayType.Logical)]
-		public int ValLogicenu { get; set; }
-		[JsonIgnore]
-		public SelectList List_ValLogicenu { get; set; }
+		/// <summary>Campo : "Logo" Tipo:"IJ"</summary>
+		[Display(Name = "LOGO62483", ResourceType = typeof(Resources.Resources))]
+		[UIHint("DBJpegImage")]
+		[Newtonsoft.Json.JsonConverter(typeof(Helpers.ResizeImageSerializer), 30, 50, false, true)]
+		public byte[] ValLogo { get; set; }
 
-		/// <summary>Campo : "Created by" Tipo:"ON"</summary>
-		[Display(Name = "CREATED_BY12292", ResourceType = typeof(Resources.Resources))]
-		public string ValCreatuse { get; set; }
+		/// <summary>Campo : "Document" Tipo:"IB"</summary>
+		[Display(Name = "DOCUMENT00695", ResourceType = typeof(Resources.Resources))]
+		[UIHint("DBDocument")]
+		[Document("ValAttach", false, true, false, false, DocumentViewTypeMode.Print)]
+		public string ValAttach { get; set; }
+		public string ValAttachfk { get; set; }
+		public DocumsProperties_ViewModel ValAttachPropertiesVM { get; set; }
 
 		/// <summary>Campo : "Day" Tipo:"OD"</summary>
 		[Display(Name = "DAY27593", ResourceType = typeof(Resources.Resources))]
 		[UIHint("HelpFixed")]
 		[DateAttribute("OD")]
 		public DateTime? ValCreatdat { get; set; }
+
+		/// <summary>Campo : "Created by" Tipo:"ON"</summary>
+		[Display(Name = "CREATED_BY12292", ResourceType = typeof(Resources.Resources))]
+		public string ValCreatuse { get; set; }
 
 		/// <summary>Campo : "Complete Date" Tipo:"OI"</summary>
 		[Display(Name = "COMPLETE_DATE53774", ResourceType = typeof(Resources.Resources))]
@@ -205,7 +250,6 @@ namespace GenioMVC.ViewModels.Flds
 		[StringLength(5, ErrorMessageResourceName = "O_COMPRIMENTO_MAXIMO21747", ErrorMessageResourceType = typeof(Resources.Resources))]
 		[DateAttribute("OT")]
 		public string ValCreathou { get; set; }
-
 
 		/// <summary>Campo : "Airline name" Tipo:"C"</summary>
 		[Display(Name = "AIRLINE_NAME55130", ResourceType = typeof(Resources.Resources))]
@@ -225,43 +269,6 @@ namespace GenioMVC.ViewModels.Flds
 		[JsonIgnore]
 		public SelectList List_ValClass { get; set; }
 
-		/// <summary>Campo : "Radio Btn" Tipo:"AC"</summary>
-		[Display(Name = "RADIO_BTN20980", ResourceType = typeof(Resources.Resources))]
-		[AllowHtml]
-		[DataArray("Radiobtn", GenioMVC.Helpers.ArrayType.Character)]
-		public string ValRadiob { get; set; }
-		[JsonIgnore]
-		public SelectList List_ValRadiob { get; set; }
-
-		/// <summary>Campo : "Logo" Tipo:"IJ"</summary>
-		[Display(Name = "LOGO62483", ResourceType = typeof(Resources.Resources))]
-		[UIHint("DBJpegImage")]
-		[Newtonsoft.Json.JsonConverter(typeof(Helpers.ResizeImageSerializer), 100, 50, false, true)]
-		public byte[] ValLogo { get; set; }
-
-		/// <summary>Campo : "Document" Tipo:"IB"</summary>
-		[Display(Name = "DOCUMENT00695", ResourceType = typeof(Resources.Resources))]
-		[UIHint("DBDocument")]
-		[Document("ValAttach", false, true, false, false, DocumentViewTypeMode.Print)]
-		public string ValAttach { get; set; }
-		public string ValAttachfk { get; set; }
-		public DocumsProperties_ViewModel ValAttachPropertiesVM { get; set; }
-
-		/// <summary>Campo : "No. register" Tipo:"C"</summary>
-		[Display(Name = "NO__REGISTER04207", ResourceType = typeof(Resources.Resources))]
-		public TableDBEdit<GenioMVC.Models.Equip>  TableEquipRegistnr { get; set; }
-
-		/// <summary>Campo : "Show record" Tipo:"L"</summary>
-		[Display(Name = "SHOW_RECORD53851", ResourceType = typeof(Resources.Resources))]
-		public bool ValShwrc { get; set; }
-
-		/// <summary>Campo : "Numeric Enumeration" Tipo:"AN"</summary>
-		[Display(Name = "NUMERIC_ENUMERATION19068", ResourceType = typeof(Resources.Resources))]
-		[DataArray("Classnum", GenioMVC.Helpers.ArrayType.Numeric)]
-		public decimal? ValClassnum { get; set; }
-		[JsonIgnore]
-		public SelectList List_ValClassnum { get; set; }
-
 
 		#region Navigations
 		#endregion
@@ -275,7 +282,6 @@ namespace GenioMVC.ViewModels.Flds
 		[Display(Name = "AIRLINE_NAME55130", ResourceType = typeof(Resources.Resources))]
 		public string ValCodaero { get; set; }
 
-		[Display(Name = "NO__REGISTER04207", ResourceType = typeof(Resources.Resources))]
 		public string ValCodequip { get; set; }
 
 		#endregion
@@ -391,15 +397,20 @@ namespace GenioMVC.ViewModels.Flds
 			}
 			try
 			{
+ 				ValShwrc = ViewModelConversion.ToLogic(m.ValShwrc);
  				ValTxtfield = ViewModelConversion.ToString(m.ValTxtfield);
  				ValDescrip = ViewModelConversion.ToString(m.ValDescrip);
+ 				ValPrimviag = ViewModelConversion.ToLogic(m.ValPrimviag);
+ 				ValLogicenu = ViewModelConversion.ToInteger(m.ValLogicenu);
+ 				ValClassnum = ViewModelConversion.ToNumeric(m.ValClassnum);
+ 				ValRadiob = ViewModelConversion.ToString(m.ValRadiob);
  				ValYear = ViewModelConversion.ToNumeric(m.ValYear);
  				ValTime = ViewModelConversion.ToString(m.ValTime);
  				ValDate = ViewModelConversion.ToDateTime(m.ValDate);
  				ValDatetime = ViewModelConversion.ToDateTime(m.ValDatetime);
  				ValDateseco = ViewModelConversion.ToDateTime(m.ValDateseco);
- 				ValNpassage = ViewModelConversion.ToNumeric(m.ValNpassage);
  				ValDuration = ViewModelConversion.ToNumeric(m.ValDuration);
+ 				ValNpassage = ViewModelConversion.ToNumeric(m.ValNpassage);
  				ValPrecobil = ViewModelConversion.ToNumeric(m.ValPrecobil);
  				ValPrice = ViewModelConversion.ToNumeric(m.ValPrice);
  				ValSsnumber = ViewModelConversion.ToString(m.ValSsnumber);
@@ -412,20 +423,16 @@ namespace GenioMVC.ViewModels.Flds
  				ValUpprtext = ViewModelConversion.ToString(m.ValUpprtext);
  				ValPassfld = ViewModelConversion.ToString(m.ValPassfld);
  				ValClrpicke = ViewModelConversion.ToString(m.ValClrpicke);
- 				ValPrimviag = ViewModelConversion.ToLogic(m.ValPrimviag);
- 				ValLogicenu = ViewModelConversion.ToInteger(m.ValLogicenu);
- 				ValCreatuse = ViewModelConversion.ToString(m.ValCreatuse);
+ 				ValLogoexte = ViewModelConversion.ToString(m.ValLogoexte);
+ 				ValLogo = ViewModelConversion.ToImage(m.ValLogo);
+ 				ValAttach = ViewModelConversion.ToString(m.ValAttach);
+				ValAttachfk = ViewModelConversion.ToString(m.ValAttachfk);
  				ValCreatdat = ViewModelConversion.ToDateTime(m.ValCreatdat);
+ 				ValCreatuse = ViewModelConversion.ToString(m.ValCreatuse);
  				ValCreatins = ViewModelConversion.ToDateTime(m.ValCreatins);
  				ValCreathou = ViewModelConversion.ToString(m.ValCreathou);
  				ValConditio = ViewModelConversion.ToNumeric(m.ValConditio);
  				ValClass = ViewModelConversion.ToString(m.ValClass);
- 				ValRadiob = ViewModelConversion.ToString(m.ValRadiob);
- 				ValLogo = ViewModelConversion.ToImage(m.ValLogo);
- 				ValAttach = ViewModelConversion.ToString(m.ValAttach);
-				ValAttachfk = ViewModelConversion.ToString(m.ValAttachfk);
- 				ValShwrc = ViewModelConversion.ToLogic(m.ValShwrc);
- 				ValClassnum = ViewModelConversion.ToNumeric(m.ValClassnum);
  				ValCodaero = ViewModelConversion.ToString(m.ValCodaero);
  				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
  				ValCodflds = ViewModelConversion.ToString(m.ValCodflds);
@@ -446,15 +453,20 @@ namespace GenioMVC.ViewModels.Flds
 			}
 			try
 			{
+				m.ValShwrc = ViewModelConversion.ToLogic(ValShwrc);
 				m.ValTxtfield = ViewModelConversion.ToString(ValTxtfield);
 				m.ValDescrip = ViewModelConversion.ToString(ValDescrip);
+				m.ValPrimviag = ViewModelConversion.ToLogic(ValPrimviag);
+				m.ValLogicenu = ViewModelConversion.ToInteger(ValLogicenu);
+				m.ValClassnum = ViewModelConversion.ToNumeric(ValClassnum);
+				m.ValRadiob = ViewModelConversion.ToString(ValRadiob);
 				m.ValYear = ViewModelConversion.ToNumeric(ValYear);
 				m.ValTime = ViewModelConversion.ToString(ValTime);
 				m.ValDate = ViewModelConversion.ToDateTime(ValDate);
 				m.ValDatetime = ViewModelConversion.ToDateTime(ValDatetime);
 				m.ValDateseco = ViewModelConversion.ToDateTime(ValDateseco);
-				m.ValNpassage = ViewModelConversion.ToNumeric(ValNpassage);
 				m.ValDuration = ViewModelConversion.ToNumeric(ValDuration);
+				m.ValNpassage = ViewModelConversion.ToNumeric(ValNpassage);
 				m.ValPrecobil = ViewModelConversion.ToNumeric(ValPrecobil);
 				m.ValPrice = ViewModelConversion.ToNumeric(ValPrice);
 				m.ValSsnumber = ViewModelConversion.ToString(ValSsnumber);
@@ -467,20 +479,16 @@ namespace GenioMVC.ViewModels.Flds
 				m.ValUpprtext = ViewModelConversion.ToString(ValUpprtext);
 				m.ValPassfld = ViewModelConversion.ToString(ValPassfld);
 				m.ValClrpicke = ViewModelConversion.ToString(ValClrpicke);
-				m.ValPrimviag = ViewModelConversion.ToLogic(ValPrimviag);
-				m.ValLogicenu = ViewModelConversion.ToInteger(ValLogicenu);
-				m.ValCreatuse = ViewModelConversion.ToString(ValCreatuse);
+				m.ValLogoexte = ViewModelConversion.ToString(ValLogoexte);
+				m.ValAttach = ViewModelConversion.ToString(ValAttach);
+				m.ValAttachfk = ViewModelConversion.ToString(ValAttachfk);
+
 				m.ValCreatdat = ViewModelConversion.ToDateTime(ValCreatdat);
+				m.ValCreatuse = ViewModelConversion.ToString(ValCreatuse);
 				m.ValCreatins = ViewModelConversion.ToDateTime(ValCreatins);
 				m.ValCreathou = ViewModelConversion.ToString(ValCreathou);
 				m.ValConditio = ViewModelConversion.ToNumeric(ValConditio);
 				m.ValClass = ViewModelConversion.ToString(ValClass);
-				m.ValRadiob = ViewModelConversion.ToString(ValRadiob);
-				m.ValAttach = ViewModelConversion.ToString(ValAttach);
-				m.ValAttachfk = ViewModelConversion.ToString(ValAttachfk);
-
-				m.ValShwrc = ViewModelConversion.ToLogic(ValShwrc);
-				m.ValClassnum = ViewModelConversion.ToNumeric(ValClassnum);
 				m.ValCodaero = ViewModelConversion.ToString(ValCodaero);
 				m.ValCodequip = ViewModelConversion.ToString(ValCodequip);
 				m.ValCodflds = ViewModelConversion.ToString(ValCodflds);
@@ -580,7 +588,6 @@ namespace GenioMVC.ViewModels.Flds
 			LoadArrays();
 
 			Load_Fieldhlpaero_name____(qs, lazyLoad);
-			Load_Fieldhlpequipregistnr(qs, lazyLoad);
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL FIELDHLP]/
 		}
 
@@ -627,15 +634,15 @@ namespace GenioMVC.ViewModels.Flds
 			this.List_ValLogicenu = new SelectList(
 				ArrayPrimviag.GetDictionary().ToDictionary(p => p.Key, p => Helpers.Helpers.GetTextFromResources(p.Value)),
 				"Key", "Value", this.ValLogicenu);
-			this.List_ValClass = new SelectList(
-				ArrayClass.GetDictionary().ToDictionary(p => p.Key, p => Helpers.Helpers.GetTextFromResources(p.Value)),
-				"Key", "Value", this.ValClass);
-			this.List_ValRadiob = new SelectList(
-				ArrayRadiobtn.GetDictionary().ToDictionary(p => p.Key, p => Helpers.Helpers.GetTextFromResources(p.Value)),
-				"Key", "Value", this.ValRadiob);
 			this.List_ValClassnum = new SelectList(
 				ArrayClassnum.GetDictionary().ToDictionary(p => p.Key, p => Helpers.Helpers.GetTextFromResources(p.Value)),
 				"Key", "Value", this.ValClassnum);
+			this.List_ValRadiob = new SelectList(
+				ArrayRadiobtn.GetDictionary().ToDictionary(p => p.Key, p => Helpers.Helpers.GetTextFromResources(p.Value)),
+				"Key", "Value", this.ValRadiob);
+			this.List_ValClass = new SelectList(
+				ArrayClass.GetDictionary().ToDictionary(p => p.Key, p => Helpers.Helpers.GetTextFromResources(p.Value)),
+				"Key", "Value", this.ValClass);
 		}
 
 
@@ -841,209 +848,6 @@ namespace GenioMVC.ViewModels.Flds
 
 
         private readonly string[] _fieldsToSerialize_FIELDHLPAERO_NAME____ = { "Aero", "Aero.ValCodaero", "Aero.ValZzstate", "Aero.ValName" };
-
-        /// <summary>
-        /// TableEquipRegistnr -> (DB)
-        /// </summary>
-        /// <param name="qs"></param>
-        /// <param name="lazyLoad">Lazy loading of dropdown items</param>
-        public void Load_Fieldhlpequipregistnr(NameValueCollection qs, bool lazyLoad = false)
-        {
-            bool fieldhlpequipregistnrDoLoad = true;
-            CriteriaSet fieldhlpequipregistnrConds = CriteriaSet.And();
-            {
-                object hValue = Navigation.GetValue("equip", true);
-                if (hValue != null && !(hValue is Array) && !String.IsNullOrEmpty(Convert.ToString(hValue)))
-                {
-                    fieldhlpequipregistnrConds.Equal(CSGenioAequip.FldCodequip, Navigation.GetValue("equip"));
-                    this.ValCodequip = Navigation.GetStrValue("equip");
-                }
-            }
-
-
-
-            TableEquipRegistnr = new TableDBEdit<Models.Equip>();
-            TableEquipRegistnr.IsLazyLoad = lazyLoad;
-            if(lazyLoad)
-            {
-                if (Navigation.CurrentLevel.GetEntry("RETURN_equip") != null)
-				{
-                    this.ValCodequip = Navigation.GetStrValue("RETURN_equip");
-					Navigation.CurrentLevel.SetEntry("RETURN_equip", null);
-				}
-                FillDependant_FieldhlpTableEquipRegistnr(lazyLoad);
-                //Check if foreignkey comes from history
-                TableEquipRegistnr.FilledByHistory = Navigation.CheckFilledByHistory("equip");
-                return;
-            }
-
-
-            if (fieldhlpequipregistnrDoLoad)
-            {
-                List<ColumnSort> sorts = new List<ColumnSort>();
-                ColumnSort requestedSort = GetRequestSort(TableEquipRegistnr, "sTableEquipRegistnr", "dTableEquipRegistnr", qs, "equip");
-                if (requestedSort != null)
-                        sorts.Add(requestedSort);
-				sorts.Add(new ColumnSort(new ColumnReference(CSGenioAequip.FldRegistnr), SortOrder.Ascending));
-
-
-                string query = "";
-                if (!String.IsNullOrEmpty(qs["TableEquipRegistnr_tableFilters"]))
-                    TableEquipRegistnr.TableFilters = bool.Parse(qs["TableEquipRegistnr_tableFilters"]);
-                else
-                    TableEquipRegistnr.TableFilters = false;
-
-                query = qs["qTableEquipRegistnr"];
-
-                //RS 26.07.2016 O preenchimento da lista de ajuda dos Dbedits passa a basear-se apenas no campo do próprio DbEdit
-                // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
-                //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
-                CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
-                {
-					search_filters.Like(CSGenioAequip.FldRegistnr, query + "%");
-                }
-                fieldhlpequipregistnrConds.SubSet(search_filters);
-
-
-                string tryParsePage = qs["pTableEquipRegistnr"] != null ? qs["pTableEquipRegistnr"].ToString() : "1";
-                int page = !String.IsNullOrEmpty(tryParsePage) ? int.Parse(tryParsePage) : 1;
-                int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
-                int offset = (page - 1) * numberItems;
-
-                FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.FldRegistnr, CSGenioAequip.FldZzstate };
-
-// USE /[MANUAL GQT OVERRQ FIELDHLP_EQUIPREGISTNR]/
-
-                // Limitation by Zzstate
-                /*
-                    Records that are currently being inserted or duplicated will also be included.
-                    Client-side persistence will try to fill the "text" value of that option.
-                */
-                if(Navigation.checkFormMode("equip", FormMode.New) || Navigation.checkFormMode("equip", FormMode.Duplicate))
-                    fieldhlpequipregistnrConds.SubSet(CriteriaSet.Or()
-                        .Equal(CSGenioAequip.FldZzstate, 0)
-                        .Equal(CSGenioAequip.FldCodequip, Navigation.GetStrValue("equip")));
-                else
-                    fieldhlpequipregistnrConds.Criterias.Add(new Criteria(new ColumnReference(CSGenioAequip.FldZzstate), CriteriaOperator.Equal, 0));
-
-                //EPH
-                //fieldhlpequipregistnrConds = Equip.AddEPH<CSGenioAequip>(ref UserContext.Current.User, fieldhlpequipregistnrConds, "LED_FIELDHLPEQUIPREGISTNR");
-
-                FieldRef firstVisibleColumn = new FieldRef("equip", "registnr");
-                ListingMVC<CSGenioAequip> listing = Models.ModelBase.Where<CSGenioAequip>(false, fieldhlpequipregistnrConds, fields, offset, numberItems, sorts, "LED_FIELDHLPEQUIPREGISTNR", true, false, firstVisibleColumn: firstVisibleColumn);
-
-                TableEquipRegistnr.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
-                TableEquipRegistnr.Query = query;
-                TableEquipRegistnr.Elements = listing.RowsForViewModel<GenioMVC.Models.Equip>((r) => new GenioMVC.Models.Equip(r, true, _fieldsToSerialize_FIELDHLPEQUIPREGISTNR));
-
-                //creaed by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
-                //last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
-                if (Navigation.CurrentLevel.GetEntry("RETURN_equip") != null)
-				{
-					this.ValCodequip = Navigation.GetStrValue("RETURN_equip");
-					Navigation.CurrentLevel.SetEntry("RETURN_equip", null);
-				}
-
-				TableEquipRegistnr.List = new SelectList(TableEquipRegistnr.Elements.ToSelectList(x => x.ValRegistnr, x => x.ValCodequip,  x => x.ValCodequip == this.ValCodequip), "Value", "Text", this.ValCodequip);
-                FillDependant_FieldhlpTableEquipRegistnr();
-
-                //Check if foreignkey comes from history
-                TableEquipRegistnr.FilledByHistory = Navigation.CheckFilledByHistory("equip");
-            }
-        }
-
-        /// <summary>
-        /// Get Dependant fields values -> TableEquipRegistnr (DB)
-        /// </summary>
-        /// <param name="PKey">Primary Key of Equip</param>
-        /// <param name="Navigation">Navigation context</param>
-        public static ConcurrentDictionary<string, object> GetDependant_FieldhlpTableEquipRegistnr(string PKey, NavigationContext Navigation)
-        {
-            string[] DependantFields = new string[] { "equip.codequip", "equip.registnr" };
-            FieldRef[] refDependantFields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.FldRegistnr };
-            var returnEmptyDependants = false;
-            CriteriaSet wherecodition = CriteriaSet.And();
-
-            // Return default values
-            if (GlobalFunctions.emptyG(PKey) == 1)
-                returnEmptyDependants = true;
-
-            // Check if the limit(s) is filled if exists
-            // - - - - - - - - - - - - - - - - - - - - -
-
-            if(returnEmptyDependants)
-                return getDefaultValuesForFields(refDependantFields);
-
-            PersistentSupport sp = UserContext.Current.PersistentSupport;
-            User u = UserContext.Current.User;
-            CSGenioAequip tempArea = new CSGenioAequip(u);
-
-            // Fields to select
-            SelectQuery querySelect = new SelectQuery();
-            querySelect.PageSize(1);
-            foreach (FieldRef field in refDependantFields)
-                querySelect.Select(field);
-
-            querySelect.From(tempArea.QSystem, tempArea.TableName, tempArea.Alias)
-                .Where(wherecodition.Equal(CSGenioAequip.FldCodequip, PKey));
-            QueryUtils.SetInnerJoins(DependantFields, null, tempArea, querySelect);
-
-            ArrayList values = sp.executeReaderOneRow(querySelect);
-
-            // Convert data to internal format
-            ConcurrentDictionary<string, object> res = new ConcurrentDictionary<string, object>();
-            for(int index = 0; index < DependantFields.Length; index ++)
-            {
-                CSGenio.framework.Field campoBD = CSGenio.business.Area.GetFieldInfo(refDependantFields[index]);
-                if (values.Count == 0)
-                    res.TryAdd(DependantFields[index], campoBD.GetValorEmpty());
-                else
-                    res.TryAdd(DependantFields[index], DBConversion.ToInternal(values[index], campoBD.FieldFormat));
-            }
-
-            return res;
-        }
-
-        /// <summary>
-        /// Fill Dependant fields values -> TableEquipRegistnr (DB)
-        /// </summary>
-        /// <param name="lazyLoad">Lazy loading of dropdown items</param>
-        public void FillDependant_FieldhlpTableEquipRegistnr(bool lazyLoad = false)
-        {
-            var row = GetDependant_FieldhlpTableEquipRegistnr(this.ValCodequip, Navigation);
-            try
-            {
-                // That code doesn't include fields of the own control and can be empty if no one dependant field present on the form.
-
-                // Fill List fields
-                this.ValCodequip = ViewModelConversion.ToString(row["equip.codequip"]);
-                TableEquipRegistnr.Value = ViewModelConversion.ToString(row["equip.registnr"]);
-                if (GlobalFunctions.emptyG(this.ValCodequip) == 1)
-                {
-                    this.ValCodequip = "";
-                    TableEquipRegistnr.Value = "";
-                    Navigation.ClearValue("equip");
-                }
-                else if (lazyLoad)
-                {
-                    TableEquipRegistnr.SetPagination(1, 0, false, false, 1);
-                    TableEquipRegistnr.List = new SelectList(new List<SelectListItem>() {
-                        new SelectListItem
-                        {
-                            Value = Convert.ToString(this.ValCodequip),
-                            Text = Convert.ToString(TableEquipRegistnr.Value),
-                            Selected = true
-                        } }, "Value", "Text", this.ValCodequip);
-                }
-                TableEquipRegistnr.Selected = this.ValCodequip;
-
-            }
-            catch (Exception ex) { CSGenio.framework.Log.Error(string.Format("FillDependant_Error (TableEquipRegistnr): {0}; {1}", ex.Message, ex.InnerException != null ? ex.InnerException.Message : "")); }
-        }
-
-
-        private readonly string[] _fieldsToSerialize_FIELDHLPEQUIPREGISTNR = { "Equip", "Equip.ValCodequip", "Equip.ValZzstate", "Equip.ValRegistnr" };
 
 
 		#region Charts

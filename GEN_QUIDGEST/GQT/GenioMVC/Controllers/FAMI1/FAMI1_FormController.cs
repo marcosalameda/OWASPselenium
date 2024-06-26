@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Fami1_ValTiposequ_ViewModel model = new Fami1_ValTiposequ_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodfamil = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

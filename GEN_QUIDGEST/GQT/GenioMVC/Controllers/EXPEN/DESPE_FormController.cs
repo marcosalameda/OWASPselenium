@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Despe_ProjeValProjecto_ViewModel model = new Despe_ProjeValProjecto_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCoddespe = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,7 +1012,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Despe_YearValYear_ViewModel model = new Despe_YearValYear_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCoddespe = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1044,7 +1042,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Despe_AgregValValue_ViewModel model = new Despe_AgregValValue_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCoddespe = id;
 			TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
 			// TODO: Remove the old version of limits that pass every field in separate parameters
 			if (Limits != null)

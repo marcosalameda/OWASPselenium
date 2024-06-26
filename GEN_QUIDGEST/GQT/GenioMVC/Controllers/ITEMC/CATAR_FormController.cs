@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Catar_ItemValItemdes_ViewModel model = new Catar_ItemValItemdes_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodcatar = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,7 +1012,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Catar_CattpValTpcatego_ViewModel model = new Catar_CattpValTpcatego_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodcatar = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

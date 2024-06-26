@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Fotos_EquipValRegistnr_ViewModel model = new Fotos_EquipValRegistnr_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodphoto = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

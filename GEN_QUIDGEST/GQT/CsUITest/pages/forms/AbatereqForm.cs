@@ -16,7 +16,6 @@ public class AbatereqForm: PageObject {
 	public BaseInputControl LED_ABATEREQDECOMNOTE____ => new BaseInputControl(driver, "[data-identifier='LED_ABATEREQDECOMNOTE____']");
 	public BaseInputControl IFF_ABATEREQPSEUDCOLLAPSE => new BaseInputControl(driver, "[data-identifier='IFF_ABATEREQPSEUDCOLLAPSE']");
 	public BaseInputControl IFF_ABATEREQPSEUDABATETAB => new BaseInputControl(driver, "[data-identifier='IFF_ABATEREQPSEUDABATETAB']");
-	public IWebElement IFF_ABATEREQPSEUDJJJ_____ => throw new NotImplementedException();
 
 	private IWebElement saveBtn => form.FindElement(By.CssSelector(".form-actions [qbutton='ok']"));
 	private IWebElement cancelBtn => form.FindElement(By.CssSelector(".form-actions [qbutton='cancel']"));

@@ -379,40 +379,6 @@ namespace CSGenio.business
         }
 
         /// <summary>
-        /// Método to validar se pode ser alterada a password to uma nova
-        /// </summary>
-        /// <param name="passAntiga">password antiga</param>
-        /// <param name="passNew">password nova</param>
-        /// <param name="passConfirm">password nova to confirmação</param>
-        /// <returns>string com erro em caso de insucesso. Vazio to caso de sucesso/returns>
-        public string password_CanChange(string codpsw, string oldPass, string passNew, string passConfirm)
-        {
-            try
-            {
-                AreaInfo pswInfo = CSGenioApsw.GetInformation();
-
-                CSGenioApsw area = new CSGenioApsw(user, user.CurrentModule);
-                if (sp.getRecord(area, codpsw, new[] { "nome", "password", "salt", "pswtype" }))
-                    return GenioServer.security.PasswordFactory.CheckValidPassToChange(area.ValNome, oldPass, passNew, passConfirm, area.ValPassword, area.ValSalt, area.ValPswtype);
-                else
-                    throw new BusinessException("Erro a puxar o registo do utilizador à psw.", "GlobalFunctions.password_CanChange", "Error checking user information");
-            }
-            catch (GenioException ex)
-            {
-                if (ex.ExceptionSite == "GlobalFunctions.password_CanChange")
-                    throw;
-                if (ex.UserMessage == null)
-                    throw new BusinessException("Erro na verificação se pode ser alterada a password.", "GlobalFunctions.password_CanChange", "Error checking if can change password.");
-                else
-                    throw new BusinessException("Erro na verificação se pode ser alterada a password: " + ex.UserMessage, "GlobalFunctions.password_CanChange", "Error checking if can change password.");
-            }
-            catch (Exception ex)
-            {
-                throw new BusinessException("Erro na verificação se pode ser alterada a password.", "GlobalFunctions.password_CanChange", "Error checking if can change password: " + ex.Message, ex);
-            }
-        }
-
-        /// <summary>
         /// Método to change uma password
         /// </summary>
         /// <param name="passAntiga">password antiga</param>
@@ -429,32 +395,20 @@ namespace CSGenio.business
 
             try
             {
-                string error = password_CanChange(codpsw, oldPass, newPass, newPassRepetition);
-                if (error == "")
-                {
-                    CSGenioApsw psw = new CSGenioApsw(User, module);
+                if (string.IsNullOrEmpty(codpsw))
+                    codpsw = User.Codpsw;
 
-                    if (string.IsNullOrEmpty(codpsw))
-                        codpsw = User.Codpsw;
-
-                    if (User.Codpsw == codpsw || User.IsAdminInAnyModule())
-                    {
-                        string passwordEncriptada = GenioServer.security.PasswordFactory.Encrypt(newPass);
-                        psw.insertNameValueField("psw.password", passwordEncriptada.Replace("'", "''"));
-                        psw.insertNameValueField("psw.salt", "");
-                        psw.insertNameValueField("psw.pswtype", Configuration.Security.PasswordAlgorithms.ToString());
-                        psw.insertNameValueField("psw.codpsw", codpsw);
-                        //RMR(2018-11-14) - Whenever the user changes his/her password, the status is set to 0 (no changes needed)
-                        psw.insertNameValueField("psw.status", 0);
-                        psw.insertNameValueField("psw.datexp", DateTime.Now);
-                        sp.openTransaction();
-                        psw.change(sp, (CriteriaSet) null);
-                        sp.closeTransaction();
-                    }
-                }
-                else
+                if (User.Codpsw == codpsw || User.IsAdminInAnyModule())
                 {
-                    throw new BusinessException(Translations.GetByCode(error, User.Language), "GlobalFunctions.password_alterar", "Error on valid if user can change password checking the rules.");
+                    var uf = new UserFactory(sp, User);
+                    sp.openConnection();
+                    var psw = uf.GetUser(User.Name);
+                    uf.ChangePassword(psw, newPass, newPassRepetition, oldPass);                        
+                    sp.closeConnection();
+
+                    sp.openTransaction();
+                    psw.update(sp);
+                    sp.closeTransaction();
                 }
                 return true;
             }
@@ -1349,11 +1303,12 @@ namespace CSGenio.business
         }
 
         /// <summary>
-        /// Returns the index in the string of the first occurrence
-        /// of the specified substring
+        /// Returns the zero-based index of the first occurrence of the specified substring within the given string.
+        /// If the substring is not found or either input string is null or empty, returns -1.
         /// </summary>
-        /// <param name="str">The string.</param>
-        /// <param name="substr">The substr.</param>
+        /// <param name="str">The string to search in.</param>
+        /// <param name="substr">The substring to search for.</param>
+        /// <returns>The zero-based index of the first occurrence of the specified substring, or -1 if not found.</returns>
         public static int IndexOf(string str, string substr)
         {
             if (string.IsNullOrEmpty(str) || string.IsNullOrEmpty(substr))
@@ -2307,10 +2262,10 @@ namespace CSGenio.business
             { "$menu-behaviour", "partial_collapse" },
             { "$compactheader", "false" },
             { "$save-icon", "floppy-disk" },
-            { "$compactstyle", "true" },
-            { "$border-radius", "0.25rem" },
+            { "$compactstyle", "false" },
+            { "$border-radius", "0" },
             { "$table-striped", "false" },
-            { "$table-head-inverse", "false" },
+            { "$table-head-inverse", "true" },
             { "$table-vertical-border", "true" },
             { "$enable-table-wrap", "true" },
             { "$font-size-base", "0.9rem" },
@@ -2329,10 +2284,10 @@ namespace CSGenio.business
             { "$input-btn-padding-y", "0.26rem" },
             { "$input-btn-padding-x", "0.25rem" },
             { "$enable-switch-single-label", "false" },
-            { "$wizard-steps", "circle" },
+            { "$wizard-steps", "'arrow'" },
             { "$wizard-content", "standard" },
             { "$btn-align-right", "false" },
-            { "$menu-multi-level", "true" },
+            { "$menu-multi-level", "false" },
             { "$primary-light", "#cde5ff" },
             { "$primary-dark", "#006398" },
             { "$success", "#28A745" },
@@ -2430,8 +2385,8 @@ namespace CSGenio.business
             { "$font-size-base", "0.9rem" },
             { "$font-family-sans-serif", "\"Lato\", Roboto, \"Helvetica Neue\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"" },
             { "$font-headings", "$font-family-sans-serif" },
-            { "$primary", "#b05f18" },
-            { "$secondary", "#595959" },
+            { "$primary", "#018BD2" },
+            { "$secondary", "#040628" },
             { "$highlight", "#ff8241" },
             { "$action-focus-width", "2px" },
             { "$action-focus-style", "solid" },
@@ -2507,7 +2462,7 @@ namespace CSGenio.business
             { "$primary-light", "#cde5ff" },
             { "$primary-dark", "#006398" },
             { "$success", "#28A745" },
-            { "$danger", "#b71c1c" },
+            { "$danger", "#B71C1C" },
             { "$light", "#EDF0F3" },
             { "$red", "#b71c1c" },
             { "$info", "#17A2B8" },

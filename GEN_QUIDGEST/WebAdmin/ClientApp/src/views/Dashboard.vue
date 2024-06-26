@@ -10,14 +10,20 @@
       </h1>
       <br />
       <hr />
-    <div v-if="!Model.HasConfig" class="card feature-box">
+    <div v-if="!loaded" class="card text-center">
+        <div class="card-body">
+            <span class="feature-icon glyphicons glyphicons-hourglass"></span>
+            <h4>{{ Resources.A_CARREGAR___34906 }}</h4>
+        </div>
+    </div>
+    <div v-else-if="!Model.HasConfig" class="card feature-box">
       <div class="card-body" @click.stop="createNewConfig">
           <span class="feature-icon glyphicons glyphicons-file-plus"></span>
           <h4>{{ Resources.CREATE_NEW_CONFIGURA21344 }}</h4>
           <p>{{ Resources.NO_CONFIGURATION_FIL40493 }}</p>                
       </div>
     </div>
-    <div v-if="Model.HasConfig">
+    <div v-else-if="Model.HasConfig">
       <div class="row">
         <div class="col-sm-3">
           <div class="card feature-box">
@@ -98,7 +104,7 @@
               <dt v-bind:class="style.dtClass">{{ Resources.SISTEMA05814 }}</dt>
               <dd v-bind:class="style.ddClass">GQT</dd>
               <dt v-bind:class="style.dtClass">{{ Resources.VERSAO_DE_SISTEMA07287 }}</dt>
-              <dd v-bind:class="style.ddClass">2699</dd>
+              <dd v-bind:class="style.ddClass">2725</dd>
               <dt v-bind:class="style.dtClass">{{ Resources.VERSAO_DE_BASE_DE_DA46937 }}</dt>
               <dd v-bind:class="style.ddClass">{{ Model.VersionDbGen }}</dd>
               <dt v-bind:class="style.dtClass">{{ Resources.APP_MIGRATION_VERSIO41495 }}</dt>
@@ -106,9 +112,9 @@
               <dt v-bind:class="style.dtClass">{{ Resources.VERSAO_DOS_INDICES49454 }}</dt>
               <dd v-bind:class="style.ddClass">{{ Model.VersionIdxDbGen }}</dd>
               <dt v-bind:class="style.dtClass">{{ Resources.VERSAO_DE_GENIO44840 }}</dt>
-              <dd v-bind:class="style.ddClass">345.35</dd>
+              <dd v-bind:class="style.ddClass">346.16</dd>
               <dt v-bind:class="style.dtClass">{{ Resources.GERADO_EM27272 }}</dt>
-              <dd v-bind:class="style.ddClass">06/06/2024</dd>
+              <dd v-bind:class="style.ddClass">06/21/2024</dd>
             </dl>
           </div>
         </div>
@@ -204,6 +210,7 @@
     data: function () {
       var vm = this;
       return {
+        loaded: false,
         Model: {},
         modules: [],
         CurentMaintenance: {},
@@ -265,6 +272,7 @@
           QUtils.log("Fetch data - OK (Dashboard)", data);
           $.each(data.model, function (propName, value) { vm.Model[propName] = value; });
           $.each(data.CurentMaintenance, function (propName, value) { vm.CurentMaintenance[propName] = value; });
+          vm.loaded = true;
         });
       },
       createNewConfig: function () {

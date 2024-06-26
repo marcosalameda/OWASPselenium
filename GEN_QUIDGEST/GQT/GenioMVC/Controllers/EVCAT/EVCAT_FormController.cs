@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Evcat_PessoValName_ViewModel model = new Evcat_PessoValName_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodprogr = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,7 +1012,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Evcat_Cate1ValCategoria_ViewModel model = new Evcat_Cate1ValCategoria_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodprogr = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

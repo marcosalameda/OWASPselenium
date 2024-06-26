@@ -25,7 +25,7 @@
 		var areaField = col.AreaField;
 		if (areaField.Area == "item" && areaField.Field == "itemdes")
 		{
-			fields.Add("ITEM.ITEMDES", new TableFilterField("ITEM", "ITEMDES", Resources.ARTICLES59822, "text", defaultSearch : true));
+			fields.Add("ITEM.ITEMDES", new TableFilterField("ITEM", "ITEMDES", Resources.ARTICLE60065, "text", defaultSearch : true));
 		}
 		if (areaField.Area == "item" && areaField.Field == "itemcod")
 		{
@@ -73,7 +73,7 @@
 		   <div class="col-auto search">
 				<div class="i-input-group input-xxlarge" id="PTN_Menu_221_simple_filter">
 					<div data-search-filter-menu-elem="filter-box-list"></div>
-					@Html.TextBox("qPTN_Menu_221", Navigation.GetStrValue("qPTN_Menu_221"), new { @class="i-input-group__field input-xxlarge dropdown-toggle", @title=@Resources.CAIXA_DE_PESQUISA53870, @onfocus="ToggleSearchFilterBox('PTN_Menu_221');" ,@onkeydown = "ListSearchEnter(event)", @autocomplete = "off" ,@data_toggle = "dropdown",@data_search_field_menu_elem = "show", @onblur = "HideSearchFieldMenuOnUnfocus('PTN_Menu_221');",@placeholder = Resources.PESQUISAR34506 + " " + Resources.ARTICLES59822})
+					@Html.TextBox("qPTN_Menu_221", Navigation.GetStrValue("qPTN_Menu_221"), new { @class="i-input-group__field input-xxlarge dropdown-toggle", @title=@Resources.CAIXA_DE_PESQUISA53870, @onfocus="ToggleSearchFilterBox('PTN_Menu_221');" ,@onkeydown = "ListSearchEnter(event)", @autocomplete = "off" ,@data_toggle = "dropdown",@data_search_field_menu_elem = "show", @onblur = "HideSearchFieldMenuOnUnfocus('PTN_Menu_221');",@placeholder = Resources.PESQUISAR34506 + " " + Resources.ARTICLE60065})
 					<button id="qPTN_Menu_221-clearBtn" class="clear-search d-none" type="button">
 						<i class="glyphicons glyphicons-remove mr-1"></i>
 					</button>

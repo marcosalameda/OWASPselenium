@@ -329,7 +329,11 @@ namespace GenioServer.security
             return StringRandom(9, false);
         }
 
-		private static double scorePassword(string pass)
+        /// <summary>
+        /// Score the strength of a password
+        /// </summary>
+        /// <returns>The password to check</returns>
+		public static double scorePassword(string pass)
         {
             double score = 0.0;
             if (pass == "")
@@ -357,116 +361,6 @@ namespace GenioServer.security
             return score;
         }
 
-		/// <summary>
-        /// Função to verificar se existem erros nos dados de forma a poder ser realizada alteração da password de um user
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="oldPass"></param>
-        /// <param name="newPass"></param>
-        /// <param name="confirmPass"></param>
-        /// <param name="encPass">Password encriptada</param>
-        /// <param name="salt"></param>
-        /// <param name="pswType"></param>
-        /// <returns>string com erro caso exista. Em caso de sucesso retorna string vazia</returns>
-        public static string CheckValidPassToChange(string user, string oldPass, string newPass, string confirmPass, string encPass, string salt, string pswType)
-        {
-            if (encPass != "" && !IsOK(oldPass, encPass, salt, pswType)) //Verificar password antiga é a verdadeira
-                return "A_PASSWORD_ANTIGA_NA50246";
-            if (oldPass == newPass || oldPass == confirmPass)
-                return "A_NOVA_PALAVRA_PASSE58485";
-
-            return CheckValidPassToCreate(user, newPass, confirmPass);
-        }
-
-		/// <summary>
-        /// Função to verificar se existem erros nos dados de forma a poder ser realizada alteração da password de um user
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="oldPass"></param>
-        /// <param name="newPass"></param>
-        /// <param name="confirmPass"></param>
-        /// <param name="encPass">Password encriptada</param>
-        /// <param name="salt"></param>
-        /// <param name="pswType"></param>
-        /// <param name="language"></param>
-        /// <returns>string com erro caso exista. Em caso de sucesso retorna string vazia</returns>
-        public static string CheckValidPassToChange(string user, string oldPass, string newPass, string confirmPass, string encPass, string salt, string pswType, string language)
-        {
-            if (encPass != "" && !IsOK(oldPass, encPass, salt, pswType)) //Verificar password antiga é a verdadeira
-                return Translations.GetByCode("A_PASSWORD_ANTIGA_NA50246", language);
-            if (oldPass == newPass || oldPass == confirmPass)
-                return Translations.GetByCode("A_NOVA_PALAVRA_PASSE58485", language);
-
-            return CheckValidPassToCreate(user, newPass, confirmPass, language);
-        }
-
-        private static (int, string) CheckPassToCreateError(string user, string pass, string confirmPass)
-        {
-            if (pass == null) // null password protection
-                pass = "";
-
-            if (pass != confirmPass) // New password e a confirmação tem Qvalues diferentes
-                return (1, "");
-            if (pass.ToUpper() == user.ToUpper()) // Não permitir a introdução de password igual ao name de user
-                return (2, "");
-
-            // check password strength
-            double pswStrength = scorePassword(pass);
-            if (!((Configuration.Security.PasswordStrength == PasswordStrength.Forte && pswStrength > 80) ||
-                (Configuration.Security.PasswordStrength == PasswordStrength.Bom && pswStrength > 60) ||
-                (Configuration.Security.PasswordStrength == PasswordStrength.Fraco && pswStrength >= 30) ||
-                (Configuration.Security.PasswordStrength == PasswordStrength.Pobre)))
-                return (3, Configuration.Security.PasswordStrength.ToString());
-
-            // check minimum chars on new password
-            if (Int32.TryParse(Configuration.Security.MinCharacters, out int minChar) && minChar > 0 && pass.Length < minChar)
-                return (4, minChar.ToString());
-
-            return (0, "");
-        }
-
-        /// <summary>
-        /// Função que verifica se a nova password preenche os requisitos do sistema
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="pass"></param>
-        /// <param name="confirmPass"></param>
-        public static string CheckValidPassToCreate(string user, string pass, string confirmPass)
-        {
-            int errorType = CheckPassToCreateError(user, pass, confirmPass).Item1;
-
-            switch (errorType)
-            {
-                case 1:
-                    return "A_NOVA_PALAVRA_CHAVE41230";
-                case 2:
-                    return "ATENCAO__NAO_PODE_CO49745";
-                case 3:
-                    return "A_PALAVRA_PASSE_NAO_59708";
-                case 4:
-                    return "A_PALAVRA_PASSE_NAO_06382";
-                default:
-                    return "";
-            }
-        }
-
-        /// <summary>
-        /// Função que verifica se a nova password preenche os requisitos do sistema
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="pass"></param>
-        /// <param name="confirmPass"></param>
-        /// <param name="language"></param>
-        public static string CheckValidPassToCreate(string user, string pass, string confirmPass, string language)
-        {
-            var error = CheckPassToCreateError(user, pass, confirmPass);
-            if (error.Item1 != 0)
-            {
-                string errorMsg = CheckValidPassToCreate(user, pass, confirmPass);
-                return string.Format(Translations.GetByCode(errorMsg, language), error.Item2);
-            }
-            return "";
-        }
 
         /// <summary>
         /// The ecription function for the password fields
@@ -500,20 +394,5 @@ namespace GenioServer.security
         }
 
 
-        /// <summary>
-        /// Check if the password is part of the blacklist
-        /// </summary>
-        /// <param name="sp">The database connection</param>
-        /// <param name="password">The password to check</param>
-        /// <returns>True if the password is blacklisted, false otherwise</returns>
-        public static bool CheckBlacklisted(PersistentSupport sp, string password)
-        {
-            SelectQuery select = new SelectQuery()
-                .Select(SqlFunctions.Count(1), "COUNT")
-                .From("PswBlacklist")
-                .Where(CriteriaSet.And().Equal("PswBlacklist", "pass", password.ToLowerInvariant()));
-            var ct = DBConversion.ToInteger(sp.executeScalar(select));
-            return ct > 0;
-        }
     }
 }

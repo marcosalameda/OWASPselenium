@@ -451,7 +451,7 @@ namespace Administration.Controllers
                 if (model.PasswordChange)
                 {
                     var factory = new UserFactory(sp, user);
-                    userPsw = factory.ChangePassword(userPsw, new(model.PasswordNew, model.PasswordConfirm));
+                    factory.ChangePassword(userPsw, model.PasswordNew, model.PasswordConfirm);
                 }
                 
                 userPsw.ValOpermuda = "WebAdmin";

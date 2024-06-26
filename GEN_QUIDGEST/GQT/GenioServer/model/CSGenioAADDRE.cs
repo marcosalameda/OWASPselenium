@@ -260,7 +260,7 @@ namespace CSGenio.business
 
 			// Area meta-information
 			info.QSystem="GQT";
-			info.TableName="gqtaddress0";
+			info.TableName="gqtaddress";
 			info.ShadowTabName="";
 			info.ShadowTabKeyName="";
 

@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Artigext_WarehValWarehdes_ViewModel model = new Artigext_WarehValWarehdes_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCoditem = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,7 +1012,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Artigext_GitemValItemdes_ViewModel model = new Artigext_GitemValItemdes_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCoditem = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

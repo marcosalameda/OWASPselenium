@@ -28,7 +28,7 @@ namespace CSGenio.framework
             CriaLog = false;
             VisivelCav = CavVisibilityType.Sempre;
         }
-
+ 
         /// <summary>
         /// Hashcode for the object
         /// </summary>

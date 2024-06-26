@@ -203,7 +203,7 @@ namespace CSGenio.business.async
             manager.StartProgressUpdater(process, serverJob.Progress);
             ProcessResponse result = new ProcessResponse(null, process);
             job.SetResponse(result);
-            job.Execute(sp, user);
+            serverJob.Execute(sp, user);
             outer.Finish(process, job.Result);
         }
 
@@ -216,7 +216,7 @@ namespace CSGenio.business.async
             manager.StartProgressUpdater(process, serverJob.Progress);
             ProcessResponse result = new ProcessResponse(null, process);
             job.SetResponse(result);
-            var t = job.ExecuteAsync(sp, user, process).Result;
+            var t = serverJob.ExecuteAsync(sp, user, process).Result;
             outer.Finish(process, job.Result);
         }
 

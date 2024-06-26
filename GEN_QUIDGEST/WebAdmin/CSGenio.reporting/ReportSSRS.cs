@@ -4,6 +4,8 @@ using CSGenio.persistence;
 
 #if NETFRAMEWORK
 using Microsoft.Reporting.WebForms;
+using System.Security;
+using System.Security.Permissions;
 #else
 using Microsoft.Reporting.NETCore;
 #endif
@@ -252,7 +254,25 @@ namespace CSGenio.reporting
         {
             var result = new ReportSSRS_Result();
             if (!this.isServerReport)
+            {
+#if NETFRAMEWORK
+                PermissionSet permissionSet = new PermissionSet(PermissionState.None);
+                permissionSet.AddPermission(new SecurityPermission(SecurityPermissionFlag.Execution));
+                /*
+                * Starting from log4net version 2.0.10, where the 'Improper Restriction of XML External Entity Reference (XXE) (CWE ID 611)' vulnerability was fixed, 
+                * local reports that initialize an AppDomain for sandboxing started to throw security errors because they internally use Serialization.
+                */
+                permissionSet.AddPermission(new SecurityPermission(SecurityPermissionFlag.SerializationFormatter));
+
+                /*
+                * https://learn.microsoft.com/en-us/previous-versions/visualstudio/visual-studio-2010/ee344968(v=vs.100)
+                * The default base permission is Execution.
+                * If any additional error appears, we can evaluate whether we can use: AppDomain.CurrentDomain.PermissionSet.Copy()
+                */
+                localReportInstance.SetBasePermissionsForSandboxAppDomain(permissionSet);
+#endif
                 result.File = localReportInstance.Render(exportType, null, out result.MimeType, out result.Encoding, out result.FileNameExtension, out result.Streams, out result.Warnings);
+            }
             else
                 result.File = serverReportInstance.Render(exportType, null, out result.MimeType, out result.Encoding, out result.FileNameExtension, out result.Streams, out result.Warnings);
             return result;

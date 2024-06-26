@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Venda_OrganValOrganiza_ViewModel model = new Venda_OrganValOrganiza_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodvenda = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

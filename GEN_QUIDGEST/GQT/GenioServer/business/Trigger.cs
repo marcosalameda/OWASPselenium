@@ -292,23 +292,4 @@ namespace CSGenio.business.Triggers
 			AddAction(2, new UpdateFieldValueAction(context, "glob", "legend", formula, false));
 		}
 	}
-
-	/// <summary>
-	/// Trigger UPDATEFORM
-	/// </summary>
-	/// <seealso cref="CSGenio.business.Trigger" />
-	public class TriggerUpdateform : Trigger
-	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="TriggerUpdateform" /> class.
-		/// </summary>
-		/// <param name="context">The context.</param>
-		public TriggerUpdateform(TriggerContext context) : base(context)
-		{
-			_id = "UPDATEFORM";
-
-			// Actions
-			AddAction(1, new RecalcTableAction(context, "proje"));
-		}
-	}
 }

@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Dentr_CntryValCountry_ViewModel model = new Dentr_CntryValCountry_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCoddentr = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,7 +1012,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Dentr_CmpnyValDesignat_ViewModel model = new Dentr_CmpnyValDesignat_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCoddentr = id;
 			TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
 			// TODO: Remove the old version of limits that pass every field in separate parameters
 			if (Limits != null)
@@ -1057,7 +1055,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Dentr_PessoValName_ViewModel model = new Dentr_PessoValName_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCoddentr = id;
 			TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
 			// TODO: Remove the old version of limits that pass every field in separate parameters
 			if (Limits != null)
@@ -1101,7 +1098,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Dentr_Ware1ValWarehdes_ViewModel model = new Dentr_Ware1ValWarehdes_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCoddentr = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1132,7 +1128,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Dentr_ValEntradas_ViewModel model = new Dentr_ValEntradas_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCoddentr = id;
 			//verificar se o user clicou to exportar os dados da Qlisting
 			if (requestValues["ExportList"] != null && Convert.ToBoolean(requestValues["ExportList"]) && requestValues["ExportType"] != null)
 			{

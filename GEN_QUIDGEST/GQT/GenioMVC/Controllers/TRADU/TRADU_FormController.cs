@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Tradu_Lang1ValLangua_ViewModel model = new Tradu_Lang1ValLangua_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodtradu = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,7 +1012,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Tradu_Lang2ValLangua_ViewModel model = new Tradu_Lang2ValLangua_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodtradu = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

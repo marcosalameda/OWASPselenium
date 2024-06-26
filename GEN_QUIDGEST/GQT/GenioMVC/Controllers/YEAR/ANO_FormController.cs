@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Ano_ValTodasdes_ViewModel model = new Ano_ValTodasdes_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodyear = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,7 +1012,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Ano_ValAgregado_ViewModel model = new Ano_ValAgregado_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodyear = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

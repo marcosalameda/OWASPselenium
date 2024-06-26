@@ -961,7 +961,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Pess1_CmpnyValDesignat_ViewModel model = new Pess1_CmpnyValDesignat_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpesso = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -991,7 +990,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Pess1_StakeValDesignat_ViewModel model = new Pess1_StakeValDesignat_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpesso = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

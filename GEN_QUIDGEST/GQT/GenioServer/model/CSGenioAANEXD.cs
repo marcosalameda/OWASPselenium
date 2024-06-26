@@ -217,7 +217,7 @@ namespace CSGenio.business
 			info.ShadowTabKeyName="";
 
 			info.PrimaryKeyName="codanexd";
-			info.HumanKeyName="";
+			info.HumanKeyName="title,".TrimEnd(',');
 			info.Alias="anexd";
 			info.IsDomain = true;
 			info.PersistenceType = PersistenceType.Database;

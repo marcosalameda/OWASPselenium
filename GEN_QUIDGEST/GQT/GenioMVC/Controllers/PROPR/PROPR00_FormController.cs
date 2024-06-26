@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Propr00_TpproValTppropri_ViewModel model = new Propr00_TpproValTppropri_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpropr = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,7 +1012,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Propr00_PessoValName_ViewModel model = new Propr00_PessoValName_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpropr = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1044,7 +1042,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Propr01_CntryValCountry_ViewModel model = new Propr01_CntryValCountry_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpropr = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1075,7 +1072,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Propr01_RegioValRegiao_ViewModel model = new Propr01_RegioValRegiao_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpropr = id;
 			TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
 			// TODO: Remove the old version of limits that pass every field in separate parameters
 			if (Limits != null)

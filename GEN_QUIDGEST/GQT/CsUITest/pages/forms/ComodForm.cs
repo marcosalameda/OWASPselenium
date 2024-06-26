@@ -23,7 +23,6 @@ public class ComodForm: PageObject {
 	public BaseInputControl LED_COMOD___LENDIOBSERVAT => new BaseInputControl(driver, "[data-identifier='LED_COMOD___LENDIOBSERVAT']");
 	public BaseInputControl LED_COMOD___LENDIRETURNDT => new BaseInputControl(driver, "[data-identifier='LED_COMOD___LENDIRETURNDT']");
 	public BaseInputControl LED_COMOD___LENDIRETURNED => new BaseInputControl(driver, "[data-identifier='LED_COMOD___LENDIRETURNED']");
-	public BaseInputControl LED_COMOD___LENDIRETURNED => new BaseInputControl(driver, "[data-identifier='LED_COMOD___LENDIRETURNED']");
 
 	private IWebElement saveBtn => form.FindElement(By.CssSelector(".form-actions [qbutton='ok']"));
 	private IWebElement cancelBtn => form.FindElement(By.CssSelector(".form-actions [qbutton='cancel']"));

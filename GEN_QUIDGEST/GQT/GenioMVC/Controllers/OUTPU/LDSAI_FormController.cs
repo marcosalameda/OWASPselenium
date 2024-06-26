@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Ldsai_OutptValDocumenr_ViewModel model = new Ldsai_OutptValDocumenr_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodoutpu = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,7 +1012,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Ldsai_WarehValWarehdes_ViewModel model = new Ldsai_WarehValWarehdes_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodoutpu = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1044,7 +1042,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Ldsai_ItemValItemdes_ViewModel model = new Ldsai_ItemValItemdes_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodoutpu = id;
 			TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
 			// TODO: Remove the old version of limits that pass every field in separate parameters
 			if (Limits != null)
@@ -1088,7 +1085,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Ldsai_OudocValNrdocsda_ViewModel model = new Ldsai_OudocValNrdocsda_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodoutpu = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

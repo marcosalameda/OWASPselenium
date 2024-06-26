@@ -98,73 +98,7 @@
 }
 		window.Form_Equigrou.DeclareControls = function () {
 			@*Form controls*@
-			this.Controls.IFF_EQUIGROUPSEUDNEWGRP01 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP01"]', this.element), window.Form_Equigrou);
-
-			this.Controls.IFF_EQUIGROUPSEUDNEWGRP02 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP02"]', this.element), window.Form_Equigrou);
-
-			this.Controls.LED_EQUIGROUCMPNYLOGO____ = new QImageControl($('[data-identifier="LED_EQUIGROUCMPNYLOGO____"]', this.element), window.Form_Equigrou, '@Html.Raw(Url.Action("ImageDelete", "Cmpny", new { id=Model.ValCodequip, modelname="Cmpny", fldname="CmpnyValLogo" }))', '@Html.Raw(Url.Action("ImageCropper", "Cmpny", new { key=Model.ValCodequip, modelname= "Cmpny", fldname= "CmpnyValLogo", identifier= "FEQUIGROU", FormName= "Equigrou", FieldId= "LED_EQUIGROUCMPNYLOGO____" }))',@Html.IsImageEmpty(Model.CmpnyValLogo));
-
-			this.Controls.IFF_EQUIGROUCMPNYDESIGNAT = new QDbeditControl($('[data-identifier="IFF_EQUIGROUCMPNYDESIGNAT"]', this.element), window.Form_Equigrou);
-
-			this.Controls.LED_EQUIGROUCMPNYACRONYM_ = new QTextControl($('[data-identifier="LED_EQUIGROUCMPNYACRONYM_"]', this.element), window.Form_Equigrou);
-
-			this.Controls.LED_EQUIGROUCMPNYNIF_____ = new QTextControl($('[data-identifier="LED_EQUIGROUCMPNYNIF_____"]', this.element), window.Form_Equigrou);
-
-			this.Controls.IFF_EQUIGROUPSEUDNEWGRP03 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP03"]', this.element), window.Form_Equigrou);
-
-			this.Controls.LED_EQUIGROUCMPNYTELEPHON = new QTextControl($('[data-identifier="LED_EQUIGROUCMPNYTELEPHON"]', this.element), window.Form_Equigrou);
-
-			this.Controls.LED_EQUIGROUCMPNYEMAIL___ = new QTextControl($('[data-identifier="LED_EQUIGROUCMPNYEMAIL___"]', this.element), window.Form_Equigrou);
-
-			this.Controls.IFF_EQUIGROUPSEUDNEWGRP04 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP04"]', this.element), window.Form_Equigrou);
-
-			this.Controls.IFF_EQUIGROUPSEUDNEWGRP06 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP06"]', this.element), window.Form_Equigrou);
-
-			this.Controls.LED_EQUIGROUEQUIPPHOTOGRA = new QImageControl($('[data-identifier="LED_EQUIGROUEQUIPPHOTOGRA"]', this.element), window.Form_Equigrou, '@Html.Raw(Url.Action("ImageDelete", "Equip", new { id=Model.ValCodequip, modelname="Equip", fldname="ValPhotogra" }))', '@Html.Raw(Url.Action("ImageCropper", "Equip", new { key=Model.ValCodequip, modelname= "Equip", fldname= "ValPhotogra", identifier= "FEQUIGROU", FormName= "Equigrou", FieldId= "LED_EQUIGROUEQUIPPHOTOGRA" }))',@Html.IsImageEmpty(Model.ValPhotogra));
-
-			this.Controls.LED_EQUIGROUEQUIPDESIGNAT = new QTextControl($('[data-identifier="LED_EQUIGROUEQUIPDESIGNAT"]', this.element), window.Form_Equigrou);
-
-			this.Controls.IFF_EQUIGROUPSEUDNEWGRP08 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP08"]', this.element), window.Form_Equigrou);
-
-			this.Controls.IFF_EQUIGROUPSEUDNEWGRP07 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP07"]', this.element), window.Form_Equigrou);
-
-			this.Controls.LED_EQUIGROUEQUIPSEQUENNR = new QNumericControl($('[data-identifier="LED_EQUIGROUEQUIPSEQUENNR"]', this.element), window.Form_Equigrou);
-
-			this.Controls.LED_EQUIGROUEQUIPREGISTNR = new QTextControl($('[data-identifier="LED_EQUIGROUEQUIPREGISTNR"]', this.element), window.Form_Equigrou);
-
-			this.Controls.LED_EQUIGROUEQUIPVALORTOT = new QNumericControl($('[data-identifier="LED_EQUIGROUEQUIPVALORTOT"]', this.element), window.Form_Equigrou);
-
-			this.Controls.IFF_EQUIGROUPSEUDNEWGRP05 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP05"]', this.element), window.Form_Equigrou);
-
-			this.Controls.LED_EQUIGROUEQUIPFREQUENC = new QArrayControl($('[data-identifier="LED_EQUIGROUEQUIPFREQUENC"]', this.element), window.Form_Equigrou);
-
-			this.Controls.LED_EQUIGROUEQUIPBOUGHT__ = new QCheckBoxControl($('[data-identifier="LED_EQUIGROUEQUIPBOUGHT__"]', this.element), window.Form_Equigrou);
-
-			this.Controls.LED_EQUIGROUEQUIPDTREFERE = new QDateControl($('[data-identifier="LED_EQUIGROUEQUIPDTREFERE"]', this.element), window.Form_Equigrou);
-
-			this.Controls.LED_EQUIGROUEQUIPFIRST___ = new QTextControl($('[data-identifier="LED_EQUIGROUEQUIPFIRST___"]', this.element), window.Form_Equigrou);
-
-			this.Controls.IFF_EQUIGROUPSEUDNEWGRP09 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP09"]', this.element), window.Form_Equigrou);
-
-			this.Controls.IFF_EQUIGROUPSEUDNEWGRP10 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP10"]', this.element), window.Form_Equigrou);
-
-			this.Controls.IFF_EQUIGROUTPEQUTIPOEQUI = new QDbeditControl($('[data-identifier="IFF_EQUIGROUTPEQUTIPOEQUI"]', this.element), window.Form_Equigrou);
-
-			this.Controls.LED_EQUIGROUTPEQUTPEQUCOD = new QTextControl($('[data-identifier="LED_EQUIGROUTPEQUTPEQUCOD"]', this.element), window.Form_Equigrou);
-
-			this.Controls.LED_EQUIGROUTPEQUPRECOMAX = new QNumericControl($('[data-identifier="LED_EQUIGROUTPEQUPRECOMAX"]', this.element), window.Form_Equigrou);
-
-			this.Controls.IFF_EQUIGROUPSEUDNEWGRP11 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP11"]', this.element), window.Form_Equigrou);
-
-			this.Controls.LED_EQUIGROUTPEQUTPEQUPAI = new QTextControl($('[data-identifier="LED_EQUIGROUTPEQUTPEQUPAI"]', this.element), window.Form_Equigrou);
-
-			this.Controls.LED_EQUIGROUTPEQUNIVEL___ = new QNumericControl($('[data-identifier="LED_EQUIGROUTPEQUNIVEL___"]', this.element), window.Form_Equigrou);
-
-			this.Controls.IFF_EQUIGROUPSEUDNEWGRP12 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP12"]', this.element), window.Form_Equigrou);
-
-			this.Controls.LED_EQUIGROUTPEQUBACKCOLO = new QTextControl($('[data-identifier="LED_EQUIGROUTPEQUBACKCOLO"]', this.element), window.Form_Equigrou);
-
-			this.Controls.LED_EQUIGROUTPEQUCORLETRA = new QTextControl($('[data-identifier="LED_EQUIGROUTPEQUCORLETRA"]', this.element), window.Form_Equigrou);
+			this.Controls.IFF_EQUIGROUPSEUDNEWGRP19 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP19"]', this.element), window.Form_Equigrou);
 
 			this.Controls.IFF_EQUIGROUPSEUDNEWGRP13 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP13"]', this.element), window.Form_Equigrou);
 
@@ -194,6 +128,86 @@
 
 			this.Controls.LED_EQUIGROUPESS1EMAIL2__ = new QTextControl($('[data-identifier="LED_EQUIGROUPESS1EMAIL2__"]', this.element), window.Form_Equigrou);
 
+			this.Controls.IFF_EQUIGROUPSEUDNEWGRP18 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP18"]', this.element), window.Form_Equigrou);
+
+			this.Controls.IFF_EQUIGROUPSEUDFIELD001 = new QTextControl($('[data-identifier="IFF_EQUIGROUPSEUDFIELD001"]', this.element), window.Form_Equigrou);
+
+			this.Controls.IFF_EQUIGROUPSEUDNEWGRP01 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP01"]', this.element), window.Form_Equigrou);
+
+			this.Controls.IFF_EQUIGROUPSEUDNEWGRP02 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP02"]', this.element), window.Form_Equigrou);
+
+			this.Controls.LED_EQUIGROUCMPNYLOGO____ = new QImageControl($('[data-identifier="LED_EQUIGROUCMPNYLOGO____"]', this.element), window.Form_Equigrou, '@Html.Raw(Url.Action("ImageDelete", "Cmpny", new { id=Model.ValCodequip, modelname="Cmpny", fldname="CmpnyValLogo" }))', '@Html.Raw(Url.Action("ImageCropper", "Cmpny", new { key=Model.ValCodequip, modelname= "Cmpny", fldname= "CmpnyValLogo", identifier= "FEQUIGROU", FormName= "Equigrou", FieldId= "LED_EQUIGROUCMPNYLOGO____" }))',@Html.IsImageEmpty(Model.CmpnyValLogo));
+
+			this.Controls.LED_EQUIGROUCMPNYDESIGNAT = new QTextControl($('[data-identifier="LED_EQUIGROUCMPNYDESIGNAT"]', this.element), window.Form_Equigrou);
+
+			this.Controls.LED_EQUIGROUCMPNYACRONYM_ = new QTextControl($('[data-identifier="LED_EQUIGROUCMPNYACRONYM_"]', this.element), window.Form_Equigrou);
+
+			this.Controls.LED_EQUIGROUCMPNYNIF_____ = new QTextControl($('[data-identifier="LED_EQUIGROUCMPNYNIF_____"]', this.element), window.Form_Equigrou);
+
+			this.Controls.IFF_EQUIGROUPSEUDNEWGRP03 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP03"]', this.element), window.Form_Equigrou);
+
+			this.Controls.LED_EQUIGROUCMPNYTELEPHON = new QTextControl($('[data-identifier="LED_EQUIGROUCMPNYTELEPHON"]', this.element), window.Form_Equigrou);
+
+			this.Controls.LED_EQUIGROUCMPNYEMAIL___ = new QTextControl($('[data-identifier="LED_EQUIGROUCMPNYEMAIL___"]', this.element), window.Form_Equigrou);
+
+			this.Controls.IFF_EQUIGROUPSEUDNEWGRP21 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP21"]', this.element), window.Form_Equigrou);
+
+			this.Controls.IFF_EQUIGROUPSEUDNEWGRP08 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP08"]', this.element), window.Form_Equigrou);
+
+			this.Controls.LED_EQUIGROUEQUIPQTDMOVIM = new QNumericControl($('[data-identifier="LED_EQUIGROUEQUIPQTDMOVIM"]', this.element), window.Form_Equigrou);
+
+			this.Controls.LED_EQUIGROUEQUIPDTAQUISI = new QDateControl($('[data-identifier="LED_EQUIGROUEQUIPDTAQUISI"]', this.element), window.Form_Equigrou);
+
+			this.Controls.IFF_EQUIGROUPSEUDNEWGRP23 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP23"]', this.element), window.Form_Equigrou);
+
+			this.Controls.IFF_EQUIGROUPSEUDNEWGRP09 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP09"]', this.element), window.Form_Equigrou);
+
+			this.Controls.IFF_EQUIGROUPSEUDNEWGRP10 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP10"]', this.element), window.Form_Equigrou);
+
+			this.Controls.IFF_EQUIGROUTPEQUTIPOEQUI = new QDbeditControl($('[data-identifier="IFF_EQUIGROUTPEQUTIPOEQUI"]', this.element), window.Form_Equigrou);
+
+			this.Controls.LED_EQUIGROUTPEQUTPEQUCOD = new QTextControl($('[data-identifier="LED_EQUIGROUTPEQUTPEQUCOD"]', this.element), window.Form_Equigrou);
+
+			this.Controls.LED_EQUIGROUTPEQUPRECOMAX = new QNumericControl($('[data-identifier="LED_EQUIGROUTPEQUPRECOMAX"]', this.element), window.Form_Equigrou);
+
+			this.Controls.IFF_EQUIGROUPSEUDNEWGRP11 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP11"]', this.element), window.Form_Equigrou);
+
+			this.Controls.LED_EQUIGROUTPEQUTPEQUPAI = new QTextControl($('[data-identifier="LED_EQUIGROUTPEQUTPEQUPAI"]', this.element), window.Form_Equigrou);
+
+			this.Controls.LED_EQUIGROUTPEQUNIVEL___ = new QNumericControl($('[data-identifier="LED_EQUIGROUTPEQUNIVEL___"]', this.element), window.Form_Equigrou);
+
+			this.Controls.IFF_EQUIGROUPSEUDNEWGRP12 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP12"]', this.element), window.Form_Equigrou);
+
+			this.Controls.LED_EQUIGROUTPEQUBACKCOLO = new QTextControl($('[data-identifier="LED_EQUIGROUTPEQUBACKCOLO"]', this.element), window.Form_Equigrou);
+
+			this.Controls.LED_EQUIGROUTPEQUCORLETRA = new QTextControl($('[data-identifier="LED_EQUIGROUTPEQUCORLETRA"]', this.element), window.Form_Equigrou);
+
+			this.Controls.IFF_EQUIGROUPSEUDNEWGRP07 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP07"]', this.element), window.Form_Equigrou);
+
+			this.Controls.LED_EQUIGROUEQUIPSEQUENNR = new QNumericControl($('[data-identifier="LED_EQUIGROUEQUIPSEQUENNR"]', this.element), window.Form_Equigrou);
+
+			this.Controls.LED_EQUIGROUEQUIPREGISTNR = new QTextControl($('[data-identifier="LED_EQUIGROUEQUIPREGISTNR"]', this.element), window.Form_Equigrou);
+
+			this.Controls.LED_EQUIGROUEQUIPVALORTOT = new QNumericControl($('[data-identifier="LED_EQUIGROUEQUIPVALORTOT"]', this.element), window.Form_Equigrou);
+
+			this.Controls.IFF_EQUIGROUPSEUDNEWGRP05 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP05"]', this.element), window.Form_Equigrou);
+
+			this.Controls.LED_EQUIGROUEQUIPFREQUENC = new QArrayControl($('[data-identifier="LED_EQUIGROUEQUIPFREQUENC"]', this.element), window.Form_Equigrou);
+
+			this.Controls.LED_EQUIGROUEQUIPBOUGHT__ = new QCheckBoxControl($('[data-identifier="LED_EQUIGROUEQUIPBOUGHT__"]', this.element), window.Form_Equigrou);
+
+			this.Controls.LED_EQUIGROUEQUIPDTREFERE = new QDateControl($('[data-identifier="LED_EQUIGROUEQUIPDTREFERE"]', this.element), window.Form_Equigrou);
+
+			this.Controls.LED_EQUIGROUEQUIPFIRST___ = new QTextControl($('[data-identifier="LED_EQUIGROUEQUIPFIRST___"]', this.element), window.Form_Equigrou);
+
+			this.Controls.IFF_EQUIGROUPSEUDNEWGRP04 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP04"]', this.element), window.Form_Equigrou);
+
+			this.Controls.LED_EQUIGROUEQUIPPHOTOGRA = new QImageControl($('[data-identifier="LED_EQUIGROUEQUIPPHOTOGRA"]', this.element), window.Form_Equigrou, '@Html.Raw(Url.Action("ImageDelete", "Equip", new { id=Model.ValCodequip, modelname="Equip", fldname="ValPhotogra" }))', '@Html.Raw(Url.Action("ImageCropper", "Equip", new { key=Model.ValCodequip, modelname= "Equip", fldname= "ValPhotogra", identifier= "FEQUIGROU", FormName= "Equigrou", FieldId= "LED_EQUIGROUEQUIPPHOTOGRA" }))',@Html.IsImageEmpty(Model.ValPhotogra));
+
+			this.Controls.IFF_EQUIGROUPSEUDNEWGRP06 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP06"]', this.element), window.Form_Equigrou);
+
+			this.Controls.LED_EQUIGROUEQUIPDESIGNAT = new QTextControl($('[data-identifier="LED_EQUIGROUEQUIPDESIGNAT"]', this.element), window.Form_Equigrou);
+
 
 
 
@@ -203,6 +217,7 @@
 	@*Hidden Foreign Keys Controls*@
 			this.Controls.LED_EQUIGROUROOM1CODROOMS = new QHiddenControl($('[data-identifier="LED_EQUIGROUROOM1CODROOMS"]', this.element), window.Form_Equigrou);
 			this.Controls.LED_EQUIGROUDECOMCODDECO_ = new QHiddenControl($('[data-identifier="LED_EQUIGROUDECOMCODDECO_"]', this.element), window.Form_Equigrou);
+			this.Controls.LED_EQUIGROUCMPNYCODEMPRE = new QHiddenControl($('[data-identifier="LED_EQUIGROUCMPNYCODEMPRE"]', this.element), window.Form_Equigrou);
 			this.Controls.LED_EQUIGROUWAREHCODWAREH = new QHiddenControl($('[data-identifier="LED_EQUIGROUWAREHCODWAREH"]', this.element), window.Form_Equigrou);
 			this.Controls.LED_EQUIGROUITEM_CODITEM_ = new QHiddenControl($('[data-identifier="LED_EQUIGROUITEM_CODITEM_"]', this.element), window.Form_Equigrou);
 	</text>
@@ -210,8 +225,6 @@
 			this.Controls.LED_EQUIGROUEQUIPCODEQUIP = new QHiddenControl($('[data-identifier="LED_EQUIGROUEQUIPCODEQUIP"]', this.element), window.Form_Equigrou);
 
 	@* Hidden Required Form Fields Controls for Formulas *@
-			this.Controls.LED_EQUIGROUEQUIPDTAQUISI = new QSpecialControl($('[data-identifier="LED_EQUIGROUEQUIPDTAQUISI"]', this.element), window.Form_Equigrou);
-			this.Controls.LED_EQUIGROUEQUIPDTAQUISI.InitData(@JavaScriptConversion.ToDateTime(@Model.ValDtaquisi));
 			this.Controls.LED_EQUIGROUITEM_ITEMDES_ = new QSpecialControl($('[data-identifier="LED_EQUIGROUITEM_ITEMDES_"]', this.element), window.Form_Equigrou);
 			this.Controls.LED_EQUIGROUITEM_ITEMDES_.InitData(@JavaScriptConversion.ToString(@Model.ItemValItemdes));
 
@@ -219,7 +232,7 @@
 {
 	<text>
 	@* DBEdit Limits *@
-			this.Controls.IFF_EQUIGROUPESS1NAME____.AddLimit(this.Controls.IFF_EQUIGROUCMPNYDESIGNAT, 'A');
+			this.Controls.IFF_EQUIGROUPESS1NAME____.AddLimit(this.Controls.LED_EQUIGROUCMPNYCODEMPRE, 'A');
 	</text>
 }
 
@@ -282,11 +295,11 @@
 		window.Form_Equigrou.Data.RelationKeysSelector = {
 				get room1() { return $(':not([elem-identifier="Multiform"]) > #ValCodrooms', $('[data-form="Equigrou"]')); /* Hidden */ },
 				get decom() { return $(':not([elem-identifier="Multiform"]) > #ValCoddeco', $('[data-form="Equigrou"]')); /* Hidden */ },
+				get cmpny() { return $(':not([elem-identifier="Multiform"]) > #ValCodempre', $('[data-form="Equigrou"]')); /* Hidden */ },
 				get wareh() { return $(':not([elem-identifier="Multiform"]) > #ValCodwareh', $('[data-form="Equigrou"]')); /* Hidden */ },
 				get item() { return $(':not([elem-identifier="Multiform"]) > #ValCoditem', $('[data-form="Equigrou"]')); /* Hidden */ },
-				get cmpny() { return $(':not([elem-identifier="Multiform"]) > #ValCodempre[pers-cs-area="Cmpny"]', $('[data-form="Equigrou"]')); /* DBEdit */ },
-				get tpequ() { return $(':not([elem-identifier="Multiform"]) > #ValCodtpequ[pers-cs-area="Tpequ"]', $('[data-form="Equigrou"]')); /* DBEdit */ },
 				get pess1() { return $(':not([elem-identifier="Multiform"]) > #ValCodpess1[pers-cs-area="Pess1"]', $('[data-form="Equigrou"]')); /* DBEdit */ },
+				get tpequ() { return $(':not([elem-identifier="Multiform"]) > #ValCodtpequ[pers-cs-area="Tpequ"]', $('[data-form="Equigrou"]')); /* DBEdit */ },
 		};
 
 		window.Form_Equigrou.getAllForeignKeySelectors = function () {
@@ -300,16 +313,16 @@
 			set room1(newValue) { (this.formContext.Data.RelationKeysSelector.room1.getQControl() || {}).Value = newValue; /* Hidden FK */ },
 			get decom() { return (this.formContext.Data.RelationKeysSelector.decom.getQControl() || {}).Value; /* Hidden FK */ },
 			set decom(newValue) { (this.formContext.Data.RelationKeysSelector.decom.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+			get cmpny() { return (this.formContext.Data.RelationKeysSelector.cmpny.getQControl() || {}).Value; /* Hidden FK */ },
+			set cmpny(newValue) { (this.formContext.Data.RelationKeysSelector.cmpny.getQControl() || {}).Value = newValue; /* Hidden FK */ },
 			get wareh() { return (this.formContext.Data.RelationKeysSelector.wareh.getQControl() || {}).Value; /* Hidden FK */ },
 			set wareh(newValue) { (this.formContext.Data.RelationKeysSelector.wareh.getQControl() || {}).Value = newValue; /* Hidden FK */ },
 			get item() { return (this.formContext.Data.RelationKeysSelector.item.getQControl() || {}).Value; /* Hidden FK */ },
 			set item(newValue) { (this.formContext.Data.RelationKeysSelector.item.getQControl() || {}).Value = newValue; /* Hidden FK */ },
-			get cmpny() { return (this.formContext.Data.RelationKeysSelector.cmpny.getQControl() || {}).Value; /* DBEdit */ },
-			set cmpny(newValue) { (this.formContext.Data.RelationKeysSelector.cmpny.getQControl() || {}).Value = newValue; /* DBEdit */ },
-			get tpequ() { return (this.formContext.Data.RelationKeysSelector.tpequ.getQControl() || {}).Value; /* DBEdit */ },
-			set tpequ(newValue) { (this.formContext.Data.RelationKeysSelector.tpequ.getQControl() || {}).Value = newValue; /* DBEdit */ },
 			get pess1() { return (this.formContext.Data.RelationKeysSelector.pess1.getQControl() || {}).Value; /* DBEdit */ },
 			set pess1(newValue) { (this.formContext.Data.RelationKeysSelector.pess1.getQControl() || {}).Value = newValue; /* DBEdit */ },
+			get tpequ() { return (this.formContext.Data.RelationKeysSelector.tpequ.getQControl() || {}).Value; /* DBEdit */ },
+			set tpequ(newValue) { (this.formContext.Data.RelationKeysSelector.tpequ.getQControl() || {}).Value = newValue; /* DBEdit */ },
 		};
 	</text>
 }
@@ -321,11 +334,6 @@
 		@*Edit mode Fields Formulas*@
 	<text>
 
-		@* Default of the 'ValDesignat' field *@
-		window.Form_Equigrou.SetFormulaDefault('LED_EQUIGROUEQUIPDESIGNAT', function() {
-						return ( getFieldValue($(':not([elem-identifier="Multiform"]) > #ItemValItemdes', $('[data-form="Equigrou"]'))));
-		}, 'ITEMVALITEMDES_CHANGE');
-		
 		@* Formula of the 'ValRegistnr' field *@
 		$(qForm).bind('VALSEQUENNR_CHANGE', function(event, eTarget) {
 				try {
@@ -347,6 +355,11 @@
 						});
 				} catch (err) { QError.AppendError('Formula of field ValBought: ' + err.message, err.stack, window.location.href); }
 		});
+		
+		@* Default of the 'ValDesignat' field *@
+		window.Form_Equigrou.SetFormulaDefault('LED_EQUIGROUEQUIPDESIGNAT', function() {
+						return ( getFieldValue($(':not([elem-identifier="Multiform"]) > #ItemValItemdes', $('[data-form="Equigrou"]'))));
+		}, 'ITEMVALITEMDES_CHANGE');
 		
 		@* Recalculate formulas (server side) *@
 		$(qForm).bind('VALDTREFERE_CHANGE VALCODEQUIP_CHANGE', function(event, eTarget) {

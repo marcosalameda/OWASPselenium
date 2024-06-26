@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Roigf_Rogl1ValTitle_ViewModel model = new Roigf_Rogl1ValTitle_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodroigf = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

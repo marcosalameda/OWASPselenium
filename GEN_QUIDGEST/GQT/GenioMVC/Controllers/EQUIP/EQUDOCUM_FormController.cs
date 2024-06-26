@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Equdocum_ValLisanex_ViewModel model = new Equdocum_ValLisanex_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodequip = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

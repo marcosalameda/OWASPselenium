@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Cfaqs_ValExpfaqs_ViewModel model = new Cfaqs_ValExpfaqs_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodcfaqs = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

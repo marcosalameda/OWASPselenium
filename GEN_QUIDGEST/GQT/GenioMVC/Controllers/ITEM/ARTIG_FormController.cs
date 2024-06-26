@@ -986,7 +986,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Artig_WarehValWarehdes_ViewModel model = new Artig_WarehValWarehdes_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCoditem = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1017,7 +1016,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Artig_GitemValItemdes_ViewModel model = new Artig_GitemValItemdes_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCoditem = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1048,7 +1046,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Artig_ValContacor_ViewModel model = new Artig_ValContacor_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCoditem = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1079,7 +1076,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Artig_ValLentrada_ViewModel model = new Artig_ValLentrada_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCoditem = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1110,7 +1106,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Artig_ValLsaidas_ViewModel model = new Artig_ValLsaidas_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCoditem = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

@@ -24,8 +24,6 @@ namespace CSGenio.business
         private static AreaRef m_AreaPWCOM = new AreaRef("GQT", "gqtpwcom", "pwcom");
         public static AreaRef AreaADDRL { get { return m_AreaADDRL; } }
         private static AreaRef m_AreaADDRL = new AreaRef("GQT", "gqtaddrl", "addrl");
-        public static AreaRef AreaAA1 { get { return m_AreaAA1; } }
-        private static AreaRef m_AreaAA1 = new AreaRef("GQT", "gqtaaa", "aa1");
         public static AreaRef AreaGENRE { get { return m_AreaGENRE; } }
         private static AreaRef m_AreaGENRE = new AreaRef("GQT", "gqtgenre", "genre");
         public static AreaRef AreaFEECA { get { return m_AreaFEECA; } }
@@ -61,7 +59,7 @@ namespace CSGenio.business
         public static AreaRef AreaTPEQU { get { return m_AreaTPEQU; } }
         private static AreaRef m_AreaTPEQU = new AreaRef("GQT", "gqttpequ", "tpequ");
         public static AreaRef AreaADDRE { get { return m_AreaADDRE; } }
-        private static AreaRef m_AreaADDRE = new AreaRef("GQT", "gqtaddress0", "addre");
+        private static AreaRef m_AreaADDRE = new AreaRef("GQT", "gqtaddress", "addre");
         public static AreaRef AreaLNHPD { get { return m_AreaLNHPD; } }
         private static AreaRef m_AreaLNHPD = new AreaRef("GQT", "gqtlnhpd", "lnhpd");
         public static AreaRef AreaCFAQS { get { return m_AreaCFAQS; } }
@@ -84,8 +82,6 @@ namespace CSGenio.business
         private static AreaRef m_AreaTABPR = new AreaRef("GQT", "gqttabpr", "tabpr");
         public static AreaRef AreaREGIO { get { return m_AreaREGIO; } }
         private static AreaRef m_AreaREGIO = new AreaRef("GQT", "gqtregio", "regio");
-        public static AreaRef AreaAAA { get { return m_AreaAAA; } }
-        private static AreaRef m_AreaAAA = new AreaRef("GQT", "gqtaaa", "aaa");
         public static AreaRef AreaTPEQ1 { get { return m_AreaTPEQ1; } }
         private static AreaRef m_AreaTPEQ1 = new AreaRef("GQT", "gqttpequ", "tpeq1");
         public static AreaRef AreaFAQS { get { return m_AreaFAQS; } }
@@ -354,7 +350,6 @@ namespace CSGenio.business
             new List<string>() {
             "pwcom",
             "addrl",
-            "aa1",
             "genre",
             "feeca",
             "notif",
@@ -384,7 +379,6 @@ namespace CSGenio.business
             "year",
             "tabpr",
             "regio",
-            "aaa",
             "tpeq1",
             "faqs",
             "tpcon",

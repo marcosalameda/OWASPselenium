@@ -884,7 +884,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Conta_PessoValName_ViewModel model = new Conta_PessoValName_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodconta = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -915,7 +914,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Conta_GenreValGender_ViewModel model = new Conta_GenreValGender_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodconta = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -946,7 +944,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Conta_TpconValTipocont_ViewModel model = new Conta_TpconValTipocont_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodconta = id;
 			TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
 			// TODO: Remove the old version of limits that pass every field in separate parameters
 			if (Limits != null)

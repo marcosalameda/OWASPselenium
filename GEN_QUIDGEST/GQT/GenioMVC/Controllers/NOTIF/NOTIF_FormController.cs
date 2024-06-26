@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Notif_Pess2ValName_ViewModel model = new Notif_Pess2ValName_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodnotif = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

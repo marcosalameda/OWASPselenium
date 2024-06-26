@@ -116,6 +116,26 @@ namespace GenioMVC.Controllers
 						    result = model.TablePess1Name;
                         }
 						break;
+					case "EQUIGROUPESS1NAME____":	// Field (DB)
+                        {
+                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
+						    var model = new Equigrou_ViewModel(navigation) { editable = false };
+						    model.MapFromModel(row);
+                            TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
+						    model.Load_Equigroupess1name____(qs);
+						    result = model.TablePess1Name;
+                        }
+						break;
+					case "EQUIGROUTPEQUTIPOEQUI":	// Field (DB)
+                        {
+                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
+						    var model = new Equigrou_ViewModel(navigation) { editable = false };
+						    model.MapFromModel(row);
+                            TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
+						    model.Load_Equigroutpequtipoequi(qs);
+						    result = model.TableTpequTipoequi;
+                        }
+						break;
 					case "EQUIP___CMPNYDESIGNAT":	// Field (DB)
                         {
                             row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
@@ -269,6 +289,12 @@ namespace GenioMVC.Controllers
 					case "ACCORDI_PESS1NAME____":	// Field (DB)
 						values = Accordi_ViewModel.GetDependant_AccordiTablePess1Name(Selected, navigation);
 						break;
+					case "EQUIGROUPESS1NAME____":	// Field (DB)
+						values = Equigrou_ViewModel.GetDependant_EquigrouTablePess1Name(Selected, navigation);
+						break;
+					case "EQUIGROUTPEQUTIPOEQUI":	// Field (DB)
+						values = Equigrou_ViewModel.GetDependant_EquigrouTableTpequTipoequi(Selected, navigation);
+						break;
 					case "EQUIP___CMPNYDESIGNAT":	// Field (DB)
 						values = Equip_ViewModel.GetDependant_EquipTableCmpnyDesignat(Selected, navigation);
 						break;
@@ -352,6 +378,22 @@ namespace GenioMVC.Controllers
         {
             return GenericRecalculateFormulas(form_data, "equip",
                 (primaryKey) => Models.Equip.Find(primaryKey, "FEQUDOCUM"),
+                (model) => form_data.MapToModel(model as Models.Equip)
+            );
+        }
+
+        /// <summary>
+        /// Recalculate formulas of the "Equigrou" form. (++, CT, SR, CL and U1)
+        /// </summary>
+        /// <param name="form_data">Current form data</param>
+        /// <returns></returns>
+        [HttpPost]
+		[AuthorizeForUsers]
+        [ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
+        public JsonResult RecalculateFormulas_Equigrou(Equigrou_ViewModel form_data)
+        {
+            return GenericRecalculateFormulas(form_data, "equip",
+                (primaryKey) => Models.Equip.Find(primaryKey, "FEQUIGROU"),
                 (model) => form_data.MapToModel(model as Models.Equip)
             );
         }

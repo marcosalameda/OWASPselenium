@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Agreg_ProjeValProjecto_ViewModel model = new Agreg_ProjeValProjecto_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodaggre = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,7 +1012,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Agreg_YearValYear_ViewModel model = new Agreg_YearValYear_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodaggre = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

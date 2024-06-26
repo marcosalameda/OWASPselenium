@@ -48,6 +48,7 @@ namespace Administration.Models
         [Display(Name = "PASSWORD09467", ResourceType = typeof(Resources.Resources))]
         public string ValPassword { get; set; }
 
+        public bool HasPassword { get; set; }
         public string OldId { get; set; }
         public string FormMode { get; set; }
         public string ResultMsg { get; set; }
@@ -70,9 +71,25 @@ namespace Administration.Models
                 m.SSL = ValSsl;
                 m.Username = ValUsername ?? "";
                 
-                //password encription
-                byte[] pass_bytes = System.Text.Encoding.UTF8.GetBytes(ValPassword ?? "");
-                m.Password = Convert.ToBase64String(pass_bytes, Base64FormattingOptions.None);
+                if(ValAuth)
+                {
+                    if (string.IsNullOrEmpty(ValUsername))
+                        throw new BusinessException("Username field is empty.", "EmailPropertiesModel.MapToModel", "Username field is empty.");
+
+                    // Decript current password to check if user changed it
+                    string oldPassword = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(m.Password ?? ""));
+
+                    // Change password if its different or if it wasn't inserted before
+                    if (!HasPassword || oldPassword != ValPassword)
+                    {
+                        if (string.IsNullOrEmpty(ValPassword))
+                            throw new BusinessException("Password field is empty.", "EmailPropertiesModel.MapToModel", "Password field is empty.");
+
+                        // Convert new password to base64
+                        byte[] pass_bytes = System.Text.Encoding.UTF8.GetBytes(ValPassword ?? "");
+                        m.Password = Convert.ToBase64String(pass_bytes, Base64FormattingOptions.None);
+                    }
+                }
 
                 m.Id = ValId;
 				m.Codpmail = ValCodpmail;
@@ -101,10 +118,10 @@ namespace Administration.Models
                 ValAuth = m.Auth;
                 ValSsl = m.SSL;
                 ValUsername = m.Username;
-                
-                //Decrypt password
-                byte[] pass_bytes = Convert.FromBase64String(m.Password ?? "");
-                ValPassword = System.Text.Encoding.UTF8.GetString(pass_bytes);
+                ValPassword = null;
+
+                if (string.IsNullOrEmpty(m.Password)) HasPassword = false;
+                else HasPassword = true;
 
                 ValId = m.Id;
 				ValCodpmail = m.Codpmail;

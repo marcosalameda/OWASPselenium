@@ -986,7 +986,6 @@ GetCarga_unico(model.ValCodtpequ);
 			var navigation = Navigation.Clone();
 			Tpequ_FamilValFamily_ViewModel model = new Tpequ_FamilValFamily_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodtpequ = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1017,7 +1016,6 @@ GetCarga_unico(model.ValCodtpequ);
 			var navigation = Navigation;
 			Tpequ_ValComponen_ViewModel model = new Tpequ_ValComponen_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodtpequ = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1048,7 +1046,6 @@ GetCarga_unico(model.ValCodtpequ);
 			var navigation = Navigation;
 			Tpequ_ValEvolucao_ViewModel model = new Tpequ_ValEvolucao_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodtpequ = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1108,7 +1105,6 @@ GetCarga_unico(model.ValCodtpequ);
 			var navigation = Navigation;
 			Tpequ_ValUnico_ViewModel model = new Tpequ_ValUnico_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodtpequ = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1139,7 +1135,6 @@ GetCarga_unico(model.ValCodtpequ);
 			var navigation = Navigation;
 			Tpequ_ValInstalac_ViewModel model = new Tpequ_ValInstalac_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodtpequ = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1170,7 +1165,6 @@ GetCarga_unico(model.ValCodtpequ);
 			var navigation = Navigation;
 			Tpequ_ValInstala1_ViewModel model = new Tpequ_ValInstala1_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodtpequ = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Armapess_WarehValWarehdes_ViewModel model = new Armapess_WarehValWarehdes_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpess = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

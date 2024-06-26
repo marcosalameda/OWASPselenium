@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Tpeq1_Fami1ValFamily_ViewModel model = new Tpeq1_Fami1ValFamily_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodtpequ = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

@@ -20,7 +20,6 @@ namespace CSGenio.business.async
 
         void SetResponse(Response response);
 
-        void Execute(PersistentSupport sp, User user);
     }
 
     /// <summary>
@@ -39,19 +38,6 @@ namespace CSGenio.business.async
         public void SetResponse(Response response)
         {
             this.response = response;
-        }
-
-        public abstract void Execute(PersistentSupport sp, User user);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sp"></param>
-        /// <param name="user"></param>
-        /// <returns></returns>
-        public async virtual Task<string> ExecuteAsync(PersistentSupport sp, User user, Process process)
-        {
-            return await Task.FromResult(""); 
         }
 
         protected Dictionary<Type, PartitionPolicy> specificPolicies = new Dictionary<Type, PartitionPolicy>();
@@ -239,10 +225,6 @@ namespace CSGenio.business.async
     public abstract class GenioExternalJob : GenioExecutableJob
     {
 
-        public override void Execute(PersistentSupport sp, User user)
-        {
-            throw new Exception("This job cannot be executed in the server.");
-        }
     }
 
 
@@ -259,6 +241,8 @@ namespace CSGenio.business.async
             this.progress = new ProgressStatus();
         }
 
+        public abstract void Execute(PersistentSupport sp, User user);
+
         public ProgressStatus Progress { get { return progress; } }
     }
 
@@ -266,9 +250,15 @@ namespace CSGenio.business.async
     {
         protected ProgressStatus progress;
 
-        public GenioServerJobAsync() : base()
+        [Obsolete]
+        public virtual void Execute(PersistentSupport sp, User user)
         {
-            this.progress = new ProgressStatus();
+            throw new NotImplementedException();
+        }
+
+        public async virtual Task<string> ExecuteAsync(PersistentSupport sp, User user, Process process)
+        {
+            return await Task.FromResult("");
         }
 
         public ProgressStatus Progress { get { return progress; } }

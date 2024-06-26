@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Feeca_FldsValDescrip_ViewModel model = new Feeca_FldsValDescrip_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodfeeca = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

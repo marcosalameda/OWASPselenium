@@ -33,7 +33,7 @@
                     <text-input v-model="Model.ssrsServerUsername" :label="Resources.NOME_DE_UTILIZADOR58858"></text-input>
                 </row>
                 <row>
-                    <password-input v-model="Model.ssrsServerPassword" :label="Resources.PALAVRA_PASSE44126"></password-input>
+                    <password-input v-model="Model.ssrsServerPassword" :label="Resources.PALAVRA_PASSE44126" :showFiller="Model.hasSsrsServerPassword"></password-input>
                 </row>
             </template>
         </card>
@@ -106,7 +106,7 @@
                     <q-button
                       :title="Resources.ELIMINAR21155"
                       @click="deleteMoreProperty(props.row)">
-                      <q-icon icon="remove" />
+                      <q-icon icon="bin" />
                     </q-button>
                   </q-button-group>
                 </template>
@@ -139,7 +139,7 @@
                     <q-button
                       :title="Resources.ELIMINAR21155"
                       @click="deleteCore(props.row)">
-                      <q-icon icon="remove" />
+                      <q-icon icon="bin" />
                     </q-button>
                   </q-button-group>
                 </template>

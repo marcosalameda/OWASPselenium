@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Campo_AeroValName_ViewModel model = new Campo_AeroValName_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodflds = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Timequip_ValReparaco_ViewModel model = new Timequip_ValReparaco_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodequip = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,7 +1012,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Timequip_ValPrimary_ViewModel model = new Timequip_ValPrimary_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodequip = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1044,7 +1042,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Timequip_ValSecundar_ViewModel model = new Timequip_ValSecundar_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodequip = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

@@ -42,7 +42,7 @@
                       <q-button
                         :title="Resources.APAGAR04097"
                         @click="ManageMessage(3, props.row)">
-                        <q-icon icon="remove" />
+                        <q-icon icon="bin" />
                       </q-button>
                     </q-button-group>
                   </template>

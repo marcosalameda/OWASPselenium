@@ -44,7 +44,7 @@ else {
 								@Html.LabelFor(model => model.ValDesignat, new { label_id="LED_EQUDOCUMEQUIPDESIGNAT", @class = " i-text__label", id="LABEL_LED_EQUDOCUMEQUIPDESIGNAT"}, true, false)
 								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
 								<a href="javascript:OpenSuggestion('LED_EQUDOCUMEQUIPDESIGNAT','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-								@Html.TextBoxFor(model => model.ValDesignat, new {help_id = "LED_EQUDOCUMEQUIPDESIGNAT", @class = "i-text__field i-text input-large", data_refresh = "true", data_tipoform = "DF", data_identifier = "LED_EQUDOCUMEQUIPDESIGNAT", @pers_cs_area = "Equip", @pers_cs_field = "ValDesignat", @db_field = "ValDesignat", title = @Resources.DESIGNATION35876, maxlength = "85", rows = "30" })
+								@Html.TextBoxFor(model => model.ValDesignat, new {help_id = "LED_EQUDOCUMEQUIPDESIGNAT", data_toggle = "tooltip", title = @Resources._112047598, data_placement = "top", description = @Resources._1120_VERBOSE06198, @class = "i-text__field i-text input-xxlarge", data_refresh = "true", data_tipoform = "DF", data_identifier = "LED_EQUDOCUMEQUIPDESIGNAT", @pers_cs_area = "Equip", @pers_cs_field = "ValDesignat", @db_field = "ValDesignat", maxlength = "85", rows = "30" })
 								@Html.ValidationMessageFor(model => model.ValDesignat)
 							</div>
 						</div>

@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Lnhpd_PedidValNrpedido_ViewModel model = new Lnhpd_PedidValNrpedido_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodlnhpd = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,7 +1012,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Lnhpd_TpequValTipoequi_ViewModel model = new Lnhpd_TpequValTipoequi_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodlnhpd = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1073,7 +1071,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Lnhpd_ValDesconju_ViewModel model = new Lnhpd_ValDesconju_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodlnhpd = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1104,7 +1101,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Lnhpd_ValDesagreg_ViewModel model = new Lnhpd_ValDesagreg_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodlnhpd = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

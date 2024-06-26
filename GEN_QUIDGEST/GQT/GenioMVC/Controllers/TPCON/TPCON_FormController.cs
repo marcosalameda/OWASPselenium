@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Tpcon_GenreValGender_ViewModel model = new Tpcon_GenreValGender_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodtpcon = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

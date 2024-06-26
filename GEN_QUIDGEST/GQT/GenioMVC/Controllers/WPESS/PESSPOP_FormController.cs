@@ -884,7 +884,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Pesspop_WarehValWarehdes_ViewModel model = new Pesspop_WarehValWarehdes_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpess = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

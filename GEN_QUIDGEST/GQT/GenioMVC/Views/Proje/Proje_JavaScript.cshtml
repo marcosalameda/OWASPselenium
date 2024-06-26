@@ -116,8 +116,6 @@
 
 			this.Controls.IFF_PROJE___PSEUDDESPESAS = new QTableListControl($('[data-identifier="IFF_PROJE___PSEUDDESPESAS"]', this.element), window.Form_Proje);
 
-			this.Controls.IFF_PROJE___PSEUDDEL_EXP_ = new QButtonControl($('[data-identifier="IFF_PROJE___PSEUDDEL_EXP_"]', this.element), window.Form_Proje);
-
 			this.Controls.IFF_PROJE___PSEUDAGREGADO = new QTableListControl($('[data-identifier="IFF_PROJE___PSEUDAGREGADO"]', this.element), window.Form_Proje);
 
 
@@ -266,7 +264,6 @@
 
 		window.Form_Proje.Init();
 
-		PROJE_FormTriggers();
 
 		// Element we want to become "sticky"
 		var header = $('#c-stickyHeader');
@@ -330,125 +327,7 @@
 
 
 
-	@*// BEGIN ROTINA DEL_EXP *@
-	function Proje_BR_DEL_EXP (id) {
-
-		var customParameters;
-// USE /[MANUAL GQT VIEW_MANUAL_ROUTINE DEL_EXP]/
-
-	return $.when(window.Form_Proje.Apply()).then(function (isSaved) {
-		if(isSaved)
-		return Proje_BR_DEL_EXP_AjaxCall(id, customParameters);
-	});
-	}
-	function Proje_BR_DEL_EXP_AjaxCall (id, customParameters) {
-
-		var urlAction = '@Url.Action("Proje_BR_DEL_EXP", "Proje")';
-		var jqxhr = $.ajax({
-			url : urlAction,
-			cache: false,
-			type: "POST",
-			contentType: 'application/json',
-			// USE /[MANUAL GQT PARAMETERS_ROUTINE DEL_EXP]/
-			data: JSON.stringify({ id: id }),
-			beforeSend : function(xhr, opts) {
- 			QAnimation.showPleaseWait();
-// USE /[MANUAL GQT BEFORESEND_ROUTINE DEL_EXP]/
-
-			}
-		})
-		.done(function(data, textStatus, jqXHR) {
-			QAnimation.hidePleaseWait();
-// USE /[MANUAL GQT DONE_ROUTINE DEL_EXP]/
-			try {
-				if (data.success == undefined || data.message == undefined)
-					throw "Invalid data structure.";
-				switch (data.success) {
-					case 'E':
-						if (typeof console != "undefined") {
-							console.log("Erro na Rotina Manual 'DEL_EXP' (" + data.message + ") ");
-						}
-						displayMessage(data.message, MessageDefs.StatusEnum.E, undefined, [{label: "OK", callback: () => Proje_BR_DEL_EXP_AfterDone(data), icon: "check"}], {onEscapeCallback: 0});
-						break;
-					case 'W':
-						if (typeof console != "undefined") {
-							console.log("Rotina Manual 'DEL_EXP' executada com sucesso!");
-						}
-						displayMessage(data.message, MessageDefs.StatusEnum.W, undefined, [{label: "OK", callback: () => Proje_BR_DEL_EXP_AfterDone(data), icon: "check"}], {onEscapeCallback: 0});
-						break;
-					case 'OK':
-						if (typeof console != "undefined") {
-							console.log("Rotina Manual 'DEL_EXP' executada com sucesso!");
-						}
-
-
-						if(data.message != ""){
-							displayMessage(data.message, MessageDefs.StatusEnum.OK, undefined, [{label: "OK", callback: () => Proje_BR_DEL_EXP_AfterDone(data), icon: "check"}], {onEscapeCallback: 0});
-						}else{
-							Proje_BR_DEL_EXP_AfterDone(data)
-						}
-
-						break;
-				}
-			}
-			catch (e) {
-				displayMessage(quidgestGlobals.Resources.NAO_FOI_POSSIVEL_CONCLUIR, MessageDefs.StatusEnum.E);
-				if (typeof QError !== "undefined") {
-					var qErrorMsg = 'AFTER DONE ROUTINE "DEL_EXP"';
-					QError.AppendError(qErrorMsg, e, '@Url.Action("Proje_BR_DEL_EXP", "Proje")', 0, 0);
-				}
-				if (typeof console !== "undefined") {
-					console.error(e.toString());
-				}
-			}
-		})
-		.fail(function(jqXHR, textStatus, errorThrown) {
-			if (errorThrown != "canceled")
-				displayMessage(quidgestGlobals.Resources.NAO_FOI_POSSIVEL_CONCLUIR, MessageDefs.StatusEnum.E);
-		});
-		return jqxhr;
-	}
-
-	function Proje_BR_DEL_EXP_AfterDone (data) {
-// USE /[MANUAL GQT AFTER_DONE_ROUTINE DEL_EXP]/
-	}
-
-
-	@*// END ROTINA DEL_EXP *@
-
-
-
-
  
-	/// <summary>
-	/// Execute the triggers of form PROJE.
-	/// <param name="id">The primary key of the record.</param>
-	/// </summary>
-	function PROJE_FormTriggers(id)
-	{
-
-		const run = () => { PROJE_FormTriggers_UPDATEFORM_1(id); }
-
-		run()
-	}
-
-	/// <summary>
-	/// Client-side component of action #1 (RECALC) of trigger UPDATEFORM.
-	/// <param name="id">The primary key of the record.</param>
-	/// </summary>
-	function PROJE_FormTriggers_UPDATEFORM_1(id)
-	{
-
-		$.ajax({
-			url: '@Url.Action("PROJE_FormTriggers_UPDATEFORM_1")',
-			type: "POST",
-			data: $.extend({ key: id }, getInputsForNestedForm($(window.Form_Proje.element)))
-		}).done(function(data) {
-			bootbox.alert(data.message);
-		}).fail(function(data) {
-			bootbox.alert(data.message);
-		});
-	}
 
     $($('[elem-identifier="FormActions"]'), $('[data-form="Proje"]')).click(function(event){
         var form = $(this).closest('[data-form]').data('form');

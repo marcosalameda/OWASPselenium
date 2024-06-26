@@ -76,13 +76,6 @@ namespace DbAdmin
 
             conf.anoDefault = Configuration.DefaultYear;
 
-            conf.Admin = new AdminCfgEl
-            {
-                Name = "quidgest",
-                Password = "D8A9D88BAA1789C14B5467975AE999770F6991CE",
-                PasswordFormat = "SHA1"
-            };
-
             UserCfgEl user = new UserCfgEl();
             user.Name = "guest";
             user.Type = UserType.Guest;

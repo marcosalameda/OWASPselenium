@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Dsaid_Ware1ValWarehdes_ViewModel model = new Dsaid_Ware1ValWarehdes_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodoutpt = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,7 +1012,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Dsaid_ValSaidas_ViewModel model = new Dsaid_ValSaidas_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodoutpt = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

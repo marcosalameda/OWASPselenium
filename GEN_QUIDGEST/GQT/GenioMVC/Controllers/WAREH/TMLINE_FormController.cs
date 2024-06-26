@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Tmline_ValTmdsaid_ViewModel model = new Tmline_ValTmdsaid_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodwareh = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

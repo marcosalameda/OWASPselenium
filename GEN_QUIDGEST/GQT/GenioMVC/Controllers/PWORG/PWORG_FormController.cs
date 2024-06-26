@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Pworg_PswValNome_ViewModel model = new Pworg_PswValNome_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpworg = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,7 +1012,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Pworg_OrganValOrganiza_ViewModel model = new Pworg_OrganValOrganiza_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpworg = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

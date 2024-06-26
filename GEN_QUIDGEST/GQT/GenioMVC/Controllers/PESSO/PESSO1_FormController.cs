@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Pesso1_CategValCategoria_ViewModel model = new Pesso1_CategValCategoria_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpesso = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,7 +1012,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Pesso1_ValContacto_ViewModel model = new Pesso1_ValContacto_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpesso = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1044,7 +1042,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Pesso1_CmpnyValDesignat_ViewModel model = new Pesso1_CmpnyValDesignat_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpesso = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1075,7 +1072,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Pesso1_ValEvolucao_ViewModel model = new Pesso1_ValEvolucao_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpesso = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1106,7 +1102,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Pesso1_Regi1ValRegiao_ViewModel model = new Pesso1_Regi1ValRegiao_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpesso = id;
 			TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
 			// TODO: Remove the old version of limits that pass every field in separate parameters
 			if (Limits != null)

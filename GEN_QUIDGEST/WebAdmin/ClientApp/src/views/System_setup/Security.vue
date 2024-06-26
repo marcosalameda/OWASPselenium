@@ -81,7 +81,7 @@
                 <q-button
                   :title="Resources.ELIMINAR21155"
                   @click="deleteIdentityProvider(props.row)">
-                  <q-icon icon="remove" />
+                  <q-icon icon="bin" />
                 </q-button>
               </q-button-group>
             </template>
@@ -115,7 +115,7 @@
               <q-button
                 :title="Resources.ELIMINAR21155"
                 @click="deleteRoleProvider(props.row)">
-                <q-icon icon="remove" />
+                <q-icon icon="bin" />
               </q-button>
             </q-button-group>
           </template>
@@ -150,7 +150,7 @@
               <q-button
                 :title="Resources.ELIMINAR21155"
                 @click="deleteUser(props.row)">
-                <q-icon icon="remove" />
+                <q-icon icon="bin" />
               </q-button>
             </q-button-group>
           </template>

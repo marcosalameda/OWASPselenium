@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Lnhde_PedidValNrpedido_ViewModel model = new Lnhde_PedidValNrpedido_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodlnhde = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,7 +1012,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Lnhde_LnhpdValLine_ViewModel model = new Lnhde_LnhpdValLine_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodlnhde = id;
 			TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
 			// TODO: Remove the old version of limits that pass every field in separate parameters
 			if (Limits != null)
@@ -1057,7 +1055,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Lnhde_Tpeq1ValTipoequi_ViewModel model = new Lnhde_Tpeq1ValTipoequi_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodlnhde = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

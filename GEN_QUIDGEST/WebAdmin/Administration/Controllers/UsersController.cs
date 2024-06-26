@@ -109,18 +109,12 @@ namespace Administration.Controllers
                         .Like(CSGenioApsw.FldNome, searchValue));
                 }
 
-                if (component == "userRoles") {
-                    selQuery = selQuery
-                        .OrderBy(CSGenioApsw.FldNome, sortOrder);
-                    selQuery.noLock = true;
-                } else {
-                    //Set pagesize and offset
-                    selQuery = selQuery
-                        .PageSize(pageSize)
-                        .Page(page)
-                        .OrderBy(CSGenioApsw.FldNome, sortOrder);
-                    selQuery.noLock = true;
-                }
+                //Set pagesize and offset
+                selQuery = selQuery
+                    .PageSize(pageSize)
+                    .Page(page)
+                    .OrderBy(CSGenioApsw.FldNome, sortOrder);
+                selQuery.noLock = true;
 
                 List<object> dataResult = new List<object>();
 

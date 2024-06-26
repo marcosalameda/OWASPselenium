@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Grpb_ValTblb_ViewModel model = new Grpb_ValTblb_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodgrpb = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

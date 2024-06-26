@@ -44,7 +44,7 @@
                 <q-button
                   :title="Resources.ELIMINAR21155"
                   @click="deleteUser(props.row)">
-                  <q-icon icon="remove" />
+                  <q-icon icon="bin" />
                 </q-button>
               </q-button-group>
             </template>

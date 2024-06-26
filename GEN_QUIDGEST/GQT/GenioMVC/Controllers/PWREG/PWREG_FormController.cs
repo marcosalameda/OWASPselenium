@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Pwreg_PswValNome_ViewModel model = new Pwreg_PswValNome_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpwreg = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,7 +1012,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Pwreg_RegioValRegiao_ViewModel model = new Pwreg_RegioValRegiao_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpwreg = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

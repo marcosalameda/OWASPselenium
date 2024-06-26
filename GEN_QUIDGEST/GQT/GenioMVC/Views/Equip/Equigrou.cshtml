@@ -37,526 +37,25 @@ else {
 @helper form_content_body() {
 			<div class="row">
 				<div class="col-12">
-					<div class="row-large-control">
-						<div class="row-line-group" id="CONTAINER_IFF_EQUIGROUPSEUDNEWGRP01">
-                            <div class="c-groupbox c-groupbox--title-background" id="GROUPBOX_EQUIGROU_NEWGRP01">
-
-                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_EQUIGROUPSEUDNEWGRP01" 
-                                    label-id="IFF_EQUIGROUPSEUDNEWGRP01">
-                                    <span>@Resources.COMPANY____C_GROUPBO49615</span>
-                                    <span><a href="javascript:OpenSuggestion('IFF_EQUIGROUPSEUDNEWGRP01','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
-								</div>
-                                <div class="form-flow">
-									<div class="row">
-										<div class="col-12">
-											<div class="control-row-group">
-												<div class="row-line-group">
-                            <div class="c-groupbox c-groupbox--minor" id="GROUPBOX_EQUIGROU_NEWGRP02">
-
-                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_EQUIGROUPSEUDNEWGRP02" 
-                                    label-id="IFF_EQUIGROUPSEUDNEWGRP02">
-                                    <span>@Resources.IDENTIFICATION____C_24190</span>
-                                    <span><a href="javascript:OpenSuggestion('IFF_EQUIGROUPSEUDNEWGRP02','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
-								</div>
-                                <div class="form-flow">
-									<div class="row">
-										<div class="col-12">
-											<div class="control-row-group">
-												<div class="control-join-group">
-												<div class="i-image draggable " id="CONTAINER_LED_EQUIGROUCMPNYLOGO____">
-													<div class="d-flex">
-													@Html.LabelFor(model => model.CmpnyValLogo, new { label_id="LED_EQUIGROUCMPNYLOGO____", @class = " i-text__label", id="LABEL_LED_EQUIGROUCMPNYLOGO____"}, true, false)
-													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
-													<a href="javascript:OpenSuggestion('LED_EQUIGROUCMPNYLOGO____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-													<div data-identifier="LED_EQUIGROUCMPNYLOGO____" pers-cs-area="Cmpny" pers-cs-field="ValLogo" class="image-control-wrapper" >
-													@Html.DisplayFor(m => m.CmpnyValLogo, new {help_id = "LED_EQUIGROUCMPNYLOGO____", @class = "col-auto ", data_identifier = "LED_EQUIGROUCMPNYLOGO____", fixed_field = "true", @readonly = "readonly", dependant = "ValCodempre", key_field = "ValCodempre", dependant_area = "Cmpny", title = @Resources.LOGO62483, guid = @Model.ValCodempre, controller = "Cmpny", fldname = "ValLogo", identifier = "FEQUIGROU", style = "height: 50pt; display: inline-block;" })
-													</div>
-													@Html.ValidationMessageFor(model => model.CmpnyValLogo)
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-12">
-											<div class="control-row-group">
-												<div class="control-join-group">
-												<div class="i-dbedit draggable " id="CONTAINER_IFF_EQUIGROUCMPNYDESIGNAT">
-													<div class="d-flex">
-													@Html.LabelFor(model => model.TableCmpnyDesignat, new { label_id="IFF_EQUIGROUCMPNYDESIGNAT", @class = " i-text__label", id="LABEL_IFF_EQUIGROUCMPNYDESIGNAT"}, true, false)
-													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
-													<a href="javascript:OpenSuggestion('IFF_EQUIGROUCMPNYDESIGNAT','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-													@Html.DropDownListFor(model => model.ValCodempre, Model.TableCmpnyDesignat.List , "", new {help_id = "IFF_EQUIGROUCMPNYDESIGNAT", @class = "i-select chosen-dropdown input-xxlarge", data_identifier = "IFF_EQUIGROUCMPNYDESIGNAT", @pers_cs_area = "Cmpny", @pers_cs_field = "ValCodempre", @db_field = "ValCodempre", @db_full_field_name = "equip.codempre", data_has_more = Model.TableCmpnyDesignat.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableCmpnyDesignat.Selected, data_dbedit_value = Model.TableCmpnyDesignat.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodequip, @data_see_more = "Equigrou_CmpnyValDesignat", title = @Resources.DESIGNATION35876, data_see_more_url = @Url.Action("Equigrou_CmpnyValDesignat","Equip"), data_is_dbedit = "true", data_fields = "cmpny.codempre,cmpny.designat", data_main_field = "Cmpny.ValDesignat", data_elements = 0, data_filled_by_history = Model.TableCmpnyDesignat.FilledByHistory, @dependant_fields = "cmpny.codempre,cmpny.designat,cmpny.acronym,cmpny.nif,cmpny.telephon,cmpny.email" })
-													@Html.ValidationMessageFor(model => model.TableCmpnyDesignat)
-													</div>
-												</div>
-												<div class="control-join-group">
-												<div class="i-text draggable " id="CONTAINER_LED_EQUIGROUCMPNYACRONYM_">
-													<div class="d-flex">
-													@Html.LabelFor(model => model.CmpnyValAcronym, new { label_id="LED_EQUIGROUCMPNYACRONYM_", @class = " i-text__label", id="LABEL_LED_EQUIGROUCMPNYACRONYM_"}, true, false)
-													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
-													<a href="javascript:OpenSuggestion('LED_EQUIGROUCMPNYACRONYM_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-													@Html.TextBoxFor(model => model.CmpnyValAcronym, new {help_id = "LED_EQUIGROUCMPNYACRONYM_", @class = "i-text__field i-text input-medium", data_identifier = "LED_EQUIGROUCMPNYACRONYM_", @pers_cs_area = "Cmpny", @pers_cs_field = "ValAcronym", @db_field = "ValAcronym", fixed_field = "true", @readonly = "readonly", dependant = "ValCodempre", key_field = "ValCodempre", dependant_area = "Cmpny", title = @Resources.ACRONYM00872, maxlength = "15", rows = "15" })
-													@Html.ValidationMessageFor(model => model.CmpnyValAcronym)
-													</div>
-												</div>
-												<div class="control-join-group">
-												<div class="i-text draggable " id="CONTAINER_LED_EQUIGROUCMPNYNIF_____">
-													<div class="d-flex">
-													@Html.LabelFor(model => model.CmpnyValNif, new { label_id="LED_EQUIGROUCMPNYNIF_____", @class = " i-text__label", id="LABEL_LED_EQUIGROUCMPNYNIF_____"}, true, false)
-													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
-													<a href="javascript:OpenSuggestion('LED_EQUIGROUCMPNYNIF_____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-													@Html.TextBoxFor(model => model.CmpnyValNif, new {help_id = "LED_EQUIGROUCMPNYNIF_____", @class = "i-text__field i-text input-medium", data_identifier = "LED_EQUIGROUCMPNYNIF_____", @pers_cs_area = "Cmpny", @pers_cs_field = "ValNif", @db_field = "ValNif", fixed_field = "true", @readonly = "readonly", dependant = "ValCodempre", key_field = "ValCodempre", dependant_area = "Cmpny", title = @Resources.TAX_IDENTIFICATION51190, maxlength = "15", rows = "15" })
-													@Html.ValidationMessageFor(model => model.CmpnyValNif)
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-                                </div>
-                            </div>
- 												</div>
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-12">
-											<div class="row-large-control">
-												<div class="row-line-group" id="CONTAINER_IFF_EQUIGROUPSEUDNEWGRP03">
-<div id="EQUIGROU_NEWGRP03" elem-identifier="AccordionGroup" class="c-accordion accordion-group c-groupbox--background" data-identifier="IFF_EQUIGROUPSEUDNEWGRP03">
-	
-	<div class="c-accordion__panel">
-		<div elem-identifier="AccordionHeading" class="c-accordion__panel-header" >
-			<a elem-identifier="AccordionToggle" href="#" class="b-btn b-btn--link c-accordion__panel-title" role="button" data-toggle="collapse"  
-				data-target="#EQUIGROU_NEWGRP03I" data-zone-type="ZC"
-				label-id="IFF_EQUIGROUPSEUDNEWGRP03"
-				>
-				<span  help-id="IFF_EQUIGROUPSEUDNEWGRP03"/>	
-				<i class="glyphicons glyphicons-plus-sign c-accordion__panel-icon"></i>
-				@Resources.CONTACTS____C_GROUPB54058		
-				<a href="javascript:OpenSuggestion('IFF_EQUIGROUPSEUDNEWGRP03','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a>
-			</a>
-		</div>
-		<div id="EQUIGROU_NEWGRP03I" elem-identifier="AccordionBody" data-parent="#EQUIGROU_NEWGRP03" class="collapse" style="height:0px; ">
-			<div class="c-accordion__panel-body" elem-identifier="AccordionInner">
-					<div elem-identifier="ContainerAccordionInner" class="container-fluid">
-												<div class="row">
-										<div class="col-12">
-											<div class="control-row-group">
-												<div class="control-join-group">
-												<div class="i-text draggable " id="CONTAINER_LED_EQUIGROUCMPNYTELEPHON">
-													<div class="d-flex">
-													@Html.LabelFor(model => model.CmpnyValTelephon, new { label_id="LED_EQUIGROUCMPNYTELEPHON", @class = " i-text__label", id="LABEL_LED_EQUIGROUCMPNYTELEPHON"}, true, false)
-													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
-													<a href="javascript:OpenSuggestion('LED_EQUIGROUCMPNYTELEPHON','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-													@Html.TextBoxFor(model => model.CmpnyValTelephon, new {help_id = "LED_EQUIGROUCMPNYTELEPHON", @class = "i-text__field i-text input-large", data_identifier = "LED_EQUIGROUCMPNYTELEPHON", @pers_cs_area = "Cmpny", @pers_cs_field = "ValTelephon", @db_field = "ValTelephon", fixed_field = "true", @readonly = "readonly", dependant = "ValCodempre", key_field = "ValCodempre", dependant_area = "Cmpny", title = @Resources.PHONE56703, maxlength = "20", rows = "20" })
-													@Html.ValidationMessageFor(model => model.CmpnyValTelephon)
-													</div>
-												</div>
-												<div class="control-join-group">
-												<div class="i-text draggable " id="CONTAINER_LED_EQUIGROUCMPNYEMAIL___">
-													<div class="d-flex">
-													@Html.LabelFor(model => model.CmpnyValEmail, new { label_id="LED_EQUIGROUCMPNYEMAIL___", @class = " i-text__label", id="LABEL_LED_EQUIGROUCMPNYEMAIL___"}, true, false)
-													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
-													<a href="javascript:OpenSuggestion('LED_EQUIGROUCMPNYEMAIL___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-													@Html.TextBoxFor(model => model.CmpnyValEmail, new {help_id = "LED_EQUIGROUCMPNYEMAIL___", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_EQUIGROUCMPNYEMAIL___", @pers_cs_area = "Cmpny", @pers_cs_field = "ValEmail", @db_field = "ValEmail", fixed_field = "true", @readonly = "readonly", dependant = "ValCodempre", key_field = "ValCodempre", dependant_area = "Cmpny", title = @Resources.EMAIL25170, maxlength = "254", rows = "99" })
-													@Html.ValidationMessageFor(model => model.CmpnyValEmail)
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-						</div>
-				</div>
-		</div>
-	</div>
-</div>
-												</div>
-											</div>
-										</div>
-									</div>
-                                </div>
-                            </div>
- 						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-12">
-					<div class="row-large-control">
-						<div class="row-line-group" id="CONTAINER_IFF_EQUIGROUPSEUDNEWGRP04">
-                            <div class="c-groupbox c-groupbox--minor-border-top" id="GROUPBOX_EQUIGROU_NEWGRP04">
-
-                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_EQUIGROUPSEUDNEWGRP04" 
-                                    label-id="IFF_EQUIGROUPSEUDNEWGRP04">
-                                    <span>@Resources.EQUIPMENT____C_GROUP25618</span>
-                                    <span><a href="javascript:OpenSuggestion('IFF_EQUIGROUPSEUDNEWGRP04','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
-								</div>
-                                <div class="form-flow">
-									<div class="row">
-										<div class="col-12">
-											<div class="control-row-group">
-												<div class="row-line-group">
-                            <div class="c-groupbox c-groupbox--minor" id="GROUPBOX_EQUIGROU_NEWGRP06">
-
-                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_EQUIGROUPSEUDNEWGRP06" 
-                                    label-id="IFF_EQUIGROUPSEUDNEWGRP06">
-                                    <span>@Resources.IDENTIFICATION____C_24190</span>
-                                    <span><a href="javascript:OpenSuggestion('IFF_EQUIGROUPSEUDNEWGRP06','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
-								</div>
-                                <div class="form-flow">
-									<div class="row">
-										<div class="col-12">
-											<div class="control-row-group">
-												<div class="control-join-group">
-												<div class="i-image draggable " id="CONTAINER_LED_EQUIGROUEQUIPPHOTOGRA">
-													<div class="d-flex">
-													@Html.LabelFor(model => model.ValPhotogra, new { label_id="LED_EQUIGROUEQUIPPHOTOGRA", @class = " i-text__label", id="LABEL_LED_EQUIGROUEQUIPPHOTOGRA"}, true, false)
-													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
-													<a href="javascript:OpenSuggestion('LED_EQUIGROUEQUIPPHOTOGRA','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-													<div data-identifier="LED_EQUIGROUEQUIPPHOTOGRA" pers-cs-area="Equip" pers-cs-field="ValPhotogra" class="image-control-wrapper" >
-													@if(Model.IsEditableMode) {
-														@Html.EditorFor(m => m.ValPhotogra, new {help_id = "LED_EQUIGROUEQUIPPHOTOGRA", @class = "col-auto ", data_identifier = "LED_EQUIGROUEQUIPPHOTOGRA", title = @Resources.PHOTO51874, guid = @Model.ValCodequip, controller = "Equip", fldname = "ValPhotogra", identifier = "FEQUIGROU", style = "height: 47pt; display: inline-block;" })
-													} else {
-														@Html.DisplayFor(m => m.ValPhotogra, new {help_id = "LED_EQUIGROUEQUIPPHOTOGRA", @class = "col-auto ", data_identifier = "LED_EQUIGROUEQUIPPHOTOGRA", title = @Resources.PHOTO51874, guid = @Model.ValCodequip, controller = "Equip", fldname = "ValPhotogra", identifier = "FEQUIGROU", style = "height: 47pt; display: inline-block;" })
-													}
-													</div>
-													@Html.ValidationMessageFor(model => model.ValPhotogra)
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-12">
-											<div class="control-row-group">
-												<div class="control-join-group">
-												<div class="i-text draggable " id="CONTAINER_LED_EQUIGROUEQUIPDESIGNAT">
-													<div class="d-flex">
-													@Html.LabelFor(model => model.ValDesignat, new { label_id="LED_EQUIGROUEQUIPDESIGNAT", @class = " i-text__label", id="LABEL_LED_EQUIGROUEQUIPDESIGNAT"}, true, false)
-													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
-													<a href="javascript:OpenSuggestion('LED_EQUIGROUEQUIPDESIGNAT','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-													@Html.TextBoxFor(model => model.ValDesignat, new {help_id = "LED_EQUIGROUEQUIPDESIGNAT", @class = "i-text__field i-text input-xxlarge", data_refresh = "true", data_tipoform = "DF", data_identifier = "LED_EQUIGROUEQUIPDESIGNAT", @pers_cs_area = "Equip", @pers_cs_field = "ValDesignat", @db_field = "ValDesignat", title = @Resources.DESIGNATION35876, maxlength = "85", rows = "85" })
-													@Html.ValidationMessageFor(model => model.ValDesignat)
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-                                </div>
-                            </div>
- 												</div>
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-12">
-											<div class="row-large-control">
-												<div class="row-line-group" id="CONTAINER_IFF_EQUIGROUPSEUDNEWGRP08">
-<div class="c-accordion" id="EQUIGROU_NEWGRP08">
-<div id="EQUIGROU_NEWGRP07" elem-identifier="AccordionGroup" class="c-accordion accordion-group c-groupbox--minor" data-identifier="IFF_EQUIGROUPSEUDNEWGRP07">
-	
-	<div class="c-accordion__panel">
-		<div elem-identifier="AccordionHeading" class="c-accordion__panel-header" >
-			<a elem-identifier="AccordionToggle" href="#" class="b-btn b-btn--link c-accordion__panel-title" role="button" data-toggle="collapse"  
-				data-target="#EQUIGROU_NEWGRP07I" data-zone-type="ZA"
-				label-id="IFF_EQUIGROUPSEUDNEWGRP08"
-				>
-				<span  help-id="IFF_EQUIGROUPSEUDNEWGRP08"/>	
-				<i class="glyphicons glyphicons-plus-sign c-accordion__panel-icon"></i>
-				@Resources.MORE____C_GROUPBOX__22286		
-				<a href="javascript:OpenSuggestion('IFF_EQUIGROUPSEUDNEWGRP08','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a>
-			</a>
-		</div>
-		<div id="EQUIGROU_NEWGRP07I" elem-identifier="AccordionBody" data-parent="#EQUIGROU_NEWGRP08" class="collapse" style="height:0px; ">
-			<div class="c-accordion__panel-body" elem-identifier="AccordionInner">
-					<div elem-identifier="ContainerAccordionInner" class="container-fluid">
-												<div class="row">
-										<div class="col-12">
-											<div class="control-row-group">
-												<div class="control-join-group">
-												<div class="i-text draggable " id="CONTAINER_LED_EQUIGROUEQUIPSEQUENNR">
-													<div class="d-flex">
-													@Html.LabelFor(model => model.ValSequennr, new { label_id="LED_EQUIGROUEQUIPSEQUENNR", @class = " i-text__label", id="LABEL_LED_EQUIGROUEQUIPSEQUENNR"}, true, false)
-													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
-													<a href="javascript:OpenSuggestion('LED_EQUIGROUEQUIPSEQUENNR','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-													@Html.NumberFor(model => model.ValSequennr, new {help_id = "LED_EQUIGROUEQUIPSEQUENNR", @class = "Number text-right i-text__field i-text input-mini", data_sequencial = "M1", data_identifier = "LED_EQUIGROUEQUIPSEQUENNR", @pers_cs_area = "Equip", @pers_cs_field = "ValSequennr", @db_field = "ValSequennr", title = @Resources.SEQUENTIAL_NO_38590, data_number_integer = "6", data_number_decimals = "0", data_number_format = "999999" })
-													@Html.ValidationMessageFor(model => model.ValSequennr)
-													</div>
-												</div>
-												<div class="control-join-group">
-												<div class="i-text draggable " id="CONTAINER_LED_EQUIGROUEQUIPREGISTNR">
-													<div class="d-flex">
-													@Html.LabelFor(model => model.ValRegistnr, new { label_id="LED_EQUIGROUEQUIPREGISTNR", @class = " i-text__label", id="LABEL_LED_EQUIGROUEQUIPREGISTNR"}, true, false)
-													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
-													<a href="javascript:OpenSuggestion('LED_EQUIGROUEQUIPREGISTNR','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-													@Html.TextBoxFor(model => model.ValRegistnr, new {help_id = "LED_EQUIGROUEQUIPREGISTNR", @class = "i-text__field i-text input-mini", data_refresh = "true", data_tipoform = "+", data_identifier = "LED_EQUIGROUEQUIPREGISTNR", @pers_cs_area = "Equip", @pers_cs_field = "ValRegistnr", @db_field = "ValRegistnr", fixed_field = "true", @readonly = "readonly", title = @Resources.NO__REGISTER04207, maxlength = "6", rows = "6" })
-													@Html.ValidationMessageFor(model => model.ValRegistnr)
-													</div>
-												</div>
-												<div class="control-join-group">
-												<div class="i-text draggable " id="CONTAINER_LED_EQUIGROUEQUIPVALORTOT">
-													<div class="d-inline-flex">
-													@Html.LabelFor(model => model.ValValortot, new { label_id="LED_EQUIGROUEQUIPVALORTOT", @class = " i-text__label", id="LABEL_LED_EQUIGROUEQUIPVALORTOT"}, true, false)
-													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
-													<a href="javascript:OpenSuggestion('LED_EQUIGROUEQUIPVALORTOT','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-													@Html.NumberFor(model => model.ValValortot, new {help_id = "LED_EQUIGROUEQUIPVALORTOT", @class = "i-input-group__field text-right i-text__field i-text input-medium", data_refresh = "true", data_tipoform = "SR", data_identifier = "LED_EQUIGROUEQUIPVALORTOT", @pers_cs_area = "Equip", @pers_cs_field = "ValValortot", @db_field = "ValValortot", fixed_field = "true", @readonly = "readonly", title = @Resources.TOTAL_VALUE30570, data_currency = "True", data_number_integer = "9", data_number_decimals = "2", data_number_format = "999999999.99" })
-													@Html.ValidationMessageFor(model => model.ValValortot)
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-						</div>
-				</div>
-		</div>
-	</div>
-</div>
-<div id="EQUIGROU_NEWGRP05" elem-identifier="AccordionGroup" class="c-accordion accordion-group c-groupbox--minor" data-identifier="IFF_EQUIGROUPSEUDNEWGRP05">
-	
-	<div class="c-accordion__panel">
-		<div elem-identifier="AccordionHeading" class="c-accordion__panel-header" >
-			<a elem-identifier="AccordionToggle" href="#" class="b-btn b-btn--link c-accordion__panel-title" role="button" data-toggle="collapse"  
-				data-target="#EQUIGROU_NEWGRP05I" data-zone-type="ZA"
-				label-id="IFF_EQUIGROUPSEUDNEWGRP08"
-				>
-				<span  help-id="IFF_EQUIGROUPSEUDNEWGRP08"/>	
-				<i class="glyphicons glyphicons-plus-sign c-accordion__panel-icon"></i>
-				@Resources.DETAILS____C_GROUPBO05902		
-				<a href="javascript:OpenSuggestion('IFF_EQUIGROUPSEUDNEWGRP08','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a>
-			</a>
-		</div>
-		<div id="EQUIGROU_NEWGRP05I" elem-identifier="AccordionBody" data-parent="#EQUIGROU_NEWGRP08" class="collapse" style="height:0px; ">
-			<div class="c-accordion__panel-body" elem-identifier="AccordionInner">
-					<div elem-identifier="ContainerAccordionInner" class="container-fluid">
-												<div class="row">
-										<div class="col-12">
-											<div class="control-row-group">
-												<div class="control-join-group">
-												<div class="i-dbedit draggable " id="CONTAINER_LED_EQUIGROUEQUIPFREQUENC">
-													<div class="d-flex">
-													@Html.LabelFor(model => model.ValFrequenc, new { label_id="LED_EQUIGROUEQUIPFREQUENC", @class = " i-text__label", id="LABEL_LED_EQUIGROUEQUIPFREQUENC"}, true, false)
-													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
-													<a href="javascript:OpenSuggestion('LED_EQUIGROUEQUIPFREQUENC','Freqempr')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-													@Html.ArrayDropDownListFor(model => model.ValFrequenc, Model.List_ValFrequenc, CSGenio.business.ArrayFreqempr.GetElement, "", new {help_id = "LED_EQUIGROUEQUIPFREQUENC", data_toggle = "tooltip", title = @Resources.___1438719, data_placement = "top", description = "", @class = "i-select chosen-dropdown input-mini", data_identifier = "LED_EQUIGROUEQUIPFREQUENC", @pers_cs_area = "Equip", @pers_cs_field = "ValFrequenc", @db_field = "ValFrequenc", data_array_type = "AN", data_placeholder = @Resources.ESCOLHA___40245, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_value = Model.List_ValFrequenc.SelectedValue, data_is_array = "true" })
-													@Html.ValidationMessageFor(model => model.ValFrequenc)
-													</div>
-												</div>
-												<div class="control-join-group row-group-checkbox">
-												<div class="i-checkbox draggable " id="CONTAINER_LED_EQUIGROUEQUIPBOUGHT__">
-													@Html.CheckBoxFor(model => model.ValBought, new {help_id = "LED_EQUIGROUEQUIPBOUGHT__", @class = "i-checkbox__field i-checkbox input-mini", data_refresh = "true", data_tipoform = "+", data_identifier = "LED_EQUIGROUEQUIPBOUGHT__", @pers_cs_area = "Equip", @pers_cs_field = "ValBought", @db_field = "ValBought", fixed_field = "true", @disabled = "disabled", @readonly = "readonly", title = @Resources.BOUGHT32044 }, @Model.IsEditableMode, false)
-													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
-													@Html.ValidationMessageFor(model => model.ValBought)
-													</div>
-												</div>
-												<div class="control-join-group">
-												<div class="i-date-picker draggable " id="CONTAINER_LED_EQUIGROUEQUIPDTREFERE">
-													<div class="d-inline-flex">
-													@Html.LabelFor(model => model.ValDtrefere, new { label_id="LED_EQUIGROUEQUIPDTREFERE", @class = " i-text__label", id="LABEL_LED_EQUIGROUEQUIPDTREFERE"}, true, false)
-													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
-													<a href="javascript:OpenSuggestion('LED_EQUIGROUEQUIPDTREFERE','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-													@Html.DateFor(model => model.ValDtrefere, new {help_id = "LED_EQUIGROUEQUIPDTREFERE", @class = "i-input-group__field b-icon-text input-large", data_identifier = "LED_EQUIGROUEQUIPDTREFERE", @pers_cs_area = "Equip", @pers_cs_field = "ValDtrefere", @db_field = "ValDtrefere", title = @Resources.REFERENCE28402 })
-													@Html.ValidationMessageFor(model => model.ValDtrefere)
-													</div>
-												</div>
-												<div class="control-join-group">
-												<div class="i-text draggable " id="CONTAINER_LED_EQUIGROUEQUIPFIRST___">
-													<div class="d-flex">
-													@Html.LabelFor(model => model.ValFirst, new { label_id="LED_EQUIGROUEQUIPFIRST___", @class = " i-text__label", id="LABEL_LED_EQUIGROUEQUIPFIRST___"}, true, false)
-													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
-													<a href="javascript:OpenSuggestion('LED_EQUIGROUEQUIPFIRST___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-													@Html.TextBoxFor(model => model.ValFirst, new {help_id = "LED_EQUIGROUEQUIPFIRST___", @class = "i-text__field i-text input-medium", data_refresh = "true", data_tipoform = "CT", data_identifier = "LED_EQUIGROUEQUIPFIRST___", @pers_cs_area = "Equip", @pers_cs_field = "ValFirst", @db_field = "ValFirst", fixed_field = "true", @readonly = "readonly", title = @Resources.FIRST42972, maxlength = "10", rows = "10" })
-													@Html.ValidationMessageFor(model => model.ValFirst)
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-						</div>
-				</div>
-		</div>
-	</div>
-</div>
-</div>
-												</div>
-											</div>
-										</div>
-									</div>
-                                </div>
-                            </div>
- 						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-12">
 					<div class="control-row-group">
 						<div class="row-line-group">
-                            <div class="c-groupbox c-groupbox--title-background" id="GROUPBOX_EQUIGROU_NEWGRP09">
+                            <div class="c-groupbox " id="GROUPBOX_EQUIGROU_NEWGRP19">
 
-                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_EQUIGROUPSEUDNEWGRP09" 
-                                    label-id="IFF_EQUIGROUPSEUDNEWGRP09">
-                                    <span>@Resources.TYPE_EQUIPMENT_INFOR47972</span>
-                                    <span><a href="javascript:OpenSuggestion('IFF_EQUIGROUPSEUDNEWGRP09','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_EQUIGROUPSEUDNEWGRP19" 
+                                    label-id="IFF_EQUIGROUPSEUDNEWGRP19">
+                                    <span>@Resources.DEFAULT_STYLE62523</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_EQUIGROUPSEUDNEWGRP19','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
 								</div>
                                 <div class="form-flow">
 									<div class="row">
 										<div class="col-12">
-											<div class="control-row-group">
-												<div class="row-line-group">
-                            <div class="c-groupbox " id="GROUPBOX_EQUIGROU_NEWGRP10">
-
-                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_EQUIGROUPSEUDNEWGRP10" 
-                                    label-id="IFF_EQUIGROUPSEUDNEWGRP10">
-                                    <span>@Resources.FIRST_LEVEL_GROUP21314</span>
-                                    <span><a href="javascript:OpenSuggestion('IFF_EQUIGROUPSEUDNEWGRP10','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
-								</div>
-                                <div class="form-flow">
-									<div class="row">
-										<div class="col-12">
-											<div class="control-row-group">
-												<div class="control-join-group">
-												<div class="i-dbedit draggable " id="CONTAINER_IFF_EQUIGROUTPEQUTIPOEQUI">
-													<div class="d-flex">
-													@Html.LabelFor(model => model.TableTpequTipoequi, new { label_id="IFF_EQUIGROUTPEQUTIPOEQUI", @class = " i-text__label", id="LABEL_IFF_EQUIGROUTPEQUTIPOEQUI"}, true, false)
-													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
-													<a href="javascript:OpenSuggestion('IFF_EQUIGROUTPEQUTIPOEQUI','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-													@Html.DropDownListFor(model => model.ValCodtpequ, Model.TableTpequTipoequi.List , "", new {help_id = "IFF_EQUIGROUTPEQUTIPOEQUI", @class = "i-select chosen-dropdown input-xxlarge", data_identifier = "IFF_EQUIGROUTPEQUTIPOEQUI", @pers_cs_area = "Tpequ", @pers_cs_field = "ValCodtpequ", @db_field = "ValCodtpequ", @db_full_field_name = "equip.codtpequ", data_has_more = Model.TableTpequTipoequi.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableTpequTipoequi.Selected, data_dbedit_value = Model.TableTpequTipoequi.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodequip, @data_see_more = "Equigrou_TpequValTipoequi", title = @Resources.TYPE_OF_EQUIPMENT18080, data_see_more_url = @Url.Action("Equigrou_TpequValTipoequi","Equip"), data_is_dbedit = "true", data_fields = "tpequ.codtpequ,tpequ.tipoequi", data_main_field = "Tpequ.ValTipoequi", data_elements = 0, data_filled_by_history = Model.TableTpequTipoequi.FilledByHistory, @dependant_fields = "tpequ.codtpequ,tpequ.tipoequi,tpequ.tpequcod,tpequ.precomax,tpequ.tpequpai,tpequ.nivel,tpequ.backcolo,tpequ.corletra" })
-													@Html.ValidationMessageFor(model => model.TableTpequTipoequi)
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-12">
-											<div class="control-row-group">
-												<div class="control-join-group">
-													<div class="d-flex">
-													@Html.LabelFor(model => model.TpequValTpequcod, new { label_id="LED_EQUIGROUTPEQUTPEQUCOD", @class = " i-text__label", id="LABEL_LED_EQUIGROUTPEQUTPEQUCOD"}, true, false)
-													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
-													<a href="javascript:OpenSuggestion('LED_EQUIGROUTPEQUTPEQUCOD','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-													@Html.TextBoxFor(model => model.TpequValTpequcod, new {help_id = "LED_EQUIGROUTPEQUTPEQUCOD", @class = "i-text__field i-text input-large", data_identifier = "LED_EQUIGROUTPEQUTPEQUCOD", @pers_cs_area = "Tpequ", @pers_cs_field = "ValTpequcod", @db_field = "ValTpequcod", fixed_field = "true", @readonly = "readonly", dependant = "ValCodtpequ", key_field = "ValCodtpequ", dependant_area = "Tpequ", title = @Resources.CODE49225, maxlength = "20", rows = "20" })
-													@Html.ValidationMessageFor(model => model.TpequValTpequcod)
-												</div>
-												<div class="control-join-group">
-												<div class="i-text draggable " id="CONTAINER_LED_EQUIGROUTPEQUPRECOMAX">
-													<div class="d-inline-flex">
-													@Html.LabelFor(model => model.TpequValPrecomax, new { label_id="LED_EQUIGROUTPEQUPRECOMAX", @class = " i-text__label", id="LABEL_LED_EQUIGROUTPEQUPRECOMAX"}, true, false)
-													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
-													<a href="javascript:OpenSuggestion('LED_EQUIGROUTPEQUPRECOMAX','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-													@Html.NumberFor(model => model.TpequValPrecomax, new {help_id = "LED_EQUIGROUTPEQUPRECOMAX", @class = "i-input-group__field text-right i-text__field i-text input-medium", data_refresh = "true", data_tipoform = "U1", data_identifier = "LED_EQUIGROUTPEQUPRECOMAX", @pers_cs_area = "Tpequ", @pers_cs_field = "ValPrecomax", @db_field = "ValPrecomax", fixed_field = "true", @readonly = "readonly", dependant = "ValCodtpequ", key_field = "ValCodtpequ", dependant_area = "Tpequ", title = @Resources.MAXIMUM_PRICE55489, data_currency = "True", data_number_integer = "9", data_number_decimals = "2", data_number_format = "999999999.99" })
-													@Html.ValidationMessageFor(model => model.TpequValPrecomax)
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-12">
-											<div class="control-row-group">
-												<div class="row-line-group">
-                            <div class="c-groupbox " id="GROUPBOX_EQUIGROU_NEWGRP11">
-
-                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_EQUIGROUPSEUDNEWGRP11" 
-                                    label-id="IFF_EQUIGROUPSEUDNEWGRP11">
-                                    <span>@Resources.SECOND_LEVEL_GROUP06141</span>
-                                    <span><a href="javascript:OpenSuggestion('IFF_EQUIGROUPSEUDNEWGRP11','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
-								</div>
-                                <div class="form-flow">
-									<div class="row">
-										<div class="col-12">
-											<div class="control-row-group">
-												<div class="control-join-group">
-													<div class="d-flex">
-													@Html.LabelFor(model => model.TpequValTpequpai, new { label_id="LED_EQUIGROUTPEQUTPEQUPAI", @class = " i-text__label", id="LABEL_LED_EQUIGROUTPEQUTPEQUPAI"}, true, false)
-													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
-													<a href="javascript:OpenSuggestion('LED_EQUIGROUTPEQUTPEQUPAI','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-													@Html.TextBoxFor(model => model.TpequValTpequpai, new {help_id = "LED_EQUIGROUTPEQUTPEQUPAI", @class = "i-text__field i-text input-large", data_identifier = "LED_EQUIGROUTPEQUTPEQUPAI", @pers_cs_area = "Tpequ", @pers_cs_field = "ValTpequpai", @db_field = "ValTpequpai", fixed_field = "true", @readonly = "readonly", dependant = "ValCodtpequ", key_field = "ValCodtpequ", dependant_area = "Tpequ", title = @Resources.DEPENDENT_ON28321, maxlength = "20", rows = "20" })
-													@Html.ValidationMessageFor(model => model.TpequValTpequpai)
-												</div>
-												<div class="control-join-group">
-													<div class="d-flex">
-													@Html.LabelFor(model => model.TpequValNivel, new { label_id="LED_EQUIGROUTPEQUNIVEL___", @class = " i-text__label", id="LABEL_LED_EQUIGROUTPEQUNIVEL___"}, true, false)
-													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
-													<a href="javascript:OpenSuggestion('LED_EQUIGROUTPEQUNIVEL___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-													@Html.NumberFor(model => model.TpequValNivel, new {help_id = "LED_EQUIGROUTPEQUNIVEL___", @class = "i-text__field i-text input-mini", data_identifier = "LED_EQUIGROUTPEQUNIVEL___", @pers_cs_area = "Tpequ", @pers_cs_field = "ValNivel", @db_field = "ValNivel", fixed_field = "true", @readonly = "readonly", dependant = "ValCodtpequ", key_field = "ValCodtpequ", dependant_area = "Tpequ", title = @Resources.LEVEL06184, data_number_integer = "3", data_number_decimals = "0", data_number_format = "999" })
-													@Html.ValidationMessageFor(model => model.TpequValNivel)
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-12">
-											<div class="control-row-group">
-												<div class="row-line-group">
-                            <div class="c-groupbox " id="GROUPBOX_EQUIGROU_NEWGRP12">
-
-                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_EQUIGROUPSEUDNEWGRP12" 
-                                    label-id="IFF_EQUIGROUPSEUDNEWGRP12">
-                                    <span>@Resources.THIRD_LEVEL_GROUP51382</span>
-                                    <span><a href="javascript:OpenSuggestion('IFF_EQUIGROUPSEUDNEWGRP12','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
-								</div>
-                                <div class="form-flow">
-									<div class="row">
-										<div class="col-12">
-											<div class="control-row-group">
-												<div class="control-join-group">
-												<div class="i-text draggable " id="CONTAINER_LED_EQUIGROUTPEQUBACKCOLO">
-													<div class="d-flex">
-													@Html.LabelFor(model => model.TpequValBackcolo, new { label_id="LED_EQUIGROUTPEQUBACKCOLO", @class = " i-text__label", id="LABEL_LED_EQUIGROUTPEQUBACKCOLO"}, true, false)
-													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
-													<a href="javascript:OpenSuggestion('LED_EQUIGROUTPEQUBACKCOLO','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-													@Html.TextBoxFor(model => model.TpequValBackcolo, new {help_id = "LED_EQUIGROUTPEQUBACKCOLO", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_EQUIGROUTPEQUBACKCOLO", @pers_cs_area = "Tpequ", @pers_cs_field = "ValBackcolo", @db_field = "ValBackcolo", fixed_field = "true", @readonly = "readonly", dependant = "ValCodtpequ", key_field = "ValCodtpequ", dependant_area = "Tpequ", title = @Resources.BACKGROUND_COLOR47883, maxlength = "50", rows = "50" })
-													@Html.ValidationMessageFor(model => model.TpequValBackcolo)
-													</div>
-												</div>
-												<div class="control-join-group">
-												<div class="i-text draggable " id="CONTAINER_LED_EQUIGROUTPEQUCORLETRA">
-													<div class="d-flex">
-													@Html.LabelFor(model => model.TpequValCorletra, new { label_id="LED_EQUIGROUTPEQUCORLETRA", @class = " i-text__label", id="LABEL_LED_EQUIGROUTPEQUCORLETRA"}, true, false)
-													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
-													<a href="javascript:OpenSuggestion('LED_EQUIGROUTPEQUCORLETRA','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-													@Html.TextBoxFor(model => model.TpequValCorletra, new {help_id = "LED_EQUIGROUTPEQUCORLETRA", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_EQUIGROUTPEQUCORLETRA", @pers_cs_area = "Tpequ", @pers_cs_field = "ValCorletra", @db_field = "ValCorletra", fixed_field = "true", @readonly = "readonly", dependant = "ValCodtpequ", key_field = "ValCodtpequ", dependant_area = "Tpequ", title = @Resources.LETTER_COLOR15736, maxlength = "50", rows = "50" })
-													@Html.ValidationMessageFor(model => model.TpequValCorletra)
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-                                </div>
-                            </div>
- 												</div>
-											</div>
-										</div>
-									</div>
-                                </div>
-                            </div>
- 												</div>
-											</div>
-										</div>
-									</div>
-                                </div>
-                            </div>
- 												</div>
-											</div>
-										</div>
-									</div>
-                                </div>
-                            </div>
- 						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-12">
-					<div class="row-large-control">
-						<div class="row-line-group" id="CONTAINER_IFF_EQUIGROUPSEUDNEWGRP13">
+											<div class="row-large-control">
+												<div class="row-line-group" id="CONTAINER_IFF_EQUIGROUPSEUDNEWGRP13">
                             <div class="c-groupbox " id="GROUPBOX_EQUIGROU_NEWGRP13">
 
                                 <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_EQUIGROUPSEUDNEWGRP13" 
                                     label-id="IFF_EQUIGROUPSEUDNEWGRP13">
-                                    <span>@Resources.OWNER_DEFAULT_STYLE03732</span>
+                                    <span>@Resources.OWNER09558</span>
                                     <span><a href="javascript:OpenSuggestion('IFF_EQUIGROUPSEUDNEWGRP13','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
 								</div>
                                 <div class="form-flow">
@@ -581,7 +80,7 @@ else {
 													@Html.LabelFor(model => model.TablePess1Name, new { label_id="IFF_EQUIGROUPESS1NAME____", @class = " i-text__label", id="LABEL_IFF_EQUIGROUPESS1NAME____"}, true, false)
 													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
 													<a href="javascript:OpenSuggestion('IFF_EQUIGROUPESS1NAME____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-													@Html.DropDownListFor(model => model.ValCodpess1, Model.TablePess1Name.List , "", new {help_id = "IFF_EQUIGROUPESS1NAME____", @class = "i-select chosen-dropdown input-xxlarge", data_identifier = "IFF_EQUIGROUPESS1NAME____", @pers_cs_area = "Pess1", @pers_cs_field = "ValCodpesso", @db_field = "ValCodpesso", @db_full_field_name = "equip.codpess1", dependant_area = "Cmpny", dependant = "ValCodempre", key_field = "ValCodpess1", data_has_more = Model.TablePess1Name.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TablePess1Name.Selected, data_dbedit_value = Model.TablePess1Name.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodequip, @data_see_more = "Equigrou_Pess1ValName", title = @Resources.NAME31974, data_see_more_url = @Url.Action("Equigrou_Pess1ValName","Equip"), data_is_dbedit = "true", data_fields = "pess1.codpesso,pess1.name", data_main_field = "Pess1.ValName", data_elements = 0, data_filled_by_history = Model.TablePess1Name.FilledByHistory, @dependant_fields = "pess1.codpesso,pess1.name,pess1.gender,pess1.dtnascim,pess1.idade,pess1.idfuncio,pess1.telephon,pess1.email,pess1.email2" })
+													@Html.DropDownListFor(model => model.ValCodpess1, Model.TablePess1Name.List , "", new {help_id = "IFF_EQUIGROUPESS1NAME____", @class = "i-select chosen-dropdown input-xxlarge", data_identifier = "IFF_EQUIGROUPESS1NAME____", @pers_cs_area = "Pess1", @pers_cs_field = "ValCodpesso", @db_field = "ValCodpesso", @db_full_field_name = "equip.codpess1", dependant_area = "Cmpny", dependant = "ValCodempre", key_field = "ValCodpess1", data_has_more = Model.TablePess1Name.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TablePess1Name.Selected, data_dbedit_value = Model.TablePess1Name.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodequip, @data_see_more = "Equigrou_Pess1ValName", title = @Resources.NAME31974, data_see_more_url = @Url.Action("Equigrou_Pess1ValName","Equip"), data_is_dbedit = "true", data_fields = "pess1.codpesso,pess1.name", data_main_field = "Pess1.ValName", data_elements = 0, data_filled_by_history = Model.TablePess1Name.FilledByHistory, @dependant_fields = "pess1.codpesso,pess1.name,pess1.gender,pess1.dtnascim,pess1.idade,pess1.idfuncio,pess1.telephon,pess1.email,pess1.email2,cmpny.codempre,cmpny.designat,cmpny.acronym,cmpny.nif,cmpny.telephon,cmpny.email" })
 													@Html.ValidationMessageFor(model => model.TablePess1Name)
 													</div>
 												</div>
@@ -603,12 +102,6 @@ else {
 											<div class="control-row-group">
 												<div class="row-line-group">
                             <div class="c-groupbox " id="GROUPBOX_EQUIGROU_NEWGRP14">
-
-                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_EQUIGROUPSEUDNEWGRP14" 
-                                    label-id="IFF_EQUIGROUPSEUDNEWGRP14">
-                                    <span>@Resources.GROUP103820</span>
-                                    <span><a href="javascript:OpenSuggestion('IFF_EQUIGROUPSEUDNEWGRP14','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
-								</div>
                                 <div class="form-flow">
 									<div class="row">
 										<div class="col-12">
@@ -750,17 +243,627 @@ else {
 									</div>
                                 </div>
                             </div>
+ 												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="row-line-group">
+                            <div class="c-groupbox " id="GROUPBOX_EQUIGROU_NEWGRP18">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_EQUIGROUPSEUDNEWGRP18" 
+                                    label-id="IFF_EQUIGROUPSEUDNEWGRP18">
+                                    <span>@Resources.MIXED_STYLE48721</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_EQUIGROUPSEUDNEWGRP18','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-static-text draggable " id="CONTAINER_IFF_EQUIGROUPSEUDFIELD001">
+														<div id="ValField001">@Html.Raw(@Resources.AT_MIXED_ZONES34969)</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="row-line-group">
+                            <div class="c-groupbox c-groupbox--title-background" id="GROUPBOX_EQUIGROU_NEWGRP01">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_EQUIGROUPSEUDNEWGRP01" 
+                                    label-id="IFF_EQUIGROUPSEUDNEWGRP01">
+                                    <span>@Resources.COMPANY52963</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_EQUIGROUPSEUDNEWGRP01','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="row-line-group">
+                            <div class="c-groupbox c-groupbox--minor" id="GROUPBOX_EQUIGROU_NEWGRP02">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_EQUIGROUPSEUDNEWGRP02" 
+                                    label-id="IFF_EQUIGROUPSEUDNEWGRP02">
+                                    <span>@Resources.IDENTIFICATION37731</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_EQUIGROUPSEUDNEWGRP02','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-image draggable " id="CONTAINER_LED_EQUIGROUCMPNYLOGO____">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.CmpnyValLogo, new { label_id="LED_EQUIGROUCMPNYLOGO____", @class = " i-text__label", id="LABEL_LED_EQUIGROUCMPNYLOGO____"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EQUIGROUCMPNYLOGO____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													<div data-identifier="LED_EQUIGROUCMPNYLOGO____" pers-cs-area="Cmpny" pers-cs-field="ValLogo" class="image-control-wrapper" >
+													@Html.DisplayFor(m => m.CmpnyValLogo, new {help_id = "LED_EQUIGROUCMPNYLOGO____", @class = "col-auto ", data_identifier = "LED_EQUIGROUCMPNYLOGO____", fixed_field = "true", @readonly = "readonly", dependant = "ValCodpess1", key_field = "ValCodempre", dependant_area = "Cmpny", title = @Resources.LOGO62483, guid = @Model.ValCodempre, controller = "Cmpny", fldname = "ValLogo", identifier = "FEQUIGROU", style = "height: 50pt; display: inline-block;" })
+													</div>
+													@Html.ValidationMessageFor(model => model.CmpnyValLogo)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_EQUIGROUCMPNYDESIGNAT">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.CmpnyValDesignat, new { label_id="LED_EQUIGROUCMPNYDESIGNAT", @class = " i-text__label", id="LABEL_LED_EQUIGROUCMPNYDESIGNAT"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EQUIGROUCMPNYDESIGNAT','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.CmpnyValDesignat, new {help_id = "LED_EQUIGROUCMPNYDESIGNAT", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_EQUIGROUCMPNYDESIGNAT", @pers_cs_area = "Cmpny", @pers_cs_field = "ValDesignat", @db_field = "ValDesignat", fixed_field = "true", @readonly = "readonly", dependant = "ValCodpess1", key_field = "ValCodempre", dependant_area = "Cmpny", title = @Resources.DESIGNATION35876, maxlength = "85", rows = "85" })
+													@Html.ValidationMessageFor(model => model.CmpnyValDesignat)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_EQUIGROUCMPNYACRONYM_">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.CmpnyValAcronym, new { label_id="LED_EQUIGROUCMPNYACRONYM_", @class = " i-text__label", id="LABEL_LED_EQUIGROUCMPNYACRONYM_"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EQUIGROUCMPNYACRONYM_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.CmpnyValAcronym, new {help_id = "LED_EQUIGROUCMPNYACRONYM_", @class = "i-text__field i-text input-medium", data_identifier = "LED_EQUIGROUCMPNYACRONYM_", @pers_cs_area = "Cmpny", @pers_cs_field = "ValAcronym", @db_field = "ValAcronym", fixed_field = "true", @readonly = "readonly", dependant = "ValCodpess1", key_field = "ValCodempre", dependant_area = "Cmpny", title = @Resources.ACRONYM00872, maxlength = "15", rows = "15" })
+													@Html.ValidationMessageFor(model => model.CmpnyValAcronym)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_EQUIGROUCMPNYNIF_____">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.CmpnyValNif, new { label_id="LED_EQUIGROUCMPNYNIF_____", @class = " i-text__label", id="LABEL_LED_EQUIGROUCMPNYNIF_____"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EQUIGROUCMPNYNIF_____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.CmpnyValNif, new {help_id = "LED_EQUIGROUCMPNYNIF_____", @class = "i-text__field i-text input-medium", data_identifier = "LED_EQUIGROUCMPNYNIF_____", @pers_cs_area = "Cmpny", @pers_cs_field = "ValNif", @db_field = "ValNif", fixed_field = "true", @readonly = "readonly", dependant = "ValCodpess1", key_field = "ValCodempre", dependant_area = "Cmpny", title = @Resources.TAX_IDENTIFICATION51190, maxlength = "15", rows = "15" })
+													@Html.ValidationMessageFor(model => model.CmpnyValNif)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="row-line-group">
+                            <div class="c-groupbox c-groupbox--background" id="GROUPBOX_EQUIGROU_NEWGRP03">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_EQUIGROUPSEUDNEWGRP03" 
+                                    label-id="IFF_EQUIGROUPSEUDNEWGRP03">
+                                    <span>@Resources.CONTACTS55742</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_EQUIGROUPSEUDNEWGRP03','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_EQUIGROUCMPNYTELEPHON">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.CmpnyValTelephon, new { label_id="LED_EQUIGROUCMPNYTELEPHON", @class = " i-text__label", id="LABEL_LED_EQUIGROUCMPNYTELEPHON"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EQUIGROUCMPNYTELEPHON','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.CmpnyValTelephon, new {help_id = "LED_EQUIGROUCMPNYTELEPHON", @class = "i-text__field i-text input-large", data_identifier = "LED_EQUIGROUCMPNYTELEPHON", @pers_cs_area = "Cmpny", @pers_cs_field = "ValTelephon", @db_field = "ValTelephon", fixed_field = "true", @readonly = "readonly", dependant = "ValCodpess1", key_field = "ValCodempre", dependant_area = "Cmpny", title = @Resources.PHONE56703, maxlength = "20", rows = "20" })
+													@Html.ValidationMessageFor(model => model.CmpnyValTelephon)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_EQUIGROUCMPNYEMAIL___">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.CmpnyValEmail, new { label_id="LED_EQUIGROUCMPNYEMAIL___", @class = " i-text__label", id="LABEL_LED_EQUIGROUCMPNYEMAIL___"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EQUIGROUCMPNYEMAIL___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.CmpnyValEmail, new {help_id = "LED_EQUIGROUCMPNYEMAIL___", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_EQUIGROUCMPNYEMAIL___", @pers_cs_area = "Cmpny", @pers_cs_field = "ValEmail", @db_field = "ValEmail", fixed_field = "true", @readonly = "readonly", dependant = "ValCodpess1", key_field = "ValCodempre", dependant_area = "Cmpny", title = @Resources.EMAIL25170, maxlength = "254", rows = "99" })
+													@Html.ValidationMessageFor(model => model.CmpnyValEmail)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="row-large-control">
+						<div class="row-line-group" id="CONTAINER_IFF_EQUIGROUPSEUDNEWGRP21">
+                            <div class="c-groupbox " id="GROUPBOX_EQUIGROU_NEWGRP21">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_EQUIGROUPSEUDNEWGRP21" 
+                                    label-id="IFF_EQUIGROUPSEUDNEWGRP21">
+                                    <span>@Resources.COLLAPSIBLE_STYLE24579</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_EQUIGROUPSEUDNEWGRP21','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="row-large-control">
+												<div class="row-line-group" id="CONTAINER_IFF_EQUIGROUPSEUDNEWGRP08">
+<div id="EQUIGROU_NEWGRP08" elem-identifier="AccordionGroup" class="c-accordion accordion-group q-group-collapsible--audit" data-identifier="IFF_EQUIGROUPSEUDNEWGRP08">
+	
+	<div class="c-accordion__panel">
+		<div elem-identifier="AccordionHeading" class="c-accordion__panel-header" >
+			<a elem-identifier="AccordionToggle" href="#" class="b-btn b-btn--link c-accordion__panel-title" role="button" data-toggle="collapse"  
+				data-target="#EQUIGROU_NEWGRP08I" data-zone-type="ZC"
+				label-id="IFF_EQUIGROUPSEUDNEWGRP08"
+				>
+				<span  help-id="IFF_EQUIGROUPSEUDNEWGRP08"/>	
+				<i class="glyphicons glyphicons-plus-sign c-accordion__panel-icon"></i>
+				@Resources.AUDIT43231		
+				<a href="javascript:OpenSuggestion('IFF_EQUIGROUPSEUDNEWGRP08','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a>
+			</a>
+		</div>
+		<div id="EQUIGROU_NEWGRP08I" elem-identifier="AccordionBody" data-parent="#EQUIGROU_NEWGRP08" class="collapse" style="height:0px; ">
+			<div class="c-accordion__panel-body" elem-identifier="AccordionInner">
+					<div elem-identifier="ContainerAccordionInner" class="container-fluid">
+												<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable labelleft" id="CONTAINER_LED_EQUIGROUEQUIPQTDMOVIM">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValQtdmovim, new { label_id="LED_EQUIGROUEQUIPQTDMOVIM", @class = " i-text__label", id="LABEL_LED_EQUIGROUEQUIPQTDMOVIM"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EQUIGROUEQUIPQTDMOVIM','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValQtdmovim, new {help_id = "LED_EQUIGROUEQUIPQTDMOVIM", @class = "Number text-right i-text__field i-text input-medium", data_refresh = "true", data_tipoform = "SR", data_identifier = "LED_EQUIGROUEQUIPQTDMOVIM", @pers_cs_area = "Equip", @pers_cs_field = "ValQtdmovim", @db_field = "ValQtdmovim", fixed_field = "true", @readonly = "readonly", title = @Resources.CHANGES_NUMBER59897, data_number_integer = "10", data_number_decimals = "0", data_number_format = "9999999999" })
+													@Html.ValidationMessageFor(model => model.ValQtdmovim)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-date-picker draggable labelleft" id="CONTAINER_LED_EQUIGROUEQUIPDTAQUISI">
+													<div class="d-inline-flex">
+													@Html.LabelFor(model => model.ValDtaquisi, new { label_id="LED_EQUIGROUEQUIPDTAQUISI", @class = " i-text__label", id="LABEL_LED_EQUIGROUEQUIPDTAQUISI"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EQUIGROUEQUIPDTAQUISI','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DateFor(model => model.ValDtaquisi, new {help_id = "LED_EQUIGROUEQUIPDTAQUISI", @class = "i-input-group__field b-icon-text input-small", data_identifier = "LED_EQUIGROUEQUIPDTAQUISI", @pers_cs_area = "Equip", @pers_cs_field = "ValDtaquisi", @db_field = "ValDtaquisi", title = @Resources.ACQUISITION44180 })
+													@Html.ValidationMessageFor(model => model.ValDtaquisi)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+						</div>
+				</div>
+		</div>
+	</div>
+</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="row-line-group">
+                            <div class="c-groupbox " id="GROUPBOX_EQUIGROU_NEWGRP23">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_EQUIGROUPSEUDNEWGRP23" 
+                                    label-id="IFF_EQUIGROUPSEUDNEWGRP23">
+                                    <span>@Resources.GROUPBOX_STYLES47434</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_EQUIGROUPSEUDNEWGRP23','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="row-line-group">
+                            <div class="c-groupbox c-groupbox--title-background" id="GROUPBOX_EQUIGROU_NEWGRP09">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_EQUIGROUPSEUDNEWGRP09" 
+                                    label-id="IFF_EQUIGROUPSEUDNEWGRP09">
+                                    <span>@Resources._1__C_GROUPBOX__TITL45813</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_EQUIGROUPSEUDNEWGRP09','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="row-line-group">
+                            <div class="c-groupbox c-groupbox--title-background" id="GROUPBOX_EQUIGROU_NEWGRP10">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_EQUIGROUPSEUDNEWGRP10" 
+                                    label-id="IFF_EQUIGROUPSEUDNEWGRP10">
+                                    <span>@Resources.IT_IS_NEST_WITHIN_TH37713</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_EQUIGROUPSEUDNEWGRP10','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-dbedit draggable " id="CONTAINER_IFF_EQUIGROUTPEQUTIPOEQUI">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.TableTpequTipoequi, new { label_id="IFF_EQUIGROUTPEQUTIPOEQUI", @class = " i-text__label", id="LABEL_IFF_EQUIGROUTPEQUTIPOEQUI"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('IFF_EQUIGROUTPEQUTIPOEQUI','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DropDownListFor(model => model.ValCodtpequ, Model.TableTpequTipoequi.List , "", new {help_id = "IFF_EQUIGROUTPEQUTIPOEQUI", @class = "i-select chosen-dropdown input-xxlarge", data_identifier = "IFF_EQUIGROUTPEQUTIPOEQUI", @pers_cs_area = "Tpequ", @pers_cs_field = "ValCodtpequ", @db_field = "ValCodtpequ", @db_full_field_name = "equip.codtpequ", data_has_more = Model.TableTpequTipoequi.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableTpequTipoequi.Selected, data_dbedit_value = Model.TableTpequTipoequi.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodequip, @data_see_more = "Equigrou_TpequValTipoequi", title = @Resources.TYPE_OF_EQUIPMENT18080, data_see_more_url = @Url.Action("Equigrou_TpequValTipoequi","Equip"), data_is_dbedit = "true", data_fields = "tpequ.codtpequ,tpequ.tipoequi", data_main_field = "Tpequ.ValTipoequi", data_elements = 0, data_filled_by_history = Model.TableTpequTipoequi.FilledByHistory, @dependant_fields = "tpequ.codtpequ,tpequ.tipoequi,tpequ.tpequcod,tpequ.precomax,tpequ.tpequpai,tpequ.nivel,tpequ.backcolo,tpequ.corletra" })
+													@Html.ValidationMessageFor(model => model.TableTpequTipoequi)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.TpequValTpequcod, new { label_id="LED_EQUIGROUTPEQUTPEQUCOD", @class = " i-text__label", id="LABEL_LED_EQUIGROUTPEQUTPEQUCOD"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EQUIGROUTPEQUTPEQUCOD','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.TpequValTpequcod, new {help_id = "LED_EQUIGROUTPEQUTPEQUCOD", @class = "i-text__field i-text input-large", data_identifier = "LED_EQUIGROUTPEQUTPEQUCOD", @pers_cs_area = "Tpequ", @pers_cs_field = "ValTpequcod", @db_field = "ValTpequcod", fixed_field = "true", @readonly = "readonly", dependant = "ValCodtpequ", key_field = "ValCodtpequ", dependant_area = "Tpequ", title = @Resources.CODE49225, maxlength = "20", rows = "20" })
+													@Html.ValidationMessageFor(model => model.TpequValTpequcod)
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_EQUIGROUTPEQUPRECOMAX">
+													<div class="d-inline-flex">
+													@Html.LabelFor(model => model.TpequValPrecomax, new { label_id="LED_EQUIGROUTPEQUPRECOMAX", @class = " i-text__label", id="LABEL_LED_EQUIGROUTPEQUPRECOMAX"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EQUIGROUTPEQUPRECOMAX','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.TpequValPrecomax, new {help_id = "LED_EQUIGROUTPEQUPRECOMAX", @class = "i-input-group__field text-right i-text__field i-text input-medium", data_refresh = "true", data_tipoform = "U1", data_identifier = "LED_EQUIGROUTPEQUPRECOMAX", @pers_cs_area = "Tpequ", @pers_cs_field = "ValPrecomax", @db_field = "ValPrecomax", fixed_field = "true", @readonly = "readonly", dependant = "ValCodtpequ", key_field = "ValCodtpequ", dependant_area = "Tpequ", title = @Resources.MAXIMUM_PRICE55489, data_currency = "True", data_number_integer = "9", data_number_decimals = "2", data_number_format = "999999999.99" })
+													@Html.ValidationMessageFor(model => model.TpequValPrecomax)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="row-line-group">
+                            <div class="c-groupbox " id="GROUPBOX_EQUIGROU_NEWGRP11">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_EQUIGROUPSEUDNEWGRP11" 
+                                    label-id="IFF_EQUIGROUPSEUDNEWGRP11">
+                                    <span>@Resources.IT_IS_NEST_WITHIN_TH02373</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_EQUIGROUPSEUDNEWGRP11','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.TpequValTpequpai, new { label_id="LED_EQUIGROUTPEQUTPEQUPAI", @class = " i-text__label", id="LABEL_LED_EQUIGROUTPEQUTPEQUPAI"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EQUIGROUTPEQUTPEQUPAI','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.TpequValTpequpai, new {help_id = "LED_EQUIGROUTPEQUTPEQUPAI", @class = "i-text__field i-text input-large", data_identifier = "LED_EQUIGROUTPEQUTPEQUPAI", @pers_cs_area = "Tpequ", @pers_cs_field = "ValTpequpai", @db_field = "ValTpequpai", fixed_field = "true", @readonly = "readonly", dependant = "ValCodtpequ", key_field = "ValCodtpequ", dependant_area = "Tpequ", title = @Resources.DEPENDENT_ON28321, maxlength = "20", rows = "20" })
+													@Html.ValidationMessageFor(model => model.TpequValTpequpai)
+												</div>
+												<div class="control-join-group">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.TpequValNivel, new { label_id="LED_EQUIGROUTPEQUNIVEL___", @class = " i-text__label", id="LABEL_LED_EQUIGROUTPEQUNIVEL___"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EQUIGROUTPEQUNIVEL___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.TpequValNivel, new {help_id = "LED_EQUIGROUTPEQUNIVEL___", @class = "i-text__field i-text input-mini", data_identifier = "LED_EQUIGROUTPEQUNIVEL___", @pers_cs_area = "Tpequ", @pers_cs_field = "ValNivel", @db_field = "ValNivel", fixed_field = "true", @readonly = "readonly", dependant = "ValCodtpequ", key_field = "ValCodtpequ", dependant_area = "Tpequ", title = @Resources.LEVEL06184, data_number_integer = "3", data_number_decimals = "0", data_number_format = "999" })
+													@Html.ValidationMessageFor(model => model.TpequValNivel)
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="row-line-group">
+                            <div class="c-groupbox " id="GROUPBOX_EQUIGROU_NEWGRP12">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_EQUIGROUPSEUDNEWGRP12" 
+                                    label-id="IFF_EQUIGROUPSEUDNEWGRP12">
+                                    <span>@Resources.IT_IS_NEST_WITHIN_TH43205</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_EQUIGROUPSEUDNEWGRP12','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_EQUIGROUTPEQUBACKCOLO">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.TpequValBackcolo, new { label_id="LED_EQUIGROUTPEQUBACKCOLO", @class = " i-text__label", id="LABEL_LED_EQUIGROUTPEQUBACKCOLO"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EQUIGROUTPEQUBACKCOLO','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.TpequValBackcolo, new {help_id = "LED_EQUIGROUTPEQUBACKCOLO", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_EQUIGROUTPEQUBACKCOLO", @pers_cs_area = "Tpequ", @pers_cs_field = "ValBackcolo", @db_field = "ValBackcolo", fixed_field = "true", @readonly = "readonly", dependant = "ValCodtpequ", key_field = "ValCodtpequ", dependant_area = "Tpequ", title = @Resources.BACKGROUND_COLOR47883, maxlength = "50", rows = "50" })
+													@Html.ValidationMessageFor(model => model.TpequValBackcolo)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_EQUIGROUTPEQUCORLETRA">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.TpequValCorletra, new { label_id="LED_EQUIGROUTPEQUCORLETRA", @class = " i-text__label", id="LABEL_LED_EQUIGROUTPEQUCORLETRA"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EQUIGROUTPEQUCORLETRA','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.TpequValCorletra, new {help_id = "LED_EQUIGROUTPEQUCORLETRA", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_EQUIGROUTPEQUCORLETRA", @pers_cs_area = "Tpequ", @pers_cs_field = "ValCorletra", @db_field = "ValCorletra", fixed_field = "true", @readonly = "readonly", dependant = "ValCodtpequ", key_field = "ValCodtpequ", dependant_area = "Tpequ", title = @Resources.LETTER_COLOR15736, maxlength = "50", rows = "50" })
+													@Html.ValidationMessageFor(model => model.TpequValCorletra)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="row-line-group">
+                            <div class="c-groupbox c-groupbox--minor" id="GROUPBOX_EQUIGROU_NEWGRP07">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_EQUIGROUPSEUDNEWGRP07" 
+                                    label-id="IFF_EQUIGROUPSEUDNEWGRP07">
+                                    <span>@Resources._2__C_GROUPBOX__MINO12365</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_EQUIGROUPSEUDNEWGRP07','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_EQUIGROUEQUIPSEQUENNR">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValSequennr, new { label_id="LED_EQUIGROUEQUIPSEQUENNR", @class = " i-text__label", id="LABEL_LED_EQUIGROUEQUIPSEQUENNR"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EQUIGROUEQUIPSEQUENNR','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValSequennr, new {help_id = "LED_EQUIGROUEQUIPSEQUENNR", @class = "Number text-right i-text__field i-text input-mini", data_sequencial = "M1", data_identifier = "LED_EQUIGROUEQUIPSEQUENNR", @pers_cs_area = "Equip", @pers_cs_field = "ValSequennr", @db_field = "ValSequennr", title = @Resources.SEQUENTIAL_NO_38590, data_number_integer = "6", data_number_decimals = "0", data_number_format = "999999" })
+													@Html.ValidationMessageFor(model => model.ValSequennr)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_EQUIGROUEQUIPREGISTNR">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValRegistnr, new { label_id="LED_EQUIGROUEQUIPREGISTNR", @class = " i-text__label", id="LABEL_LED_EQUIGROUEQUIPREGISTNR"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EQUIGROUEQUIPREGISTNR','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValRegistnr, new {help_id = "LED_EQUIGROUEQUIPREGISTNR", @class = "i-text__field i-text input-mini", data_refresh = "true", data_tipoform = "+", data_identifier = "LED_EQUIGROUEQUIPREGISTNR", @pers_cs_area = "Equip", @pers_cs_field = "ValRegistnr", @db_field = "ValRegistnr", fixed_field = "true", @readonly = "readonly", title = @Resources.NO__REGISTER04207, maxlength = "6", rows = "6" })
+													@Html.ValidationMessageFor(model => model.ValRegistnr)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_EQUIGROUEQUIPVALORTOT">
+													<div class="d-inline-flex">
+													@Html.LabelFor(model => model.ValValortot, new { label_id="LED_EQUIGROUEQUIPVALORTOT", @class = " i-text__label", id="LABEL_LED_EQUIGROUEQUIPVALORTOT"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EQUIGROUEQUIPVALORTOT','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValValortot, new {help_id = "LED_EQUIGROUEQUIPVALORTOT", @class = "i-input-group__field text-right i-text__field i-text input-medium", data_refresh = "true", data_tipoform = "SR", data_identifier = "LED_EQUIGROUEQUIPVALORTOT", @pers_cs_area = "Equip", @pers_cs_field = "ValValortot", @db_field = "ValValortot", fixed_field = "true", @readonly = "readonly", title = @Resources.TOTAL_VALUE30570, data_currency = "True", data_number_integer = "9", data_number_decimals = "2", data_number_format = "999999999.99" })
+													@Html.ValidationMessageFor(model => model.ValValortot)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="row-line-group">
+                            <div class="c-groupbox c-groupbox--minor" id="GROUPBOX_EQUIGROU_NEWGRP05">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_EQUIGROUPSEUDNEWGRP05" 
+                                    label-id="IFF_EQUIGROUPSEUDNEWGRP05">
+                                    <span>@Resources.IT_IS_NEST_WITHIN_TH37713</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_EQUIGROUPSEUDNEWGRP05','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-dbedit draggable " id="CONTAINER_LED_EQUIGROUEQUIPFREQUENC">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValFrequenc, new { label_id="LED_EQUIGROUEQUIPFREQUENC", @class = " i-text__label", id="LABEL_LED_EQUIGROUEQUIPFREQUENC"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EQUIGROUEQUIPFREQUENC','Freqempr')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.ArrayDropDownListFor(model => model.ValFrequenc, Model.List_ValFrequenc, CSGenio.business.ArrayFreqempr.GetElement, "", new {help_id = "LED_EQUIGROUEQUIPFREQUENC", data_toggle = "tooltip", title = @Resources.___1438719, data_placement = "top", description = "", @class = "i-select chosen-dropdown input-mini", data_identifier = "LED_EQUIGROUEQUIPFREQUENC", @pers_cs_area = "Equip", @pers_cs_field = "ValFrequenc", @db_field = "ValFrequenc", data_array_type = "AN", data_placeholder = @Resources.ESCOLHA___40245, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_value = Model.List_ValFrequenc.SelectedValue, data_is_array = "true" })
+													@Html.ValidationMessageFor(model => model.ValFrequenc)
+													</div>
+												</div>
+												<div class="control-join-group row-group-checkbox">
+												<div class="i-checkbox draggable " id="CONTAINER_LED_EQUIGROUEQUIPBOUGHT__">
+													@Html.CheckBoxFor(model => model.ValBought, new {help_id = "LED_EQUIGROUEQUIPBOUGHT__", @class = "i-checkbox__field i-checkbox input-mini", data_refresh = "true", data_tipoform = "+", data_identifier = "LED_EQUIGROUEQUIPBOUGHT__", @pers_cs_area = "Equip", @pers_cs_field = "ValBought", @db_field = "ValBought", fixed_field = "true", @disabled = "disabled", @readonly = "readonly", title = @Resources.BOUGHT32044 }, @Model.IsEditableMode, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													@Html.ValidationMessageFor(model => model.ValBought)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-date-picker draggable " id="CONTAINER_LED_EQUIGROUEQUIPDTREFERE">
+													<div class="d-inline-flex">
+													@Html.LabelFor(model => model.ValDtrefere, new { label_id="LED_EQUIGROUEQUIPDTREFERE", @class = " i-text__label", id="LABEL_LED_EQUIGROUEQUIPDTREFERE"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EQUIGROUEQUIPDTREFERE','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DateFor(model => model.ValDtrefere, new {help_id = "LED_EQUIGROUEQUIPDTREFERE", @class = "i-input-group__field b-icon-text input-large", data_identifier = "LED_EQUIGROUEQUIPDTREFERE", @pers_cs_area = "Equip", @pers_cs_field = "ValDtrefere", @db_field = "ValDtrefere", title = @Resources.REFERENCE28402 })
+													@Html.ValidationMessageFor(model => model.ValDtrefere)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_EQUIGROUEQUIPFIRST___">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValFirst, new { label_id="LED_EQUIGROUEQUIPFIRST___", @class = " i-text__label", id="LABEL_LED_EQUIGROUEQUIPFIRST___"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EQUIGROUEQUIPFIRST___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValFirst, new {help_id = "LED_EQUIGROUEQUIPFIRST___", @class = "i-text__field i-text input-medium", data_refresh = "true", data_tipoform = "CT", data_identifier = "LED_EQUIGROUEQUIPFIRST___", @pers_cs_area = "Equip", @pers_cs_field = "ValFirst", @db_field = "ValFirst", fixed_field = "true", @readonly = "readonly", title = @Resources.FIRST42972, maxlength = "10", rows = "10" })
+													@Html.ValidationMessageFor(model => model.ValFirst)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="row-line-group">
+                            <div class="c-groupbox c-groupbox--minor-border-top" id="GROUPBOX_EQUIGROU_NEWGRP04">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_EQUIGROUPSEUDNEWGRP04" 
+                                    label-id="IFF_EQUIGROUPSEUDNEWGRP04">
+                                    <span>@Resources._3__C_GROUPBOX__MINO47300</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_EQUIGROUPSEUDNEWGRP04','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-image draggable " id="CONTAINER_LED_EQUIGROUEQUIPPHOTOGRA">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValPhotogra, new { label_id="LED_EQUIGROUEQUIPPHOTOGRA", @class = " i-text__label", id="LABEL_LED_EQUIGROUEQUIPPHOTOGRA"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EQUIGROUEQUIPPHOTOGRA','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													<div data-identifier="LED_EQUIGROUEQUIPPHOTOGRA" pers-cs-area="Equip" pers-cs-field="ValPhotogra" class="image-control-wrapper" >
+													@if(Model.IsEditableMode) {
+														@Html.EditorFor(m => m.ValPhotogra, new {help_id = "LED_EQUIGROUEQUIPPHOTOGRA", @class = "col-auto ", data_identifier = "LED_EQUIGROUEQUIPPHOTOGRA", title = @Resources.PHOTO51874, guid = @Model.ValCodequip, controller = "Equip", fldname = "ValPhotogra", identifier = "FEQUIGROU", style = "height: 47pt; display: inline-block;" })
+													} else {
+														@Html.DisplayFor(m => m.ValPhotogra, new {help_id = "LED_EQUIGROUEQUIPPHOTOGRA", @class = "col-auto ", data_identifier = "LED_EQUIGROUEQUIPPHOTOGRA", title = @Resources.PHOTO51874, guid = @Model.ValCodequip, controller = "Equip", fldname = "ValPhotogra", identifier = "FEQUIGROU", style = "height: 47pt; display: inline-block;" })
+													}
+													</div>
+													@Html.ValidationMessageFor(model => model.ValPhotogra)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="row-line-group">
+                            <div class="c-groupbox c-groupbox--minor-border-top" id="GROUPBOX_EQUIGROU_NEWGRP06">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_EQUIGROUPSEUDNEWGRP06" 
+                                    label-id="IFF_EQUIGROUPSEUDNEWGRP06">
+                                    <span>@Resources.IT_IS_NEST_WITHIN_TH37713</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_EQUIGROUPSEUDNEWGRP06','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_EQUIGROUEQUIPDESIGNAT">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValDesignat, new { label_id="LED_EQUIGROUEQUIPDESIGNAT", @class = " i-text__label", id="LABEL_LED_EQUIGROUEQUIPDESIGNAT"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EQUIGROUEQUIPDESIGNAT','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValDesignat, new {help_id = "LED_EQUIGROUEQUIPDESIGNAT", @class = "i-text__field i-text input-xxlarge", data_refresh = "true", data_tipoform = "DF", data_identifier = "LED_EQUIGROUEQUIPDESIGNAT", @pers_cs_area = "Equip", @pers_cs_field = "ValDesignat", @db_field = "ValDesignat", title = @Resources.DESIGNATION35876, maxlength = "85", rows = "85" })
+													@Html.ValidationMessageFor(model => model.ValDesignat)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
  						</div>
 					</div>
 				</div>
 			</div>
 
 
-		@Html.HiddenFor(model=> model.ValDtaquisi, new { @pers_cs_area = "Equip", @pers_cs_field = "ValDtaquisi", @data_identifier = "LED_EQUIGROUEQUIPDTAQUISI" })
 		@Html.HiddenFor(model=> model.ItemValItemdes, new { @pers_cs_area = "Item", @pers_cs_field = "ValItemdes", @data_identifier = "LED_EQUIGROUITEM_ITEMDES_" })
 
 			@Html.HiddenFor(model => model.ValCodrooms, new { @pers_cs_field="ValCodrooms", @pers_cs_area="Equip", @data_value = Model.ValCodrooms, @db_field="ValCodrooms", @trelate="Room1", @tfrelate="Codrooms", @data_identifier="LED_EQUIGROUROOM1CODROOMS" })
 			@Html.HiddenFor(model => model.ValCoddeco, new { @pers_cs_field="ValCoddeco", @pers_cs_area="Equip", @data_value = Model.ValCoddeco, @db_field="ValCoddeco", @trelate="Decom", @tfrelate="Coddeco", @data_identifier="LED_EQUIGROUDECOMCODDECO_" })
+			@Html.HiddenFor(model => model.ValCodempre, new { @pers_cs_field="ValCodempre", @pers_cs_area="Equip", @data_value = Model.ValCodempre, @db_field="ValCodempre", @trelate="Cmpny", @tfrelate="Codempre", @data_identifier="LED_EQUIGROUCMPNYCODEMPRE" })
 			@Html.HiddenFor(model => model.ValCodwareh, new { @pers_cs_field="ValCodwareh", @pers_cs_area="Equip", @data_value = Model.ValCodwareh, @db_field="ValCodwareh", @trelate="Wareh", @tfrelate="Codwareh", @data_identifier="LED_EQUIGROUWAREHCODWAREH" })
 			@Html.HiddenFor(model => model.ValCoditem, new { @pers_cs_field="ValCoditem", @pers_cs_area="Equip", @data_value = Model.ValCoditem, @db_field="ValCoditem", @trelate="Item", @tfrelate="Coditem", @data_identifier="LED_EQUIGROUITEM_CODITEM_" })
 

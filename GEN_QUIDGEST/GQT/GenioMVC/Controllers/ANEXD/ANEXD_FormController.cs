@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Anexd_EquipValRegistnr_ViewModel model = new Anexd_EquipValRegistnr_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodanexd = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,7 +1012,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Anexd_LanguValLangua_ViewModel model = new Anexd_LanguValLangua_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodanexd = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

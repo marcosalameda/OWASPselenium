@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Tblk_GrpbValName_ViewModel model = new Tblk_GrpbValName_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodtblk = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,7 +1012,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Tblk_TrsbValName_ViewModel model = new Tblk_TrsbValName_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodtblk = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

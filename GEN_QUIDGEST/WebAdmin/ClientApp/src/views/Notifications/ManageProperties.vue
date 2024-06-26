@@ -45,9 +45,9 @@
                         <text-input v-model="Model.ValUsername" :label="Resources.UTILIZADOR52387" :isReadOnly="blockForm || !Model.ValAuth"></text-input>
                     </row>
                     <row>
-                        <password-input v-model="Model.ValPassword" :label="Resources.PASSWORD09467" :isReadOnly="blockForm || !Model.ValAuth"></password-input>
+                        <password-input v-model="Model.ValPassword" :label="Resources.PASSWORD09467" :isReadOnly="blockForm || !Model.ValAuth" :showFiller="Model.HasPassword"></password-input>
                     </row>
-                    <row v-show="!blockForm && Model.ValAuth">
+                    <row v-show="!blockForm && Model.ValAuth && Model.ValPassword">
                         <div id="passMeter" ref="PassMeter">
                             <meter ref="pswStrengthMeter" max="4" id="password-strength-meter" value="0"></meter>
                             <br />

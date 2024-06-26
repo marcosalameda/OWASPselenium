@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Regia_on_CntryValCountry_ViewModel model = new Regia_on_CntryValCountry_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodregia = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,7 +1012,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Regia_on_Pais1ValCountry_ViewModel model = new Regia_on_Pais1ValCountry_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodregia = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1044,7 +1042,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Regia_on_ValImoveisl_ViewModel model = new Regia_on_ValImoveisl_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodregia = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

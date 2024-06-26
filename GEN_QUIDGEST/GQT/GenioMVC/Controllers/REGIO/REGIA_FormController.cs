@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Regia_CntryValCountry_ViewModel model = new Regia_CntryValCountry_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodregia = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

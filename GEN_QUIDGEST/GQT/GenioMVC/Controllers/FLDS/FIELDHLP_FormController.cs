@@ -958,7 +958,7 @@ namespace GenioMVC.Controllers
 
 
 
-                             
+                                   
 		//
 		// GET: /Flds/Fieldhlp_AeroValName
 		// POST: /Flds/Fieldhlp_AeroValName
@@ -982,38 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Fieldhlp_AeroValName_ViewModel model = new Fieldhlp_AeroValName_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodflds = id;
-
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
-      
-		//
-		// GET: /Flds/Fieldhlp_EquipValRegistnr
-		// POST: /Flds/Fieldhlp_EquipValRegistnr
-		[AuthorizeForUsers]
-		[ActionName("Fieldhlp_EquipValRegistnr")]
-		[ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
-		public ActionResult Fieldhlp_EquipValRegistnr(string id, string partialView,  IDictionary<string, string> Limits)
-		{
-			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
-
-			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
-			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_equip")))
-				UserContext.Current.SetPersistenceReadOnly(true);
-			else
-			{
-				Navigation.DestroyEntry("ForcePrimaryRead_equip");
-				UserContext.Current.SetPersistenceReadOnly(false);
-			}
-
-			NameValueCollection requestValues = Request.Unvalidated.Form.Count > 0 ? Request.Unvalidated.Form : Request.QueryString; //TSX (01.07.2020) Can not access directly to the FormCollection or made Request.Form otherwise the tags on viewmodel will be ignored
-			var navigation = Navigation.Clone();
-			Fieldhlp_EquipValRegistnr_ViewModel model = new Fieldhlp_EquipValRegistnr_ViewModel(navigation);
-			model.setModes(Request.QueryString["m"]);
-			model.ValCodflds = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

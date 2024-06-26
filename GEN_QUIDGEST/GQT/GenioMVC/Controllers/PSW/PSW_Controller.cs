@@ -382,10 +382,7 @@ namespace GenioMVC.Controllers
                 Psw psw = Psw.Find(model.ValCodpsw);
                 var userFactory = new GenioServer.security.UserFactory(UserContext.Current.PersistentSupport, UserContext.Current.User);
                 if (!String.IsNullOrEmpty(model.ValPassword))
-                {
-                    var password = new GenioServer.security.Password(model.ValPassword, model.ValConfirmPassword);
-                    userFactory.ChangePassword(psw.klass, password);
-                }
+                    userFactory.ChangePassword(psw.klass, model.ValPassword, model.ValConfirmPassword);
 
                 psw.ValNome = model.ValNome;
 

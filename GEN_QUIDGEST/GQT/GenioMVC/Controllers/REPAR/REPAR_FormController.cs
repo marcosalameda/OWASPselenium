@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Repar_EquipValRegistnr_ViewModel model = new Repar_EquipValRegistnr_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodrepar = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,7 +1012,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Repar_SpeciValEspecial_ViewModel model = new Repar_SpeciValEspecial_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodrepar = id;
 			TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
 			// TODO: Remove the old version of limits that pass every field in separate parameters
 			if (Limits != null)
@@ -1057,7 +1055,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Repar_PessoValName_ViewModel model = new Repar_PessoValName_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodrepar = id;
 			TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
 			// TODO: Remove the old version of limits that pass every field in separate parameters
 			if (Limits != null)

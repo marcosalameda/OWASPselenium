@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Comod_Pess1ValName_ViewModel model = new Comod_Pess1ValName_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodlendi = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,7 +1012,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Comod_Pess2ValName_ViewModel model = new Comod_Pess2ValName_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodlendi = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1044,7 +1042,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Comod_EquipValRegistnr_ViewModel model = new Comod_EquipValRegistnr_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodlendi = id;
 			TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
 			// TODO: Remove the old version of limits that pass every field in separate parameters
 			if (Limits != null)

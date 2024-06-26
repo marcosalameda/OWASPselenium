@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Pais_ValProprie1_ViewModel model = new Pais_ValProprie1_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodcntry = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,7 +1012,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Pais_ValPropried_ViewModel model = new Pais_ValPropried_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodcntry = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

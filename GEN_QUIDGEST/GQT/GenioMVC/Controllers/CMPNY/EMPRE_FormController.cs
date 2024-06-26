@@ -884,7 +884,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Empre_CntryValCountry_ViewModel model = new Empre_CntryValCountry_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodempre = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

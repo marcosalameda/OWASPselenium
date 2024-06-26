@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Pessosep_CategValCategoria_ViewModel model = new Pessosep_CategValCategoria_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpesso = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,7 +1012,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Pessos00_CmpnyValDesignat_ViewModel model = new Pessos00_CmpnyValDesignat_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpesso = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1044,7 +1042,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Pessos01_ValEvolucao_ViewModel model = new Pessos01_ValEvolucao_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpesso = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1075,7 +1072,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Pessos01_ValContacto_ViewModel model = new Pessos01_ValContacto_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpesso = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

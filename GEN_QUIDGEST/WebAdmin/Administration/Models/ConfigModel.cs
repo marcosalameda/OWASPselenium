@@ -87,9 +87,11 @@ namespace Administration.Models
         [Display(Name = "PALAVRA_PASSE44126", ResourceType = typeof(Resources.Resources))]
         [Required]
         public string DbPsw { get; set; }
+        public bool HasDbPsw { get; set; }
 
         [Display(Name = "PALAVRA_PASSE44126", ResourceType = typeof(Resources.Resources))]
         public string Log_DbPsw { get; set; }
+        public bool Log_HasDbPsw { get; set; }
 
         [Display(Name = "CONFIRMAR_NOVA_PALAV02846", ResourceType = typeof(Resources.Resources))]
         [Required]
@@ -124,6 +126,8 @@ namespace Administration.Models
 
         [Display(Name = "PALAVRA_PASSE44126", ResourceType = typeof(Resources.Resources))]
         public string ssrsServerPassword { get; set; }
+        
+        public bool hasSsrsServerPassword { get; set; }
 
         [Display(Name = "FORMATO_DAS_DATAS11781", ResourceType = typeof(Resources.Resources))]
         public DateFormatCfg DateFormat { get; set; }

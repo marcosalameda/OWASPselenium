@@ -223,7 +223,7 @@ namespace CSGenio.business
 			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field("frequenc", FieldType.ARRAY_COD_NUMERICO);
 			Qfield.FieldDescription = "Loan frequency";
-			Qfield.FieldSize =  1;
+			Qfield.FieldSize =  2;
 			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "LOAN_FREQUENCY00701";
 

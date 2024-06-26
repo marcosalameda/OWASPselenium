@@ -984,7 +984,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Pesso_CategValCategoria_ViewModel model = new Pesso_CategValCategoria_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpesso = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1015,7 +1014,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Pesso_Pais1ValCountry_ViewModel model = new Pesso_Pais1ValCountry_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpesso = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1089,7 +1087,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Pesso_ValEspecitl_ViewModel model = new Pesso_ValEspecitl_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpesso = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1120,7 +1117,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Pesso_ValContacto_ViewModel model = new Pesso_ValContacto_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpesso = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1151,7 +1147,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Pesso_CmpnyValDesignat_ViewModel model = new Pesso_CmpnyValDesignat_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpesso = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1182,7 +1177,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Pesso_Regi1ValRegiao_ViewModel model = new Pesso_Regi1ValRegiao_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpesso = id;
 			TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
 			// TODO: Remove the old version of limits that pass every field in separate parameters
 			if (Limits != null)
@@ -1226,7 +1220,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Pesso_ValEvolucao_ViewModel model = new Pesso_ValEvolucao_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpesso = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

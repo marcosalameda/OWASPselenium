@@ -49,6 +49,7 @@ namespace GenioMVC.Controllers
 		private static readonly NavigationLocation ACTION_STY_MENU_TABLE = new NavigationLocation("TABLE15475", "STY_Menu_TABLE", "Equip") { vueRouteName = "menu-STY_TABLE" };
 		private static readonly NavigationLocation ACTION_STY_MENU_FULLCALENDAR = new NavigationLocation("EQUIPMENT03632", "STY_Menu_FULLCALENDAR", "Equip") { vueRouteName = "menu-STY_FULLCALENDAR" };
 		private static readonly NavigationLocation ACTION_STY_MENU_GOOGLEMAPS = new NavigationLocation("LISTAGEM45924", "STY_Menu_GOOGLEMAPS", "Equip") { vueRouteName = "menu-STY_GOOGLEMAPS" };
+		private static readonly NavigationLocation ACTION_STY_MENU_371 = new NavigationLocation("EQUIPMENT03632", "STY_Menu_371", "Equip") { vueRouteName = "menu-STY_371" };
         #endregion
 
         #region Menus
@@ -2192,6 +2193,81 @@ namespace GenioMVC.Controllers
                 return View(model);
             else
                 return PartialView("STY_Menu_GOOGLEMAPS_Partial", model);
+        }
+
+
+
+        //
+        // GET: /Equip/STY_Menu_371
+        [AuthorizeForUsers]
+		[AuthorizeForUsers]
+        [ActionName("STY_Menu_371")]
+        public ActionResult STY_Menu_371(bool allSelected = false)
+        {
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+
+            STY_Menu_371_ViewModel model = new STY_Menu_371_ViewModel(Navigation);
+            bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
+            if (isHomePage)
+                Navigation.SetValue("HomePage", "STY_Menu_371");
+            ViewBag.isHomePage = isHomePage;
+            //If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+            if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_equip")))
+                UserContext.Current.SetPersistenceReadOnly(true);
+            else
+			{
+                Navigation.DestroyEntry("ForcePrimaryRead_equip");
+				UserContext.Current.SetPersistenceReadOnly(false);
+			}
+            CSGenio.framework.StatusMessage result = model.CheckPermissions(FormMode.List);
+            if (result.Status.Equals(CSGenio.framework.Status.E))
+            {
+                if (!Request.IsAjaxRequest() && !isHomePage)
+                    return View("_PermissionError", model: result.Message);
+                else
+                    return PartialView("_PermissionError", model: result.Message);
+            }
+
+            NameValueCollection querystring = Request.Form.Count > 0 ? Request.Form : Request.QueryString;
+			if (!isHomePage && !Request.IsAjaxRequest())
+            {
+                if (Navigation.CurrentLevel == null || !ACTION_STY_MENU_371.IsSameAction(Navigation.CurrentLevel.Location))
+                {
+                    // reset the selections for this new navigation flow
+                    // TODO: This change still requires more testing
+                    Navigation.RemoveHistoryLevel(ACTION_STY_MENU_371);
+                    if (Navigation.CurrentLevel.Location.Action != ACTION_STY_MENU_371.Action)
+                    {
+                        Navigation.AddHistoryLevel(ACTION_STY_MENU_371, FormMode.List);
+                        CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
+                    }
+				}
+            }
+            else if (isHomePage)
+            {
+                CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_STY_MENU_371.ShortDescription());
+                Navigation.SetValue("HomePageContainsList", true);
+            }
+
+
+
+			model.Navigation = Navigation;
+
+// USE /[MANUAL STY MENU_GET 371]/
+
+
+			model.Load(perPage, querystring, Request.IsAjaxRequest());
+
+            if(model.CheckForZzstate())
+                WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
+
+ 
+            if(isHomePage)
+                return PartialView("STY_Menu_371", model);
+            else if (!Request.IsAjaxRequest())
+                return View(model);
+            else
+                return PartialView("STY_Menu_371_Partial", model);
         }
 
 

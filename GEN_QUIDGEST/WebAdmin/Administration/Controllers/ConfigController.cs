@@ -107,7 +107,9 @@ namespace Administration.Controllers
                 model.isLocalReports = conf.ssrsServer.isLocalReports;
                 model.ssrsServerDomain = conf.ssrsServer.Domain;
                 model.ssrsServerUsername = Encoding.Unicode.GetString(Convert.FromBase64String(conf.ssrsServer.Username ?? string.Empty));
-                model.ssrsServerPassword = Encoding.Unicode.GetString(Convert.FromBase64String(conf.ssrsServer.Password ?? string.Empty));
+                
+                if (string.IsNullOrEmpty(conf.ssrsServer.Password)) model.hasSsrsServerPassword = false;
+                else model.hasSsrsServerPassword = true;
 
                 model.DateFormat = new Models.DateFormatCfg();
                 if (conf.DateFormat != null)
@@ -258,7 +260,10 @@ namespace Administration.Controllers
 
                 model.HideYears = conf.omiteAnos.ToUpper() == "S";  //<-- Only this one goes to the conf? does that make sense?
                 model.DbUser = Encoding.Unicode.GetString(Convert.FromBase64String(dataSystem.Login ?? string.Empty));
-                model.DbPsw = Encoding.Unicode.GetString(Convert.FromBase64String(dataSystem.Password ?? string.Empty));
+                
+                if (string.IsNullOrEmpty(dataSystem.Password)) model.HasDbPsw = false;
+                else model.HasDbPsw = true;
+
                 model.Server = dataSystem.Server;
                 model.Service = dataSystem.Service;
                 model.ServiceName = dataSystem.ServiceName;
@@ -268,15 +273,18 @@ namespace Administration.Controllers
                 model.ServerType = serverType;
 
                 /*
-                    *  Read Log Database config
-                    */
+                *  Read Log Database config
+                */
                 if (dataSystem.DataSystemLog != null && dataSystem.DataSystemLog.Schemas.Count > 0)
                 {
                     model.Log_Schema = dataSystem.DataSystemLog.Schemas[0].Schema;
                     model.Log_ConnEncrypt = dataSystem.DataSystemLog.Schemas[0].ConnEncrypt;
                     model.Log_ConnWithDomainUser = dataSystem.DataSystemLog.Schemas[0].ConnWithDomainUser;
                     model.Log_DbUser = Encoding.Unicode.GetString(Convert.FromBase64String(dataSystem.DataSystemLog.Login ?? string.Empty));
-                    model.Log_DbPsw = Encoding.Unicode.GetString(Convert.FromBase64String(dataSystem.DataSystemLog.Password ?? string.Empty));
+                    
+                    if (string.IsNullOrEmpty(dataSystem.DataSystemLog.Password)) model.Log_HasDbPsw = false;
+                    else model.Log_HasDbPsw = true;
+
                     model.Log_Server = dataSystem.DataSystemLog.Server ?? string.Empty;
                     model.Log_Port = dataSystem.DataSystemLog.Port ?? string.Empty;
                     model.Log_Service = dataSystem.DataSystemLog.Service ?? string.Empty;
@@ -820,7 +828,15 @@ namespace Administration.Controllers
                 conf.ssrsServer.isLocalReports = model.isLocalReports;
                 conf.ssrsServer.Domain = model.ssrsServerDomain;
                 conf.ssrsServer.Username = Convert.ToBase64String(Encoding.Unicode.GetBytes(model.ssrsServerUsername));
-                conf.ssrsServer.Password = Convert.ToBase64String(Encoding.Unicode.GetBytes(model.ssrsServerPassword));
+                
+                if (!string.IsNullOrEmpty(model.ssrsServerUsername) && string.IsNullOrEmpty(model.ssrsServerPassword))
+                    throw new BusinessException("SSR Password field is empty.", "EmailPropertiesModel.MapToModel", "SSR Password field is empty.");
+
+                if (string.IsNullOrEmpty(model.ssrsServerUsername) && !string.IsNullOrEmpty(model.ssrsServerPassword))
+                    throw new BusinessException("SSR Username field is empty.", "EmailPropertiesModel.MapToModel", "SSR Username field is empty.");
+
+                // Convert new password to base64
+                conf.ssrsServer.Password = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(model.ssrsServerPassword ?? ""));
 
                 conf.DateFormat.Date = model.DateFormat.date;
                 conf.DateFormat.DateTime = model.DateFormat.dateTime;
@@ -1065,10 +1081,12 @@ namespace Administration.Controllers
         {
             PersistentSupport sp = PersistentSupport.getPersistentSupport(CurrentYear);
             sp.openConnection();
-            var found = GenioServer.security.PasswordFactory.CheckBlacklisted(sp, req.password);
+            User user = SysConfiguration.CreateWebAdminUser();
+            var factory = new GenioServer.security.UserFactory(sp, user);
+            var error = factory.CheckBlacklisted(req.password);
             sp.closeConnection();
 
-            return Json(new { Success = true, found });
+            return Json(new { Success = true, found = !string.IsNullOrEmpty(error) });
         }
 
         [HttpPost]

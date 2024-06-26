@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Fullcale_ValFullcale_ViewModel model = new Fullcale_ValFullcale_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodequip = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

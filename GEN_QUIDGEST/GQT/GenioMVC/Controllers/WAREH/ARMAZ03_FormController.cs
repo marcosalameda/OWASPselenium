@@ -884,7 +884,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Armaz03_ValArtigos_ViewModel model = new Armaz03_ValArtigos_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodwareh = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

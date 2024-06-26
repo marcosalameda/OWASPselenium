@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Mltform_ValMltform1_ViewModel model = new Mltform_ValMltform1_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodwareh = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

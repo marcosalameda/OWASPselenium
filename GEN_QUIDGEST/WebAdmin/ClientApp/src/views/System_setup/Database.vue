@@ -31,7 +31,7 @@
           <text-input v-model="Model.DbUser" :label="Resources.LOGIN_DE_ACESSO_A_BA52816" :isRequired="true"></text-input>
         </row>
         <row>
-          <password-input v-model="Model.DbPsw" :label="Resources.PALAVRA_PASSE44126" :isRequired="true"></password-input>
+          <password-input v-model="Model.DbPsw" :label="Resources.PALAVRA_PASSE44126" :isRequired="true" :showFiller="Model.HasDbPsw"></password-input>
         </row>
         <row>
           <password-input v-model="Model.DbCheckPsw" :label="Resources.CONFIRMAR_PALAVRA_PA30977" :isRequired="true"></password-input>
@@ -75,7 +75,7 @@
             <text-input v-model="Model.Log_DbUser" :label="Resources.LOGIN_DE_ACESSO_A_BA52816"></text-input>
           </row>
           <row>
-            <password-input v-model="Model.Log_DbPsw" :label="Resources.PALAVRA_PASSE44126"></password-input>
+            <password-input v-model="Model.Log_DbPsw" :label="Resources.PALAVRA_PASSE44126" :showFiller="Model.Log_HasDbPsw"></password-input>
           </row>
           <row>
             <password-input v-model="Model.Log_DbCheckPsw" :label="Resources.CONFIRMAR_PALAVRA_PA30977"></password-input>

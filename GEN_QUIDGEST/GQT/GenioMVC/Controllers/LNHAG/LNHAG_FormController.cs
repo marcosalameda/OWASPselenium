@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Lnhag_PedidValNrpedido_ViewModel model = new Lnhag_PedidValNrpedido_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodlnhag = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,7 +1012,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Lnhag_Tpeq1ValTipoequi_ViewModel model = new Lnhag_Tpeq1ValTipoequi_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodlnhag = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

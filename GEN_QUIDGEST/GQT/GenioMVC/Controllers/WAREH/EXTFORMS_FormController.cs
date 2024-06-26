@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Extforms_ValArtigos_ViewModel model = new Extforms_ValArtigos_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodwareh = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

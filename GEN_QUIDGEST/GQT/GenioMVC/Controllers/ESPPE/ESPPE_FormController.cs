@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Esppe_PessoValName_ViewModel model = new Esppe_PessoValName_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodesppe = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,7 +1012,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Esppe_SpeciValEspecial_ViewModel model = new Esppe_SpeciValEspecial_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodesppe = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

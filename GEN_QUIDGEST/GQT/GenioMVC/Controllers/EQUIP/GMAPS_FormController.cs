@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Gmaps_ValInstalac_ViewModel model = new Gmaps_ValInstalac_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodequip = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

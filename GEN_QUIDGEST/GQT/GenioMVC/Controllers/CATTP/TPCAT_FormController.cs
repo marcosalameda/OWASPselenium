@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Tpcat_SbcatValSubcateg_ViewModel model = new Tpcat_SbcatValSubcateg_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodtpcat = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

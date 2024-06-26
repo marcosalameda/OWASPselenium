@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Pwcom_PswValNome_ViewModel model = new Pwcom_PswValNome_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpwcom = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,7 +1012,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Pwcom_Pess1ValName_ViewModel model = new Pwcom_Pess1ValName_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpwcom = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

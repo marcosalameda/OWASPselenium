@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Tabpr_TpequValTipoequi_ViewModel model = new Tabpr_TpequValTipoequi_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodtabpr = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

@@ -30,7 +30,11 @@
 		<Script>tblHardcode.sql</Script>
 	  </Scripts>
 	</Function>
-
+	<!-- Used to select both the before and after schema upgrade scripts -->
+	<Function Id="UPGRADECLIENTS" Name="Upgrade Version Routines" Help="" Connection="Normal" Selected="true" Selectable="true">
+	  <Scripts>
+	  </Scripts>
+	</Function>
 	<Function Id="UPGRADECLIENT1" Name="Upgrade Client" Help="" Connection="Normal" Selected="true" TimeoutMult="10" Selectable="false">
 	  <Scripts>
    </Scripts>
@@ -117,7 +121,7 @@
 	<Function Id="UPGRADECLIENT2" Name="Upgrade Client" Type="SQL" Help="" Connection="Normal" Selected="true" TimeoutMult="10" Selectable="false">
 	  <Scripts>
  		<!-- User defined ReIndexItems -->
-      </Scripts>
+     </Scripts>
 	</Function>
 	
 	<Function Id="UPDATEFORMULAFIELDS" Name="Update FormulaFields" Help="" Connection="Normal" Selected="true" TimeoutMult="10" Selectable="true">
@@ -194,6 +198,7 @@
 			<ReIndexItem>CREATESP</ReIndexItem>
 			<ReIndexItem>CREATESCHEMA</ReIndexItem>
 			<ReIndexItem>CREATEHRDSCHEMA</ReIndexItem>
+			<ReIndexItem>UPGRADECLIENTS</ReIndexItem>
 
 			<ReIndexItem>UPGRADECLIENT1</ReIndexItem>
 

@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Proje_Year1ValYear_ViewModel model = new Proje_Year1ValYear_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodproje = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,14 +1012,13 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Proje_ValDespesas_ViewModel model = new Proje_ValDespesas_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodproje = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
 			return PartialView(partialView, model);
 		}
 
-  
+ 
 		//
 		// GET: /Proje/Proje_ValAgregado
 		// POST: /Proje/Proje_ValAgregado
@@ -1044,7 +1042,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Proje_ValAgregado_ViewModel model = new Proje_ValAgregado_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodproje = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1074,80 +1071,6 @@ namespace GenioMVC.Controllers
 			};
 
 			return GenericHandlePostFormApply(eventSink, model);
-		}
-
-		/// <summary>
-		/// Server-side component of action #1 (RECALC) of trigger UPDATEFORM
-		/// Button ${field.Ajcampo.ToUpper()}
-		/// </summary>
-		/// <param name="data">The client-side context of the trigger.</param>
-		/// <returns>
-		/// Success message
-		/// </returns>
-		[AuthorizeForUsers]
-		public ActionResult Proje_BT_${field.Ajcampo.ToUpper()}_UPDATEFORM_1(string key, Proje_ViewModel vm)
-		{
-			User user = UserContext.Current.User;
-			PersistentSupport sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
-
-			try 
-			{
-				var model = Models.Proje.Find(key, "F${field.Form.ToUpper()}");
-				vm.MapToModel(model);
-				// Context
-				var context = new CSGenio.business.Triggers.TriggerContext()
-				{
-					Area = model.klass,
-					PersistentSupport = sp,
-					User = user,
-				};
-
-				// Should open a local transaction
-				// if the context did not provide an open transaction.
-				bool openLocalTransaction = sp.TransactionIsClosed;
-
-				// Should keep the connection alive
-				// if the context provided an open connection but not an open transaction.
-				bool keepConnectionAlive = !sp.ConnectionIsClosed && sp.TransactionIsClosed;
-
-				if (openLocalTransaction)
-					sp.openTransaction();
-
-				// Trigger UPDATEFORM
-				CSGenio.business.Triggers.ITrigger trigger_UPDATEFORM = new CSGenio.business.Triggers.TriggerUpdateform(context);
-				CSGenio.business.Triggers.IAction action = trigger_UPDATEFORM.GetAction(1);
-				trigger_UPDATEFORM.ExecuteAction(action);
-
-				// If a local transaction was opened, it should also be closed.
-				if (openLocalTransaction)
-				{
-					sp.closeTransaction();
-
-					// Reopen the connection if it needs to be kept alive.
-					if (keepConnectionAlive)
-						sp.openConnection();
-				}
-
-			}
-			catch(Exception)
-			{
-				sp.rollbackTransaction();
-				return Json(
-					new {
-						success = "E",
-						message = Resources.Resources.PEDIMOS_DESCULPA__OC63848
-					},
-                    JsonRequestBehavior.AllowGet
-				);
-			}
-
-			return Json(
-				new {
-					success = "OK",
-					message = Resources.Resources.A_OPERACAO_FOI_CONCL36721
-				},
-				JsonRequestBehavior.AllowGet
-			);
 		}
 	}
 }

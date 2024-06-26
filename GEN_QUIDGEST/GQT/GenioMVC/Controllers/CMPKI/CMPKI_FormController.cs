@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Cmpki_TpequValTipoequi_ViewModel model = new Cmpki_TpequValTipoequi_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodcmpki = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,7 +1012,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Cmpki_Tpeq1ValTipoequi_ViewModel model = new Cmpki_Tpeq1ValTipoequi_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodcmpki = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

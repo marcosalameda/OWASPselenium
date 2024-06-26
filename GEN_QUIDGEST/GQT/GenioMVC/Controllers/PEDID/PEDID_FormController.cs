@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Pedid_ValLinhas_ViewModel model = new Pedid_ValLinhas_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpedid = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,7 +1012,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Pedid_ValDesagreg_ViewModel model = new Pedid_ValDesagreg_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpedid = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1044,7 +1042,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Pedid_ValAgrupame_ViewModel model = new Pedid_ValAgrupame_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpedid = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

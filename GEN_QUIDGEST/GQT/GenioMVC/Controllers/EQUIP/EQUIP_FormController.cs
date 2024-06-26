@@ -984,7 +984,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Equip_CmpnyValDesignat_ViewModel model = new Equip_CmpnyValDesignat_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodequip = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1015,7 +1014,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Equip_Pess1ValName_ViewModel model = new Equip_Pess1ValName_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodequip = id;
 			TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
 			// TODO: Remove the old version of limits that pass every field in separate parameters
 			if (Limits != null)
@@ -1059,7 +1057,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Equip_TpequValTipoequi_ViewModel model = new Equip_TpequValTipoequi_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodequip = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1090,7 +1087,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Equip_WarehValWarehdes_ViewModel model = new Equip_WarehValWarehdes_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodequip = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1121,7 +1117,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Equip_ItemValItemdes_ViewModel model = new Equip_ItemValItemdes_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodequip = id;
 			TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
 			// TODO: Remove the old version of limits that pass every field in separate parameters
 			if (Limits != null)
@@ -1184,7 +1179,37 @@ namespace GenioMVC.Controllers
 
 			return PartialView(partialView, model);
 		}
-    
+  
+		//
+		// GET: /Equip/Equip_ValMovimels
+		// POST: /Equip/Equip_ValMovimels
+		[AuthorizeForUsers]
+		[ActionName("Equip_ValMovimels")]
+		[ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
+		public ActionResult Equip_ValMovimels(string id, string partialView)
+		{
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+
+			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_movim")))
+				UserContext.Current.SetPersistenceReadOnly(true);
+			else
+			{
+				Navigation.DestroyEntry("ForcePrimaryRead_movim");
+				UserContext.Current.SetPersistenceReadOnly(false);
+			}
+
+			NameValueCollection requestValues = Request.Unvalidated.Form.Count > 0 ? Request.Unvalidated.Form : Request.QueryString; //TSX (01.07.2020) Can not access directly to the FormCollection or made Request.Form otherwise the tags on viewmodel will be ignored
+			var navigation = Navigation;
+			Equip_ValMovimels_ViewModel model = new Equip_ValMovimels_ViewModel(navigation);
+			model.setModes(Request.QueryString["m"]);
+
+			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+
+			return PartialView(partialView, model);
+		}
+
+   
 		//
 		// GET: /Equip/Equip_ValInstalag
 		// POST: /Equip/Equip_ValInstalag
@@ -1208,7 +1233,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Equip_ValInstalag_ViewModel model = new Equip_ValInstalag_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodequip = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1239,7 +1263,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Equip_ValInstalac_ViewModel model = new Equip_ValInstalac_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodequip = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1270,7 +1293,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Equip_ValReparaco_ViewModel model = new Equip_ValReparaco_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodequip = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1278,6 +1300,36 @@ namespace GenioMVC.Controllers
 		}
 
  
+		//
+		// GET: /Equip/Equip_DecomValDecomnr
+		// POST: /Equip/Equip_DecomValDecomnr
+		[AuthorizeForUsers]
+		[ActionName("Equip_DecomValDecomnr")]
+		[ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
+		public ActionResult Equip_DecomValDecomnr(string id, string partialView,  IDictionary<string, string> Limits)
+		{
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+
+			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_decom")))
+				UserContext.Current.SetPersistenceReadOnly(true);
+			else
+			{
+				Navigation.DestroyEntry("ForcePrimaryRead_decom");
+				UserContext.Current.SetPersistenceReadOnly(false);
+			}
+
+			NameValueCollection requestValues = Request.Unvalidated.Form.Count > 0 ? Request.Unvalidated.Form : Request.QueryString; //TSX (01.07.2020) Can not access directly to the FormCollection or made Request.Form otherwise the tags on viewmodel will be ignored
+			var navigation = Navigation.Clone();
+			Equip_DecomValDecomnr_ViewModel model = new Equip_DecomValDecomnr_ViewModel(navigation);
+			model.setModes(Request.QueryString["m"]);
+
+			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+
+			return PartialView(partialView, model);
+		}
+
+  
 		//
 		// GET: /Equip/Equip_ValFotoequi
 		// POST: /Equip/Equip_ValFotoequi
@@ -1301,7 +1353,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Equip_ValFotoequi_ViewModel model = new Equip_ValFotoequi_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodequip = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1332,7 +1383,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Equip_ValVisequip_ViewModel model = new Equip_ValVisequip_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodequip = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1462,37 +1512,6 @@ namespace GenioMVC.Controllers
 
  
 		//
-		// GET: /Equip/Equip_DecomValDecomnr
-		// POST: /Equip/Equip_DecomValDecomnr
-		[AuthorizeForUsers]
-		[ActionName("Equip_DecomValDecomnr")]
-		[ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
-		public ActionResult Equip_DecomValDecomnr(string id, string partialView,  IDictionary<string, string> Limits)
-		{
-			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
-
-			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
-			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_decom")))
-				UserContext.Current.SetPersistenceReadOnly(true);
-			else
-			{
-				Navigation.DestroyEntry("ForcePrimaryRead_decom");
-				UserContext.Current.SetPersistenceReadOnly(false);
-			}
-
-			NameValueCollection requestValues = Request.Unvalidated.Form.Count > 0 ? Request.Unvalidated.Form : Request.QueryString; //TSX (01.07.2020) Can not access directly to the FormCollection or made Request.Form otherwise the tags on viewmodel will be ignored
-			var navigation = Navigation.Clone();
-			Equip_DecomValDecomnr_ViewModel model = new Equip_DecomValDecomnr_ViewModel(navigation);
-			model.setModes(Request.QueryString["m"]);
-			model.ValCodequip = id;
-
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
-  
-		//
 		// GET: /Equip/Equip_ValAnexos
 		// POST: /Equip/Equip_ValAnexos
 		[AuthorizeForUsers]
@@ -1515,7 +1534,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Equip_ValAnexos_ViewModel model = new Equip_ValAnexos_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodequip = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1546,38 +1564,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Equip_ValTlequipa_ViewModel model = new Equip_ValTlequipa_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodequip = id;
-
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
-
-			return PartialView(partialView, model);
-		}
-
- 
-		//
-		// GET: /Equip/Equip_ValMovimels
-		// POST: /Equip/Equip_ValMovimels
-		[AuthorizeForUsers]
-		[ActionName("Equip_ValMovimels")]
-		[ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
-		public ActionResult Equip_ValMovimels(string id, string partialView)
-		{
-			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
-
-			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
-			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_movim")))
-				UserContext.Current.SetPersistenceReadOnly(true);
-			else
-			{
-				Navigation.DestroyEntry("ForcePrimaryRead_movim");
-				UserContext.Current.SetPersistenceReadOnly(false);
-			}
-
-			NameValueCollection requestValues = Request.Unvalidated.Form.Count > 0 ? Request.Unvalidated.Form : Request.QueryString; //TSX (01.07.2020) Can not access directly to the FormCollection or made Request.Form otherwise the tags on viewmodel will be ignored
-			var navigation = Navigation;
-			Equip_ValMovimels_ViewModel model = new Equip_ValMovimels_ViewModel(navigation);
-			model.setModes(Request.QueryString["m"]);
-			model.ValCodequip = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

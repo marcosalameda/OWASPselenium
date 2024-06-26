@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Movim_EquipValRegistnr_ViewModel model = new Movim_EquipValRegistnr_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodmovim = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,7 +1012,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Movim_RoomsValRoomnr_ViewModel model = new Movim_RoomsValRoomnr_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodmovim = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

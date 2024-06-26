@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Armaz_ValPessarma_ViewModel model = new Armaz_ValPessarma_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodwareh = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

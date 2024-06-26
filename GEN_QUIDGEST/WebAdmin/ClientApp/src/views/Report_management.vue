@@ -60,7 +60,7 @@
               <q-button
                 :title="Resources.APAGAR04097"
                 @click="ManageSlotReport('delete', props.row[0])">
-                <q-icon icon="remove" />
+                <q-icon icon="bin" />
               </q-button>
             </q-button-group>
           </template>

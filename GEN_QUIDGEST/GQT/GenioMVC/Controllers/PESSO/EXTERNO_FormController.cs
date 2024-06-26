@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Externo_CmpnyValDesignat_ViewModel model = new Externo_CmpnyValDesignat_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodpesso = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Visit_EquipValRegistnr_ViewModel model = new Visit_EquipValRegistnr_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodvisit = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

@@ -52,7 +52,6 @@ namespace GenioMVC.ViewModels.Decom
 		[DataType(DataType.MultilineText)]
 		public string ValNote { get; set; }
 
-
 		/// <summary>Campo : "Decomission" Tipo:"DT"</summary>
 		[Display(Name = "DECOMISSION14486", ResourceType = typeof(Resources.Resources))]
 		[Required(ErrorMessageResourceName = "O_CAMPO__0__E_OBRIGA36687", ErrorMessageResourceType = typeof(Resources.Resources))]

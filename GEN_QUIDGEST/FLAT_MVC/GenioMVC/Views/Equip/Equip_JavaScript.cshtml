@@ -10,11 +10,11 @@
 <script src="@Url.Content("~/Scripts/FullCalendar/packages/core/main.min.js")" type="application/javascript"></script>
 <script src="@Url.Content("~/Scripts/FullCalendar/packages/bootstrap/main.min.js")" type="application/javascript"></script>
 <script src="@Url.Content("~/Scripts/FullCalendar/packages/interaction/main.min.js")" type="application/javascript"></script>
-                                <script src="@Url.Content("~/Scripts/FullCalendar/packages/daygrid/main.min.js")" type="application/javascript"></script>
+                                   <script src="@Url.Content("~/Scripts/FullCalendar/packages/daygrid/main.min.js")" type="application/javascript"></script>
    <script src="@Url.Content("~/Scripts/FullCalendar/packages/timegrid/main.min.js")" type="application/javascript"></script>
      <script src="@Url.Content("~/Scripts/popper.min.js")" type="application/javascript"></script>
 <script src="@Url.Content("~/Scripts/FullCalendar/quidgest/quidgest.Calendar.js")" type="application/javascript"></script>
-        @if (FullCalendarHelper.FullCallendarLocale.Key != "en")
+     @if (FullCalendarHelper.FullCallendarLocale.Key != "en")
 {
     <script src="@Url.Content(FullCalendarHelper.FullCallendarLocale.Value)"></script>
 }
@@ -171,6 +171,8 @@
 
 			this.Controls.IFF_EQUIP___PSEUDROOMSMVE = new QGenericControl($('[data-identifier="IFF_EQUIP___PSEUDROOMSMVE"]', this.element), window.Form_Equip);
 
+			this.Controls.IFF_EQUIP___PSEUDMOVIMELS = new QTableListControl($('[data-identifier="IFF_EQUIP___PSEUDMOVIMELS"]', this.element), window.Form_Equip);
+
 			this.Controls.IFF_EQUIP___PSEUDNOVOGR06 = new QGenericControl($('[data-identifier="IFF_EQUIP___PSEUDNOVOGR06"]', this.element), window.Form_Equip);
 
 			this.Controls.LED_EQUIP___EQUIPPHOTOGRA = new QImageControl($('[data-identifier="LED_EQUIP___EQUIPPHOTOGRA"]', this.element), window.Form_Equip, '@Html.Raw(Url.Action("ImageDelete", "Equip", new { id=Model.ValCodequip, modelname="Equip", fldname="ValPhotogra" }))', '@Html.Raw(Url.Action("ImageCropper", "Equip", new { key=Model.ValCodequip, modelname= "Equip", fldname= "ValPhotogra", identifier= "FEQUIP", FormName= "Equip", FieldId= "LED_EQUIP___EQUIPPHOTOGRA" }))',@Html.IsImageEmpty(Model.ValPhotogra));
@@ -191,6 +193,10 @@
 
 			this.Controls.IFF_EQUIP___PSEUDREPARACO = new QTableListControl($('[data-identifier="IFF_EQUIP___PSEUDREPARACO"]', this.element), window.Form_Equip);
 
+			this.Controls.IFF_EQUIP___DECOMDECOMNR_ = new QDbeditControl($('[data-identifier="IFF_EQUIP___DECOMDECOMNR_"]', this.element), window.Form_Equip);
+
+			this.Controls.LED_EQUIP___EQUIPIFABATIF = new QCheckBoxControl($('[data-identifier="LED_EQUIP___EQUIPIFABATIF"]', this.element), window.Form_Equip);
+
 			this.Controls.IFF_EQUIP___PSEUDNOVOGR08 = new QGenericControl($('[data-identifier="IFF_EQUIP___PSEUDNOVOGR08"]', this.element), window.Form_Equip);
 
 			this.Controls.IFF_EQUIP___PSEUDFOTOEQUI = new QTableListControl($('[data-identifier="IFF_EQUIP___PSEUDFOTOEQUI"]', this.element), window.Form_Equip);
@@ -199,17 +205,11 @@
 
 			this.Controls.IFF_EQUIP___PSEUDVISEQUIP = new QTableListControl($('[data-identifier="IFF_EQUIP___PSEUDVISEQUIP"]', this.element), window.Form_Equip);
 
-			this.Controls.IFF_EQUIP___DECOMDECOMNR_ = new QDbeditControl($('[data-identifier="IFF_EQUIP___DECOMDECOMNR_"]', this.element), window.Form_Equip);
-
-			this.Controls.LED_EQUIP___EQUIPIFABATIF = new QCheckBoxControl($('[data-identifier="LED_EQUIP___EQUIPIFABATIF"]', this.element), window.Form_Equip);
-
 			this.Controls.IFF_EQUIP___PSEUDNOVOGR12 = new QGenericControl($('[data-identifier="IFF_EQUIP___PSEUDNOVOGR12"]', this.element), window.Form_Equip);
 
 			this.Controls.IFF_EQUIP___PSEUDANEXOS__ = new QTableListControl($('[data-identifier="IFF_EQUIP___PSEUDANEXOS__"]', this.element), window.Form_Equip);
 
 			this.Controls.IFF_EQUIP___PSEUDTLEQUIPA = new QTimeLineControl($('[data-identifier="IFF_EQUIP___PSEUDTLEQUIPA"]', this.element), window.Form_Equip);
-
-			this.Controls.IFF_EQUIP___PSEUDMOVIMELS = new QTableListControl($('[data-identifier="IFF_EQUIP___PSEUDMOVIMELS"]', this.element), window.Form_Equip);
 
 
 

@@ -54,7 +54,7 @@ namespace CSGenio.framework
         /// <summary>
         /// Application version
         /// </summary>
-        public static int Version { get; } = 3596;
+        public static int Version { get; } = 3656;
 
         /// <summary>
         /// System id
@@ -84,12 +84,12 @@ namespace CSGenio.framework
         /// <summary>
         /// Version of the database
         /// </summary>
-        public const int VersionDbGen = 3596;
+        public const int VersionDbGen = 3656;
 
         /// <summary>
         /// Version of the database indexes
         /// </summary>
-        public const int VersionIdxDbGen = 1246;
+        public const int VersionIdxDbGen = 1306;
 
         /// <summary>
         /// Version of the latest upgrade index version
@@ -104,12 +104,12 @@ namespace CSGenio.framework
         /// <summary>
         /// Genio generator version
         /// </summary>
-        public const string GenioVersion = "344.73";
+        public const string GenioVersion = "346.35";
 
         /// <summary>
         /// Solution build version
         /// </summary>
-        public const int BuildVersionGen = 2691;
+        public const int BuildVersionGen = 2728;
         /// <summary>
         /// Solution release version
         /// </summary>
@@ -143,11 +143,6 @@ namespace CSGenio.framework
         /// Security configuration
         /// </summary>
         public static SecurityCfgEl Security { get; private set; } = null;
-
-        /// <summary>
-        /// Administration configuration
-        /// </summary>
-        public static AdminCfgEl Admin { get; private set; } = null;
 
         /// <summary>
         /// Audit configuration
@@ -436,7 +431,6 @@ namespace CSGenio.framework
 			//--------------------------------------------------
 
             MessageQueueing = readXML.MessageQueueing;
-            Admin = readXML.Admin;
             NumberFormat = readXML.NumberFormat ?? new NumberFormatXml();
             DateFormat = readXML.DateFormat ?? new DateFormatXml();
             //------------------------------------------------
@@ -513,7 +507,7 @@ namespace CSGenio.framework
         /// </summary>
         public static string DefaultYear
         {
-            get { return DataSystems.Count!=0?DataSystems[0].Name:"0" ; }
+            get { return DataSystems?.Count > 0 ? DataSystems[0].Name : "0"; }
         }
 
         /// <summary>

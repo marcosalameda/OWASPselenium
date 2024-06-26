@@ -761,11 +761,58 @@ namespace GenioMVC.Models
 				}
 			}
 
-			//Add priamry key column to sorts if it's not there already to keep the order of records consistent when sorting by a field where many rows have to same value
-			AreaInfo info = CSGenio.business.Area.GetInfoArea<A>();
-			ColumnSort pkColumn = new ColumnSort(new ColumnReference(info.Alias, info.PrimaryKeyName), SortOrder.Ascending);
-			if (!sorts.Contains(pkColumn) && !distinct)
-				sorts.Add(pkColumn);
+			if(!distinct)
+			{
+				//< Make sure at least one of the fields or combination of fields is unique
+				bool hasUniqueField = false;
+				AreaInfo areaInfo = CSGenio.business.Area.GetInfoArea<A>();
+
+				// Iterate a copy of the sorts because fields can be added to sorts during this
+				List<ColumnSort> originalSorts = new List<ColumnSort>(sorts);
+				foreach (ColumnSort sort in originalSorts)
+				{
+					// Check if this field is unique
+					ColumnReference sortColumnReference = (ColumnReference)sort.Expression;
+					Field field = CSGenio.business.Area.GetFieldInfo(new Quidgest.Persistence.FieldRef(sortColumnReference.TableAlias, sortColumnReference.ColumnName));
+					if (
+						// Field has unique property
+						field.NotDup
+						// Field is the table's primary key
+						|| (field.Alias != null && field.Alias.Equals(areaInfo.Alias) && field.Name != null && field.Name.Equals(areaInfo.PrimaryKeyName))
+						// Field is a sequential
+						|| (areaInfo.SequentialDefaultValues != null && areaInfo.SequentialDefaultValues.Contains(field.Name))
+					)
+						hasUniqueField = true;
+
+					// If field has a "prefix to be unique" field, add it to the ordering
+					if (!string.IsNullOrEmpty(field.PrefNDup))
+					{
+						ColumnReference prefixColumnRef = new ColumnReference(field.Alias, field.PrefNDup);
+						ColumnSort prefixColumnSort = new ColumnSort(prefixColumnRef, SortOrder.Ascending);
+						if(!sorts.Contains(prefixColumnSort))
+							sorts.Add(prefixColumnSort);
+					}
+
+					// If the field is a "prefix to be unique" field, add its corresponding unique field to the ordering
+					if (!string.IsNullOrEmpty(field.SufNDup))
+					{
+						ColumnReference suffixColumnRef = new ColumnReference(field.Alias, field.SufNDup);
+						ColumnSort suffixColumnSort = new ColumnSort(suffixColumnRef, SortOrder.Ascending);
+						if (!sorts.Contains(suffixColumnSort))
+							sorts.Add(suffixColumnSort);
+						hasUniqueField = true;
+					}
+				}
+
+				// If ordering does not have a unique column or combination of columns, add the primary key column
+				// to keep the order of records consistent
+				if (!hasUniqueField)
+				{
+					ColumnSort pkColumnSort = new ColumnSort(new ColumnReference(areaInfo.Alias, areaInfo.PrimaryKeyName), SortOrder.Ascending);
+					sorts.Add(pkColumnSort);
+				}
+				//> Make sure at least one of the fields or combination of fields is unique
+			}
 
 			ListingMVC<A> listing = new ListingMVC<A>(fields, sorts, offset, numRegs, distinct, u, noLock, identifier, getTotal, selectrow, PagingPosEPHs);
 

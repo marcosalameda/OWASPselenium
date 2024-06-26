@@ -63,6 +63,7 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "__DISPATCH53890";
 
 			Qfield.Dupmsg = "";
+            Qfield.SufNDup = "linenumb";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -

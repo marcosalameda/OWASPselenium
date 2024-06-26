@@ -15,7 +15,7 @@
     <EmbeddedResource Include="resources\UserMessages.xml" />
     <EmbeddedResource Include="resources\ControlQuery\*.xml" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <EmbeddedResource Include="resources\Exports\template.ods" />
   </ItemGroup>
@@ -28,6 +28,10 @@
     <PackageReference Include="EPPlus" Version="4.5.3.3" />
     <PackageReference Include="Fido2" Version="1.0.1" />
     <PackageReference Include="log4net" Version="2.0.15" />
+    <!-- Its has to be this version. The lastest version of Types only works with the new Microsoft.Data.SqlClient provider -->
+    <PackageReference Include="Microsoft.SqlServer.Types" Version="14.0.1016.290">
+      <NoWarn>NU1701</NoWarn>
+    </PackageReference>
     <PackageReference Include="MySql.Data" Version="8.0.21" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.19.180" />
@@ -40,10 +44,10 @@
     <PackageReference Include="System.DirectoryServices" Version="8.0.0" />
     <PackageReference Include="System.DirectoryServices.Protocols" Version="8.0.0" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
-	  <PackageReference Include="Isopoh.Cryptography.Argon2" Version="1.1.12" />
+    <PackageReference Include="Isopoh.Cryptography.Argon2" Version="1.1.12" />
     <PackageReference Include="System.ServiceModel.Primitives" Version="4.10.3" />
     <PackageReference Include="System.ServiceModel.Http" Version="4.10.3" />
-	<PackageReference Include="System.Text.Json" Version="8.0.2" />
+    <PackageReference Include="System.Text.Json" Version="8.0.2" />
 <!-- USE /[MANUAL GQT REFEREN CORE]/ -->
   </ItemGroup>
 

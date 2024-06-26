@@ -158,14 +158,6 @@ namespace CSGenio
             get;set;
         }
 
-        private AdminCfgEl m_admin = null;
-        [XmlElement("admin")]
-        public AdminCfgEl Admin
-        {
-            get { return m_admin; }
-            set { m_admin = value; }
-        }
-
         private NumberFormatXml m_numberFormat = null;
         [XmlElement("numberFormat")]
         public NumberFormatXml NumberFormat
@@ -712,6 +704,7 @@ namespace CSGenio
             security.m_users = m_users.Select(identity => (UserCfgEl)identity.Clone()).ToList();
             security.m_maxAttempts = m_maxAttempts;
             security.m_sessionTimeOut = m_sessionTimeOut;
+            security.UsePasswordBlacklist = UsePasswordBlacklist;
 
             return security;
         }
@@ -833,6 +826,8 @@ namespace CSGenio
             set { m_sessionTimeOut = value; }
         }
         
+        [XmlAttribute("usePasswordBlacklist")]
+        public bool UsePasswordBlacklist { get; set; } = false;
     }
 
     [XmlRoot("AppPath")]
@@ -850,35 +845,6 @@ namespace CSGenio
         Regular,
         Guest,
         Admin
-    }
-
-    [XmlRoot("admin")]
-    public class AdminCfgEl
-    {
-        private string m_name;
-        private string m_password;
-        private string m_password_format;
-
-        [XmlAttribute("name")]
-        public string Name
-        {
-            get { return m_name; }
-            set { m_name = value; }
-        }
-
-        [XmlAttribute("password")]
-        public string Password
-        {
-            get { return m_password; }
-            set { m_password = value; }
-        }
-
-        [XmlAttribute("passwordFormat")]
-        public string PasswordFormat
-        {
-            get { return m_password_format; }
-            set { m_password_format = value; }
-        }
     }
 
     [XmlRoot("numberFormat")]

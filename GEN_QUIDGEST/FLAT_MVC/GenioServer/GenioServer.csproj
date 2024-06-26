@@ -74,6 +74,13 @@
     </Reference>
     <PackageReference Include="DotNetZip" Version="1.16.0" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.11.2" />
+    <!-- Its has to be this version. The lastest version of Types only works with the new Microsoft.Data.SqlClient provider -->
+    <PackageReference Include="Microsoft.SqlServer.Types" Version="14.0.1016.290">
+      <NoWarn>NU1701</NoWarn>
+    </PackageReference>
+    <PackageReference Include="QRCoder">
+      <Version>1.4.1</Version>
+    </PackageReference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.DirectoryServices" />
@@ -82,9 +89,6 @@
     <Reference Include="System.Messaging" />
     <Reference Include="System.Web" />
     <Reference Include="System.Runtime.Serialization" />
-    <PackageReference Include="QRCoder">
-      <Version>1.4.1</Version>
-    </PackageReference>
 <!-- USE /[MANUAL GQT REFEREN]/ -->
   </ItemGroup>
   <ItemGroup>
@@ -266,13 +270,7 @@
     <Compile Include="business\MapServiceProvider.cs" />
     <Compile Include="business\MessageQueueProcessor.cs" />
     <Compile Include="business\DocumentEngine.cs" />
-    <Compile Include="business\async\Scheduling.cs" />
-    <Compile Include="business\async\StatusMessageExtension.cs" />
-    <Compile Include="business\async\SchedulerProcessManager.cs" />
-    <Compile Include="business\async\GenioScheduler.cs" />
-    <Compile Include="business\async\SchedulerJob.cs" />
-    <Compile Include="business\async\SchedulerWorker.cs" />
-    <Compile Include="business\async\PartitionPolicy.cs" />
+    <Compile Include="business\async\**"/>
     <Compile Include="business\RequestFlashBSC.cs" />
     <Compile Include="business\RequestFlashWorkflow.cs" />
     <Compile Include="business\RequestFlashPicagem.cs" />

@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Itemc
         /// Initializes a new instance of the <see cref="Catar_CattpValTpcatego_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Catar_CattpValTpcatego_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Catar_CattpValTpcatego_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodcatar = currentNavigation.CurrentLevel.GetEntry("itemc")?.ToString();
         }
 
         /// <inheritdoc/>

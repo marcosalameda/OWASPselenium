@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Cmpny
         /// Initializes a new instance of the <see cref="Empre_CntryValCountry_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Empre_CntryValCountry_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Empre_CntryValCountry_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodempre = currentNavigation.CurrentLevel.GetEntry("cmpny")?.ToString();
         }
 
         /// <inheritdoc/>

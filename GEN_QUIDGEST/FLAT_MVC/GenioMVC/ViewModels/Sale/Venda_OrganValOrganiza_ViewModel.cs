@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Sale
         /// Initializes a new instance of the <see cref="Venda_OrganValOrganiza_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Venda_OrganValOrganiza_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Venda_OrganValOrganiza_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodvenda = currentNavigation.CurrentLevel.GetEntry("sale")?.ToString();
         }
 
         /// <inheritdoc/>

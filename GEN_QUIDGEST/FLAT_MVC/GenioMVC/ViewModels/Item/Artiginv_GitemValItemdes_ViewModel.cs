@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Item
         /// Initializes a new instance of the <see cref="Artiginv_GitemValItemdes_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Artiginv_GitemValItemdes_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Artiginv_GitemValItemdes_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCoditem = currentNavigation.CurrentLevel.GetEntry("item")?.ToString();
         }
 
         /// <inheritdoc/>

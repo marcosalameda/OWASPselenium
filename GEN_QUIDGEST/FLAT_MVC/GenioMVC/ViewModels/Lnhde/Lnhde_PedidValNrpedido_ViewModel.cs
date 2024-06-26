@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Lnhde
         /// Initializes a new instance of the <see cref="Lnhde_PedidValNrpedido_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Lnhde_PedidValNrpedido_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Lnhde_PedidValNrpedido_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodlnhde = currentNavigation.CurrentLevel.GetEntry("lnhde")?.ToString();
         }
 
         /// <inheritdoc/>

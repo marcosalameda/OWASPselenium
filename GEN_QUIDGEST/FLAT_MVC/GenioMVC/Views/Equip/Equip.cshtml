@@ -96,9 +96,9 @@ else {
 				<div class="col-12">
 					<div class="control-row-group">
 						<div class="row-line-group">
-                            <div class="c-groupbox " id="GROUPBOX_EQUIP_NOVOGR01">
+                            <div class="c-groupbox c-groupbox--title-background" id="GROUPBOX_EQUIP_NOVOGR01">
 
-                                <div class="c-groupbox__title" elem-identifier="GroupZone" data-toggle="tooltip" help-id="IFF_EQUIP___PSEUDNOVOGR01" data-placement="top" title="@Resources.___1537256" description="@Resources.___15_VERBOSE09201"  
+                                <div class="c-groupbox__title" elem-identifier="GroupZone" data-toggle="tooltip" help-id="IFF_EQUIP___PSEUDNOVOGR01" data-placement="top" title="@Resources._111418227" description="@Resources._1114_VERBOSE42095"  
                                     label-id="IFF_EQUIP___PSEUDNOVOGR01">
                                     <span>@Resources.EQUIPMENT38184</span>
                                     <span><a href="javascript:OpenSuggestion('IFF_EQUIP___PSEUDNOVOGR01','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
@@ -405,6 +405,8 @@ else {
 													</div>
 													@Html.ValidationMessageFor(model => model.List_Movimevv)
 													</div>
+												</div>
+												<div class="control-join-group">
 												<div class="i-dbedit draggable " id="CONTAINER_IFF_EQUIP___PSEUDROOMSMVE">
 													<div class="d-flex">
 													@Html.LabelFor(model => model.List_Roomsmve, new { label_id="IFF_EQUIP___PSEUDROOMSMVE", @class = " i-text__label", id="LABEL_IFF_EQUIP___PSEUDROOMSMVE"}, true, false)
@@ -894,9 +896,9 @@ else {
 
 <link href="@Url.Content("~/Scripts/FullCalendar/packages/core/main.min.css")" rel="stylesheet" />
 <link href="@Url.Content("~/Scripts/FullCalendar/packages/bootstrap/main.min.css")" rel="stylesheet" />
-                               <link href="@Url.Content("~/Scripts/FullCalendar/packages/daygrid/main.min.css")" rel="stylesheet" />
+                                  <link href="@Url.Content("~/Scripts/FullCalendar/packages/daygrid/main.min.css")" rel="stylesheet" />
    <link href="@Url.Content("~/Scripts/FullCalendar/packages/timegrid/main.min.css")" rel="stylesheet" />
-            }
+         }
 
 @section include_stylesheets {
     @includeStylesheets()

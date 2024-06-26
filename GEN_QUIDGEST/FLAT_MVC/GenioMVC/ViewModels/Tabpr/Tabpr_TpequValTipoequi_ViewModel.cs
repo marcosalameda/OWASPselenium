@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Tabpr
         /// Initializes a new instance of the <see cref="Tabpr_TpequValTipoequi_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Tabpr_TpequValTipoequi_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Tabpr_TpequValTipoequi_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodtabpr = currentNavigation.CurrentLevel.GetEntry("tabpr")?.ToString();
         }
 
         /// <inheritdoc/>

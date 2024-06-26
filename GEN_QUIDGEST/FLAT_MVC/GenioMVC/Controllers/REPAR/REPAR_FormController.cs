@@ -468,12 +468,12 @@ namespace GenioMVC.Controllers
 			string saveMsg = TempData["NEW_SAVE_LIST"] as string;
 
 			if (!internalRedirect || !Request.IsAjaxRequest())
-				SuccessMessage(String.IsNullOrEmpty(saveMsg) ? Resources.Resources.ALTERACOES_EFECTUADA64514 + GetHumanKeyToQMessage("repar", Convert.ToString(Navigation.CurrentLevel.GetEntry("repar"))) : saveMsg);
+				SuccessMessage(String.IsNullOrEmpty(saveMsg) ? Resources.Resources.ALTERACOES_EFETUADAS10166 + GetHumanKeyToQMessage("repar", Convert.ToString(Navigation.CurrentLevel.GetEntry("repar"))) : saveMsg);
 
 			Navigation.RemoveHistoryLevel();
 
 			if (Request.IsAjaxRequest()) // Ajax result for nested form
-				return Json(new { Success = true, Operation = "Edit", Message = String.IsNullOrEmpty(saveMsg) ? Resources.Resources.ALTERACOES_EFECTUADA64514 : saveMsg, Warnings = warningMsgs }, JsonRequestBehavior.AllowGet);
+				return Json(new { Success = true, Operation = "Edit", Message = String.IsNullOrEmpty(saveMsg) ? Resources.Resources.ALTERACOES_EFETUADAS10166 : saveMsg, Warnings = warningMsgs }, JsonRequestBehavior.AllowGet);
 
 			//verify if the current level has a skipifjustone option, and remove it from history
 			if (Navigation.CurrentLevel.CheckEntry("SkipIfJustOne"))
@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Repar_EquipValRegistnr_ViewModel model = new Repar_EquipValRegistnr_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodrepar = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1013,7 +1012,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Repar_SpeciValEspecial_ViewModel model = new Repar_SpeciValEspecial_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodrepar = id;
 			TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
 			// TODO: Remove the old version of limits that pass every field in separate parameters
 			if (Limits != null)
@@ -1057,7 +1055,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Repar_PessoValName_ViewModel model = new Repar_PessoValName_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodrepar = id;
 			TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
 			// TODO: Remove the old version of limits that pass every field in separate parameters
 			if (Limits != null)

@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Lnhag
         /// Initializes a new instance of the <see cref="Lnhag_PedidValNrpedido_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Lnhag_PedidValNrpedido_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Lnhag_PedidValNrpedido_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodlnhag = currentNavigation.CurrentLevel.GetEntry("lnhag")?.ToString();
         }
 
         /// <inheritdoc/>

@@ -65,9 +65,9 @@ namespace GenioMVC.ViewModels.Outpu
         /// Initializes a new instance of the <see cref="Ldsai_ItemValItemdes_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Ldsai_ItemValItemdes_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Ldsai_ItemValItemdes_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodoutpu = currentNavigation.CurrentLevel.GetEntry("outpu")?.ToString();
         }
 
         /// <inheritdoc/>

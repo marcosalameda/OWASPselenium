@@ -176,8 +176,8 @@ namespace CSGenio.business
 			info.Pathways.Add("indoc","indoc");
 			info.Pathways.Add("gitem","item");
 			info.Pathways.Add("cntry","indoc");
-			info.Pathways.Add("ware1","indoc");
 			info.Pathways.Add("cmpny","indoc");
+			info.Pathways.Add("ware1","indoc");
 			info.Pathways.Add("pesso","indoc");
 			info.Pathways.Add("pais1","indoc");
 			info.Pathways.Add("regi1","indoc");
@@ -192,8 +192,8 @@ namespace CSGenio.business
 			//------------------------------
 			//Actualiza as seguintes somas relacionadas:
 			info.RelatedSumArgs = new List<RelatedSumArgument>();
-			info.RelatedSumArgs.Add( new RelatedSumArgument("ldent", "item", "existenc", "qtdentra", '+', true));
 			info.RelatedSumArgs.Add( new RelatedSumArgument("ldent", "item", "entries", "qtdentra", '+', true));
+			info.RelatedSumArgs.Add( new RelatedSumArgument("ldent", "item", "existenc", "qtdentra", '+', true));
 
 
 

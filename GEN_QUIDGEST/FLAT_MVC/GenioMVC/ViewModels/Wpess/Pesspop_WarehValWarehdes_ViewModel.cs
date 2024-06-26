@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Wpess
         /// Initializes a new instance of the <see cref="Pesspop_WarehValWarehdes_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Pesspop_WarehValWarehdes_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Pesspop_WarehValWarehdes_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodpess = currentNavigation.CurrentLevel.GetEntry("wpess")?.ToString();
         }
 
         /// <inheritdoc/>

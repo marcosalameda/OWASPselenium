@@ -72,6 +72,7 @@ namespace CSGenio.business
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
+            Qfield.SufNDup = "nrrepara";
 			Qfield.Formula = new ReplicaFormula("_replicRel_codequip", "codempre");
 			info.RegisterFieldDB(Qfield);
 
@@ -208,13 +209,13 @@ namespace CSGenio.business
 			info.Pathways.Add("cntry","cmpny");
 			info.Pathways.Add("pais1","pesso");
 			info.Pathways.Add("regi1","pesso");
-			info.Pathways.Add("wareh","equip");
 			info.Pathways.Add("decom","equip");
-			info.Pathways.Add("item","equip");
+			info.Pathways.Add("wareh","equip");
 			info.Pathways.Add("tpequ","equip");
+			info.Pathways.Add("item","equip");
 			info.Pathways.Add("pess1","equip");
-			info.Pathways.Add("gitem","equip");
 			info.Pathways.Add("famil","equip");
+			info.Pathways.Add("gitem","equip");
 			info.Pathways.Add("stake","equip");
 			info.Pathways.Add("cate2","equip");
 		}

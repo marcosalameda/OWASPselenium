@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Pedid
         /// Initializes a new instance of the <see cref="Pedid_ValAgrupame_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Pedid_ValAgrupame_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Pedid_ValAgrupame_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodpedid = currentNavigation.CurrentLevel.GetEntry("pedid")?.ToString();
         }
 
         /// <inheritdoc/>

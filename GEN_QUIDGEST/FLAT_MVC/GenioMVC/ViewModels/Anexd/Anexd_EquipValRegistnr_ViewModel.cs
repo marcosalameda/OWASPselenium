@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Anexd
         /// Initializes a new instance of the <see cref="Anexd_EquipValRegistnr_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Anexd_EquipValRegistnr_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Anexd_EquipValRegistnr_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodanexd = currentNavigation.CurrentLevel.GetEntry("anexd")?.ToString();
         }
 
         /// <inheritdoc/>

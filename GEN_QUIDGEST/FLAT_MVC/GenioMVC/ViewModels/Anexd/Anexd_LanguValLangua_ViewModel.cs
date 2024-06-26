@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Anexd
         /// Initializes a new instance of the <see cref="Anexd_LanguValLangua_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Anexd_LanguValLangua_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Anexd_LanguValLangua_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodanexd = currentNavigation.CurrentLevel.GetEntry("anexd")?.ToString();
         }
 
         /// <inheritdoc/>

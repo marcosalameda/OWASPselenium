@@ -77,7 +77,7 @@
             </row>
             <div style="text-align:left; margin-left: 20px;">
               <template v-for="sqlFunc in getFiltredGroupItems(GrpItem)" :key="sqlFunc.Id">
-                <row v-if="sqlFunc.Selectable">
+                <row v-if="sqlFunc.Id !== 'UPGRADECLIENT2'">
                       <div class="row">
                           <div class="col-6">
                               <checkbox-input v-model="sqlFunc.Value"
@@ -215,6 +215,8 @@
         $.each(grp.GroupItems, function (i, gID) {
           var idx = vm.getIndex(gID);
           if (idx > -1) {
+            //Make sure the after schema upgrade scripts dont get deselected
+            if (vm.Model.Items[idx].Id !== 'UPGRADECLIENT2')
               vm.Model.Items[idx].Value = checked;
           }
         });

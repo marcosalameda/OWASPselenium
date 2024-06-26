@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Indoc
         /// Initializes a new instance of the <see cref="Dentr_Ware1ValWarehdes_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Dentr_Ware1ValWarehdes_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Dentr_Ware1ValWarehdes_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCoddentr = currentNavigation.CurrentLevel.GetEntry("indoc")?.ToString();
         }
 
         /// <inheritdoc/>

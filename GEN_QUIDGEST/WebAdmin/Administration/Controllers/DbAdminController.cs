@@ -287,7 +287,7 @@ namespace Administration.Controllers
             if (!ModelState.IsValid)
                 throw new BusinessException(Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860, "DbAdminController.reindex", Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860);
 
-            List<ReindexFunctionItem> rdxFunctions = GetSelectedReindexFunctionItems(model.Items);
+            List<ReindexFunctionItem> rdxFunctions = model.Items.Where(x => x.Value == true).ToList(); //Get all the selected items
             List<string> allSelectedItems = rdxFunctions.Select(x => x.Id).ToList(); //Get the ids
 
             //If no scripts were selected
@@ -315,15 +315,6 @@ namespace Administration.Controllers
                 cToken, model.Timeout);
 
             return rdxParam;
-        }
-
-        private static List<ReindexFunctionItem> GetSelectedReindexFunctionItems(List<ReindexFunctionItem> reindexFunctionItems)
-        {
-            bool upgradeVersionChecked = reindexFunctionItems.First(item => item.Id == "UPGRADECLIENTS").Value;
-            reindexFunctionItems.First(item => item.Id == "UPGRADECLIENT1").Value = upgradeVersionChecked;
-            reindexFunctionItems.First(item => item.Id == "UPGRADECLIENT2").Value = upgradeVersionChecked;
-
-            return reindexFunctionItems.Where(x => x.Value == true).ToList(); //Get all the selected items
         }
 
         [HttpPost]

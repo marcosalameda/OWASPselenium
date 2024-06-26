@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Agreg
         /// Initializes a new instance of the <see cref="Agreg_ProjeValProjecto_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Agreg_ProjeValProjecto_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Agreg_ProjeValProjecto_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodaggre = currentNavigation.CurrentLevel.GetEntry("agreg")?.ToString();
         }
 
         /// <inheritdoc/>

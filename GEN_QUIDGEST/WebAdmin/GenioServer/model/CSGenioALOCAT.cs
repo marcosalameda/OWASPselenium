@@ -124,8 +124,8 @@ namespace CSGenio.business
 			info.Pathways.Add("facil","facil");
 			info.Pathways.Add("entit","entit");
 			info.Pathways.Add("facty","facil");
-			info.Pathways.Add("faci1","entit");
 			info.Pathways.Add("faci2","entit");
+			info.Pathways.Add("faci1","entit");
 		}
 
 		/// <summary>

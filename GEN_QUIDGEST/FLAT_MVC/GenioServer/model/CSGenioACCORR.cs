@@ -170,8 +170,8 @@ namespace CSGenio.business
 			info.Pathways.Add("gitem","item");
 			info.Pathways.Add("wareh","item");
 			info.Pathways.Add("cntry","indoc");
-			info.Pathways.Add("ware1","indoc");
 			info.Pathways.Add("cmpny","indoc");
+			info.Pathways.Add("ware1","indoc");
 			info.Pathways.Add("pesso","indoc");
 			info.Pathways.Add("pais1","indoc");
 			info.Pathways.Add("regi1","indoc");

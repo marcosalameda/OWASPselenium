@@ -424,7 +424,7 @@ namespace GenioMVC.Controllers
 			string saveMsg = TempData["NEW_SAVE_LIST"] as string;
 
 			Navigation.RemoveHistoryLevel();
-			return Json(new { Success = true, Operation = "Edit", Message = String.IsNullOrEmpty(saveMsg) ? Resources.Resources.ALTERACOES_EFECTUADA64514 : saveMsg, Warnings = warningMsgs }, JsonRequestBehavior.AllowGet);
+			return Json(new { Success = true, Operation = "Edit", Message = String.IsNullOrEmpty(saveMsg) ? Resources.Resources.ALTERACOES_EFETUADAS10166 : saveMsg, Warnings = warningMsgs }, JsonRequestBehavior.AllowGet);
 		}
 
 
@@ -884,7 +884,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Artigval_GitemValItemdes_ViewModel model = new Artigval_GitemValItemdes_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCoditem = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -915,7 +914,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Artigval_WarehValWarehdes_ViewModel model = new Artigval_WarehValWarehdes_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCoditem = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

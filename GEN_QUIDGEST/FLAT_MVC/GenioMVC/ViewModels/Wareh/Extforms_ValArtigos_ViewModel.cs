@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Wareh
         /// Initializes a new instance of the <see cref="Extforms_ValArtigos_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Extforms_ValArtigos_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Extforms_ValArtigos_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodwareh = currentNavigation.CurrentLevel.GetEntry("wareh")?.ToString();
         }
 
         /// <inheritdoc/>

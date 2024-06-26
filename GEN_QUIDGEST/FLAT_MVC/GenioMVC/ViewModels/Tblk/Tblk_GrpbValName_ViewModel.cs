@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Tblk
         /// Initializes a new instance of the <see cref="Tblk_GrpbValName_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Tblk_GrpbValName_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Tblk_GrpbValName_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodtblk = currentNavigation.CurrentLevel.GetEntry("tblk")?.ToString();
         }
 
         /// <inheritdoc/>

@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Cfaqs
         /// Initializes a new instance of the <see cref="Cfaqs_ValExpfaqs_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Cfaqs_ValExpfaqs_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Cfaqs_ValExpfaqs_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodcfaqs = currentNavigation.CurrentLevel.GetEntry("cfaqs")?.ToString();
         }
 
         /// <inheritdoc/>

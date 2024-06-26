@@ -19,12 +19,12 @@
         {
             column.Expression(p => p.ValCodpess, true).Hidden();
 
-// USE /[MANUAL GQT CUSTOM_COLUMN ARMAZ_PESSARMA_WPESS_NFUNC]/
-		column.Expression(p => p.ValNfunc).Title(@Resources.NOFUNCIONARIO21429).Field("ValNfunc").Size(6);
 // USE /[MANUAL GQT CUSTOM_COLUMN ARMAZ_PESSARMA_WPESS_NAME]/
 		column.Expression(p => p.ValName).Title(@Resources.NAME31974).Field("ValName").Size(30);
 // USE /[MANUAL GQT CUSTOM_COLUMN ARMAZ_PESSARMA_WPESS_SEX]/
 		column.Expression(p => p.ArrayValsex).Title(@Resources.SEXO52099).Field("ValSex", "ArraySexo").Size(9);
+// USE /[MANUAL GQT CUSTOM_COLUMN ARMAZ_PESSARMA_WPESS_NFUNC]/
+		column.Expression(p => p.ValNfunc).Title(@Resources.NOFUNCIONARIO21429).Field("ValNfunc").Size(6);
             column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
         })
         .SetLimits(this.Model.tableLimits)

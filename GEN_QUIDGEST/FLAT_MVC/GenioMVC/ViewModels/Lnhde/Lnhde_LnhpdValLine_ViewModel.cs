@@ -65,9 +65,9 @@ namespace GenioMVC.ViewModels.Lnhde
         /// Initializes a new instance of the <see cref="Lnhde_LnhpdValLine_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Lnhde_LnhpdValLine_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Lnhde_LnhpdValLine_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodlnhde = currentNavigation.CurrentLevel.GetEntry("lnhde")?.ToString();
         }
 
         /// <inheritdoc/>

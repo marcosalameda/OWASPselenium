@@ -7,7 +7,6 @@ using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
 using System.Linq;
 using System.Threading;
-using System.Reflection;
 
 
 namespace CSGenio.business.async
@@ -867,86 +866,6 @@ namespace CSGenio.business.async
                 sp.closeConnection();
                 throw;
             }
-        }
-    }
-    //END_MANUALCODE
-
-
-    public class JobFinder
-    {
-        public GenioExecutableJob ObtainJob(Process process)
-        {
-            QCacheInstance cache = QCache.Instance.ManualCode;
-
-            Dictionary<String, Type> loaded = cache.Get("loadedProcesses") as Dictionary<String, Type>;
-            if (loaded == null)
-            {
-                loaded = loadJobs();
-            }
-
-            string type = process.ValType;
-            string mode = process.ValModoproc;
-            string key = type + ";" + mode;
-
-            Type processType = loaded[key];
-            if (processType != null)
-            {
-                return createJob(processType, process);
-            }
-            else
-            {
-                throw new BusinessException("Erro ao correr o processo agendado.", "ObtainJob", "Não foi encontrada uma classe que implemente o tipo e argumento deste agendamento.");
-            }
-        }
-
-
-        private Dictionary<String, Type> loadJobs()
-        {
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            Dictionary<String, Type> loadedProcesses = new Dictionary<String, Type>();
-            Type[] allTypes = assembly.GetTypes();
-            foreach (Type tipo in allTypes)
-            {
-                //Verificar se tem o tipo correto
-                GenioProcessType[] pTypes = tipo.GetCustomAttributes(typeof(GenioProcessType), true) as GenioProcessType[];
-                if (pTypes.Length == 1)
-                {
-                    //Verificar se tem o mode correto
-                    GenioProcessMode[] pModes = tipo.GetCustomAttributes(typeof(GenioProcessMode), true) as GenioProcessMode[];
-                    if (pModes.Length == 1)
-                    {
-                        string key = pTypes[0].Id + ";" + pModes[0].id;
-                        loadedProcesses[key] = tipo;
-                    }
-                }
-            }
-            QCache.Instance.ManualCode.Put("loadedProcesses", loadedProcesses);
-            return loadedProcesses;
-        }
-
-        private GenioExecutableJob createJob(Type agendamento, Process process)
-        {
-            ConstructorInfo construtor = agendamento.GetConstructor(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[0], null);
-            if (construtor == null)
-                throw new BusinessException("Falha na execução do processo.", "createJob", "Não existe nenhum construtor vazio no processo.");
-            GenioExecutableJob job = construtor.Invoke(null) as GenioExecutableJob;
-            return job;
-        }
-
-        private bool typeOfProcess(Type tipo, Process process)
-        {
-            string id = process.ValType;
-            //Verificar se tem o tipo correto
-            GenioProcessType[] pTypes = tipo.GetCustomAttributes(typeof(GenioProcessType), true) as GenioProcessType[];
-            if (pTypes.Length == 1 && pTypes[0].Id == id)
-            {
-                //Verificar se tem o mode correto
-                GenioProcessMode[] pModes = tipo.GetCustomAttributes(typeof(GenioProcessMode), true) as GenioProcessMode[];
-                string mode = process.ValModoproc;
-                if (pModes.Length == 1 && pModes[0].id == mode)
-                    return true;
-            }
-            return false;
         }
     }
 }

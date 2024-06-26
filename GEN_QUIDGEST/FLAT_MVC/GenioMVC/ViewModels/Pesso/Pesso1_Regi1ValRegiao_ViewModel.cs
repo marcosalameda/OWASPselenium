@@ -64,9 +64,9 @@ namespace GenioMVC.ViewModels.Pesso
         /// Initializes a new instance of the <see cref="Pesso1_Regi1ValRegiao_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Pesso1_Regi1ValRegiao_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Pesso1_Regi1ValRegiao_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodpesso = currentNavigation.CurrentLevel.GetEntry("pesso")?.ToString();
         }
 
         /// <inheritdoc/>

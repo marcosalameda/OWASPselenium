@@ -16,16 +16,20 @@ public class Configuration
     //should be private but this is just a quick way to allow the configuration to be deserialized
     public Configuration() {}
 
-    public static Configuration Instance { 
-        get {
+    public static Configuration Instance
+    {
+        get
+        {
             if(_instance == null)
             {
-                _instance = new Configuration();
-                _instance.Browser = "chrome";
-                _instance.BaseUrl = "http://localhost:59464/";
-                _instance.Headless = true;
-                _instance.ImplicitWait = 100;
-                _instance.ExplicitWait = 1000;
+                _instance = new Configuration
+                {
+                    Browser = "chrome",
+                    BaseUrl = "https://localhost:5173/",
+                    Headless = true,
+                    ImplicitWait = 100,
+                    ExplicitWait = 1000
+                };
 
                 //config file overrides defaults
                 if(File.Exists("SeleniumWebTest.json"))

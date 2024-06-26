@@ -101,8 +101,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
         /// Initializes a new instance of the <see cref="STY_Menu_FULLCALENDAR_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public STY_Menu_FULLCALENDAR_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public STY_Menu_FULLCALENDAR_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
             this.RoleToShow = CSGenio.framework.Role.ROLE_1;
         }

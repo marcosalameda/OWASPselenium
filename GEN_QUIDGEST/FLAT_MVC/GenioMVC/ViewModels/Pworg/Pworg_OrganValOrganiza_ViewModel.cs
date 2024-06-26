@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Pworg
         /// Initializes a new instance of the <see cref="Pworg_OrganValOrganiza_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Pworg_OrganValOrganiza_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Pworg_OrganValOrganiza_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodpworg = currentNavigation.CurrentLevel.GetEntry("pworg")?.ToString();
         }
 
         /// <inheritdoc/>

@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Cntry
         /// Initializes a new instance of the <see cref="Pais_ValProprie1_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Pais_ValProprie1_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Pais_ValProprie1_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodcntry = currentNavigation.CurrentLevel.GetEntry("cntry")?.ToString();
         }
 
         /// <inheritdoc/>

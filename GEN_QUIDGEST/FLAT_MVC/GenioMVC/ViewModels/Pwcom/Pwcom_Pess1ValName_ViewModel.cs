@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Pwcom
         /// Initializes a new instance of the <see cref="Pwcom_Pess1ValName_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Pwcom_Pess1ValName_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Pwcom_Pess1ValName_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodpwcom = currentNavigation.CurrentLevel.GetEntry("pwcom")?.ToString();
         }
 
         /// <inheritdoc/>

@@ -100,8 +100,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwareh.FldCodwareh, CSGenioAwareh.Fl
         /// Initializes a new instance of the <see cref="STY_Menu_ALERTS_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public STY_Menu_ALERTS_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public STY_Menu_ALERTS_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
             this.RoleToShow = CSGenio.framework.Role.ROLE_1;
         }

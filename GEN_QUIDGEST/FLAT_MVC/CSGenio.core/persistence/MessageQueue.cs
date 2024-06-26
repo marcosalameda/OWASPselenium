@@ -79,7 +79,7 @@ namespace CSGenio.framework
                 XmlCDataSection node = xml.CreateCDataSection(DBConversion.ToString(Qvalue));
                 xml_elem_propertie.AppendChild(node);
             }
-            else if (tipo == FieldFormatting.DATA)
+            else if (tipo == FieldFormatting.DATA || tipo == FieldFormatting.DATAHORA || tipo == FieldFormatting.DATASEGUNDO)
             {
                 DateTime data;
                 string data_nova = "";
@@ -90,10 +90,18 @@ namespace CSGenio.framework
                 else
                     data = DateTime.Parse(Qvalue.ToString());
 
+                string format = "";
+                if (tipo == FieldFormatting.DATA)
+                    format = "dd/MM/yyyy";
+                else if (tipo == FieldFormatting.DATAHORA)
+                    format = "dd/MM/yyyy HH:mm";
+                else if (tipo == FieldFormatting.DATASEGUNDO)
+                    format = "dd/MM/yyyy HH:mm:ss";				
+
                 //foi reestruturado to ficar coerente com o backoffice
                 //se a data for inválida, o Qvalue deve ir vazio to o xml
                 if (data != DateTime.MinValue)
-                    data_nova = data.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);// String.Format("{0:MM/dd/yyyy}", data);
+                    data_nova = data.ToString(format, System.Globalization.CultureInfo.InvariantCulture);// String.Format("{0:MM/dd/yyyy}", data);
 
                 XmlText xml_text = xml.CreateTextNode(data_nova);// data.ToString("dd/MM/yyyy"));//esta porra esta a meter "-" em vez de "/"... resolver...!!!!!!!!                xml_elem_propertie.AppendChild(xml_text);
                 xml_elem_propertie.AppendChild(xml_text);

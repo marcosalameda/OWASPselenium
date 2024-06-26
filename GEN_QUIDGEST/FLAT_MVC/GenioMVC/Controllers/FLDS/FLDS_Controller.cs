@@ -43,30 +43,6 @@ namespace GenioMVC.Controllers
         #region Programmers code...
 
 
-		// GET: /Flds/Fieldhlp_BR_APPLWIT
-		// <returns>Json(new { success = "OK", message = "" }, JsonRequestBehavior.AllowGet)</returns>
-		public JsonResult Fieldhlp_BR_APPLWIT(string id)
-		{
-			try
-			{
-//Platform: MVC | Type: CONTROLLER_ROUTINE_BODY | Module: GQT | Parameter: APPLWIT | File:  | Order: 0
-//BEGIN_MANUALCODE_CODMANUA:4c4dc3f0-13bc-4675-96ec-0368ba7048e7
-//Return ok message
-return Json(new { success = true, message = "OK" });
-//END_MANUALCODE
-			}
-			catch (BusinessException ex)
-			{
-				return Json(new { success = "E", message = ex.UserMessage }, JsonRequestBehavior.AllowGet);
-			}
-			catch (Exception ex)
-			{
-				Log.Error("Error in action Fieldhlp_BR_APPLWIT: " + ex.Message);
-				return Json(new { success = "E", message = Resources.Resources.PEDIMOS_DESCULPA__OC63848 }, JsonRequestBehavior.AllowGet);
-			}
-		}
-
-
         private List<string> GetActionIds(CriteriaSet crs, CSGenio.persistence.PersistentSupport sp = null)
         {
             CSGenio.business.Area area = CSGenio.business.Area.createArea<CSGenioAflds>(UserContext.Current.User, UserContext.Current.User.CurrentModule);
@@ -130,16 +106,6 @@ return Json(new { success = true, message = "OK" });
 						    result = model.TableAeroName;
                         }
 						break;
-					case "FIELDHLPEQUIPREGISTNR":	// Field (DB)
-                        {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
-						    var model = new Fieldhlp_ViewModel(navigation) { editable = false };
-						    model.MapFromModel(row);
-                            TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
-						    model.Load_Fieldhlpequipregistnr(qs);
-						    result = model.TableEquipRegistnr;
-                        }
-						break;
 					default: break;
 				}
 			}
@@ -179,9 +145,6 @@ return Json(new { success = true, message = "OK" });
 				{
 					case "FIELDHLPAERO_NAME____":	// Field (DB)
 						values = Fieldhlp_ViewModel.GetDependant_FieldhlpTableAeroName(Selected, navigation);
-						break;
-					case "FIELDHLPEQUIPREGISTNR":	// Field (DB)
-						values = Fieldhlp_ViewModel.GetDependant_FieldhlpTableEquipRegistnr(Selected, navigation);
 						break;
 					default: break;
 				}

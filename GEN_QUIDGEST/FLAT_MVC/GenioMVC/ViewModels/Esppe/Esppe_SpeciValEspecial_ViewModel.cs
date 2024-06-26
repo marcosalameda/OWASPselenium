@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Esppe
         /// Initializes a new instance of the <see cref="Esppe_SpeciValEspecial_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Esppe_SpeciValEspecial_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Esppe_SpeciValEspecial_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodesppe = currentNavigation.CurrentLevel.GetEntry("esppe")?.ToString();
         }
 
         /// <inheritdoc/>

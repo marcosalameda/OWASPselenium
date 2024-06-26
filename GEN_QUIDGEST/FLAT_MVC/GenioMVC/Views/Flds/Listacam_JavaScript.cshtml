@@ -175,8 +175,8 @@
 {
 	<text>
 	@*Hidden Foreign Keys Controls*@
-			this.Controls.LED_LISTACAMAERO_CODAERO_ = new QHiddenControl($('[data-identifier="LED_LISTACAMAERO_CODAERO_"]', this.element), window.Form_Listacam);
 			this.Controls.LED_LISTACAMEQUIPCODEQUIP = new QHiddenControl($('[data-identifier="LED_LISTACAMEQUIPCODEQUIP"]', this.element), window.Form_Listacam);
+			this.Controls.LED_LISTACAMAERO_CODAERO_ = new QHiddenControl($('[data-identifier="LED_LISTACAMAERO_CODAERO_"]', this.element), window.Form_Listacam);
 	</text>
 }
 			this.Controls.LED_LISTACAMFLDS_CODFLDS_ = new QHiddenControl($('[data-identifier="LED_LISTACAMFLDS_CODFLDS_"]', this.element), window.Form_Listacam);
@@ -247,8 +247,8 @@
 @{
 	<text>
 		window.Form_Listacam.Data.RelationKeysSelector = {
-				get aero() { return $(':not([elem-identifier="Multiform"]) > #ValCodaero', $('[data-form="Listacam"]')); /* Hidden */ },
 				get equip() { return $(':not([elem-identifier="Multiform"]) > #ValCodequip', $('[data-form="Listacam"]')); /* Hidden */ },
+				get aero() { return $(':not([elem-identifier="Multiform"]) > #ValCodaero', $('[data-form="Listacam"]')); /* Hidden */ },
 		};
 
 		window.Form_Listacam.getAllForeignKeySelectors = function () {
@@ -258,10 +258,10 @@
 
 		window.Form_Listacam.Data.RelationKeys = {
 			get formContext() { return window.Form_Listacam; },
-			get aero() { return (this.formContext.Data.RelationKeysSelector.aero.getQControl() || {}).Value; /* Hidden FK */ },
-			set aero(newValue) { (this.formContext.Data.RelationKeysSelector.aero.getQControl() || {}).Value = newValue; /* Hidden FK */ },
 			get equip() { return (this.formContext.Data.RelationKeysSelector.equip.getQControl() || {}).Value; /* Hidden FK */ },
 			set equip(newValue) { (this.formContext.Data.RelationKeysSelector.equip.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+			get aero() { return (this.formContext.Data.RelationKeysSelector.aero.getQControl() || {}).Value; /* Hidden FK */ },
+			set aero(newValue) { (this.formContext.Data.RelationKeysSelector.aero.getQControl() || {}).Value = newValue; /* Hidden FK */ },
 		};
 	</text>
 }

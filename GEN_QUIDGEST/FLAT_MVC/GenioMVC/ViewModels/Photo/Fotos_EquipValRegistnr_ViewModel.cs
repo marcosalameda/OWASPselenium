@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Photo
         /// Initializes a new instance of the <see cref="Fotos_EquipValRegistnr_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Fotos_EquipValRegistnr_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Fotos_EquipValRegistnr_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodphoto = currentNavigation.CurrentLevel.GetEntry("photo")?.ToString();
         }
 
         /// <inheritdoc/>

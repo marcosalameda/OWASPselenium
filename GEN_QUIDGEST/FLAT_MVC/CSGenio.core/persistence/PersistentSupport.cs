@@ -331,8 +331,6 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
 
             AddParameters(adapter.SelectCommand, parameters);
 
-			//if you received error "DataReader.GetFieldType([x]) returned null" and the [x] field is "geography" data type, please check if you have the component SQLServer Types installed
-			//your web.config have reference to the SQLServer Types version 2012
             DataSet ds = new DataSet();
             adapter.Fill(ds);
 
@@ -1587,19 +1585,28 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
 
         public DataMatrix returnValuesDocums(IArea area, string fieldName, SelectField[] Qvalues, CriteriaSet condition, ColumnSort[] order)
         {
+            return returnValuesDocums(area, fieldName, true, Qvalues, condition, order);
+        }
+
+        public DataMatrix returnValuesDocums(IArea area, string fieldName, bool isForeignKey, SelectField[] Qvalues, CriteriaSet condition, ColumnSort[] order)
+        {
             DataMatrix res = null;
             string tabelaDocums = "docums";
             object primaryKeyValue = area.returnValueField(area.Alias + "." + area.PrimaryKeyName);
-            Object chaveDocums = null;
+            object chaveDocums = null;
 
-            if (area.DBFields.ContainsKey(fieldName + "fk"))
+            string dbFieldName = fieldName;
+            if (isForeignKey)
+                dbFieldName += "fk";
+
+            if (area.DBFields.ContainsKey(dbFieldName))
             {
-                chaveDocums = area.returnValueField(area.Alias + "." + fieldName + "fk");
+                chaveDocums = area.returnValueField(area.Alias + "." + dbFieldName);
             }
             else
             {
                 SelectQuery qs1 = new SelectQuery()
-                    .Select(area.Alias, fieldName + "fk")
+                    .Select(area.Alias, dbFieldName)
                     .From(area.QSystem, area.TableName, area.Alias)
                     .Where(CriteriaSet.And()
                         .Equal(area.Alias, area.PrimaryKeyName, primaryKeyValue));
@@ -1609,8 +1616,8 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                 {
                     chaveDocums = mx.GetDirect(0, 0);
                 }
-
             }
+
             if (chaveDocums == null || chaveDocums == DBNull.Value || chaveDocums.Equals(""))
             {
                 return res;
@@ -1663,6 +1670,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                     chaveDocums = mx.GetDirect(0, 0);
                 }
             }
+
             if (chaveDocums == null || chaveDocums == DBNull.Value || chaveDocums.Equals(""))
             {
                 return "";
@@ -2406,49 +2414,6 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             query.PageSize(pageSize);
             return query;
         }
-		/*
-        /// <summary>
-        /// Reorders a field within a subset from 1 to N maintaining the relative order of the records
-        /// </summary>
-        /// <param name="arearef">The table to reorder</param>
-        /// <param name="orderField">The field to reorder</param>
-        /// <param name="partition">The partition corresponding to the rows to be reordered</param>
-        public void ReorderSequence(AreaRef arearef, FieldRef orderField, CriteriaSet partition, List<Relation> relations = null)
-        {
-            // UPDATE [GENNOV0].[dbo].[gencmpbd]
-            // SET [num] = [renum_campo].[new_num]
-            // FROM [GENNOV0].[dbo].[gencmpbd] [campo]
-            // JOIN (SELECT  (ROW_NUMBER() OVER (ORDER BY [campo].[num]  ASC)) AS [new_num],  ([campo].[codcmpbd]) AS [pk]
-            //          FROM [GENNOV0].[dbo].[gencmpbd] AS [campo]
-            //          WHERE ([campo].[codtabel] = @param1)) AS [renum_campo]
-            // ON ([renum_campo].[pk] = [campo].[codcmpbd])
-
-            string pkName = Area.GetInfoArea(arearef.Alias).PrimaryKeyName;
-
-            SelectQuery sq = new SelectQuery()
-                .Select(SqlFunctions.RowNumber(orderField, SortOrder.Ascending, orderField), "new_num")
-                .Select(arearef.Alias, pkName, "pk")
-                .From(arearef)
-                .Where(partition);
-
-            if(relations != null)
-            {
-                foreach (Relation r in relations)
-                {
-                    sq.Join(r.TargetTable, r.AliasTargetTab, TableJoinType.Left)
-                        .On(CriteriaSet.And()
-                            .Equal(r.AliasSourceTab, r.SourceRelField, r.AliasTargetTab, r.TargetRelField));
-                }
-            }
-
-            UpdateQuery up = new UpdateQuery().Update(arearef)
-                .Set(orderField.Field, new ColumnReference("renum_" + arearef.Alias, "new_num"))
-                .Join(sq, "renum_" + arearef.Alias, TableJoinType.Inner).On(CriteriaSet.And().Equal("renum_" + arearef.Alias, "pk", arearef.Alias, pkName))
-                ;
-
-            Execute(up);
-        }
-		/**/
 
 		/// <summary>
         /// Reorders a field within a subset from startPos to N maintaining the relative order of the records
@@ -2487,8 +2452,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
 
             UpdateQuery up = new UpdateQuery().Update(arearef)
                 .Set(orderField.Field, new ColumnReference("renum_" + arearef.Alias, "new_num"))
-                .Join(sq, "renum_" + arearef.Alias, TableJoinType.Inner).On(CriteriaSet.And().Equal("renum_" + arearef.Alias, "pk", arearef.Alias, pkName))
-                ;
+                .Join(sq, "renum_" + arearef.Alias, TableJoinType.Inner).On(CriteriaSet.And().Equal("renum_" + arearef.Alias, "pk", arearef.Alias, pkName));
 
             Execute(up);
         }
@@ -2649,7 +2613,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             return valorMaximo;
         }
 
-        public object insertValueDocums(IArea area, string fieldName, string fileName, string extension, Byte[] file, FieldFormatting formatting)
+        public object insertValueDocums(IArea area, string fieldName, string fileName, string extension, byte[] file)
         {
             string tabelaDocums = "docums";
             object primaryKeyValue = area.returnValueField(area.Alias + "." + area.PrimaryKeyName);
@@ -2659,7 +2623,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             object valorChavePrimariaDocums = generatePrimaryKey(tabelaDocums, chaveDocums.FieldSize, CSGenioAdocums.GetInformation().KeyType);
 
             //RS(2010.09.16) The table docums starts to gardar several verses and the author of the document
-                        InsertQuery query = new InsertQuery()
+            InsertQuery query = new InsertQuery()
                 .Into(tabelaDocums)
                 .Value("coddocums", valorChavePrimariaDocums)
                 .Value("documid", valorChavePrimariaDocums)
@@ -2911,18 +2875,18 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             Execute(query);
         }
 
-        public void changeValueDocums(object keyValueDocums, Byte[] file, string fileName, string extension, string Qversion, string operChange)
+        public void changeValueDocums(object keyValueDocums, byte[] file, string fileName, string extension, string Qversion, string operChange)
         {
             changeValueDocums(keyValueDocums, file, fileName, extension, Qversion, operChange, "DEFAULT");
         }
 
-        public void changeValueDocums(object keyValueDocums, Byte[] file, string fileName, string extension, string Qversion, string operChange, string alias)
+        public void changeValueDocums(object keyValueDocums, byte[] file, string fileName, string extension, string Qversion, string operChange, string alias)
         {
-            if (Log.IsDebugEnabled) Log.Debug(string.Format("Altera o documento. [ficheiro] {0}", fileName));
+            if (Log.IsDebugEnabled)
+                Log.Debug(string.Format("Altera o documento. [ficheiro] {0}", fileName));
 
-            //RS(2010.09.16) The table docums starts to gardar several verses and the author of the document
+            // RS(2010.09.16) The table docums starts to save several versions and the author of the document
             string tabelaDocums = "docums";
-
 
             UpdateQuery query = new UpdateQuery()
                 .Update(tabelaDocums)

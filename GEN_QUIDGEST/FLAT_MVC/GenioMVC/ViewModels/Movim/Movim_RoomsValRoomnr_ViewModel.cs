@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Movim
         /// Initializes a new instance of the <see cref="Movim_RoomsValRoomnr_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Movim_RoomsValRoomnr_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Movim_RoomsValRoomnr_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodmovim = currentNavigation.CurrentLevel.GetEntry("movim")?.ToString();
         }
 
         /// <inheritdoc/>

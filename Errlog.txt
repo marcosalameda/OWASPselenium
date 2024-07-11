@@ -1,39 +1,30 @@
-﻿GQT em 11/07/2024 15:07:51
-03:07:51.369 info: Reading relational model...
-03:07:51.568 info: Reading menus...
-03:07:51.914 info: Calculating indexes [Tables]...
-03:07:51.929 info: Calculating indexes [Eph]...
-03:07:51.943 info: Calculating indexes [Menus]...
-03:07:51.971 info: Calculating indexes [Forms]...
-03:08:02.756 info: Calculating indexes [Manwins]...
-03:08:02.758 info: Calculating indexes [Altwins]...
-03:08:02.760 info: Calculating unique indexes...
-03:08:02.762 info: Reading indexes from table...
-03:08:02.818 info: Beginning generation: Styles - ASP.Net MVC
-03:08:02.912 info: Reading relational model...
-03:08:03.150 info: Validations for ASP.NET MVC...
-03:08:03.156 info: Creating output directories for ASP.NET MVC...
-03:08:03.210 info: Copying configurations...
-03:08:03.278 info: Generating resources...
-03:08:03.489 info: Generating helper classes...
-03:08:03.551 info: Generating generic controllers...
-03:08:04.742 info: Generating generic models...
-03:08:04.772 info: Generating table models...
-03:08:04.960 info: Generating generic view models...
-03:08:05.091 info: Generating forms view models...
-03:08:05.236 warning: Altwin STY_Menu_ALERTS.cshtml '' filename/wildcard did not match any generated files. Check if it's still necessary.
-03:08:05.236 warning: Altwin Authent.cshtml '' filename/wildcard did not match any generated files. Check if it's still necessary.
-03:08:05.237 warning: Altwin STY_Menu_ALERTS.cshtml '' filename/wildcard did not match any generated files. Check if it's still necessary.
-03:08:05.237 warning: Altwin Btnsform.cshtml '' filename/wildcard did not match any generated files. Check if it's still necessary.
-03:08:05.237 warning: Altwin STY_Menu_OVERVIEW.cshtml '' filename/wildcard did not match any generated files. Check if it's still necessary.
-03:08:05.237 info: Deleting unnecessary generation files
-03:08:05.243 info: Writing pending files took 5 ms
-03:08:05.244 info: Finished generation
+﻿GQT em 11/07/2024 15:08:31
+03:08:31.458 info: Beginning generation: Styles - ASP.Net MVC
+03:08:31.477 info: Reading relational model...
+03:08:31.597 info: Validations for ASP.NET MVC...
+03:08:31.599 info: Creating output directories for ASP.NET MVC...
+03:08:31.621 info: Copying configurations...
+03:08:31.657 info: Generating resources...
+03:08:31.889 info: Generating helper classes...
+03:08:31.926 info: Generating generic controllers...
+03:08:32.733 info: Generating generic models...
+03:08:32.743 info: Generating table models...
+03:08:32.831 info: Generating generic view models...
+03:08:32.863 info: Generating forms view models...
+03:08:32.878 warning: Altwin STY_Menu_ALERTS.cshtml '' filename/wildcard did not match any generated files. Check if it's still necessary.
+03:08:32.879 warning: Altwin Authent.cshtml '' filename/wildcard did not match any generated files. Check if it's still necessary.
+03:08:32.879 warning: Altwin STY_Menu_ALERTS.cshtml '' filename/wildcard did not match any generated files. Check if it's still necessary.
+03:08:32.879 warning: Altwin Btnsform.cshtml '' filename/wildcard did not match any generated files. Check if it's still necessary.
+03:08:32.880 warning: Altwin STY_Menu_OVERVIEW.cshtml '' filename/wildcard did not match any generated files. Check if it's still necessary.
+03:08:32.880 info: Deleting unnecessary generation files
+03:08:32.882 info: Writing pending files took 1 ms
+03:08:32.882 info: Finished generation
 exception: Error while running control template: Templates/ASPNET-MVCTemplates/MvcRazor/Control.vm.
 GenioAPI
    at GenGenio.Genio.Generate()
    at GenioAPI.Generation.EntryPoint.GenerateApplication(ClientApplication app, SolutionXml sol, InitialGenerationInfo iinfo, Boolean reportSave, Boolean zipCode)
-   at GenioGenerationServer.Generation.GenerateOneApp(String client, String app, Boolean recalcIndex)
+   at GenioAPI.Generation.EntryPoint.GenerateClient(Cliente client, String appid, IEnumerable`1 geracoes, Boolean suppressWebAdmin, Boolean reportSave, Boolean zipCode)
+   at GenioGenerationServer.Generation.GenerateOneClient(String client, Boolean recalcIndex)
 +--- Context dump ---+
 Genio = GenGenio.Genio
 this = NVelocity.VelocityContext
@@ -100,7 +91,6 @@ NVelocity
    at NVelocity.Runtime.Parser.Node.ASTBlock.Render(IInternalContextAdapter context, TextWriter writer)
    at NVelocity.Runtime.Parser.Node.ASTElseIfStatement.Render(IInternalContextAdapter context, TextWriter writer)
    at NVelocity.Runtime.Parser.Node.ASTIfStatement.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Runtime.Parser.Node.ASTBlock.Render(IInternalContextAdapter context, TextWriter writer)
    at NVelocity.Runtime.Directive.Foreach.Render(IInternalContextAdapter context, TextWriter writer, INode node)
    at NVelocity.Runtime.Parser.Node.ASTDirective.Render(IInternalContextAdapter context, TextWriter writer)
    at NVelocity.Runtime.Parser.Node.SimpleNode.Render(IInternalContextAdapter context, TextWriter writer)
@@ -109,8 +99,6 @@ NVelocity
 exception: Error while running control template: Templates\ASPNET-MVCTemplates\MvcRazor\GenioMVC\ViewModels\TemplateViewModel.cs.vm.
 GenioAPI
    at GenGenio.Genio.ParseToString(IContext parentContext, String txt)
-   at GenGenio.Genio.ParseInternal(IContext parentContext, String txt, String path, Encoding encoding, Boolean addToParsedFiles)
-   at GenGenio.Genio.Parse(IContext parentContext, String txt, String path, Encoding encoding)
    at GenGenio.Genio.Parse(IContext parentContext, String txt, String path)
    at InvokeStub_Genio.Parse(Object, Span`1)
    at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
@@ -149,7 +137,6 @@ NVelocity
    at NVelocity.Runtime.Parser.Node.ASTDirective.Render(IInternalContextAdapter context, TextWriter writer)
    at NVelocity.Runtime.Parser.Node.ASTBlock.Render(IInternalContextAdapter context, TextWriter writer)
    at NVelocity.Runtime.Parser.Node.ASTIfStatement.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Runtime.Parser.Node.SimpleNode.Render(IInternalContextAdapter context, TextWriter writer)
    at NVelocity.Template.Merge(IContext context, TextWriter writer)
    at GenGenio.Genio.ParseToString(IContext parentContext, String txt)
 
@@ -157,12 +144,9 @@ exception: Invocation of method 'ValidarFuncoesConhecidasFormulas' at ValidarFun
 NVelocity
    at NVelocity.Runtime.Parser.Node.ASTMethod.Execute(Object o, IInternalContextAdapter context)
    at NVelocity.Runtime.Parser.Node.ASTReference.Execute(Object o, IInternalContextAdapter context)
-   at NVelocity.Runtime.Parser.Node.ASTReference.Evaluate(IInternalContextAdapter context)
-   at NVelocity.Runtime.Parser.Node.ASTExpression.Evaluate(IInternalContextAdapter context)
    at NVelocity.Runtime.Parser.Node.ASTIfStatement.Render(IInternalContextAdapter context, TextWriter writer)
    at NVelocity.Runtime.Parser.Node.ASTBlock.Render(IInternalContextAdapter context, TextWriter writer)
    at NVelocity.Runtime.Parser.Node.ASTIfStatement.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Runtime.Parser.Node.ASTBlock.Render(IInternalContextAdapter context, TextWriter writer)
    at NVelocity.Runtime.Directive.Foreach.Render(IInternalContextAdapter context, TextWriter writer, INode node)
    at NVelocity.Runtime.Parser.Node.ASTDirective.Render(IInternalContextAdapter context, TextWriter writer)
    at NVelocity.Runtime.Parser.Node.SimpleNode.Render(IInternalContextAdapter context, TextWriter writer)
@@ -184,6 +168,6 @@ GenioAPI
    at GenGenio.Language.GELUtils.GetFunctionList(String formula)
    at GenGenio.FormulaInterna.ValidarFuncoesConhecidas(ICollection`1 funcoesManwin, FormulasTemplate template, Genio genio, String tabela, String campo, String output, Trace level)
    at GenGenio.FormulaInterna.ValidarFuncoesConhecidasFormulas(ICollection`1 funcoesManwin, FormulasTemplate template, Genio genio, String tabela, String campo)
-   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at InvokeStub_FormulaInterna.ValidarFuncoesConhecidasFormulas(Object, Span`1)
    at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
 

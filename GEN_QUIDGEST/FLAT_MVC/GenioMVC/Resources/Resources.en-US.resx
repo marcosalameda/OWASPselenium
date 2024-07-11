@@ -4518,6 +4518,78 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="PATIENT10865" xml:space="preserve">
 		<value>Patient</value>
 	</data>
+	<data name="SUB_CATEGORY06342" xml:space="preserve">
+		<value>Sub category</value>
+	</data>
+	<data name="EDITAR11616" xml:space="preserve">
+		<value>Edit</value>
+	</data>
+	<data name="PRE_ABORDAGEM30870" xml:space="preserve">
+		<value>Pré-abordagem</value>
+	</data>
+	<data name="IMAGE65174" xml:space="preserve">
+		<value>Image</value>
+	</data>
+	<data name="PARAMETER41976" xml:space="preserve">
+		<value>Parameter</value>
+	</data>
+	<data name="CAREER41490" xml:space="preserve">
+		<value>CAREER</value>
+	</data>
+	<data name="REGISTRATION03584" xml:space="preserve">
+		<value>Registration</value>
+	</data>
+	<data name="SCORECARD_FREQUENCY32144" xml:space="preserve">
+		<value>Scorecard Frequency</value>
+	</data>
+	<data name="__12457768" xml:space="preserve">
+		<value>Referência para o dado</value>
+	</data>
+	<data name="NOTELEFONE56747" xml:space="preserve">
+		<value>NºTelefone</value>
+	</data>
+	<data name="COMMODITY03939" xml:space="preserve">
+		<value>Commodity</value>
+	</data>
+	<data name="TEXT_FIELD39430" xml:space="preserve">
+		<value>Text field</value>
+	</data>
+	<data name="TIME_OF_BIRTH04797" xml:space="preserve">
+		<value>Time of birth</value>
+	</data>
+	<data name="WAREHOUSE_API20206" xml:space="preserve">
+		<value>Warehouse api</value>
+	</data>
+	<data name="POSTAL_LOCATION08708" xml:space="preserve">
+		<value>Postal location</value>
+	</data>
+	<data name="SPACE_TYPE42493" xml:space="preserve">
+		<value>Space type</value>
+	</data>
+	<data name="CONTACTS____C_GROUPB54058" xml:space="preserve">
+		<value>Contacts -&gt; c-groupbox--background</value>
+	</data>
+	<data name="DOCUMENTS14470" xml:space="preserve">
+		<value>Documents</value>
+	</data>
+	<data name="BCC22049" xml:space="preserve">
+		<value>Bcc</value>
+	</data>
+	<data name="INVERSA_53723" xml:space="preserve">
+		<value>Inversa?</value>
+	</data>
+	<data name="GRAI___GLOBAL_RETURN06821" xml:space="preserve">
+		<value>GRAI – Global Returnable Asset Identifier</value>
+	</data>
+	<data name="_1124_VERBOSE42774" xml:space="preserve">
+		<value>Help in button to form</value>
+	</data>
+	<data name="X__MAPA_ESTRATEGICO_40869" xml:space="preserve">
+		<value>X (Mapa Estratégico)</value>
+	</data>
+	<data name="VISIBLE_ON_HOMEPAGE_28937" xml:space="preserve">
+		<value>Visible on homepage?</value>
+	</data>
 	<data name="MANUAL_FILLING_FIELD38373" xml:space="preserve">
 		<value>Manual filling field</value>
 	</data>
@@ -4640,9 +4712,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	</data>
 	<data name="XXXX_XXX51420" xml:space="preserve">
 		<value>xxxx-xxx</value>
-	</data>
-	<data name="SUB_CATEGORY06342" xml:space="preserve">
-		<value>Sub category</value>
 	</data>
 	<data name="EXPIRATION_DATE34293" xml:space="preserve">
 		<value>Expiration date</value>
@@ -5149,9 +5218,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="REF_A30225" xml:space="preserve">
 		<value>Ref.ª</value>
 	</data>
-	<data name="COMMODITY03939" xml:space="preserve">
-		<value>Commodity</value>
-	</data>
 	<data name="TYPES_OF_SEGMENTS31012" xml:space="preserve">
 		<value>Types of segments</value>
 	</data>
@@ -5356,9 +5422,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="CLOSING_THE_SALE18336" xml:space="preserve">
 		<value>Closing the sale</value>
 	</data>
-	<data name="SCORECARD_FREQUENCY32144" xml:space="preserve">
-		<value>Scorecard Frequency</value>
-	</data>
 	<data name="EQUIPMENT_FAMILIY58959" xml:space="preserve">
 		<value>Equipment familiy</value>
 	</data>
@@ -5516,9 +5579,6 @@ Proceso:  Centran su medición en el desarrollo de las actividades, las cuales e
 	</data>
 	<data name="PONTOS_BONIFICACAO56636" xml:space="preserve">
 		<value>Pontos Bonificação</value>
-	</data>
-	<data name="SPACE_TYPE42493" xml:space="preserve">
-		<value>Space type</value>
 	</data>
 	<data name="GEOGRAPHICAL_COORDIN45869" xml:space="preserve">
 		<value>Geographical coordinate</value>
@@ -5734,9 +5794,6 @@ Proceso:  Centran su medición en el desarrollo de las actividades, las cuales e
 	<data name="SCORECARD_TYPE13605" xml:space="preserve">
 		<value>Scorecard type</value>
 	</data>
-	<data name="PRE_ABORDAGEM30870" xml:space="preserve">
-		<value>Pré-abordagem</value>
-	</data>
 	<data name="COMPLETE_DATE53774" xml:space="preserve">
 		<value>Complete Date</value>
 	</data>
@@ -5760,9 +5817,6 @@ Proceso:  Centran su medición en el desarrollo de las actividades, las cuales e
 	</data>
 	<data name="__35409638" xml:space="preserve">
 		<value>Data</value>
-	</data>
-	<data name="GRAI___GLOBAL_RETURN06821" xml:space="preserve">
-		<value>GRAI – Global Returnable Asset Identifier</value>
 	</data>
 	<data name="DISPONIVEL07725" xml:space="preserve">
 		<value>Disponível</value>
@@ -5918,9 +5972,6 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
 	</data>
 	<data name="__PERSON_RESPONSIBLE00553" xml:space="preserve">
 		<value>&gt;&gt;PERSON RESPONSIBLE</value>
-	</data>
-	<data name="BCC22049" xml:space="preserve">
-		<value>Bcc</value>
 	</data>
 	<data name="SEPARADORES25231" xml:space="preserve">
 		<value>Separadores</value>
@@ -6129,9 +6180,6 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
 	<data name="QUERY_FOR_EXTERNAL_A51761" xml:space="preserve">
 		<value>Query for external API</value>
 	</data>
-	<data name="X__MAPA_ESTRATEGICO_40869" xml:space="preserve">
-		<value>X (Mapa Estratégico)</value>
-	</data>
 	<data name="MARCH41748" xml:space="preserve">
 		<value>March</value>
 	</data>
@@ -6143,9 +6191,6 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
 	</data>
 	<data name="DEFAULT_STYLE62523" xml:space="preserve">
 		<value>Default style</value>
-	</data>
-	<data name="EDITAR11616" xml:space="preserve">
-		<value>Edit</value>
 	</data>
 	<data name="__27461951" xml:space="preserve">
 		<value>Inserir valor inicial.</value>
@@ -6296,9 +6341,6 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
 	</data>
 	<data name="DISPLACEMENT_AND_REL64077" xml:space="preserve">
 		<value>Displacement and relationship to the destination side of the connecting line</value>
-	</data>
-	<data name="WAREHOUSE_API20206" xml:space="preserve">
-		<value>Warehouse api</value>
 	</data>
 	<data name="LIMITE_BOM53392" xml:space="preserve">
 		<value>Limite bom</value>
@@ -6487,9 +6529,6 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</value>
 	</data>
 	<data name="_111838179" xml:space="preserve">
 		<value>Help in the time field</value>
-	</data>
-	<data name="DOCUMENTS14470" xml:space="preserve">
-		<value>Documents</value>
 	</data>
 	<data name="__28630590" xml:space="preserve">
 		<value>Chave estrangeira</value>
@@ -6683,9 +6722,6 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</value>
 	<data name="NO_FACTIBLE14448" xml:space="preserve">
 		<value>No Factible</value>
 	</data>
-	<data name="POSTAL_LOCATION08708" xml:space="preserve">
-		<value>Postal location</value>
-	</data>
 	<data name="OBSERVATION37880" xml:space="preserve">
 		<value>Observation</value>
 	</data>
@@ -6844,39 +6880,6 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</value>
 	</data>
 	<data name="SEXO_DA_PESSOA59108" xml:space="preserve">
 		<value>Sexo da pessoa</value>
-	</data>
-	<data name="IMAGE65174" xml:space="preserve">
-		<value>Image</value>
-	</data>
-	<data name="PARAMETER41976" xml:space="preserve">
-		<value>Parameter</value>
-	</data>
-	<data name="CAREER41490" xml:space="preserve">
-		<value>CAREER</value>
-	</data>
-	<data name="REGISTRATION03584" xml:space="preserve">
-		<value>Registration</value>
-	</data>
-	<data name="__12457768" xml:space="preserve">
-		<value>Referência para o dado</value>
-	</data>
-	<data name="NOTELEFONE56747" xml:space="preserve">
-		<value>NºTelefone</value>
-	</data>
-	<data name="TIME_OF_BIRTH04797" xml:space="preserve">
-		<value>Time of birth</value>
-	</data>
-	<data name="CONTACTS____C_GROUPB54058" xml:space="preserve">
-		<value>Contacts -&gt; c-groupbox--background</value>
-	</data>
-	<data name="INVERSA_53723" xml:space="preserve">
-		<value>Inversa?</value>
-	</data>
-	<data name="_1124_VERBOSE42774" xml:space="preserve">
-		<value>Help in button to form</value>
-	</data>
-	<data name="VISIBLE_ON_HOMEPAGE_28937" xml:space="preserve">
-		<value>Visible on homepage?</value>
 	</data>
 	<data name="GROUP__BASIC_TYPES_31302" xml:space="preserve">
 		<value>Group (Basic Types)</value>

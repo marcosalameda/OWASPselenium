@@ -287,14 +287,10 @@
     <Compile Include="Controllers\Addrl\*.cs" />
     <Compile Include="ViewModels\Genre\*_ViewModel.cs" />
     <Compile Include="Controllers\Genre\*.cs" />
-    <Compile Include="ViewModels\E2et2\*_ViewModel.cs" />
-    <Compile Include="Controllers\E2et2\*.cs" />
     <Compile Include="ViewModels\Feeca\*_ViewModel.cs" />
     <Compile Include="Controllers\Feeca\*.cs" />
     <Compile Include="ViewModels\Notif\*_ViewModel.cs" />
     <Compile Include="Controllers\Notif\*.cs" />
-    <Compile Include="ViewModels\E2et3\*_ViewModel.cs" />
-    <Compile Include="Controllers\E2et3\*.cs" />
     <Compile Include="ViewModels\Asset\*_ViewModel.cs" />
     <Compile Include="Controllers\Asset\*.cs" />
     <Compile Include="ViewModels\Lang2\*_ViewModel.cs" />
@@ -511,8 +507,6 @@
     <Compile Include="Controllers\Oudoc\*.cs" />
     <Compile Include="ViewModels\Outpu\*_ViewModel.cs" />
     <Compile Include="Controllers\Outpu\*.cs" />
-    <Compile Include="ViewModels\E2et1\*_ViewModel.cs" />
-    <Compile Include="Controllers\E2et1\*.cs" />
     <Compile Include="ViewModels\Prpin\*_ViewModel.cs" />
     <Compile Include="Controllers\Prpin\*.cs" />
     <Compile Include="ViewModels\Rooms\*_ViewModel.cs" />

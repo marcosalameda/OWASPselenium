@@ -381,8 +381,6 @@
     <Compile Include="Controllers\Organ\*.cs" />
     <Compile Include="ViewModels\Relin\*_ViewModel.cs" />
     <Compile Include="Controllers\Relin\*.cs" />
-    <Compile Include="ViewModels\E2et1\*_ViewModel.cs" />
-    <Compile Include="Controllers\E2et1\*.cs" />
     <Compile Include="ViewModels\Teamp\*_ViewModel.cs" />
     <Compile Include="Controllers\Teamp\*.cs" />
     <Compile Include="ViewModels\Ware1\*_ViewModel.cs" />
@@ -413,8 +411,6 @@
     <Compile Include="Controllers\Wareh\*.cs" />
     <Compile Include="ViewModels\Glob\*_ViewModel.cs" />
     <Compile Include="Controllers\Glob\*.cs" />
-    <Compile Include="ViewModels\E2et2\*_ViewModel.cs" />
-    <Compile Include="Controllers\E2et2\*.cs" />
     <Compile Include="ViewModels\Tblk\*_ViewModel.cs" />
     <Compile Include="Controllers\Tblk\*.cs" />
     <Compile Include="ViewModels\Cmpny\*_ViewModel.cs" />
@@ -567,8 +563,6 @@
     <Compile Include="Controllers\Flds\*.cs" />
     <Compile Include="ViewModels\Faci1\*_ViewModel.cs" />
     <Compile Include="Controllers\Faci1\*.cs" />
-    <Compile Include="ViewModels\E2et3\*_ViewModel.cs" />
-    <Compile Include="Controllers\E2et3\*.cs" />
     <Compile Include="ViewModels\Sales\*_ViewModel.cs" />
     <Compile Include="Controllers\Sales\*.cs" />
     <Compile Include="ViewModels\Faci2\*_ViewModel.cs" />

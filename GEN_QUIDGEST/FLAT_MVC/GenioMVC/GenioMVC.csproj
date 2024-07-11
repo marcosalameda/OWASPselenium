@@ -375,6 +375,8 @@
     <Compile Include="Controllers\Facty\*.cs" />
     <Compile Include="ViewModels\Rordi\*_ViewModel.cs" />
     <Compile Include="Controllers\Rordi\*.cs" />
+    <Compile Include="ViewModels\E2et1\*_ViewModel.cs" />
+    <Compile Include="Controllers\E2et1\*.cs" />
     <Compile Include="ViewModels\Dilin\*_ViewModel.cs" />
     <Compile Include="Controllers\Dilin\*.cs" />
     <Compile Include="ViewModels\Organ\*_ViewModel.cs" />
@@ -409,6 +411,8 @@
     <Compile Include="Controllers\Manua\*.cs" />
     <Compile Include="ViewModels\Wareh\*_ViewModel.cs" />
     <Compile Include="Controllers\Wareh\*.cs" />
+    <Compile Include="ViewModels\E2et3\*_ViewModel.cs" />
+    <Compile Include="Controllers\E2et3\*.cs" />
     <Compile Include="ViewModels\Glob\*_ViewModel.cs" />
     <Compile Include="Controllers\Glob\*.cs" />
     <Compile Include="ViewModels\Tblk\*_ViewModel.cs" />
@@ -491,6 +495,8 @@
     <Compile Include="Controllers\Expe1\*.cs" />
     <Compile Include="ViewModels\Noti1\*_ViewModel.cs" />
     <Compile Include="Controllers\Noti1\*.cs" />
+    <Compile Include="ViewModels\E2et2\*_ViewModel.cs" />
+    <Compile Include="Controllers\E2et2\*.cs" />
     <Compile Include="ViewModels\Roigf\*_ViewModel.cs" />
     <Compile Include="Controllers\Roigf\*.cs" />
     <Compile Include="ViewModels\Visit\*_ViewModel.cs" />

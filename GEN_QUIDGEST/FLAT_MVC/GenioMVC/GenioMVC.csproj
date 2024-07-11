@@ -25,10 +25,10 @@
     <TargetFrameworkProfile />
     <Use64BitIISExpress />
     <RuntimeIdentifiers>win</RuntimeIdentifiers>
-	<!-- Suppress warning CS1685: The predefined type 'System.ObsoleteAttribute' is defined in multiple assemblies in the global alias 
-	This warning is a bug and Microsoft said it does not cause issues but it's not a priority to fix. 
-	https://developercommunity.visualstudio.com/t/warning-CS1685:-The-predefined-type-Sys/10152556?space=61&entry=problem -->
-	<NoWarn>$(NoWarn);CS1685</NoWarn>
+    <!-- Suppress warning CS1685: The predefined type 'System.ObsoleteAttribute' is defined in multiple assemblies in the global alias
+    This warning is a bug and Microsoft said it does not cause issues but it's not a priority to fix.
+    https://developercommunity.visualstudio.com/t/warning-CS1685:-The-predefined-type-Sys/10152556?space=61&entry=problem -->
+    <NoWarn>$(NoWarn);CS1685</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -622,7 +622,7 @@
     <Compile Include="Models\Navigation\MenuResult.cs" />
     <Compile Include="Models\Navigation\ItemActionDescriptor.cs" />
     <Compile Include="Models\Timeline\TimelineItem.cs" />
-	  <Compile Include="Models\SpecialRendering\SpecialRendering.cs" />
+    <Compile Include="Models\SpecialRendering\SpecialRendering.cs" />
     <Compile Include="Models\Wizard\Wizard.cs" />
     <Compile Include="Models\Dashboard\*.cs" />
     <Compile Include="Models\Lstusr\*.cs" />

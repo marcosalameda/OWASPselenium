@@ -295,8 +295,6 @@
     <Compile Include="Controllers\Asset\*.cs" />
     <Compile Include="ViewModels\Lang2\*_ViewModel.cs" />
     <Compile Include="Controllers\Lang2\*.cs" />
-    <Compile Include="ViewModels\E2et2\*_ViewModel.cs" />
-    <Compile Include="Controllers\E2et2\*.cs" />
     <Compile Include="ViewModels\Lendi\*_ViewModel.cs" />
     <Compile Include="Controllers\Lendi\*.cs" />
     <Compile Include="ViewModels\S_pax\*_ViewModel.cs" />
@@ -365,8 +363,6 @@
     <Compile Include="Controllers\Shity\*.cs" />
     <Compile Include="ViewModels\Ccorr\*_ViewModel.cs" />
     <Compile Include="Controllers\Ccorr\*.cs" />
-    <Compile Include="ViewModels\E2et5\*_ViewModel.cs" />
-    <Compile Include="Controllers\E2et5\*.cs" />
     <Compile Include="ViewModels\Assma\*_ViewModel.cs" />
     <Compile Include="Controllers\Assma\*.cs" />
     <Compile Include="ViewModels\Wpess\*_ViewModel.cs" />
@@ -381,8 +377,6 @@
     <Compile Include="Controllers\Rordi\*.cs" />
     <Compile Include="ViewModels\Dilin\*_ViewModel.cs" />
     <Compile Include="Controllers\Dilin\*.cs" />
-    <Compile Include="ViewModels\E2et4\*_ViewModel.cs" />
-    <Compile Include="Controllers\E2et4\*.cs" />
     <Compile Include="ViewModels\Organ\*_ViewModel.cs" />
     <Compile Include="Controllers\Organ\*.cs" />
     <Compile Include="ViewModels\Relin\*_ViewModel.cs" />
@@ -439,8 +433,6 @@
     <Compile Include="Controllers\Produ\*.cs" />
     <Compile Include="ViewModels\Kinde\*_ViewModel.cs" />
     <Compile Include="Controllers\Kinde\*.cs" />
-    <Compile Include="ViewModels\E2et3\*_ViewModel.cs" />
-    <Compile Include="Controllers\E2et3\*.cs" />
     <Compile Include="ViewModels\Rules\*_ViewModel.cs" />
     <Compile Include="Controllers\Rules\*.cs" />
     <Compile Include="ViewModels\S_ua\*_ViewModel.cs" />
@@ -473,8 +465,6 @@
     <Compile Include="Controllers\S_nes\*.cs" />
     <Compile Include="ViewModels\Uicom\*_ViewModel.cs" />
     <Compile Include="Controllers\Uicom\*.cs" />
-    <Compile Include="ViewModels\E2et1\*_ViewModel.cs" />
-    <Compile Include="Controllers\E2et1\*.cs" />
     <Compile Include="ViewModels\Cate2\*_ViewModel.cs" />
     <Compile Include="Controllers\Cate2\*.cs" />
     <Compile Include="ViewModels\S_nm\*_ViewModel.cs" />

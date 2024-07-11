@@ -1876,75 +1876,6 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
 	<data name="SEMANAL19148" xml:space="preserve">
 		<value>Semanal</value>
 	</data>
-	<data name="_109937997" xml:space="preserve">
-		<value>The name of the city, town, suburb, village or other community or delivery center.</value>
-	</data>
-	<data name="NO_DATA_17175" xml:space="preserve">
-		<value>No data?</value>
-	</data>
-	<data name="ESTADOS_DO_PROCESSO59118" xml:space="preserve">
-		<value>Estados do processo</value>
-	</data>
-	<data name="LOGIN_NAME31337" xml:space="preserve">
-		<value>Login name</value>
-	</data>
-	<data name="SITIO_NA_NET35977" xml:space="preserve">
-		<value>Sítio na net</value>
-	</data>
-	<data name="PEOPLE34206" xml:space="preserve">
-		<value>People</value>
-	</data>
-	<data name="LETTER_COLOR_03195" xml:space="preserve">
-		<value>Letter Color:</value>
-	</data>
-	<data name="QUIDGESTAT_QUIDGEST_PT47872" xml:space="preserve">
-		<value>quidgest@quidgest.pt</value>
-	</data>
-	<data name="NUMERIC_15_2_DOUBLE_11443" xml:space="preserve">
-		<value>Numeric 15.2 double = float(53) (precision 15 digits) (storage: 8 byte)</value>
-	</data>
-	<data name="TEXT_AFTER_SIGNATURE11837" xml:space="preserve">
-		<value>Text after signature</value>
-	</data>
-	<data name="CARRIER64855" xml:space="preserve">
-		<value>Carrier</value>
-	</data>
-	<data name="POLYGON_COLOR32161" xml:space="preserve">
-		<value>Polygon color</value>
-	</data>
-	<data name="DESPESA07561" xml:space="preserve">
-		<value>Despesa</value>
-	</data>
-	<data name="LIMITE_MAU45713" xml:space="preserve">
-		<value>Limite mau</value>
-	</data>
-	<data name="SIDE_OF_WHICH_PART_I54503" xml:space="preserve">
-		<value>Side of which part is linked to the origin indicator</value>
-	</data>
-	<data name="DEPARTURE_DATE__HOUR17284" xml:space="preserve">
-		<value>Departure date (hour)</value>
-	</data>
-	<data name="LIST__FOREIGN_KEY_TY24596" xml:space="preserve">
-		<value>List (Foreign Key Types)</value>
-	</data>
-	<data name="EMAIL_44228" xml:space="preserve">
-		<value>Email:</value>
-	</data>
-	<data name="ALERT_POINTS17903" xml:space="preserve">
-		<value>Alert points</value>
-	</data>
-	<data name="_113433986" xml:space="preserve">
-		<value>Percentagem do valor objectivo a que corresponde o valor do limite mau.</value>
-	</data>
-	<data name="RETURNED01606" xml:space="preserve">
-		<value>Returned</value>
-	</data>
-	<data name="INDICATOR_DESIGNATIO12003" xml:space="preserve">
-		<value>Indicator Designation</value>
-	</data>
-	<data name="OBJECTIVES_ICON07184" xml:space="preserve">
-		<value>Objectives icon</value>
-	</data>
 	<data name="STAKEHOLDERS39854" xml:space="preserve">
 		<value>Stakeholders</value>
 	</data>
@@ -2674,6 +2605,9 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
 	<data name="POLARITY21297" xml:space="preserve">
 		<value>Polarity</value>
 	</data>
+	<data name="PEOPLE34206" xml:space="preserve">
+		<value>People</value>
+	</data>
 	<data name="_ROOM54790" xml:space="preserve">
 		<value>&gt;ROOM</value>
 	</data>
@@ -2824,6 +2758,9 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
 	<data name="DATA_ULTIMA_NOTIFICA44675" xml:space="preserve">
 		<value>Data última notificação</value>
 	</data>
+	<data name="NUMERIC_15_2_DOUBLE_11443" xml:space="preserve">
+		<value>Numeric 15.2 double = float(53) (precision 15 digits) (storage: 8 byte)</value>
+	</data>
 	<data name="VISITAS_DE_INSPECAO03014" xml:space="preserve">
 		<value>Visitas de inspeção</value>
 	</data>
@@ -2874,6 +2811,9 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
 	</data>
 	<data name="SPACE_TYPES45728" xml:space="preserve">
 		<value>Space types</value>
+	</data>
+	<data name="_113433986" xml:space="preserve">
+		<value>Percentagem do valor objectivo a que corresponde o valor do limite mau.</value>
 	</data>
 	<data name="GAME_DAY26077" xml:space="preserve">
 		<value>Game day</value>
@@ -3003,6 +2943,9 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
 	</data>
 	<data name="_PERSON28337" xml:space="preserve">
 		<value>&gt;PERSON</value>
+	</data>
+	<data name="ESTADOS_DO_PROCESSO59118" xml:space="preserve">
+		<value>Estados do processo</value>
 	</data>
 	<data name="VISAO__INSTANCIA_52050" xml:space="preserve">
 		<value>Visão (Instância)</value>
@@ -3342,6 +3285,9 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
 	</data>
 	<data name="GOAL_POINTS28619" xml:space="preserve">
 		<value>Goal points</value>
+	</data>
+	<data name="_109937997" xml:space="preserve">
+		<value>The name of the city, town, suburb, village or other community or delivery center.</value>
 	</data>
 	<data name="ID__ME_49163" xml:space="preserve">
 		<value>ID (ME)</value>
@@ -3786,6 +3732,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="___3763273" xml:space="preserve">
 		<value>This help is for a field of type Creation: Instant</value>
 	</data>
+	<data name="LETTER_COLOR_03195" xml:space="preserve">
+		<value>Letter Color:</value>
+	</data>
 	<data name="ATTACHED26247" xml:space="preserve">
 		<value>Attached</value>
 	</data>
@@ -4158,6 +4107,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="CATEGORY_FAQS42471" xml:space="preserve">
 		<value>Category FAQS</value>
 	</data>
+	<data name="SITIO_NA_NET35977" xml:space="preserve">
+		<value>Sítio na net</value>
+	</data>
 	<data name="___9814807" xml:space="preserve">
 		<value>Default value as a percentage of the target, for the lower limit of the &apos;Bad&apos; range</value>
 	</data>
@@ -4395,6 +4347,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="SOMA_BONIF_ENCADEADA04598" xml:space="preserve">
 		<value>Soma Bonif Encadeadas</value>
 	</data>
+	<data name="RETURNED01606" xml:space="preserve">
+		<value>Returned</value>
+	</data>
 	<data name="TAX_DATA61628" xml:space="preserve">
 		<value>Tax data</value>
 	</data>
@@ -4452,77 +4407,14 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="REQUIRED58276" xml:space="preserve">
 		<value>Required</value>
 	</data>
-	<data name="MANUAL_FILLING_FIELD38373" xml:space="preserve">
-		<value>Manual filling field</value>
-	</data>
-	<data name="INTERNAL04894" xml:space="preserve">
-		<value>Internal</value>
-	</data>
-	<data name="CARDS04291" xml:space="preserve">
-		<value>Cards</value>
-	</data>
-	<data name="VERTICAL_LAYOUT___VU34223" xml:space="preserve">
-		<value>Vertical layout - Vue</value>
-	</data>
-	<data name="INDICATOR_GOAL37404" xml:space="preserve">
-		<value>Indicator Goal</value>
-	</data>
-	<data name="NO_HORAS_SEMANAIS27486" xml:space="preserve">
-		<value>Nº Horas Semanais</value>
-	</data>
-	<data name="MINIMO33485" xml:space="preserve">
-		<value>Mínimo</value>
-	</data>
-	<data name="STMP_USER_ACCESS42993" xml:space="preserve">
-		<value>STMP User Access</value>
-	</data>
-	<data name="FOTO19492" xml:space="preserve">
-		<value>Foto</value>
-	</data>
-	<data name="MESSAGES59316" xml:space="preserve">
-		<value>Messages</value>
-	</data>
-	<data name="_111031103" xml:space="preserve">
-		<value>The name of the entity linked by parentId</value>
-	</data>
-	<data name="_1103_VERBOSE48229" xml:space="preserve">
-		<value>ISO 3166 3 letter codes can be used in place of a human readable country name.</value>
-	</data>
-	<data name="HEADER35023" xml:space="preserve">
-		<value>Header</value>
-	</data>
-	<data name="PHOTO51874" xml:space="preserve">
-		<value>Photo</value>
-	</data>
-	<data name="OWNER09558" xml:space="preserve">
-		<value>Owner</value>
+	<data name="INSERT30329" xml:space="preserve">
+		<value>Insert</value>
 	</data>
 	<data name="PERC__MIN55014" xml:space="preserve">
 		<value>Perc. Min</value>
 	</data>
-	<data name="CREATION_DATE__DD_MM48834" xml:space="preserve">
-		<value>Creation Date (DD/MM/YY)</value>
-	</data>
-	<data name="__33064222" xml:space="preserve">
-		<value>Valor usado no relatório QUAR para o ano N-2</value>
-	</data>
-	<data name="MAIL12094" xml:space="preserve">
-		<value>Mail</value>
-	</data>
-	<data name="ALLOW_FEATURE_REMOVA13844" xml:space="preserve">
-		<value>Allow feature removal</value>
-	</data>
-	<data name="_1O_CLASSE38057" xml:space="preserve">
-		<value>1º Classe</value>
-	</data>
-	<data name="__30543632" xml:space="preserve">
-		<value>Fax</value>
-	</data>
-	<data name="_1120_VERBOSE06198" xml:space="preserve">
-		<value>Help in the field verbose</value>
-	</data>
-	<data name="INSERT30329" xml:space="preserve">
-		<value>Insert</value>
+	<data name="DATETIME_FIELD26358" xml:space="preserve">
+		<value>Datetime field</value>
 	</data>
 	<data name="_REPAIRER36801" xml:space="preserve">
 		<value>&gt;REPAIRER</value>
@@ -4574,6 +4466,120 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	</data>
 	<data name="XXXX_XXX51420" xml:space="preserve">
 		<value>xxxx-xxx</value>
+	</data>
+	<data name="NO_DATA_17175" xml:space="preserve">
+		<value>No data?</value>
+	</data>
+	<data name="LOGIN_NAME31337" xml:space="preserve">
+		<value>Login name</value>
+	</data>
+	<data name="QUIDGESTAT_QUIDGEST_PT47872" xml:space="preserve">
+		<value>quidgest@quidgest.pt</value>
+	</data>
+	<data name="TEXT_AFTER_SIGNATURE11837" xml:space="preserve">
+		<value>Text after signature</value>
+	</data>
+	<data name="CARRIER64855" xml:space="preserve">
+		<value>Carrier</value>
+	</data>
+	<data name="POLYGON_COLOR32161" xml:space="preserve">
+		<value>Polygon color</value>
+	</data>
+	<data name="DESPESA07561" xml:space="preserve">
+		<value>Despesa</value>
+	</data>
+	<data name="LIMITE_MAU45713" xml:space="preserve">
+		<value>Limite mau</value>
+	</data>
+	<data name="SIDE_OF_WHICH_PART_I54503" xml:space="preserve">
+		<value>Side of which part is linked to the origin indicator</value>
+	</data>
+	<data name="DEPARTURE_DATE__HOUR17284" xml:space="preserve">
+		<value>Departure date (hour)</value>
+	</data>
+	<data name="LOGICAL_FIELD15973" xml:space="preserve">
+		<value>Logical field</value>
+	</data>
+	<data name="LIST__FOREIGN_KEY_TY24596" xml:space="preserve">
+		<value>List (Foreign Key Types)</value>
+	</data>
+	<data name="EMAIL_44228" xml:space="preserve">
+		<value>Email:</value>
+	</data>
+	<data name="ALERT_POINTS17903" xml:space="preserve">
+		<value>Alert points</value>
+	</data>
+	<data name="INDICATOR_DESIGNATIO12003" xml:space="preserve">
+		<value>Indicator Designation</value>
+	</data>
+	<data name="OBJECTIVES_ICON07184" xml:space="preserve">
+		<value>Objectives icon</value>
+	</data>
+	<data name="MANUAL_FILLING_FIELD38373" xml:space="preserve">
+		<value>Manual filling field</value>
+	</data>
+	<data name="INTERNAL04894" xml:space="preserve">
+		<value>Internal</value>
+	</data>
+	<data name="CARDS04291" xml:space="preserve">
+		<value>Cards</value>
+	</data>
+	<data name="VERTICAL_LAYOUT___VU34223" xml:space="preserve">
+		<value>Vertical layout - Vue</value>
+	</data>
+	<data name="INDICATOR_GOAL37404" xml:space="preserve">
+		<value>Indicator Goal</value>
+	</data>
+	<data name="NO_HORAS_SEMANAIS27486" xml:space="preserve">
+		<value>Nº Horas Semanais</value>
+	</data>
+	<data name="MINIMO33485" xml:space="preserve">
+		<value>Mínimo</value>
+	</data>
+	<data name="STMP_USER_ACCESS42993" xml:space="preserve">
+		<value>STMP User Access</value>
+	</data>
+	<data name="FOTO19492" xml:space="preserve">
+		<value>Foto</value>
+	</data>
+	<data name="MESSAGES59316" xml:space="preserve">
+		<value>Messages</value>
+	</data>
+	<data name="_111031103" xml:space="preserve">
+		<value>The name of the entity linked by parentId</value>
+	</data>
+	<data name="_1103_VERBOSE48229" xml:space="preserve">
+		<value>ISO 3166 3 letter codes can be used in place of a human readable country name.</value>
+	</data>
+	<data name="HEADER35023" xml:space="preserve">
+		<value>Header</value>
+	</data>
+	<data name="PHOTO51874" xml:space="preserve">
+		<value>Photo</value>
+	</data>
+	<data name="OWNER09558" xml:space="preserve">
+		<value>Owner</value>
+	</data>
+	<data name="CREATION_DATE__DD_MM48834" xml:space="preserve">
+		<value>Creation Date (DD/MM/YY)</value>
+	</data>
+	<data name="__33064222" xml:space="preserve">
+		<value>Valor usado no relatório QUAR para o ano N-2</value>
+	</data>
+	<data name="MAIL12094" xml:space="preserve">
+		<value>Mail</value>
+	</data>
+	<data name="ALLOW_FEATURE_REMOVA13844" xml:space="preserve">
+		<value>Allow feature removal</value>
+	</data>
+	<data name="_1O_CLASSE38057" xml:space="preserve">
+		<value>1º Classe</value>
+	</data>
+	<data name="__30543632" xml:space="preserve">
+		<value>Fax</value>
+	</data>
+	<data name="_1120_VERBOSE06198" xml:space="preserve">
+		<value>Help in the field verbose</value>
 	</data>
 	<data name="SUB_CATEGORY06342" xml:space="preserve">
 		<value>Sub category</value>

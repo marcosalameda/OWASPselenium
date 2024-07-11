@@ -389,8 +389,6 @@
     <Compile Include="Controllers\Pess2\*.cs" />
     <Compile Include="ViewModels\Entit\*_ViewModel.cs" />
     <Compile Include="Controllers\Entit\*.cs" />
-    <Compile Include="ViewModels\\*_ViewModel.cs" />
-    <Compile Include="Controllers\\*.cs" />
     <Compile Include="ViewModels\Esppe\*_ViewModel.cs" />
     <Compile Include="Controllers\Esppe\*.cs" />
     <Compile Include="ViewModels\Lcext\*_ViewModel.cs" />
@@ -441,8 +439,6 @@
     <Compile Include="Controllers\S_ua\*.cs" />
     <Compile Include="ViewModels\Ftgri\*_ViewModel.cs" />
     <Compile Include="Controllers\Ftgri\*.cs" />
-    <Compile Include="ViewModels\E2et2\*_ViewModel.cs" />
-    <Compile Include="Controllers\E2et2\*.cs" />
     <Compile Include="ViewModels\Cate1\*_ViewModel.cs" />
     <Compile Include="Controllers\Cate1\*.cs" />
     <Compile Include="ViewModels\Propr\*_ViewModel.cs" />
@@ -513,8 +509,6 @@
     <Compile Include="Controllers\Outpu\*.cs" />
     <Compile Include="ViewModels\Prpin\*_ViewModel.cs" />
     <Compile Include="Controllers\Prpin\*.cs" />
-    <Compile Include="ViewModels\E2et3\*_ViewModel.cs" />
-    <Compile Include="Controllers\E2et3\*.cs" />
     <Compile Include="ViewModels\Rooms\*_ViewModel.cs" />
     <Compile Include="Controllers\Rooms\*.cs" />
     <Compile Include="ViewModels\Expen\*_ViewModel.cs" />
@@ -561,8 +555,6 @@
     <Compile Include="Controllers\Tradu\*.cs" />
     <Compile Include="ViewModels\Pedid\*_ViewModel.cs" />
     <Compile Include="Controllers\Pedid\*.cs" />
-    <Compile Include="ViewModels\E2et1\*_ViewModel.cs" />
-    <Compile Include="Controllers\E2et1\*.cs" />
     <Compile Include="ViewModels\Facil\*_ViewModel.cs" />
     <Compile Include="Controllers\Facil\*.cs" />
     <Compile Include="ViewModels\Aero\*_ViewModel.cs" />

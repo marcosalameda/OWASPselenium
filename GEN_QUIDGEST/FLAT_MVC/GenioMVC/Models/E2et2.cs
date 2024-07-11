@@ -18,10 +18,10 @@ using SelectList = System.Web.Mvc.SelectList;
 
 namespace GenioMVC.Models
 {
-	public class Patie : ModelBase
+	public class E2et2 : ModelBase
 	{
 		[JsonIgnore]
-		public CSGenioApatie klass { get { return baseklass as CSGenioApatie; } set { baseklass = value; } }
+		public CSGenioAe2et2 klass { get { return baseklass as CSGenioAe2et2; } set { baseklass = value; } }
 
 		private Glob _globTable;
 		/// <summary>
@@ -34,50 +34,50 @@ namespace GenioMVC.Models
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
-		public string ValCodpatie { get { return klass.ValCodpatie; } set { klass.ValCodpatie = value; } }
-		public bool ShouldSerializeValCodpatie() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Patie.ValCodpatie");
+		public string ValCode2et2 { get { return klass.ValCode2et2; } set { klass.ValCode2et2 = value; } }
+		public bool ShouldSerializeValCode2et2() => this.SerializeAllFields || this.FieldsToSerialize.Contains("E2et2.ValCode2et2");
 
 		[DisplayName("ZZSTATE")]
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
-		public bool ShouldSerializeValZzstate () => this.SerializeAllFields || this.FieldsToSerialize.Contains("Patie.ValZzstate");
+		public bool ShouldSerializeValZzstate () => this.SerializeAllFields || this.FieldsToSerialize.Contains("E2et2.ValZzstate");
 
-		public Patie() : this(UserContext.Current.User) { }
+		public E2et2() : this(UserContext.Current.User) { }
 
-		public Patie(User u)
+		public E2et2(User u)
 		{
-			this.klass = new CSGenioApatie(u);
+			this.klass = new CSGenioAe2et2(u);
 		}
 
-		public Patie(string[] fieldsToSerialize) : this()
+		public E2et2(string[] fieldsToSerialize) : this()
 		{
 			SetFieldsToSerialize(fieldsToSerialize);
 		}
 
-		public Patie(bool isEmpty, string[] fieldsToSerialize) : this(fieldsToSerialize)
+		public E2et2(bool isEmpty, string[] fieldsToSerialize) : this(fieldsToSerialize)
 		{
 			this.isEmptyModel = isEmpty;
 		}
 
-		public Patie(bool isEmpty) : this(isEmpty, null) { }
+		public E2et2(bool isEmpty) : this(isEmpty, null) { }
 
-		public Patie(CSGenioApatie val, string[] fieldsToSerialize)
+		public E2et2(CSGenioAe2et2 val, string[] fieldsToSerialize)
 		{
 			klass = val; SetFieldsToSerialize(fieldsToSerialize);
 		}
 
-		public Patie(CSGenioApatie val) : this(val, null) { }
+		public E2et2(CSGenioAe2et2 val) : this(val, null) { }
 
-		public Patie(CSGenioApatie val, bool fillAreasRel, string[] fieldsToSerialize)
+		public E2et2(CSGenioAe2et2 val, bool fillAreasRel, string[] fieldsToSerialize)
 		{
 			klass = val;
 			SetFieldsToSerialize(fieldsToSerialize);
 			FillRelatedAreas(val);
 		}
 
-		public Patie(CSGenioApatie val, bool fillAreasRel) : this(val, fillAreasRel, null) { }
+		public E2et2(CSGenioAe2et2 val, bool fillAreasRel) : this(val, fillAreasRel, null) { }
 
-		public void FillRelatedAreas(CSGenioApatie csgenioa)
+		public void FillRelatedAreas(CSGenioAe2et2 csgenioa)
 		{
 			if (csgenioa == null)
 				return;
@@ -100,7 +100,7 @@ namespace GenioMVC.Models
 		/// <param name="fieldsToSerialize">The fields to serialize.</param>
 		/// <param name="fieldsToQuery">The fields to query.</param>
 		/// <returns>Model or NULL</returns>
-		public static Patie Find(string id, string identifier = null, string[] fieldsToSerialize = null, string[] fieldsToQuery = null)
+		public static E2et2 Find(string id, string identifier = null, string[] fieldsToSerialize = null, string[] fieldsToQuery = null)
 		{
 			return Find(id, UserContext.Current, identifier, fieldsToSerialize, fieldsToQuery);
 		}
@@ -114,36 +114,36 @@ namespace GenioMVC.Models
 		/// <param name="fieldsToSerialize">The fields to serialize.</param>
 		/// <param name="fieldsToQuery">The fields to query.</param>
 		/// <returns>Model or NULL</returns>
-		public static Patie Find(string id, UserContext userCtx, string identifier = null, string[] fieldsToSerialize = null, string[] fieldsToQuery = null)
+		public static E2et2 Find(string id, UserContext userCtx, string identifier = null, string[] fieldsToSerialize = null, string[] fieldsToQuery = null)
 		{
-			var record = Find<CSGenioApatie>(id, userCtx, identifier, fieldsToQuery);
-			return record == null ? null : new Patie(record, fieldsToSerialize) { Identifier = identifier };
+			var record = Find<CSGenioAe2et2>(id, userCtx, identifier, fieldsToQuery);
+			return record == null ? null : new E2et2(record, fieldsToSerialize) { Identifier = identifier };
 		}
 
 		[Obsolete("This method should never be used because it uses the default pagination but never allow in the parameters to set any other page. " +
 			"Might induce error in manual routines expection to return all the records in the database, when in fact they only get 1 page of records.")]
-		public static List<Patie> Where(CriteriaSet args = null, string identifier = null, bool noLock = true)
+		public static List<E2et2> Where(CriteriaSet args = null, string identifier = null, bool noLock = true)
 		{
-			return Where<CSGenioApatie>(false, args, null, 0, 0, null, identifier,noLock).RowsForViewModel<Patie>();
+			return Where<CSGenioAe2et2>(false, args, null, 0, 0, null, identifier,noLock).RowsForViewModel<E2et2>();
 		}
 
 		[Obsolete("Please use the ModelBase<A>.Where method instead")]
-		public static ListingMVC<CSGenioApatie> Where(bool distinct, CriteriaSet args = null, Quidgest.Persistence.FieldRef[] fields = null, int offset = 0, int numRegs = 0, List<ColumnSort> sorts = null, string identifier = null, bool noLock = true, bool getTotal = false, string selectrow = "", CriteriaSet PagingPosEPHs = null, Quidgest.Persistence.FieldRef firstVisibleColumn = null)
+		public static ListingMVC<CSGenioAe2et2> Where(bool distinct, CriteriaSet args = null, Quidgest.Persistence.FieldRef[] fields = null, int offset = 0, int numRegs = 0, List<ColumnSort> sorts = null, string identifier = null, bool noLock = true, bool getTotal = false, string selectrow = "", CriteriaSet PagingPosEPHs = null, Quidgest.Persistence.FieldRef firstVisibleColumn = null)
 		{
-			return ModelBase.Where<CSGenioApatie>(distinct, args, fields, offset, numRegs, sorts, identifier, noLock, getTotal, selectrow, PagingPosEPHs, firstVisibleColumn);
+			return ModelBase.Where<CSGenioAe2et2>(distinct, args, fields, offset, numRegs, sorts, identifier, noLock, getTotal, selectrow, PagingPosEPHs, firstVisibleColumn);
 		}
 
 		[Obsolete("Please use the ModelBase<A>.All method instead")]
-		public static ListingMVC<CSGenioApatie> All(CriteriaSet args = null)
+		public static ListingMVC<CSGenioAe2et2> All(CriteriaSet args = null)
 		{
-			return Where<CSGenioApatie>(false, args, numRegs: -1);
+			return Where<CSGenioAe2et2>(false, args, numRegs: -1);
 		}
 
-		public static List<Patie> AllModel(CriteriaSet args = null, string identifier = null)
+		public static List<E2et2> AllModel(CriteriaSet args = null, string identifier = null)
 		{
-			return Where<CSGenioApatie>(false, args, numRegs: -1, identifier: identifier).RowsForViewModel<Patie>((r) => new Patie(r));
+			return Where<CSGenioAe2et2>(false, args, numRegs: -1, identifier: identifier).RowsForViewModel<E2et2>((r) => new E2et2(r));
 		}
 
-// USE /[MANUAL GQT MODEL PATIE]/
+// USE /[MANUAL GQT MODEL E2ET2]/
 	}
 }

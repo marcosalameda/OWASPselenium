@@ -2875,6 +2875,9 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
 	<data name="SPACE_TYPES45728" xml:space="preserve">
 		<value>Space types</value>
 	</data>
+	<data name="DATETIME_FIELD26358" xml:space="preserve">
+		<value>Datetime field</value>
+	</data>
 	<data name="GAME_DAY26077" xml:space="preserve">
 		<value>Game day</value>
 	</data>
@@ -2892,84 +2895,6 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
 	</data>
 	<data name="TEXT__UPPER_CASE_62204" xml:space="preserve">
 		<value>Text (Upper case)</value>
-	</data>
-	<data name="PROFILE_PICTURE26817" xml:space="preserve">
-		<value>Profile picture</value>
-	</data>
-	<data name="ALLOW_FEATURE_DRAGGI09054" xml:space="preserve">
-		<value>Allow feature dragging</value>
-	</data>
-	<data name="ROOMS06809" xml:space="preserve">
-		<value>Rooms</value>
-	</data>
-	<data name="SEQUENTIAL_MOVEMENTS40923" xml:space="preserve">
-		<value>Sequential Movements</value>
-	</data>
-	<data name="DISPATCHES13773" xml:space="preserve">
-		<value>Dispatches</value>
-	</data>
-	<data name="RESPONSAVEL08700" xml:space="preserve">
-		<value>Responsavél</value>
-	</data>
-	<data name="EMAIL__CONFIRM_56391" xml:space="preserve">
-		<value>Email (confirm)</value>
-	</data>
-	<data name="CODE_49120" xml:space="preserve">
-		<value>Code:</value>
-	</data>
-	<data name="PROFILE65433" xml:space="preserve">
-		<value>Profile</value>
-	</data>
-	<data name="RARE54339" xml:space="preserve">
-		<value>Rare</value>
-	</data>
-	<data name="DATA_EFEITO54573" xml:space="preserve">
-		<value>Data Efeito</value>
-	</data>
-	<data name="_CATEGORY37591" xml:space="preserve">
-		<value>&gt;CATEGORy</value>
-	</data>
-	<data name="REGION_OF_THE_PERSON14756" xml:space="preserve">
-		<value>Region of the person:</value>
-	</data>
-	<data name="DELIVERED26597" xml:space="preserve">
-		<value>Delivered</value>
-	</data>
-	<data name="__37942339" xml:space="preserve">
-		<value>Designação a dar em vez de &quot;Objetivo&quot;.</value>
-	</data>
-	<data name="ATIVA_45603" xml:space="preserve">
-		<value>Ativa?</value>
-	</data>
-	<data name="STRATEGIC_OBJECTIVES32021" xml:space="preserve">
-		<value>Strategic Objectives / Operational Objectives</value>
-	</data>
-	<data name="PERSPECTIVA53871" xml:space="preserve">
-		<value>Perspectiva</value>
-	</data>
-	<data name="PROFESSIONAL_ABBREVI57700" xml:space="preserve">
-		<value>Professional abbreviation</value>
-	</data>
-	<data name="__35609308" xml:space="preserve">
-		<value>Avanço no intervalo do Gantt</value>
-	</data>
-	<data name="MOVING46562" xml:space="preserve">
-		<value>Moving</value>
-	</data>
-	<data name="NO_MECANOGRAFICO18516" xml:space="preserve">
-		<value>Nº Mecanográfico</value>
-	</data>
-	<data name="TOLERANCE34152" xml:space="preserve">
-		<value>Tolerance</value>
-	</data>
-	<data name="FEMALE46107" xml:space="preserve">
-		<value>Female</value>
-	</data>
-	<data name="WIZARD_WITH_PROGRESS02484" xml:space="preserve">
-		<value>Wizard with progress</value>
-	</data>
-	<data name="LONGITUDES_RANGE_FRO04878" xml:space="preserve">
-		<value>Longitudes range from -180 to 180.</value>
 	</data>
 	<data name="EM_FILA_DE_ESPERA21822" xml:space="preserve">
 		<value>Em fila de espera</value>
@@ -3370,6 +3295,9 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
 	<data name="INDICADOR21795" xml:space="preserve">
 		<value>Indicador</value>
 	</data>
+	<data name="ATIVA_45603" xml:space="preserve">
+		<value>Ativa?</value>
+	</data>
 	<data name="DESCRICAO51618" xml:space="preserve">
 		<value>Descricao</value>
 	</data>
@@ -3399,6 +3327,9 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
 	</data>
 	<data name="FACILITY_NAME19514" xml:space="preserve">
 		<value>Facility name</value>
+	</data>
+	<data name="ALLOW_FEATURE_DRAGGI09054" xml:space="preserve">
+		<value>Allow feature dragging</value>
 	</data>
 	<data name="ALPHABETIC_232435" xml:space="preserve">
 		<value>Alphabetic 2</value>
@@ -4323,6 +4254,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="__32629430" xml:space="preserve">
 		<value>Número de ordem utilizado para ordenação dos indicadores</value>
 	</data>
+	<data name="EMAIL__CONFIRM_56391" xml:space="preserve">
+		<value>Email (confirm)</value>
+	</data>
 	<data name="TEXT_WITH_INPUT39903" xml:space="preserve">
 		<value>Text with input</value>
 	</data>
@@ -4496,6 +4430,75 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	</data>
 	<data name="PERPECTIVES05236" xml:space="preserve">
 		<value>Perpectives</value>
+	</data>
+	<data name="PROFILE_PICTURE26817" xml:space="preserve">
+		<value>Profile picture</value>
+	</data>
+	<data name="ROOMS06809" xml:space="preserve">
+		<value>Rooms</value>
+	</data>
+	<data name="SEQUENTIAL_MOVEMENTS40923" xml:space="preserve">
+		<value>Sequential Movements</value>
+	</data>
+	<data name="DISPATCHES13773" xml:space="preserve">
+		<value>Dispatches</value>
+	</data>
+	<data name="RESPONSAVEL08700" xml:space="preserve">
+		<value>Responsavél</value>
+	</data>
+	<data name="CODE_49120" xml:space="preserve">
+		<value>Code:</value>
+	</data>
+	<data name="PROFILE65433" xml:space="preserve">
+		<value>Profile</value>
+	</data>
+	<data name="RARE54339" xml:space="preserve">
+		<value>Rare</value>
+	</data>
+	<data name="DATA_EFEITO54573" xml:space="preserve">
+		<value>Data Efeito</value>
+	</data>
+	<data name="_CATEGORY37591" xml:space="preserve">
+		<value>&gt;CATEGORy</value>
+	</data>
+	<data name="REGION_OF_THE_PERSON14756" xml:space="preserve">
+		<value>Region of the person:</value>
+	</data>
+	<data name="DELIVERED26597" xml:space="preserve">
+		<value>Delivered</value>
+	</data>
+	<data name="__37942339" xml:space="preserve">
+		<value>Designação a dar em vez de &quot;Objetivo&quot;.</value>
+	</data>
+	<data name="STRATEGIC_OBJECTIVES32021" xml:space="preserve">
+		<value>Strategic Objectives / Operational Objectives</value>
+	</data>
+	<data name="PERSPECTIVA53871" xml:space="preserve">
+		<value>Perspectiva</value>
+	</data>
+	<data name="PROFESSIONAL_ABBREVI57700" xml:space="preserve">
+		<value>Professional abbreviation</value>
+	</data>
+	<data name="__35609308" xml:space="preserve">
+		<value>Avanço no intervalo do Gantt</value>
+	</data>
+	<data name="MOVING46562" xml:space="preserve">
+		<value>Moving</value>
+	</data>
+	<data name="NO_MECANOGRAFICO18516" xml:space="preserve">
+		<value>Nº Mecanográfico</value>
+	</data>
+	<data name="TOLERANCE34152" xml:space="preserve">
+		<value>Tolerance</value>
+	</data>
+	<data name="FEMALE46107" xml:space="preserve">
+		<value>Female</value>
+	</data>
+	<data name="WIZARD_WITH_PROGRESS02484" xml:space="preserve">
+		<value>Wizard with progress</value>
+	</data>
+	<data name="LONGITUDES_RANGE_FRO04878" xml:space="preserve">
+		<value>Longitudes range from -180 to 180.</value>
 	</data>
 	<data name="MANUAL_FILLING_FIELD38373" xml:space="preserve">
 		<value>Manual filling field</value>

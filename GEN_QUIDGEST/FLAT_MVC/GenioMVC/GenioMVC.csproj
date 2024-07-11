@@ -323,6 +323,8 @@
     <Compile Include="Controllers\Addre\*.cs" />
     <Compile Include="ViewModels\Lnhpd\*_ViewModel.cs" />
     <Compile Include="Controllers\Lnhpd\*.cs" />
+    <Compile Include="ViewModels\E2et2\*_ViewModel.cs" />
+    <Compile Include="Controllers\E2et2\*.cs" />
     <Compile Include="ViewModels\Cfaqs\*_ViewModel.cs" />
     <Compile Include="Controllers\Cfaqs\*.cs" />
     <Compile Include="ViewModels\Gitem\*_ViewModel.cs" />
@@ -417,6 +419,8 @@
     <Compile Include="Controllers\Cmpny\*.cs" />
     <Compile Include="ViewModels\Ldent\*_ViewModel.cs" />
     <Compile Include="Controllers\Ldent\*.cs" />
+    <Compile Include="ViewModels\E2et3\*_ViewModel.cs" />
+    <Compile Include="Controllers\E2et3\*.cs" />
     <Compile Include="ViewModels\Team1\*_ViewModel.cs" />
     <Compile Include="Controllers\Team1\*.cs" />
     <Compile Include="ViewModels\Indoc\*_ViewModel.cs" />
@@ -473,6 +477,8 @@
     <Compile Include="Controllers\Asspa\*.cs" />
     <Compile Include="ViewModels\Audit\*_ViewModel.cs" />
     <Compile Include="Controllers\Audit\*.cs" />
+    <Compile Include="ViewModels\E2et4\*_ViewModel.cs" />
+    <Compile Include="Controllers\E2et4\*.cs" />
     <Compile Include="ViewModels\Perio\*_ViewModel.cs" />
     <Compile Include="Controllers\Perio\*.cs" />
     <Compile Include="ViewModels\Perso\*_ViewModel.cs" />
@@ -573,6 +579,8 @@
     <Compile Include="Controllers\Evcat\*.cs" />
     <Compile Include="ViewModels\Lnhag\*_ViewModel.cs" />
     <Compile Include="Controllers\Lnhag\*.cs" />
+    <Compile Include="ViewModels\E2et1\*_ViewModel.cs" />
+    <Compile Include="Controllers\E2et1\*.cs" />
     <Compile Include="ViewModels\UserAdmin\*.cs" />
     <Compile Include="ViewModels\Breadcrumbs_ViewModel.cs" />
     <Compile Include="ViewModels\Messages_ViewModel.cs" />

@@ -1,39 +1,28 @@
-﻿GQT em 11/07/2024 17:16:46
-05:16:46.287 info: Reading relational model...
-05:16:46.479 info: Reading menus...
-05:16:46.813 info: Calculating indexes [Tables]...
-05:16:46.836 info: Calculating indexes [Eph]...
-05:16:46.841 info: Calculating indexes [Menus]...
-05:16:46.868 info: Calculating indexes [Forms]...
-05:16:55.282 info: Calculating indexes [Manwins]...
-05:16:55.284 info: Calculating indexes [Altwins]...
-05:16:55.286 info: Calculating unique indexes...
-05:16:55.288 info: Reading indexes from table...
-05:16:55.347 info: Beginning generation: Styles - ASP.Net MVC
-05:16:55.450 info: Reading relational model...
-05:16:55.805 info: Validations for ASP.NET MVC...
-05:16:55.810 info: Creating output directories for ASP.NET MVC...
-05:16:55.863 info: Copying configurations...
-05:16:55.936 info: Generating resources...
-05:16:56.143 info: Generating helper classes...
-05:16:56.193 info: Generating generic controllers...
-05:16:57.519 info: Generating generic models...
-05:16:57.543 info: Generating table models...
-05:16:57.718 info: Generating generic view models...
-05:16:57.843 info: Generating forms view models...
-05:16:58.010 warning: Altwin STY_Menu_ALERTS.cshtml '' filename/wildcard did not match any generated files. Check if it's still necessary.
-05:16:58.010 warning: Altwin Authent.cshtml '' filename/wildcard did not match any generated files. Check if it's still necessary.
-05:16:58.011 warning: Altwin STY_Menu_ALERTS.cshtml '' filename/wildcard did not match any generated files. Check if it's still necessary.
-05:16:58.011 warning: Altwin Btnsform.cshtml '' filename/wildcard did not match any generated files. Check if it's still necessary.
-05:16:58.011 warning: Altwin STY_Menu_OVERVIEW.cshtml '' filename/wildcard did not match any generated files. Check if it's still necessary.
-05:16:58.011 info: Deleting unnecessary generation files
-05:16:58.018 info: Writing pending files took 5 ms
-05:16:58.018 info: Finished generation
+﻿GQT em 11/07/2024 17:17:26
+05:17:26.570 info: Beginning generation: Styles - ASP.Net MVC
+05:17:26.588 info: Reading relational model...
+05:17:26.696 info: Validations for ASP.NET MVC...
+05:17:26.697 info: Creating output directories for ASP.NET MVC...
+05:17:26.720 info: Copying configurations...
+05:17:26.753 info: Generating resources...
+05:17:26.985 info: Generating helper classes...
+05:17:27.023 info: Generating generic controllers...
+05:17:27.178 info: Generating generic models...
+05:17:27.190 info: Generating table models...
+05:17:27.288 warning: Altwin STY_Menu_ALERTS.cshtml '' filename/wildcard did not match any generated files. Check if it's still necessary.
+05:17:27.289 warning: Altwin Authent.cshtml '' filename/wildcard did not match any generated files. Check if it's still necessary.
+05:17:27.289 warning: Altwin STY_Menu_ALERTS.cshtml '' filename/wildcard did not match any generated files. Check if it's still necessary.
+05:17:27.289 warning: Altwin Btnsform.cshtml '' filename/wildcard did not match any generated files. Check if it's still necessary.
+05:17:27.290 warning: Altwin STY_Menu_OVERVIEW.cshtml '' filename/wildcard did not match any generated files. Check if it's still necessary.
+05:17:27.290 info: Deleting unnecessary generation files
+05:17:27.310 info: Writing pending files took 19 ms
+05:17:27.310 info: Finished generation
 exception: Error while running control template: Templates/ASPNET-MVCTemplates/MvcRazor/Control.vm.
 GenioAPI
    at GenGenio.Genio.Generate()
    at GenioAPI.Generation.EntryPoint.GenerateApplication(ClientApplication app, SolutionXml sol, InitialGenerationInfo iinfo, Boolean reportSave, Boolean zipCode)
-   at GenioGenerationServer.Generation.GenerateOneApp(String client, String app, Boolean recalcIndex)
+   at GenioAPI.Generation.EntryPoint.GenerateClient(Cliente client, String appid, IEnumerable`1 geracoes, Boolean suppressWebAdmin, Boolean reportSave, Boolean zipCode)
+   at GenioGenerationServer.Generation.GenerateOneClient(String client, Boolean recalcIndex)
 +--- Context dump ---+
 Genio = GenGenio.Genio
 this = NVelocity.VelocityContext
@@ -69,15 +58,10 @@ pxs = System.Collections.Generic.List`1[GenGenio.MenuContinuacao]
 empty_tablefield_checked = System.Collections.Generic.List`1[System.Object]
 empty_descriptions = System.Collections.Generic.List`1[System.Object]
 todasTabelas = System.Collections.Generic.Dictionary`2+ValueCollection[System.String,GenGenio.TabelaBD]
-velocityCount = 0
+velocityCount = 98
 suffix = en-US
 full_name = STY_Menu_DASHBOARD
-form = ABATE
-form_name = Abate
-form_table = Decom
-areasForm = System.Collections.Generic.List`1[GenGenio.AreaForm]
-form_Fields = System.Collections.Generic.List`1[GenGenio.CampoForm]
-vmSuperClass = FormViewModel
+table = E2ET4
 +--------------------+
 
 exception: Error in template: Templates/ASPNET-MVCTemplates/Control.vm
@@ -89,24 +73,18 @@ NVelocity
    at NVelocity.Template.Merge(IContext context, TextWriter writer)
    at GenGenio.Genio.Generate()
 
-exception: Invocation of method 'Parse' at Parse($this, "Templates/ASPNET-MVCTemplates/${mvcFolder}/GenioMVC/ViewModels/TemplateViewModel.cs.vm", "${Genio.OutputDirectory}/GenioMVC/ViewModels/${form_table}/${form_name}_ViewModel.cs") Line 306 Column 32 threw an exception.
+exception: Invocation of method 'Parse' at Parse($this, "Templates/ASPNET-MVCTemplates/${mvcFolder}/GenioMVC/Models/Table.cs.vm", "${Genio.OutputDirectory}/GenioMVC/Models/${sutil.CapFirst($table.Ndbf)}.cs") Line 211 Column 16 threw an exception.
 NVelocity
    at NVelocity.Runtime.Parser.Node.ASTMethod.Execute(Object o, IInternalContextAdapter context)
    at NVelocity.Runtime.Parser.Node.ASTReference.Execute(Object o, IInternalContextAdapter context)
    at NVelocity.Runtime.Parser.Node.ASTReference.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Runtime.Parser.Node.ASTBlock.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Runtime.Parser.Node.SimpleNode.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Runtime.Parser.Node.ASTIfStatement.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Runtime.Parser.Node.ASTBlock.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Runtime.Parser.Node.ASTElseIfStatement.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Runtime.Parser.Node.ASTIfStatement.Render(IInternalContextAdapter context, TextWriter writer)
    at NVelocity.Runtime.Parser.Node.ASTBlock.Render(IInternalContextAdapter context, TextWriter writer)
    at NVelocity.Runtime.Directive.Foreach.Render(IInternalContextAdapter context, TextWriter writer, INode node)
    at NVelocity.Runtime.Parser.Node.ASTDirective.Render(IInternalContextAdapter context, TextWriter writer)
    at NVelocity.Runtime.Parser.Node.SimpleNode.Render(IInternalContextAdapter context, TextWriter writer)
    at NVelocity.Runtime.Directive.Parse.RenderTemplate(Template template, String arg, TextWriter writer, IInternalContextAdapter context)
 
-exception: Error while running control template: Templates\ASPNET-MVCTemplates\MvcRazor\GenioMVC\ViewModels\TemplateViewModel.cs.vm.
+exception: Error while running control template: Templates\ASPNET-MVCTemplates\MvcRazor\GenioMVC\Models\Table.cs.vm.
 GenioAPI
    at GenGenio.Genio.ParseToString(IContext parentContext, String txt)
    at GenGenio.Genio.ParseInternal(IContext parentContext, String txt, String path, Encoding encoding, Boolean addToParsedFiles)
@@ -116,74 +94,37 @@ GenioAPI
    at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
 +--- Context dump ---+
 this = NVelocity.VelocityContext
-formIdentifier = FABATE
-table = DECOM
-chave = CODDECO
-form_name = Abate
-form_table = Decom
-tmpFormFields = System.Collections.Generic.List`1[GenGenio.CampoForm]
-hasWriteConditions = True
-queueLista = System.Collections.Generic.List`1[GenGenio.Genio+AuxRelacoesMq]
-lstCampos = System.Collections.Generic.List`1[System.Object]
-extraFields = System.Collections.Generic.List`1[System.Object]
-createdFields = System.Collections.Generic.List`1[System.Object]
+ltabela = E2et4
+larea = e2et4
+chave = CODE2ET4
+cargas = System.Collections.Generic.List`1[GenGenio.Carga]
 velocityCount = 0
-key_name = ValCoddeco
-fieldPrefix = ValNote
-areaBaseFormula = DECOM
-conditions = System.Collections.Generic.List`1[GenGenio.FormCondition]
-verifyApply = True
-conditionType = write
-campoNdbfCapFirst = Decom
-areasFormula = System.Collections.Generic.List`1[System.Object]
-condition = True
-applyCondition = !isApply && 
-formulaInterna = GenGenio.FormulaInterna
-conditionMessage = ""
+field = 
 +--------------------+
 
-exception: Error in template: Templates/ASPNET-MVCTemplates/MvcRazor/GenioMVC/ViewModels/ViewModelFormula.vm
-NVelocity
-   at NVelocity.Runtime.Directive.Parse.RenderTemplate(Template template, String arg, TextWriter writer, IInternalContextAdapter context)
-   at NVelocity.Runtime.Directive.Parse.Render(IInternalContextAdapter context, TextWriter writer, INode node)
-   at NVelocity.Runtime.Parser.Node.ASTDirective.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Runtime.Parser.Node.ASTBlock.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Runtime.Parser.Node.ASTIfStatement.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Runtime.Parser.Node.SimpleNode.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Template.Merge(IContext context, TextWriter writer)
-   at GenGenio.Genio.ParseToString(IContext parentContext, String txt)
-
-exception: Invocation of method 'ValidarFuncoesConhecidasFormulas' at ValidarFuncoesConhecidasFormulas($mvc.GetFuncoesCSConhecidas(), $mvc.GetFormulasControllerMVC(), $Genio, $areaBaseFormula, "Transformar Formula Interna MVC") Line 60 Column 22 threw an exception.
+exception: Invocation of method 'CreateModelField' at CreateModelField($table, $field) Line 54 Column 6 threw an exception.
 NVelocity
    at NVelocity.Runtime.Parser.Node.ASTMethod.Execute(Object o, IInternalContextAdapter context)
    at NVelocity.Runtime.Parser.Node.ASTReference.Execute(Object o, IInternalContextAdapter context)
-   at NVelocity.Runtime.Parser.Node.ASTReference.Evaluate(IInternalContextAdapter context)
-   at NVelocity.Runtime.Parser.Node.ASTExpression.Evaluate(IInternalContextAdapter context)
-   at NVelocity.Runtime.Parser.Node.ASTIfStatement.Render(IInternalContextAdapter context, TextWriter writer)
+   at NVelocity.Runtime.Parser.Node.ASTReference.Render(IInternalContextAdapter context, TextWriter writer)
    at NVelocity.Runtime.Parser.Node.ASTBlock.Render(IInternalContextAdapter context, TextWriter writer)
    at NVelocity.Runtime.Parser.Node.ASTIfStatement.Render(IInternalContextAdapter context, TextWriter writer)
    at NVelocity.Runtime.Parser.Node.ASTBlock.Render(IInternalContextAdapter context, TextWriter writer)
    at NVelocity.Runtime.Directive.Foreach.Render(IInternalContextAdapter context, TextWriter writer, INode node)
    at NVelocity.Runtime.Parser.Node.ASTDirective.Render(IInternalContextAdapter context, TextWriter writer)
    at NVelocity.Runtime.Parser.Node.SimpleNode.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Runtime.Directive.Parse.RenderTemplate(Template template, String arg, TextWriter writer, IInternalContextAdapter context)
+   at NVelocity.Template.Merge(IContext context, TextWriter writer)
+   at GenGenio.Genio.ParseToString(IContext parentContext, String txt)
 
-exception: 1:5: mismatched input '<EOF>' expecting '('
+exception: The key  was not present in the dictionary<System.String,System.String>.
 GenioAPI
-   at GenGenio.Language.GELUtils.<>c.<GetFunctionList>b__3_0(Int32 line, Int32 column, Int32 lastLine, Int32 lastColumn, String msg)
-   at GenGenio.Language.GELErrorListener.WriteError(String msg)
-   at GenGenio.Language.GELErrorListener.SyntaxError(TextWriter output, IRecognizer recognizer, IToken offendingSymbol, Int32 line, Int32 charPositionInLine, String msg, RecognitionException e)
-   at Antlr4.Runtime.ProxyErrorListener`1.SyntaxError(TextWriter output, IRecognizer recognizer, Symbol offendingSymbol, Int32 line, Int32 charPositionInLine, String msg, RecognitionException e)
-   at Antlr4.Runtime.Parser.NotifyErrorListeners(IToken offendingToken, String msg, RecognitionException e)
-   at Antlr4.Runtime.DefaultErrorStrategy.NotifyErrorListeners(Parser recognizer, String message, RecognitionException e)
-   at Antlr4.Runtime.DefaultErrorStrategy.ReportInputMismatch(Parser recognizer, InputMismatchException e)
-   at Antlr4.Runtime.DefaultErrorStrategy.ReportError(Parser recognizer, RecognitionException e)
-   at GenGenio.Language.GELParser.expression(Int32 _p)
-   at GenGenio.Language.GELParser.stmt()
-   at GenGenio.Language.GELUtils.GetParseTree(GELErrorListener errorListener, String formulaText)
-   at GenGenio.Language.GELUtils.GetFunctionList(String formula)
-   at GenGenio.FormulaInterna.ValidarFuncoesConhecidas(ICollection`1 funcoesManwin, FormulasTemplate template, Genio genio, String tabela, String campo, String output, Trace level)
-   at GenGenio.FormulaInterna.ValidarFuncoesConhecidasFormulas(ICollection`1 funcoesManwin, FormulasTemplate template, Genio genio, String tabela, String campo)
-   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
-   at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at GenGenio.DictionaryExtensions.GetByKey[TKey,TValue](IDictionary`2 dict, TKey key)
+   at GenGenio.GenioMvcExtension.CreateModelField(TabelaBD table, CampoBD field)
+   at InvokeStub_GenioMvcExtension.CreateModelField(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+exception: The given key '' was not present in the dictionary.
+System.Private.CoreLib
+   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at GenGenio.DictionaryExtensions.GetByKey[TKey,TValue](IDictionary`2 dict, TKey key)
 

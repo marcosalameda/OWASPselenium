@@ -299,8 +299,6 @@
     <Compile Include="Controllers\Lendi\*.cs" />
     <Compile Include="ViewModels\S_pax\*_ViewModel.cs" />
     <Compile Include="Controllers\S_pax\*.cs" />
-    <Compile Include="ViewModels\E2et2\*_ViewModel.cs" />
-    <Compile Include="Controllers\E2et2\*.cs" />
     <Compile Include="ViewModels\Cntry\*_ViewModel.cs" />
     <Compile Include="Controllers\Cntry\*.cs" />
     <Compile Include="ViewModels\Repar\*_ViewModel.cs" />
@@ -391,10 +389,6 @@
     <Compile Include="Controllers\Pess2\*.cs" />
     <Compile Include="ViewModels\Entit\*_ViewModel.cs" />
     <Compile Include="Controllers\Entit\*.cs" />
-    <Compile Include="ViewModels\E2et3\*_ViewModel.cs" />
-    <Compile Include="Controllers\E2et3\*.cs" />
-    <Compile Include="ViewModels\E2et4\*_ViewModel.cs" />
-    <Compile Include="Controllers\E2et4\*.cs" />
     <Compile Include="ViewModels\Esppe\*_ViewModel.cs" />
     <Compile Include="Controllers\Esppe\*.cs" />
     <Compile Include="ViewModels\Lcext\*_ViewModel.cs" />

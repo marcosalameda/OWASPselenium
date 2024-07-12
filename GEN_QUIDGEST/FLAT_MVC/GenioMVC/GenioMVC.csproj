@@ -291,8 +291,6 @@
     <Compile Include="Controllers\Feeca\*.cs" />
     <Compile Include="ViewModels\Notif\*_ViewModel.cs" />
     <Compile Include="Controllers\Notif\*.cs" />
-    <Compile Include="ViewModels\E2et3\*_ViewModel.cs" />
-    <Compile Include="Controllers\E2et3\*.cs" />
     <Compile Include="ViewModels\Asset\*_ViewModel.cs" />
     <Compile Include="Controllers\Asset\*.cs" />
     <Compile Include="ViewModels\Lang2\*_ViewModel.cs" />
@@ -411,8 +409,6 @@
     <Compile Include="Controllers\Manua\*.cs" />
     <Compile Include="ViewModels\Wareh\*_ViewModel.cs" />
     <Compile Include="Controllers\Wareh\*.cs" />
-    <Compile Include="ViewModels\E2et2\*_ViewModel.cs" />
-    <Compile Include="Controllers\E2et2\*.cs" />
     <Compile Include="ViewModels\Glob\*_ViewModel.cs" />
     <Compile Include="Controllers\Glob\*.cs" />
     <Compile Include="ViewModels\Tblk\*_ViewModel.cs" />
@@ -541,8 +537,6 @@
     <Compile Include="Controllers\Pess3\*.cs" />
     <Compile Include="ViewModels\Stock\*_ViewModel.cs" />
     <Compile Include="Controllers\Stock\*.cs" />
-    <Compile Include="ViewModels\E2et1\*_ViewModel.cs" />
-    <Compile Include="Controllers\E2et1\*.cs" />
     <Compile Include="ViewModels\Famil\*_ViewModel.cs" />
     <Compile Include="Controllers\Famil\*.cs" />
     <Compile Include="ViewModels\Rogl1\*_ViewModel.cs" />

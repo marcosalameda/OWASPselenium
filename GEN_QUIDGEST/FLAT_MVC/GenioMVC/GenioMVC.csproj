@@ -447,6 +447,8 @@
     <Compile Include="Controllers\Ware2\*.cs" />
     <Compile Include="ViewModels\Afini\*_ViewModel.cs" />
     <Compile Include="Controllers\Afini\*.cs" />
+    <Compile Include="ViewModels\E2et3\*_ViewModel.cs" />
+    <Compile Include="Controllers\E2et3\*.cs" />
     <Compile Include="ViewModels\Param\*_ViewModel.cs" />
     <Compile Include="Controllers\Param\*.cs" />
     <Compile Include="ViewModels\Tppro\*_ViewModel.cs" />
@@ -487,6 +489,8 @@
     <Compile Include="Controllers\Outpt\*.cs" />
     <Compile Include="ViewModels\Item\*_ViewModel.cs" />
     <Compile Include="Controllers\Item\*.cs" />
+    <Compile Include="ViewModels\E2et2\*_ViewModel.cs" />
+    <Compile Include="Controllers\E2et2\*.cs" />
     <Compile Include="ViewModels\Expe1\*_ViewModel.cs" />
     <Compile Include="Controllers\Expe1\*.cs" />
     <Compile Include="ViewModels\Noti1\*_ViewModel.cs" />
@@ -569,6 +573,8 @@
     <Compile Include="Controllers\Faci2\*.cs" />
     <Compile Include="ViewModels\Agreg\*_ViewModel.cs" />
     <Compile Include="Controllers\Agreg\*.cs" />
+    <Compile Include="ViewModels\E2et4\*_ViewModel.cs" />
+    <Compile Include="Controllers\E2et4\*.cs" />
     <Compile Include="ViewModels\Evcat\*_ViewModel.cs" />
     <Compile Include="Controllers\Evcat\*.cs" />
     <Compile Include="ViewModels\Lnhag\*_ViewModel.cs" />

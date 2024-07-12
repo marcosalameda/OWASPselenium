@@ -4452,6 +4452,60 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="REQUIRED58276" xml:space="preserve">
 		<value>Required</value>
 	</data>
+	<data name="END_TIME_WITH_INCLUS19241" xml:space="preserve">
+		<value>End time with inclusive boundary, if not ongoing</value>
+	</data>
+	<data name="SEPARADORES25231" xml:space="preserve">
+		<value>Separadores</value>
+	</data>
+	<data name="__10624216" xml:space="preserve">
+		<value>Descrição sumária da Perspectiva.</value>
+	</data>
+	<data name="TO_ROUTINE31339" xml:space="preserve">
+		<value>To routine</value>
+	</data>
+	<data name="DATETIME_FIELD26358" xml:space="preserve">
+		<value>Datetime field</value>
+	</data>
+	<data name="NATIONAL_MEASUREMENT59425" xml:space="preserve">
+		<value>National Measurement Feasibility</value>
+	</data>
+	<data name="__PRODUCT04710" xml:space="preserve">
+		<value>&gt;&gt;PRODUCT</value>
+	</data>
+	<data name="OUT_OF_DATE_LENDINGS05506" xml:space="preserve">
+		<value>Out-of-date lendings</value>
+	</data>
+	<data name="ARTICLE60065" xml:space="preserve">
+		<value>Article</value>
+	</data>
+	<data name="IDENTIFICACAO_DA_OPO05341" xml:space="preserve">
+		<value>Identificação da oportunidade comercial</value>
+	</data>
+	<data name="LENDING_IN_THE_PERIO23741" xml:space="preserve">
+		<value>Lending in the period</value>
+	</data>
+	<data name="_111231321" xml:space="preserve">
+		<value>Shows the number of the address, to indicate whether the address is the primary, secondary, or other address for the customer.</value>
+	</data>
+	<data name="DATETIME__SECONDS_49861" xml:space="preserve">
+		<value>DateTime (Seconds)</value>
+	</data>
+	<data name="END_TIME53495" xml:space="preserve">
+		<value>End time</value>
+	</data>
+	<data name="PREVIOUS_YEAR22440" xml:space="preserve">
+		<value>Previous Year</value>
+	</data>
+	<data name="ALTERADO_POR39254" xml:space="preserve">
+		<value>Alterado por</value>
+	</data>
+	<data name="TIMELINE___WEEKS09084" xml:space="preserve">
+		<value>Timeline - Weeks</value>
+	</data>
+	<data name="__30847379" xml:space="preserve">
+		<value>Soma</value>
+	</data>
 	<data name="MANUAL_FILLING_FIELD38373" xml:space="preserve">
 		<value>Manual filling field</value>
 	</data>
@@ -5856,9 +5910,6 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
 	<data name="BCC22049" xml:space="preserve">
 		<value>Bcc</value>
 	</data>
-	<data name="SEPARADORES25231" xml:space="preserve">
-		<value>Separadores</value>
-	</data>
 	<data name="TOTAL_VALUE30570" xml:space="preserve">
 		<value>Total value</value>
 	</data>
@@ -5891,9 +5942,6 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
 	</data>
 	<data name="PROFILE_PICTURE42911" xml:space="preserve">
 		<value>Profile Picture</value>
-	</data>
-	<data name="ALTERADO_POR39254" xml:space="preserve">
-		<value>Alterado por</value>
 	</data>
 	<data name="LABEL27729" xml:space="preserve">
 		<value>Label</value>
@@ -6150,9 +6198,6 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
 	<data name="ACESSO_A_ORGANIZACAO01976" xml:space="preserve">
 		<value>Acesso a Organização</value>
 	</data>
-	<data name="LENDING_IN_THE_PERIO23741" xml:space="preserve">
-		<value>Lending in the period</value>
-	</data>
 	<data name="TYPE_OF_SEGMENTS22789" xml:space="preserve">
 		<value>Type of segments</value>
 	</data>
@@ -6272,9 +6317,6 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
 	</data>
 	<data name="SPACE62433" xml:space="preserve">
 		<value>Space</value>
-	</data>
-	<data name="ARTICLE60065" xml:space="preserve">
-		<value>Article</value>
 	</data>
 	<data name="DESIGNACAO_DE_PERSPE58231" xml:space="preserve">
 		<value>Designação de Perspetiva</value>
@@ -6476,9 +6518,6 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</value>
 	<data name="GROUPBOX_STYLES47434" xml:space="preserve">
 		<value>Groupbox styles</value>
 	</data>
-	<data name="OUT_OF_DATE_LENDINGS05506" xml:space="preserve">
-		<value>Out-of-date lendings</value>
-	</data>
 	<data name="MINISTRY_LOGO28273" xml:space="preserve">
 		<value>Ministry Logo</value>
 	</data>
@@ -6671,9 +6710,6 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</value>
 	<data name="TIMELINE___MONTHS37278" xml:space="preserve">
 		<value>Timeline - Months</value>
 	</data>
-	<data name="__PRODUCT04710" xml:space="preserve">
-		<value>&gt;&gt;PRODUCT</value>
-	</data>
 	<data name="LAG58416" xml:space="preserve">
 		<value>Lag</value>
 	</data>
@@ -6733,9 +6769,6 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</value>
 	</data>
 	<data name="SAVE04165" xml:space="preserve">
 		<value>Save</value>
-	</data>
-	<data name="END_TIME53495" xml:space="preserve">
-		<value>End time</value>
 	</data>
 	<data name="DISPATCH46310" xml:space="preserve">
 		<value>Dispatch</value>
@@ -7062,9 +7095,6 @@ Nacional: Se refiere a la propuesta nacional que proviene de las instituciones r
 	</data>
 	<data name="___3661638" xml:space="preserve">
 		<value>This help is for a field of type Creation: Date</value>
-	</data>
-	<data name="TO_ROUTINE31339" xml:space="preserve">
-		<value>To routine</value>
 	</data>
 	<data name="PROCESS_TYPE25967" xml:space="preserve">
 		<value>Process type</value>
@@ -7613,9 +7643,6 @@ The end value includes any matching date/time. For example, the period 2011-05-2
 	<data name="ARTICLES_IN_USE35156" xml:space="preserve">
 		<value>Articles in use</value>
 	</data>
-	<data name="__30847379" xml:space="preserve">
-		<value>Soma</value>
-	</data>
 	<data name="COMPANIES04875" xml:space="preserve">
 		<value>Companies</value>
 	</data>
@@ -7766,9 +7793,6 @@ The end value includes any matching date/time. For example, the period 2011-05-2
 	<data name="PATIENT10865" xml:space="preserve">
 		<value>Patient</value>
 	</data>
-	<data name="TIMELINE___WEEKS09084" xml:space="preserve">
-		<value>Timeline - Weeks</value>
-	</data>
 	<data name="LAST_INCORPORATED_FA29541" xml:space="preserve">
 		<value>Last incorporated facility</value>
 	</data>
@@ -7880,12 +7904,6 @@ The end value includes any matching date/time. For example, the period 2011-05-2
 	<data name="ORIGIN_POINT61939" xml:space="preserve">
 		<value>Origin point</value>
 	</data>
-	<data name="NATIONAL_MEASUREMENT59425" xml:space="preserve">
-		<value>National Measurement Feasibility</value>
-	</data>
-	<data name="END_TIME_WITH_INCLUS19241" xml:space="preserve">
-		<value>End time with inclusive boundary, if not ongoing</value>
-	</data>
 	<data name="PHONE56703" xml:space="preserve">
 		<value>Phone</value>
 	</data>
@@ -7906,9 +7924,6 @@ The end value includes any matching date/time. For example, the period 2011-05-2
 	</data>
 	<data name="PERCENTAGEM27154" xml:space="preserve">
 		<value>Percentagem</value>
-	</data>
-	<data name="DATETIME__SECONDS_49861" xml:space="preserve">
-		<value>DateTime (Seconds)</value>
 	</data>
 	<data name="LIMITACOES_PARA_CUMP08754" xml:space="preserve">
 		<value>Limitações para cumprimento de metas</value>
@@ -8101,9 +8116,6 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</valu
 	<data name="ASYNC_PROCESS_ARGUME13794" xml:space="preserve">
 		<value>Async process arguments</value>
 	</data>
-	<data name="PREVIOUS_YEAR22440" xml:space="preserve">
-		<value>Previous Year</value>
-	</data>
 	<data name="ESTADO_DO_PROCESSO07540" xml:space="preserve">
 		<value>Estado do processo</value>
 	</data>
@@ -8130,9 +8142,6 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</valu
 	</data>
 	<data name="SEPTEMBER29714" xml:space="preserve">
 		<value>September</value>
-	</data>
-	<data name="IDENTIFICACAO_DA_OPO05341" xml:space="preserve">
-		<value>Identificação da oportunidade comercial</value>
 	</data>
 	<data name="EQUIPMENT____C_GROUP25618" xml:space="preserve">
 		<value>Equipment -&gt; c-groupbox--minor-border-top</value>
@@ -8216,9 +8225,6 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</valu
 	<data name="__18163334" xml:space="preserve">
 		<value>Data de referência dos dados. Data a que os dados devem respeitar.</value>
 	</data>
-	<data name="_111231321" xml:space="preserve">
-		<value>Shows the number of the address, to indicate whether the address is the primary, secondary, or other address for the customer.</value>
-	</data>
 	<data name="MORE____C_GROUPBOX__37337" xml:space="preserve">
 		<value>More -&gt; c-groupbox--minor-border-top</value>
 	</data>
@@ -8284,9 +8290,6 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</valu
 	</data>
 	<data name="KIT27179" xml:space="preserve">
 		<value>Kit</value>
-	</data>
-	<data name="__10624216" xml:space="preserve">
-		<value>Descrição sumária da Perspectiva.</value>
 	</data>
 	<data name="GRID_FOTO05588" xml:space="preserve">
 		<value>Grid Foto</value>

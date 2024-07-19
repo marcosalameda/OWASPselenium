@@ -454,6 +454,9 @@ cdmSchemas:&#91;&quot;/core/applicationCommon/Address.cdm.json/Address/hasAttrib
 	<data name="A_VALIDACAO_DA_TABEL53583" xml:space="preserve">
 		<value>A validação da tabela deu um warning</value>
 	</data>
+	<data name="TESTE_225519" xml:space="preserve">
+		<value>Teste 2</value>
+	</data>
 	<data name="ORGANIZATION64123" xml:space="preserve">
 		<value>Organization</value>
 	</data>
@@ -2607,6 +2610,9 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
 	</data>
 	<data name="EQUIPMENT_REQUESTS07243" xml:space="preserve">
 		<value>Equipment requests</value>
+	</data>
+	<data name="AIRLINE_JOANA47018" xml:space="preserve">
+		<value>Airline JOANA</value>
 	</data>
 	<data name="QUIDGEST___VUE_JS35808" xml:space="preserve">
 		<value>Quidgest - Vue.js</value>
@@ -7835,6 +7841,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
 	<data name="GOAL_TYPE29368" xml:space="preserve">
 		<value>Goal type</value>
 	</data>
+	<data name="CODIGO30770" xml:space="preserve">
+		<value>Codigo</value>
+	</data>
 	<data name="PROJECT_COMPLETED06496" xml:space="preserve">
 		<value>Project completed</value>
 	</data>
@@ -8337,6 +8346,9 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</valu
 &lt;p&gt;Verbose Help in a logic field (checkbox)&lt;/p&gt;
 &lt;/body&gt;
 &lt;/html&gt;</value>
+	</data>
+	<data name="TESTE23551" xml:space="preserve">
+		<value>Teste</value>
 	</data>
 	<data name="COMPANY____C_GROUPBO49615" xml:space="preserve">
 		<value>Company -&gt; c-groupbox--title-background</value>
@@ -16428,5 +16440,8 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</valu
 	</data>
 	<data name="PASSWORD_VULNERAVEL_00083" xml:space="preserve">
 		<value>Password vulnerable to leaked password lists</value>
+	</data>
+	<data name="O_CAMPO__0__TEM_UM_E13294" xml:space="preserve">
+		<value>Field &#123;0&#125; has an invalid address.</value>
 	</data>
 </root>

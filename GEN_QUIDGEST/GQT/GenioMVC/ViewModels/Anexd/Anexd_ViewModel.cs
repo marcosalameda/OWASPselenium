@@ -71,9 +71,8 @@ namespace GenioMVC.ViewModels.Anexd
 
 		/// <summary>Campo : "Document" Tipo:"IB"</summary>
 		[Display(Name = "DOCUMENT00695", ResourceType = typeof(Resources.Resources))]
-		[Required(ErrorMessageResourceName = "O_CAMPO__0__E_OBRIGA36687", ErrorMessageResourceType = typeof(Resources.Resources))]
 		[UIHint("DBDocument")]
-		[Document("ValDocument", false, true, false, true, DocumentViewTypeMode.Preview)]
+		[Document("ValDocument", false, true, false, false, DocumentViewTypeMode.Preview)]
 		public string ValDocument { get; set; }
 		public string ValDocumentfk { get; set; }
 		public DocumsProperties_ViewModel ValDocumentPropertiesVM { get; set; }

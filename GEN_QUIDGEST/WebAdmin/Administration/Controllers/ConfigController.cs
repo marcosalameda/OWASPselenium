@@ -1115,6 +1115,57 @@ namespace Administration.Controllers
             return Json(new { Success = true, numPasswords });
         }
 
+        [HttpPost]
+        public IActionResult ServicePasswordCheck()
+        {
+            List<string> errors = [];
+            var conf = configManager.GetExistingConfig();
+            string pass;
 
+            PersistentSupport sp = PersistentSupport.getPersistentSupport(CurrentYear);
+            sp.openConnection();
+            User user = SysConfiguration.CreateWebAdminUser();
+            var factory = new GenioServer.security.UserFactory(sp, user);
+
+            void CheckOnePassword(string label, string pass)
+            {
+                if(!string.IsNullOrEmpty(pass))
+                {
+                    string error = factory.CheckPasswordRules(pass);
+                    if(!string.IsNullOrEmpty(error))
+                        errors.Add(label + " : " + error);
+                }
+            }
+
+            DataSystemXml dataSystem = Configuration.ResolveDataSystem(CurrentYear, Configuration.DbTypes.NORMAL);
+            if(dataSystem != null)
+            {
+                pass = Encoding.Unicode.GetString(Convert.FromBase64String(dataSystem.Password ?? string.Empty));
+                CheckOnePassword("Current Data System", pass);
+
+                if(dataSystem.DataSystemLog != null)
+                {
+                    pass = Encoding.Unicode.GetString(Convert.FromBase64String(dataSystem.DataSystemLog.Password ?? string.Empty));
+                    CheckOnePassword("Log Data System", pass);
+                }
+            }
+
+            if(conf.ssrsServer != null)
+            {
+                pass = Encoding.Unicode.GetString(Convert.FromBase64String(conf.ssrsServer.Password ?? string.Empty));
+                CheckOnePassword("Reporting services", pass);
+            }
+
+            if(conf.EmailProperties != null)
+                foreach(var server in conf.EmailProperties)
+                {
+                    pass = Encoding.UTF8.GetString(Convert.FromBase64String(server.Password ?? string.Empty));
+                    CheckOnePassword("Email Server" + " " + server.Name, pass);
+                }
+
+            sp.closeConnection();
+
+            return Json(new { Success = true, resultList = errors });
+        }
     }
 }

@@ -3746,9 +3746,10 @@ namespace CSGenio.business
         {
             SelectQuery query = new SelectQuery()
                 .Select(SqlFunctions.Count(1), "count")
-                .From(areadInfo.TableName)
+                .From(areadInfo.TableName, areadInfo.Alias)
                 .Where(CriteriaSet.And()
-                .Equal(areadInfo.PrimaryKeyName, key));
+                .Equal(areadInfo.Alias, areadInfo.PrimaryKeyName, key));
+
 
             return DBConversion.ToInteger(sp.ExecuteScalar(query)) > 0;
         }

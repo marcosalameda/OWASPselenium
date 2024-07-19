@@ -189,8 +189,8 @@ namespace CSGenio.business
 			info.Pathways.Add("entit","entit");
 			info.Pathways.Add("recei","recei");
 			info.Pathways.Add("produ","produ");
-			info.Pathways.Add("faci2","entit");
 			info.Pathways.Add("faci1","entit");
+			info.Pathways.Add("faci2","entit");
 			info.Pathways.Add("locat","produ");
 			info.Pathways.Add("lcext","produ");
 			info.Pathways.Add("facil","produ");
@@ -206,8 +206,8 @@ namespace CSGenio.business
 			//------------------------------
 			//Actualiza as seguintes somas relacionadas:
 			info.RelatedSumArgs = new List<RelatedSumArgument>();
-			info.RelatedSumArgs.Add( new RelatedSumArgument("relin", "produ", "stock", "received", '+', true));
 			info.RelatedSumArgs.Add( new RelatedSumArgument("relin", "produ", "inputs", "received", '+', true));
+			info.RelatedSumArgs.Add( new RelatedSumArgument("relin", "produ", "stock", "received", '+', true));
 
 
 

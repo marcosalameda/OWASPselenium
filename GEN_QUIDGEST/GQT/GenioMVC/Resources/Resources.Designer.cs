@@ -1062,6 +1062,15 @@ namespace GenioMVC.Resources
 		}
 
 		/// <summary>
+		///   Looks up a localized string similar to "Teste 2"
+		/// </summary>
+		public static string TESTE_225519 {
+			get {
+				return ResourceManager.GetString("TESTE_225519", resourceCulture);
+			}
+		}
+
+		/// <summary>
 		///   Looks up a localized string similar to "Organization"
 		/// </summary>
 		public static string ORGANIZATION64123 {
@@ -7457,6 +7466,15 @@ namespace GenioMVC.Resources
 		public static string EQUIPMENT_REQUESTS07243 {
 			get {
 				return ResourceManager.GetString("EQUIPMENT_REQUESTS07243", resourceCulture);
+			}
+		}
+
+		/// <summary>
+		///   Looks up a localized string similar to "Airline JOANA"
+		/// </summary>
+		public static string AIRLINE_JOANA47018 {
+			get {
+				return ResourceManager.GetString("AIRLINE_JOANA47018", resourceCulture);
 			}
 		}
 
@@ -23022,6 +23040,15 @@ namespace GenioMVC.Resources
 		}
 
 		/// <summary>
+		///   Looks up a localized string similar to "Codigo"
+		/// </summary>
+		public static string CODIGO30770 {
+			get {
+				return ResourceManager.GetString("CODIGO30770", resourceCulture);
+			}
+		}
+
+		/// <summary>
 		///   Looks up a localized string similar to "Project completed"
 		/// </summary>
 		public static string PROJECT_COMPLETED06496 {
@@ -24458,6 +24485,15 @@ namespace GenioMVC.Resources
 		public static string _1142_VERBOSE19186 {
 			get {
 				return ResourceManager.GetString("_1142_VERBOSE19186", resourceCulture);
+			}
+		}
+
+		/// <summary>
+		///   Looks up a localized string similar to "Teste"
+		/// </summary>
+		public static string TESTE23551 {
+			get {
+				return ResourceManager.GetString("TESTE23551", resourceCulture);
 			}
 		}
 
@@ -48731,6 +48767,15 @@ namespace GenioMVC.Resources
 		public static string PASSWORD_VULNERAVEL_00083 {
 			get {
 				return ResourceManager.GetString("PASSWORD_VULNERAVEL_00083", resourceCulture);
+			}
+		}
+
+		/// <summary>
+		///   Looks up a localized string similar to "O campo {0} tem um endereço inválido."
+		/// </summary>
+		public static string O_CAMPO__0__TEM_UM_E13294 {
+			get {
+				return ResourceManager.GetString("O_CAMPO__0__TEM_UM_E13294", resourceCulture);
 			}
 		}
 

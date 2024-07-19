@@ -533,6 +533,9 @@ namespace GenioMVC.Controllers
 		[HttpGet]
 		public ActionResult QDebug()
 		{
+			// We only allow code debugging when event tracing is active.
+			if(!Configuration.EventTracking)
+				return RedirectToAction("Index", "Home");
 			QDebug_ViewModel model = new QDebug_ViewModel(Navigation);
 			return PartialView(model);
 		}

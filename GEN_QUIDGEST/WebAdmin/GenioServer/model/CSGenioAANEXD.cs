@@ -91,7 +91,6 @@ namespace CSGenio.business
 			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "DOCUMENT00695";
 
-            Qfield.NotNull = true;
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
  			Qfield = new Field("documentfk", FieldType.CHAVE_ESTRANGEIRA_GUID);

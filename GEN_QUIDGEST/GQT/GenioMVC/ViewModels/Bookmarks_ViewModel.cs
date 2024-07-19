@@ -51,7 +51,7 @@ namespace GenioMVC.ViewModels.Bookmarks
 						MenuEntry menu = null;
 						try
 						{
-							menu = Helpers.Menus.Menus.FindMenu(fav.ValModulo, fav.ValId);
+							menu = Helpers.Menus.Menus.FindMenuForUserRec(userContext, fav.ValModulo, fav.ValId, true);
 						}
 						catch (KeyNotFoundException)
 						{

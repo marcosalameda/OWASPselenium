@@ -49,12 +49,16 @@ namespace GenioMVC.ViewModels
 		{
 			List<string> moduleRoles = new List<string>();
 
-			foreach (var module in Configuration.Application.Modules.Select(m => m.Key))
+			// We only allow code debugging when event tracing is active.
+			if(Configuration.EventTracking)
 			{
-				var user = UserContext.Current.User;
-				var roleList = user.GetModuleRoles(module);
-				string moduleRoleList = string.Join(",", roleList);
-				moduleRoles.Add($"({module} : {moduleRoleList})");
+				foreach (var module in Configuration.Application.Modules.Select(m => m.Key))
+				{
+					var user = UserContext.Current.User;
+					var roleList = user.GetModuleRoles(module);
+					string moduleRoleList = string.Join(",", roleList);
+					moduleRoles.Add($"({module} : {moduleRoleList})");
+				}
 			}
 
 			return string.Join(",", moduleRoles);

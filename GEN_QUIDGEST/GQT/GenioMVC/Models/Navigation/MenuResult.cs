@@ -20,17 +20,20 @@ namespace GenioMVC.Models.Navigation
 		public string ActionId { get; set; }
 
 		public string Module { get; }
+		
+		public string ModuleText { get; }
 
 		/// <summary>
 		/// TODO: Fill in right here vs fill in the controller
 		/// </summary>
 		public MenuEntry MenuObj { get; set; }
 
-		public MenuResult(string id,string module, string text)
+		public MenuResult(string id,string module, string text, string moduleText)
 		{
 			this.Id = id;
 			Module = module;
 			Text = text;
+			ModuleText = moduleText;
 		}
 
 		public static List<MenuResult> SearchableMenus(UserContext userContext, CultureInfo cultureInfo)
@@ -42,7 +45,8 @@ namespace GenioMVC.Models.Navigation
 				foreach (var menu in modulo.Children)
 				{
 					string menuText = Resources.Resources.ResourceManager.GetString(menu.Title, cultureInfo);
-					var result = new MenuResult(menu.ID, modulo.ID, menuText);
+					string moduleText = Resources.Resources.ResourceManager.GetString(modulo.Title, cultureInfo);
+					var result = new MenuResult(menu.ID, modulo.ID, menuText, moduleText);
 
 					if (string.IsNullOrWhiteSpace(menu.RoleId))
 						menuEntries.AddRange(SearchableSubmenu(userContext, menu, result));
@@ -67,7 +71,7 @@ namespace GenioMVC.Models.Navigation
 				if (!menu.HasCondition || (menu.HasCondition && Menus.ValidateCondition(userContext, menu, parent.Module)))
 				{
 					string menuText = Resources.Resources.ResourceManager.GetString(menu.Title);
-					MenuResult result = new MenuResult(menu.ID, parent.Module, menuText);
+					MenuResult result = new MenuResult(menu.ID, parent.Module, menuText, parent.ModuleText);
 					string flatMenu = parent.FlatMenu;
 
 					if (string.IsNullOrEmpty(parent.FlatMenu))

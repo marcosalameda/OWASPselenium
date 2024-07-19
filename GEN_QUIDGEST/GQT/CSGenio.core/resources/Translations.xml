@@ -336,6 +336,8 @@ cdmSchemas:&#91;&quot;/core/applicationCommon/Address.cdm.json/Address/hasAttrib
   <msg id="A validação da tabela deu um warning" code="A_VALIDACAO_DA_TABEL53583">
     <ENUS>A validação da tabela deu um warning</ENUS>
   </msg>
+  <msg id="Teste 2" code="TESTE_225519">
+  </msg>
   <msg id="Organization" code="ORGANIZATION64123">
     <ENUS>Organization</ENUS>
   </msg>
@@ -2471,6 +2473,8 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
   </msg>
   <msg id="Equipment requests" code="EQUIPMENT_REQUESTS07243">
     <ENUS>Equipment requests</ENUS>
+  </msg>
+  <msg id="Airline JOANA" code="AIRLINE_JOANA47018">
   </msg>
   <msg id="Quidgest - Vue.js" code="QUIDGEST___VUE_JS35808">
     <ENUS>Quidgest - Vue.js</ENUS>
@@ -7634,6 +7638,8 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   <msg id="Goal type" code="GOAL_TYPE29368">
     <ENUS>Goal type</ENUS>
   </msg>
+  <msg id="Codigo" code="CODIGO30770">
+  </msg>
   <msg id="Project completed" code="PROJECT_COMPLETED06496">
     <ENUS>Project completed</ENUS>
   </msg>
@@ -8100,6 +8106,8 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <ENUS>Creation date</ENUS>
   </msg>
   <msg id=" 1142_VERBOSE" code="_1142_VERBOSE19186">
+  </msg>
+  <msg id="Teste" code="TESTE23551">
   </msg>
   <msg id="Company -&gt; c-groupbox--title-background" code="COMPANY____C_GROUPBO49615">
   </msg>
@@ -16190,5 +16198,8 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   </msg>
   <msg id="Password vulnerável a listas de passwords conhecidas" code="PASSWORD_VULNERAVEL_00083">
     <ENUS>Password vulnerable to leaked password lists</ENUS>
+  </msg>
+  <msg id="O campo {0} tem um endereço inválido." code="O_CAMPO__0__TEM_UM_E13294">
+    <ENUS>Field &#123;0&#125; has an invalid address.</ENUS>
   </msg>
 </Messages>

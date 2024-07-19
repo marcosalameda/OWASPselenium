@@ -8,7 +8,8 @@
   <ItemGroup>
     <PackageReference Include="SoapCore" Version="1.1.0.39" />
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="8.0.0" />
-    <!-- Its has to be this version. The lastest version of Types only works with the new Microsoft.Data.SqlClient provider -->
+    <!-- This shouldn't be necessary, but there's currently no way of disabling warnings coming from specific project references -->
+    <!-- https://github.com/NuGet/Home/issues/5740 -->
     <PackageReference Include="Microsoft.SqlServer.Types" Version="14.0.1016.290">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>

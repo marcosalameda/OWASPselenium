@@ -55,6 +55,10 @@ else {
 				<div class="col-12">
 					<div class="row-large-control">
 						<div class="row-line-group" id="CONTAINER_IFF_GRPB____PSEUDTBLB____">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValTblb, new { label_id="IFF_GRPB____PSEUDTBLB____", @class = " i-text__label hidden-label table-title f-header__title", id="LABEL_IFF_GRPB____PSEUDTBLB____"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('IFF_GRPB____PSEUDTBLB____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
 								<div id="Grpb_ValTblb" data-identifier="IFF_GRPB____PSEUDTBLB____"  data-extra-options="" > 
 									@{ Html.RenderAction("Grpb_ValTblb", "Grpb", new { id = Model.ValCodgrpb, partialView = "Grpb_ValTblb"}); }
 								</div>

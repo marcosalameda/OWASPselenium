@@ -2,6 +2,15 @@
     <div id="password_blacklist_container" class="container-fluid">
         <h1 class="pb-2 mt-4 mb-2 border-bottom">{{ Resources.MANAGE_PASSWORD_BLAC01612 }}</h1>
 
+        <row v-if="!isEmptyObject(resultMsg)">
+          <div :class="['alert', statusError?'alert-danger':'alert-success']">
+              <span>
+                  <b class="status-message">{{ resultMsg }}</b>
+              </span>
+          </div>
+          <br />
+        </row>
+
         <div>{{ Resources.BLACKLISTED_PASSWORD46582 }}: {{ numPasswords }}</div>
         <row>
             <div class="q-button-container">
@@ -26,6 +35,21 @@
                 <button class="q-btn q-btn--secondary" @click="passAdd">{{ Resources.ADICIONAR14072 }}</button>
             </div>
         </row>
+
+        <row>
+            <div>Validate service passwords</div>
+            <div class="control-row-group q-button-container">
+                <button class="q-btn q-btn--primary" @click="servicePassCheck">{{ Resources.VALIDACAO46021 }}</button>
+            </div>
+            <div>
+                <div v-for="item in servicePassResults" class="alert alert-warning">
+                    <span>
+                        <b class="status-message">{{ item }}</b>
+                    </span>
+                </div>
+            </div>
+        </row>
+
     </div>
 </template>
 
@@ -33,7 +57,6 @@
   // @ is an alias to /src
   import { reusableMixin } from '@/mixins/mainMixin';
   import { QUtils } from '@/utils/mainUtils';
-  import bootbox from 'bootbox';
 
   export default {
     name: 'manage-blacklist',
@@ -44,7 +67,10 @@
     data: function () {
         return {
             numPasswords: 0,
-            password: ''
+            password: '',
+            resultMsg: '',
+            statusError: false,
+            servicePassResults: []
         }
     },
     methods: {
@@ -63,6 +89,9 @@
             const file = selection[0];
             formData.append("file", file);
 
+            this.resultMsg = "";
+            this.statusError = false;
+
             const uri = QUtils.apiActionURL('Config', 'BlacklistUpload');
             const response = await fetch(uri, {
                 method: "POST",
@@ -73,10 +102,12 @@
             {
                 const data = await response.json();
                 if (data.Success) {
-                    bootbox.alert(this.Resources.ALTERACOES_EFETUADAS10166);
+                    this.resultMsg = this.Resources.ALTERACOES_EFETUADAS10166;
+                    this.statusError = false;
                     this.numPasswords = data.numPasswords;
                 } else {
-                    bootbox.alert(data.Message);
+                    this.resultMsg = data.Message;
+                    this.statusError = false;
                 }                
             }
         },
@@ -89,40 +120,78 @@
                 password: this.password
             };
             const vm = this;
+            vm.resultMsg = "";
+            vm.statusError = false;
+            
             QUtils.postData('Config', 'BlacklistPasswordCheck', params, null, function (data) {
                 if (data.Success) {
                     if(data.found) {
-                        bootbox.alert(vm.Resources.PASSWORD_VULNERAVEL_00083);
+                        vm.resultMsg = vm.Resources.PASSWORD_VULNERAVEL_00083;
+                        vm.statusError = true;
                     } else {
-                        bootbox.alert('ok');
+                        vm.resultMsg = "ok";
+                        vm.statusError = false;
                     }
                 } else {
-                    bootbox.alert(data.Message);
+                    vm.resultMsg = data.Message;
+                    vm.statusError = true;
+                }
+            });
+        },
+        servicePassCheck() {
+            const params = {
+            };
+            const vm = this;
+
+            vm.resultMsg = "";            
+            vm.statusError = false;
+            vm.servicePassResults = [];
+
+            QUtils.postData('Config', 'ServicePasswordCheck', params, null, function (data) {
+                if (data.Success) {
+                    if(data.resultList && data.resultList.length > 0) {
+                        vm.servicePassResults = data.resultList;
+                    } else {
+                        vm.resultMsg = "ok";
+                        vm.statusError = false;
+                    }
+                } else {
+                    vm.resultMsg = data.Message;
+                    vm.statusError = true;
                 }
             });
         },
         passAdd() {
             const vm = this;
+            this.resultMsg = "";
+            this.statusError = false;
+
             const params = {
                 password: this.password
             };
             QUtils.postData('Config', 'BlacklistPasswordAdd', params, null, function (data) {
                 if (data.Success) {
-                    bootbox.alert(vm.Resources.ALTERACOES_EFETUADAS10166);
+                    vm.resultMsg = vm.Resources.ALTERACOES_EFETUADAS10166;
+                    vm.statusError = false;
                     vm.numPasswords = data.numPasswords;
                 } else {
-                    bootbox.alert(data.Message);
+                    vm.resultMsg = data.Message;
+                    vm.statusError = true;
                 }
             });
         },
         deleteAll() {
             const vm = this;
+            this.resultMsg = "";
+            this.statusError = false;
             QUtils.postData('Config', 'BlacklistPasswordClear', {}, null, function (data) {
                 if (data.Success) {
-                    bootbox.alert(vm.Resources.ALTERACOES_EFETUADAS10166);
+                    vm.resultMsg = vm.Resources.ALTERACOES_EFETUADAS10166;
+                    vm.statusError = false;
                     vm.numPasswords = data.numPasswords;
                 } else {
-                    bootbox.alert(data.Message);
+                    vm.resultMsg = data.Message;
+                    vm.statusError = true;
                 }
             });
         }

@@ -18,6 +18,7 @@
 	<ContainerWidth>whole_page</ContainerWidth> <!-- whole_page, reduced -->
 	<RowActionDisplay>dropdown</RowActionDisplay> <!-- inline, dropdown -->
 	<DefaultSidebarState>opened</DefaultSidebarState> <!-- opened, closed -->
+	<ModulesStyle>dropdown</ModulesStyle> <!-- list, dropdown, collapsible -->
 	<MenuSearchEnable>true</MenuSearchEnable> <!-- true, false -->
 	<BookmarkEnable>true</BookmarkEnable> <!-- true, false -->
 	<MenuAlign>left</MenuAlign> <!-- left, right -->

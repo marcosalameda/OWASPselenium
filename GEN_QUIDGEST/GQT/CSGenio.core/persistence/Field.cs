@@ -263,7 +263,11 @@ namespace CSGenio.framework
                         return true;
                     break;
                 case FieldFormatting.LOGICO:
-                    if ((int)Qvalue == 0)
+                    //When a boolean field has a default value in the form (true or false), Qvalue is a bool (true or false).
+                    if (Qvalue is Boolean)
+                        return (bool)Qvalue == false;
+                     //When a boolean field has a default value in the table (true or false), Qvalue is an int (1 or 0).
+                    else if ((int)Qvalue == 0)
                         return true;
                     break;
                 case FieldFormatting.CARACTERES:

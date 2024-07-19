@@ -20,9 +20,9 @@ import GroupBoxContainer from '@/components/GroupBoxContainer.vue';
 // Quidgest UI
 import {
     QButton,
-    QButtonGroup,
-    QIcon
-} from '@quidgest/ui'
+	QButtonGroup,
+	QIcon
+} from '@quidgest/ui/components'
 
 export default function ComponentsInit(app) {
     // Inputs

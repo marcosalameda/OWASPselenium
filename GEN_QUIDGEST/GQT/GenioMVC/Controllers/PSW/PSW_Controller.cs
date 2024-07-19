@@ -385,6 +385,7 @@ namespace GenioMVC.Controllers
                     userFactory.ChangePassword(psw.klass, model.ValPassword, model.ValConfirmPassword);
 
                 psw.ValNome = model.ValNome;
+                psw.ValEmail = model.ValEmail;
 
                 sp.openTransaction();
 				model.flashMessage = psw.Save(sp);

@@ -109,7 +109,7 @@ namespace CSGenio.framework
         /// <summary>
         /// Solution build version
         /// </summary>
-        public const int BuildVersionGen = 2730;
+        public const int BuildVersionGen = 2731;
         /// <summary>
         /// Solution release version
         /// </summary>

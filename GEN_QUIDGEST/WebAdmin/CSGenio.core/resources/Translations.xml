@@ -108,6 +108,8 @@
   <msg id="Collapsible" code="COLLAPSIBLE33154">
     <ENUS>Collapsible</ENUS>
   </msg>
+  <msg id="Uncheck items from list -&gt; DE + DB" code="UNCHECK_ITEMS_FROM_L00165">
+  </msg>
   <msg id="Text with icon" code="TEXT_WITH_ICON41926">
     <ENUS>Text with icon</ENUS>
   </msg>
@@ -1411,6 +1413,8 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
   <msg id="Project Bonus Days" code="PROJECT_BONUS_DAYS62505">
     <ENUS>Project Bonus Days</ENUS>
   </msg>
+  <msg id="Tables" code="TABLES38578">
+  </msg>
   <msg id="  424" code="__42433617">
     <ENUS>Moeda</ENUS>
   </msg>
@@ -2114,6 +2118,8 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
   <msg id="Tipo" code="TIPO55111">
     <ENUS>Tipo</ENUS>
   </msg>
+  <msg id=" 1147" code="_114729348">
+  </msg>
   <msg id="No Disponible" code="NO_DISPONIBLE08299">
     <ENUS>No Disponible</ENUS>
   </msg>
@@ -2406,6 +2412,8 @@ No Aplica: El indicador no es aplicable al país.</ENUS>
   </msg>
   <msg id="1116" code="_111636045">
     <ENUS>Help in the Multiline field</ENUS>
+  </msg>
+  <msg id="Selection with conditions -&gt; SC+ DB" code="SELECTION_WITH_CONDI51491">
   </msg>
   <msg id="URL" code="URL05719">
     <ENUS>URL</ENUS>
@@ -3810,6 +3818,8 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id="Perc. Limite Mau" code="PERC__LIMITE_MAU13993">
     <ENUS>Perc. Limite Mau</ENUS>
   </msg>
+  <msg id="Logic - Internal people" code="LOGIC___INTERNAL_PEO26376">
+  </msg>
   <msg id="Inactivo" code="INACTIVO19228">
     <ENUS>Inactivo</ENUS>
   </msg>
@@ -4519,6 +4529,8 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id="Equipment family" code="EQUIPMENT_FAMILY41883">
     <ENUS>Equipment family</ENUS>
   </msg>
+  <msg id="List -&gt; DB" code="LIST____DB61131">
+  </msg>
   <msg id="Order (Integer field)" code="ORDER__INTEGER_FIELD38959">
     <ENUS>Order (Integer field)</ENUS>
   </msg>
@@ -4889,6 +4901,8 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id="Complete Date of Creation" code="COMPLETE_DATE_OF_CRE57046">
     <ENUS>Complete Date of Creation</ENUS>
   </msg>
+  <msg id="Equipment - 1 month until today" code="EQUIPMENT___1_MONTH_48623">
+  </msg>
   <msg id="  320" code="__32021092">
     <ENUS>Documento</ENUS>
   </msg>
@@ -5189,6 +5203,8 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   </msg>
   <msg id="Organização" code="ORGANIZACAO47877">
     <ENUS>Organização</ENUS>
+  </msg>
+  <msg id="Selection between limits -&gt; SE + DB" code="SELECTION_BETWEEN_LI08710">
   </msg>
   <msg id="Acompanhamento" code="ACOMPANHAMENTO53507">
     <ENUS>Acompanhamento</ENUS>
@@ -5696,6 +5712,8 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
   <msg id="Equipment decommission" code="EQUIPMENT_DECOMMISSI11875">
     <ENUS>Equipment decommission</ENUS>
   </msg>
+  <msg id="New Menu" code="NEW_MENU31759">
+  </msg>
   <msg id="Add Points Activities" code="ADD_POINTS_ACTIVITIE57884">
     <ENUS>Add Points Activities</ENUS>
   </msg>
@@ -5724,6 +5742,8 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
   </msg>
   <msg id="Label" code="LABEL27729">
     <ENUS>Label</ENUS>
+  </msg>
+  <msg id="Specific buttons -&gt; DB + MB + F" code="SPECIFIC_BUTTONS____08735">
   </msg>
   <msg id="Alert Perc." code="ALERT_PERC_15762">
     <ENUS>Alert Perc.</ENUS>
@@ -5982,6 +6002,8 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
   </msg>
   <msg id="Periodicidades de Recolha" code="PERIODICIDADES_DE_RE37021">
     <ENUS>Periodicidades de Recolha</ENUS>
+  </msg>
+  <msg id="Action button - Edit" code="ACTION_BUTTON___EDIT46455">
   </msg>
   <msg id="Cellphone" code="CELLPHONE19585">
     <ENUS>Cellphone</ENUS>
@@ -6302,6 +6324,8 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</ENUS>
   </msg>
   <msg id="123456789" code="_12345678953785">
     <ENUS>123456789</ENUS>
+  </msg>
+  <msg id="Visualization form -&gt; F" code="VISUALIZATION_FORM__35976">
   </msg>
   <msg id="Postal &amp; Physical" code="POSTAL___PHYSICAL44710">
     <ENUS>Postal &amp; Physical</ENUS>
@@ -6719,6 +6743,8 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</ENUS>
   </msg>
   <msg id="&gt;&gt;LOGIN" code="__LOGIN09030">
     <ENUS>&gt;&gt;LOGIN</ENUS>
+  </msg>
+  <msg id="Specific path with conditions -&gt; DB + MB + MC + F " code="SPECIFIC_PATH_WITH_C05040">
   </msg>
   <msg id="Sigla da UO" code="SIGLA_DA_UO63728">
     <ENUS>Sigla da UO</ENUS>
@@ -7293,6 +7319,8 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   <msg id="Product identification" code="PRODUCT_IDENTIFICATI25169">
     <ENUS>Product identification</ENUS>
   </msg>
+  <msg id="Mark items from list to -&gt; DE + DB" code="MARK_ITEMS_FROM_LIST48680">
+  </msg>
   <msg id="Pontos Meta" code="PONTOS_META23523">
     <ENUS>Pontos Meta</ENUS>
   </msg>
@@ -7495,6 +7523,8 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   <msg id="Limite Superado" code="LIMITE_SUPERADO31240">
     <ENUS>Limite Superado</ENUS>
   </msg>
+  <msg id="Specific path with conditions -&gt; DB + MC + F" code="SPECIFIC_PATH_WITH_C16597">
+  </msg>
   <msg id="   90" code="___9011631">
     <ENUS>Default values for the lower limit of the reference interval for any and all targets, as a percentage of the target itself. The aim is to draw the target for each and every goal in abstract form, in order to limit the reference range for evaluating the various levels of assessment and achievement.</ENUS>
   </msg>
@@ -7509,6 +7539,8 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   </msg>
   <msg id="For returning" code="FOR_RETURNING61907">
     <ENUS>For returning</ENUS>
+  </msg>
+  <msg id="User Management -&gt; UM" code="USER_MANAGEMENT____U27995">
   </msg>
   <msg id="Visits" code="VISITS33669">
     <ENUS>Visits</ENUS>
@@ -7657,6 +7689,8 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   </msg>
   <msg id="Period Start" code="PERIOD_START07901">
     <ENUS>Period Start</ENUS>
+  </msg>
+  <msg id="Multiple Select List -&gt; DM" code="MULTIPLE_SELECT_LIST24097">
   </msg>
   <msg id="Alerts" code="ALERTS30407">
     <ENUS>Alerts</ENUS>
@@ -7842,6 +7876,8 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   <msg id="Dispatched" code="DISPATCHED04380">
     <ENUS>Dispatched</ENUS>
   </msg>
+  <msg id="N:N List -&gt; DC + DB" code="N_N_LIST____DC___DB06204">
+  </msg>
   <msg id="REPAIRS" code="REPAIRS42202">
     <ENUS>REPAIRS</ENUS>
   </msg>
@@ -7896,6 +7932,8 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="Previous Year" code="PREVIOUS_YEAR22440">
     <ENUS>Previous Year</ENUS>
   </msg>
+  <msg id="Manual routine -&gt; DM + MB + R" code="MANUAL_ROUTINE____DM59547">
+  </msg>
   <msg id="Estado do processo" code="ESTADO_DO_PROCESSO07540">
     <ENUS>Estado do processo</ENUS>
   </msg>
@@ -7948,6 +7986,8 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   </msg>
   <msg id="leader no." code="LEADER_NO_11905">
     <ENUS>leader no.</ENUS>
+  </msg>
+  <msg id="Enum - Female people" code="ENUM___FEMALE_PEOPLE19941">
   </msg>
   <msg id="c-groupbox--title-background" code="C_GROUPBOX__TITLE_BA24563">
   </msg>
@@ -8091,6 +8131,8 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   </msg>
   <msg id="Is prepared" code="IS_PREPARED16113">
     <ENUS>Is prepared</ENUS>
+  </msg>
+  <msg id="Report -&gt; DB + L" code="REPORT____DB___L44238">
   </msg>
   <msg id="group1" code="GROUP103820">
   </msg>
@@ -16198,6 +16240,21 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   </msg>
   <msg id="Password vulnerável a listas de passwords conhecidas" code="PASSWORD_VULNERAVEL_00083">
     <ENUS>Password vulnerable to leaked password lists</ENUS>
+  </msg>
+  <msg id="Mostrar alterações" code="MOSTRAR_ALTERACOES47173">
+    <ENUS>Show changes</ENUS>
+  </msg>
+  <msg id="Escuro" code="ESCURO16457">
+    <ENUS>Dark</ENUS>
+  </msg>
+  <msg id="Claro" code="CLARO60841">
+    <ENUS>Light</ENUS>
+  </msg>
+  <msg id="Tema" code="TEMA56931">
+    <ENUS>Theme</ENUS>
+  </msg>
+  <msg id="Escreva o seu código aqui..." code="ESCREVA_O_SEU_CODIGO16246">
+    <ENUS>Write your code here...</ENUS>
   </msg>
   <msg id="O campo {0} tem um endereço inválido." code="O_CAMPO__0__TEM_UM_E13294">
     <ENUS>Field &#123;0&#125; has an invalid address.</ENUS>

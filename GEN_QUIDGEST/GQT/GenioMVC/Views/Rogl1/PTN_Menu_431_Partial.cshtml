@@ -1,0 +1,109 @@
+﻿@model GenioMVC.ViewModels.Rogl1.PTN_Menu_431_ViewModel
+@using Newtonsoft.Json;
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@using GenioMVC.ViewModels.Rogl1;    
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Rogl1>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodrogl1, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_431_ROGL1_TITLE]/
+		column.Expression(p => p.ValTitle).Title(@Resources.TITLE21885).Field("ValTitle").Size(30);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Rogl1")
+        .Id("PTN_Menu_431")
+        .AjaxRequest("Menu")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .DBEdit()
+        .Filters(this.Model.Menu.Filters)
+        .Form("Rogl1", false, false)
+        .SetFollowUp("PTN_Menu_4311", "Roigf" , (Func<GenioMVC.Models.Rogl1, object>)(item => new { rogl1 = item.ValCodrogl1 }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
+        .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
+		;
+        
+}
+
+@tbl.ToHtml()
+
+
+<script>
+ 
+ 
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qPTN_Menu_431, #PTN_Menu_431_complex_filter th input, #PTN_Menu_431_filters input").change(function() {
+                    $("#pPTN_Menu_431").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#PTN_Menu_431_tableFilters').val(false);")
+                    @Html.Raw("$('#PTN_Menu_431_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#PTN_Menu_431_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $("[data-form='PTN_Menu_431']").submit();
+                    @:      event.preventDefault();
+                    @:      ClearSearchBox('qPTN_Menu_431');
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#PTN_Menu_431_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_PTN_Menu_431').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+                 @if (this.Model.Menu.Filters.FiltersValues.Count >= 1) {
+                    var activeFields = Newtonsoft.Json.JsonConvert.SerializeObject(this.Model.Menu.Filters.FiltersValues);
+                    @: SetActiveFilters('PTN_Menu_431', 'ROGL1', @Html.Raw(activeFields))
+                  }
+
+
+                setupHistoryClicks()
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='Menu']"));
+                    InitSpecialControls($('#Menu'));
+                    $('#Menu').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS PTN_MENU_431]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+// USE /[MANUAL GQT LISTING_CODEJS PTN_MENU_431]/
+</script>

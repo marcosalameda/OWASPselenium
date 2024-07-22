@@ -225,6 +225,9 @@
 	<data name="COLLAPSIBLE33154" xml:space="preserve">
 		<value>Collapsible</value>
 	</data>
+	<data name="UNCHECK_ITEMS_FROM_L00165" xml:space="preserve">
+		<value>Uncheck items from list -&gt; DE + DB</value>
+	</data>
 	<data name="TEXT_WITH_ICON41926" xml:space="preserve">
 		<value>Text with icon</value>
 	</data>
@@ -1540,6 +1543,9 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
 	<data name="PROJECT_BONUS_DAYS62505" xml:space="preserve">
 		<value>Project Bonus Days</value>
 	</data>
+	<data name="TABLES38578" xml:space="preserve">
+		<value>Tables</value>
+	</data>
 	<data name="__42433617" xml:space="preserve">
 		<value>Moeda</value>
 	</data>
@@ -2248,6 +2254,9 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
 	<data name="TIPO55111" xml:space="preserve">
 		<value>Tipo</value>
 	</data>
+	<data name="_114729348" xml:space="preserve">
+		<value>This menu allows you to delete rows in a multiple-select list</value>
+	</data>
 	<data name="NO_DISPONIBLE08299" xml:space="preserve">
 		<value>No Disponible</value>
 	</data>
@@ -2542,6 +2551,9 @@ No Aplica: El indicador no es aplicable al país.</value>
 	</data>
 	<data name="_111636045" xml:space="preserve">
 		<value>Help in the Multiline field</value>
+	</data>
+	<data name="SELECTION_WITH_CONDI51491" xml:space="preserve">
+		<value>Selection with conditions -&gt; SC+ DB</value>
 	</data>
 	<data name="URL05719" xml:space="preserve">
 		<value>URL</value>
@@ -3957,6 +3969,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="PERC__LIMITE_MAU13993" xml:space="preserve">
 		<value>Perc. Limite Mau</value>
 	</data>
+	<data name="LOGIC___INTERNAL_PEO26376" xml:space="preserve">
+		<value>Logic - Internal people</value>
+	</data>
 	<data name="INACTIVO19228" xml:space="preserve">
 		<value>Inactivo</value>
 	</data>
@@ -4671,6 +4686,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="EQUIPMENT_FAMILY41883" xml:space="preserve">
 		<value>Equipment family</value>
 	</data>
+	<data name="LIST____DB61131" xml:space="preserve">
+		<value>List -&gt; DB</value>
+	</data>
 	<data name="ORDER__INTEGER_FIELD38959" xml:space="preserve">
 		<value>Order (Integer field)</value>
 	</data>
@@ -5050,6 +5068,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="COMPLETE_DATE_OF_CRE57046" xml:space="preserve">
 		<value>Complete Date of Creation</value>
 	</data>
+	<data name="EQUIPMENT___1_MONTH_48623" xml:space="preserve">
+		<value>Equipment - 1 month until today</value>
+	</data>
 	<data name="__32021092" xml:space="preserve">
 		<value>Documento</value>
 	</data>
@@ -5352,6 +5373,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	</data>
 	<data name="ORGANIZACAO47877" xml:space="preserve">
 		<value>Organização</value>
+	</data>
+	<data name="SELECTION_BETWEEN_LI08710" xml:space="preserve">
+		<value>Selection between limits -&gt; SE + DB</value>
 	</data>
 	<data name="ACOMPANHAMENTO53507" xml:space="preserve">
 		<value>Acompanhamento</value>
@@ -5868,6 +5892,9 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
 	<data name="EQUIPMENT_DECOMMISSI11875" xml:space="preserve">
 		<value>Equipment decommission</value>
 	</data>
+	<data name="NEW_MENU31759" xml:space="preserve">
+		<value>New Menu</value>
+	</data>
 	<data name="ADD_POINTS_ACTIVITIE57884" xml:space="preserve">
 		<value>Add Points Activities</value>
 	</data>
@@ -5897,6 +5924,9 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
 	</data>
 	<data name="LABEL27729" xml:space="preserve">
 		<value>Label</value>
+	</data>
+	<data name="SPECIFIC_BUTTONS____08735" xml:space="preserve">
+		<value>Specific buttons -&gt; DB + MB + F</value>
 	</data>
 	<data name="ALERT_PERC_15762" xml:space="preserve">
 		<value>Alert Perc.</value>
@@ -6161,6 +6191,9 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
 	</data>
 	<data name="PERIODICIDADES_DE_RE37021" xml:space="preserve">
 		<value>Periodicidades de Recolha</value>
+	</data>
+	<data name="ACTION_BUTTON___EDIT46455" xml:space="preserve">
+		<value>Action button - Edit</value>
 	</data>
 	<data name="CELLPHONE19585" xml:space="preserve">
 		<value>Cellphone</value>
@@ -6484,6 +6517,9 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</value>
 	</data>
 	<data name="_12345678953785" xml:space="preserve">
 		<value>123456789</value>
+	</data>
+	<data name="VISUALIZATION_FORM__35976" xml:space="preserve">
+		<value>Visualization form -&gt; F</value>
 	</data>
 	<data name="POSTAL___PHYSICAL44710" xml:space="preserve">
 		<value>Postal &amp; Physical</value>
@@ -6904,6 +6940,9 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</value>
 	</data>
 	<data name="__LOGIN09030" xml:space="preserve">
 		<value>&gt;&gt;LOGIN</value>
+	</data>
+	<data name="SPECIFIC_PATH_WITH_C05040" xml:space="preserve">
+		<value>Specific path with conditions -&gt; DB + MB + MC + F </value>
 	</data>
 	<data name="SIGLA_DA_UO63728" xml:space="preserve">
 		<value>Sigla da UO</value>
@@ -7490,6 +7529,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
 	<data name="PRODUCT_IDENTIFICATI25169" xml:space="preserve">
 		<value>Product identification</value>
 	</data>
+	<data name="MARK_ITEMS_FROM_LIST48680" xml:space="preserve">
+		<value>Mark items from list to -&gt; DE + DB</value>
+	</data>
 	<data name="PONTOS_META23523" xml:space="preserve">
 		<value>Pontos Meta</value>
 	</data>
@@ -7697,6 +7739,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
 	<data name="LIMITE_SUPERADO31240" xml:space="preserve">
 		<value>Limite Superado</value>
 	</data>
+	<data name="SPECIFIC_PATH_WITH_C16597" xml:space="preserve">
+		<value>Specific path with conditions -&gt; DB + MC + F</value>
+	</data>
 	<data name="___9011631" xml:space="preserve">
 		<value>Default values for the lower limit of the reference interval for any and all targets, as a percentage of the target itself. The aim is to draw the target for each and every goal in abstract form, in order to limit the reference range for evaluating the various levels of assessment and achievement.</value>
 	</data>
@@ -7711,6 +7756,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
 	</data>
 	<data name="FOR_RETURNING61907" xml:space="preserve">
 		<value>For returning</value>
+	</data>
+	<data name="USER_MANAGEMENT____U27995" xml:space="preserve">
+		<value>User Management -&gt; UM</value>
 	</data>
 	<data name="VISITS33669" xml:space="preserve">
 		<value>Visits</value>
@@ -7861,6 +7909,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
 	</data>
 	<data name="PERIOD_START07901" xml:space="preserve">
 		<value>Period Start</value>
+	</data>
+	<data name="MULTIPLE_SELECT_LIST24097" xml:space="preserve">
+		<value>Multiple Select List -&gt; DM</value>
 	</data>
 	<data name="ALERTS30407" xml:space="preserve">
 		<value>Alerts</value>
@@ -8048,6 +8099,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
 	<data name="DISPATCHED04380" xml:space="preserve">
 		<value>Dispatched</value>
 	</data>
+	<data name="N_N_LIST____DC___DB06204" xml:space="preserve">
+		<value>N:N List -&gt; DC + DB</value>
+	</data>
 	<data name="REPAIRS42202" xml:space="preserve">
 		<value>REPAIRS</value>
 	</data>
@@ -8104,6 +8158,9 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</valu
 	<data name="PREVIOUS_YEAR22440" xml:space="preserve">
 		<value>Previous Year</value>
 	</data>
+	<data name="MANUAL_ROUTINE____DM59547" xml:space="preserve">
+		<value>Manual routine -&gt; DM + MB + R</value>
+	</data>
 	<data name="ESTADO_DO_PROCESSO07540" xml:space="preserve">
 		<value>Estado do processo</value>
 	</data>
@@ -8157,6 +8214,9 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</valu
 	</data>
 	<data name="LEADER_NO_11905" xml:space="preserve">
 		<value>leader no.</value>
+	</data>
+	<data name="ENUM___FEMALE_PEOPLE19941" xml:space="preserve">
+		<value>Enum - Female people</value>
 	</data>
 	<data name="C_GROUPBOX__TITLE_BA24563" xml:space="preserve">
 		<value>c-groupbox--title-background</value>
@@ -8314,6 +8374,9 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</valu
 	</data>
 	<data name="IS_PREPARED16113" xml:space="preserve">
 		<value>Is prepared</value>
+	</data>
+	<data name="REPORT____DB___L44238" xml:space="preserve">
+		<value>Report -&gt; DB + L</value>
 	</data>
 	<data name="GROUP103820" xml:space="preserve">
 		<value>group1</value>
@@ -16440,6 +16503,21 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</valu
 	</data>
 	<data name="PASSWORD_VULNERAVEL_00083" xml:space="preserve">
 		<value>Password vulnerable to leaked password lists</value>
+	</data>
+	<data name="MOSTRAR_ALTERACOES47173" xml:space="preserve">
+		<value>Show changes</value>
+	</data>
+	<data name="ESCURO16457" xml:space="preserve">
+		<value>Dark</value>
+	</data>
+	<data name="CLARO60841" xml:space="preserve">
+		<value>Light</value>
+	</data>
+	<data name="TEMA56931" xml:space="preserve">
+		<value>Theme</value>
+	</data>
+	<data name="ESCREVA_O_SEU_CODIGO16246" xml:space="preserve">
+		<value>Write your code here...</value>
 	</data>
 	<data name="O_CAMPO__0__TEM_UM_E13294" xml:space="preserve">
 		<value>Field &#123;0&#125; has an invalid address.</value>

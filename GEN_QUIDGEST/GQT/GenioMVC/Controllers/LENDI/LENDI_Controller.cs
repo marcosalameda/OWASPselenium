@@ -156,13 +156,13 @@ namespace GenioMVC.Controllers
 		{
 			CSGenio.business.Area area = CSGenio.business.Area.createArea("lendi", UserContext.Current.User, UserContext.Current.User.CurrentModule);
 			NameValueCollection parameters;
-			PTN_Menu_1211_ViewModel model = new PTN_Menu_1211_ViewModel(Navigation);
+			PTN_Menu_3E1_ViewModel model = new PTN_Menu_3E1_ViewModel(Navigation);
 			
 			//Fetch and format the parameters
 			if (queryParams != null && queryParams.Count() > 0)
 				parameters = FormatQueryString(queryParams);
 			else
-				parameters = this.Navigation.GetValue<NameValueCollection>("requestValues" + "PTN_Menu_1211");
+				parameters = this.Navigation.GetValue<NameValueCollection>("requestValues" + "PTN_Menu_3E1");
 			
 			//Get CriteriaSet
 			CriteriaSet crs = model.BuildCriteriaSet(parameters, out bool hasAllRequiredLimits);

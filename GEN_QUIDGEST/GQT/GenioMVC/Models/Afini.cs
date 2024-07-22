@@ -60,19 +60,19 @@ namespace GenioMVC.Models
 		public virtual Pess1 Pess1 { get { if (!this.isEmptyModel && (_pess1 == null || (!string.IsNullOrEmpty(ValCodpess1) && (_pess1.isEmptyModel || _pess1.klass.QPrimaryKey != ValCodpess1)))) _pess1 = Models.Pess1.Find(ValCodpess1, Identifier, _fieldsToSerialize); if (_pess1 == null) _pess1 = new Models.Pess1(true, _fieldsToSerialize); return _pess1; } set { _pess1 = value; } }
 		public bool ShouldSerializePess1 () => this.SerializeAllFields || this.FieldsToSerialize.Contains("Pess1");
 
-		[DisplayName(">DADATARY")]
-		/// <summary>Field : ">DADATARY" Tipo: "CE" Formula:  ""</summary>
+		[DisplayName(">AFFINITY GENRE")]
+		/// <summary>Field : ">AFFINITY GENRE" Tipo: "CF" Formula:  ""</summary>
+		public string ValCodgafin { get { return klass.ValCodgafin; } set { klass.ValCodgafin = value; } }
+		public bool ShouldSerializeValCodgafin() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Afini.ValCodgafin");
+
+		[DisplayName("")]
+		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public string ValCodpess2 { get { return klass.ValCodpess2; } set { klass.ValCodpess2 = value; } }
 		public bool ShouldSerializeValCodpess2() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Afini.ValCodpess2");
 		private Pess2 _pess2;
 		[DisplayName("Pess2")]
 		public virtual Pess2 Pess2 { get { if (!this.isEmptyModel && (_pess2 == null || (!string.IsNullOrEmpty(ValCodpess2) && (_pess2.isEmptyModel || _pess2.klass.QPrimaryKey != ValCodpess2)))) _pess2 = Models.Pess2.Find(ValCodpess2, Identifier, _fieldsToSerialize); if (_pess2 == null) _pess2 = new Models.Pess2(true, _fieldsToSerialize); return _pess2; } set { _pess2 = value; } }
 		public bool ShouldSerializePess2 () => this.SerializeAllFields || this.FieldsToSerialize.Contains("Pess2");
-
-		[DisplayName(">AFFINITY GENRE")]
-		/// <summary>Field : ">AFFINITY GENRE" Tipo: "CF" Formula:  ""</summary>
-		public string ValCodgafin { get { return klass.ValCodgafin; } set { klass.ValCodgafin = value; } }
-		public bool ShouldSerializeValCodgafin() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Afini.ValCodgafin");
 
 		[DisplayName("ZZSTATE")]
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>

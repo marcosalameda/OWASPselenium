@@ -1,0 +1,114 @@
+﻿@model GenioMVC.ViewModels.Equip.PTN_Menu_341_ViewModel
+@using Newtonsoft.Json;
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Equip>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodequip, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_341_EQUIP_DESIGNAT]/
+		column.Expression(p => p.ValDesignat).Title(@Resources.DESIGNATION35876).Field("ValDesignat").Size(30);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Equip")
+        .Id("PTN_Menu_341")
+        .AjaxRequest("PTN_Menu_341_Container")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .DBEdit()
+        .DEF_MultipleSelection()
+        .Filters(this.Model.Menu.Filters)
+        .Permissions(canView: false, canInsert: false, canEdit: false, canDelete: false, canDuplicate: false)
+		;
+        
+}
+
+@tbl.ToHtml()
+
+
+<script>
+ 
+ 
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qPTN_Menu_341, #PTN_Menu_341_complex_filter th input, #PTN_Menu_341_filters input").change(function() {
+                    $("#pPTN_Menu_341").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#PTN_Menu_341_tableFilters').val(false);")
+                    @Html.Raw("$('#PTN_Menu_341_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#PTN_Menu_341_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $("[data-form='PTN_Menu_341']").submit();
+                    @:      event.preventDefault();
+                    @:      ClearSearchBox('qPTN_Menu_341');
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#PTN_Menu_341_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_PTN_Menu_341').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+                 @if (this.Model.Menu.Filters.FiltersValues.Count >= 1) {
+                    var activeFields = Newtonsoft.Json.JsonConvert.SerializeObject(this.Model.Menu.Filters.FiltersValues);
+                    @: SetActiveFilters('PTN_Menu_341', 'EQUIP', @Html.Raw(activeFields))
+                  }
+
+
+                setupHistoryClicks()
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='Menu']"));
+                    InitSpecialControls($('#Menu'));
+                    $('#Menu').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                    $(document).trigger('PTN_Menu_341_FirstTabInit');
+
+
+                    const selectedRecordsText = $('.selected-records-text');
+                    btnPopover("", "@Resources.MOVER_OS_REGISTROS_S04579: <b>Rooms</b>", selectedRecordsText);
+                    const popoverBtn = selectedRecordsText.children();
+                    popoverBtn.popover(); //re-enables the popover
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS PTN_MENU_341]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+// USE /[MANUAL GQT LISTING_CODEJS PTN_MENU_341]/
+</script>

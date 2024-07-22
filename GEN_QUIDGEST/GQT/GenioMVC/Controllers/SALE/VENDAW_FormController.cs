@@ -1306,29 +1306,6 @@ namespace GenioMVC.Controllers
 			if (Request.QueryString.Get("clearData") != null)
 				clearData = Convert.ToBoolean(Request.QueryString["clearData"]);
 
-			if (isGoingBack)
-			{
-
-				if (clearData)
-				{
-					try
-					{
-						ModelState.Clear();
-
-						model = new Vendaw01_ViewModel(new Models.Sale(), Navigation);
-						model.ValCodvenda = Navigation.GetStrValue("sale");
-						model.NewLoad();
-					}
-					catch (Exception e)
-					{
-						// When removing dependencies from tables, if the records are related to other tables, an exception will be thrown.
-						// Error message: "The record with code X of the table Y has related records and can't be deleted. The related table: Z".
-						// TODO: A more profound analysis needs to be conducted, to decide if the records in those tables should also be removed, or if the removal shouldn't be possible at all.
-						CSGenio.framework.Log.Error("Vendaw_Fases_Vendaw01_Save - Error while removing record: " + e.Message);
-					}
-				}
-			}
-
 			model._Navigation.SetValue("isGoingBack", isGoingBack);
 			model._Navigation.SetValue("clearData", clearData);
 
@@ -1364,29 +1341,6 @@ namespace GenioMVC.Controllers
 			bool clearData = false;
 			if (Request.QueryString.Get("clearData") != null)
 				clearData = Convert.ToBoolean(Request.QueryString["clearData"]);
-
-			if (isGoingBack)
-			{
-
-				if (clearData)
-				{
-					try
-					{
-						ModelState.Clear();
-
-						model = new Vendaw02_ViewModel(new Models.Sale(), Navigation);
-						model.ValCodvenda = Navigation.GetStrValue("sale");
-						model.NewLoad();
-					}
-					catch (Exception e)
-					{
-						// When removing dependencies from tables, if the records are related to other tables, an exception will be thrown.
-						// Error message: "The record with code X of the table Y has related records and can't be deleted. The related table: Z".
-						// TODO: A more profound analysis needs to be conducted, to decide if the records in those tables should also be removed, or if the removal shouldn't be possible at all.
-						CSGenio.framework.Log.Error("Vendaw_Fases_Vendaw02_Save - Error while removing record: " + e.Message);
-					}
-				}
-			}
 
 			model._Navigation.SetValue("isGoingBack", isGoingBack);
 			model._Navigation.SetValue("clearData", clearData);
@@ -1424,29 +1378,6 @@ namespace GenioMVC.Controllers
 			if (Request.QueryString.Get("clearData") != null)
 				clearData = Convert.ToBoolean(Request.QueryString["clearData"]);
 
-			if (isGoingBack)
-			{
-
-				if (clearData)
-				{
-					try
-					{
-						ModelState.Clear();
-
-						model = new Vendaw03_ViewModel(new Models.Sale(), Navigation);
-						model.ValCodvenda = Navigation.GetStrValue("sale");
-						model.NewLoad();
-					}
-					catch (Exception e)
-					{
-						// When removing dependencies from tables, if the records are related to other tables, an exception will be thrown.
-						// Error message: "The record with code X of the table Y has related records and can't be deleted. The related table: Z".
-						// TODO: A more profound analysis needs to be conducted, to decide if the records in those tables should also be removed, or if the removal shouldn't be possible at all.
-						CSGenio.framework.Log.Error("Vendaw_Fases_Vendaw03_Save - Error while removing record: " + e.Message);
-					}
-				}
-			}
-
 			model._Navigation.SetValue("isGoingBack", isGoingBack);
 			model._Navigation.SetValue("clearData", clearData);
 
@@ -1482,29 +1413,6 @@ namespace GenioMVC.Controllers
 			bool clearData = false;
 			if (Request.QueryString.Get("clearData") != null)
 				clearData = Convert.ToBoolean(Request.QueryString["clearData"]);
-
-			if (isGoingBack)
-			{
-
-				if (clearData)
-				{
-					try
-					{
-						ModelState.Clear();
-
-						model = new Vendaw04_ViewModel(new Models.Sale(), Navigation);
-						model.ValCodvenda = Navigation.GetStrValue("sale");
-						model.NewLoad();
-					}
-					catch (Exception e)
-					{
-						// When removing dependencies from tables, if the records are related to other tables, an exception will be thrown.
-						// Error message: "The record with code X of the table Y has related records and can't be deleted. The related table: Z".
-						// TODO: A more profound analysis needs to be conducted, to decide if the records in those tables should also be removed, or if the removal shouldn't be possible at all.
-						CSGenio.framework.Log.Error("Vendaw_Fases_Vendaw04_Save - Error while removing record: " + e.Message);
-					}
-				}
-			}
 
 			model._Navigation.SetValue("isGoingBack", isGoingBack);
 			model._Navigation.SetValue("clearData", clearData);
@@ -1542,29 +1450,6 @@ namespace GenioMVC.Controllers
 			if (Request.QueryString.Get("clearData") != null)
 				clearData = Convert.ToBoolean(Request.QueryString["clearData"]);
 
-			if (isGoingBack)
-			{
-
-				if (clearData)
-				{
-					try
-					{
-						ModelState.Clear();
-
-						model = new Vendaw05_ViewModel(new Models.Sale(), Navigation);
-						model.ValCodvenda = Navigation.GetStrValue("sale");
-						model.NewLoad();
-					}
-					catch (Exception e)
-					{
-						// When removing dependencies from tables, if the records are related to other tables, an exception will be thrown.
-						// Error message: "The record with code X of the table Y has related records and can't be deleted. The related table: Z".
-						// TODO: A more profound analysis needs to be conducted, to decide if the records in those tables should also be removed, or if the removal shouldn't be possible at all.
-						CSGenio.framework.Log.Error("Vendaw_Fases_Vendaw05_Save - Error while removing record: " + e.Message);
-					}
-				}
-			}
-
 			model._Navigation.SetValue("isGoingBack", isGoingBack);
 			model._Navigation.SetValue("clearData", clearData);
 
@@ -1600,29 +1485,6 @@ namespace GenioMVC.Controllers
 			bool clearData = false;
 			if (Request.QueryString.Get("clearData") != null)
 				clearData = Convert.ToBoolean(Request.QueryString["clearData"]);
-
-			if (isGoingBack)
-			{
-
-				if (clearData)
-				{
-					try
-					{
-						ModelState.Clear();
-
-						model = new Vendaw06_ViewModel(new Models.Sale(), Navigation);
-						model.ValCodvenda = Navigation.GetStrValue("sale");
-						model.NewLoad();
-					}
-					catch (Exception e)
-					{
-						// When removing dependencies from tables, if the records are related to other tables, an exception will be thrown.
-						// Error message: "The record with code X of the table Y has related records and can't be deleted. The related table: Z".
-						// TODO: A more profound analysis needs to be conducted, to decide if the records in those tables should also be removed, or if the removal shouldn't be possible at all.
-						CSGenio.framework.Log.Error("Vendaw_Fases_Vendaw06_Save - Error while removing record: " + e.Message);
-					}
-				}
-			}
 
 			model._Navigation.SetValue("isGoingBack", isGoingBack);
 			model._Navigation.SetValue("clearData", clearData);
@@ -1660,29 +1522,6 @@ namespace GenioMVC.Controllers
 			if (Request.QueryString.Get("clearData") != null)
 				clearData = Convert.ToBoolean(Request.QueryString["clearData"]);
 
-			if (isGoingBack)
-			{
-
-				if (clearData)
-				{
-					try
-					{
-						ModelState.Clear();
-
-						model = new Vendaw07_ViewModel(new Models.Sale(), Navigation);
-						model.ValCodvenda = Navigation.GetStrValue("sale");
-						model.NewLoad();
-					}
-					catch (Exception e)
-					{
-						// When removing dependencies from tables, if the records are related to other tables, an exception will be thrown.
-						// Error message: "The record with code X of the table Y has related records and can't be deleted. The related table: Z".
-						// TODO: A more profound analysis needs to be conducted, to decide if the records in those tables should also be removed, or if the removal shouldn't be possible at all.
-						CSGenio.framework.Log.Error("Vendaw_Fases_Vendaw07_Save - Error while removing record: " + e.Message);
-					}
-				}
-			}
-
 			model._Navigation.SetValue("isGoingBack", isGoingBack);
 			model._Navigation.SetValue("clearData", clearData);
 
@@ -1718,29 +1557,6 @@ namespace GenioMVC.Controllers
 			bool clearData = false;
 			if (Request.QueryString.Get("clearData") != null)
 				clearData = Convert.ToBoolean(Request.QueryString["clearData"]);
-
-			if (isGoingBack)
-			{
-
-				if (clearData)
-				{
-					try
-					{
-						ModelState.Clear();
-
-						model = new Vendaw08_ViewModel(new Models.Sale(), Navigation);
-						model.ValCodvenda = Navigation.GetStrValue("sale");
-						model.NewLoad();
-					}
-					catch (Exception e)
-					{
-						// When removing dependencies from tables, if the records are related to other tables, an exception will be thrown.
-						// Error message: "The record with code X of the table Y has related records and can't be deleted. The related table: Z".
-						// TODO: A more profound analysis needs to be conducted, to decide if the records in those tables should also be removed, or if the removal shouldn't be possible at all.
-						CSGenio.framework.Log.Error("Vendaw_Fases_Vendaw08_Save - Error while removing record: " + e.Message);
-					}
-				}
-			}
 
 			model._Navigation.SetValue("isGoingBack", isGoingBack);
 			model._Navigation.SetValue("clearData", clearData);

@@ -26,6 +26,8 @@ namespace GenioMVC.Controllers
 		#region NavigationLocation Names
 
 		private static readonly NavigationLocation ACTION_LSTUSR_EDIT = new NavigationLocation("LISTA_DE_UTILIZADORE37232", "ChangeListProperties", "Home");
+		private static readonly NavigationLocation ACTION_PEOPLE_SHOW = new NavigationLocation("CONSULTA40695", "People_Show", "Home")  { vueRouteName = "form-PEOPLE", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_PEOPLE_EDIT = new NavigationLocation("EDITAR11616", "People_Edit", "Home")  { vueRouteName = "form-PEOPLE", mode = "EDIT" };
 
 		#endregion
 
@@ -181,6 +183,99 @@ namespace GenioMVC.Controllers
 		}
 
 
+		#region Form Methods -> People ()
+
+		// GET: /Home/People_Show
+		[AuthorizeForUsers]
+		public ActionResult People_Show()
+		{
+			var qs = Request.QueryString;
+			var nestedForm = qs["nestedForm"] == "true";
+			var model = new People_ViewModel(Navigation, nestedForm);
+			CSGenio.framework.StatusMessage permission = model.CheckPermissions(FormMode.Show);
+			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
+			ViewBag.isHomePage = isHomePage;
+			if (isHomePage)
+				Navigation.SetValue("HomePage", "People");
+			if (permission.Status.Equals(CSGenio.framework.Status.E))
+			{
+				if (!Request.IsAjaxRequest() && !isHomePage)
+					return View("_PermissionError", model: permission.Message);
+				else
+					return PartialView("_PermissionError", model: permission.Message);
+			}
+
+			if (!isHomePage && IsNewLocation(ACTION_PEOPLE_SHOW))
+				Navigation.AddHistoryLevel(ACTION_PEOPLE_SHOW.SetRoutedValues(new { m = Request.QueryString["m"] }), FormMode.Show, nestedForm);
+			// Audit
+			CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.FORM54242 + " " + ACTION_PEOPLE_SHOW.ShortDescription());
+
+// USE /[MANUAL GQT BEFORE_LOAD_SHOW PEOPLE]/
+
+			model.Load(qs);
+
+// USE /[MANUAL GQT AFTER_LOAD_SHOW PEOPLE]/
+
+			if (!Request.IsAjaxRequest() && !isHomePage)
+				return View("People", model);
+			else
+				return PartialView("People", model);
+		}
+
+		// GET: /Home/People_Edit
+		[AuthorizeForUsers]
+		public ActionResult People_Edit()
+		{
+			var qs = Request.QueryString;
+			var nestedForm = qs["nestedForm"] == "true";
+			var model = new People_ViewModel(Navigation, nestedForm);
+			CSGenio.framework.StatusMessage permission = model.CheckPermissions(FormMode.Edit);
+			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
+			ViewBag.isHomePage = isHomePage;
+			if (isHomePage)
+				Navigation.SetValue("HomePage", "People");
+
+			if (!isHomePage && IsNewLocation(ACTION_PEOPLE_EDIT))
+				Navigation.AddHistoryLevel(ACTION_PEOPLE_EDIT.SetRoutedValues(new { m = Request.QueryString["m"] }), FormMode.Show, nestedForm);
+			// Audit
+			CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.FORM54242 + " " + ACTION_PEOPLE_EDIT.ShortDescription());
+
+// USE /[MANUAL GQT BEFORE_LOAD_EDIT PEOPLE]/
+
+			model.Load(qs);
+
+// USE /[MANUAL GQT AFTER_LOAD_EDIT PEOPLE]/
+
+			return JsonOK(model);
+		}
+
+		//
+		// GET: /Home/People_Cancel
+// USE /[MANUAL GQT CONTROLLER_CANCEL_GET PEOPLE]/
+		[AuthorizeForUsers]
+		public ActionResult People_Cancel()
+		{
+			return JsonOK(new { Success = true });
+		}
+
+		//
+		// GET: /Home/People_ValPeoplels
+		// POST: /Home/People_ValPeoplels
+		[AuthorizeForUsers]
+		[ActionName("People_ValPeoplels")]
+		public ActionResult People_ValPeoplels()
+		{
+			NameValueCollection requestValues = Request.Unvalidated.Form.Count > 0 ? Request.Unvalidated.Form : Request.QueryString; //TSX (01.07.2020) Can not access directly to the FormCollection or made Request.Form otherwise the tags on viewmodel will be ignored
+
+			People_ValPeoplels_ViewModel model = new People_ValPeoplels_ViewModel(Navigation);
+
+
+			model.Load(2, requestValues, Request.IsAjaxRequest());
+
+			return PartialView("People_ValPeoplels", model);
+		}
+
+		#endregion
 
 		private void recreateUser()
 		{

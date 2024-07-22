@@ -85,21 +85,22 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codpess2", FieldType.CHAVE_ESTRANGEIRA_GUID);
-			Qfield.FieldDescription = ">DADATARY";
-			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
-			Qfield.CavDesignation = "_DADATARY21139";
-
-			Qfield.Dupmsg = "";
-			info.RegisterFieldDB(Qfield);
-
-			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field("codgafin", FieldType.CHAVE_FALSA_GUID);
 			Qfield.FieldDescription = ">AFFINITY GENRE";
 			Qfield.FieldSize =  36;
 			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "_AFFINITY_GENRE64973";
+
+			Qfield.Dupmsg = "";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field("codpess2", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield.FieldDescription = "";
+			Qfield.FieldSize =  36;
+			Qfield.Alias = info.Alias;
+			Qfield.MQueue = false;
+			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -135,12 +136,12 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(6);
-			info.Pathways.Add("pess1","pess1");
 			info.Pathways.Add("pess2","pess2");
-			info.Pathways.Add("stake","pess1");
+			info.Pathways.Add("pess1","pess1");
+			info.Pathways.Add("stake","pess2");
+			info.Pathways.Add("cmpny","pess2");
+			info.Pathways.Add("cntry","pess2");
 			info.Pathways.Add("cate2","pess1");
-			info.Pathways.Add("cmpny","pess1");
-			info.Pathways.Add("cntry","pess1");
 		}
 
 		/// <summary>
@@ -326,18 +327,6 @@ namespace CSGenio.business
 		}
 
 
-		/// <summary>Field : ">DADATARY" Tipo: "CE" Formula:  ""</summary>
-		public static FieldRef FldCodpess2 { get { return m_fldCodpess2; } }
-		private static FieldRef m_fldCodpess2 = new FieldRef("afini", "codpess2");
-
-		/// <summary>Field : ">DADATARY" Tipo: "CE" Formula:  ""</summary>
-		public string ValCodpess2
-		{
-			get { return (string)returnValueField(FldCodpess2); }
-			set { insertNameValueField(FldCodpess2, value); }
-		}
-
-
 		/// <summary>Field : ">AFFINITY GENRE" Tipo: "CF" Formula:  ""</summary>
 		public static FieldRef FldCodgafin { get { return m_fldCodgafin; } }
 		private static FieldRef m_fldCodgafin = new FieldRef("afini", "codgafin");
@@ -347,6 +336,18 @@ namespace CSGenio.business
 		{
 			get { return (string)returnValueField(FldCodgafin); }
 			set { insertNameValueField(FldCodgafin, value); }
+		}
+
+
+		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
+		public static FieldRef FldCodpess2 { get { return m_fldCodpess2; } }
+		private static FieldRef m_fldCodpess2 = new FieldRef("afini", "codpess2");
+
+		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
+		public string ValCodpess2
+		{
+			get { return (string)returnValueField(FldCodpess2); }
+			set { insertNameValueField(FldCodpess2, value); }
 		}
 
 

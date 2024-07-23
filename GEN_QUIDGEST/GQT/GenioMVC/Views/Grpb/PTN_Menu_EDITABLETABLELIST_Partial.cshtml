@@ -1,4 +1,4 @@
-﻿@model GenioMVC.ViewModels.Grpb.PTN_Menu_231_ViewModel
+﻿@model GenioMVC.ViewModels.Grpb.PTN_Menu_EDITABLETABLELIST_ViewModel
 @using Newtonsoft.Json;
 @using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
 @{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
@@ -10,13 +10,13 @@
         {
             column.Expression(p => p.ValCodgrpb, true).Hidden();
 
-// USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_231_GRPB_NAME]/
+// USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_EDITABLETABLELIST_GRPB_NAME]/
 		column.Expression(p => p.ValName).Title(@Resources.NAME31974).Field("ValName").Size(30);
             column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
         })
         .SetLimits(this.Model.tableLimits)
         .SetUserColumns(this.Model.UserColumns, "Grpb")
-        .Id("PTN_Menu_231")
+        .Id("PTN_Menu_EDITABLETABLELIST")
         .AjaxRequest("Menu")
         .DataSource(this.Model.Menu.Elements)
         .Sort(this.Model.Menu.Sort)
@@ -45,28 +45,28 @@ $(document).ready(function() {
     try {
         if (jQuery) {
             try {
-                $("#qPTN_Menu_231, #PTN_Menu_231_complex_filter th input, #PTN_Menu_231_filters input").change(function() {
-                    $("#pPTN_Menu_231").val("1");
+                $("#qPTN_Menu_EDITABLETABLELIST, #PTN_Menu_EDITABLETABLELIST_complex_filter th input, #PTN_Menu_EDITABLETABLELIST_filters input").change(function() {
+                    $("#pPTN_Menu_EDITABLETABLELIST").val("1");
                 });
                 @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
 
 
                 @if(@disable && Model.Menu.Filters.ShowTableFilters) {
-                    @Html.Raw("$('#PTN_Menu_231_tableFilters').val(false);")
-                    @Html.Raw("$('#PTN_Menu_231_simple_filter').show();")
+                    @Html.Raw("$('#PTN_Menu_EDITABLETABLELIST_tableFilters').val(false);")
+                    @Html.Raw("$('#PTN_Menu_EDITABLETABLELIST_simple_filter').show();")
                 }
                 @if (!disable) {
-                    @:$('#PTN_Menu_231_complex_filter input').keypress(function (event) {
+                    @:$('#PTN_Menu_EDITABLETABLELIST_complex_filter input').keypress(function (event) {
                     @:  var keycode = (event.keyCode ? event.keyCode : event.which);
                     @:  if(keycode == '13' || keycode == '10'){
-                    @:      $("[data-form='PTN_Menu_231']").submit();
+                    @:      $("[data-form='PTN_Menu_EDITABLETABLELIST']").submit();
                     @:      event.preventDefault();
-                    @:      ClearSearchBox('qPTN_Menu_231');
+                    @:      ClearSearchBox('qPTN_Menu_EDITABLETABLELIST');
                     @:  }
                     @:});
                 }
-                @Html.Raw("$('#PTN_Menu_231_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
-                @Html.Raw("$('#exportBtn_PTN_Menu_231').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#PTN_Menu_EDITABLETABLELIST_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_PTN_Menu_EDITABLETABLELIST').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
                 //Hide 2nd date fields
                 $("[hiddable]").hide();
                 $(".filter-date-cell *").focus(function () {
@@ -74,7 +74,7 @@ $(document).ready(function() {
                 });
                  @if (this.Model.Menu.Filters.FiltersValues.Count >= 1) {
                     var activeFields = Newtonsoft.Json.JsonConvert.SerializeObject(this.Model.Menu.Filters.FiltersValues);
-                    @: SetActiveFilters('PTN_Menu_231', 'GRPB', @Html.Raw(activeFields))
+                    @: SetActiveFilters('PTN_Menu_EDITABLETABLELIST', 'GRPB', @Html.Raw(activeFields))
                   }
 
 
@@ -94,7 +94,7 @@ $(document).ready(function() {
 
 
 
-// USE /[MANUAL GQT LISTING_JS PTN_MENU_231]/
+// USE /[MANUAL GQT LISTING_JS PTN_MENU_EDITABLETABLELIST]/
  
             } catch (err) {
                 //function still not defined, proceed
@@ -105,5 +105,5 @@ $(document).ready(function() {
         window.location.pathname = location.pathname;
     }
 })
-// USE /[MANUAL GQT LISTING_CODEJS PTN_MENU_231]/
+// USE /[MANUAL GQT LISTING_CODEJS PTN_MENU_EDITABLETABLELIST]/
 </script>

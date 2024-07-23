@@ -29,25 +29,25 @@ namespace GenioMVC.Controllers
     public partial class GrpbController : ControllerBase
     {
         #region NavigationLocation Names
-		private static readonly NavigationLocation ACTION_PTN_MENU_231 = new NavigationLocation("GROUPS__BASIC_25795", "PTN_Menu_231", "Grpb") { vueRouteName = "menu-PTN_231" };
+		private static readonly NavigationLocation ACTION_PTN_MENU_EDITABLETABLELIST = new NavigationLocation("GROUPS__BASIC_25795", "PTN_Menu_EDITABLETABLELIST", "Grpb") { vueRouteName = "menu-PTN_EDITABLETABLELIST" };
         #endregion
 
         #region Menus
 
 
         //
-        // GET: /Grpb/PTN_Menu_231
+        // GET: /Grpb/PTN_Menu_EDITABLETABLELIST
         [AuthorizeForUsers]
 		[AuthorizeForUsers]
-        [ActionName("PTN_Menu_231")]
-        public ActionResult PTN_Menu_231(bool allSelected = false)
+        [ActionName("PTN_Menu_EDITABLETABLELIST")]
+        public ActionResult PTN_Menu_EDITABLETABLELIST(bool allSelected = false)
         {
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
 
-            PTN_Menu_231_ViewModel model = new PTN_Menu_231_ViewModel(Navigation);
+            PTN_Menu_EDITABLETABLELIST_ViewModel model = new PTN_Menu_EDITABLETABLELIST_ViewModel(Navigation);
             bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
             if (isHomePage)
-                Navigation.SetValue("HomePage", "PTN_Menu_231");
+                Navigation.SetValue("HomePage", "PTN_Menu_EDITABLETABLELIST");
             ViewBag.isHomePage = isHomePage;
             //If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
             if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_grpb")))
@@ -69,21 +69,21 @@ namespace GenioMVC.Controllers
             NameValueCollection querystring = Request.Form.Count > 0 ? Request.Form : Request.QueryString;
 			if (!isHomePage && !Request.IsAjaxRequest())
             {
-                if (Navigation.CurrentLevel == null || !ACTION_PTN_MENU_231.IsSameAction(Navigation.CurrentLevel.Location))
+                if (Navigation.CurrentLevel == null || !ACTION_PTN_MENU_EDITABLETABLELIST.IsSameAction(Navigation.CurrentLevel.Location))
                 {
                     // reset the selections for this new navigation flow
                     // TODO: This change still requires more testing
-                    Navigation.RemoveHistoryLevel(ACTION_PTN_MENU_231);
-                    if (Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_231.Action)
+                    Navigation.RemoveHistoryLevel(ACTION_PTN_MENU_EDITABLETABLELIST);
+                    if (Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_EDITABLETABLELIST.Action)
                     {
-                        Navigation.AddHistoryLevel(ACTION_PTN_MENU_231, FormMode.List);
+                        Navigation.AddHistoryLevel(ACTION_PTN_MENU_EDITABLETABLELIST, FormMode.List);
                         CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
                     }
 				}
             }
             else if (isHomePage)
             {
-                CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_231.ShortDescription());
+                CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_EDITABLETABLELIST.ShortDescription());
                 Navigation.SetValue("HomePageContainsList", true);
             }
 
@@ -91,7 +91,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-// USE /[MANUAL PTN MENU_GET 231]/
+// USE /[MANUAL PTN MENU_GET EDITABLETABLELIST]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -101,11 +101,11 @@ namespace GenioMVC.Controllers
 
  
             if(isHomePage)
-                return PartialView("PTN_Menu_231", model);
+                return PartialView("PTN_Menu_EDITABLETABLELIST", model);
             else if (!Request.IsAjaxRequest())
                 return View(model);
             else
-                return PartialView("PTN_Menu_231_Partial", model);
+                return PartialView("PTN_Menu_EDITABLETABLELIST_Partial", model);
         }
 
 

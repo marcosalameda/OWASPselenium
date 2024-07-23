@@ -14,7 +14,7 @@ using GenioMVC.Helpers.Table.Properties;
 
 namespace GenioMVC.ViewModels.Grpb
 {
-    public class PTN_Menu_231_ViewModel : ListViewModel
+    public class PTN_Menu_EDITABLETABLELIST_ViewModel : ListViewModel
     {
         /// <summary>
         /// Gets or sets the object that represents the table and its elements.
@@ -97,10 +97,10 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgrpb.FldCodgrpb, CSGenioAgrpb.FldZz
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PTN_Menu_231_ViewModel" /> class.
+        /// Initializes a new instance of the <see cref="PTN_Menu_EDITABLETABLELIST_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public PTN_Menu_231_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
+        public PTN_Menu_EDITABLETABLELIST_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
             this.RoleToShow = CSGenio.framework.Role.ROLE_1;
         }
@@ -158,7 +158,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgrpb.FldCodgrpb, CSGenioAgrpb.FldZz
 
 			if(Menu == null)
 				Menu = new TablePartial<GenioMVC.Models.Grpb>();
-			Menu.SetFilters(bool.Parse(requestValues["PTN_Menu_231_tableFilters"] ?? "false"), false);
+			Menu.SetFilters(bool.Parse(requestValues["PTN_Menu_EDITABLETABLELIST_tableFilters"] ?? "false"), false);
 
 
 			//FOR: MENU LIST SORTING
@@ -167,7 +167,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgrpb.FldCodgrpb, CSGenioAgrpb.FldZz
 			allSortOrders["GRPB.NAME"].Add("GRPB.NAME", "A");
 
 
-			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "PTN_Menu_231_"));
+			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "PTN_Menu_EDITABLETABLELIST_"));
 
 
 			//Subfilters
@@ -182,7 +182,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgrpb.FldCodgrpb, CSGenioAgrpb.FldZz
 			if (isToExport)
 			{
 				// EPH
-				crs = Models.Grpb.AddEPH<CSGenioAgrpb>(ref u, crs, "ML231");
+				crs = Models.Grpb.AddEPH<CSGenioAgrpb>(ref u, crs, "MLEDITABLETABLELIST");
 
 				// Export only records with ZZState == 0
 				crs.Equal(CSGenioAgrpb.FldZzstate, 0);
@@ -199,7 +199,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgrpb.FldCodgrpb, CSGenioAgrpb.FldZz
 				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_grpb");
 				Navigation.DestroyEntry("QMVC_POS_RECORD_grpb");
 				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
-					crs.Equals(Models.Grpb.AddEPH<CSGenioAgrpb>(ref u, null, "ML231"));
+					crs.Equals(Models.Grpb.AddEPH<CSGenioAgrpb>(ref u, null, "MLEDITABLETABLELIST"));
 			}
 
 			return crs;
@@ -243,9 +243,9 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgrpb.FldCodgrpb, CSGenioAgrpb.FldZz
 			//TODO: Tem um problema quando saímos de um form e voltamos ao dbedit e mudamos de página.
 			//como não é devolvido to a view o text pesquisado, ao mudar de página assume que o Qfield está a vazio
 			if (ajaxRequest)
-				this.Navigation.SetValue("requestValues" + "PTN_Menu_231", requestValues);
-			else if (!ajaxRequest && this.Navigation.CheckKey("requestValues" + "PTN_Menu_231"))
-				requestValues = this.Navigation.GetValue<NameValueCollection>("requestValues" + "PTN_Menu_231");
+				this.Navigation.SetValue("requestValues" + "PTN_Menu_EDITABLETABLELIST", requestValues);
+			else if (!ajaxRequest && this.Navigation.CheckKey("requestValues" + "PTN_Menu_EDITABLETABLELIST"))
+				requestValues = this.Navigation.GetValue<NameValueCollection>("requestValues" + "PTN_Menu_EDITABLETABLELIST");
 
 			User u = UserContext.Current.User;
 			Menu = new TablePartial<GenioMVC.Models.Grpb>();
@@ -253,7 +253,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgrpb.FldCodgrpb, CSGenioAgrpb.FldZz
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["PTN_Menu_231_tableFilters"] ?? "false"), false);
+			Menu.SetFilters(bool.Parse(requestValues["PTN_Menu_EDITABLETABLELIST_tableFilters"] ?? "false"), false);
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
@@ -263,13 +263,13 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgrpb.FldCodgrpb, CSGenioAgrpb.FldZz
 
 
 
-			var pageNumber = (ajaxRequest && !String.IsNullOrEmpty(requestValues["pPTN_Menu_231"])) ? int.Parse(requestValues["pPTN_Menu_231"]) : 1;
+			var pageNumber = (ajaxRequest && !String.IsNullOrEmpty(requestValues["pPTN_Menu_EDITABLETABLELIST"])) ? int.Parse(requestValues["pPTN_Menu_EDITABLETABLELIST"]) : 1;
 
 			// Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 			if (pageNumber < 1)
 				pageNumber = 1;
 
-			List<ColumnSort> sorts = GetRequestSorts(this.Menu, "sPTN_Menu_231", "dPTN_Menu_231", requestValues, "grpb", allSortOrders);
+			List<ColumnSort> sorts = GetRequestSorts(this.Menu, "sPTN_Menu_EDITABLETABLELIST", "dPTN_Menu_EDITABLETABLELIST", requestValues, "grpb", allSortOrders);
 
 			if (sorts == null || sorts.Count == 0)
 			{
@@ -321,19 +321,19 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgrpb.FldCodgrpb, CSGenioAgrpb.FldZz
 				Limit limit = new Limit();
 				limit.TipoLimite = LimitType.EPH;
 				CSGenioAgrpb model_limit_area = new CSGenioAgrpb(UserContext.Current.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML231");
+				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "MLEDITABLETABLELIST");
 				if (area_EPH_limits.Count > 0)
 					this.tableLimits.AddRange(area_EPH_limits);
 			}
 
 
-			CriteriaSet ptn_menu_231Conds = BuildCriteriaSet(requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
+			CriteriaSet ptn_menu_editabletablelistConds = BuildCriteriaSet(requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
             tableReload &= hasAllRequiredLimits;
 			
-// USE /[MANUAL PTN OVERRQ 231]/
+// USE /[MANUAL PTN OVERRQ EDITABLETABLELIST]/
 
             // This will happen in case there is an error
-            if(ptn_menu_231Conds == null)
+            if(ptn_menu_editabletablelistConds == null)
                 return;
 
 			if (isToExport)
@@ -341,11 +341,11 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgrpb.FldCodgrpb, CSGenioAgrpb.FldZz
                 if(!tableReload)
 					return;
 
-				Qlisting = Models.ModelBase.Where<CSGenioAgrpb>(false, ptn_menu_231Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML231", true, firstVisibleColumn: firstVisibleColumn);
+				Qlisting = Models.ModelBase.Where<CSGenioAgrpb>(false, ptn_menu_editabletablelistConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLEDITABLETABLELIST", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL PTN OVERRQLSTEXP 231]/
+// USE /[MANUAL PTN OVERRQLSTEXP EDITABLETABLELIST]/
 
-                conditions = ptn_menu_231Conds;
+                conditions = ptn_menu_editabletablelistConds;
                 return;
 			}
 
@@ -353,7 +353,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgrpb.FldCodgrpb, CSGenioAgrpb.FldZz
 
 			if (tableReload)
 			{
-// USE /[MANUAL PTN OVERRQLIST 231]/
+// USE /[MANUAL PTN OVERRQLIST EDITABLETABLELIST]/
 
 
 				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_grpb");
@@ -362,7 +362,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgrpb.FldCodgrpb, CSGenioAgrpb.FldZz
 
 				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
 				{
-					var m_iCurPag = UserContext.Current.PersistentSupport.getPagingPos(CSGenioAgrpb.GetInformation(), QMVC_POS_RECORD, sorts, ptn_menu_231Conds, m_PagingPosEPHs, firstVisibleColumn: firstVisibleColumn);
+					var m_iCurPag = UserContext.Current.PersistentSupport.getPagingPos(CSGenioAgrpb.GetInformation(), QMVC_POS_RECORD, sorts, ptn_menu_editabletablelistConds, m_PagingPosEPHs, firstVisibleColumn: firstVisibleColumn);
 					if (m_iCurPag != -1)
 					{
 						pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
@@ -370,7 +370,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgrpb.FldCodgrpb, CSGenioAgrpb.FldZz
 					}
 				}
 
-				ListingMVC<CSGenioAgrpb> listing = Models.ModelBase.Where<CSGenioAgrpb>(false, ptn_menu_231Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML231", true, true, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn);
+				ListingMVC<CSGenioAgrpb> listing = Models.ModelBase.Where<CSGenioAgrpb>(false, ptn_menu_editabletablelistConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLEDITABLETABLELIST", true, true, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn);
 
 				if (listing.CurrentPage > 0)
 					pageNumber = listing.CurrentPage;
@@ -380,15 +380,15 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgrpb.FldCodgrpb, CSGenioAgrpb.FldZz
 					pageNumber = 1;
 	
 
-				Menu.Elements = MapPTN_Menu_231(listing);
+				Menu.Elements = MapPTN_Menu_EDITABLETABLELIST(listing);
 
-				Menu.Identifier = "ML231";
+				Menu.Identifier = "MLEDITABLETABLELIST";
 				Menu.Slots = new Dictionary<string, List<object>>();
 
 				// Last updated by [CJP] at [2015.02.03]
 				// Adds the identifier to each element
 				foreach (var element in Menu.Elements)
-					element.Identifier = "ML231";
+					element.Identifier = "MLEDITABLETABLELIST";
 
 				Menu.SetPagination(pageNumber, listing.NumRegs, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 			}
@@ -397,7 +397,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgrpb.FldCodgrpb, CSGenioAgrpb.FldZz
 			FillTableLimitsDisplayData();
 		}
 
-        private List<Models.Grpb> MapPTN_Menu_231(ListingMVC<CSGenioAgrpb> Qlisting)
+        private List<Models.Grpb> MapPTN_Menu_EDITABLETABLELIST(ListingMVC<CSGenioAgrpb> Qlisting)
         {
             var Elements = new List<Models.Grpb>();
             int i = 0;
@@ -408,7 +408,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgrpb.FldCodgrpb, CSGenioAgrpb.FldZz
 				{
 					if (Qlisting.NumRegs > 0 && i >= Qlisting.NumRegs) // Copiado da versão antiga do RowsToViewModels
 						break;
-					Elements.Add(MapPTN_Menu_231(row));
+					Elements.Add(MapPTN_Menu_EDITABLETABLELIST(row));
 					i++;
 				}
             }
@@ -421,7 +421,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgrpb.FldCodgrpb, CSGenioAgrpb.FldZz
         /// to a Models.Grpb object.
         /// </summary>
         /// <param name="row">The row.</param>
-        private Models.Grpb MapPTN_Menu_231(CSGenioAgrpb row)
+        private Models.Grpb MapPTN_Menu_EDITABLETABLELIST(CSGenioAgrpb row)
         {
             var model = new Models.Grpb(true, _fieldsToSerialize);
             if (row == null)
@@ -454,7 +454,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgrpb.FldCodgrpb, CSGenioAgrpb.FldZz
 
 
         #region Custom code
-// USE /[MANUAL GQT VIEWMODEL_CUSTOM PTN_MENU_231]/
+// USE /[MANUAL GQT VIEWMODEL_CUSTOM PTN_MENU_EDITABLETABLELIST]/
         #endregion
 
         private static readonly string[] _fieldsToSerialize =

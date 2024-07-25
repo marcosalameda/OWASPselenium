@@ -47,12 +47,16 @@ namespace DbAdmin.IntegrationTest
         public void JobExecutes()
         {
             var job = new TestSuccessProcess();
-            job.Schedule(sp, _user);
+            var jobId = job.Schedule(sp, _user);
+
+            Assert.That(jobId, Is.Not.Null);
+            Assert.That(jobId, Is.Not.Empty);
 
             SchedulerBroker scheduler = SchedulerBroker.GetBroker();
             GenioWork work = (GenioWork) scheduler.GetWork(_user);
             Assert.IsNotNull(work);
             Assert.AreEqual(ArrayS_prstat.E_AG_3, work.Process.ValRtstatus);            
+            Assert.That(jobId, Is.EqualTo(work.Process.QPrimaryKey));
 
             work.DoWork(_user);
             Assert.AreEqual(ArrayS_prstat.E_T_4, work.Process.ValRtstatus);
@@ -62,12 +66,16 @@ namespace DbAdmin.IntegrationTest
         public void JobExecutesAsync()
         {
             var job = new TestAsyncProcess();
-            job.Schedule(sp, _user);
+            var jobId = job.Schedule(sp, _user);
+
+            Assert.That(jobId, Is.Not.Null);
+            Assert.That(jobId, Is.Not.Empty);
 
             SchedulerBroker scheduler = SchedulerBroker.GetBroker();
             GenioWork work = (GenioWork)scheduler.GetWork(_user);
             Assert.IsNotNull(work);
             Assert.AreEqual(ArrayS_prstat.E_AG_3, work.Process.ValRtstatus);
+            Assert.That(jobId, Is.EqualTo(work.Process.QPrimaryKey));
 
             work.DoWork(_user);
             Assert.AreEqual(ArrayS_prstat.E_T_4, work.Process.ValRtstatus);

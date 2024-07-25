@@ -34,7 +34,7 @@ namespace CSGenio.config
         public bool Exists()
         {
             var pathConfig = GetFileLocation();
-            return File.Exists(GetFileLocation());
+            return File.Exists(pathConfig);
         }
 
         public ConfigurationXML GetExistingConfig()

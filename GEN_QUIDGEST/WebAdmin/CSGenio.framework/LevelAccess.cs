@@ -12,6 +12,8 @@ namespace CSGenio.framework
         public readonly static LevelAccess NV0 = new LevelAccess(0); //Unauthorized
         public readonly static LevelAccess NV1 = new LevelAccess(1); //Query
         public readonly static LevelAccess NV2 = new LevelAccess(2); //Vendedor
+        public readonly static LevelAccess NV3 = new LevelAccess(3); //Officer
+        public readonly static LevelAccess NV4 = new LevelAccess(4); //Agent
         public readonly static LevelAccess NV20 = new LevelAccess(20); //Manager
         public readonly static LevelAccess NV99 = new LevelAccess(99); //Administrator
 

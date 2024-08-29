@@ -250,6 +250,11 @@ namespace CSGenio.business.async
     {
         protected ProgressStatus progress;
 
+        public GenioServerJobAsync() : base()
+        {
+            this.progress = new ProgressStatus();
+        }
+
         [Obsolete]
         public virtual void Execute(PersistentSupport sp, User user)
         {

@@ -14,7 +14,7 @@
    <script src="@Url.Content("~/Scripts/FullCalendar/packages/timegrid/main.min.js")" type="application/javascript"></script>
      <script src="@Url.Content("~/Scripts/popper.min.js")" type="application/javascript"></script>
 <script src="@Url.Content("~/Scripts/FullCalendar/quidgest/quidgest.Calendar.js")" type="application/javascript"></script>
-     @if (FullCalendarHelper.FullCallendarLocale.Key != "en")
+      @if (FullCalendarHelper.FullCallendarLocale.Key != "en")
 {
     <script src="@Url.Content(FullCalendarHelper.FullCallendarLocale.Value)"></script>
 }
@@ -210,6 +210,8 @@
 			this.Controls.IFF_EQUIP___PSEUDANEXOS__ = new QTableListControl($('[data-identifier="IFF_EQUIP___PSEUDANEXOS__"]', this.element), window.Form_Equip);
 
 			this.Controls.IFF_EQUIP___PSEUDTLEQUIPA = new QTimeLineControl($('[data-identifier="IFF_EQUIP___PSEUDTLEQUIPA"]', this.element), window.Form_Equip);
+
+			this.Controls.LED_EQUIP___EQUIPSHOWRC__ = new QCheckBoxControl($('[data-identifier="LED_EQUIP___EQUIPSHOWRC__"]', this.element), window.Form_Equip);
 
 
 

@@ -239,36 +239,36 @@ namespace DbAdmin
             }
         }
 
-        public string BackupDatabase(string username, string password, string saveLocation = "", string year = "")
+        public static string BackupDatabase(string year, string username, string password, string saveLocation = "")
         {
-            //Use default year if none is given
-            if(string.IsNullOrEmpty(year)) 
+            // Use default year if none is given
+            if (string.IsNullOrEmpty(year)) 
                 year = Configuration.DefaultYear;
             
-            //TODO:acrescentar controlo de text to associar um file de text a cada file de backup
-            ConfigurationXML conf = ConfigurationXML.readXML(Configuration.GetConfigPath() + Path.DirectorySeparatorChar + "Configuracoes.xml");
+            // TODO: acrescentar controlo de text to associar um file de text a cada file de backup
+            ConfigurationXML conf = ConfigurationXML.readXML(Path.Combine(Configuration.GetConfigPath(), "Configuracoes.xml"));
 
             if (conf.DataSystems.Count == 0)
                 throw new BusinessException("There are no DataSystems configured!", "DBMaintenance.BackupDatabase", "There are no DataSystems configured!");
 
-            var dataSystem = conf.DataSystems.FirstOrDefault(ds => ds.Name == year);
-
-            PersistentSupport.Backup(year, username, password, saveLocation);
-            string filename = dataSystem.Schemas[0].Schema + "_" +
-                                DateTime.Today.Year.ToString() + "_" +
-                                DateTime.Today.Month.ToString("D2") + "_" +
-                                DateTime.Today.Day.ToString("D2") + "_" +
-                                DateTime.Now.Hour.ToString("D2") + DateTime.Now.Minute.ToString("D2") + ".bak";
-
-            return Path.Combine(saveLocation, filename);
+            return PersistentSupport.Backup(year, username, password, saveLocation);
         }
 
-        public void RestoreDatabase(string username, string password, string filename, string location, string year = "")
+        /// <summary>
+        /// Restores a database from a specified backup file.
+        /// </summary>
+        /// <param name="year">The year of the target database to be restored.</param>
+        /// <param name="username">The username used for authenticating the database connection.</param>
+        /// <param name="password">The password used for authenticating the database connection.</param>
+        /// <param name="backupsRoot">The root directory where backup files are stored.</param>
+        /// <param name="filename">The name of the backup file to be restored.</param>
+        public static void RestoreDatabase(string year, string username, string password, string backupsRoot, string filename)
         {
-            PersistentSupport.Restore(year, username, password, Path.Combine(location, filename));
+            string backupPath = Path.Combine(backupsRoot, filename);
+            PersistentSupport.Restore(year, username, password, backupPath);
         }
 
-        public void DeleteBackup(string path)
+        public static void DeleteBackup(string path)
         {
             if (File.Exists(path))
                 File.Delete(path);

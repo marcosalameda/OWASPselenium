@@ -12,6 +12,7 @@ using GenioMVC.Models;
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.Attributes;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using Quidgest.Persistence.GenericQuery;
 using CSGenio.persistence;
 using CSGenio.business;
@@ -385,6 +386,7 @@ namespace GenioMVC.Controllers
                     userFactory.ChangePassword(psw.klass, model.ValPassword, model.ValConfirmPassword);
 
                 psw.ValNome = model.ValNome;
+                psw.ValEmail = model.ValEmail;
 
                 sp.openTransaction();
 				model.flashMessage = psw.Save(sp);

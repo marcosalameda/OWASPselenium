@@ -12,6 +12,7 @@ using GenioMVC.Models;
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.Attributes;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using Quidgest.Persistence.GenericQuery;
 using CSGenio.persistence;
 using CSGenio.business;
@@ -37,6 +38,83 @@ namespace GenioMVC.Controllers
 
         #region Reports
 
+
+        #endregion
+
+        #region Triggers
+
+		/// <summary>
+		/// Server-side component of action #1 (FLDUPDT) of trigger TRIGMENU2
+		/// Button PTN_3G11
+		/// </summary>
+		/// <param name="key">The primary key of the record.</param>
+		/// <returns>
+		/// Success message
+		/// </returns>
+		[AuthorizeForUsers]
+		public ActionResult PTN_MenuTR_3G11_TRIGMENU2_1(string key)
+		{
+			User user = UserContext.Current.User;
+			PersistentSupport sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
+
+			try 
+			{
+                var model = CSGenioAexpen.search(sp, key, user);
+				// Context
+				var context = new CSGenio.business.Triggers.TriggerContext()
+				{
+					Area = model,
+					PersistentSupport = sp,
+					User = user,
+				};
+
+				// Should open a local transaction
+				// if the context did not provide an open transaction.
+				bool openLocalTransaction = sp.TransactionIsClosed;
+
+				// Should keep the connection alive
+				// if the context provided an open connection but not an open transaction.
+				bool keepConnectionAlive = !sp.ConnectionIsClosed && sp.TransactionIsClosed;
+
+				if (openLocalTransaction)
+					sp.openTransaction();
+
+				// Trigger TRIGMENU2
+				CSGenio.business.Triggers.ITrigger trigger_TRIGMENU2 = new CSGenio.business.Triggers.TriggerTrigmenu2(context);
+				CSGenio.business.Triggers.IAction action = trigger_TRIGMENU2.GetAction(1);
+				trigger_TRIGMENU2.ExecuteAction(action);
+
+				// If a local transaction was opened, it should also be closed.
+				if (openLocalTransaction)
+				{
+					sp.closeTransaction();
+
+					// Reopen the connection if it needs to be kept alive.
+					if (keepConnectionAlive)
+						sp.openConnection();
+				}
+
+			}
+			catch(Exception)
+			{
+                sp.rollbackTransaction();
+				return Json(
+					new {
+						success = "E",
+						message = Resources.Resources.PEDIMOS_DESCULPA__OC63848
+					},
+                    JsonRequestBehavior.AllowGet
+				);
+			}
+
+			return Json(
+				new {
+					success = "OK",
+					message = Resources.Resources.A_OPERACAO_FOI_CONCL36721
+				},
+				JsonRequestBehavior.AllowGet
+			);
+		}
 
         #endregion
 

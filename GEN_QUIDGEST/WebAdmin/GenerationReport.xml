@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GenerationReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <id>ADMINCS</id>
-  <timestamp>2024-07-25T09:28:35.9115577Z</timestamp>
-  <duration>8487</duration>
-  <bytesCopied>81303755</bytesCopied>
-  <charsGenerated>45021651</charsGenerated>
+  <timestamp>2024-08-29T08:54:28.3662105Z</timestamp>
+  <duration>3862</duration>
+  <bytesCopied>83417232</bytesCopied>
+  <charsGenerated>44442681</charsGenerated>
 </GenerationReport>

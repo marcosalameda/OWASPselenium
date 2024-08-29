@@ -85,17 +85,6 @@ namespace Administration.Controllers
             return httpResponseMessage;
         }
 
-        /// <summary>
-        /// Content Root Path
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        [NonAction]
-        public string MapPath(string path)
-        {
-            return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, path);
-        }
-
         protected List<string> GetModelStateErrors()
         {
             return (from item in ModelState

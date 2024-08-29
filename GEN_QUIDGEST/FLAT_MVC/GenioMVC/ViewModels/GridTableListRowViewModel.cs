@@ -2,6 +2,7 @@
 using System.Collections.Specialized;
 
 using CSGenio.framework;
+using CSGenio.business;
 using GenioMVC.Models;
 using GenioMVC.Models.Navigation;
 
@@ -58,18 +59,38 @@ namespace GenioMVC.ViewModels
 				Model.baseklass.QPrimaryKey = pk;
 			}
 		}
+        public override void Apply()
+        {
+            MapFromClientSide();
 
-		public override void Apply()
-		{
-			MapFromClientSide();
-			Model.Apply();
-		}
+            StatusMessage result = new StatusMessage();
+            result = EvaluateWriteConditions(isApply: false);
 
-		public override void Save()
-		{
-			MapFromClientSide();
-			this.flashMessage = Model.Save();
-		}
+            if (result.Status == Status.E)
+                throw new BusinessException(result.Message, "DbArea.alterar", "Error updating record: " + result.Message);
+            else
+                Model.Apply();
+        }
+
+        public override void Save()
+        {
+            MapFromClientSide();
+
+            if (HasWriteConditions)
+            {
+                StatusMessage result = new StatusMessage();
+                result = EvaluateWriteConditions(isApply: false);
+
+                if (result.Status != Status.OK)
+                    this.flashMessage = result;
+                if (result.Status == Status.E)
+                    throw new BusinessException(result.Message, "DbArea.alterar", "Error updating record: " + result.Message);
+                else
+                    this.flashMessage = Model.Save();
+            }
+            else
+                this.flashMessage = Model.Save();
+        }
 
 		// Creates the pseudo-new record in the database (zzstate=1)
 		public override void New()

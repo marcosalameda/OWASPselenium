@@ -52,7 +52,7 @@
         .Form("Tpequ", false, false)
         .AddTableAction("GQT_Menu_2d2111", "Equip" , (Func<GenioMVC.Models.Tpequ, object>)(item => new { tpequ = item.ValCodtpequ }), "", @Resources.LISTA13474, isRoutine: false, isAjaxAction: false, htmlAttributes: new { }, accesslevel: GenioMVC.Models.Navigation.UserContext.Current.User.VerifyAccess(CSGenio.framework.Role.ROLE_1), openInPopup: false, isBootStrapIcon: false)
         .AddTableAction("Tpequ_Show", "Tpequ" , (Func<GenioMVC.Models.Tpequ, object>)(item => new { id = item.ValCodtpequ }), "", @Resources.FORMULARIO39926, isRoutine: false, isAjaxAction: false, htmlAttributes: new { }, accesslevel: GenioMVC.Models.Navigation.UserContext.Current.User.VerifyAccess(CSGenio.framework.Role.ROLE_1), openInPopup: false, isBootStrapIcon: false)
-        .AddTableAction("GQT_MenuR_TEST", "Tpequ" , (Func<GenioMVC.Models.Tpequ, object>)(item => new { id = item.ValCodtpequ }), "", @Resources.ROUTINE58306, isRoutine: true, multipleSelection: true, isAjaxAction: false, htmlAttributes: new { }, accesslevel: GenioMVC.Models.Navigation.UserContext.Current.User.VerifyAccess(CSGenio.framework.Role.ROLE_1), openInPopup: false, isBootStrapIcon: false)
+        .AddTableAction("GQT_Menu_2D21_MenuR_TEST", "Tpequ" , (Func<GenioMVC.Models.Tpequ, object>)(item => new { id = item.ValCodtpequ }), "", @Resources.ROUTINE58306, isRoutine: true, multipleSelection: true, isAjaxAction: false, htmlAttributes: new { }, accesslevel: GenioMVC.Models.Navigation.UserContext.Current.User.VerifyAccess(CSGenio.framework.Role.ROLE_1), openInPopup: false, isBootStrapIcon: false)
         .AddTableAction("SubmitMultiSelection", "Tpequ", null, "", @Resources.REPORT48266, isBootStrapIcon: false, isRoutine: true, multipleSelection: true, isAjaxAction: true, htmlAttributes: new { }, accesslevel: GenioMVC.Models.Navigation.UserContext.Current.User.VerifyAccess(CSGenio.framework.Role.ROLE_1))
         .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
 		;
@@ -63,19 +63,22 @@
 
 
 <script>
- 
 
-	@*// BEGIN ROTINA Test *@
-	function GQT_MenuR_TEST (jsonRouteValues) {
 
+	function GQT_MenuR_TEST(jsonRouteValues) {
 // USE /[MANUAL GQT VIEW_MANUAL_ROUTINE Test]/
 
 	}
 	@*If you want to send information to the server use /[MANUAL GQT CONTROLLER_ROUTINE_BODY Test]/ or /[MANUAL GQT CONTROLLER_ROUTINE Test]/*@
 
+	function GQT_Menu_2D21_MenuR_TEST(jsonRouteValues)
+	{
+		jsonRouteValues.action = '@Url.Action("GQT_Menu_2D21_MenuR_TEST", "Tpequ")'
+		this.GQT_MenuR_TEST(jsonRouteValues)
+	}
+
 	@*// END ROTINA Test *@
 
- 
 
 $(document).ready(function() {
 

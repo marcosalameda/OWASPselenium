@@ -52,6 +52,7 @@ public class EquipForm: PageObject {
 	public ListControl IFF_EQUIP___PSEUDVISEQUIP => new ListControl(driver, "ValVisequip", "#Equip_ValVisequip");
 	public ListControl IFF_EQUIP___PSEUDANEXOS__ => new ListControl(driver, "ValAnexos", "#Equip_ValAnexos");
 	public BaseInputControl IFF_EQUIP___PSEUDTLEQUIPA => new BaseInputControl(driver, "[data-identifier='IFF_EQUIP___PSEUDTLEQUIPA']");
+	public BaseInputControl LED_EQUIP___EQUIPSHOWRC__ => new BaseInputControl(driver, "[data-identifier='LED_EQUIP___EQUIPSHOWRC__']");
 
 	private IWebElement saveBtn => form.FindElement(By.CssSelector(".form-actions [qbutton='ok']"));
 	private IWebElement cancelBtn => form.FindElement(By.CssSelector(".form-actions [qbutton='cancel']"));

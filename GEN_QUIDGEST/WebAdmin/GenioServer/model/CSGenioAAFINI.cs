@@ -75,16 +75,6 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codpess1", FieldType.CHAVE_ESTRANGEIRA_GUID);
-			Qfield.FieldDescription = ">COMOMODOR";
-			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
-			Qfield.CavDesignation = "_COMOMODOR01469";
-
-			Qfield.Dupmsg = "";
-			info.RegisterFieldDB(Qfield);
-
-			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field("codgafin", FieldType.CHAVE_FALSA_GUID);
 			Qfield.FieldDescription = ">AFFINITY GENRE";
 			Qfield.FieldSize =  36;
@@ -96,6 +86,17 @@ namespace CSGenio.business
 
 			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field("codpess2", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield.FieldDescription = "";
+			Qfield.FieldSize =  36;
+			Qfield.Alias = info.Alias;
+			Qfield.MQueue = false;
+			Qfield.CavDesignation = "";
+
+			Qfield.Dupmsg = "";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field("codpess1", FieldType.CHAVE_ESTRANGEIRA_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.Alias = info.Alias;
@@ -315,18 +316,6 @@ namespace CSGenio.business
 		}
 
 
-		/// <summary>Field : ">COMOMODOR" Tipo: "CE" Formula:  ""</summary>
-		public static FieldRef FldCodpess1 { get { return m_fldCodpess1; } }
-		private static FieldRef m_fldCodpess1 = new FieldRef("afini", "codpess1");
-
-		/// <summary>Field : ">COMOMODOR" Tipo: "CE" Formula:  ""</summary>
-		public string ValCodpess1
-		{
-			get { return (string)returnValueField(FldCodpess1); }
-			set { insertNameValueField(FldCodpess1, value); }
-		}
-
-
 		/// <summary>Field : ">AFFINITY GENRE" Tipo: "CF" Formula:  ""</summary>
 		public static FieldRef FldCodgafin { get { return m_fldCodgafin; } }
 		private static FieldRef m_fldCodgafin = new FieldRef("afini", "codgafin");
@@ -348,6 +337,18 @@ namespace CSGenio.business
 		{
 			get { return (string)returnValueField(FldCodpess2); }
 			set { insertNameValueField(FldCodpess2, value); }
+		}
+
+
+		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
+		public static FieldRef FldCodpess1 { get { return m_fldCodpess1; } }
+		private static FieldRef m_fldCodpess1 = new FieldRef("afini", "codpess1");
+
+		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
+		public string ValCodpess1
+		{
+			get { return (string)returnValueField(FldCodpess1); }
+			set { insertNameValueField(FldCodpess1, value); }
 		}
 
 

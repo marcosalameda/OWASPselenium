@@ -212,6 +212,9 @@ namespace CSGenio
             get; set;
         }
 
+        [XmlElement("Messaging")]
+        public MessagingXml Messaging { get; set; }
+
         /*
             Functions
         */
@@ -256,7 +259,11 @@ namespace CSGenio
             {
                 Elasticsearch = new ElasticsearchXml();
                 Elasticsearch.Colours = new List<CoreXml>();
+            }
 
+            if (Messaging == null)
+            {
+                Messaging = new MessagingXml();
             }
         }
 
@@ -270,6 +277,7 @@ namespace CSGenio
             Elasticsearch.Colours = new List<CoreXml>();
             maisPropriedades = ExtraProperties.GetInitialValues();
             ConfigVersion = ConfigXMLMigration.CurConfigurationVerion.ToString();
+            Messaging = new MessagingXml();
         }
 
         public static ConfigurationXML readXML(string filename)
@@ -1127,6 +1135,49 @@ namespace CSGenio
         public EmailServer()
         {
 
+        }
+
+    }
+
+    [XmlRoot("Messaging")]
+    public class MessagingXml
+    {
+        [XmlAttribute]
+        public bool Enabled { get; set; } = false;
+
+        [XmlElement]
+        public MessagingHostXml Host { get; set; } = new MessagingHostXml();
+
+        [XmlArray("Publications")]
+        [XmlArrayItem("Pub")]
+        public List<string> EnabledPublications { get; set; } = new List<string>();
+
+        [XmlArray("Subscriptions")]
+        [XmlArrayItem("Sub")]
+        public List<string> EnabledSubscriptions { get; set; } = new List<string>();
+    }
+
+    [XmlRoot("Host")]
+    public class MessagingHostXml
+    {
+        [XmlElement]
+        public string Provider { get; set; } = "RabbitMq";
+        [XmlElement]
+        public string Endpoint { get; set; } = "amqp://localhost";
+        [XmlElement]
+        public string Username { get; set; } = string.Empty;
+        [XmlElement]
+        public string Password { get; set; } = string.Empty;
+
+        public string PasswordDecode()
+        {
+            if (Password == null) return null;
+            return System.Text.Encoding.Unicode.GetString(Convert.FromBase64String(Password));
+        }
+        public string UsernameDecode()
+        {
+            if (Username == null) return null;
+            return System.Text.Encoding.Unicode.GetString(Convert.FromBase64String(Username));
         }
 
     }

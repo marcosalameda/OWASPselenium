@@ -12,6 +12,7 @@ using GenioMVC.Models;
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.Attributes;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using Quidgest.Persistence.GenericQuery;
 using CSGenio.persistence;
 using CSGenio.business;
@@ -40,7 +41,7 @@ namespace GenioMVC.Controllers
 		[AuthorizeForUsers]
         [ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
         [AddHeader("X-Frame-Options", "SAMEORIGIN")]
-        public ActionResult PTN_Report_3111(bool allSelected = false)
+        public ActionResult PTN_Report_3D11(bool allSelected = false)
         {
             bool preview = false;
             try
@@ -58,7 +59,7 @@ namespace GenioMVC.Controllers
                 string id = Navigation.GetStrValue("pess1");
                 var record = Models.Pess1.Find(id, fieldsToSerialize: new string[] { "zzstate" });
                 if (record == null || record.ValZzstate != 0)
-                    throw new FrameworkException(Resources.Resources.NAO_E_POSSIVEL_ACEDE59423, "PTN_Report_3111", "Cannot access the specified record");
+                    throw new FrameworkException(Resources.Resources.NAO_E_POSSIVEL_ACEDE59423, "PTN_Report_3D11", "Cannot access the specified record");
 
 
                 string[] historicFieldNames = new string[1]{"pess1"};
@@ -71,7 +72,7 @@ namespace GenioMVC.Controllers
                 string[] areasReport = new string[0]{};
 
 
-// USE /[MANUAL GQT BEFORE_EXECUTE_REPORT 3111]/
+// USE /[MANUAL GQT BEFORE_EXECUTE_REPORT 3D11]/
                 Microsoft.Reporting.WebForms.ReportViewer reportViewer = new Microsoft.Reporting.WebForms.ReportViewer();
                 reportViewer.ProcessingMode = isServerReports ? Microsoft.Reporting.WebForms.ProcessingMode.Remote : Microsoft.Reporting.WebForms.ProcessingMode.Local;
                 reportViewer.SizeToReportContent = true;
@@ -83,7 +84,7 @@ namespace GenioMVC.Controllers
                 {
                     renderer.ConstructReport(UserContext.Current.User, area, historicFieldNames, historicFieldValues, globFields, areasReport, limitation.ToArray(), specialFormulasFields);
                     var vres = PartialView("SSRSReport", reportViewer);
-// USE /[MANUAL GQT OVERRIDE_REPORT 3111]/
+// USE /[MANUAL GQT OVERRIDE_REPORT 3D11]/
                     return vres;
                 }
             }
@@ -103,7 +104,7 @@ namespace GenioMVC.Controllers
 		[AuthorizeForUsers]
         [ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
         [AddHeader("X-Frame-Options", "SAMEORIGIN")]
-        public ActionResult PTN_Report_32111(bool allSelected = false)
+        public ActionResult PTN_Report_5111(bool allSelected = false)
         {
             bool preview = false;
             try
@@ -121,7 +122,7 @@ namespace GenioMVC.Controllers
                 string id = Navigation.GetStrValue("pess1");
                 var record = Models.Pess1.Find(id, fieldsToSerialize: new string[] { "zzstate" });
                 if (record == null || record.ValZzstate != 0)
-                    throw new FrameworkException(Resources.Resources.NAO_E_POSSIVEL_ACEDE59423, "PTN_Report_32111", "Cannot access the specified record");
+                    throw new FrameworkException(Resources.Resources.NAO_E_POSSIVEL_ACEDE59423, "PTN_Report_5111", "Cannot access the specified record");
 
 
                 string[] historicFieldNames = new string[1]{"pess1"};
@@ -134,7 +135,7 @@ namespace GenioMVC.Controllers
                 string[] areasReport = new string[0]{};
 
 
-// USE /[MANUAL GQT BEFORE_EXECUTE_REPORT 32111]/
+// USE /[MANUAL GQT BEFORE_EXECUTE_REPORT 5111]/
                 Microsoft.Reporting.WebForms.ReportViewer reportViewer = new Microsoft.Reporting.WebForms.ReportViewer();
                 reportViewer.ProcessingMode = isServerReports ? Microsoft.Reporting.WebForms.ProcessingMode.Remote : Microsoft.Reporting.WebForms.ProcessingMode.Local;
                 reportViewer.SizeToReportContent = true;
@@ -146,7 +147,7 @@ namespace GenioMVC.Controllers
                 {
                     renderer.ConstructReport(UserContext.Current.User, area, historicFieldNames, historicFieldValues, globFields, areasReport, limitation.ToArray(), specialFormulasFields);
                     var vres = PartialView("SSRSReport", reportViewer);
-// USE /[MANUAL GQT OVERRIDE_REPORT 32111]/
+// USE /[MANUAL GQT OVERRIDE_REPORT 5111]/
                     return vres;
                 }
             }
@@ -165,7 +166,8 @@ namespace GenioMVC.Controllers
         }
 		[AuthorizeForUsers]
         [ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
-        public ActionResult PTN_Report_32211(bool allSelected = false)
+        [AddHeader("X-Frame-Options", "SAMEORIGIN")]
+        public ActionResult PTN_Report_52111(bool allSelected = false)
         {
             bool preview = false;
             try
@@ -183,7 +185,7 @@ namespace GenioMVC.Controllers
                 string id = Navigation.GetStrValue("pess1");
                 var record = Models.Pess1.Find(id, fieldsToSerialize: new string[] { "zzstate" });
                 if (record == null || record.ValZzstate != 0)
-                    throw new FrameworkException(Resources.Resources.NAO_E_POSSIVEL_ACEDE59423, "PTN_Report_32211", "Cannot access the specified record");
+                    throw new FrameworkException(Resources.Resources.NAO_E_POSSIVEL_ACEDE59423, "PTN_Report_52111", "Cannot access the specified record");
 
 
                 string[] historicFieldNames = new string[1]{"pess1"};
@@ -196,7 +198,69 @@ namespace GenioMVC.Controllers
                 string[] areasReport = new string[0]{};
 
 
-// USE /[MANUAL GQT BEFORE_EXECUTE_REPORT 32211]/
+// USE /[MANUAL GQT BEFORE_EXECUTE_REPORT 52111]/
+                Microsoft.Reporting.WebForms.ReportViewer reportViewer = new Microsoft.Reporting.WebForms.ReportViewer();
+                reportViewer.ProcessingMode = isServerReports ? Microsoft.Reporting.WebForms.ProcessingMode.Remote : Microsoft.Reporting.WebForms.ProcessingMode.Local;
+                reportViewer.SizeToReportContent = true;
+                reportViewer.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFFFF");
+                reportViewer.Height = System.Web.UI.WebControls.Unit.Percentage(100);
+                using (var renderer = (isServerReports ?
+                                new ReportSSRS(reportViewer.ServerReport, reportFullPath, reportName) :
+                                new ReportSSRS(reportViewer.LocalReport, reportName, reportFullPath, UserContext.Current.PersistentSupport)))
+                {
+                    renderer.ConstructReport(UserContext.Current.User, area, historicFieldNames, historicFieldValues, globFields, areasReport, limitation.ToArray(), specialFormulasFields);
+                    var vres = PartialView("SSRSReport", reportViewer);
+// USE /[MANUAL GQT OVERRIDE_REPORT 52111]/
+                    return vres;
+                }
+            }
+            catch (Exception e)
+            {
+                CSGenio.framework.Log.Error("Erro_Report: " + e.Message + "; " + (e.InnerException != null ? e.InnerException.Message : ""));
+                if (!preview)
+                {
+                    return PartialView("_ErrorReport", model: Resources.Resources.FALHA_AO_GERAR_O_REL63109 + " -- " + e.Message);
+                }
+                else
+                {
+                    return PartialView("_ErrorReport", model: Resources.Resources.OCORREU_UM_ERRO_INES30674);
+                }
+            }
+        }
+		[AuthorizeForUsers]
+        [ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
+        public ActionResult PTN_Report_52211(bool allSelected = false)
+        {
+            bool preview = false;
+            try
+            {
+                var isServerReports = !Configuration.SSRSServer.isLocalReports;
+                var reportName = "comodatos";
+                var reportFileName = reportName + (isServerReports ? "" : ".rdl");
+                var reportPath = isServerReports ? Configuration.SSRSServer.path : Configuration.PathReports;
+                var reportFullPath = reportPath + (isServerReports ? "/" : "\\") + reportFileName;
+                if(isServerReports) reportFullPath = (reportFullPath.StartsWith("/") ? "" : "/") + reportFullPath;
+
+                string area = "pess1";
+                var limitation = new List<ReportLimitParameter>();
+                // This find is necessary to check: if the value exists, if the record is invalid, and if the user can view it (EPH).
+                string id = Navigation.GetStrValue("pess1");
+                var record = Models.Pess1.Find(id, fieldsToSerialize: new string[] { "zzstate" });
+                if (record == null || record.ValZzstate != 0)
+                    throw new FrameworkException(Resources.Resources.NAO_E_POSSIVEL_ACEDE59423, "PTN_Report_52211", "Cannot access the specified record");
+
+
+                string[] historicFieldNames = new string[1]{"pess1"};
+                string[] historicFieldValues = new string[1]{Navigation.GetStrValue("pess1")};
+                Dictionary<string, string> arrayFieldsList = new Dictionary<string, string>();
+
+                string[] globFields = new string[1]{"glob.pricolor"};
+
+                string[] specialFormulasFields = new string[0]{};
+                string[] areasReport = new string[0]{};
+
+
+// USE /[MANUAL GQT BEFORE_EXECUTE_REPORT 52211]/
                 ReportSSRS_Result result;
                 using (var renderer = new ReportSSRS(reportFullPath, reportFileName, reportFullPath, isServerReports, UserContext.Current.PersistentSupport))
                 {
@@ -209,7 +273,7 @@ namespace GenioMVC.Controllers
                     result = renderer.Render("PDF");
                 }
 
-// USE /[MANUAL GQT OVERRIDE_REPORT 32211]/
+// USE /[MANUAL GQT OVERRIDE_REPORT 52211]/
 
                 Response.Headers.Add("FileName", reportFileName + "." + result.FileNameExtension);
                 if (result.FileNameExtension == "pdf") // If pass file extension, browser will download file instead of opening it in PDF Viewer.
@@ -232,7 +296,7 @@ namespace GenioMVC.Controllers
         }
 		[AuthorizeForUsers]
         [ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
-        public ActionResult PTN_Report_32311(bool allSelected = false)
+        public ActionResult PTN_Report_52311(bool allSelected = false)
         {
             bool preview = false;
             try
@@ -250,7 +314,7 @@ namespace GenioMVC.Controllers
                 string id = Navigation.GetStrValue("pess1");
                 var record = Models.Pess1.Find(id, fieldsToSerialize: new string[] { "zzstate" });
                 if (record == null || record.ValZzstate != 0)
-                    throw new FrameworkException(Resources.Resources.NAO_E_POSSIVEL_ACEDE59423, "PTN_Report_32311", "Cannot access the specified record");
+                    throw new FrameworkException(Resources.Resources.NAO_E_POSSIVEL_ACEDE59423, "PTN_Report_52311", "Cannot access the specified record");
 
 
                 string[] historicFieldNames = new string[1]{"pess1"};
@@ -263,7 +327,7 @@ namespace GenioMVC.Controllers
                 string[] areasReport = new string[0]{};
 
 
-// USE /[MANUAL GQT BEFORE_EXECUTE_REPORT 32311]/
+// USE /[MANUAL GQT BEFORE_EXECUTE_REPORT 52311]/
                 ReportSSRS_Result result;
                 using (var renderer = new ReportSSRS(reportFullPath, reportFileName, reportFullPath, isServerReports, UserContext.Current.PersistentSupport))
                 {
@@ -276,7 +340,7 @@ namespace GenioMVC.Controllers
                     result = renderer.Render("WORD");
                 }
 
-// USE /[MANUAL GQT OVERRIDE_REPORT 32311]/
+// USE /[MANUAL GQT OVERRIDE_REPORT 52311]/
 
                 Response.Headers.Add("FileName", reportFileName + "." + result.FileNameExtension);
                 if (result.FileNameExtension == "pdf") // If pass file extension, browser will download file instead of opening it in PDF Viewer.

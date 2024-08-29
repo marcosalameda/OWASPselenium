@@ -277,7 +277,7 @@ namespace GenioServer.security
         }
 
 
-        private string CheckPasswordRules(string pass)
+        public string CheckPasswordRules(string pass)
         {
             string error = CheckPasswordChars(pass);
             if (!string.IsNullOrEmpty(error)) return error;

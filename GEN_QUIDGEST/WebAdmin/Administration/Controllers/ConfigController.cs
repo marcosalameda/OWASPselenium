@@ -13,7 +13,7 @@ using System.Data.SqlClient;
 using CSGenio.persistence;
 using System.Data;
 using Quidgest.Persistence.GenericQuery;
-
+using CSGenio.core.messaging;
 
 namespace Administration.Controllers
 {
@@ -88,6 +88,18 @@ namespace Administration.Controllers
                     {
                         model.MQueues.Acks.Add(new Models.QueueACK(q) { Rownum = rownum ++ });
                     }
+                }
+
+                //----------------
+                //Messaging (will replace MSMQ)
+                //----------------
+                if (conf.Messaging != null)
+                {
+                    model.Messaging = conf.Messaging;
+                    //decode the username and remove the password before sending to client side
+                    model.Messaging.Host.Username = model.Messaging.Host.UsernameDecode();
+                    model.Messaging.Host.Password = "";
+                    model.MessagingMetadata = MessagingService.Metadata;
                 }
 
                 //----------------
@@ -663,6 +675,26 @@ namespace Administration.Controllers
             }
 
             configManager.StoreConfig(conf);
+            // Reload Configuration static instance in server with the new Configuracoes.xml data
+            CSGenio.framework.Configuration.ReadConfiguration(conf);
+
+            return Json(new { Success = true });
+        }
+
+        [HttpPost]
+        public IActionResult SaveConfigMessaging([FromBody]MessagingXml model)
+        {
+            var conf = configManager.GetExistingConfig();
+
+            model.Host.Username = Convert.ToBase64String(Encoding.Unicode.GetBytes(model.Host.Username));
+            if(!string.IsNullOrEmpty(model.Host.Password))
+                model.Host.Password = Convert.ToBase64String(Encoding.Unicode.GetBytes(model.Host.Password));
+            else
+                model.Host.Password = conf.Messaging.Host.Password;
+
+            conf.Messaging = model;
+            configManager.StoreConfig(conf);
+
             // Reload Configuration static instance in server with the new Configuracoes.xml data
             CSGenio.framework.Configuration.ReadConfiguration(conf);
 

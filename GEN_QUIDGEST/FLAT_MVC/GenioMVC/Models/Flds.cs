@@ -151,7 +151,7 @@ namespace GenioMVC.Models
 
 		[DisplayName("Document")]
 		/// <summary>Field : "Document" Tipo: "IB" Formula:  ""</summary>
-		[Document("ValAttach", false, true, false, false)]
+		[Document("ValAttach", true, false, false)]
 		public string ValAttach { get { return klass.ValAttach; } set { klass.ValAttach = value; } }
 		public string ValAttachfk { get { return klass.ValAttachfk; } set { klass.ValAttachfk = value; } }
 		public bool ShouldSerializeValAttach() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Flds.ValAttach");

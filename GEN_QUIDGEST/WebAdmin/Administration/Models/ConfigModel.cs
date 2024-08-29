@@ -171,6 +171,10 @@ namespace Administration.Models
         [Display(Name = "REGISTO_DE_EVENTOS65341", ResourceType = typeof(Resources.Resources))]
         public bool EventTracking { get; set; }
 
+        public MessagingXml Messaging { get; set; }
+
+        public CSGenio.core.messaging.MessageMetadata MessagingMetadata {get; set;}
+
         [BindNever]
         public object SelectLists
         {

@@ -67,6 +67,9 @@ builder.Services.AddSingleton<IUserManagementService, UserManagement>();
 //Add configuration manager
 builder.Services.AddSingleton<CSGenio.config.IConfigurationManager>(new FileConfigurationManager(AppDomain.CurrentDomain.BaseDirectory));
 
+//Background services (messaging, scheduling, ...)
+builder.WebHost.UseShutdownTimeout(TimeSpan.FromSeconds(60));
+builder.Services.AddHostedService<MessagingServiceHost>();
 
 // USE /[MANUAL GQT APP_INIT]/
 

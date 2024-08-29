@@ -2,6 +2,7 @@
 using System.Web;
 using System.Web.Optimization;
 using CSGenio.framework;
+using System.Linq;
 
 namespace GenioMVC
 {
@@ -68,33 +69,38 @@ namespace GenioMVC
             string gmapsAPICdnPathDisplayEditor = "https://maps.googleapis.com/maps/api/js?libraries=geometry,places&key=" + Configuration.GoogleMapsKey ;
             bundles.Add(new ScriptBundle("~/Scripts/GoogleMapsDisplay&Editor", gmapsAPICdnPathDisplayEditor).Include("~/Scripts/gmapsDisplay&Edit.js"));
 
-            bundles.Add(new ScriptBundle("~/Scripts/javascriptControls").Include(
-                        /*UrlNames.Subscriptor,*/
-                        UrlNames.QuidgestTreetable,
-                        UrlNames.QuidgestTableFor,
-                        UrlNames.QuidgestNumber,
-                        UrlNames.JQueryHistory,
-                        UrlNames.ChosenJQuery,
-                        UrlNames.Scripts,
-                        UrlNames.JQueryMask,
-                        UrlNames.QuidgestLocalStorage,
-                        UrlNames.QuidgestDebug,
-                        UrlNames.QuidgestClientSidePersistence,
-						UrlNames.QuidgestMenus,
-                        UrlNames.QuidgestMultiform,
-						UrlNames.QuidgestModal,
-						UrlNames.QuidgestFunctions,
-						UrlNames.QuidgestGlobalFunctions,
-						UrlNames.QuidgestMsq,
-						UrlNames.QuidgestCav,
-                        UrlNames.jqueryMultiSelect,
-                        UrlNames.jqueryQuicksearch,
-						UrlNames.QuidgestControls,
-                        UrlNames.QuidgestHistorial,
-                        UrlNames.QuidgestAlerts,
-                        UrlNames.QuidgestDashboard,
-                        UrlNames.JQueryMagnificPopUp,
-                        UrlNames.JQueryWizard));
+            string[] javascriptControls = new string[] {
+                /*UrlNames.Subscriptor,*/
+                UrlNames.QuidgestTreetable,
+                UrlNames.QuidgestTableFor,
+                UrlNames.QuidgestNumber,
+                UrlNames.JQueryHistory,
+                UrlNames.ChosenJQuery,
+                UrlNames.Scripts,
+                UrlNames.JQueryMask,
+                UrlNames.QuidgestLocalStorage,
+                UrlNames.QuidgestClientSidePersistence,
+                UrlNames.QuidgestMenus,
+                UrlNames.QuidgestMultiform,
+                UrlNames.QuidgestModal,
+                UrlNames.QuidgestFunctions,
+                UrlNames.QuidgestGlobalFunctions,
+                UrlNames.QuidgestMsq,
+                UrlNames.QuidgestCav,
+                UrlNames.jqueryMultiSelect,
+                UrlNames.jqueryQuicksearch,
+                UrlNames.QuidgestControls,
+                UrlNames.QuidgestHistorial,
+                UrlNames.QuidgestAlerts,
+                UrlNames.QuidgestDashboard,
+                UrlNames.JQueryMagnificPopUp,
+                UrlNames.JQueryWizard};
+
+            // We only add the debug window JavaScript if event tracing is active.
+            if(Configuration.EventTracking)
+                javascriptControls = javascriptControls.Append(UrlNames.QuidgestDebug).ToArray();
+
+            bundles.Add(new ScriptBundle("~/Scripts/javascriptControls").Include(javascriptControls));
 
 
             bundles.Add(new ScriptBundle("~/Scripts/validateJs").Include(

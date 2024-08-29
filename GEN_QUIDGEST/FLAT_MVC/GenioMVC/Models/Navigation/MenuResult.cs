@@ -20,7 +20,7 @@ namespace GenioMVC.Models.Navigation
 		public string ActionId { get; set; }
 
 		public string Module { get; }
-		
+
 		public string ModuleText { get; }
 
 		/// <summary>

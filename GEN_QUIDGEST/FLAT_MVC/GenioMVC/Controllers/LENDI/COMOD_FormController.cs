@@ -970,11 +970,11 @@ namespace GenioMVC.Controllers
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
 
 			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
-			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_pess1")))
+			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_lendi")))
 				UserContext.Current.SetPersistenceReadOnly(true);
 			else
 			{
-				Navigation.DestroyEntry("ForcePrimaryRead_pess1");
+				Navigation.DestroyEntry("ForcePrimaryRead_lendi");
 				UserContext.Current.SetPersistenceReadOnly(false);
 			}
 

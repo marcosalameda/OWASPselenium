@@ -47,9 +47,14 @@ namespace GenioMVC.Controllers
 		private static readonly NavigationLocation ACTION_GQT_MENU_2D111 = new NavigationLocation("EQUIPMENT03632", "GQT_Menu_2D111", "Equip") { vueRouteName = "menu-GQT_2D111" };
 		private static readonly NavigationLocation ACTION_GQT_MENU_2D2111 = new NavigationLocation("EQUIPMENT03632", "GQT_Menu_2D2111", "Equip") { vueRouteName = "menu-GQT_2D2111" };
 		private static readonly NavigationLocation ACTION_GQT_MENU_6211 = new NavigationLocation("EQUIPMENT03632", "GQT_Menu_6211", "Equip") { vueRouteName = "menu-GQT_6211" };
-		private static readonly NavigationLocation ACTION_PTN_MENU_441 = new NavigationLocation("EQUIPMENT03632", "PTN_Menu_441", "Equip") { vueRouteName = "menu-PTN_441" };
-		private static readonly NavigationLocation ACTION_PTN_MENU_451 = new NavigationLocation("EQUIPMENT03632", "PTN_Menu_451", "Equip") { vueRouteName = "menu-PTN_451" };
-		private static readonly NavigationLocation ACTION_PTN_MENU_521 = new NavigationLocation("EQUIPMENT03632", "PTN_Menu_521", "Equip") { vueRouteName = "menu-PTN_521" };
+		private static readonly NavigationLocation ACTION_PTN_MENU_241 = new NavigationLocation("EQUIPMENT03632", "PTN_Menu_241", "Equip") { vueRouteName = "menu-PTN_241" };
+		private static readonly NavigationLocation ACTION_PTN_MENU_251 = new NavigationLocation("EQUIPMENT03632", "PTN_Menu_251", "Equip") { vueRouteName = "menu-PTN_251" };
+		private static readonly NavigationLocation ACTION_PTN_MENU_331 = new NavigationLocation("EQUIPMENT03632", "PTN_Menu_331", "Equip") { vueRouteName = "menu-PTN_331" };
+		private static readonly NavigationLocation ACTION_PTN_MENU_341 = new NavigationLocation("EQUIPMENT03632", "PTN_Menu_341", "Equip") { vueRouteName = "menu-PTN_341" };
+		private static readonly NavigationLocation ACTION_PTN_MENU_351 = new NavigationLocation("EQUIPMENT03632", "PTN_Menu_351", "Equip") { vueRouteName = "menu-PTN_351" };
+		private static readonly NavigationLocation ACTION_PTN_MENUSE_3C1 = new NavigationLocation("SELECAO_ENTRE_LIMITE34362", "PTN_MenuSE_3C1", "Equip") { vueRouteName = "menu-PTN_3C1" };
+		private static readonly NavigationLocation ACTION_PTN_MENU_3C11 = new NavigationLocation("EQUIPMENT03632", "PTN_Menu_3C11", "Equip") { vueRouteName = "menu-PTN_3C11" };
+		private static readonly NavigationLocation ACTION_PTN_MENU_621 = new NavigationLocation("EQUIPMENT03632", "PTN_Menu_621", "Equip") { vueRouteName = "menu-PTN_621" };
         #endregion
 
         #region Menus
@@ -2048,18 +2053,18 @@ namespace GenioMVC.Controllers
 
 
         //
-        // GET: /Equip/PTN_Menu_441
+        // GET: /Equip/PTN_Menu_241
         [AuthorizeForUsers]
 		[AuthorizeForUsers]
-        [ActionName("PTN_Menu_441")]
-        public ActionResult PTN_Menu_441(bool allSelected = false)
+        [ActionName("PTN_Menu_241")]
+        public ActionResult PTN_Menu_241(bool allSelected = false)
         {
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
 
-            PTN_Menu_441_ViewModel model = new PTN_Menu_441_ViewModel(Navigation);
+            PTN_Menu_241_ViewModel model = new PTN_Menu_241_ViewModel(Navigation);
             bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
             if (isHomePage)
-                Navigation.SetValue("HomePage", "PTN_Menu_441");
+                Navigation.SetValue("HomePage", "PTN_Menu_241");
             ViewBag.isHomePage = isHomePage;
             //If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
             if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_equip")))
@@ -2081,21 +2086,21 @@ namespace GenioMVC.Controllers
             NameValueCollection querystring = Request.Form.Count > 0 ? Request.Form : Request.QueryString;
 			if (!isHomePage && !Request.IsAjaxRequest())
             {
-                if (Navigation.CurrentLevel == null || !ACTION_PTN_MENU_441.IsSameAction(Navigation.CurrentLevel.Location))
+                if (Navigation.CurrentLevel == null || !ACTION_PTN_MENU_241.IsSameAction(Navigation.CurrentLevel.Location))
                 {
                     // reset the selections for this new navigation flow
                     // TODO: This change still requires more testing
-                    Navigation.RemoveHistoryLevel(ACTION_PTN_MENU_441);
-                    if (Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_441.Action)
+                    Navigation.RemoveHistoryLevel(ACTION_PTN_MENU_241);
+                    if (Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_241.Action)
                     {
-                        Navigation.AddHistoryLevel(ACTION_PTN_MENU_441, FormMode.List);
+                        Navigation.AddHistoryLevel(ACTION_PTN_MENU_241, FormMode.List);
                         CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
                     }
 				}
             }
             else if (isHomePage)
             {
-                CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_441.ShortDescription());
+                CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_241.ShortDescription());
                 Navigation.SetValue("HomePageContainsList", true);
             }
 
@@ -2103,7 +2108,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-// USE /[MANUAL PTN MENU_GET 441]/
+// USE /[MANUAL PTN MENU_GET 241]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -2113,28 +2118,28 @@ namespace GenioMVC.Controllers
 
  
             if(isHomePage)
-                return PartialView("PTN_Menu_441", model);
+                return PartialView("PTN_Menu_241", model);
             else if (!Request.IsAjaxRequest())
                 return View(model);
             else
-                return PartialView("PTN_Menu_441_Partial", model);
+                return PartialView("PTN_Menu_241_Partial", model);
         }
 
 
 
         //
-        // GET: /Equip/PTN_Menu_451
+        // GET: /Equip/PTN_Menu_251
         [AuthorizeForUsers]
 		[AuthorizeForUsers]
-        [ActionName("PTN_Menu_451")]
-        public ActionResult PTN_Menu_451(bool allSelected = false)
+        [ActionName("PTN_Menu_251")]
+        public ActionResult PTN_Menu_251(bool allSelected = false)
         {
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
 
-            PTN_Menu_451_ViewModel model = new PTN_Menu_451_ViewModel(Navigation);
+            PTN_Menu_251_ViewModel model = new PTN_Menu_251_ViewModel(Navigation);
             bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
             if (isHomePage)
-                Navigation.SetValue("HomePage", "PTN_Menu_451");
+                Navigation.SetValue("HomePage", "PTN_Menu_251");
             ViewBag.isHomePage = isHomePage;
             //If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
             if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_equip")))
@@ -2156,21 +2161,21 @@ namespace GenioMVC.Controllers
             NameValueCollection querystring = Request.Form.Count > 0 ? Request.Form : Request.QueryString;
 			if (!isHomePage && !Request.IsAjaxRequest())
             {
-                if (Navigation.CurrentLevel == null || !ACTION_PTN_MENU_451.IsSameAction(Navigation.CurrentLevel.Location))
+                if (Navigation.CurrentLevel == null || !ACTION_PTN_MENU_251.IsSameAction(Navigation.CurrentLevel.Location))
                 {
                     // reset the selections for this new navigation flow
                     // TODO: This change still requires more testing
-                    Navigation.RemoveHistoryLevel(ACTION_PTN_MENU_451);
-                    if (Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_451.Action)
+                    Navigation.RemoveHistoryLevel(ACTION_PTN_MENU_251);
+                    if (Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_251.Action)
                     {
-                        Navigation.AddHistoryLevel(ACTION_PTN_MENU_451, FormMode.List);
+                        Navigation.AddHistoryLevel(ACTION_PTN_MENU_251, FormMode.List);
                         CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
                     }
 				}
             }
             else if (isHomePage)
             {
-                CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_451.ShortDescription());
+                CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_251.ShortDescription());
                 Navigation.SetValue("HomePageContainsList", true);
             }
 
@@ -2178,7 +2183,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-// USE /[MANUAL PTN MENU_GET 451]/
+// USE /[MANUAL PTN MENU_GET 251]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -2188,28 +2193,28 @@ namespace GenioMVC.Controllers
 
  
             if(isHomePage)
-                return PartialView("PTN_Menu_451", model);
+                return PartialView("PTN_Menu_251", model);
             else if (!Request.IsAjaxRequest())
                 return View(model);
             else
-                return PartialView("PTN_Menu_451_Partial", model);
+                return PartialView("PTN_Menu_251_Partial", model);
         }
 
 
 
         //
-        // GET: /Equip/PTN_Menu_521
+        // GET: /Equip/PTN_Menu_331
         [AuthorizeForUsers]
 		[AuthorizeForUsers]
-        [ActionName("PTN_Menu_521")]
-        public ActionResult PTN_Menu_521(bool allSelected = false)
+        [ActionName("PTN_Menu_331")]
+        public ActionResult PTN_Menu_331(bool allSelected = false)
         {
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
 
-            PTN_Menu_521_ViewModel model = new PTN_Menu_521_ViewModel(Navigation);
+            PTN_Menu_331_ViewModel model = new PTN_Menu_331_ViewModel(Navigation);
             bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
             if (isHomePage)
-                Navigation.SetValue("HomePage", "PTN_Menu_521");
+                Navigation.SetValue("HomePage", "PTN_Menu_331");
             ViewBag.isHomePage = isHomePage;
             //If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
             if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_equip")))
@@ -2231,21 +2236,21 @@ namespace GenioMVC.Controllers
             NameValueCollection querystring = Request.Form.Count > 0 ? Request.Form : Request.QueryString;
 			if (!isHomePage && !Request.IsAjaxRequest())
             {
-                if (Navigation.CurrentLevel == null || !ACTION_PTN_MENU_521.IsSameAction(Navigation.CurrentLevel.Location))
+                if (Navigation.CurrentLevel == null || !ACTION_PTN_MENU_331.IsSameAction(Navigation.CurrentLevel.Location))
                 {
                     // reset the selections for this new navigation flow
                     // TODO: This change still requires more testing
-                    Navigation.RemoveHistoryLevel(ACTION_PTN_MENU_521);
-                    if (Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_521.Action)
+                    Navigation.RemoveHistoryLevel(ACTION_PTN_MENU_331);
+                    if (Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_331.Action)
                     {
-                        Navigation.AddHistoryLevel(ACTION_PTN_MENU_521, FormMode.List);
+                        Navigation.AddHistoryLevel(ACTION_PTN_MENU_331, FormMode.List);
                         CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
                     }
 				}
             }
             else if (isHomePage)
             {
-                CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_521.ShortDescription());
+                CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_331.ShortDescription());
                 Navigation.SetValue("HomePageContainsList", true);
             }
 
@@ -2253,7 +2258,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-// USE /[MANUAL PTN MENU_GET 521]/
+// USE /[MANUAL PTN MENU_GET 331]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -2263,11 +2268,513 @@ namespace GenioMVC.Controllers
 
  
             if(isHomePage)
-                return PartialView("PTN_Menu_521", model);
+                return PartialView("PTN_Menu_331", model);
             else if (!Request.IsAjaxRequest())
                 return View(model);
             else
-                return PartialView("PTN_Menu_521_Partial", model);
+                return PartialView("PTN_Menu_331_Partial", model);
+        }
+
+
+
+        //
+        // GET: /Equip/PTN_Menu_341
+        [AuthorizeForUsers]
+		[AuthorizeForUsers]
+        [ActionName("PTN_Menu_341")]
+        public ActionResult PTN_Menu_341(bool allSelected = false)
+        {
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+
+            PTN_Menu_341_ViewModel model = new PTN_Menu_341_ViewModel(Navigation);
+            bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
+            if (isHomePage)
+                Navigation.SetValue("HomePage", "PTN_Menu_341");
+            ViewBag.isHomePage = isHomePage;
+            //If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+            if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_equip")))
+                UserContext.Current.SetPersistenceReadOnly(true);
+            else
+			{
+                Navigation.DestroyEntry("ForcePrimaryRead_equip");
+				UserContext.Current.SetPersistenceReadOnly(false);
+			}
+            CSGenio.framework.StatusMessage result = model.CheckPermissions(FormMode.List);
+            if (result.Status.Equals(CSGenio.framework.Status.E))
+            {
+                if (!Request.IsAjaxRequest() && !isHomePage)
+                    return View("_PermissionError", model: result.Message);
+                else
+                    return PartialView("_PermissionError", model: result.Message);
+            }
+
+            NameValueCollection querystring = Request.Form.Count > 0 ? Request.Form : Request.QueryString;
+			if (!isHomePage && !Request.IsAjaxRequest())
+            {
+                if (Navigation.CurrentLevel == null || !ACTION_PTN_MENU_341.IsSameAction(Navigation.CurrentLevel.Location))
+                {
+                    // reset the selections for this new navigation flow
+                    // TODO: This change still requires more testing
+                    Navigation.RemoveHistoryLevel(ACTION_PTN_MENU_341);
+                    if (Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_341.Action)
+                    {
+                        Navigation.AddHistoryLevel(ACTION_PTN_MENU_341, FormMode.List);
+                        CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
+                    }
+				}
+            }
+            else if (isHomePage)
+            {
+                CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_341.ShortDescription());
+                Navigation.SetValue("HomePageContainsList", true);
+            }
+
+
+
+			model.Navigation = Navigation;
+
+// USE /[MANUAL PTN MENU_GET 341]/
+
+
+			model.Load(perPage, querystring, Request.IsAjaxRequest());
+
+            if(model.CheckForZzstate())
+                WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
+
+ 
+            if(isHomePage)
+                return PartialView("PTN_Menu_341", model);
+            else if (!Request.IsAjaxRequest())
+                return View(model);
+            else
+                return PartialView("PTN_Menu_341_Partial", model);
+        }
+        /// <summary>
+        /// GET/POST: /Equip/PTN_Menu_341
+        /// </summary>
+        /// <param name="selected_ids"></param>
+        /// <param name="dest_id"></param>
+        /// <returns></returns>
+        [AuthorizeForUsers]
+        public JsonResult PTN_Menu_341_Execute(string[] selected_ids, string dest_id, Dictionary<string, string> queryParams, bool allSelected = false)
+        {
+            PTN_Menu_341_ViewModel menuViewModel = new PTN_Menu_341_ViewModel(Navigation);
+            CSGenio.framework.StatusMessage result = menuViewModel.CheckPermissions(FormMode.List);
+
+            if (result.Status.Equals(CSGenio.framework.Status.E))
+                return Json(new { Success = false,  Message = result.Message });
+
+            if((selected_ids == null && !allSelected) || string.IsNullOrEmpty(dest_id))
+            {
+                return Json(new { Success = false, Message = Resources.Resources.NENHUM_REGISTO_FOI_S05034 });
+            }
+
+            var alternativeRedirect = string.Empty;
+
+            //Create progress object
+            this.Navigation.SetValue("ProgressReport_ML341", new ProgressReport());
+
+            //Reference it so it can be used in the thread below
+            ProgressReport progress = (ProgressReport)this.Navigation.GetValue("ProgressReport_ML341");
+            try
+            {
+                NavigationContext navCtx = Navigation.Clone(); //Clone Navigation
+                NameValueCollection parameters;
+
+                //Fetch and format the parameters
+				if (queryParams != null && queryParams.Count() > 0)
+					parameters = FormatQueryString(queryParams);
+				else
+					parameters = this.Navigation.GetValue<NameValueCollection>("requestValues" + "PTN_Menu_341");
+
+                //Get CriteriaSet
+				CriteriaSet crs = menuViewModel.BuildCriteriaSet(parameters, out bool hasAllRequiredLimits);
+
+                UserContext userCtx = UserContext.Current;
+                System.Threading.Tasks.Task.Factory.StartNew(() =>
+                {
+                    PersistentSupport sp = PersistentSupport.getPersistentSupport(userCtx.User.Year, userCtx.User.Name);
+                    try
+                    {
+                        sp.openTransaction();
+
+                        progress.Report("PTN_Menu_341", 0);
+                        SelectQuery query;
+                        if (allSelected)
+                        {
+                            /* Build subquery with custom CriteriaSet */
+                            SelectQuery allIds = new SelectQuery()
+                            .Select(CSGenioAequip.FldCodequip)
+                            .From(CSGenio.business.Area.AreaEQUIP);
+
+                            //Fetch Current Area
+                            CSGenio.business.Area area = CSGenio.business.Area.createArea("equip", userCtx.User, userCtx.User.CurrentModule);
+
+                            //Add Related Areas to Query Joins
+                            QueryUtils.SetInnerJoins(new[] { "EQUIP.FldCodequip" }, crs, area, allIds);
+                            allIds.Where(crs);
+                            /* -------------------------------------- */
+
+                            //Replace the selected rows array
+                            DataMatrix dm = sp.Execute(allIds);
+                            selected_ids = new string[dm.NumRows];
+                            for (int i = 0; i < dm.NumRows; i++)
+                            {
+                                if(!string.IsNullOrEmpty(dm.GetKey(i, 0).ToString()))
+                                    selected_ids[i] = dm.GetKey(i, 0).ToString();
+                            }
+
+                            //Run the main query
+                            query = new SelectQuery()
+                            .Select(CSGenioAmovim.FldCodequip)
+                            .From(CSGenio.business.Area.AreaMOVIM)
+                            .Where(CriteriaSet.And()
+                                .Equal(CSGenioAmovim.FldCodrooms, dest_id)
+                                .In(CSGenioAmovim.FldCodequip, allIds)
+                                .Equal(CSGenioAmovim.FldZzstate, 0));
+                        }
+                        else{
+                            query = new SelectQuery()
+                            .Select(CSGenioAmovim.FldCodequip)
+                            .From(CSGenio.business.Area.AreaMOVIM)
+                            .Where(CriteriaSet.And()
+                                .Equal(CSGenioAmovim.FldCodrooms, dest_id)
+                                .In(CSGenioAmovim.FldCodequip, selected_ids)
+                                .Equal(CSGenioAmovim.FldZzstate, 0));
+                        }
+
+                        int cnt = 0;
+                        List<string> cods = new List<string>();
+                        DataMatrix cod = sp.Execute(query);
+                        for (int i = 0; i < cod.NumRows; i++)
+                            cods.Add(cod.GetString(i, 0));
+// USE /[MANUAL GQT BEFORE_EXECUTE PTN_Menu_341]/
+                        foreach(string selectedId in selected_ids)
+                        {
+                            //Update Progress
+                            progress.Report("PTN_Menu_341", (cnt * 100.0) / selected_ids.Length);
+
+                            if (cods.Contains(selectedId))
+                                continue;
+                            Models.Movim model = new Models.Movim(userCtx.User);
+                            model.LoadKeysFormHistory(navCtx, navCtx.CurrentLevel.Level);
+                            model.New(sp, userCtx, "MPTN_Menu_341");
+                            // Voltar preencher as chaves a partir do Historial, caso se as replicas preencherem a null
+                            model.LoadKeysFormHistory(navCtx, navCtx.CurrentLevel.Level, false);
+                            // Preencher as chaves selecionadas
+                            model.ValCodequip = selectedId;
+                            model.ValCodrooms = dest_id;
+// USE /[MANUAL GQT ON_EXECUTE PTN_Menu_341]/
+                            model.Save(sp);
+                            cnt++;
+                        }
+// USE /[MANUAL GQT AFTER_EXECUTE PTN_Menu_341]/
+                        sp.closeTransaction();
+
+                        //Update to 100% Progress
+                        progress.Report("PTN_Menu_341", 100);
+                        progress.Finished = true;
+                    }
+                    catch(Exception e)
+                    {
+                        //Revert changes
+                        sp.rollbackTransaction();
+                        sp.closeTransaction();
+
+                        //Show error
+                        CSGenio.framework.ErrorHandling error = new CSGenio.framework.ErrorHandling();
+                        if (e is GenioException && (e as GenioException).UserMessage != null)
+                            error.ErrorResponse = (e as GenioException).UserMessage;
+                        else
+                            error.ErrorResponse = e.Message;
+                        progress.Report("PTN_Menu_341", -1, true, null, null, error, null);
+                        progress.Finished = true;
+                    }
+                });
+            }
+            catch (ModelNotFoundException e)
+            {
+                //Show error
+                CSGenio.framework.ErrorHandling error = new CSGenio.framework.ErrorHandling();
+                error.ErrorResponse = e.Message;
+                progress.Report("GQT_Menu_231", -1, true, null, null, error, null);
+                progress.Finished = true;
+
+                return Json(new { Success = false, Message = Resources.Resources.O_REGISTO_PEDIDO_NAO63869 });
+            }
+            catch (Exception e)
+            {
+                //Show error
+                CSGenio.framework.ErrorHandling error = new CSGenio.framework.ErrorHandling();
+                error.ErrorResponse = e.Message;
+                progress.Report("GQT_Menu_231", -1, true, null, null, error, null);
+                progress.Finished = true;
+
+                return Json(new { Success = false, Message = CSGenio.framework.Translations.Get(e.Message, UserContext.Current.User.Language) });
+            }
+
+            return Json(new { Success = true, RedirectURL = alternativeRedirect });
+        }
+
+        /// <summary>
+        /// GET/POST: /Equip/PTN_Menu_341
+        /// </summary>
+        /// <returns></returns>
+        [AuthorizeForUsers]
+        public JsonResult PTN_Menu_341_Progress()
+        {
+            ProgressReport progress = (ProgressReport)this.Navigation.GetValue("ProgressReport_ML341");
+
+            if (progress == null)
+                return Json(new { Success = true, percent = 0, message = Resources.Resources.THERE_IS_NO_TASK_RUN02354, finished = false, ongoing = false});
+
+            if(progress.Finished) {
+                if(progress.Percent == 100) {
+                    return Json(new { Success = true, percent = 100, message = Resources.Resources.ALTERACOES_EFETUADAS10166, finished = true, ongoing = false });
+                }
+                else {
+                    if(progress.Errors != null){
+                        if(!string.IsNullOrEmpty(progress.Errors.ErrorResponse)){
+                            return Json(new { Success = false, percent = progress.Percent,
+                            message = progress.Errors.ErrorResponse,
+                            finished = false, ongoing = false });
+                        }
+                        else if(progress.Errors.ErrorLog.Count() > 0) {
+                            string messageBuilder = "";
+                            foreach(string err in progress.Errors.ErrorLog){
+                                messageBuilder += err + "<br />";
+                            }
+
+                            return Json(new { Success = false, percent = progress.Percent,
+                            message = messageBuilder,
+                            finished = false, ongoing = false });
+                        }
+                    }
+                    return Json(new { Success = false, percent = progress.Percent,
+                    message = Resources.Resources.OCORREU_UM_ERRO_AO_P53091,
+                    finished = true, ongoing = false });
+                }
+            }
+            else{
+                return Json(new { Success = true, percent = progress.Percent, message = "", finished = false, ongoing = true});
+            }
+        }
+
+
+        //
+        // GET: /Equip/PTN_Menu_351
+        [AuthorizeForUsers]
+		[AuthorizeForUsers]
+        [ActionName("PTN_Menu_351")]
+        public ActionResult PTN_Menu_351(bool allSelected = false)
+        {
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+
+            PTN_Menu_351_ViewModel model = new PTN_Menu_351_ViewModel(Navigation);
+            bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
+            if (isHomePage)
+                Navigation.SetValue("HomePage", "PTN_Menu_351");
+            ViewBag.isHomePage = isHomePage;
+            //If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+            if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_equip")))
+                UserContext.Current.SetPersistenceReadOnly(true);
+            else
+			{
+                Navigation.DestroyEntry("ForcePrimaryRead_equip");
+				UserContext.Current.SetPersistenceReadOnly(false);
+			}
+            CSGenio.framework.StatusMessage result = model.CheckPermissions(FormMode.List);
+            if (result.Status.Equals(CSGenio.framework.Status.E))
+            {
+                if (!Request.IsAjaxRequest() && !isHomePage)
+                    return View("_PermissionError", model: result.Message);
+                else
+                    return PartialView("_PermissionError", model: result.Message);
+            }
+
+            NameValueCollection querystring = Request.Form.Count > 0 ? Request.Form : Request.QueryString;
+            CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_351.ShortDescription());
+
+
+			model.Navigation = Navigation;
+
+// USE /[MANUAL PTN MENU_GET 351]/
+
+
+			model.Load(perPage, querystring, Request.IsAjaxRequest());
+
+            if(model.CheckForZzstate())
+                WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
+
+ 
+            return PartialView("PTN_Menu_351", model);
+        }
+
+
+
+
+
+
+        //
+        // GET: /Equip/PTN_Menu_3C11
+        [AuthorizeForUsers]
+		[AuthorizeForUsers]
+        [ActionName("PTN_Menu_3C11")]
+        public ActionResult PTN_Menu_3C11(DateTime? minEquipValDtaquisi = null, DateTime? maxEquipValDtaquisi = null, bool allSelected = false)
+        {
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+
+            if (GlobalFunctions.emptyD(minEquipValDtaquisi) == 1 && Navigation.GetValue("minEquipValDtaquisi") != null)
+                minEquipValDtaquisi = Navigation.GetDateValue("minEquipValDtaquisi").GetValueOrDefault();
+
+            if (GlobalFunctions.emptyD(maxEquipValDtaquisi) == 1 && Navigation.GetValue("maxEquipValDtaquisi") != null)
+                maxEquipValDtaquisi = Navigation.GetDateValue("maxEquipValDtaquisi").GetValueOrDefault();
+            // MH - Compatibilidade com antiga versão dos menus SE / SU
+            var ValMinvalue = minEquipValDtaquisi;
+            var ValMaxvalue = maxEquipValDtaquisi;
+            PTN_Menu_3C11_ViewModel model = new PTN_Menu_3C11_ViewModel(Navigation);
+            bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
+            if (isHomePage)
+                Navigation.SetValue("HomePage", "PTN_Menu_3C11");
+            ViewBag.isHomePage = isHomePage;
+            //If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+            if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_equip")))
+                UserContext.Current.SetPersistenceReadOnly(true);
+            else
+			{
+                Navigation.DestroyEntry("ForcePrimaryRead_equip");
+				UserContext.Current.SetPersistenceReadOnly(false);
+			}
+            CSGenio.framework.StatusMessage result = model.CheckPermissions(FormMode.List);
+            if (result.Status.Equals(CSGenio.framework.Status.E))
+            {
+                if (!Request.IsAjaxRequest() && !isHomePage)
+                    return View("_PermissionError", model: result.Message);
+                else
+                    return PartialView("_PermissionError", model: result.Message);
+            }
+
+            NameValueCollection querystring = Request.Form.Count > 0 ? Request.Form : Request.QueryString;
+			if (!isHomePage && !Request.IsAjaxRequest())
+            {
+                if (Navigation.CurrentLevel == null || !ACTION_PTN_MENU_3C11.IsSameAction(Navigation.CurrentLevel.Location))
+                {
+                    // reset the selections for this new navigation flow
+                    // TODO: This change still requires more testing
+                    Navigation.RemoveHistoryLevel(ACTION_PTN_MENU_3C11);
+                    if (Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_3C11.Action)
+                    {
+                        Navigation.AddHistoryLevel(ACTION_PTN_MENU_3C11, FormMode.List);
+                        CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
+                    }
+				}
+            }
+            else if (isHomePage)
+            {
+                CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_3C11.ShortDescription());
+                Navigation.SetValue("HomePageContainsList", true);
+            }
+
+
+            // SE / SU Limitations
+            Navigation.SetValue("minEquipValDtaquisi", minEquipValDtaquisi);
+            Navigation.SetValue("maxEquipValDtaquisi", maxEquipValDtaquisi);
+            // MH - Compatibilidade com antiga versão dos menus SE
+            Navigation.SetValue("ValMinvalue", minEquipValDtaquisi);
+            Navigation.SetValue("ValMaxvalue", maxEquipValDtaquisi);
+
+			model.Navigation = Navigation;
+
+// USE /[MANUAL PTN MENU_GET 3C11]/
+
+
+			model.Load(perPage, querystring, Request.IsAjaxRequest());
+
+            if(model.CheckForZzstate())
+                WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
+
+ 
+            if(isHomePage)
+                return PartialView("PTN_Menu_3C11", model);
+            else if (!Request.IsAjaxRequest())
+                return View(model);
+            else
+                return PartialView("PTN_Menu_3C11_Partial", model);
+        }
+
+
+
+        //
+        // GET: /Equip/PTN_Menu_621
+        [AuthorizeForUsers]
+		[AuthorizeForUsers]
+        [ActionName("PTN_Menu_621")]
+        public ActionResult PTN_Menu_621(bool allSelected = false)
+        {
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+
+            PTN_Menu_621_ViewModel model = new PTN_Menu_621_ViewModel(Navigation);
+            bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
+            if (isHomePage)
+                Navigation.SetValue("HomePage", "PTN_Menu_621");
+            ViewBag.isHomePage = isHomePage;
+            //If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+            if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_equip")))
+                UserContext.Current.SetPersistenceReadOnly(true);
+            else
+			{
+                Navigation.DestroyEntry("ForcePrimaryRead_equip");
+				UserContext.Current.SetPersistenceReadOnly(false);
+			}
+            CSGenio.framework.StatusMessage result = model.CheckPermissions(FormMode.List);
+            if (result.Status.Equals(CSGenio.framework.Status.E))
+            {
+                if (!Request.IsAjaxRequest() && !isHomePage)
+                    return View("_PermissionError", model: result.Message);
+                else
+                    return PartialView("_PermissionError", model: result.Message);
+            }
+
+            NameValueCollection querystring = Request.Form.Count > 0 ? Request.Form : Request.QueryString;
+			if (!isHomePage && !Request.IsAjaxRequest())
+            {
+                if (Navigation.CurrentLevel == null || !ACTION_PTN_MENU_621.IsSameAction(Navigation.CurrentLevel.Location))
+                {
+                    // reset the selections for this new navigation flow
+                    // TODO: This change still requires more testing
+                    Navigation.RemoveHistoryLevel(ACTION_PTN_MENU_621);
+                    if (Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_621.Action)
+                    {
+                        Navigation.AddHistoryLevel(ACTION_PTN_MENU_621, FormMode.List);
+                        CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
+                    }
+				}
+            }
+            else if (isHomePage)
+            {
+                CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_621.ShortDescription());
+                Navigation.SetValue("HomePageContainsList", true);
+            }
+
+
+
+			model.Navigation = Navigation;
+
+// USE /[MANUAL PTN MENU_GET 621]/
+
+
+			model.Load(perPage, querystring, Request.IsAjaxRequest());
+
+            if(model.CheckForZzstate())
+                WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
+
+ 
+            if(isHomePage)
+                return PartialView("PTN_Menu_621", model);
+            else if (!Request.IsAjaxRequest())
+                return View(model);
+            else
+                return PartialView("PTN_Menu_621_Partial", model);
         }
 
 
@@ -2275,6 +2782,25 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
+		#region Limit Seletions (SE // SU)
+
+        //
+        // GET: /Equip/PTN_MenuSE_3C1
+        [AuthorizeForUsers]
+        public ActionResult PTN_MenuSE_3C1()
+        {
+            if (Navigation.CurrentLevel != null)
+            {
+				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
+            }
+
+            PTN_MenuSE_3C1_ViewModel model = new PTN_MenuSE_3C1_ViewModel(Navigation);
+
+
+            return PartialView("PTN_MenuSE_3C1", model);
+        }
+
+		#endregion
 
 
     }

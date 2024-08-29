@@ -48,6 +48,7 @@
     <PackageReference Include="System.ServiceModel.Primitives" Version="4.10.3" />
     <PackageReference Include="System.ServiceModel.Http" Version="4.10.3" />
     <PackageReference Include="System.Text.Json" Version="8.0.4" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.8.1" />
 <!-- USE /[MANUAL GQT REFEREN CORE]/ -->
   </ItemGroup>
 

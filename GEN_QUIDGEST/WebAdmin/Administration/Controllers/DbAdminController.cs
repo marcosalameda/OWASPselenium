@@ -411,10 +411,7 @@ namespace Administration.Controllers
         {
             var model = new DbBackupModel();
 
-            //string pathConfig = CSGenio.framework.Configuration.GetConfigPath();
-            //ConfigurationXML conf = ConfigurationXML.readXML(pathConfig + Path.DirectorySeparatorChar + "Configuracoes.xml");
-
-            model.Load(MapPath(@"~\dbs\backup"));
+            model.Load(PersistentSupport.GetDefaultBackupsLocation());
 
             return Json(model);
         }
@@ -431,7 +428,7 @@ namespace Administration.Controllers
                     throw new BusinessException(Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860, "DbAdminController.Backup", Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860);
 
                 model.ResultMsg = String.Format(Resources.Resources.BACKUP_DA_BASE_DE_DA01918,
-                    new DBMaintenance(AppDomain.CurrentDomain.BaseDirectory).BackupDatabase(model.DbUser, model.DbPsw, "", CurrentYear));
+                    DBMaintenance.BackupDatabase(CurrentYear, model.DbUser, model.DbPsw));
             }
             catch (GenioException e)
             {
@@ -442,7 +439,7 @@ namespace Administration.Controllers
                 model.ResultMsg = Translations.Get(e.Message, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper());
             }
 
-            model.Load(MapPath(@"~\dbs\backup"));
+            model.Load(PersistentSupport.GetDefaultBackupsLocation());
             return Json(model);
         }
 
@@ -451,13 +448,13 @@ namespace Administration.Controllers
         public IActionResult DeleteBackup([FromBody] DbBackupModel model)
         {
             model.ResultMsg = string.Empty;
-            model.Load(MapPath(@"~\dbs\backup"));
+            model.Load(PersistentSupport.GetDefaultBackupsLocation());
 
             //validate input
             var backup = model.BackupFiles.Find(x => x.Filename == model.BackupItem);
             if (backup != null)
             {
-                new DBMaintenance(AppDomain.CurrentDomain.BaseDirectory).DeleteBackup(Path.Combine(MapPath(@"~\dbs\backup"), model.BackupItem));
+                DBMaintenance.DeleteBackup(Path.Combine(PersistentSupport.GetDefaultBackupsLocation(), model.BackupItem));
                 model.BackupFiles.Remove(backup);
             }
             else
@@ -471,7 +468,7 @@ namespace Administration.Controllers
         public IActionResult Restore([FromBody] DbBackupModel model)
         {
             model.ResultMsg = string.Empty;
-            model.Load(MapPath(@"~\dbs\backup"));
+            model.Load(PersistentSupport.GetDefaultBackupsLocation());
 
             if (model.BackupItem == null || model.BackupItem.Length == 0)
                 model.ResultMsg = Resources.Resources.NENHUM_FICHEIRO_DE_B40914;
@@ -482,7 +479,8 @@ namespace Administration.Controllers
                     if (!ModelState.IsValid)
                         throw new BusinessException(Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860, "DbAdminController.Restore", Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860);
 
-                    new DBMaintenance(AppDomain.CurrentDomain.BaseDirectory).RestoreDatabase(model.DbUser, model.DbPsw, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "dbs", "backup"), model.BackupItem, CurrentYear);
+                    string backupsRoot = PersistentSupport.GetDefaultBackupsLocation();
+                    DBMaintenance.RestoreDatabase(CurrentYear, model.DbUser, model.DbPsw, backupsRoot, model.BackupItem);
 
                     model.ResultMsg = Resources.Resources.BASE_DE_DADOS_RESTAU48748;
                 }

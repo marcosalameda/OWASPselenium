@@ -12,12 +12,14 @@ using GenioMVC.Models;
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.Attributes;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using Quidgest.Persistence.GenericQuery;
 using CSGenio.persistence;
 using CSGenio.business;
 using CSGenio.framework;
 using CSGenio.reporting;
 using System.Collections.Specialized;
+using GenioMVC.ViewModels.Aero;
 using Microsoft.Reporting.WebForms;
 using GenioServer.business;
 

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 
+using CSGenio.core.messaging;
 using CSGenio.framework;
 using CSGenio.persistence;
 using Quidgest.Persistence;
@@ -1621,7 +1622,10 @@ namespace CSGenio.business
             DeleteDependencies(sp, rootRecord, oldvalues);
 
 			if (Zzstate == 0)
+            {
 				insertQueue(sp, "D", null, null); // à imagem do que é feito no backoffice, a queue é enviada imediatamente antes de ser apagado o registo.
+                MessageQueue(sp, "D", null);
+            }
 
             // CX 2011.10.18: Os ficheiros têm de ser apagados antes da ficha, senão não se consegue obter o Qvalue da key to apagar os ficheiros.
             deleteFilesDB(sp);
@@ -2098,7 +2102,10 @@ namespace CSGenio.business
 
                 //enviar mensagem de message queueing
 				if (Zzstate == 0)
+                {
 					insertQueue(sp, oldvalues.Zzstate == 0 ? "U" : "C", oldvalues, null);
+                    MessageQueue(sp, oldvalues.Zzstate == 0 ? "U" : "C", oldvalues);
+                }
 			}
 			catch (GenioException ex)
 			{
@@ -2225,7 +2232,10 @@ namespace CSGenio.business
 
                 //enviar mensagem de message queueing
 				if (Zzstate == 0)
+                {
 					insertQueue(sp, oldvalues.Zzstate == 0 ? "U" : "C", oldvalues, null);
+                    MessageQueue(sp, oldvalues.Zzstate == 0 ? "U" : "C", oldvalues);
+                }
 
                 //Validações e cálculos custom
                 Qresult.MergeStatusMessage(afterUpdate(sp, oldvalues));
@@ -2588,6 +2598,7 @@ namespace CSGenio.business
 
                 //enviar mensagem de message queueing
 				insertQueue(sp, "C", null, null);
+                MessageQueue(sp, "C", null);
                 //--------------------------------------------------------------------
 
                 //Validações e cálculos custom
@@ -3508,6 +3519,178 @@ namespace CSGenio.business
                         return true;
                 }
             }
+            return false;
+        }
+
+
+        private void MessageQueue(PersistentSupport sp, string operation, Area oldValues)
+        {
+            if(!Configuration.Messaging.Enabled)
+                return;
+
+            var meta = MessagingService.Metadata;
+            foreach(var pub in meta.Publishers)
+            {
+                //check if the publication is enabled
+                if (!Configuration.Messaging.EnabledPublications.Contains(pub.Id))
+                    continue;
+
+                //if we are inside a queue processor don't resend publications that are involved in service loops
+                if (sp.QueueMode && pub.NoReexport) 
+                    continue;
+
+                //check if this table is part of this publication
+                var mt = pub.Tables.Find(t => t.Areas.Contains(this.Alias));
+                if (mt == null)
+                    continue;
+                //anex tables do no send themselves, only as a result of other tables being sent
+                if (mt.IsAnex)
+                    continue;
+                //check conditions
+                if (!CheckTableFilter(mt, this, sp))
+                    continue;
+
+                //delete operation is very simple so we take that out of the way
+                if (operation == "D")
+                {
+                    sp.DeferMessageDelete(pub, mt, this);
+                    continue;
+                }
+
+                //check if any of the fields that this publisher uses have changed
+                if (operation == "U" && oldValues != null)
+                {
+                    bool changed = mt.Fields
+                        .Select(fld => Alias + "." + fld)
+                        .Any(fld => !oldValues.returnValueField(fld).Equals(this.returnValueField(fld)));
+                    if (!changed)
+                        continue;
+                }
+
+                //check if we have any parent row that is still zzstate pending
+                //this can be made much more efficient if we have access to the current history stack
+                if (CheckPendingParents(sp, pub))
+                    continue;
+
+                //add the message to the transaction context so it can be sent during the commit phase
+                sp.DeferMessageUpdate(pub, mt, this);
+
+                //Anex tables are always sent together with the main one
+                MessageAnexes(sp, pub);
+
+                //if this row changed to zzstate 0 during this change
+                // then send all its child records that are part of the publication
+                if (this.Zzstate == 0 && oldValues != null && oldValues.Zzstate != 0)
+                    MessageChildren(sp, pub);
+            }
+        }
+
+        private void MessageAnexes(PersistentSupport sp, PublisherMetadata pub)
+        {
+            //above table anexes
+            foreach (var rel in this.Information.ParentTables)
+            {
+                var anex = pub.Tables.Find(x => x.IsAnex && x.Areas.Contains(rel.Key));
+                if (anex != null)
+                {
+                    string fk = returnValueField(this.Alias + "." + rel.Value.SourceRelField) as string;
+                    if (DBFields[rel.Value.SourceRelField].isEmptyValue(fk))
+                        continue;
+
+                    Area areaUp = Area.createArea(rel.Key, user, user.CurrentModule);
+                    sp.getRecord(areaUp, fk, anex.Fields.ToArray());
+                    if (!CheckTableFilter(anex, areaUp, sp))
+                        continue;
+                    sp.DeferMessageUpdate(pub, anex, areaUp);
+                }
+            }
+
+            //below table anexes
+            foreach (var rel in this.Information.ChildTable)
+            {
+                var child = pub.Tables.Find(x => x.IsAnex && x.Areas.Contains(rel.ChildArea));
+                if (child != null)
+                {
+                    var criteria = CriteriaSet.Or();
+                    foreach (var foreignKey in rel.RelatedFields)
+                        criteria.Equal(rel.ChildArea, foreignKey, QPrimaryKey);
+
+                    var rows = Area.searchList(rel.ChildArea, sp, user, criteria, child.Fields.ToArray());
+                    foreach (var row in rows)
+                    {
+                        if (!CheckTableFilter(child, row, sp))
+                            continue;
+                        sp.DeferMessageUpdate(pub, child, row);
+                    }
+                }
+            }
+        }
+
+        private void MessageChildren(PersistentSupport sp, PublisherMetadata pub)
+        {
+            foreach (var rel in this.Information.ChildTable)
+            {
+                var child = pub.Tables.Find(x => !x.IsAnex && x.Areas.Contains(rel.ChildArea));
+                if (child != null)
+                {
+                    var criteria = CriteriaSet.Or();
+                    foreach (var foreignKey in rel.RelatedFields)
+                        criteria.Equal(rel.ChildArea, foreignKey, QPrimaryKey);
+
+                    var rows = Area.searchList(rel.ChildArea, sp, user, criteria, child.Fields.ToArray());
+                    foreach (var row in rows)
+                    {
+                        if (!CheckTableFilter(child, row, sp))
+                            continue;
+                        sp.DeferMessageUpdate(pub, child, row);
+                    }
+                }
+            }
+        }
+
+        private bool CheckTableFilter(PublisherTable mt, Area area, PersistentSupport sp)
+        {
+            if (mt.Filter == null)
+                return true;
+
+            FormulaDbContext fdc = new FormulaDbContext(area);
+            //If the area we are running this formula on is different from the area the formula was defined on
+            // we need to convert the formula into something that can run in this new area.
+            //Since InternalOperationFormula fetches relations from the phisical FK rather than relations
+            // we can get away to just cloning and remaping the base area of the formula to the current area.
+            var formula = mt.Filter;
+            if(mt.Table != area.Alias)
+            {
+                formula = new InternalOperationFormula(
+                    formula.ByAreaArguments.Select(a => new ByAreaArguments(
+                        a.FieldNames, 
+                        a.FieldsPosition,
+                        a.AliasName == mt.Table ? area.Alias : a.AliasName, //switch the base area
+                        a.KeyName
+                        )).ToList(),
+                    formula.ParameterCount,
+                    formula.function
+                    );
+            }
+            fdc.AddFormulaSources(formula);
+            return (bool)formula.calculateInternalFormula(area, sp, fdc, FunctionType.ALT);
+        }
+
+        private bool CheckPendingParents(PersistentSupport sp, PublisherMetadata pub)
+        {
+            foreach (var rel in this.Information.ParentTables)
+                if (pub.Tables.Exists(x => !x.IsAnex && x.Table == rel.Key))
+                {
+                    string fk = returnValueField(this.Alias + "." + rel.Value.SourceRelField) as string;
+                    if (DBFields[rel.Value.SourceRelField].isEmptyValue(fk))
+                        continue;
+
+                    //fetch zzstate
+                    Area areaUp = Area.createArea(rel.Key, user, user.CurrentModule);
+                    sp.getRecord(areaUp, fk, new string[] { "zzstate" });
+                    if (areaUp.Zzstate != 0)
+                        return true;
+                }
             return false;
         }
 

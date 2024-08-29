@@ -131,11 +131,11 @@ else {
 						<div class="control-join-group">
 						<div class="i-document draggable " id="CONTAINER_LED_ANEXD___ANEXDDOCUMENT">
 								<div class="d-flex">
-								@Html.LabelFor(model => model.ValDocument, new { label_id="LED_ANEXD___ANEXDDOCUMENT", @class = " i-text__label", id="LABEL_LED_ANEXD___ANEXDDOCUMENT"}, true, true)
+								@Html.LabelFor(model => model.ValDocument, new { label_id="LED_ANEXD___ANEXDDOCUMENT", @class = " i-text__label", id="LABEL_LED_ANEXD___ANEXDDOCUMENT"}, true, false)
 								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
 								<a href="javascript:OpenSuggestion('LED_ANEXD___ANEXDDOCUMENT','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
 								@if (Model.IsEditableMode) {
-									@Html.EditorFor(model => model.ValDocument, new { fieldFk = Model.ValDocumentfk, docProperties = Model.ValDocumentPropertiesVM, baseArea = "Anexd", baseAreaKey = Model.ValCodanexd, useTemplates =  false, data_identifier="LED_ANEXD___ANEXDDOCUMENT", identifier = "FANEXD", fieldSize = "input-xxlarge", isRequired = true, maxSize = "null", allowedTypes = "null", htmlAttributes = new {help_id = "LED_ANEXD___ANEXDDOCUMENT", data_toggle = "tooltip", title = @Resources.___1637441, data_placement = "top", description = "" }})
+									@Html.EditorFor(model => model.ValDocument, new { fieldFk = Model.ValDocumentfk, docProperties = Model.ValDocumentPropertiesVM, baseArea = "Anexd", baseAreaKey = Model.ValCodanexd, useTemplates =  false, data_identifier="LED_ANEXD___ANEXDDOCUMENT", identifier = "FANEXD", fieldSize = "input-xxlarge", isRequired = false, maxSize = "null", allowedTypes = "null", htmlAttributes = new {help_id = "LED_ANEXD___ANEXDDOCUMENT", data_toggle = "tooltip", title = @Resources.___1637441, data_placement = "top", description = "" }})
 								} else {
 									@Html.DisplayFor(model => model.ValDocument, new { fieldFk = Model.ValDocumentfk, docProperties = Model.ValDocumentPropertiesVM, baseArea = "Anexd", baseAreaKey = Model.ValCodanexd, useTemplates =  false, data_identifier="LED_ANEXD___ANEXDDOCUMENT", identifier = "FANEXD", fieldSize = "input-xxlarge", htmlAttributes = new {help_id = "LED_ANEXD___ANEXDDOCUMENT", data_toggle = "tooltip", title = @Resources.___1637441, data_placement = "top", description = "" }})
 								}

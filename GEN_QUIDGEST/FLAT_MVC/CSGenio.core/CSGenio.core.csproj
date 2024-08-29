@@ -28,7 +28,7 @@
     <PackageReference Include="EPPlus" Version="4.5.3.3" />
     <PackageReference Include="Fido2" Version="1.0.1" />
     <PackageReference Include="log4net" Version="2.0.15" />
-    <!-- Its has to be this version. The lastest version of Types only works with the new Microsoft.Data.SqlClient provider -->
+    <!-- It has to be this version. The lastest version of Types only works with the new Microsoft.Data.SqlClient provider -->
     <PackageReference Include="Microsoft.SqlServer.Types" Version="14.0.1016.290">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
@@ -47,7 +47,8 @@
     <PackageReference Include="Isopoh.Cryptography.Argon2" Version="1.1.12" />
     <PackageReference Include="System.ServiceModel.Primitives" Version="4.10.3" />
     <PackageReference Include="System.ServiceModel.Http" Version="4.10.3" />
-    <PackageReference Include="System.Text.Json" Version="8.0.2" />
+    <PackageReference Include="System.Text.Json" Version="8.0.4" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.8.1" />
 <!-- USE /[MANUAL GQT REFEREN CORE]/ -->
   </ItemGroup>
 

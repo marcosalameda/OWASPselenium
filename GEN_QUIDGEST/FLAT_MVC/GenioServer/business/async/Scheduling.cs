@@ -27,41 +27,28 @@ namespace CSGenio.business.async
         }
 
         /// <summary>
-        /// Schedule a new process
+        /// Schedules a new process.
         /// </summary>
-        /// <param name="sp"></param>
-        /// <param name="user"></param>
-        public virtual void Schedule(PersistentSupport sp, User user)
+        /// <param name="sp">The persistent support.</param>
+        /// <param name="user">The user.</param>
+        public virtual string Schedule(PersistentSupport sp, User user)
         {
-            GlobalFunctions fg = new GlobalFunctions(user, user.CurrentModule, sp);
-            //string codpesoa = fg.GetPessoaFromUser(false);
-            string codpesoa = null;
             //este agendar é feito pelo interface logo pode repetir sempre
-            this.Agenda(sp, user, codpesoa, true);
+            return this.Agenda(sp, user, null, true);
         }
 
-
-        protected void Agenda(PersistentSupport sp, User user, string codpesoa, bool repeat)
+        protected string Agenda(PersistentSupport sp, User user, string codpesoa, bool repeat)
         {
             if (GetPermission(sp, user))
             {
                 GenioProcessManager pm = GenioProcessManager.SimpleProcessManager(sp, user);
-                pm.Agenda(this, codpesoa, user.Codpsw, repeat);
+                return pm.Agenda(this, codpesoa, user.Codpsw, repeat);
             }
             else
             {
                 throw new BusinessException(Translations.Get("MSG_NO_PERMISSION_PROCESS", user.Language), "Agendamento.Agenda", "");
             }
         }
-
-        public virtual void AgendarAuto(PersistentSupport sp, User user, bool repeat)
-        {
-            //User ut = GlobalFunctions.CreateAdminUser(user.Year, user.CurrentModule, user.Language);
-            ////este agendamento é especifico to processos automaticos que não são invocados pelo interface/user fica ao criterio de cada agendamento o repeat
-            //this.Agenda(sp, ut, "", repeat);
-        }
-
-
 
         /// <summary>
         /// Indicates the mode associated with the process (global, individual, etc)

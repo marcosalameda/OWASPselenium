@@ -431,20 +431,10 @@ namespace GenioMVC.Helpers.Cav
 	public class ReportReply
 	{
 		/// <summary>
-		/// Estado da execução
-		/// </summary>
-		/// <remarks>
-		/// OK
-		/// E
-		/// </remarks>
-		[DataMember]
-		public string Result { get; set; }
-
-		/// <summary>
-		/// Mensagem de erro
+		/// The result Query
 		/// </summary>
 		[DataMember]
-		public string ResultMessage { get; set; }
+		public string QuerySQL { get; set; }
 
 		/// <summary>
 		/// Grupo de topo de resultados
@@ -460,6 +450,18 @@ namespace GenioMVC.Helpers.Cav
 		/// </summary>
 		[DataMember]
 		public int ResultCount { get; set; }
+
+		public ReportReply()
+		{
+			QuerySQL = "";
+			MainGroup = new ReportReplyGroup()
+			{
+				//podem ser os detalhes ou o primeiro agrupamento
+				Groups = new List<ReportReplyGroup>(),
+				//estes vão ser totalizadores globais
+				Values = new List<string>()
+			};
+		}
 	}
 
 	/// <summary>

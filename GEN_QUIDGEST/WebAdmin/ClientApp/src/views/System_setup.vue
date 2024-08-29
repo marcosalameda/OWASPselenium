@@ -34,6 +34,9 @@
           <a class="nav-link c-tab__item-header" id="paths-tab" data-toggle="tab" data-target="#paths" role="tab" aria-controls="paths" aria-selected="false">{{ Resources.APLICACAO16322 }}</a>
         </li>
         <li class="nav-item c-tab__item">
+          <a class="nav-link c-tab__item-header" id="messaging-tab" data-toggle="tab" data-target="#messaging" role="tab" aria-controls="messaging" aria-selected="false">Messaging</a>
+        </li>
+        <li class="nav-item c-tab__item">
           <a class="nav-link c-tab__item-header" id="others-tab" data-toggle="tab" data-target="#others" role="tab" aria-controls="others" aria-selected="false">{{ Resources.MAIS25935 }}</a>
         </li>
       </ul>
@@ -53,6 +56,10 @@
         <!--Path-->
         <div class="tab-pane c-tab__item-content" id="paths" ref="paths" role="tabpanel" aria-labelledby="paths-tab">
           <paths v-if="Paths && isActiveTab('paths')" :Model="Paths"></paths>
+        </div>
+        <!--Messaging-->
+        <div class="tab-pane c-tab__item-content" id="messaging" ref="messaging" role="tabpanel" aria-labelledby="messaging-tab">
+          <messaging v-if="Model && isActiveTab('messaging')"  :Model="Model.Messaging" :Metadata="Model.MessagingMetadata" @updateModal="fetchData"></messaging>
         </div>
         <!--Others-->
         <div class="tab-pane c-tab__item-content" id="others" ref="others" role="tabpanel" aria-labelledby="others-tab">
@@ -75,11 +82,12 @@
   import audit from './System_setup/Audit.vue';
   import paths from './System_setup/Paths.vue';
   import others from './System_setup/Others.vue';
-  
+    import messaging from './System_setup/Messaging.vue';
+
   export default {
     name: 'system_setup',
     mixins: [reusableMixin],
-    components: { database, security, audit, paths, others },
+    components: { database, security, audit, paths, others, messaging },
     data: function () {
       return {
         Model: {},

@@ -92,9 +92,6 @@ namespace Administration.Models
         [Required]
         public string DbPsw { get; set; }
 
-        //public string BackupItem { get; set; }
-        //public Dictionary<string, string> BackupItems { get; set; }
-
         public string BackupItem { get; set; }
 
         [Display(Name = "ESTADO07788", ResourceType = typeof(Resources.Resources))]
@@ -105,29 +102,24 @@ namespace Administration.Models
 
         public void Load(string basePath)
         {
-            BackupFiles = new List<BackupFileItem>();
-            //BackupItems = new Dictionary<string, string>();
-            //BackupItems.Add("", "");
             if (Directory.Exists(basePath))
             {
-            DirectoryInfo directory = new DirectoryInfo(basePath);
-            foreach (FileInfo bakFile in directory.GetFiles().OrderByDescending(a => a.Name).ToList())
-                if (bakFile.Extension == ".bak")
-                {
-                    //BackupItems.Add(bakFile.Name, bakFile.Name);
+                DirectoryInfo directory = new(basePath);
 
-                    var bi = new BackupFileItem()
-                    {
-                        Filename = bakFile.Name,
-                        Date = bakFile.CreationTime,
-                        Size = Math.Round((decimal)bakFile.Length / 1000000M, 2)
-                    };
-                    BackupFiles.Add(bi);
-                }
+                BackupFiles = directory.EnumerateFiles("*.bak")
+                                       .OrderByDescending(f => f.CreationTime)
+                                       .Select(bakFile => new BackupFileItem
+                                       {
+                                           Filename = bakFile.Name,
+                                           Date = bakFile.CreationTime,
+                                           Size = Math.Round(bakFile.Length / 1_000_000M, 2)
+                                       })
+                                       .ToList();
             }
-            
-
-            BackupFiles.Sort((x, y) => y.Date.CompareTo(x.Date));
+            else
+            {
+                BackupFiles = [];
+            }
         }
     }
 

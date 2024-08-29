@@ -139,6 +139,10 @@ else {
 												</div>
 												<div class="control-join-group">
 												<div class="i-radio__control draggable " id="CONTAINER_LED_FIELDHLPFLDS_RADIOB__">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValRadiob, new { label_id="LED_FIELDHLPFLDS_RADIOB__", @class = " i-text__label", id="LABEL_LED_FIELDHLPFLDS_RADIOB__"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_FIELDHLPFLDS_RADIOB__','Radiobtn')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
 													@Html.RadioButtonForSelectList(model => model.ValRadiob, Model.List_ValRadiob, @Resources.ESCOLHA___40245, new {help_id = "LED_FIELDHLPFLDS_RADIOB__", @class = "input-mini", data_identifier = "LED_FIELDHLPFLDS_RADIOB__", @pers_cs_area = "Flds", @pers_cs_field = "ValRadiob", @db_field = "ValRadiob", title = @Resources.RADIO_BTN20980, data_array_type = "AC" }, 0)
 													@Html.ValidationMessageFor(model => model.ValRadiob)
 													</div>

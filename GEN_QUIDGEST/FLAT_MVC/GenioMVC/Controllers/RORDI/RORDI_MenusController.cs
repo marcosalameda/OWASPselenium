@@ -29,25 +29,25 @@ namespace GenioMVC.Controllers
     public partial class RordiController : ControllerBase
     {
         #region NavigationLocation Names
-		private static readonly NavigationLocation ACTION_PTN_MENU_1521 = new NavigationLocation("ORDERS__INTEGER_FIEL24075", "PTN_Menu_1521", "Rordi") { vueRouteName = "menu-PTN_1521" };
+		private static readonly NavigationLocation ACTION_PTN_MENU_421 = new NavigationLocation("ORDERS__INTEGER_FIEL24075", "PTN_Menu_421", "Rordi") { vueRouteName = "menu-PTN_421" };
         #endregion
 
         #region Menus
 
 
         //
-        // GET: /Rordi/PTN_Menu_1521
+        // GET: /Rordi/PTN_Menu_421
         [AuthorizeForUsers]
 		[AuthorizeForUsers]
-        [ActionName("PTN_Menu_1521")]
-        public ActionResult PTN_Menu_1521(bool allSelected = false)
+        [ActionName("PTN_Menu_421")]
+        public ActionResult PTN_Menu_421(bool allSelected = false)
         {
 			int perPage = -1;
 
-            PTN_Menu_1521_ViewModel model = new PTN_Menu_1521_ViewModel(Navigation);
+            PTN_Menu_421_ViewModel model = new PTN_Menu_421_ViewModel(Navigation);
             bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
             if (isHomePage)
-                Navigation.SetValue("HomePage", "PTN_Menu_1521");
+                Navigation.SetValue("HomePage", "PTN_Menu_421");
             ViewBag.isHomePage = isHomePage;
             //If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
             if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_rordi")))
@@ -69,21 +69,21 @@ namespace GenioMVC.Controllers
             NameValueCollection querystring = Request.Form.Count > 0 ? Request.Form : Request.QueryString;
 			if (!isHomePage && !Request.IsAjaxRequest())
             {
-                if (Navigation.CurrentLevel == null || !ACTION_PTN_MENU_1521.IsSameAction(Navigation.CurrentLevel.Location))
+                if (Navigation.CurrentLevel == null || !ACTION_PTN_MENU_421.IsSameAction(Navigation.CurrentLevel.Location))
                 {
                     // reset the selections for this new navigation flow
                     // TODO: This change still requires more testing
-                    Navigation.RemoveHistoryLevel(ACTION_PTN_MENU_1521);
-                    if (Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_1521.Action)
+                    Navigation.RemoveHistoryLevel(ACTION_PTN_MENU_421);
+                    if (Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_421.Action)
                     {
-                        Navigation.AddHistoryLevel(ACTION_PTN_MENU_1521, FormMode.List);
+                        Navigation.AddHistoryLevel(ACTION_PTN_MENU_421, FormMode.List);
                         CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
                     }
 				}
             }
             else if (isHomePage)
             {
-                CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_1521.ShortDescription());
+                CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_421.ShortDescription());
                 Navigation.SetValue("HomePageContainsList", true);
             }
 
@@ -91,7 +91,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-// USE /[MANUAL PTN MENU_GET 1521]/
+// USE /[MANUAL PTN MENU_GET 421]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -101,11 +101,11 @@ namespace GenioMVC.Controllers
 
  
             if(isHomePage)
-                return PartialView("PTN_Menu_1521", model);
+                return PartialView("PTN_Menu_421", model);
             else if (!Request.IsAjaxRequest())
                 return View(model);
             else
-                return PartialView("PTN_Menu_1521_Partial", model);
+                return PartialView("PTN_Menu_421_Partial", model);
         }
 
 
@@ -116,10 +116,10 @@ namespace GenioMVC.Controllers
 
         #region Reorder code...
         [AuthorizeForUsers]
-        public ActionResult ReorderPTN_Menu_1521(string id, string position,string partialView)
+        public ActionResult ReorderPTN_Menu_421(string id, string position,string partialView)
         {
-            PTN_Menu_1521_ViewModel model = new PTN_Menu_1521_ViewModel(Navigation);
-            model.ReorderPTN_Menu_1521(id,position);
+            PTN_Menu_421_ViewModel model = new PTN_Menu_421_ViewModel(Navigation);
+            model.ReorderPTN_Menu_421(id,position);
             model.Load(-1);
 
             if (Request.IsAjaxRequest())

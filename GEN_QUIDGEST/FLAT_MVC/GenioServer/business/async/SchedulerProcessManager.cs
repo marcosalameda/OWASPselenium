@@ -43,7 +43,7 @@ namespace CSGenio.business.async
 
         public abstract bool AllocateProcess(Process process);
 
-        public abstract void Agenda(ProcessScheduler agendamento, string userid, string codpsw, bool repeat);
+        public abstract string Agenda(ProcessScheduler agendamento, string userid, string codpsw, bool repeat);
 
         private bool EqualArguments(ArgumentsMap schedulerArgs, List<CSGenioAs_arg> processArgs)
         {
@@ -263,13 +263,14 @@ namespace CSGenio.business.async
             }
         }
 
-        public override void Agenda(ProcessScheduler agendamento, string userid, string codpsw, bool repeat)
+        public override string Agenda(ProcessScheduler agendamento, string userid, string codpsw, bool repeat)
         {
             try
             {
                 sp.openTransaction();
-                decorated.Agenda(agendamento, userid, codpsw, repeat);
+                string jobId = decorated.Agenda(agendamento, userid, codpsw, repeat);
                 sp.closeTransaction();
+                return jobId;
             }
             catch (Exception e)
             {                
@@ -405,38 +406,16 @@ namespace CSGenio.business.async
             }
         }
 
-        public override void Agenda(ProcessScheduler agendamento, string userid, string codpsw, bool repeat)
+        public override string Agenda(ProcessScheduler agendamento, string userid, string codpsw, bool repeat)
         {
-            //Antes de agendar é necessário verificar se está em manutenação
-            //SelectQuery query = new SelectQuery()
-            //    .Select(SqlFunctions.Count(1), "count")
-            //    .From(CSGenioAprman.AreaPRMAN)
-            //    .Where(CriteriaSet.And().In(CSGenioAprman.FldModomanu, new string[] { ArrayAmanproc.E_A_1, ArrayAmanproc.E_AE_3 })
-            //        .Equal(CSGenioAprman.FldTipoproc, agendamento.getProcessType()));
-
-            //int inManut = (int)sp.ExecuteScalar(query);
-            //if (inManut > 0)
-            //{
-            //    string message = Translations.Get("MSG_CANT_SCHEDULE_MAINTENANCE", user.Language);
-            //    throw new BusinessException(message, "ProcessManager.Agenda", "The process type is in maintenance");
-            //}
-
-
-            //if (!repeat && EqualProcessInQueue(agendamento.getProcessType(), agendamento.getMode(), agendamento.GetArgumentsValues()))
-            //{
-            //    string message = string.Format(UserMsg.Get(UserMsg.MSG_CANT_SCHEDULE_REPEAT, user.Language),
-            //        ArrayAtipopro.CodToDescricao(agendamento.getProcessType()),
-            //        ArrayAmodopro.CodToDescricao(agendamento.getMode()));
-            //    throw new BusinessException(message, "ProcessManager.Agenda", message);
-            //}
-
             try
             {
                 sp.openTransaction();
                 //Agendar os processos, escrevendo os argumentos
                 var arguments = agendamento.GetArgumentsValues();
-                ScheduleProcess(agendamento.getProcessType(), agendamento.getMode(), userid, codpsw, arguments);
+                string jobId = ScheduleProcess(agendamento.getProcessType(), agendamento.getMode(), userid, codpsw, arguments);
                 sp.closeTransaction();
+                return jobId;
             }
             catch (Exception e)
             {                
@@ -444,21 +423,21 @@ namespace CSGenio.business.async
                 sp.rollbackTransaction();
                 throw;
             }
-            
         }
 
-        public void ScheduleProcess(string tipo, string mode, string userid, string codpsw, ArgumentsMap arguments)
+        public string ScheduleProcess(string tipo, string mode, string userid, string codpsw, ArgumentsMap arguments)
         {
-            CSGenioAs_apr proc = new CSGenioAs_apr(user);
-            proc.ValType = tipo;
-            proc.ValModoproc = mode;
-            proc.ValCodentit = userid;
-            proc.ValCodpsw = codpsw;
-            proc.ValStatus = ArrayS_prstat.E_FE_2;
-            proc.ValLastupdt = DateTime.Now;
+            Process proc = new Process(user)
+            {
+                ValType = tipo,
+                ValModoproc = mode,
+                ValCodentit = userid,
+                ValCodpsw = codpsw,
+                ValStatus = ArrayS_prstat.E_FE_2,
+                ValLastupdt = DateTime.Now
+            };
             proc.insert(sp);
 
-            //argumentos
             foreach (var pair in arguments)
             {
                 AsyncProcessArgument argument = pair.Value;
@@ -468,7 +447,6 @@ namespace CSGenio.business.async
                 Dictionary<String, String> descriptions = null;
                 if (argument.Field != null && !argument.Docum)
                     descriptions = GetDescriptions(argument, key);
-
 
                 foreach (var value in argument.Value)
                 {
@@ -504,17 +482,10 @@ namespace CSGenio.business.async
                     if (argument.Hide)
                         pArg.ValHidden = 1;
                     pArg.insert(sp);
-
-                    if (argument.Docum)
-                    {
-                    //    string filePath = Path.Combine(GlobalFunctions.PathTemp, value);
-                    //    RecursoFicheiroConfidencial rFile = new RecursoFicheiroConfidencial(pArg.ValDesignac, filePath);
-                    //    pArg.commitDocum(sp, CSGenioAargpr.FldDocument.Field, rFile.GetContent(sp), rFile.Name + "_", "");
-                    //    pArg.ValValor = pArg.ValDocumentfk; //o Qvalue é a key do documento isto porque a tradução está centralizada em apenas um Qfield (por agora)
-                    //    pArg.update(sp);
-                    }
                 }
             }
+
+            return proc.QPrimaryKey;
         }
 
         private string GetHumanName(string key, AsyncProcessArgument argument)

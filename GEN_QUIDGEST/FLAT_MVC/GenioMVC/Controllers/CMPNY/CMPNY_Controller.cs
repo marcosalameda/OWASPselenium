@@ -12,6 +12,7 @@ using GenioMVC.Models;
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.Attributes;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using Quidgest.Persistence.GenericQuery;
 using CSGenio.persistence;
 using CSGenio.business;
@@ -180,6 +181,22 @@ namespace GenioMVC.Controllers
         {
             return GenericRecalculateFormulas(form_data, "cmpny",
                 (primaryKey) => Models.Cmpny.Find(primaryKey, "FEMPRE"),
+                (model) => form_data.MapToModel(model as Models.Cmpny)
+            );
+        }
+
+        /// <summary>
+        /// Recalculate formulas of the "Wid_cola" form. (++, CT, SR, CL and U1)
+        /// </summary>
+        /// <param name="form_data">Current form data</param>
+        /// <returns></returns>
+        [HttpPost]
+		[AuthorizeForUsers]
+        [ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
+        public JsonResult RecalculateFormulas_Wid_cola(Wid_cola_ViewModel form_data)
+        {
+            return GenericRecalculateFormulas(form_data, "cmpny",
+                (primaryKey) => Models.Cmpny.Find(primaryKey, "FWID_COLA"),
                 (model) => form_data.MapToModel(model as Models.Cmpny)
             );
         }

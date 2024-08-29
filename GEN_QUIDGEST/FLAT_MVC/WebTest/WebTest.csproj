@@ -1,5 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
- <PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>annotations</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -11,13 +11,17 @@
     <PackageReference Include="nunit" Version="3.10.1" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
+    <!-- This shouldn't be necessary, but there's currently no way of disabling warnings coming from specific project references -->
+    <!-- https://github.com/NuGet/Home/issues/5740 -->
+    <PackageReference Include="Microsoft.SqlServer.Types" Version="14.0.1016.290">
+      <NoWarn>NU1701</NoWarn>
+    </PackageReference>
     <PackageReference Include="Moq" Version="4.20.70" />
   </ItemGroup>
 
   <ItemGroup>
-	<ProjectReference Include="..\CSGenio.core\CSGenio.core.csproj">
+    <ProjectReference Include="..\CSGenio.core\CSGenio.core.csproj">
       <Project>{b4208612-c332-4a48-be24-6ef1799be01c}</Project>
-
       <Name>CSGenio.core</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSGenio.framework\CSGenio.framework.csproj">

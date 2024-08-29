@@ -12,6 +12,7 @@ using GenioMVC.Models;
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.Attributes;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using Quidgest.Persistence.GenericQuery;
 using CSGenio.persistence;
 using CSGenio.business;
@@ -118,9 +119,7 @@ namespace GenioMVC.Controllers
         #region Programmers code...
 
 
-		// GET: /Lendi/PTN_MenuR_DELETEONEROW
-		// <returns>Json(new { success = "OK", message = "" }, JsonRequestBehavior.AllowGet)</returns>
-		public JsonResult PTN_MenuR_DELETEONEROW(string id)
+		protected JsonResult PTN_MenuR_DELETEONEROW(string id, Dictionary<string, object> customParameters = null)
 		{
 			try
 			{
@@ -149,56 +148,17 @@ namespace GenioMVC.Controllers
 			}
 		}
 
-
-		// GET: /Lendi/PTN_MenuR_DELETEROWS
+		// GET: /Lendi/PTN_Menu_3E1_MenuR_DELETEONEROW
 		// <returns>Json(new { success = "OK", message = "" }, JsonRequestBehavior.AllowGet)</returns>
-		public JsonResult PTN_MenuR_DELETEROWS(List<string> ids, Dictionary<string, string> queryParams, bool allSelected = false)
+		public JsonResult PTN_Menu_3E1_MenuR_DELETEONEROW(string id, Dictionary<string, object> customParameters = null)
 		{
-			CSGenio.business.Area area = CSGenio.business.Area.createArea("lendi", UserContext.Current.User, UserContext.Current.User.CurrentModule);
-			NameValueCollection parameters;
-			PTN_Menu_1211_ViewModel model = new PTN_Menu_1211_ViewModel(Navigation);
-			
-			//Fetch and format the parameters
-			if (queryParams != null && queryParams.Count() > 0)
-				parameters = FormatQueryString(queryParams);
-			else
-				parameters = this.Navigation.GetValue<NameValueCollection>("requestValues" + "PTN_Menu_1211");
-			
-			//Get CriteriaSet
-			CriteriaSet crs = model.BuildCriteriaSet(parameters, out bool hasAllRequiredLimits);
-
-
-			if (!allSelected || crs == null)
-				crs.In("lendi", "CODLENDI", ids);
-
-			//Fetch List of Related Areas
-			List<string> relatedTables = new List<string>();
-			QueryUtils.checkConditionsForForeignTables(crs, area, relatedTables);
-
-			/*
-			 * This is a list of Relationships has to be included in the query
-			 * that will be using the CriteriaSet.
-			 *
-			 * This can be done using QueryUtils.setFromTabDirect()
-			 */
-			List<CSGenio.framework.Relation> relations = QueryUtils.tablesRelationships(relatedTables, area);
-			try
-			{
-				return PTN_MenuR_DELETEROWS_Routine(crs, relations, area);
-			}
-			catch (BusinessException ex)
-			{
-				return Json(new { success = "E", message = ex.UserMessage }, JsonRequestBehavior.AllowGet);
-			}
-			catch (Exception ex)
-			{
-				Log.Error("Error in action PTN_MenuR_DELETEROWS: " + ex.Message);
-				return Json(new { success = "E", message = Resources.Resources.PEDIMOS_DESCULPA__OC63848 }, JsonRequestBehavior.AllowGet);
-			}
+			return PTN_MenuR_DELETEONEROW(id, customParameters);
 		}
 
-		private JsonResult PTN_MenuR_DELETEROWS_Routine(CriteriaSet crs, List<Relation> relations, CSGenio.business.Area routineArea)
+		protected JsonResult PTN_MenuR_DELETEROWS(CriteriaSet crs, List<Relation> relations, CSGenio.business.Area routineArea, Dictionary<string, object> customParameters = null)
 		{
+			try
+			{
 //Platform: MVC | Type: CONTROLLER_ROUTINE_BODY | Module: GQT | Parameter: DELETEROWS | File:  | Order: 0
 //BEGIN_MANUALCODE_CODMANUA:db1bb593-c309-49f0-9eee-3ee35c5c4383
 			
@@ -214,8 +174,50 @@ namespace GenioMVC.Controllers
 			
 			return Json(new { success = "OK", message = "Routine success" });
 //END_MANUALCODE
+			}
+			catch (BusinessException ex)
+			{
+				return Json(new { success = "E", message = ex.UserMessage }, JsonRequestBehavior.AllowGet);
+			}
+			catch (Exception ex)
+			{
+				Log.Error("Error in action PTN_MenuR_DELETEROWS: " + ex.Message);
+				return Json(new { success = "E", message = Resources.Resources.PEDIMOS_DESCULPA__OC63848 }, JsonRequestBehavior.AllowGet);
+			}
 		}
 
+		// GET: /Lendi/PTN_Menu_3E1_MenuR_DELETEROWS
+		// <returns>Json(new { success = "OK", message = "" }, JsonRequestBehavior.AllowGet)</returns>
+		public JsonResult PTN_Menu_3E1_MenuR_DELETEROWS(List<string> ids, Dictionary<string, string> queryParams, bool allSelected = false, Dictionary<string, object> customParameters = null)
+		{
+			CSGenio.business.Area area = CSGenio.business.Area.createArea("lendi", UserContext.Current.User, UserContext.Current.User.CurrentModule);
+			ListViewModel model = new PTN_Menu_3E1_ViewModel(Navigation);
+			NameValueCollection parameters;
+
+			//Fetch and format the parameters
+			if (queryParams != null && queryParams.Count() > 0)
+				parameters = FormatQueryString(queryParams);
+			else
+				parameters = this.Navigation.GetValue<NameValueCollection>("requestValuesPTN_Menu_3E1");
+
+			//Get CriteriaSet
+			CriteriaSet crs = model.BuildCriteriaSet(parameters, out bool hasAllRequiredLimits);
+
+			if (!allSelected || crs == null)
+				crs.In("lendi", "CODLENDI", ids);
+
+			//Fetch List of Related Areas
+			List<string> relatedTables = new List<string>();
+			QueryUtils.checkConditionsForForeignTables(crs, area, relatedTables);
+
+			/*
+			 * This is a list of Relationships that has to be included in the query that will be using the CriteriaSet.
+			 * This can be done using QueryUtils.setFromTabDirect()
+			 */
+			List<CSGenio.framework.Relation> relations = QueryUtils.tablesRelationships(relatedTables, area);
+
+			return PTN_MenuR_DELETEROWS(crs, relations, area, customParameters);
+		}
 
         private List<string> GetActionIds(CriteriaSet crs, CSGenio.persistence.PersistentSupport sp = null)
         {

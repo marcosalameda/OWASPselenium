@@ -11,12 +11,9 @@
 	<BreadcrumbsContent>detailed</BreadcrumbsContent> <!-- simplified, detailed, hidden -->
 	<RowActionDisplay>dropdown</RowActionDisplay> <!-- inline, dropdown -->
 	<DefaultSidebarState>opened</DefaultSidebarState> <!-- opened, closed -->
-	<HeaderPlacement>in_menuPanel</HeaderPlacement> <!-- in_contentPanel, in_menuPanel -->
 	<ModulesStyle>collapsible</ModulesStyle> <!-- list, dropdown, collapsible -->
 	<MenuSearchEnable>false</MenuSearchEnable> <!-- true, false -->
 	<BookmarkEnable>true</BookmarkEnable> <!-- true, false -->
-	<MenuBackgroundColor>dark</MenuBackgroundColor> <!-- dark, light -->
-	<MenuBrand>Text</MenuBrand> <!-- Image, Text -->
 	<ShowPasswordToggle>true</ShowPasswordToggle> <!-- true, false -->
 	<AuthenticationStyle>default</AuthenticationStyle> <!-- default, light, secondary -->
 	<HelpListShort>Subtitle</HelpListShort> <!-- Tooltip, Popover, Subtitle, Info-banner -->
@@ -25,4 +22,7 @@
 	<HelpInputDetail>Popover</HelpInputDetail> <!-- Popover -->
 	<HelpGroupShort>Tooltip</HelpGroupShort> <!-- Tooltip, Popover, Subtitle -->
 	<HelpGroupDetail>Popover</HelpGroupDetail> <!-- Popover, Subtitle -->
+	<HeaderPlacement>in_menuPanel</HeaderPlacement> <!-- in_contentPanel, in_menuPanel -->
+	<MenuBackgroundColor>dark</MenuBackgroundColor> <!-- dark, light -->
+	<MenuBrand>Text</MenuBrand> <!-- Image, Text -->
 </LayoutConfig>

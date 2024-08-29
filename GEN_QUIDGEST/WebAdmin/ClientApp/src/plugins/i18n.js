@@ -1,22 +1,19 @@
 ﻿
 import QGlobal from '@/global';
-import defaultResources from '@/translations/resources.en-US.json';
 import EventBus from '@/utils/eventBus';
 import { createI18n } from 'vue-i18n'
-
-var messages = {
-  'en-US': defaultResources
-};
 
 export function setupI18n(options = {
     globalInjection: true,
     legacy: false,
     locale: QGlobal.defaultLang, // set locale
     fallbackLocale: QGlobal.defaultLang, // set fallback locale
-    messages, // set locale messages
+    messages: {}
 }) {
     const i18n = createI18n(options);
-    setI18nLanguage(i18n, options.locale);
+    loadLocaleMessages(i18n, options.locale).then(() => {
+        setI18nLanguage(i18n, options.locale); // Set language in HTML
+    });
     return i18n;
 }
 
@@ -35,11 +32,6 @@ export function setI18nLanguage(i18n, locale) {
 }
 
 export function loadLocaleMessages(i18n, locale) {
-    // If the same language
-    if (i18n.global.locale === locale) {
-        return Promise.resolve(setI18nLanguage(i18n, locale));
-    }
-
     // If the language was already loaded
     if (i18n.global.availableLocales.includes(locale)) {
         return Promise.resolve(setI18nLanguage(i18n, locale));

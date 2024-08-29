@@ -106,6 +106,8 @@ namespace CSGenio.business
         private static AreaRef m_AreaLANGU = new AreaRef("GQT", "gqtlangu", "langu");
         public static AreaRef AreaSBCAT { get { return m_AreaSBCAT; } }
         private static AreaRef m_AreaSBCAT = new AreaRef("GQT", "gqtsbcat", "sbcat");
+        public static AreaRef Area { get { return m_Area; } }
+        private static AreaRef m_Area = new AreaRef("GQT", "gqt", "");
         public static AreaRef AreaSHITY { get { return m_AreaSHITY; } }
         private static AreaRef m_AreaSHITY = new AreaRef("GQT", "gqtshity", "shity");
         public static AreaRef AreaCCORR { get { return m_AreaCCORR; } }
@@ -246,6 +248,8 @@ namespace CSGenio.business
         private static AreaRef m_AreaROIGF = new AreaRef("GQT", "gqtroigf", "roigf");
         public static AreaRef AreaVISIT { get { return m_AreaVISIT; } }
         private static AreaRef m_AreaVISIT = new AreaRef("GQT", "gqtvisit", "visit");
+        public static AreaRef AreaE2ETS { get { return m_AreaE2ETS; } }
+        private static AreaRef m_AreaE2ETS = new AreaRef("GQT", "gqte2ets", "e2ets");
         public static AreaRef AreaCONTA { get { return m_AreaCONTA; } }
         private static AreaRef m_AreaCONTA = new AreaRef("GQT", "gqtconta", "conta");
         public static AreaRef AreaGAMES { get { return m_AreaGAMES; } }
@@ -407,6 +411,7 @@ namespace CSGenio.business
             "movim",
             "langu",
             "sbcat",
+            "",
             "shity",
             "ccorr",
             "assma",
@@ -477,6 +482,7 @@ namespace CSGenio.business
             "noti1",
             "roigf",
             "visit",
+            "e2ets",
             "conta",
             "games",
             "insta",

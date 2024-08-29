@@ -367,6 +367,8 @@
     <Compile Include="Controllers\Langu\*.cs" />
     <Compile Include="ViewModels\Sbcat\*_ViewModel.cs" />
     <Compile Include="Controllers\Sbcat\*.cs" />
+    <Compile Include="ViewModels\\*_ViewModel.cs" />
+    <Compile Include="Controllers\\*.cs" />
     <Compile Include="ViewModels\Shity\*_ViewModel.cs" />
     <Compile Include="Controllers\Shity\*.cs" />
     <Compile Include="ViewModels\Ccorr\*_ViewModel.cs" />
@@ -507,6 +509,8 @@
     <Compile Include="Controllers\Roigf\*.cs" />
     <Compile Include="ViewModels\Visit\*_ViewModel.cs" />
     <Compile Include="Controllers\Visit\*.cs" />
+    <Compile Include="ViewModels\E2ets\*_ViewModel.cs" />
+    <Compile Include="Controllers\E2ets\*.cs" />
     <Compile Include="ViewModels\Conta\*_ViewModel.cs" />
     <Compile Include="Controllers\Conta\*.cs" />
     <Compile Include="ViewModels\Games\*_ViewModel.cs" />

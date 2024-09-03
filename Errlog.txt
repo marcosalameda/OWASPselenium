@@ -1,84 +1,39 @@
-﻿GQT em 29/08/2024 09:55:47
-09:55:47.825 info: Beginning generation: Styles - ASP.Net MVC
-09:55:47.841 info: Reading relational model...
-09:55:48.163 info: Validations for ASP.NET MVC...
-09:55:48.174 info: Creating output directories for ASP.NET MVC...
-09:55:48.204 info: Copying configurations...
-09:55:48.221 info: Generating resources...
-09:55:48.320 info: Generating helper classes...
-09:55:48.345 info: Generating generic controllers...
-09:55:55.389 info: Generating generic models...
-09:55:55.397 info: Generating table models...
-09:55:55.494 info: Generating generic view models...
-09:55:55.556 info: Generating forms view models...
-09:55:56.528 warning: Field with Type=PM and Help=PM was not processed. Form=FIELDHLP Field=FIELD001.
-09:55:57.604 info: Generating editable table list view models...
-09:55:57.606 info: Generating list view models...
-09:55:57.859 info: Creating output directories for ASP.NET MVC razor client-side...
-09:55:57.861 info: Generating the razor client-side...
-09:55:57.870 info: Copying configurations...
-09:55:57.871 info: Generating javascript files...
-09:55:57.995 info: Generating stylesheets...
-09:55:58.016 warning: Resource with code: HOME not found in path Resources\FontIcons\home.scss
-09:55:58.017 warning: Resource with code: CONTAINERS not found in path Resources\FontIcons\containers.scss
-09:55:58.018 warning: Resource with code: COMPONENTS not found in path Resources/FontIcons/components.scss
-09:55:58.019 warning: Resource with code: ADPATTERS not found in path Resources\FontIcons\advanced-patterns.scss
-09:55:58.027 warning: Resource with code: DELETE not found in path Resources\svg\delete.svg
-09:55:58.027 warning: Resource with code: DELETE not found in path Resources\svg\delete.svg
-09:55:58.027 warning: Resource with code: DELETE not found in path Resources\svg\delete.svg
-09:55:58.029 warning: Resource with code: ADPATTERS not found in path Resources\FontIcons\advanced-patterns.scss
-09:55:58.029 warning: Resource with code: CONTAINERS not found in path Resources\FontIcons\containers.scss
-09:55:58.029 warning: Resource with code: LIST not found in path Resources\FontIcons\list.scss
-09:55:58.030 warning: Resource with code: MAGIC not found in path Resources\FontIcons\magic.scss
-09:55:58.030 warning: Resource with code: MODAL_WI not found in path Resources\FontIcons\modal-window.scss
-09:55:58.030 warning: Resource with code: COMPONENTS not found in path Resources/FontIcons/components.scss
-09:55:58.031 warning: Resource with code: HOME not found in path Resources\FontIcons\home.scss
-09:55:58.032 info: Generating razor views...
-09:55:58.055 info: Copying layout FlatIntranet...
-09:55:58.073 info: Generating shared views...
-09:55:58.085 info: Generating user management views...
-09:55:58.087 info: Generating form views...
-09:55:58.864 error: Field SHOWRC on form EQUIP has no control!
-09:55:58.974 warning: Field with Type=PM and Help=PM was not processed. Form=FIELDHLP Field=FIELD001.
-09:55:58.974 warning: Field with Type=PM and Help=PM was not processed. Form=FIELDHLP Field=FIELD001.
-09:55:58.976 warning: Field with Type=IX and Help= do not yet support edit mode. Form=FIELDHLP Field=LOGOEXTE.
-09:55:58.977 warning: Field with Type=IX and Help= do not yet support edit mode. Form=FIELDHLP Field=LOGOEXTE.
-09:55:58.978 warning: Field with Type=PM and Help=PM was not processed. Form=FIELDHLP Field=FIELD001.
-09:55:58.978 warning: Field with Type=PM and Help=PM was not processed. Form=FIELDHLP Field=FIELD001.
-09:55:58.980 warning: Field with Type=IX and Help= do not yet support edit mode. Form=FIELDHLP Field=LOGOEXTE.
-09:55:58.981 warning: Field with Type=IX and Help= do not yet support edit mode. Form=FIELDHLP Field=LOGOEXTE.
-09:55:59.286 warning: Resource with code: IDI_OK not found in path Resources\ok.ico
-09:55:59.287 warning: Resource with code: IDI_OK not found in path Resources\ok.ico
-09:55:59.289 info: LNHPD
-09:55:59.417 warning: Resource with code: IDI_SETA not found in path Resources\seta.ico
-09:56:00.000 warning: Resource with code: IDI_OK not found in path Resources\ok.ico
-09:56:00.002 warning: Resource with code: IDI_OK not found in path Resources\ok.ico
-09:56:00.265 info: Creating DBEdit views...
-09:56:00.632 info: Generating custom controls...
-09:56:00.715 info: Creating dashboard views...
-09:56:00.719 info: Copying razor configurations...
-09:56:00.724 info: Generating global classes...
-09:56:00.730 info: Generating razor specific helper classes...
-09:56:00.750 info: Generating forms controllers...
-09:56:01.328 info: Generating razor specific view models...
-09:56:01.341 info: Deleting unnecessary generation files
-09:56:01.353 info: Writing pending files took 11 ms
-09:56:01.353 info: Finished generation
-09:56:01.353 info: Took 13 seconds
-09:56:01.358 info: Beginning generation: Styles - C# Server
-09:56:01.373 info: Validating formulas...
-09:56:01.611 info: Reading relational model...
-09:56:01.616 info: Creating output directories...
-09:56:01.617 info: Generating tables...
-09:56:01.894 info: Deleting unnecessary generation files
-09:56:02.011 info: Writing pending files took 116 ms
-09:56:02.011 info: Finished generation
-exception: Error while running control template: Templates/CsTemplates/Control.vm.
+﻿GQT em 03/09/2024 15:53:27
+03:53:27.891 info: Reading relational model...
+03:53:28.140 info: Reading menus...
+03:53:28.754 info: Calculating indexes [Tables]...
+03:53:28.771 info: Calculating indexes [Eph]...
+03:53:28.794 info: Calculating indexes [Menus]...
+03:53:28.840 info: Calculating indexes [Forms]...
+03:53:48.589 info: Calculating indexes [Manwins]...
+03:53:48.591 info: Calculating indexes [Altwins]...
+03:53:48.593 info: Calculating unique indexes...
+03:53:48.596 info: Reading indexes from table...
+03:53:48.692 info: Beginning generation: Styles - ASP.Net MVC
+03:53:48.809 info: Reading relational model...
+03:53:55.435 info: Validations for ASP.NET MVC...
+03:53:55.455 info: Creating output directories for ASP.NET MVC...
+03:53:55.534 info: Copying configurations...
+03:53:55.622 info: Generating resources...
+03:53:55.909 info: Generating helper classes...
+03:53:55.957 info: Generating generic controllers...
+03:54:02.880 info: Generating generic models...
+03:54:02.904 info: Generating table models...
+03:54:03.122 info: Generating generic view models...
+03:54:03.293 info: Generating forms view models...
+03:54:03.437 warning: Altwin STY_Menu_ALERTS.cshtml '' filename/wildcard did not match any generated files. Check if it's still necessary.
+03:54:03.438 warning: Altwin Authent.cshtml '' filename/wildcard did not match any generated files. Check if it's still necessary.
+03:54:03.438 warning: Altwin STY_Menu_ALERTS.cshtml '' filename/wildcard did not match any generated files. Check if it's still necessary.
+03:54:03.438 warning: Altwin Btnsform.cshtml '' filename/wildcard did not match any generated files. Check if it's still necessary.
+03:54:03.438 warning: Altwin STY_Menu_OVERVIEW.cshtml '' filename/wildcard did not match any generated files. Check if it's still necessary.
+03:54:03.439 info: Deleting unnecessary generation files
+03:54:04.280 info: Writing pending files took 841 ms
+03:54:04.281 info: Finished generation
+exception: Error while running control template: Templates/ASPNET-MVCTemplates/MvcRazor/Control.vm.
 GenioAPI
    at GenGenio.Genio.Generate()
    at GenioAPI.Generation.EntryPoint.GenerateApplication(ClientApplication app, SolutionXml sol, InitialGenerationInfo iinfo, Boolean reportSave, Boolean zipCode)
-   at GenioAPI.Generation.EntryPoint.GenerateClient(Cliente client, String appid, IEnumerable`1 geracoes, Boolean suppressWebAdmin, Boolean reportSave, Boolean zipCode)
-   at GenioGenerationServer.Generation.GenerateOneClient(String client, Boolean recalcIndex)
+   at GenioGenerationServer.Generation.GenerateOneApp(String client, String app, Boolean recalcIndex)
 +--- Context dump ---+
 Genio = GenGenio.Genio
 this = NVelocity.VelocityContext
@@ -90,65 +45,144 @@ aspa = "
 dollar = $
 sharp = #
 quote = "
+mvc = GenGenio.GenioMvcRazorExtension
+mvcFolder = MvcRazor
+layout = FlatIntranet
 tgt = System.Collections.Generic.Dictionary`2[System.String,GenGenio.Manwin+TagType]
-Csharp = GenGenio.GenioServidorCsharpExtension
+tpSearchField = System.Collections.Generic.Dictionary`2[System.String,System.String]
+zero = System.Collections.Generic.Dictionary`2[System.String,System.String]
 sutil = GenGenio.StringUtils
-rc_lingua = eng
-Plataforma = MVC
-tabelasHardcoded = System.Collections.ArrayList
-recursosHardcoded = System.Collections.ArrayList
-BinFolder = Bin
+idutil = GenGenio.IdentifierUtils
+Csharp = GenGenio.GenioServidorCsharpExtension
+plataforma = MVC
+grupos = System.Collections.Generic.List`1[GenGenio.ModuloCliente]
+langs = System.Collections.Generic.List`1[System.String]
+baselang = eng
+texts = System.Collections.Generic.Dictionary`2+ValueCollection[System.String,GenGenio.Texto]
+confirmPasswordPrefix = Confirm
+AuditNamespace = GenioMVC
+dashboards = System.Collections.Generic.List`1[GenGenio.MenuDSDashboard]
+dbeditButtons = System.Collections.Generic.List`1[GenGenio.CampoForm]
+chartsList = System.Collections.Generic.List`1[System.String]
+pxs = System.Collections.Generic.List`1[GenGenio.MenuContinuacao]
+empty_tablefield_checked = System.Collections.Generic.List`1[System.Object]
+empty_descriptions = System.Collections.Generic.List`1[System.Object]
 todasTabelas = System.Collections.Generic.Dictionary`2+ValueCollection[System.String,GenGenio.TabelaBD]
-velocityCount = 43
-tabela = 
+velocityCount = 0
+suffix = en-US
+full_name = PTN_Menu_3H1
+form = ABATE
+form_name = Abate
+form_table = Decom
+areasForm = System.Collections.Generic.List`1[GenGenio.AreaForm]
+form_Fields = System.Collections.Generic.List`1[GenGenio.CampoForm]
+vmSuperClass = FormViewModel
 +--------------------+
 
-exception: Invocation of method 'Parse' at Parse($this, "Templates/CsTemplates/CSArea.cs.vm", "${Genio.OutputDirectory}/GenioServer/model/CSGenioA${tabela.Nome}.cs") Line 68 Column 12 threw an exception.
+exception: Error in template: Templates/ASPNET-MVCTemplates/Control.vm
+NVelocity
+   at NVelocity.Runtime.Directive.Parse.RenderTemplate(Template template, String arg, TextWriter writer, IInternalContextAdapter context)
+   at NVelocity.Runtime.Directive.Parse.Render(IInternalContextAdapter context, TextWriter writer, INode node)
+   at NVelocity.Runtime.Parser.Node.ASTDirective.Render(IInternalContextAdapter context, TextWriter writer)
+   at NVelocity.Runtime.Parser.Node.SimpleNode.Render(IInternalContextAdapter context, TextWriter writer)
+   at NVelocity.Template.Merge(IContext context, TextWriter writer)
+   at GenGenio.Genio.Generate()
+
+exception: Invocation of method 'Parse' at Parse($this, "Templates/ASPNET-MVCTemplates/${mvcFolder}/GenioMVC/ViewModels/TemplateViewModel.cs.vm", "${Genio.OutputDirectory}/GenioMVC/ViewModels/${form_table}/${form_name}_ViewModel.cs") Line 305 Column 32 threw an exception.
 NVelocity
    at NVelocity.Runtime.Parser.Node.ASTMethod.Execute(Object o, IInternalContextAdapter context)
    at NVelocity.Runtime.Parser.Node.ASTReference.Execute(Object o, IInternalContextAdapter context)
    at NVelocity.Runtime.Parser.Node.ASTReference.Render(IInternalContextAdapter context, TextWriter writer)
    at NVelocity.Runtime.Parser.Node.ASTBlock.Render(IInternalContextAdapter context, TextWriter writer)
+   at NVelocity.Runtime.Parser.Node.SimpleNode.Render(IInternalContextAdapter context, TextWriter writer)
    at NVelocity.Runtime.Parser.Node.ASTIfStatement.Render(IInternalContextAdapter context, TextWriter writer)
+   at NVelocity.Runtime.Parser.Node.ASTBlock.Render(IInternalContextAdapter context, TextWriter writer)
+   at NVelocity.Runtime.Parser.Node.ASTElseIfStatement.Render(IInternalContextAdapter context, TextWriter writer)
+   at NVelocity.Runtime.Parser.Node.ASTIfStatement.Render(IInternalContextAdapter context, TextWriter writer)
+   at NVelocity.Runtime.Parser.Node.ASTBlock.Render(IInternalContextAdapter context, TextWriter writer)
    at NVelocity.Runtime.Directive.Foreach.Render(IInternalContextAdapter context, TextWriter writer, INode node)
    at NVelocity.Runtime.Parser.Node.ASTDirective.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Template.Merge(IContext context, TextWriter writer)
-   at GenGenio.Genio.Generate()
+   at NVelocity.Runtime.Parser.Node.SimpleNode.Render(IInternalContextAdapter context, TextWriter writer)
+   at NVelocity.Runtime.Directive.Parse.RenderTemplate(Template template, String arg, TextWriter writer, IInternalContextAdapter context)
 
-exception: Error while running control template: Templates\CsTemplates\CSArea.cs.vm.
+exception: Error while running control template: Templates\ASPNET-MVCTemplates\MvcRazor\GenioMVC\ViewModels\TemplateViewModel.cs.vm.
 GenioAPI
    at GenGenio.Genio.ParseToString(IContext parentContext, String txt)
+   at GenGenio.Genio.ParseInternal(IContext parentContext, String txt, String path, Encoding encoding, Boolean addToParsedFiles)
+   at GenGenio.Genio.Parse(IContext parentContext, String txt, String path, Encoding encoding)
    at GenGenio.Genio.Parse(IContext parentContext, String txt, String path)
    at InvokeStub_Genio.Parse(Object, Span`1)
    at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
 +--- Context dump ---+
 this = NVelocity.VelocityContext
-cargas = System.Collections.Generic.List`1[GenGenio.Carga]
-dominio = 
-ltabela = 
-mapMsmqTipos = System.Collections.Generic.Dictionary`2[System.String,System.String]
-mapCondOpToCritOp = System.Collections.Generic.Dictionary`2[System.String,System.String]
-larea = 
-ldominio = gqt
-modeloRelacional = GenGenio.RelationalModel
-arvore = 0
-argumentosRep = System.Collections.Generic.List`1[GenGenio.TriggerReplica]
-cliente = Quidgest - Management Consultants, S.A.
-mapTipoInterno = System.Collections.Generic.Dictionary`2[System.String,System.String]
-mapCavCampo = System.Collections.Generic.Dictionary`2[System.String,System.String]
+formIdentifier = FABATE
+table = DECOM
+chave = CODDECO
+form_name = Abate
+form_table = Decom
+tmpFormFields = System.Collections.Generic.List`1[GenGenio.CampoForm]
+hasWriteConditions = True
+queueLista = System.Collections.Generic.List`1[GenGenio.Genio+AuxRelacoesMq]
+lstCampos = System.Collections.Generic.List`1[System.Object]
+extraFields = System.Collections.Generic.List`1[System.Object]
+createdFields = System.Collections.Generic.List`1[System.Object]
+velocityCount = 0
+key_name = ValCoddeco
+fieldPrefix = ValNote
+areaBaseFormula = DECOM
+conditions = System.Collections.Generic.List`1[GenGenio.FormCondition]
+verifyApply = True
+conditionType = write
+campoNdbfCapFirst = Decom
+areasFormula = System.Collections.Generic.List`1[System.Object]
+condition = True
+applyCondition = !isApply && 
+formulaInterna = GenGenio.FormulaInterna
+conditionMessage = ""
 +--------------------+
 
-exception: Invocation of method 'getTipoKey' at getTipoKey($Genio.Cliente.Tipokey) Line 47 Column 57 threw an exception.
+exception: Error in template: Templates/ASPNET-MVCTemplates/MvcRazor/GenioMVC/ViewModels/ViewModelFormula.vm
 NVelocity
-   at NVelocity.Runtime.Parser.Node.ASTMethod.Execute(Object o, IInternalContextAdapter context)
-   at NVelocity.Runtime.Parser.Node.ASTReference.Execute(Object o, IInternalContextAdapter context)
-   at NVelocity.Runtime.Parser.Node.ASTReference.Render(IInternalContextAdapter context, TextWriter writer)
+   at NVelocity.Runtime.Directive.Parse.RenderTemplate(Template template, String arg, TextWriter writer, IInternalContextAdapter context)
+   at NVelocity.Runtime.Directive.Parse.Render(IInternalContextAdapter context, TextWriter writer, INode node)
+   at NVelocity.Runtime.Parser.Node.ASTDirective.Render(IInternalContextAdapter context, TextWriter writer)
+   at NVelocity.Runtime.Parser.Node.ASTBlock.Render(IInternalContextAdapter context, TextWriter writer)
+   at NVelocity.Runtime.Parser.Node.ASTIfStatement.Render(IInternalContextAdapter context, TextWriter writer)
+   at NVelocity.Runtime.Parser.Node.SimpleNode.Render(IInternalContextAdapter context, TextWriter writer)
    at NVelocity.Template.Merge(IContext context, TextWriter writer)
    at GenGenio.Genio.ParseToString(IContext parentContext, String txt)
 
-exception: Object reference not set to an instance of an object.
+exception: Invocation of method 'ValidarFuncoesConhecidasFormulas' at ValidarFuncoesConhecidasFormulas($mvc.GetFuncoesCSConhecidas(), $mvc.GetFormulasControllerMVC(), $Genio, $areaBaseFormula, "Transformar Formula Interna MVC") Line 60 Column 22 threw an exception.
+NVelocity
+   at NVelocity.Runtime.Parser.Node.ASTMethod.Execute(Object o, IInternalContextAdapter context)
+   at NVelocity.Runtime.Parser.Node.ASTReference.Execute(Object o, IInternalContextAdapter context)
+   at NVelocity.Runtime.Parser.Node.ASTReference.Evaluate(IInternalContextAdapter context)
+   at NVelocity.Runtime.Parser.Node.ASTExpression.Evaluate(IInternalContextAdapter context)
+   at NVelocity.Runtime.Parser.Node.ASTIfStatement.Render(IInternalContextAdapter context, TextWriter writer)
+   at NVelocity.Runtime.Parser.Node.ASTBlock.Render(IInternalContextAdapter context, TextWriter writer)
+   at NVelocity.Runtime.Parser.Node.ASTIfStatement.Render(IInternalContextAdapter context, TextWriter writer)
+   at NVelocity.Runtime.Parser.Node.ASTBlock.Render(IInternalContextAdapter context, TextWriter writer)
+   at NVelocity.Runtime.Directive.Foreach.Render(IInternalContextAdapter context, TextWriter writer, INode node)
+   at NVelocity.Runtime.Parser.Node.ASTDirective.Render(IInternalContextAdapter context, TextWriter writer)
+   at NVelocity.Runtime.Parser.Node.SimpleNode.Render(IInternalContextAdapter context, TextWriter writer)
+   at NVelocity.Runtime.Directive.Parse.RenderTemplate(Template template, String arg, TextWriter writer, IInternalContextAdapter context)
+
+exception: 1:5: mismatched input '<EOF>' expecting '('
 GenioAPI
-   at GenGenio.TabelaBD.getTipoKey(String tpkey)
-   at InvokeStub_TabelaBD.getTipoKey(Object, Span`1)
-   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at GenGenio.Language.GELUtils.<>c.<GetFunctionList>b__3_0(Int32 line, Int32 column, Int32 lastLine, Int32 lastColumn, String msg)
+   at GenGenio.Language.GELErrorListener.WriteError(String msg)
+   at GenGenio.Language.GELErrorListener.SyntaxError(TextWriter output, IRecognizer recognizer, IToken offendingSymbol, Int32 line, Int32 charPositionInLine, String msg, RecognitionException e)
+   at Antlr4.Runtime.ProxyErrorListener`1.SyntaxError(TextWriter output, IRecognizer recognizer, Symbol offendingSymbol, Int32 line, Int32 charPositionInLine, String msg, RecognitionException e)
+   at Antlr4.Runtime.Parser.NotifyErrorListeners(IToken offendingToken, String msg, RecognitionException e)
+   at Antlr4.Runtime.DefaultErrorStrategy.NotifyErrorListeners(Parser recognizer, String message, RecognitionException e)
+   at Antlr4.Runtime.DefaultErrorStrategy.ReportInputMismatch(Parser recognizer, InputMismatchException e)
+   at Antlr4.Runtime.DefaultErrorStrategy.ReportError(Parser recognizer, RecognitionException e)
+   at GenGenio.Language.GELParser.expression(Int32 _p)
+   at GenGenio.Language.GELParser.stmt()
+   at GenGenio.Language.GELUtils.GetParseTree(GELErrorListener errorListener, String formulaText)
+   at GenGenio.Language.GELUtils.GetFunctionList(String formula)
+   at GenGenio.FormulaInterna.ValidarFuncoesConhecidas(ICollection`1 funcoesManwin, FormulasTemplate template, Genio genio, String tabela, String campo, String output, Trace level)
+   at GenGenio.FormulaInterna.ValidarFuncoesConhecidasFormulas(ICollection`1 funcoesManwin, FormulasTemplate template, Genio genio, String tabela, String campo)
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
 

@@ -1,0 +1,302 @@
+﻿@model GenioMVC.ViewModels.Wpess.Imgmagn_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS IMGMAGN]/ *@
+<script  type="text/javascript">
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Imgmagn !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Imgmagn = new QForm($('[data-form="Imgmagn"]'), "Form_Imgmagn");
+		}
+		window.Form_Imgmagn.baseArea = "wpess";
+		window.Form_Imgmagn.FormMode = '@Model.GetFormMode';
+		window.Form_Imgmagn.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Imgmagn.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Wpess")',
+			GetDependants:		'@Url.Action("GetDependants", "Wpess")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Imgmagn", "Wpess")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Imgmagn", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Wpess", "Wpess")',
+		};
+		window.Form_Imgmagn.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Imgmagn.formSaveEdit = '@Url.Action("Imgmagn_SaveEdit", "Wpess")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Imgmagn.formAction = 'Imgmagn_New';
+		window.Form_Imgmagn.formRedirectURL = '@Url.Action("Imgmagn_New_Redirect", "Wpess")';
+		window.Form_Imgmagn.formSubmitURL = '@Url.Action("Imgmagn_New", "Wpess")';
+		window.Form_Imgmagn.formRedirectURL_repeatInsertion = '@Url.Action("Imgmagn_New_Redirect", "Wpess", new { repeatInsertion = true})';
+		window.Form_Imgmagn.formSubmitURL_repeatInsertion = '@Url.Action("Imgmagn_New", "Wpess", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Imgmagn.formAction = 'Imgmagn_Edit';
+		window.Form_Imgmagn.formRedirectURL = '@Url.Action("Imgmagn_Edit_Redirect", "Wpess")';
+		window.Form_Imgmagn.formSubmitURL = '@Url.Action("Imgmagn_Edit", "Wpess")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Imgmagn.formAction = 'Imgmagn_Duplicate';
+		window.Form_Imgmagn.formRedirectURL = '@Url.Action("Imgmagn_Duplicate_Redirect", "Wpess")';
+		window.Form_Imgmagn.formSubmitURL = '@Url.Action("Imgmagn_Duplicate", "Wpess")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Imgmagn.formAction = 'Imgmagn_Delete';
+		window.Form_Imgmagn.formRedirectURL = '@Url.Action("Imgmagn_Delete_Redirect", "Wpess")';
+		window.Form_Imgmagn.formSubmitURL = '@Url.Action("Imgmagn_Delete", "Wpess")';
+	</text>
+}
+		window.Form_Imgmagn.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.LED_IMGMAGN_WPESSFTBACKGR = new QImageControl($('[data-identifier="LED_IMGMAGN_WPESSFTBACKGR"]', this.element), window.Form_Imgmagn, '@Html.Raw(Url.Action("ImageDelete", "Wpess", new { id=Model.ValCodpess, modelname="Wpess", fldname="ValFtbackgr" }))', '@Html.Raw(Url.Action("ImageCropper", "Wpess", new { key=Model.ValCodpess, modelname= "Wpess", fldname= "ValFtbackgr", identifier= "FIMGMAGN", FormName= "Imgmagn", FieldId= "LED_IMGMAGN_WPESSFTBACKGR" }))',@Html.IsImageEmpty(Model.ValFtbackgr));
+
+
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	@*Hidden Foreign Keys Controls*@
+			this.Controls.LED_IMGMAGN_WAREHCODWAREH = new QHiddenControl($('[data-identifier="LED_IMGMAGN_WAREHCODWAREH"]', this.element), window.Form_Imgmagn);
+	</text>
+}
+			this.Controls.LED_IMGMAGN_WPESSCODPESS_ = new QHiddenControl($('[data-identifier="LED_IMGMAGN_WPESSCODPESS_"]', this.element), window.Form_Imgmagn);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+			this.Controls.LED_IMGMAGN_WPESSNAME____ = new QSpecialControl($('[data-identifier="LED_IMGMAGN_WPESSNAME____"]', this.element), window.Form_Imgmagn);
+			this.Controls.LED_IMGMAGN_WPESSNAME____.InitData(@JavaScriptConversion.ToString(@Model.ValName));
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	</text>
+}
+
+		window.Form_Imgmagn.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Imgmagn.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI IMGMAGN]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Imgmagn.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS IMGMAGN]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Imgmagn.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS IMGMAGN]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Imgmagn.Data.RelationKeysSelector = {
+				get wareh() { return $(':not([elem-identifier="Multiform"]) > #ValCodwareh', $('[data-form="Imgmagn"]')); /* Hidden */ },
+		};
+
+		window.Form_Imgmagn.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Imgmagn.Data.RelationKeys = {
+			get formContext() { return window.Form_Imgmagn; },
+			get wareh() { return (this.formContext.Data.RelationKeysSelector.wareh.getQControl() || {}).Value; /* Hidden FK */ },
+			set wareh(newValue) { (this.formContext.Data.RelationKeysSelector.wareh.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+		};
+	</text>
+}
+
+	window.Form_Imgmagn.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Imgmagn.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitImgmagn(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Imgmagn.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeleteImgmagn(event) {
+			event.preventDefault();
+			window.Form_Imgmagn.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+    var ajaxCallsRemaining = $(".flash object embed").length;
+    $('form [elem-identifier="ButtonPrimary"]').click(function() {
+        var flashObjects = $(".flash object embed");
+        ajaxCallsRemaining = flashObjects.length;
+        if(flashObjects.length == 0)
+            return true;
+        else {
+            flashObjects.each(function() {
+               var flashObj = GetFlash($(this).attr('id'));
+               flashObj.UsedFlash.TriggerSave(flashObj);
+            });
+            return false;
+        }
+    });
+    </text>
+}
+// USE /[MANUAL GQT FORM_CODEJS IMGMAGN]/
+
+
+
+ 
+
+    $($('[elem-identifier="FormActions"]'), $('[data-form="Imgmagn"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

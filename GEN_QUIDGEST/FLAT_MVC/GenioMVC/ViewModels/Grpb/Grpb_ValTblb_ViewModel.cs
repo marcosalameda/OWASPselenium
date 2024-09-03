@@ -1,0 +1,444 @@
+﻿using System;
+using CSGenio.business;
+using CSGenio.framework;
+using GenioMVC.Models.Navigation;
+using Quidgest.Persistence.GenericQuery;
+using System.Collections.Generic;
+using System.Linq;
+using System.Data;
+using System.Globalization;
+using System.Collections.Specialized;
+using System.Web.Mvc;
+using Quidgest.Persistence;
+using GenioMVC.Helpers.Table.Properties;
+
+namespace GenioMVC.ViewModels.Grpb
+{
+    public class Grpb_ValTblb_ViewModel : ListViewModel
+    {
+        /// <summary>
+        /// Gets or sets the object that represents the table and its elements.
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("Table")]
+        public TablePartial<GenioMVC.Models.Tblb> Menu { get; set; }
+
+        /// <inheritdoc/>
+        public override string TableAlias { get => "tblb"; }
+
+        /// <inheritdoc/>
+        public override string Uuid { get => "Grpb_ValTblb"; }
+
+        /// <inheritdoc/>
+        protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+
+        /// <inheritdoc/>
+        protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+
+        /// <summary>
+        /// The primary key field.
+        /// </summary>
+        public string ValCodgrpb { get; set; }
+
+        /// <inheritdoc/>
+        public override CriteriaSet baseConditions
+        {
+            get
+            {
+                CriteriaSet conds = CriteriaSet.And();
+                return conds;
+            }
+        }
+
+        /// <inheritdoc/>
+        public override List<Relation> relations
+        {
+            get
+            {
+                List<Relation> relations = null;
+                return relations;
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Grpb_ValTblb_ViewModel" /> class.
+        /// </summary>
+        /// <param name="currentNavigation">The current navigation</param>
+        public Grpb_ValTblb_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
+        {
+            ValCodgrpb = currentNavigation.CurrentLevel.GetEntry("grpb")?.ToString();
+        }
+
+        /// <inheritdoc/>
+        public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
+        {
+            var columns = new List<Exports.QColumn>()
+            {
+                new Exports.QColumn(CSGenioAtblb.FldText, FieldType.TEXTO, Resources.Resources.TEXT04938, 30, 0, true),
+                new Exports.QColumn(CSGenioAtblb.FldTextml, FieldType.MEMO, Resources.Resources.MULTILINE_TEXT38013, 30, 0, true),
+                new Exports.QColumn(CSGenioAtblb.FldNumint, FieldType.NUMERO, Resources.Resources.NUMERIC__INTEGER_50289, 10, 0, true),
+                new Exports.QColumn(CSGenioAtblb.FldNumdec, FieldType.NUMERO, Resources.Resources.NUMERIC__DECIMAL_36157, 10, 3, true),
+                new Exports.QColumn(CSGenioAtblb.FldCurint, FieldType.VALOR, Resources.Resources.CURRENCY__INTERGER_21437, 10, 0, true),
+                new Exports.QColumn(CSGenioAtblb.FldCurdec, FieldType.VALOR, Resources.Resources.CURRENCY__DECIMAL_11718, 10, 2, true),
+                new Exports.QColumn(CSGenioAtblb.FldBool, FieldType.LOGICO, Resources.Resources.BOOLEAN45002, 1, 0, true),
+                new Exports.QColumn(CSGenioAtblb.FldDate, FieldType.DATA, Resources.Resources.DATE18475, 8, 0, true),
+                new Exports.QColumn(CSGenioAtblb.FldDatetm, FieldType.DATAHORA, Resources.Resources.DATETIME__MINUTES_59352, 16, 0, true),
+                new Exports.QColumn(CSGenioAtblb.FldDatets, FieldType.DATASEGUNDO, Resources.Resources.DATETIME__SECONDS_49861, 19, 0, true),
+                new Exports.QColumn(CSGenioAtblb.FldTimehm, FieldType.TEMPO, Resources.Resources.TIME__HOURS_MINUTES_01660, 5, 0, true),
+                new Exports.QColumn(CSGenioAtblb.FldEnumt, FieldType.ARRAY_COD_TEXTO, Resources.Resources.ENUMERATION__TEXT_15855, 10, 0, true, "typet"),
+                new Exports.QColumn(CSGenioAtblb.FldEnumn, FieldType.ARRAY_COD_NUMERICO, Resources.Resources.ENUMERATION__NUMERIC44708, 10, 0, true, "typen"),
+            };
+
+            columns.RemoveAll(item => item == null);
+            return columns;
+        }
+
+        public void LoadToExport(out ListingMVC<CSGenioAtblb> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, NameValueCollection requestValues, bool ajaxRequest = false)
+        {
+            listing = null;
+            conditions = null;
+            columns = this.GetColumnsToExport(ajaxRequest);
+            Load(-1, requestValues, ajaxRequest, true, ref listing, ref conditions);
+
+            //user config listing:
+            if (ajaxRequest && userColumns!=null)
+            {
+                List<Exports.QColumn> current_List = new List<Exports.QColumn>();
+                foreach (CSGenioAlstcol column in userColumns)
+                {
+                    //check if theres a match in existing list columns
+                    string areabase = column.ValTabela.ToLower() != "tblb" ? CultureInfo.InvariantCulture.TextInfo.ToTitleCase(column.ValTabela) + "." : "";
+                    Exports.QColumn matching_column = columns.Where(x => x.BaseArea == column.ValTabela && areabase + "Val" + x.FieldName.First().ToString().ToUpper() + x.FieldName.Substring(1).ToLower() == column.ValCampo && column.ValVisivel==1).FirstOrDefault();
+                    if (matching_column != null)
+                        current_List.Add(matching_column);
+                }
+                columns = current_List;
+            }
+        }
+
+		/// <inheritdoc/>
+		public override CriteriaSet BuildCriteriaSet(NameValueCollection requestValues, out bool tableReload, CriteriaSet crs = null, bool isToExport = false)
+		{
+			User u = UserContext.Current.User;
+            tableReload = true;
+
+			if (crs == null)
+				crs = CriteriaSet.And();
+
+
+
+			if(Menu == null)
+				Menu = new TablePartial<GenioMVC.Models.Tblb>();
+			Menu.SetFilters(bool.Parse(requestValues["ValTblb_tableFilters"] ?? "false"), false);
+
+
+			//FOR: MENU LIST SORTING
+			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
+
+
+			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValTblb_"));
+
+
+			//Subfilters
+			CriteriaSet subfilters = CriteriaSet.And();
+
+			crs.SubSets.Add(subfilters);
+
+			if(this.ValCodgrpb != null)
+				crs.Equal(CSGenioAtblb.FldFkey1, this.ValCodgrpb);
+
+
+
+
+
+			if (isToExport)
+			{
+				// EPH
+				crs = Models.Tblb.AddEPH<CSGenioAtblb>(ref u, crs, "IBL_GRPB____PSEUDTBLB____");
+
+				// Export only records with ZZState == 0
+				crs.Equal(CSGenioAtblb.FldZzstate, 0);
+
+				return crs;
+			}
+
+			// Limitation by Zzstate
+			if (!Navigation.checkFormMode("TBLB", FormMode.New)) // TODO: Check in Duplicate mode
+				crs = extendWithZzstateCondition(crs, CSGenioAtblb.FldZzstate, null);
+
+			if (tableReload)
+			{
+				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_tblb");
+				Navigation.DestroyEntry("QMVC_POS_RECORD_tblb");
+				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
+					crs.Equals(Models.Tblb.AddEPH<CSGenioAtblb>(ref u, null, "IBL_GRPB____PSEUDTBLB____"));
+			}
+
+			return crs;
+		}
+
+        /// <summary>
+        /// Loads the list with the specified number of rows.
+        /// </summary>
+        /// <param name="numberListItems">The number of rows to load.</param>
+        /// <param name="ajaxRequest">Whether the request was initiated via AJAX.</param>
+        public void Load(int numberListItems, bool ajaxRequest = false)
+        {
+            Load(numberListItems, new NameValueCollection(), ajaxRequest);
+        }
+
+        /// <summary>
+        /// Loads the list with the specified number of rows.
+        /// </summary>
+        /// <param name="numberListItems">The number of rows to load.</param>
+        /// <param name="requestValues">The request values.</param>
+        /// <param name="ajaxRequest">Whether the request was initiated via AJAX.</param>
+        /// <param name="conditions">The conditions.</param>
+        public void Load(int numberListItems, NameValueCollection requestValues, bool ajaxRequest = false, CriteriaSet conditions = null)
+        {
+            ListingMVC<CSGenioAtblb> listing = null;
+
+            Load(numberListItems, requestValues, ajaxRequest, false, ref listing, ref conditions);
+        }
+
+        /// <summary>
+		/// Loads the list with the specified number of rows.
+		/// </summary>
+		/// <param name="numberListItems">The number of rows to load.</param>
+		/// <param name="requestValues">The request values.</param>
+		/// <param name="ajaxRequest">Whether the request was initiated via AJAX.</param>
+		/// <param name="isToExport">Whether the list is being loaded to be exported</param>
+		/// <param name="Qlisting">The rows.</param>
+		/// <param name="conditions">The conditions.</param>
+		public void Load(int numberListItems, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAtblb> Qlisting, ref CriteriaSet conditions)
+		{
+			//TODO: Tem um problema quando saímos de um form e voltamos ao dbedit e mudamos de página.
+			//como não é devolvido to a view o text pesquisado, ao mudar de página assume que o Qfield está a vazio
+			if (ajaxRequest)
+				this.Navigation.SetValue("requestValues" + "Grpb_ValTblb", requestValues);
+			else if (!ajaxRequest && this.Navigation.CheckKey("requestValues" + "Grpb_ValTblb"))
+				requestValues = this.Navigation.GetValue<NameValueCollection>("requestValues" + "Grpb_ValTblb");
+
+			User u = UserContext.Current.User;
+			Menu = new TablePartial<GenioMVC.Models.Tblb>();
+
+
+			bool tableReload = true;
+
+			Menu.SetFilters(bool.Parse(requestValues["ValTblb_tableFilters"] ?? "false"), false);
+
+			//FOR: MENU LIST SORTING
+			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
+
+
+
+
+			var pageNumber = (ajaxRequest && !String.IsNullOrEmpty(requestValues["pValTblb"])) ? int.Parse(requestValues["pValTblb"]) : 1;
+
+			// Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
+			if (pageNumber < 1)
+				pageNumber = 1;
+
+			List<ColumnSort> sorts = GetRequestSorts(this.Menu, "sValTblb", "dValTblb", requestValues, "tblb", allSortOrders);
+
+
+FieldRef[] fields = new FieldRef[] { CSGenioAtblb.FldCodtblb, CSGenioAtblb.FldZzstate, CSGenioAtblb.FldText, CSGenioAtblb.FldTextml, CSGenioAtblb.FldNumint, CSGenioAtblb.FldNumdec, CSGenioAtblb.FldCurint, CSGenioAtblb.FldCurdec, CSGenioAtblb.FldBool, CSGenioAtblb.FldDate, CSGenioAtblb.FldDatetm, CSGenioAtblb.FldDatets, CSGenioAtblb.FldTimehm, CSGenioAtblb.FldEnumt, CSGenioAtblb.FldEnumn, CSGenioAtblb.FldFkey1 };
+
+
+			//columns by users list (TemplateDBEditViewModel)
+			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).userColumns;
+			FieldRef firstVisibleColumn = null;
+
+			if (sorts == null)
+				if (userColumns != null)
+				{
+					CSGenioAlstcol col = userColumns.FirstOrDefault(x => x.ValVisivel == 1);
+
+					if (col != null)
+					{
+						string table = col.ValTabela.ToLower();
+						string field = col.ValCampo.ToLower(); //may contain Table.ValField
+						if (field.Contains("."))
+						{
+							field = field.Substring(table.Length + 4); //remove table name and .Val from ValCampo data. i.e: "Pesso.ValNome", pesso lenght will remove "Pesso" and then +4 for the fixed ".Val"
+						}
+						else
+						{
+							field = field.Substring(3); //remove table Val from ValCampo data. i.e: "ValNome", Substring(3) will remove "Val"
+						}
+
+						firstVisibleColumn = new FieldRef(table, field);
+					}
+				}
+				else
+					firstVisibleColumn = new FieldRef("tblb", "text");
+
+
+			// Limitations
+			if (this.tableLimits == null)
+				this.tableLimits = new List<Limit>();
+			//Comparer to check if limit is already present in tableLimits
+			LimitComparer limitComparer = new LimitComparer();
+
+			//Tooltip for EPHs affecting this viewmodel list
+			{
+				Limit limit = new Limit();
+				limit.TipoLimite = LimitType.EPH;
+				CSGenioAtblb model_limit_area = new CSGenioAtblb(UserContext.Current.User);
+				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_GRPB____PSEUDTBLB____");
+				if (area_EPH_limits.Count > 0)
+					this.tableLimits.AddRange(area_EPH_limits);
+			}
+
+
+			CriteriaSet grpb____pseudtblb____Conds = BuildCriteriaSet(requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
+            tableReload &= hasAllRequiredLimits;
+
+// USE /[MANUAL GQT OVERRQ GRPB_PSEUDTBLB]/
+
+            // This will happen in case there is an error
+            if(grpb____pseudtblb____Conds == null)
+                return;
+
+			if (isToExport)
+			{
+                if(!tableReload)
+					return;
+
+				Qlisting = Models.ModelBase.Where<CSGenioAtblb>(false, grpb____pseudtblb____Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_GRPB____PSEUDTBLB____", true, firstVisibleColumn: firstVisibleColumn);
+
+// USE /[MANUAL GQT OVERRQLSTEXP GRPB_PSEUDTBLB]/
+
+                conditions = grpb____pseudtblb____Conds;
+                return;
+			}
+
+
+
+			if (tableReload)
+			{
+// USE /[MANUAL GQT OVERRQLIST GRPB_PSEUDTBLB]/
+
+
+				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_tblb");
+				Navigation.DestroyEntry("QMVC_POS_RECORD_tblb");
+				CriteriaSet m_PagingPosEPHs = null;
+
+				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
+				{
+					var m_iCurPag = UserContext.Current.PersistentSupport.getPagingPos(CSGenioAtblb.GetInformation(), QMVC_POS_RECORD, sorts, grpb____pseudtblb____Conds, m_PagingPosEPHs, firstVisibleColumn: firstVisibleColumn);
+					if (m_iCurPag != -1)
+					{
+						pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
+						Menu.FocusOnRecord = QMVC_POS_RECORD;
+					}
+				}
+
+				ListingMVC<CSGenioAtblb> listing = Models.ModelBase.Where<CSGenioAtblb>(false, grpb____pseudtblb____Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_GRPB____PSEUDTBLB____", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn);
+
+				if (listing.CurrentPage > 0)
+					pageNumber = listing.CurrentPage;
+
+				//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
+				if (pageNumber < 1)
+					pageNumber = 1;
+
+
+				Menu.Elements = MapGrpb_ValTblb(listing);
+
+				Menu.Identifier = "IBL_GRPB____PSEUDTBLB____";
+
+				// Last updated by [CJP] at [2015.02.03]
+				// Adds the identifier to each element
+				foreach (var element in Menu.Elements)
+					element.Identifier = "IBL_GRPB____PSEUDTBLB____";
+
+				Menu.SetPagination(pageNumber, listing.NumRegs, listing.HasMore, listing.GetTotal, listing.TotalRecords);
+			}
+
+			//Set table limits display property
+			FillTableLimitsDisplayData();
+		}
+
+        private List<Models.Tblb> MapGrpb_ValTblb(ListingMVC<CSGenioAtblb> Qlisting)
+        {
+            var Elements = new List<Models.Tblb>();
+            int i = 0;
+
+            if (Qlisting.Rows != null)
+            {
+                foreach (var row in Qlisting.Rows)
+				{
+					if (Qlisting.NumRegs > 0 && i >= Qlisting.NumRegs) // Copiado da versão antiga do RowsToViewModels
+						break;
+					Elements.Add(MapGrpb_ValTblb(row));
+					i++;
+				}
+            }
+
+            return Elements;
+        }
+
+        /// <summary>
+        /// Maps a single CSGenioAtblb row
+        /// to a Models.Tblb object.
+        /// </summary>
+        /// <param name="row">The row.</param>
+        private Models.Tblb MapGrpb_ValTblb(CSGenioAtblb row)
+        {
+            var model = new Models.Tblb(true, _fieldsToSerialize);
+            if (row == null)
+                return model;
+
+            foreach (RequestedField Qfield in row.Fields.Values)
+            {
+                switch (Qfield.Area)
+                {
+                    case "tblb":
+                        model.klass.insertNameValueField(Qfield.FullName, Qfield.Value); break;
+                    default:
+                        break;
+                }
+            }
+
+            return model;
+        }
+
+        /// <summary>
+        /// Checks the loaded model for pending rows (zzsttate not 0).
+        /// </summary>
+        public bool CheckForZzstate()
+        {
+            if (Menu?.Elements == null)
+                return false;
+
+            return Menu.Elements.Any(row => row.ValZzstate != 0);
+        }
+
+
+        #region Custom code
+// USE /[MANUAL GQT VIEWMODEL_CUSTOM GRPB_VALTBLB]/
+        #endregion
+
+        private static readonly string[] _fieldsToSerialize =
+        {
+            "Tblb", "Tblb.ValCodtblb", "Tblb.ValZzstate", "Tblb.ValText", "Tblb.ValTextml", "Tblb.ValNumint", "Tblb.ValNumdec", "Tblb.ValCurint", "Tblb.ValCurdec", "Tblb.ValBool", "Tblb.ValDate", "Tblb.ValDatetm", "Tblb.ValDatets", "Tblb.ValTimehm", "Tblb.ValEnumt", "Tblb.ValEnumn", "Tblb.ValFkey1"
+        };
+
+        private static readonly List<TableSearchColumn> _searchableColumns = new List<TableSearchColumn>
+        {
+            new TableSearchColumn("ValText", CSGenioAtblb.FldText, typeof(string)),
+            new TableSearchColumn("ValTextml", CSGenioAtblb.FldTextml, typeof(string)),
+            new TableSearchColumn("ValNumint", CSGenioAtblb.FldNumint, typeof(decimal?)),
+            new TableSearchColumn("ValNumdec", CSGenioAtblb.FldNumdec, typeof(decimal?)),
+            new TableSearchColumn("ValCurint", CSGenioAtblb.FldCurint, typeof(decimal?)),
+            new TableSearchColumn("ValCurdec", CSGenioAtblb.FldCurdec, typeof(decimal?)),
+            new TableSearchColumn("ValBool", CSGenioAtblb.FldBool, typeof(bool)),
+            new TableSearchColumn("ValDate", CSGenioAtblb.FldDate, typeof(DateTime?)),
+            new TableSearchColumn("ValDatetm", CSGenioAtblb.FldDatetm, typeof(DateTime?)),
+            new TableSearchColumn("ValDatets", CSGenioAtblb.FldDatets, typeof(DateTime?)),
+            new TableSearchColumn("ValTimehm", CSGenioAtblb.FldTimehm, typeof(string)),
+            new TableSearchColumn("ValEnumt", CSGenioAtblb.FldEnumt, typeof(string), array : "typet"),
+            new TableSearchColumn("ValEnumn", CSGenioAtblb.FldEnumn, typeof(decimal), array : "typen")
+        };
+    }
+}

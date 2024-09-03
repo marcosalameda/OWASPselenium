@@ -3,6 +3,7 @@ using CSGenio.business.async;
 using CSGenio.framework;
 using CSGenio.persistence;
 using Process = CSGenio.business.CSGenioAs_apr;
+using ProcessResponse = CSGenio.business.async.Response;
 
 namespace DbAdmin.IntegrationTest
 {
@@ -14,7 +15,7 @@ namespace DbAdmin.IntegrationTest
         
         public override void Execute(PersistentSupport sp, User user)
         {
-            this.SetResponse(new Response(StatusMessage.OK()));
+            this.SetResponse(new ProcessResponse(StatusMessage.OK()));
         }
     }
 
@@ -25,7 +26,7 @@ namespace DbAdmin.IntegrationTest
 
         public override async Task<string> ExecuteAsync(PersistentSupport sp, User user, Process process)
         {
-            this.SetResponse(new Response(StatusMessage.OK()));
+            this.SetResponse(new ProcessResponse(StatusMessage.OK()));
             return await Task.FromResult("");
         }
     }

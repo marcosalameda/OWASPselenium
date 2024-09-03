@@ -1,0 +1,111 @@
+﻿@model GenioMVC.ViewModels.Itemc.GQT_Menu_481_ViewModel
+@using Newtonsoft.Json;
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@using GenioMVC.ViewModels.Itemc;    
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Itemc>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodcatar, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_481_ITEM_ITEMDES]/
+		column.Expression(p => p.Item.ValItemdes).Title(@Resources.ARTICLE60065).Field("Item.ValItemdes").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_481_CATTP_TPCATEGO]/
+		column.Expression(p => p.Cattp.ValTpcatego).Title(@Resources.CATEGORY_TYPE23058).Field("Cattp.ValTpcatego").Size(30);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Itemc")
+        .Id("GQT_Menu_481")
+        .AjaxRequest("Menu")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .DBEdit()
+        .Filters(this.Model.Menu.Filters)
+        .Form("Catar", false, false)
+        .SetFollowUp("Catar_Show", "Itemc" , (Func<GenioMVC.Models.Itemc, object>)(item => new { id = item.ValCodcatar }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
+        .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
+		;
+        
+}
+
+@tbl.ToHtml()
+
+
+<script>
+
+
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qGQT_Menu_481, #GQT_Menu_481_complex_filter th input, #GQT_Menu_481_filters input").change(function() {
+                    $("#pGQT_Menu_481").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#GQT_Menu_481_tableFilters').val(false);")
+                    @Html.Raw("$('#GQT_Menu_481_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#GQT_Menu_481_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $("[data-form='GQT_Menu_481']").submit();
+                    @:      event.preventDefault();
+                    @:      ClearSearchBox('qGQT_Menu_481');
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#GQT_Menu_481_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_GQT_Menu_481').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+                 @if (this.Model.Menu.Filters.FiltersValues.Count >= 1) {
+                    var activeFields = Newtonsoft.Json.JsonConvert.SerializeObject(this.Model.Menu.Filters.FiltersValues);
+                    @: SetActiveFilters('GQT_Menu_481', 'CATAR', @Html.Raw(activeFields))
+                  }
+
+
+                setupHistoryClicks()
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='Menu']"));
+                    InitSpecialControls($('#Menu'));
+                    $('#Menu').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS GQT_MENU_481]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+// USE /[MANUAL GQT LISTING_CODEJS GQT_MENU_481]/
+</script>

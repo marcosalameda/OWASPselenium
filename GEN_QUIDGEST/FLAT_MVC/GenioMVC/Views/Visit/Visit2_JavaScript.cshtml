@@ -1,0 +1,324 @@
+﻿@model GenioMVC.ViewModels.Visit.Visit2_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+<script src="@Url.Content("~/Scripts/bootstrap-colorpicker.min.js")" type="application/javascript"></script>
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS VISIT2]/ *@
+<script  type="text/javascript">
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Visit2 !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Visit2 = new QForm($('[data-form="Visit2"]'), "Form_Visit2");
+		}
+		window.Form_Visit2.baseArea = "visit";
+		window.Form_Visit2.FormMode = '@Model.GetFormMode';
+		window.Form_Visit2.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Visit2.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Visit")',
+			GetDependants:		'@Url.Action("GetDependants", "Visit")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Visit2", "Visit")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Visit2", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Visit", "Visit")',
+		};
+		window.Form_Visit2.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Visit2.formSaveEdit = '@Url.Action("Visit2_SaveEdit", "Visit")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Visit2.formAction = 'Visit2_New';
+		window.Form_Visit2.formRedirectURL = '@Url.Action("Visit2_New_Redirect", "Visit")';
+		window.Form_Visit2.formSubmitURL = '@Url.Action("Visit2_New", "Visit")';
+		window.Form_Visit2.formRedirectURL_repeatInsertion = '@Url.Action("Visit2_New_Redirect", "Visit", new { repeatInsertion = true})';
+		window.Form_Visit2.formSubmitURL_repeatInsertion = '@Url.Action("Visit2_New", "Visit", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Visit2.formAction = 'Visit2_Edit';
+		window.Form_Visit2.formRedirectURL = '@Url.Action("Visit2_Edit_Redirect", "Visit")';
+		window.Form_Visit2.formSubmitURL = '@Url.Action("Visit2_Edit", "Visit")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Visit2.formAction = 'Visit2_Duplicate';
+		window.Form_Visit2.formRedirectURL = '@Url.Action("Visit2_Duplicate_Redirect", "Visit")';
+		window.Form_Visit2.formSubmitURL = '@Url.Action("Visit2_Duplicate", "Visit")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Visit2.formAction = 'Visit2_Delete';
+		window.Form_Visit2.formRedirectURL = '@Url.Action("Visit2_Delete_Redirect", "Visit")';
+		window.Form_Visit2.formSubmitURL = '@Url.Action("Visit2_Delete", "Visit")';
+	</text>
+}
+		window.Form_Visit2.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.IFF_VISIT2__EQUIPREGISTNR = new QDbeditControl($('[data-identifier="IFF_VISIT2__EQUIPREGISTNR"]', this.element), window.Form_Visit2);
+
+			this.Controls.LED_VISIT2__VISITTITLE___ = new QTextControl($('[data-identifier="LED_VISIT2__VISITTITLE___"]', this.element), window.Form_Visit2);
+
+			this.Controls.LED_VISIT2__VISITSTARTDT_ = new QDateControl($('[data-identifier="LED_VISIT2__VISITSTARTDT_"]', this.element), window.Form_Visit2);
+
+			this.Controls.LED_VISIT2__VISITDTFIM___ = new QDateControl($('[data-identifier="LED_VISIT2__VISITDTFIM___"]', this.element), window.Form_Visit2);
+
+			this.Controls.LED_VISIT2__VISITDESCRIPT = new QGenericControl($('[data-identifier="LED_VISIT2__VISITDESCRIPT"]', this.element), window.Form_Visit2);
+
+			this.Controls.LED_VISIT2__VISITTODOODIA = new QCheckBoxControl($('[data-identifier="LED_VISIT2__VISITTODOODIA"]', this.element), window.Form_Visit2);
+
+			this.Controls.LED_VISIT2__VISITCOLOR___ = new QTextControl($('[data-identifier="LED_VISIT2__VISITCOLOR___"]', this.element), window.Form_Visit2);
+
+			this.Controls.LED_VISIT2__VISITBACK____ = new QCheckBoxControl($('[data-identifier="LED_VISIT2__VISITBACK____"]', this.element), window.Form_Visit2);
+
+
+
+
+			this.Controls.LED_VISIT2__VISITCODVISIT = new QHiddenControl($('[data-identifier="LED_VISIT2__VISITCODVISIT"]', this.element), window.Form_Visit2);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	</text>
+}
+
+		window.Form_Visit2.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Visit2.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI VISIT2]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Visit2.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS VISIT2]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Visit2.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS VISIT2]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Visit2.Data.RelationKeysSelector = {
+				get equip() { return $(':not([elem-identifier="Multiform"]) > #ValCodequip[pers-cs-area="Equip"]', $('[data-form="Visit2"]')); /* DBEdit */ },
+		};
+
+		window.Form_Visit2.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Visit2.Data.RelationKeys = {
+			get formContext() { return window.Form_Visit2; },
+			get equip() { return (this.formContext.Data.RelationKeysSelector.equip.getQControl() || {}).Value; /* DBEdit */ },
+			set equip(newValue) { (this.formContext.Data.RelationKeysSelector.equip.getQControl() || {}).Value = newValue; /* DBEdit */ },
+		};
+	</text>
+}
+
+	window.Form_Visit2.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Visit2.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitVisit2(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Visit2.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeleteVisit2(event) {
+			event.preventDefault();
+			window.Form_Visit2.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+    modal_QuidgestGlobals = {
+        UrlAction: {
+            newWindow: '@Url.Action("newWindow")',
+            ReloadDBEdit: '@Url.Action("ReloadDBEdit")',
+            formArea: '	@Url.Action("form", "area")',
+            UpdateValues: '@Url.Action("UpdateValues")',
+            LogJavaScriptError: '@Url.Action("LogJavaScriptError", "ApplicationErrors")',
+            syncFormKeys: '@Url.Action("syncFormKeys")',
+            GetDependants: 		'@Url.Action("GetDependants")',
+            ImageHandlerPut:		'@Url.Action("ImageHandlerPut")',
+            ImageHandlerGet:		'@Url.Action("ImageHandlerGet")'
+        }
+    };
+$(document).ready(function () {
+	loaded($("#form-modal"));
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+	var ajaxCallsRemaining = $("#form-modal .flash object embed").length;
+	$('#form-modal form [elem-identifier="ButtonPrimary"]').click(function() {
+		var flashObjects = $("#form-modal .flash object embed");
+		ajaxCallsRemaining = flashObjects.length;
+		if(flashObjects.length == 0)
+			return true;
+		else {
+			flashObjects.each(function() {
+			   var flashObj = GetFlash($(this).attr('id'))
+			   flashObj.UsedFlash.TriggerSave(flashObj);
+			});
+			return false;
+		}
+	});
+    </text>
+}
+});
+// USE /[MANUAL GQT FORM_CODEJS VISIT2]/
+
+
+
+ 
+
+    $($('[elem-identifier="Actions"]'), $('[data-form="Visit2"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

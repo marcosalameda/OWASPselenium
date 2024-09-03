@@ -1,0 +1,111 @@
+﻿@model GenioMVC.ViewModels.Pedid.Pedid_ValAgrupame_ViewModel
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@using Newtonsoft.Json;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@*List properties DBEDIT BUTTONS*@
+<div class="row">
+	<div class="col">
+		<div elem-identifier="List"  help-id="IFF_PEDID___PSEUDAGRUPAME" style="padding-top: 0.5rem;"><label class = "i-text__label table-title c-table__title" > <h2 list-header>@Resources.GROUPING_OF_EQUIPMEN34190</h2 list-header> </label></div>
+	</div>
+</div>
+
+@* USE /[MANUAL GQT TABLE_FOR PEDID_AGRUPAME]/ *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@using GenioMVC.ViewModels.Lnhag;    
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Lnhag>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodlnhag, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN PEDID_AGRUPAME_TPEQ1_TIPOEQUI]/
+		column.Expression(p => p.Tpeq1.ValTipoequi).Title(@Resources.TYPE_OF_EQUIPMENT18080).Field("Tpeq1.ValTipoequi").Size(50);
+// USE /[MANUAL GQT CUSTOM_COLUMN PEDID_AGRUPAME_LNHAG_QTDTPEQU]/
+		column.Expression(p => p.ValQtdtpequ).Title(@Resources.AMOUNT46885).Field("ValQtdtpequ").Size(6);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Lnhag")
+        .Id("ValAgrupame")
+        .AjaxRequest("Pedid_ValAgrupame")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .TableList(hasFilters: false)
+        .RequestLink(@Url.Action("Pedid_ValAgrupame", new { id = Model.ValCodpedid, partialView = "Pedid_ValAgrupame"}))
+        .Form("Lnhag", false, false)
+        .SetFollowUp("Lnhag_Show", "Lnhag" , (Func<GenioMVC.Models.Lnhag, object>)(item => new { id = item.ValCodlnhag }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
+        .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
+		;
+        
+}
+
+@tbl.ToHtml()
+
+<script>
+
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qValAgrupame, #ValAgrupame_complex_filter th input, #ValAgrupame_filters input").change(function() {
+                    $("#pValAgrupame").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#ValAgrupame_tableFilters').val(false);")
+                    @Html.Raw("$('#ValAgrupame_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#ValAgrupame_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $('#ValAgrupame_complex_filter button#applyComplexFilter').click();
+                    @:      event.preventDefault();
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#ValAgrupame_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_ValAgrupame').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+
+
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='ValAgrupame']"));
+                    InitSpecialControls($('#ValAgrupame'));
+                    $('#ValAgrupame').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS PEDID_VALAGRUPAME]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+</script>

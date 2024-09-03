@@ -1,0 +1,294 @@
+﻿@model GenioMVC.ViewModels.Wareh.Extforms_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS EXTFORMS]/ *@
+<script  type="text/javascript">
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Extforms !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Extforms = new QForm($('[data-form="Extforms"]'), "Form_Extforms");
+		}
+		window.Form_Extforms.baseArea = "wareh";
+		window.Form_Extforms.FormMode = '@Model.GetFormMode';
+		window.Form_Extforms.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Extforms.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Wareh")',
+			GetDependants:		'@Url.Action("GetDependants", "Wareh")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Extforms", "Wareh")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Extforms", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Wareh", "Wareh")',
+		};
+		window.Form_Extforms.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Extforms.formSaveEdit = '@Url.Action("Extforms_SaveEdit", "Wareh")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Extforms.formAction = 'Extforms_New';
+		window.Form_Extforms.formRedirectURL = '@Url.Action("Extforms_New_Redirect", "Wareh")';
+		window.Form_Extforms.formSubmitURL = '@Url.Action("Extforms_New", "Wareh")';
+		window.Form_Extforms.formRedirectURL_repeatInsertion = '@Url.Action("Extforms_New_Redirect", "Wareh", new { repeatInsertion = true})';
+		window.Form_Extforms.formSubmitURL_repeatInsertion = '@Url.Action("Extforms_New", "Wareh", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Extforms.formAction = 'Extforms_Edit';
+		window.Form_Extforms.formRedirectURL = '@Url.Action("Extforms_Edit_Redirect", "Wareh")';
+		window.Form_Extforms.formSubmitURL = '@Url.Action("Extforms_Edit", "Wareh")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Extforms.formAction = 'Extforms_Duplicate';
+		window.Form_Extforms.formRedirectURL = '@Url.Action("Extforms_Duplicate_Redirect", "Wareh")';
+		window.Form_Extforms.formSubmitURL = '@Url.Action("Extforms_Duplicate", "Wareh")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Extforms.formAction = 'Extforms_Delete';
+		window.Form_Extforms.formRedirectURL = '@Url.Action("Extforms_Delete_Redirect", "Wareh")';
+		window.Form_Extforms.formSubmitURL = '@Url.Action("Extforms_Delete", "Wareh")';
+	</text>
+}
+		window.Form_Extforms.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.IFF_EXTFORMSPSEUDARTIGAPO = new QDateControl($('[data-identifier="IFF_EXTFORMSPSEUDARTIGAPO"]', this.element), window.Form_Extforms);
+
+			this.Controls.IFF_EXTFORMSPSEUDARTIGOS_ = new QTableListControl($('[data-identifier="IFF_EXTFORMSPSEUDARTIGOS_"]', this.element), window.Form_Extforms);
+
+
+
+
+			this.Controls.LED_EXTFORMSWAREHCODWAREH = new QHiddenControl($('[data-identifier="LED_EXTFORMSWAREHCODWAREH"]', this.element), window.Form_Extforms);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+			this.Controls.LED_EXTFORMSWAREHWAREHDES = new QSpecialControl($('[data-identifier="LED_EXTFORMSWAREHWAREHDES"]', this.element), window.Form_Extforms);
+			this.Controls.LED_EXTFORMSWAREHWAREHDES.InitData(@JavaScriptConversion.ToString(@Model.ValWarehdes));
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	</text>
+}
+
+		window.Form_Extforms.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Extforms.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI EXTFORMS]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Extforms.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS EXTFORMS]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Extforms.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS EXTFORMS]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Extforms.Data.RelationKeysSelector = {
+		};
+
+		window.Form_Extforms.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Extforms.Data.RelationKeys = {
+			get formContext() { return window.Form_Extforms; },
+		};
+	</text>
+}
+
+	window.Form_Extforms.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Extforms.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitExtforms(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Extforms.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeleteExtforms(event) {
+			event.preventDefault();
+			window.Form_Extforms.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+    var ajaxCallsRemaining = $(".flash object embed").length;
+    $('form [elem-identifier="ButtonPrimary"]').click(function() {
+        var flashObjects = $(".flash object embed");
+        ajaxCallsRemaining = flashObjects.length;
+        if(flashObjects.length == 0)
+            return true;
+        else {
+            flashObjects.each(function() {
+               var flashObj = GetFlash($(this).attr('id'));
+               flashObj.UsedFlash.TriggerSave(flashObj);
+            });
+            return false;
+        }
+    });
+    </text>
+}
+// USE /[MANUAL GQT FORM_CODEJS EXTFORMS]/
+
+
+
+ 
+
+    $($('[elem-identifier="FormActions"]'), $('[data-form="Extforms"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

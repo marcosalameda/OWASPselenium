@@ -1,175 +1,173 @@
-﻿GQT em 03/09/2024 15:54:54
-03:54:54.241 info: Beginning generation: Styles - ASP.Net MVC
-03:54:54.254 info: Reading relational model...
-03:54:54.409 info: Validations for ASP.NET MVC...
-03:54:54.411 info: Creating output directories for ASP.NET MVC...
-03:54:54.436 info: Copying configurations...
-03:54:54.454 info: Generating resources...
-03:54:54.620 info: Generating helper classes...
-03:54:54.655 info: Generating generic controllers...
-03:55:11.364 info: Generating generic models...
-03:55:11.374 info: Generating table models...
-03:55:11.487 info: Generating generic view models...
-03:55:11.541 info: Generating forms view models...
-03:55:11.560 warning: Altwin STY_Menu_ALERTS.cshtml '' filename/wildcard did not match any generated files. Check if it's still necessary.
-03:55:11.561 warning: Altwin Authent.cshtml '' filename/wildcard did not match any generated files. Check if it's still necessary.
-03:55:11.561 warning: Altwin STY_Menu_ALERTS.cshtml '' filename/wildcard did not match any generated files. Check if it's still necessary.
-03:55:11.561 warning: Altwin Btnsform.cshtml '' filename/wildcard did not match any generated files. Check if it's still necessary.
-03:55:11.561 warning: Altwin STY_Menu_OVERVIEW.cshtml '' filename/wildcard did not match any generated files. Check if it's still necessary.
-03:55:11.562 info: Deleting unnecessary generation files
-03:55:11.565 info: Writing pending files took 3 ms
-03:55:11.565 info: Finished generation
-exception: Error while running control template: Templates/ASPNET-MVCTemplates/MvcRazor/Control.vm.
-GenioAPI
-   at GenGenio.Genio.Generate()
-   at GenioAPI.Generation.EntryPoint.GenerateApplication(ClientApplication app, SolutionXml sol, InitialGenerationInfo iinfo, Boolean reportSave, Boolean zipCode)
-   at GenioAPI.Generation.EntryPoint.GenerateClient(Cliente client, String appid, IEnumerable`1 geracoes, Boolean suppressWebAdmin, Boolean reportSave, Boolean zipCode)
-   at GenioGenerationServer.Generation.GenerateOneClient(String client, Boolean recalcIndex)
-+--- Context dump ---+
-Genio = GenGenio.Genio
-this = NVelocity.VelocityContext
-newline = 
-
-cifrao = $
-cardinal = #
-aspa = "
-dollar = $
-sharp = #
-quote = "
-mvc = GenGenio.GenioMvcRazorExtension
-mvcFolder = MvcRazor
-layout = FlatIntranet
-tgt = System.Collections.Generic.Dictionary`2[System.String,GenGenio.Manwin+TagType]
-tpSearchField = System.Collections.Generic.Dictionary`2[System.String,System.String]
-zero = System.Collections.Generic.Dictionary`2[System.String,System.String]
-sutil = GenGenio.StringUtils
-idutil = GenGenio.IdentifierUtils
-Csharp = GenGenio.GenioServidorCsharpExtension
-plataforma = MVC
-grupos = System.Collections.Generic.List`1[GenGenio.ModuloCliente]
-langs = System.Collections.Generic.List`1[System.String]
-baselang = eng
-texts = System.Collections.Generic.Dictionary`2+ValueCollection[System.String,GenGenio.Texto]
-confirmPasswordPrefix = Confirm
-AuditNamespace = GenioMVC
-dashboards = System.Collections.Generic.List`1[GenGenio.MenuDSDashboard]
-dbeditButtons = System.Collections.Generic.List`1[GenGenio.CampoForm]
-chartsList = System.Collections.Generic.List`1[System.String]
-pxs = System.Collections.Generic.List`1[GenGenio.MenuContinuacao]
-empty_tablefield_checked = System.Collections.Generic.List`1[System.Object]
-empty_descriptions = System.Collections.Generic.List`1[System.Object]
-todasTabelas = System.Collections.Generic.Dictionary`2+ValueCollection[System.String,GenGenio.TabelaBD]
-velocityCount = 0
-suffix = en-US
-full_name = PTN_Menu_3H1
-form = ABATE
-form_name = Abate
-form_table = Decom
-areasForm = System.Collections.Generic.List`1[GenGenio.AreaForm]
-form_Fields = System.Collections.Generic.List`1[GenGenio.CampoForm]
-vmSuperClass = FormViewModel
-+--------------------+
-
-exception: Error in template: Templates/ASPNET-MVCTemplates/Control.vm
-NVelocity
-   at NVelocity.Runtime.Directive.Parse.RenderTemplate(Template template, String arg, TextWriter writer, IInternalContextAdapter context)
-   at NVelocity.Runtime.Directive.Parse.Render(IInternalContextAdapter context, TextWriter writer, INode node)
-   at NVelocity.Runtime.Parser.Node.ASTDirective.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Runtime.Parser.Node.SimpleNode.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Template.Merge(IContext context, TextWriter writer)
-   at GenGenio.Genio.Generate()
-
-exception: Invocation of method 'Parse' at Parse($this, "Templates/ASPNET-MVCTemplates/${mvcFolder}/GenioMVC/ViewModels/TemplateViewModel.cs.vm", "${Genio.OutputDirectory}/GenioMVC/ViewModels/${form_table}/${form_name}_ViewModel.cs") Line 305 Column 32 threw an exception.
-NVelocity
-   at NVelocity.Runtime.Parser.Node.ASTMethod.Execute(Object o, IInternalContextAdapter context)
-   at NVelocity.Runtime.Parser.Node.ASTReference.Execute(Object o, IInternalContextAdapter context)
-   at NVelocity.Runtime.Parser.Node.ASTReference.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Runtime.Parser.Node.ASTBlock.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Runtime.Parser.Node.SimpleNode.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Runtime.Parser.Node.ASTIfStatement.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Runtime.Parser.Node.ASTBlock.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Runtime.Parser.Node.ASTElseIfStatement.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Runtime.Parser.Node.ASTIfStatement.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Runtime.Directive.Foreach.Render(IInternalContextAdapter context, TextWriter writer, INode node)
-   at NVelocity.Runtime.Parser.Node.ASTDirective.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Runtime.Parser.Node.SimpleNode.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Runtime.Directive.Parse.RenderTemplate(Template template, String arg, TextWriter writer, IInternalContextAdapter context)
-
-exception: Error while running control template: Templates\ASPNET-MVCTemplates\MvcRazor\GenioMVC\ViewModels\TemplateViewModel.cs.vm.
-GenioAPI
-   at GenGenio.Genio.ParseToString(IContext parentContext, String txt)
-   at GenGenio.Genio.ParseInternal(IContext parentContext, String txt, String path, Encoding encoding, Boolean addToParsedFiles)
-   at GenGenio.Genio.Parse(IContext parentContext, String txt, String path, Encoding encoding)
-   at GenGenio.Genio.Parse(IContext parentContext, String txt, String path)
-   at InvokeStub_Genio.Parse(Object, Span`1)
-   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
-+--- Context dump ---+
-this = NVelocity.VelocityContext
-formIdentifier = FABATE
-table = DECOM
-chave = CODDECO
-form_name = Abate
-form_table = Decom
-tmpFormFields = System.Collections.Generic.List`1[GenGenio.CampoForm]
-hasWriteConditions = True
-queueLista = System.Collections.Generic.List`1[GenGenio.Genio+AuxRelacoesMq]
-lstCampos = System.Collections.Generic.List`1[System.Object]
-extraFields = System.Collections.Generic.List`1[System.Object]
-createdFields = System.Collections.Generic.List`1[System.Object]
-velocityCount = 0
-key_name = ValCoddeco
-fieldPrefix = ValNote
-areaBaseFormula = DECOM
-conditions = System.Collections.Generic.List`1[GenGenio.FormCondition]
-verifyApply = True
-conditionType = write
-campoNdbfCapFirst = Decom
-areasFormula = System.Collections.Generic.List`1[System.Object]
-condition = True
-applyCondition = !isApply && 
-formulaInterna = GenGenio.FormulaInterna
-conditionMessage = ""
-+--------------------+
-
-exception: Error in template: Templates/ASPNET-MVCTemplates/MvcRazor/GenioMVC/ViewModels/ViewModelFormula.vm
-NVelocity
-   at NVelocity.Runtime.Directive.Parse.RenderTemplate(Template template, String arg, TextWriter writer, IInternalContextAdapter context)
-   at NVelocity.Runtime.Directive.Parse.Render(IInternalContextAdapter context, TextWriter writer, INode node)
-   at NVelocity.Runtime.Parser.Node.ASTDirective.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Runtime.Parser.Node.ASTBlock.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Runtime.Parser.Node.ASTIfStatement.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Runtime.Parser.Node.SimpleNode.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Template.Merge(IContext context, TextWriter writer)
-   at GenGenio.Genio.ParseToString(IContext parentContext, String txt)
-
-exception: Invocation of method 'ValidarFuncoesConhecidasFormulas' at ValidarFuncoesConhecidasFormulas($mvc.GetFuncoesCSConhecidas(), $mvc.GetFormulasControllerMVC(), $Genio, $areaBaseFormula, "Transformar Formula Interna MVC") Line 60 Column 22 threw an exception.
-NVelocity
-   at NVelocity.Runtime.Parser.Node.ASTMethod.Execute(Object o, IInternalContextAdapter context)
-   at NVelocity.Runtime.Parser.Node.ASTReference.Execute(Object o, IInternalContextAdapter context)
-   at NVelocity.Runtime.Parser.Node.ASTIfStatement.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Runtime.Parser.Node.ASTBlock.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Runtime.Parser.Node.ASTIfStatement.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Runtime.Directive.Foreach.Render(IInternalContextAdapter context, TextWriter writer, INode node)
-   at NVelocity.Runtime.Parser.Node.ASTDirective.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Runtime.Parser.Node.SimpleNode.Render(IInternalContextAdapter context, TextWriter writer)
-   at NVelocity.Runtime.Directive.Parse.RenderTemplate(Template template, String arg, TextWriter writer, IInternalContextAdapter context)
-
-exception: 1:5: mismatched input '<EOF>' expecting '('
-GenioAPI
-   at GenGenio.Language.GELUtils.<>c.<GetFunctionList>b__3_0(Int32 line, Int32 column, Int32 lastLine, Int32 lastColumn, String msg)
-   at GenGenio.Language.GELErrorListener.WriteError(String msg)
-   at GenGenio.Language.GELErrorListener.SyntaxError(TextWriter output, IRecognizer recognizer, IToken offendingSymbol, Int32 line, Int32 charPositionInLine, String msg, RecognitionException e)
-   at Antlr4.Runtime.ProxyErrorListener`1.SyntaxError(TextWriter output, IRecognizer recognizer, Symbol offendingSymbol, Int32 line, Int32 charPositionInLine, String msg, RecognitionException e)
-   at Antlr4.Runtime.Parser.NotifyErrorListeners(IToken offendingToken, String msg, RecognitionException e)
-   at Antlr4.Runtime.DefaultErrorStrategy.NotifyErrorListeners(Parser recognizer, String message, RecognitionException e)
-   at Antlr4.Runtime.DefaultErrorStrategy.ReportInputMismatch(Parser recognizer, InputMismatchException e)
-   at Antlr4.Runtime.DefaultErrorStrategy.ReportError(Parser recognizer, RecognitionException e)
-   at GenGenio.Language.GELParser.expression(Int32 _p)
-   at GenGenio.Language.GELParser.stmt()
-   at GenGenio.Language.GELUtils.GetParseTree(GELErrorListener errorListener, String formulaText)
-   at GenGenio.Language.GELUtils.GetFunctionList(String formula)
-   at GenGenio.FormulaInterna.ValidarFuncoesConhecidas(ICollection`1 funcoesManwin, FormulasTemplate template, Genio genio, String tabela, String campo, String output, Trace level)
-   at GenGenio.FormulaInterna.ValidarFuncoesConhecidasFormulas(ICollection`1 funcoesManwin, FormulasTemplate template, Genio genio, String tabela, String campo)
-   at InvokeStub_FormulaInterna.ValidarFuncoesConhecidasFormulas(Object, Span`1)
-   at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
-
+﻿GQT em 03/09/2024 16:48:14
+04:48:14.538 info: Reading relational model...
+04:48:14.882 info: Reading menus...
+04:48:15.782 info: Calculating indexes [Tables]...
+04:48:15.799 info: Calculating indexes [Eph]...
+04:48:15.824 info: Calculating indexes [Menus]...
+04:48:15.854 info: Calculating indexes [Forms]...
+04:48:37.652 info: Calculating indexes [Manwins]...
+04:48:37.654 info: Calculating indexes [Altwins]...
+04:48:37.655 info: Calculating unique indexes...
+04:48:37.658 info: Reading indexes from table...
+04:48:37.743 info: Beginning generation: Styles - ASP.Net MVC
+04:48:37.839 info: Reading relational model...
+04:48:38.307 info: Validations for ASP.NET MVC...
+04:48:38.314 info: Creating output directories for ASP.NET MVC...
+04:48:38.373 info: Copying configurations...
+04:48:38.454 info: Generating resources...
+04:48:38.677 info: Generating helper classes...
+04:48:38.726 info: Generating generic controllers...
+04:48:51.834 info: Generating generic models...
+04:48:51.853 info: Generating table models...
+04:48:52.056 info: Generating generic view models...
+04:48:52.226 info: Generating forms view models...
+04:48:53.898 warning: Field with Type=PM and Help=PM was not processed. Form=FIELDHLP Field=FIELD001.
+04:48:55.412 info: Generating editable table list view models...
+04:48:55.416 info: Generating list view models...
+04:48:55.939 info: Creating output directories for ASP.NET MVC razor client-side...
+04:48:55.941 info: Generating the razor client-side...
+04:48:55.981 info: Copying configurations...
+04:48:55.983 info: Generating javascript files...
+04:48:56.315 info: Generating stylesheets...
+04:48:56.353 warning: Resource with code: HOME not found in path Resources\FontIcons\home.scss
+04:48:56.353 warning: Resource with code: CONTAINERS not found in path Resources\FontIcons\containers.scss
+04:48:56.354 warning: Resource with code: COMPONENTS not found in path Resources/FontIcons/components.scss
+04:48:56.356 warning: Resource with code: ADPATTERS not found in path Resources\FontIcons\advanced-patterns.scss
+04:48:56.364 warning: Resource with code: DELETE not found in path Resources\svg\delete.svg
+04:48:56.364 warning: Resource with code: DELETE not found in path Resources\svg\delete.svg
+04:48:56.364 warning: Resource with code: DELETE not found in path Resources\svg\delete.svg
+04:48:56.367 warning: Resource with code: ADPATTERS not found in path Resources\FontIcons\advanced-patterns.scss
+04:48:56.367 warning: Resource with code: CONTAINERS not found in path Resources\FontIcons\containers.scss
+04:48:56.368 warning: Resource with code: LIST not found in path Resources\FontIcons\list.scss
+04:48:56.368 warning: Resource with code: MAGIC not found in path Resources\FontIcons\magic.scss
+04:48:56.368 warning: Resource with code: MODAL_WI not found in path Resources\FontIcons\modal-window.scss
+04:48:56.369 warning: Resource with code: COMPONENTS not found in path Resources/FontIcons/components.scss
+04:48:56.369 warning: Resource with code: HOME not found in path Resources\FontIcons\home.scss
+04:48:56.371 info: Generating razor views...
+04:48:56.448 info: Copying layout FlatIntranet...
+04:48:56.506 info: Generating shared views...
+04:48:56.686 info: Generating user management views...
+04:48:56.694 info: Generating form views...
+04:48:57.749 warning: Field with Type=PM and Help=PM was not processed. Form=FIELDHLP Field=FIELD001.
+04:48:57.750 warning: Field with Type=PM and Help=PM was not processed. Form=FIELDHLP Field=FIELD001.
+04:48:57.754 warning: Field with Type=IX and Help= do not yet support edit mode. Form=FIELDHLP Field=LOGOEXTE.
+04:48:57.754 warning: Field with Type=IX and Help= do not yet support edit mode. Form=FIELDHLP Field=LOGOEXTE.
+04:48:57.756 warning: Field with Type=PM and Help=PM was not processed. Form=FIELDHLP Field=FIELD001.
+04:48:57.757 warning: Field with Type=PM and Help=PM was not processed. Form=FIELDHLP Field=FIELD001.
+04:48:57.761 warning: Field with Type=IX and Help= do not yet support edit mode. Form=FIELDHLP Field=LOGOEXTE.
+04:48:57.762 warning: Field with Type=IX and Help= do not yet support edit mode. Form=FIELDHLP Field=LOGOEXTE.
+04:48:58.122 warning: Resource with code: IDI_OK not found in path Resources\ok.ico
+04:48:58.123 warning: Resource with code: IDI_OK not found in path Resources\ok.ico
+04:48:58.127 info: LNHPD
+04:48:58.293 warning: Resource with code: IDI_SETA not found in path Resources\seta.ico
+04:48:59.119 warning: Resource with code: IDI_OK not found in path Resources\ok.ico
+04:48:59.122 warning: Resource with code: IDI_OK not found in path Resources\ok.ico
+04:48:59.382 info: Creating DBEdit views...
+04:48:59.803 info: Generating custom controls...
+04:48:59.910 info: Creating dashboard views...
+04:48:59.918 info: Copying razor configurations...
+04:48:59.922 info: Generating global classes...
+04:48:59.932 info: Generating razor specific helper classes...
+04:48:59.968 info: Generating forms controllers...
+04:49:00.915 info: Generating razor specific view models...
+04:49:00.937 info: Deleting unnecessary generation files
+04:49:00.964 info: Writing pending files took 27 ms
+04:49:00.965 info: Finished generation
+04:49:00.965 info: Took 23 seconds
+04:49:00.984 info: Beginning generation: Styles - C# Server
+04:49:01.017 info: Validating formulas...
+04:49:01.799 info: Reading relational model...
+04:49:01.850 info: Creating output directories...
+04:49:01.852 info: Generating tables...
+04:49:03.004 info: Generating ephs and access levels...
+04:49:03.023 info: Generating functions and manual code...
+04:49:03.426 info: Generating server side interface support code...
+04:49:03.431 info: Reading necessary forms...
+04:49:03.551 info: Copying Files...
+04:49:04.007 info: Deleting unnecessary generation files
+04:49:04.027 info: Writing pending files took 19 ms
+04:49:04.027 info: Finished generation
+04:49:04.027 info: Took 3 seconds
+04:49:04.030 info: Beginning generation: Styles - CSharp UI Test
+04:49:04.038 info: Reading relational model...
+04:49:04.085 info: Creating output directories...
+04:49:04.086 info: Copying files...
+04:49:04.090 info: Generating Form pages...
+04:49:04.144 info: Creating tests from Manual routines...
+04:49:04.145 info: Deleting unnecessary generation files
+04:49:04.164 info: Writing pending files took 18 ms
+04:49:04.164 info: Finished generation
+04:49:04.165 info: Took 136 ms
+04:49:04.183 info: Beginning generation: WebAdmin - Administration CS
+04:49:04.196 info: Reading relational model...
+04:49:04.198 info: Creating output directories for Administration CS...
+04:49:04.198 info: Generating resources folder...
+04:49:04.314 info: Generating C# classes...
+04:49:04.386 info: Generating client app
+04:49:04.547 info: Creating integration tests
+04:49:04.550 info: Deleting unnecessary generation files
+04:49:04.567 info: Writing pending files took 17 ms
+04:49:04.568 info: Finished generation
+04:49:04.568 info: Took 386 ms
+04:49:04.575 info: Beginning generation: WebAdmin - C# Server
+04:49:04.591 info: Validating formulas...
+04:49:04.742 info: Reading relational model...
+04:49:04.767 info: Creating output directories...
+04:49:04.769 info: Generating tables...
+04:49:05.623 info: Generating ephs and access levels...
+04:49:05.636 info: Generating functions and manual code...
+04:49:05.741 info: Generating server side interface support code...
+04:49:05.744 info: Reading necessary forms...
+04:49:12.032 info: Copying Files...
+04:49:12.308 info: Deleting unnecessary generation files
+04:49:12.351 info: Writing pending files took 43 ms
+04:49:12.352 info: Finished generation
+04:49:12.352 info: Took 7 seconds
+04:49:12.370 info: Beginning generation: WebAdmin - Reindex Scripts
+04:49:12.376 info: Generating Microsoft sql reindex scripts...
+04:49:12.382 info: Creating Output Directory...
+04:49:12.382 info: Reading relational model...
+04:49:12.428 info: Generating: 'Database Verification'
+04:49:12.430 info: Generating: 'Schema Verification'
+04:49:12.431 info: Generating: 'Auxiliary Functions'
+04:49:12.432 info: Generating: 'Table Rebuild'
+04:49:12.439 info: Generating: 'Table Validation'
+04:49:12.564 info: Generating: 'Column Removal'
+04:49:12.573 info: Generating: 'Schema Maintenance'
+04:49:12.585 info: Generating: 'Fixed Tables'
+04:49:12.598 info: Generating: 'Index Validation'
+04:49:12.611 info: Generating: 'Update Stored Procedures and Initial Functions'
+04:49:12.674 info: Generating: 'Update Stored Procedures and Manual Functions'
+04:49:12.694 info: Generating: 'Update Stored Procedures and Final Functions'
+04:49:12.700 info: Generating: 'Grant Access of Stored Procedures e Functions'
+04:49:12.701 info: Generating: 'Version Verification'
+04:49:12.702 info: Generating: 'Update States'
+04:49:12.704 info: Generating: 'Internal Codes Rebuild'
+04:49:12.707 info: Generating: 'Temporary Tables Elimination'
+04:49:12.708 info: Generating: 'Transaction Log Compression'
+04:49:12.708 info: Generating: 'Propagation of Replicas'
+04:49:12.723 info: Generating: 'Clear Fields to Formulas'
+04:49:12.726 info: Generating: 'Formulas Calculation'
+04:49:12.928 info: Generating Formulas Calculations: Last Value Relations
+04:49:12.932 info: Generating Formulas Calculations: Table Consultation
+04:49:12.943 info: Generating Formulas Calculations: Internal Formulas
+04:49:12.960 info: Generating Formulas Calculations: External Formulas
+04:49:12.970 info: Generating Formulas Calculations: Lits Aggregate Formulas
+04:49:12.973 info: Generating Formulas Calculations: Daily Update Formulas
+04:49:12.987 info: Generating: Index Rebuild
+04:49:12.989 info: Generating: 'Controlled Records'
+04:49:13.036 info: Generating: 'FK Creation'
+04:49:13.040 info: Generating: 'FK Elimination'
+04:49:13.041 info: Generating: 'Upgrade Client'
+04:49:13.046 info: Generating: 'Fulltext Search'
+04:49:13.052 info: Generating: 'Database Seeding'
+04:49:13.054 info: Generating: 'FrameworkChangeRoutines.sql'
+04:49:13.055 info: Generating: 'order2Exec.dat'
+04:49:13.055 info: Generating: 'order2Exec.xml'
+04:49:13.070 info: Generating: 'ChangeYear.sql'
+04:49:13.085 info: Generating: 'SetInvalidFK2Null.sql'
+04:49:13.091 info: Generating: 'DBSessionState.sql'
+04:49:13.098 info: Deleting unnecessary generation files
+04:49:13.099 info: Writing pending files took 0 ms
+04:49:13.099 info: Finished generation
+04:49:13.100 info: Took 731 ms

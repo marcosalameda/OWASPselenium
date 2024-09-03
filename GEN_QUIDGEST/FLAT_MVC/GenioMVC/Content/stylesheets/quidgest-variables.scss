@@ -1,0 +1,50 @@
+﻿//@import "bootstrap4/_variables.scss";
+
+//
+// Quidgest Variables
+// --------------------------------------------------
+
+$imagesPath: '../img';
+
+$inputDisabledTextColor: lighten($gray,20%);
+$btnPrimaryTextColor: $white;
+$btnPrimaryTextColorHighlight: $white;
+
+$btnWarningTextColor: $btnPrimaryTextColor;
+$btnWarningTextColorHighlight: $btnPrimaryTextColorHighlight;
+
+/* Quidgest */
+$qdgFlowLabelColor: $body-color;
+
+$qgdInputFocusborderColor: rgba(0,169,206,0.25);
+//$qgdInputFocusGlowColor: ~"inset 0 1px 1px rgba(rgb(0,0,0),.075), 0 0 8px rgba(rgb(0,140,210),.6) !important";
+
+$gqdInputMandatoryBorder: auto;
+//$gqdInputMandatoryBoxShaddow: inset 0px 0px 8px 1px @inputBorder; //0px 0px 4px rgba(255,0,0,0.6);
+
+
+/* Chosen */
+$chznBackground: $input-bg;
+$chznBackgroundImg: none;
+$chznBorder: $input-border-color;
+$chznBorderRadius: $input-border-radius;
+$chznBoxShadow: none;
+$chznTextColor: $input-color;
+$chznSpritePath: '#{$imagesPath}/chosen-sprite.png';
+$chznHighlightStart:lighten($primary, 60%);
+$chznHighlightEnd: lighten($primary, 60%);
+$chznHighlightTextColor:  lighten($body-color, 10%);
+$chznDisabledBackground: $inputDisabledBackground;
+
+$qdgTreeList: '#{$imagesPath}/tree_list.png';
+
+/* Switch */
+$enable-switch-single-label: false;
+
+
+/*DisplayMessage Variables*/
+$displayMessageError: $danger !default;
+$displayMessageInfo: $info !default;
+$displayMessageQuestion: $warning !default;
+$displayMessageWarning: $warning !default;
+$displayMessageOK: $success !default;

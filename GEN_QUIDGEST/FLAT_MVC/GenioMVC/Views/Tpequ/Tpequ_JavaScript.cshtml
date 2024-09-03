@@ -1,0 +1,378 @@
+﻿@model GenioMVC.ViewModels.Tpequ.Tpequ_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+<script src="@Url.Content("~/Scripts/bootstrap-colorpicker.min.js")" type="application/javascript"></script>
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS TPEQU]/ *@
+<script  type="text/javascript">
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Tpequ !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Tpequ = new QForm($('[data-form="Tpequ"]'), "Form_Tpequ");
+		}
+		window.Form_Tpequ.baseArea = "tpequ";
+		window.Form_Tpequ.FormMode = '@Model.GetFormMode';
+		window.Form_Tpequ.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Tpequ.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Tpequ")',
+			GetDependants:		'@Url.Action("GetDependants", "Tpequ")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Tpequ", "Tpequ")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Tpequ", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Tpequ", "Tpequ")',
+		};
+		window.Form_Tpequ.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+			ApplyButton: true,
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Tpequ.formSaveEdit = '@Url.Action("Tpequ_SaveEdit", "Tpequ")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Tpequ.formAction = 'Tpequ_New';
+		window.Form_Tpequ.formRedirectURL = '@Url.Action("Tpequ_New_Redirect", "Tpequ")';
+		window.Form_Tpequ.formSubmitURL = '@Url.Action("Tpequ_New", "Tpequ")';
+		window.Form_Tpequ.formRedirectURL_repeatInsertion = '@Url.Action("Tpequ_New_Redirect", "Tpequ", new { repeatInsertion = true})';
+		window.Form_Tpequ.formSubmitURL_repeatInsertion = '@Url.Action("Tpequ_New", "Tpequ", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Tpequ.formAction = 'Tpequ_Edit';
+		window.Form_Tpequ.formRedirectURL = '@Url.Action("Tpequ_Edit_Redirect", "Tpequ")';
+		window.Form_Tpequ.formSubmitURL = '@Url.Action("Tpequ_Edit", "Tpequ")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Tpequ.formAction = 'Tpequ_Duplicate';
+		window.Form_Tpequ.formRedirectURL = '@Url.Action("Tpequ_Duplicate_Redirect", "Tpequ")';
+		window.Form_Tpequ.formSubmitURL = '@Url.Action("Tpequ_Duplicate", "Tpequ")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Tpequ.formAction = 'Tpequ_Delete';
+		window.Form_Tpequ.formRedirectURL = '@Url.Action("Tpequ_Delete_Redirect", "Tpequ")';
+		window.Form_Tpequ.formSubmitURL = '@Url.Action("Tpequ_Delete", "Tpequ")';
+	</text>
+}
+		window.Form_Tpequ.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.IFF_TPEQU___PSEUDNOVOGR01 = new QGenericControl($('[data-identifier="IFF_TPEQU___PSEUDNOVOGR01"]', this.element), window.Form_Tpequ);
+
+			this.Controls.IFF_TPEQU___FAMILFAMILY__ = new QDbeditControl($('[data-identifier="IFF_TPEQU___FAMILFAMILY__"]', this.element), window.Form_Tpequ);
+
+			this.Controls.LED_TPEQU___TPEQUTIPOEQUI = new QTextControl($('[data-identifier="LED_TPEQU___TPEQUTIPOEQUI"]', this.element), window.Form_Tpequ);
+
+			this.Controls.LED_TPEQU___TPEQUTPEQUCOD = new QTextControl($('[data-identifier="LED_TPEQU___TPEQUTPEQUCOD"]', this.element), window.Form_Tpequ);
+
+			this.Controls.LED_TPEQU___TPEQUNIVEL___ = new QNumericControl($('[data-identifier="LED_TPEQU___TPEQUNIVEL___"]', this.element), window.Form_Tpequ);
+
+			this.Controls.IFF_TPEQU___PSEUDNOVOGR05 = new QGenericControl($('[data-identifier="IFF_TPEQU___PSEUDNOVOGR05"]', this.element), window.Form_Tpequ);
+
+			this.Controls.IFF_TPEQU___PSEUDNOVOGR04 = new QGenericControl($('[data-identifier="IFF_TPEQU___PSEUDNOVOGR04"]', this.element), window.Form_Tpequ);
+
+			this.Controls.LED_TPEQU___TPEQUKIT_____ = new QCheckBoxControl($('[data-identifier="LED_TPEQU___TPEQUKIT_____"]', this.element), window.Form_Tpequ);
+
+			this.Controls.LED_TPEQU___TPEQUPRECOMAX = new QNumericControl($('[data-identifier="LED_TPEQU___TPEQUPRECOMAX"]', this.element), window.Form_Tpequ);
+
+			this.Controls.LED_TPEQU___TPEQUBACKCOLO = new QTextControl($('[data-identifier="LED_TPEQU___TPEQUBACKCOLO"]', this.element), window.Form_Tpequ);
+
+			this.Controls.LED_TPEQU___TPEQUCORLETRA = new QTextControl($('[data-identifier="LED_TPEQU___TPEQUCORLETRA"]', this.element), window.Form_Tpequ);
+
+			this.Controls.LED_TPEQU___TPEQUTPEQUPAI = new QTextControl($('[data-identifier="LED_TPEQU___TPEQUTPEQUPAI"]', this.element), window.Form_Tpequ);
+
+			this.Controls.LED_TPEQU___TPEQUPRECOULT = new QNumericControl($('[data-identifier="LED_TPEQU___TPEQUPRECOULT"]', this.element), window.Form_Tpequ);
+
+			this.Controls.LED_TPEQU___TPEQUSINCE___ = new QDateControl($('[data-identifier="LED_TPEQU___TPEQUSINCE___"]', this.element), window.Form_Tpequ);
+
+			this.Controls.IFF_TPEQU___PSEUDCOMPONEN = new QTableListControl($('[data-identifier="IFF_TPEQU___PSEUDCOMPONEN"]', this.element), window.Form_Tpequ);
+
+			this.Controls.IFF_TPEQU___PSEUDNOVOGR03 = new QGenericControl($('[data-identifier="IFF_TPEQU___PSEUDNOVOGR03"]', this.element), window.Form_Tpequ);
+
+			this.Controls.IFF_TPEQU___PSEUDEVOLUCAO = new QTableListControl($('[data-identifier="IFF_TPEQU___PSEUDEVOLUCAO"]', this.element), window.Form_Tpequ);
+
+			this.Controls.IFF_TPEQU___PSEUDNOVOGR02 = new QGenericControl($('[data-identifier="IFF_TPEQU___PSEUDNOVOGR02"]', this.element), window.Form_Tpequ);
+
+			this.Controls.IFF_TPEQU___PSEUDUNICO___ = new QButtonControl($('[data-identifier="IFF_TPEQU___PSEUDUNICO___"]', this.element), window.Form_Tpequ);
+
+			this.Controls.IFF_TPEQU___PSEUDNOVOGR06 = new QGenericControl($('[data-identifier="IFF_TPEQU___PSEUDNOVOGR06"]', this.element), window.Form_Tpequ);
+
+			this.Controls.IFF_TPEQU___PSEUDINSTALAC = new QTableListControl($('[data-identifier="IFF_TPEQU___PSEUDINSTALAC"]', this.element), window.Form_Tpequ);
+
+			this.Controls.IFF_TPEQU___PSEUDINSTALA1 = new QTableListControl($('[data-identifier="IFF_TPEQU___PSEUDINSTALA1"]', this.element), window.Form_Tpequ);
+
+			this.Controls.LED_TPEQU___TPEQUQTDEQUIP = new QNumericControl($('[data-identifier="LED_TPEQU___TPEQUQTDEQUIP"]', this.element), window.Form_Tpequ);
+
+
+
+
+			this.Controls.LED_TPEQU___TPEQUCODTPEQU = new QHiddenControl($('[data-identifier="LED_TPEQU___TPEQUCODTPEQU"]', this.element), window.Form_Tpequ);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	</text>
+}
+
+		window.Form_Tpequ.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Tpequ.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI TPEQU]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+@if (Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+					if (rData.mode === "NEW" || rData.mode === "EDIT" || rData.mode === "DUPLICATE") {
+						$.when(window.Form_Tpequ.Apply()).then(function (issaved) { rData.deferred.resolve(issaved); });
+					}
+					else
+	</text>
+}
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Tpequ.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS TPEQU]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Tpequ.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS TPEQU]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Tpequ.Data.RelationKeysSelector = {
+				get famil() { return $(':not([elem-identifier="Multiform"]) > #ValCodfamil[pers-cs-area="Famil"]', $('[data-form="Tpequ"]')); /* DBEdit */ },
+		};
+
+		window.Form_Tpequ.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Tpequ.Data.RelationKeys = {
+			get formContext() { return window.Form_Tpequ; },
+			get famil() { return (this.formContext.Data.RelationKeysSelector.famil.getQControl() || {}).Value; /* DBEdit */ },
+			set famil(newValue) { (this.formContext.Data.RelationKeysSelector.famil.getQControl() || {}).Value = newValue; /* DBEdit */ },
+		};
+	</text>
+}
+
+	window.Form_Tpequ.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+		@* Recalculate formulas (server side) *@
+		$(qForm).bind('Tpequ_ValEvolucao_RELOADED', function(event, eTarget) {
+				window.Form_Tpequ.RecalculateFormulas();
+		});
+		
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Tpequ.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitTpequ(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Tpequ.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeleteTpequ(event) {
+			event.preventDefault();
+			window.Form_Tpequ.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+    var ajaxCallsRemaining = $(".flash object embed").length;
+    $('form [elem-identifier="ButtonPrimary"]').click(function() {
+        var flashObjects = $(".flash object embed");
+        ajaxCallsRemaining = flashObjects.length;
+        if(flashObjects.length == 0)
+            return true;
+        else {
+            flashObjects.each(function() {
+               var flashObj = GetFlash($(this).attr('id'));
+               flashObj.UsedFlash.TriggerSave(flashObj);
+            });
+            return false;
+        }
+    });
+    </text>
+}
+// USE /[MANUAL GQT FORM_CODEJS TPEQU]/
+
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	function Tpequ_ValUnico_BC_UNICO (id) {
+		$.when(window.Form_Tpequ.Apply()).then(function (isSaved) {
+		if (!isSaved) {
+			return;
+		}
+
+		$.ajax({
+            url: '@Url.Action("GetCarga_unico")',
+            type: "GET",
+            data: { idsrc : id }
+        }).done(function(data) {
+            bootbox.alert('@Resources.A_OPERACAO_FOI_CONCL36721');
+            //QUtils.WindowReload();
+        }).fail(function(jqXHR, textStatus) {
+            bootbox.alert(quidgestGlobals.Resources.OCORREU_UM_ERRO_AO_P53091);
+        });
+
+		});
+
+    }
+	</text>
+}
+  
+
+    $($('[elem-identifier="FormActions"]'), $('[data-form="Tpequ"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

@@ -1,0 +1,295 @@
+﻿@model GenioMVC.ViewModels.Cattp.Tpcat_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS TPCAT]/ *@
+<script  type="text/javascript">
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Tpcat !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Tpcat = new QForm($('[data-form="Tpcat"]'), "Form_Tpcat");
+		}
+		window.Form_Tpcat.baseArea = "cattp";
+		window.Form_Tpcat.FormMode = '@Model.GetFormMode';
+		window.Form_Tpcat.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Tpcat.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Cattp")',
+			GetDependants:		'@Url.Action("GetDependants", "Cattp")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Tpcat", "Cattp")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Tpcat", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Cattp", "Cattp")',
+		};
+		window.Form_Tpcat.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Tpcat.formSaveEdit = '@Url.Action("Tpcat_SaveEdit", "Cattp")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Tpcat.formAction = 'Tpcat_New';
+		window.Form_Tpcat.formRedirectURL = '@Url.Action("Tpcat_New_Redirect", "Cattp")';
+		window.Form_Tpcat.formSubmitURL = '@Url.Action("Tpcat_New", "Cattp")';
+		window.Form_Tpcat.formRedirectURL_repeatInsertion = '@Url.Action("Tpcat_New_Redirect", "Cattp", new { repeatInsertion = true})';
+		window.Form_Tpcat.formSubmitURL_repeatInsertion = '@Url.Action("Tpcat_New", "Cattp", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Tpcat.formAction = 'Tpcat_Edit';
+		window.Form_Tpcat.formRedirectURL = '@Url.Action("Tpcat_Edit_Redirect", "Cattp")';
+		window.Form_Tpcat.formSubmitURL = '@Url.Action("Tpcat_Edit", "Cattp")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Tpcat.formAction = 'Tpcat_Duplicate';
+		window.Form_Tpcat.formRedirectURL = '@Url.Action("Tpcat_Duplicate_Redirect", "Cattp")';
+		window.Form_Tpcat.formSubmitURL = '@Url.Action("Tpcat_Duplicate", "Cattp")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Tpcat.formAction = 'Tpcat_Delete';
+		window.Form_Tpcat.formRedirectURL = '@Url.Action("Tpcat_Delete_Redirect", "Cattp")';
+		window.Form_Tpcat.formSubmitURL = '@Url.Action("Tpcat_Delete", "Cattp")';
+	</text>
+}
+		window.Form_Tpcat.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.LED_TPCAT___CATTPTPCATEGO = new QTextControl($('[data-identifier="LED_TPCAT___CATTPTPCATEGO"]', this.element), window.Form_Tpcat);
+
+			this.Controls.IFF_TPCAT___SBCATSUBCATEG = new QDbeditControl($('[data-identifier="IFF_TPCAT___SBCATSUBCATEG"]', this.element), window.Form_Tpcat);
+
+
+
+
+			this.Controls.LED_TPCAT___CATTPCODTPCAT = new QHiddenControl($('[data-identifier="LED_TPCAT___CATTPCODTPCAT"]', this.element), window.Form_Tpcat);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	</text>
+}
+
+		window.Form_Tpcat.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Tpcat.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI TPCAT]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Tpcat.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS TPCAT]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Tpcat.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS TPCAT]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Tpcat.Data.RelationKeysSelector = {
+				get sbcat() { return $(':not([elem-identifier="Multiform"]) > #ValCodsbcat[pers-cs-area="Sbcat"]', $('[data-form="Tpcat"]')); /* DBEdit */ },
+		};
+
+		window.Form_Tpcat.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Tpcat.Data.RelationKeys = {
+			get formContext() { return window.Form_Tpcat; },
+			get sbcat() { return (this.formContext.Data.RelationKeysSelector.sbcat.getQControl() || {}).Value; /* DBEdit */ },
+			set sbcat(newValue) { (this.formContext.Data.RelationKeysSelector.sbcat.getQControl() || {}).Value = newValue; /* DBEdit */ },
+		};
+	</text>
+}
+
+	window.Form_Tpcat.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Tpcat.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitTpcat(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Tpcat.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeleteTpcat(event) {
+			event.preventDefault();
+			window.Form_Tpcat.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+    var ajaxCallsRemaining = $(".flash object embed").length;
+    $('form [elem-identifier="ButtonPrimary"]').click(function() {
+        var flashObjects = $(".flash object embed");
+        ajaxCallsRemaining = flashObjects.length;
+        if(flashObjects.length == 0)
+            return true;
+        else {
+            flashObjects.each(function() {
+               var flashObj = GetFlash($(this).attr('id'));
+               flashObj.UsedFlash.TriggerSave(flashObj);
+            });
+            return false;
+        }
+    });
+    </text>
+}
+// USE /[MANUAL GQT FORM_CODEJS TPCAT]/
+
+
+
+ 
+
+    $($('[elem-identifier="FormActions"]'), $('[data-form="Tpcat"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

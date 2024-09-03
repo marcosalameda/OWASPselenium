@@ -1,0 +1,350 @@
+﻿@model GenioMVC.ViewModels.Equip.Accordi_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS ACCORDI]/ *@
+<script  type="text/javascript">
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Accordi !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Accordi = new QForm($('[data-form="Accordi"]'), "Form_Accordi");
+		}
+		window.Form_Accordi.baseArea = "equip";
+		window.Form_Accordi.FormMode = '@Model.GetFormMode';
+		window.Form_Accordi.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Accordi.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Equip")',
+			GetDependants:		'@Url.Action("GetDependants", "Equip")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Accordi", "Equip")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Accordi", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Equip", "Equip")',
+		};
+		window.Form_Accordi.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Accordi.formSaveEdit = '@Url.Action("Accordi_SaveEdit", "Equip")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Accordi.formAction = 'Accordi_New';
+		window.Form_Accordi.formRedirectURL = '@Url.Action("Accordi_New_Redirect", "Equip")';
+		window.Form_Accordi.formSubmitURL = '@Url.Action("Accordi_New", "Equip")';
+		window.Form_Accordi.formRedirectURL_repeatInsertion = '@Url.Action("Accordi_New_Redirect", "Equip", new { repeatInsertion = true})';
+		window.Form_Accordi.formSubmitURL_repeatInsertion = '@Url.Action("Accordi_New", "Equip", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Accordi.formAction = 'Accordi_Edit';
+		window.Form_Accordi.formRedirectURL = '@Url.Action("Accordi_Edit_Redirect", "Equip")';
+		window.Form_Accordi.formSubmitURL = '@Url.Action("Accordi_Edit", "Equip")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Accordi.formAction = 'Accordi_Duplicate';
+		window.Form_Accordi.formRedirectURL = '@Url.Action("Accordi_Duplicate_Redirect", "Equip")';
+		window.Form_Accordi.formSubmitURL = '@Url.Action("Accordi_Duplicate", "Equip")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Accordi.formAction = 'Accordi_Delete';
+		window.Form_Accordi.formRedirectURL = '@Url.Action("Accordi_Delete_Redirect", "Equip")';
+		window.Form_Accordi.formSubmitURL = '@Url.Action("Accordi_Delete", "Equip")';
+	</text>
+}
+		window.Form_Accordi.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.IFF_ACCORDI_PSEUDNOVOGR02 = new QGenericControl($('[data-identifier="IFF_ACCORDI_PSEUDNOVOGR02"]', this.element), window.Form_Accordi);
+
+			this.Controls.IFF_ACCORDI_CMPNYDESIGNAT = new QDbeditControl($('[data-identifier="IFF_ACCORDI_CMPNYDESIGNAT"]', this.element), window.Form_Accordi);
+
+			this.Controls.IFF_ACCORDI_PESS1NAME____ = new QDbeditControl($('[data-identifier="IFF_ACCORDI_PESS1NAME____"]', this.element), window.Form_Accordi);
+
+			this.Controls.LED_ACCORDI_EQUIPSEQUENNR = new QNumericControl($('[data-identifier="LED_ACCORDI_EQUIPSEQUENNR"]', this.element), window.Form_Accordi);
+
+			this.Controls.IFF_ACCORDI_PSEUDNOVOGR06 = new QGenericControl($('[data-identifier="IFF_ACCORDI_PSEUDNOVOGR06"]', this.element), window.Form_Accordi);
+
+			this.Controls.LED_ACCORDI_EQUIPPHOTOGRA = new QImageControl($('[data-identifier="LED_ACCORDI_EQUIPPHOTOGRA"]', this.element), window.Form_Accordi, '@Html.Raw(Url.Action("ImageDelete", "Equip", new { id=Model.ValCodequip, modelname="Equip", fldname="ValPhotogra" }))', '@Html.Raw(Url.Action("ImageCropper", "Equip", new { key=Model.ValCodequip, modelname= "Equip", fldname= "ValPhotogra", identifier= "FACCORDI", FormName= "Accordi", FieldId= "LED_ACCORDI_EQUIPPHOTOGRA" }))',@Html.IsImageEmpty(Model.ValPhotogra));
+
+			this.Controls.IFF_ACCORDI_PSEUDNOVOGR05 = new QGenericControl($('[data-identifier="IFF_ACCORDI_PSEUDNOVOGR05"]', this.element), window.Form_Accordi);
+
+			this.Controls.IFF_ACCORDI_PSEUDNOVOGR03 = new QGenericControl($('[data-identifier="IFF_ACCORDI_PSEUDNOVOGR03"]', this.element), window.Form_Accordi);
+
+			this.Controls.IFF_ACCORDI_PSEUDINSTALAG = new QTableListControl($('[data-identifier="IFF_ACCORDI_PSEUDINSTALAG"]', this.element), window.Form_Accordi);
+
+			this.Controls.IFF_ACCORDI_PSEUDNOVOGR04 = new QGenericControl($('[data-identifier="IFF_ACCORDI_PSEUDNOVOGR04"]', this.element), window.Form_Accordi);
+
+			this.Controls.IFF_ACCORDI_PSEUDINSTALAC = new QTableListControl($('[data-identifier="IFF_ACCORDI_PSEUDINSTALAC"]', this.element), window.Form_Accordi);
+
+			this.Controls.IFF_ACCORDI_PSEUDNOVOGR11 = new QGenericControl($('[data-identifier="IFF_ACCORDI_PSEUDNOVOGR11"]', this.element), window.Form_Accordi);
+
+			this.Controls.IFF_ACCORDI_PSEUDREPARACO = new QTableListControl($('[data-identifier="IFF_ACCORDI_PSEUDREPARACO"]', this.element), window.Form_Accordi);
+
+
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	@*Hidden Foreign Keys Controls*@
+			this.Controls.LED_ACCORDI_TPEQUCODTPEQU = new QHiddenControl($('[data-identifier="LED_ACCORDI_TPEQUCODTPEQU"]', this.element), window.Form_Accordi);
+			this.Controls.LED_ACCORDI_ROOM1CODROOMS = new QHiddenControl($('[data-identifier="LED_ACCORDI_ROOM1CODROOMS"]', this.element), window.Form_Accordi);
+			this.Controls.LED_ACCORDI_DECOMCODDECO_ = new QHiddenControl($('[data-identifier="LED_ACCORDI_DECOMCODDECO_"]', this.element), window.Form_Accordi);
+			this.Controls.LED_ACCORDI_WAREHCODWAREH = new QHiddenControl($('[data-identifier="LED_ACCORDI_WAREHCODWAREH"]', this.element), window.Form_Accordi);
+			this.Controls.LED_ACCORDI_ITEM_CODITEM_ = new QHiddenControl($('[data-identifier="LED_ACCORDI_ITEM_CODITEM_"]', this.element), window.Form_Accordi);
+	</text>
+}
+			this.Controls.LED_ACCORDI_EQUIPCODEQUIP = new QHiddenControl($('[data-identifier="LED_ACCORDI_EQUIPCODEQUIP"]', this.element), window.Form_Accordi);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+			this.Controls.LED_ACCORDI_EQUIPREGISTNR = new QSpecialControl($('[data-identifier="LED_ACCORDI_EQUIPREGISTNR"]', this.element), window.Form_Accordi);
+			this.Controls.LED_ACCORDI_EQUIPREGISTNR.InitData(@JavaScriptConversion.ToString(@Model.ValRegistnr));
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	@* DBEdit Limits *@
+			this.Controls.IFF_ACCORDI_PESS1NAME____.AddLimit(this.Controls.IFF_ACCORDI_CMPNYDESIGNAT, 'A');
+	</text>
+}
+
+		window.Form_Accordi.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Accordi.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI ACCORDI]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Accordi.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS ACCORDI]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Accordi.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS ACCORDI]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Accordi.Data.RelationKeysSelector = {
+				get tpequ() { return $(':not([elem-identifier="Multiform"]) > #ValCodtpequ', $('[data-form="Accordi"]')); /* Hidden */ },
+				get room1() { return $(':not([elem-identifier="Multiform"]) > #ValCodrooms', $('[data-form="Accordi"]')); /* Hidden */ },
+				get decom() { return $(':not([elem-identifier="Multiform"]) > #ValCoddeco', $('[data-form="Accordi"]')); /* Hidden */ },
+				get wareh() { return $(':not([elem-identifier="Multiform"]) > #ValCodwareh', $('[data-form="Accordi"]')); /* Hidden */ },
+				get item() { return $(':not([elem-identifier="Multiform"]) > #ValCoditem', $('[data-form="Accordi"]')); /* Hidden */ },
+				get cmpny() { return $(':not([elem-identifier="Multiform"]) > #ValCodempre[pers-cs-area="Cmpny"]', $('[data-form="Accordi"]')); /* DBEdit */ },
+				get pess1() { return $(':not([elem-identifier="Multiform"]) > #ValCodpess1[pers-cs-area="Pess1"]', $('[data-form="Accordi"]')); /* DBEdit */ },
+		};
+
+		window.Form_Accordi.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Accordi.Data.RelationKeys = {
+			get formContext() { return window.Form_Accordi; },
+			get tpequ() { return (this.formContext.Data.RelationKeysSelector.tpequ.getQControl() || {}).Value; /* Hidden FK */ },
+			set tpequ(newValue) { (this.formContext.Data.RelationKeysSelector.tpequ.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+			get room1() { return (this.formContext.Data.RelationKeysSelector.room1.getQControl() || {}).Value; /* Hidden FK */ },
+			set room1(newValue) { (this.formContext.Data.RelationKeysSelector.room1.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+			get decom() { return (this.formContext.Data.RelationKeysSelector.decom.getQControl() || {}).Value; /* Hidden FK */ },
+			set decom(newValue) { (this.formContext.Data.RelationKeysSelector.decom.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+			get wareh() { return (this.formContext.Data.RelationKeysSelector.wareh.getQControl() || {}).Value; /* Hidden FK */ },
+			set wareh(newValue) { (this.formContext.Data.RelationKeysSelector.wareh.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+			get item() { return (this.formContext.Data.RelationKeysSelector.item.getQControl() || {}).Value; /* Hidden FK */ },
+			set item(newValue) { (this.formContext.Data.RelationKeysSelector.item.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+			get cmpny() { return (this.formContext.Data.RelationKeysSelector.cmpny.getQControl() || {}).Value; /* DBEdit */ },
+			set cmpny(newValue) { (this.formContext.Data.RelationKeysSelector.cmpny.getQControl() || {}).Value = newValue; /* DBEdit */ },
+			get pess1() { return (this.formContext.Data.RelationKeysSelector.pess1.getQControl() || {}).Value; /* DBEdit */ },
+			set pess1(newValue) { (this.formContext.Data.RelationKeysSelector.pess1.getQControl() || {}).Value = newValue; /* DBEdit */ },
+		};
+	</text>
+}
+
+	window.Form_Accordi.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Accordi.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitAccordi(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Accordi.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeleteAccordi(event) {
+			event.preventDefault();
+			window.Form_Accordi.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+    var ajaxCallsRemaining = $(".flash object embed").length;
+    $('form [elem-identifier="ButtonPrimary"]').click(function() {
+        var flashObjects = $(".flash object embed");
+        ajaxCallsRemaining = flashObjects.length;
+        if(flashObjects.length == 0)
+            return true;
+        else {
+            flashObjects.each(function() {
+               var flashObj = GetFlash($(this).attr('id'));
+               flashObj.UsedFlash.TriggerSave(flashObj);
+            });
+            return false;
+        }
+    });
+    </text>
+}
+// USE /[MANUAL GQT FORM_CODEJS ACCORDI]/
+
+
+
+ 
+
+    $($('[elem-identifier="FormActions"]'), $('[data-form="Accordi"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

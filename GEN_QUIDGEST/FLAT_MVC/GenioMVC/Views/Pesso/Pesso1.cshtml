@@ -1,0 +1,627 @@
+﻿@model GenioMVC.ViewModels.Pesso.Pesso1_ViewModel
+@using GenioMVC.Models.Navigation;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Form = "Pesso1";
+	ViewBag.Title = @Resources.PERSON10446;
+    ViewBag.formmode = Model.GetFormMode;
+	ViewBag.ClassForFormLayout = "form-flow";
+}
+
+
+@if (!Model.NestedForm) {
+    if(Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+    {
+        using (Html.BeginForm("Action", "Pesso", FormMethod.Post, new { @class = "form-horizontal", area="Pesso", data_form="Pesso1" }))
+        {
+            @form_content_alert()
+            @Html.QValidationSummary()
+	        @LoadDefault()
+        }
+    }
+    else
+    {
+        <div class="form-horizontal" id="Pesso1" area="Pesso" data-form="Pesso1">
+	        @LoadDefault()
+        </div>
+    }
+}
+else {
+    <div class="c-card nested-form" id="Pesso1_well" area="Pesso" data-form="Pesso1">
+        @Html.QValidationSummary()
+		@LoadDefault()
+    </div>
+}
+
+@helper form_content_body() {
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="row-line-group">
+                            <div class="c-groupbox zone-no-border ">
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+                            <div class="c-groupbox " id="GROUPBOX_PESSO1_NOVOGR04">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_PESSO1__PSEUDNOVOGR04" 
+                                    label-id="IFF_PESSO1__PSEUDNOVOGR04">
+                                    <span>@Resources.PHOTO32097</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_PESSO1__PSEUDNOVOGR04','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-image draggable " id="CONTAINER_LED_PESSO1__PESSOPHOTOGRA">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValPhotogra, new { label_id="LED_PESSO1__PESSOPHOTOGRA", @class = " i-text__label", id="LABEL_LED_PESSO1__PESSOPHOTOGRA"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PESSO1__PESSOPHOTOGRA','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													<div data-identifier="LED_PESSO1__PESSOPHOTOGRA" pers-cs-area="Pesso" pers-cs-field="ValPhotogra" class="image-control-wrapper" >
+													@if(Model.IsEditableMode) {
+														@Html.EditorFor(m => m.ValPhotogra, new {help_id = "LED_PESSO1__PESSOPHOTOGRA", @class = "col-auto ", data_identifier = "LED_PESSO1__PESSOPHOTOGRA", title = @Resources.PHOTO51874, guid = @Model.ValCodpesso, controller = "Pesso", fldname = "ValPhotogra", identifier = "FPESSO1", style = "height: 47pt; display: inline-block;" })
+													} else {
+														@Html.DisplayFor(m => m.ValPhotogra, new {help_id = "LED_PESSO1__PESSOPHOTOGRA", @class = "col-auto ", data_identifier = "LED_PESSO1__PESSOPHOTOGRA", title = @Resources.PHOTO51874, guid = @Model.ValCodpesso, controller = "Pesso", fldname = "ValPhotogra", identifier = "FPESSO1", style = "height: 47pt; display: inline-block;" })
+													}
+													</div>
+													@Html.ValidationMessageFor(model => model.ValPhotogra)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+                             <div class="c-groupbox " id="GROUPBOX_PESSO1_NOVOGR02">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_PESSO1__PSEUDNOVOGR02" 
+                                    label-id="IFF_PESSO1__PSEUDNOVOGR02">
+                                    <span>@Resources.IDENTIFICATION40793</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_PESSO1__PSEUDNOVOGR02','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_PESSO1__PESSOIDFUNCIO">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValIdfuncio, new { label_id="LED_PESSO1__PESSOIDFUNCIO", @class = " i-text__label", id="LABEL_LED_PESSO1__PESSOIDFUNCIO"}, true, true)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PESSO1__PESSOIDFUNCIO','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValIdfuncio, new {help_id = "LED_PESSO1__PESSOIDFUNCIO", @class = "Number text-right i-text__field i-text input-small", data_sequencial = "M1", data_identifier = "LED_PESSO1__PESSOIDFUNCIO", @pers_cs_area = "Pesso", @pers_cs_field = "ValIdfuncio", @db_field = "ValIdfuncio", title = @Resources.EMPLOYEE_NO_01176, data_number_integer = "6", data_number_decimals = "0", data_number_format = "999999" })
+													@Html.ValidationMessageFor(model => model.ValIdfuncio)
+													</div>
+												<div class="i-text draggable " id="CONTAINER_LED_PESSO1__PESSONAME____">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValName, new { label_id="LED_PESSO1__PESSONAME____", @class = " i-text__label", id="LABEL_LED_PESSO1__PESSONAME____"}, true, true)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PESSO1__PESSONAME____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValName, new {help_id = "LED_PESSO1__PESSONAME____", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_PESSO1__PESSONAME____", @pers_cs_area = "Pesso", @pers_cs_field = "ValName", @db_field = "ValName", title = @Resources.NAME_23841, maxlength = "85", rows = "85" })
+													@Html.ValidationMessageFor(model => model.ValName)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-date-picker draggable " id="CONTAINER_LED_PESSO1__PESSODTNASCIM">
+													<div class="d-inline-flex">
+													@Html.LabelFor(model => model.ValDtnascim, new { label_id="LED_PESSO1__PESSODTNASCIM", @class = " i-text__label", id="LABEL_LED_PESSO1__PESSODTNASCIM"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PESSO1__PESSODTNASCIM','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DateFor(model => model.ValDtnascim, new {help_id = "LED_PESSO1__PESSODTNASCIM", @class = "i-input-group__field b-icon-text input-small", data_identifier = "LED_PESSO1__PESSODTNASCIM", @pers_cs_area = "Pesso", @pers_cs_field = "ValDtnascim", @db_field = "ValDtnascim", title = @Resources.BIRTH21799 })
+													@Html.ValidationMessageFor(model => model.ValDtnascim)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_PESSO1__PESSOIDADE___">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValIdade, new { label_id="LED_PESSO1__PESSOIDADE___", @class = " i-text__label", id="LABEL_LED_PESSO1__PESSOIDADE___"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PESSO1__PESSOIDADE___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.NumberFor(model => model.ValIdade, new {help_id = "LED_PESSO1__PESSOIDADE___", @class = "Number text-right i-text__field i-text input-mini", data_refresh = "true", data_tipoform = "+", data_identifier = "LED_PESSO1__PESSOIDADE___", @pers_cs_area = "Pesso", @pers_cs_field = "ValIdade", @db_field = "ValIdade", fixed_field = "true", @readonly = "readonly", title = @Resources.AGE28663, data_number_integer = "5", data_number_decimals = "0", data_number_format = "99999" })
+													@Html.ValidationMessageFor(model => model.ValIdade)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group row-group-checkbox">
+												<div class="i-checkbox draggable " id="CONTAINER_LED_PESSO1__PESSOINTERNA_">
+													@Html.CheckBoxFor(model => model.ValInterna, new {help_id = "LED_PESSO1__PESSOINTERNA_", @class = "i-checkbox__field i-checkbox input-mini", data_identifier = "LED_PESSO1__PESSOINTERNA_", @pers_cs_area = "Pesso", @pers_cs_field = "ValInterna", @db_field = "ValInterna", title = @Resources.INTERN65375 }, @Model.IsEditableMode, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													@Html.ValidationMessageFor(model => model.ValInterna)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group row-group-checkbox">
+												<div class="i-checkbox draggable " id="CONTAINER_LED_PESSO1__PESSOEXTERNA_">
+													@Html.CheckBoxFor(model => model.ValExterna, new {help_id = "LED_PESSO1__PESSOEXTERNA_", @class = "i-checkbox__field i-checkbox input-small", data_identifier = "LED_PESSO1__PESSOEXTERNA_", @pers_cs_area = "Pesso", @pers_cs_field = "ValExterna", @db_field = "ValExterna", title = @Resources.EXTERNAL13375 }, @Model.IsEditableMode, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													@Html.ValidationMessageFor(model => model.ValExterna)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-dbedit draggable " id="CONTAINER_IFF_PESSO1__CATEGCATEGORY">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.TableCategCategory, new { label_id="IFF_PESSO1__CATEGCATEGORY", @class = " i-text__label", id="LABEL_IFF_PESSO1__CATEGCATEGORY"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('IFF_PESSO1__CATEGCATEGORY','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DropDownListFor(model => model.ValCodcateg, Model.TableCategCategory.List , "", new {help_id = "IFF_PESSO1__CATEGCATEGORY", @class = "i-select chosen-dropdown input-xxlarge", data_refresh = "true", data_tipoform = "U1", @readonly = "readonly", data_identifier = "IFF_PESSO1__CATEGCATEGORY", @pers_cs_area = "Categ", @pers_cs_field = "ValCodcateg", @db_field = "ValCodcateg", @db_full_field_name = "pesso.codcateg", data_has_more = Model.TableCategCategory.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableCategCategory.Selected, data_dbedit_value = Model.TableCategCategory.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodpesso, @data_see_more = "Pesso1_CategValCategoria", title = @Resources.CATEGORY18978, data_see_more_url = @Url.Action("Pesso1_CategValCategoria","Pesso"), data_is_dbedit = "true", data_support_form = @Url.Action("CATEG_New", "CATEG"), data_fields = "categ.codcateg,categ.categoria,categ.abbreviation", data_main_field = "Categ.ValCategory", data_elements = 0, data_filled_by_history = Model.TableCategCategory.FilledByHistory, @dependant_fields = "categ.codcateg,categ.category" })
+													@Html.ValidationMessageFor(model => model.TableCategCategory)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-date-picker draggable " id="CONTAINER_LED_PESSO1__PESSODTULTCAT">
+													<div class="d-inline-flex">
+													@Html.LabelFor(model => model.ValDtultcat, new { label_id="LED_PESSO1__PESSODTULTCAT", @class = " i-text__label", id="LABEL_LED_PESSO1__PESSODTULTCAT"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PESSO1__PESSODTULTCAT','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DateFor(model => model.ValDtultcat, new {help_id = "LED_PESSO1__PESSODTULTCAT", @class = "i-input-group__field b-icon-text input-small", data_refresh = "true", data_tipoform = "U1", data_identifier = "LED_PESSO1__PESSODTULTCAT", @pers_cs_area = "Pesso", @pers_cs_field = "ValDtultcat", @db_field = "ValDtultcat", fixed_field = "true", @readonly = "readonly", title = @Resources.SINCE47259 })
+													@Html.ValidationMessageFor(model => model.ValDtultcat)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row hidden">
+										<div class="col-12 hidden">
+											<div class="control-row-group hidden">
+												<div>
+													@Html.HiddenFor(model => model.ValGender, new {help_id = "IFF_PESSO1__PESSOGENDER__", @class = "", data_identifier = "IFF_PESSO1__PESSOGENDER__", @pers_cs_area = "Pesso", @pers_cs_field = "ValGender", data_value = Model.ValGender })
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="row-line-group">
+                            <div class="c-groupbox " id="GROUPBOX_PESSO1_NOVOGR06">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_PESSO1__PSEUDNOVOGR06" 
+                                    label-id="IFF_PESSO1__PSEUDNOVOGR06">
+                                    <span>@Resources.ACCORDION01950</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_PESSO1__PSEUDNOVOGR06','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="row-line-group">
+                            <div class="c-groupbox " id="GROUPBOX_PESSO1_NOVOGR07">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_PESSO1__PSEUDNOVOGR07" 
+                                    label-id="IFF_PESSO1__PSEUDNOVOGR07">
+                                    <span>@Resources.CONTACT05134</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_PESSO1__PSEUDNOVOGR07','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+                            <div class="c-groupbox " id="GROUPBOX_PESSO1_NOVOGR03">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_PESSO1__PSEUDNOVOGR03" 
+                                    label-id="IFF_PESSO1__PSEUDNOVOGR03">
+                                    <span>@Resources.MAIN_CONTACT60524</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_PESSO1__PSEUDNOVOGR03','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_PESSO1__PESSOTELEPHON">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValTelephon, new { label_id="LED_PESSO1__PESSOTELEPHON", @class = " i-text__label", id="LABEL_LED_PESSO1__PESSOTELEPHON"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PESSO1__PESSOTELEPHON','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValTelephon, new {help_id = "LED_PESSO1__PESSOTELEPHON", @class = "i-text__field i-text input-medium", data_identifier = "LED_PESSO1__PESSOTELEPHON", @pers_cs_area = "Pesso", @pers_cs_field = "ValTelephon", @db_field = "ValTelephon", title = @Resources.TELEPHONE28697, maxlength = "20", rows = "20" })
+													@Html.ValidationMessageFor(model => model.ValTelephon)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_PESSO1__PESSOEMAIL___">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValEmail, new { label_id="LED_PESSO1__PESSOEMAIL___", @class = " i-text__label", id="LABEL_LED_PESSO1__PESSOEMAIL___"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PESSO1__PESSOEMAIL___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValEmail, new {help_id = "LED_PESSO1__PESSOEMAIL___", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_PESSO1__PESSOEMAIL___", @pers_cs_area = "Pesso", @pers_cs_field = "ValEmail", @db_field = "ValEmail", title = @Resources.EMAIL_44228, maxlength = "254", rows = "60" })
+													@Html.ValidationMessageFor(model => model.ValEmail)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="row-large-control">
+												<div class="row-line-group" id="CONTAINER_IFF_PESSO1__PSEUDNOVOGR09">
+                            <div class="c-groupbox " id="GROUPBOX_PESSO1_NOVOGR09">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_PESSO1__PSEUDNOVOGR09" 
+                                    label-id="IFF_PESSO1__PSEUDNOVOGR09">
+                                    <span>@Resources.ALL_CONTACTS25646</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_PESSO1__PSEUDNOVOGR09','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="row-large-control">
+												<div class="row-line-group" id="CONTAINER_IFF_PESSO1__PSEUDCONTACTO">
+													<div id="Pesso1_ValContacto" data-identifier="IFF_PESSO1__PSEUDCONTACTO"  data-extra-options="" > 
+														@{ Html.RenderAction("Pesso1_ValContacto", "Pesso", new { id = Model.ValCodpesso, partialView = "Pesso1_ValContacto"}); }
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="row-line-group">
+                            <div class="c-groupbox " id="GROUPBOX_PESSO1_NOVOGR05">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_PESSO1__PSEUDNOVOGR05" 
+                                    label-id="IFF_PESSO1__PSEUDNOVOGR05">
+                                    <span>@Resources.CAREER41490</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_PESSO1__PSEUDNOVOGR05','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="row-line-group">
+                            <div class="c-groupbox " id="GROUPBOX_PESSO1_NOVOGR01">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_PESSO1__PSEUDNOVOGR01" 
+                                    label-id="IFF_PESSO1__PSEUDNOVOGR01">
+                                    <span>@Resources.COMPANY20759</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_PESSO1__PSEUDNOVOGR01','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-dbedit draggable " id="CONTAINER_IFF_PESSO1__CMPNYDESIGNAT">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.TableCmpnyDesignat, new { label_id="IFF_PESSO1__CMPNYDESIGNAT", @class = " i-text__label", id="LABEL_IFF_PESSO1__CMPNYDESIGNAT"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('IFF_PESSO1__CMPNYDESIGNAT','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DropDownListFor(model => model.ValCodempre, Model.TableCmpnyDesignat.List , "", new {help_id = "IFF_PESSO1__CMPNYDESIGNAT", @class = "i-select chosen-dropdown input-xxlarge", data_identifier = "IFF_PESSO1__CMPNYDESIGNAT", @pers_cs_area = "Cmpny", @pers_cs_field = "ValCodempre", @db_field = "ValCodempre", @db_full_field_name = "pesso.codempre", data_has_more = Model.TableCmpnyDesignat.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableCmpnyDesignat.Selected, data_dbedit_value = Model.TableCmpnyDesignat.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodpesso, @data_see_more = "Pesso1_CmpnyValDesignat", title = @Resources.COMPANY52963, data_see_more_url = @Url.Action("Pesso1_CmpnyValDesignat","Pesso"), data_is_dbedit = "true", data_support_form = @Url.Action("EMPRE_New", "CMPNY"), data_support_form_popup = true, data_fields = "cmpny.codempre,cmpny.designat,cmpny.acronym,cmpny.nif,cmpny.telephon,cmpny.email,cmpny.logo", data_main_field = "Cmpny.ValDesignat", data_elements = 0, data_filled_by_history = Model.TableCmpnyDesignat.FilledByHistory, @dependant_fields = "cmpny.codempre,cmpny.designat,cntry.codcntry,cntry.country" })
+													@Html.ValidationMessageFor(model => model.TableCmpnyDesignat)
+													</div>
+												</div>
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_PESSO1__CNTRYCOUNTRY_">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.CntryValCountry, new { label_id="LED_PESSO1__CNTRYCOUNTRY_", @class = " i-text__label", id="LABEL_LED_PESSO1__CNTRYCOUNTRY_"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PESSO1__CNTRYCOUNTRY_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.CntryValCountry, new {help_id = "LED_PESSO1__CNTRYCOUNTRY_", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_PESSO1__CNTRYCOUNTRY_", @pers_cs_area = "Cntry", @pers_cs_field = "ValCountry", @db_field = "ValCountry", fixed_field = "true", @readonly = "readonly", dependant = "ValCodempre", key_field = "ValCodcntry", dependant_area = "Cmpny", title = @Resources.COUNTRY64133, maxlength = "90", rows = "90" })
+													@Html.ValidationMessageFor(model => model.CntryValCountry)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="row-large-control">
+												<div class="row-line-group" id="CONTAINER_IFF_PESSO1__PSEUDNOVOGR10">
+                            <div class="c-groupbox " id="GROUPBOX_PESSO1_NOVOGR10">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_PESSO1__PSEUDNOVOGR10" 
+                                    label-id="IFF_PESSO1__PSEUDNOVOGR10">
+                                    <span>@Resources.EVOLUTION63463</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_PESSO1__PSEUDNOVOGR10','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="row-large-control">
+												<div class="row-line-group" id="CONTAINER_IFF_PESSO1__PSEUDEVOLUCAO">
+													<div id="Pesso1_ValEvolucao" data-identifier="IFF_PESSO1__PSEUDEVOLUCAO"  data-extra-options="" > 
+														@{ Html.RenderAction("Pesso1_ValEvolucao", "Pesso", new { id = Model.ValCodpesso, partialView = "Pesso1_ValEvolucao"}); }
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="row-line-group">
+                            <div class="c-groupbox " id="GROUPBOX_PESSO1_NOVOGR11">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_PESSO1__PSEUDNOVOGR11" 
+                                    label-id="IFF_PESSO1__PSEUDNOVOGR11">
+                                    <span>@Resources.PLACE_OF_BIRTH21795</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_PESSO1__PSEUDNOVOGR11','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-dbedit draggable " id="CONTAINER_IFF_PESSO1__REGI1REGIAO__">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.TableRegi1Regiao, new { label_id="IFF_PESSO1__REGI1REGIAO__", @class = " i-text__label", id="LABEL_IFF_PESSO1__REGI1REGIAO__"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('IFF_PESSO1__REGI1REGIAO__','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DropDownListFor(model => model.ValCodregia, Model.TableRegi1Regiao.List , "", new {help_id = "IFF_PESSO1__REGI1REGIAO__", @class = "i-select chosen-dropdown input-xxlarge", data_identifier = "IFF_PESSO1__REGI1REGIAO__", @pers_cs_area = "Regi1", @pers_cs_field = "ValCodregia", @db_field = "ValCodregia", @db_full_field_name = "pesso.codregia", dependant_area = "", dependant = "", key_field = "ValCodregia", data_has_more = Model.TableRegi1Regiao.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableRegi1Regiao.Selected, data_dbedit_value = Model.TableRegi1Regiao.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodpesso, @data_see_more = "Pesso1_Regi1ValRegiao", title = @Resources.REGION12723, data_see_more_url = @Url.Action("Pesso1_Regi1ValRegiao","Pesso"), data_is_dbedit = "true", data_fields = "regi1.codregia,regi1.regiao", data_main_field = "Regi1.ValRegiao", data_elements = 0, data_filled_by_history = Model.TableRegi1Regiao.FilledByHistory, @dependant_fields = "regi1.codregia,regi1.regiao,pais1.codcntry,pais1.country" })
+													@Html.ValidationMessageFor(model => model.TableRegi1Regiao)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row hidden">
+										<div class="col-12 hidden">
+											<div class="control-row-group hidden">
+												<div>
+													@Html.TextBoxFor(model => model.Pais1ValCountry, new {help_id = "LED_PESSO1__PAIS1COUNTRY_", @class = "i-text__field i-text input-xlarge", data_identifier = "LED_PESSO1__PAIS1COUNTRY_", @pers_cs_area = "Pais1", @pers_cs_field = "ValCountry", @db_field = "ValCountry", fixed_field = "true", @readonly = "readonly", dependant = "ValCodregia", key_field = "ValCodcntry", dependant_area = "Regi1", maxlength = "90", rows = "50" })
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-static-text draggable " id="CONTAINER_IFF_PESSO1__PSEUDOBRIGATO">
+									<div id="ValObrigato">@Html.Raw(@Resources.AT_REQUIRED65277)</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+		@Html.HiddenFor(model=> model.ValEmail2, new { @pers_cs_area = "Pesso", @pers_cs_field = "ValEmail2", @data_identifier = "LED_PESSO1__PESSOEMAIL2__" })
+
+			@Html.HiddenFor(model => model.ValCodpaise, new { @pers_cs_field="ValCodpaise", @pers_cs_area="Pesso", @data_value = Model.ValCodpaise, @db_field="ValCodpaise", @trelate="Cntry", @tfrelate="Codcntry", @data_identifier="LED_PESSO1__CNTRYCODCNTRY" })
+			@Html.HiddenFor(model => model.ValCodcntry, new { @pers_cs_field="ValCodcntry", @pers_cs_area="Pesso", @data_value = Model.ValCodcntry, @db_field="ValCodcntry", @trelate="Pais1", @tfrelate="Codcntry", @data_identifier="LED_PESSO1__PAIS1CODCNTRY" })
+
+			@Html.HiddenFor(model => model.ValCodpesso, new { @pers_cs_field="ValCodpesso", @pers_cs_area="Pesso", data_refresh = "true", @form_area="true", @data_value = Model.ValCodpesso, @data_identifier = "LED_PESSO1__PESSOCODPESSO" })
+
+            @Html.Hidden("IgnoreWarnings", "false", new { id = "IgnoreWarnings" })
+
+			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Pesso1" })
+            @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Pesso1" })
+            @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Pesso1" })
+			if (!Model.NestedForm)
+            {
+                @Html.AntiForgeryToken()
+            }
+}
+
+@helper form_content_alert() {
+	if(Model.FormMode == FormMode.Delete) {
+		<div class="c-alert c-alert--warning">
+			<i class="glyphicons glyphicons-alert c-alert__icon" aria-hidden="true"></i>
+			<div class="c-alert__text">
+				&ensp;@Resources.DESEJA_ELIMINAR_ESTA24564
+			</div>
+		<!--Ao confirmar esta ficha irá ser eliminada da base de dados. Cancele caso não tenha a certeza.-->
+		</div>
+	}
+}
+
+@helper form_content_buttons() {
+
+
+
+
+    @* Extended support form *@
+    if (Model.NestedForm)
+    {
+        if (Model.IsEditableMode)
+        {
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("Pesso1", Model.FormMode).ToString(), "Pesso")", "Pesso1_well")' qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>
+                    @Resources.SAVE04165
+            </button>
+            <button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Pesso1_Delete", "Pesso", new {id = @Model.ValCodpesso} )", "Pesso1_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+
+            <script type="application/javascript">
+                $(document).ready(function () { loaded($("#Pesso1_well")); });
+            </script>
+        }
+
+        @* javascript code_javascript *@
+        @*@codeJavascript()*@
+    }
+    @* Normal mode *@
+    else
+    {
+        if (Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+        {
+            if (Model.FormMode == FormMode.New && Convert.ToBoolean(Model.Navigation.CurrentLevel.GetEntry("repeatInsertion")))
+            {
+            <button type="button" data-end-pers="true" name="Pesso1_repete_insertion" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitPesso1(event, true)" qbutton="ok_new">@Resources.GRAVAR_E_CRIAR_NOVA17771</button>
+            }
+            if(Model.FormMode == FormMode.Delete)
+            {
+				<button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Pesso1", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitDeletePesso1(event)" qbutton="delete">
+                    <i class="glyphicons glyphicons-check e-icon" aria-hidden="true"></i>@Resources.CONFIRMAR09808
+                </button>
+            }
+            else
+            {
+                <button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Pesso1", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitPesso1(event)" title="@Resources.SAVE04165" data-selector="true" qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>@Resources.SAVE04165
+                </button>
+            }
+
+            <button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-href="@Url.Action("Pesso1_Cancel", "Pesso", new { niv = Model.Navigation.CurrentLevel.Level })" onclick="javascript:window.Form_Pesso1.Cancel()" title="@Resources.CANCEL65428" data-selector="true" qbutton="cancel">
+                <i class="glyphicons glyphicons-ban-circle e-icon" aria-hidden="true"></i>@Resources.CANCEL65428
+            </button>
+        }
+        else if (!(ViewBag.isHomePage ?? false))
+        {
+            @Html.ActionLinkWithIcon(@Resources.RETROCEDER16633, "Pesso1_Cancel","Pesso","glyphicons glyphicons-arrow-left e-icon", null, new { @class = "b-icon-text b-icon-text--secondary", @data_end_pers = "true", @title = @Resources.RETROCEDER16633, qbutton = "cancel" })
+        }
+    }
+}
+
+@helper LoadDefault() {
+    if (Model.NestedForm)
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div class="c-card__header">
+                    <div class="c-card__header-tag">
+						<span class="form-header" style="padding:0;">
+							<i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+						</span>
+                    </div>
+                </div>
+                <div class="c-card__body">
+                    @form_content_body()
+                    <div elem-identifier="FormActions" class="form-actions" data-form-actions="Pesso1">
+                        @form_content_buttons()
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    }
+    else
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div id="c-stickyHeader">
+                    <div class="c-action-bar d-flex">
+                        <span class="form-header">
+                            <i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+                        </span>
+                        <div data-parent-form="Pesso1" data-q-ref="form-btns-main_container"></div>
+                    </div>
+                </div>
+
+                @form_content_body()
+                <div elem-identifier="FormActions" class="form-actions" data-form-actions="Pesso1">
+                @form_content_buttons()
+                </div>
+            </div>
+        </fieldset>
+    }
+}
+
+@helper LoadFromLayout()
+{
+}
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT PESSO1]/ *@
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_PESSO1" data-form-javascript="true">
+@Html.Partial("Pesso1_JavaScript", Model, ViewData)
+</div>
+}
+
+@section code_javascript
+{
+	@codeJavascript()
+}
+
+@if (Request.IsAjaxRequest())
+{
+    @codeJavascript()
+    @includeStylesheets()
+}
+
+@helper includeStylesheets()
+{
+
+ }
+
+@section include_stylesheets {
+    @includeStylesheets()
+}

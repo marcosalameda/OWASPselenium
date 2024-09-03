@@ -1,0 +1,302 @@
+﻿@model GenioMVC.ViewModels.Regio.Regia_on_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS REGIA_ON]/ *@
+<script  type="text/javascript">
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Regia_on !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Regia_on = new QForm($('[data-form="Regia_on"]'), "Form_Regia_on");
+		}
+		window.Form_Regia_on.baseArea = "regio";
+		window.Form_Regia_on.FormMode = '@Model.GetFormMode';
+		window.Form_Regia_on.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Regia_on.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Regio")',
+			GetDependants:		'@Url.Action("GetDependants", "Regio")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Regia_on", "Regio")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Regia_on", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Regio", "Regio")',
+		};
+		window.Form_Regia_on.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Regia_on.formSaveEdit = '@Url.Action("Regia_on_SaveEdit", "Regio")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Regia_on.formAction = 'Regia_on_New';
+		window.Form_Regia_on.formRedirectURL = '@Url.Action("Regia_on_New_Redirect", "Regio")';
+		window.Form_Regia_on.formSubmitURL = '@Url.Action("Regia_on_New", "Regio")';
+		window.Form_Regia_on.formRedirectURL_repeatInsertion = '@Url.Action("Regia_on_New_Redirect", "Regio", new { repeatInsertion = true})';
+		window.Form_Regia_on.formSubmitURL_repeatInsertion = '@Url.Action("Regia_on_New", "Regio", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Regia_on.formAction = 'Regia_on_Edit';
+		window.Form_Regia_on.formRedirectURL = '@Url.Action("Regia_on_Edit_Redirect", "Regio")';
+		window.Form_Regia_on.formSubmitURL = '@Url.Action("Regia_on_Edit", "Regio")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Regia_on.formAction = 'Regia_on_Duplicate';
+		window.Form_Regia_on.formRedirectURL = '@Url.Action("Regia_on_Duplicate_Redirect", "Regio")';
+		window.Form_Regia_on.formSubmitURL = '@Url.Action("Regia_on_Duplicate", "Regio")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Regia_on.formAction = 'Regia_on_Delete';
+		window.Form_Regia_on.formRedirectURL = '@Url.Action("Regia_on_Delete_Redirect", "Regio")';
+		window.Form_Regia_on.formSubmitURL = '@Url.Action("Regia_on_Delete", "Regio")';
+	</text>
+}
+		window.Form_Regia_on.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.IFF_REGIA_ONCNTRYCOUNTRY_ = new QDbeditControl($('[data-identifier="IFF_REGIA_ONCNTRYCOUNTRY_"]', this.element), window.Form_Regia_on);
+
+			this.Controls.LED_REGIA_ONREGIOREGIAO__ = new QTextControl($('[data-identifier="LED_REGIA_ONREGIOREGIAO__"]', this.element), window.Form_Regia_on);
+
+			this.Controls.IFF_REGIA_ONPAIS1COUNTRY_ = new QDbeditControl($('[data-identifier="IFF_REGIA_ONPAIS1COUNTRY_"]', this.element), window.Form_Regia_on);
+
+			this.Controls.IFF_REGIA_ONPSEUDIMOVEISL = new QTableListControl($('[data-identifier="IFF_REGIA_ONPSEUDIMOVEISL"]', this.element), window.Form_Regia_on);
+
+
+
+
+			this.Controls.LED_REGIA_ONREGIOCODREGIA = new QHiddenControl($('[data-identifier="LED_REGIA_ONREGIOCODREGIA"]', this.element), window.Form_Regia_on);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	</text>
+}
+
+		window.Form_Regia_on.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Regia_on.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI REGIA_ON]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Regia_on.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS REGIA_ON]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Regia_on.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS REGIA_ON]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Regia_on.Data.RelationKeysSelector = {
+				get cntry() { return $(':not([elem-identifier="Multiform"]) > #ValCodcntry[pers-cs-area="Cntry"]', $('[data-form="Regia_on"]')); /* DBEdit */ },
+				get pais1() { return $(':not([elem-identifier="Multiform"]) > #ValCodpais1[pers-cs-area="Pais1"]', $('[data-form="Regia_on"]')); /* DBEdit */ },
+		};
+
+		window.Form_Regia_on.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Regia_on.Data.RelationKeys = {
+			get formContext() { return window.Form_Regia_on; },
+			get cntry() { return (this.formContext.Data.RelationKeysSelector.cntry.getQControl() || {}).Value; /* DBEdit */ },
+			set cntry(newValue) { (this.formContext.Data.RelationKeysSelector.cntry.getQControl() || {}).Value = newValue; /* DBEdit */ },
+			get pais1() { return (this.formContext.Data.RelationKeysSelector.pais1.getQControl() || {}).Value; /* DBEdit */ },
+			set pais1(newValue) { (this.formContext.Data.RelationKeysSelector.pais1.getQControl() || {}).Value = newValue; /* DBEdit */ },
+		};
+	</text>
+}
+
+	window.Form_Regia_on.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Regia_on.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitRegia_on(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Regia_on.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeleteRegia_on(event) {
+			event.preventDefault();
+			window.Form_Regia_on.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+    var ajaxCallsRemaining = $(".flash object embed").length;
+    $('form [elem-identifier="ButtonPrimary"]').click(function() {
+        var flashObjects = $(".flash object embed");
+        ajaxCallsRemaining = flashObjects.length;
+        if(flashObjects.length == 0)
+            return true;
+        else {
+            flashObjects.each(function() {
+               var flashObj = GetFlash($(this).attr('id'));
+               flashObj.UsedFlash.TriggerSave(flashObj);
+            });
+            return false;
+        }
+    });
+    </text>
+}
+// USE /[MANUAL GQT FORM_CODEJS REGIA_ON]/
+
+
+
+ 
+
+    $($('[elem-identifier="FormActions"]'), $('[data-form="Regia_on"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

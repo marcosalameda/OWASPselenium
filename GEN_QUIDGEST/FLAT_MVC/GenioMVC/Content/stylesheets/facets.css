@@ -1,0 +1,6 @@
+a.removeFacet 
+{
+	background: url(../img/close_icon.png) no-repeat center left;
+	padding-left: 15px;
+	cursor: pointer;
+}

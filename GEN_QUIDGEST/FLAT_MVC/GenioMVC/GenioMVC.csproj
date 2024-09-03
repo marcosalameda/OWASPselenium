@@ -487,8 +487,6 @@
     <Compile Include="Controllers\Perio\*.cs" />
     <Compile Include="ViewModels\Perso\*_ViewModel.cs" />
     <Compile Include="Controllers\Perso\*.cs" />
-    <Compile Include="ViewModels\E2ets\*_ViewModel.cs" />
-    <Compile Include="Controllers\E2ets\*.cs" />
     <Compile Include="ViewModels\Lang1\*_ViewModel.cs" />
     <Compile Include="Controllers\Lang1\*.cs" />
     <Compile Include="ViewModels\Procn\*_ViewModel.cs" />
@@ -503,8 +501,6 @@
     <Compile Include="Controllers\Item\*.cs" />
     <Compile Include="ViewModels\Expe1\*_ViewModel.cs" />
     <Compile Include="Controllers\Expe1\*.cs" />
-    <Compile Include="ViewModels\\*_ViewModel.cs" />
-    <Compile Include="Controllers\\*.cs" />
     <Compile Include="ViewModels\Noti1\*_ViewModel.cs" />
     <Compile Include="Controllers\Noti1\*.cs" />
     <Compile Include="ViewModels\Roigf\*_ViewModel.cs" />
@@ -569,8 +565,6 @@
     <Compile Include="Controllers\Cate3\*.cs" />
     <Compile Include="ViewModels\Grid\*_ViewModel.cs" />
     <Compile Include="Controllers\Grid\*.cs" />
-    <Compile Include="ViewModels\E2ett\*_ViewModel.cs" />
-    <Compile Include="Controllers\E2ett\*.cs" />
     <Compile Include="ViewModels\Tradu\*_ViewModel.cs" />
     <Compile Include="Controllers\Tradu\*.cs" />
     <Compile Include="ViewModels\Pedid\*_ViewModel.cs" />

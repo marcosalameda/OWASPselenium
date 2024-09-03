@@ -1,0 +1,128 @@
+﻿@model GenioMVC.ViewModels.Lendi.PTN_Menu_3121_ViewModel
+@using Newtonsoft.Json;
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Lendi>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodlendi, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_3121_PESS1_NAME]/
+		column.Expression(p => p.Pess1.ValName).Title(@Resources.NAME31974).Field("Pess1.ValName").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_3121_EQUIP_REGISTNR]/
+		column.Expression(p => p.Equip.ValRegistnr).Title(@Resources.NO__REGISTER04207).Field("Equip.ValRegistnr").Size(6);
+// USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_3121_PESS2_NAME]/
+		column.Expression(p => p.Pess2.ValName).Title(@Resources.NAME31974).Field("Pess2.ValName").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_3121_LENDI_LENDINNR]/
+		column.Expression(p => p.ValLendinnr).Title(@Resources.NO__OF_THE_DADATO35934).Field("ValLendinnr").Size(6);
+// USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_3121_LENDI_START]/
+		column.Expression(p => p.ValStart).Title(@Resources.BEGINNING18124).Field("ValStart").Size(16);
+// USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_3121_LENDI_WARNDT]/
+		column.Expression(p => p.ValWarndt).Title(@Resources.WARNING52043).Field("ValWarndt").Size(16);
+// USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_3121_LENDI_END]/
+		column.Expression(p => p.ValEnd).Title(@Resources.END47577).Field("ValEnd").Size(16);
+// USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_3121_LENDI_OBSERVAT]/
+		column.Expression(p => p.ValObservat).Title(@Resources.OBSERVATIONS03729).Field("ValObservat").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_3121_LENDI_RETURNDT]/
+		column.Expression(p => p.ValReturndt).Title(@Resources.RETURN32222).Field("ValReturndt").Size(8).Format("{0:d}");
+// USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_3121_LENDI_RETURNED]/
+		column.Expression(p => p.ValReturned).Title(@Resources.RETURNED01606).Field("ValReturned").Size(1);
+// USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_3121_LENDI_DAYSLIMI]/
+		column.Expression(p => p.ValDayslimi).Title(@Resources.DAYS_FOR_RETURN_PERI04559).Field("ValDayslimi").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_3121_LENDI_IFOUTDT]/
+		column.Expression(p => p.ValIfoutdt).Title(@Resources.IF_OUT_OF_DATE49042).Field("ValIfoutdt").Size(1);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Lendi")
+        .Id("PTN_Menu_3121")
+        .AjaxRequest("Menu")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .DBEdit()
+        .Filters(this.Model.Menu.Filters)
+        .Permissions(canView: false, canInsert: false, canEdit: false, canDelete: false, canDuplicate: false)
+		;
+        
+}
+
+@tbl.ToHtml()
+
+
+<script>
+
+
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qPTN_Menu_3121, #PTN_Menu_3121_complex_filter th input, #PTN_Menu_3121_filters input").change(function() {
+                    $("#pPTN_Menu_3121").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#PTN_Menu_3121_tableFilters').val(false);")
+                    @Html.Raw("$('#PTN_Menu_3121_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#PTN_Menu_3121_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $("[data-form='PTN_Menu_3121']").submit();
+                    @:      event.preventDefault();
+                    @:      ClearSearchBox('qPTN_Menu_3121');
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#PTN_Menu_3121_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_PTN_Menu_3121').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+                 @if (this.Model.Menu.Filters.FiltersValues.Count >= 1) {
+                    var activeFields = Newtonsoft.Json.JsonConvert.SerializeObject(this.Model.Menu.Filters.FiltersValues);
+                    @: SetActiveFilters('PTN_Menu_3121', 'COMOD', @Html.Raw(activeFields))
+                  }
+
+
+                setupHistoryClicks()
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='Menu']"));
+                    InitSpecialControls($('#Menu'));
+                    $('#Menu').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS PTN_MENU_3121]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+// USE /[MANUAL GQT LISTING_CODEJS PTN_MENU_3121]/
+</script>

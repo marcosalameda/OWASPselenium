@@ -1,0 +1,301 @@
+﻿@model GenioMVC.ViewModels.Cmpki.Cmpki_ViewModel
+@using GenioMVC.Models.Navigation;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Form = "Cmpki";
+	ViewBag.Title = @Resources.KIT_COMPONENT05829;
+    ViewBag.formmode = Model.GetFormMode;
+	ViewBag.ClassForFormLayout = "form-flow";
+}
+
+
+@if (!Model.NestedForm) {
+    if(Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+    {
+        using (Html.BeginForm("Action", "Cmpki", FormMethod.Post, new { @class = "form-horizontal", area="Cmpki", data_form="Cmpki" }))
+        {
+            @form_content_alert()
+            @Html.QValidationSummary()
+	        @LoadDefault()
+        }
+    }
+    else
+    {
+        <div class="form-horizontal" id="Cmpki" area="Cmpki" data-form="Cmpki">
+	        @LoadDefault()
+        </div>
+    }
+}
+else {
+    <div class="c-card nested-form" id="Cmpki_well" area="Cmpki" data-form="Cmpki">
+        @Html.QValidationSummary()
+		@LoadDefault()
+    </div>
+}
+
+@helper form_content_body() {
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-dbedit draggable " id="CONTAINER_IFF_CMPKI___TPEQUTIPOEQUI">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.TableTpequTipoequi, new { label_id="IFF_CMPKI___TPEQUTIPOEQUI", @class = " i-text__label", id="LABEL_IFF_CMPKI___TPEQUTIPOEQUI"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('IFF_CMPKI___TPEQUTIPOEQUI','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DropDownListFor(model => model.ValCodtpequ, Model.TableTpequTipoequi.List , "", new {help_id = "IFF_CMPKI___TPEQUTIPOEQUI", @class = "i-select chosen-dropdown input-xxlarge", data_identifier = "IFF_CMPKI___TPEQUTIPOEQUI", @pers_cs_area = "Tpequ", @pers_cs_field = "ValCodtpequ", @db_field = "ValCodtpequ", @db_full_field_name = "cmpki.codtpequ", data_has_more = Model.TableTpequTipoequi.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableTpequTipoequi.Selected, data_dbedit_value = Model.TableTpequTipoequi.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodcmpki, @data_see_more = "Cmpki_TpequValTipoequi", title = @Resources.TYPE_OF_EQUIPMENT64921, data_see_more_url = @Url.Action("Cmpki_TpequValTipoequi","Cmpki"), data_is_dbedit = "true", data_support_form = @Url.Action("TPEQU_New", "TPEQU"), data_fields = "tpequ.codtpequ,tpequ.tipoequi", data_main_field = "Tpequ.ValTipoequi", data_elements = 0, data_filled_by_history = Model.TableTpequTipoequi.FilledByHistory, @dependant_fields = "tpequ.codtpequ,tpequ.tipoequi" })
+								@Html.ValidationMessageFor(model => model.TableTpequTipoequi)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_CMPKI___CMPKIORDER___">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValOrder, new { label_id="LED_CMPKI___CMPKIORDER___", @class = " i-text__label", id="LABEL_LED_CMPKI___CMPKIORDER___"}, true, true)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_CMPKI___CMPKIORDER___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValOrder, new {help_id = "LED_CMPKI___CMPKIORDER___", @class = "Number text-right i-text__field i-text input-mini", data_sequencial = "M1", data_identifier = "LED_CMPKI___CMPKIORDER___", @pers_cs_area = "Cmpki", @pers_cs_field = "ValOrder", @db_field = "ValOrder", title = @Resources.ORDER39632, data_number_integer = "3", data_number_decimals = "1", data_number_format = "999.9" })
+								@Html.ValidationMessageFor(model => model.ValOrder)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-dbedit draggable " id="CONTAINER_IFF_CMPKI___TPEQ1TIPOEQUI">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.TableTpeq1Tipoequi, new { label_id="IFF_CMPKI___TPEQ1TIPOEQUI", @class = " i-text__label", id="LABEL_IFF_CMPKI___TPEQ1TIPOEQUI"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('IFF_CMPKI___TPEQ1TIPOEQUI','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DropDownListFor(model => model.ValCodtpeq1, Model.TableTpeq1Tipoequi.List , "", new {help_id = "IFF_CMPKI___TPEQ1TIPOEQUI", @class = "i-select chosen-dropdown input-xxlarge", data_refresh = "true", data_tipoform = "DF", data_identifier = "IFF_CMPKI___TPEQ1TIPOEQUI", @pers_cs_area = "Tpeq1", @pers_cs_field = "ValCodtpequ", @db_field = "ValCodtpequ", @db_full_field_name = "cmpki.codtpeq1", data_has_more = Model.TableTpeq1Tipoequi.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableTpeq1Tipoequi.Selected, data_dbedit_value = Model.TableTpeq1Tipoequi.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodcmpki, @data_see_more = "Cmpki_Tpeq1ValTipoequi", title = @Resources.TYPE_OF_EQUIPMENT64921, data_see_more_url = @Url.Action("Cmpki_Tpeq1ValTipoequi","Cmpki"), data_is_dbedit = "true", data_fields = "tpeq1.codtpequ,tpeq1.tipoequi", data_main_field = "Tpeq1.ValTipoequi", data_elements = 0, data_filled_by_history = Model.TableTpeq1Tipoequi.FilledByHistory, @dependant_fields = "tpeq1.codtpequ,tpeq1.tipoequi" })
+								@Html.ValidationMessageFor(model => model.TableTpeq1Tipoequi)
+							</div>
+						<div class="i-text draggable " id="CONTAINER_LED_CMPKI___CMPKIQUANTIDA">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValQuantida, new { label_id="LED_CMPKI___CMPKIQUANTIDA", @class = " i-text__label", id="LABEL_LED_CMPKI___CMPKIQUANTIDA"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_CMPKI___CMPKIQUANTIDA','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValQuantida, new {help_id = "LED_CMPKI___CMPKIQUANTIDA", @class = "Number text-right i-text__field i-text input-small", data_identifier = "LED_CMPKI___CMPKIQUANTIDA", @pers_cs_area = "Cmpki", @pers_cs_field = "ValQuantida", @db_field = "ValQuantida", title = @Resources.QUANTITY_08002, data_number_integer = "3", data_number_decimals = "0", data_number_format = "999" })
+								@Html.ValidationMessageFor(model => model.ValQuantida)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_CMPKI___CMPKICODE____">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValCode, new { label_id="LED_CMPKI___CMPKICODE____", @class = " i-text__label", id="LABEL_LED_CMPKI___CMPKICODE____"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_CMPKI___CMPKICODE____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextBoxFor(model => model.ValCode, new {help_id = "LED_CMPKI___CMPKICODE____", @class = "i-text__field i-text input-small", data_identifier = "LED_CMPKI___CMPKICODE____", @pers_cs_area = "Cmpki", @pers_cs_field = "ValCode", @db_field = "ValCode", title = @Resources.CODE49225, maxlength = "10", rows = "10" })
+								@Html.ValidationMessageFor(model => model.ValCode)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-textarea draggable " id="CONTAINER_LED_CMPKI___CMPKIDESCRIPT">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValDescript, new { label_id="LED_CMPKI___CMPKIDESCRIPT", @class = " i-text__label", id="LABEL_LED_CMPKI___CMPKIDESCRIPT"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_CMPKI___CMPKIDESCRIPT','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextAreaFor(model => model.ValDescript, 2, 85, new {help_id = "LED_CMPKI___CMPKIDESCRIPT", @class = "i-textarea__field i-textarea input-xxlarge", data_identifier = "LED_CMPKI___CMPKIDESCRIPT", @pers_cs_area = "Cmpki", @pers_cs_field = "ValDescript", @db_field = "ValDescript", title = @Resources.DESCRIPTION07383 })
+								@Html.ValidationMessageFor(model => model.ValDescript)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_CMPKI___CMPKIURL_____">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValUrl, new { label_id="LED_CMPKI___CMPKIURL_____", @class = " i-text__label", id="LABEL_LED_CMPKI___CMPKIURL_____"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_CMPKI___CMPKIURL_____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextBoxFor(model => model.ValUrl, new {help_id = "LED_CMPKI___CMPKIURL_____", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_CMPKI___CMPKIURL_____", @pers_cs_area = "Cmpki", @pers_cs_field = "ValUrl", @db_field = "ValUrl", title = @Resources.SITE06486, maxlength = "250", rows = "85" })
+								@Html.ValidationMessageFor(model => model.ValUrl)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			@Html.HiddenFor(model => model.ValCodcmpki, new { @pers_cs_field="ValCodcmpki", @pers_cs_area="Cmpki", data_refresh = "true", @form_area="true", @data_value = Model.ValCodcmpki, @data_identifier = "LED_CMPKI___CMPKICODCMPKI" })
+
+            @Html.Hidden("IgnoreWarnings", "false", new { id = "IgnoreWarnings" })
+
+			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Cmpki" })
+            @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Cmpki" })
+            @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Cmpki" })
+			if (!Model.NestedForm)
+            {
+                @Html.AntiForgeryToken()
+            }
+}
+
+@helper form_content_alert() {
+	if(Model.FormMode == FormMode.Delete) {
+		<div class="c-alert c-alert--warning">
+			<i class="glyphicons glyphicons-alert c-alert__icon" aria-hidden="true"></i>
+			<div class="c-alert__text">
+				&ensp;@Resources.DESEJA_ELIMINAR_ESTA24564
+			</div>
+		<!--Ao confirmar esta ficha irá ser eliminada da base de dados. Cancele caso não tenha a certeza.-->
+		</div>
+	}
+}
+
+@helper form_content_buttons() {
+
+
+
+
+    @* Extended support form *@
+    if (Model.NestedForm)
+    {
+        if (Model.IsEditableMode)
+        {
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("Cmpki", Model.FormMode).ToString(), "Cmpki")", "Cmpki_well")' qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>
+                    @Resources.SAVE04165
+            </button>
+            <button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Cmpki_Delete", "Cmpki", new {id = @Model.ValCodcmpki} )", "Cmpki_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+
+            <script type="application/javascript">
+                $(document).ready(function () { loaded($("#Cmpki_well")); });
+            </script>
+        }
+
+        @* javascript code_javascript *@
+        @*@codeJavascript()*@
+    }
+    @* Normal mode *@
+    else
+    {
+        if (Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+        {
+            if (Model.FormMode == FormMode.New && Convert.ToBoolean(Model.Navigation.CurrentLevel.GetEntry("repeatInsertion")))
+            {
+            <button type="button" data-end-pers="true" name="Cmpki_repete_insertion" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitCmpki(event, true)" qbutton="ok_new">@Resources.GRAVAR_E_CRIAR_NOVA17771</button>
+            }
+            if(Model.FormMode == FormMode.Delete)
+            {
+				<button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Cmpki", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitDeleteCmpki(event)" qbutton="delete">
+                    <i class="glyphicons glyphicons-check e-icon" aria-hidden="true"></i>@Resources.CONFIRMAR09808
+                </button>
+            }
+            else
+            {
+                <button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Cmpki", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitCmpki(event)" title="@Resources.SAVE04165" data-selector="true" qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>@Resources.SAVE04165
+                </button>
+            }
+
+            <button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-href="@Url.Action("Cmpki_Cancel", "Cmpki", new { niv = Model.Navigation.CurrentLevel.Level })" onclick="javascript:window.Form_Cmpki.Cancel()" title="@Resources.CANCEL65428" data-selector="true" qbutton="cancel">
+                <i class="glyphicons glyphicons-ban-circle e-icon" aria-hidden="true"></i>@Resources.CANCEL65428
+            </button>
+        }
+        else if (!(ViewBag.isHomePage ?? false))
+        {
+            @Html.ActionLinkWithIcon(@Resources.RETROCEDER16633, "Cmpki_Cancel","Cmpki","glyphicons glyphicons-arrow-left e-icon", null, new { @class = "b-icon-text b-icon-text--secondary", @data_end_pers = "true", @title = @Resources.RETROCEDER16633, qbutton = "cancel" })
+        }
+    }
+}
+
+@helper LoadDefault() {
+    if (Model.NestedForm)
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div class="c-card__header">
+                    <div class="c-card__header-tag">
+						<span class="form-header" style="padding:0;">
+							<i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+						</span>
+                    </div>
+                </div>
+                <div class="c-card__body">
+                    @form_content_body()
+                    <div elem-identifier="FormActions" class="form-actions" data-form-actions="Cmpki">
+                        @form_content_buttons()
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    }
+    else
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div id="c-stickyHeader">
+                    <div class="c-action-bar d-flex">
+                        <span class="form-header">
+                            <i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+                        </span>
+                        <div data-parent-form="Cmpki" data-q-ref="form-btns-main_container"></div>
+                    </div>
+                </div>
+
+                @form_content_body()
+                <div elem-identifier="FormActions" class="form-actions" data-form-actions="Cmpki">
+                @form_content_buttons()
+                </div>
+            </div>
+        </fieldset>
+    }
+}
+
+@helper LoadFromLayout()
+{
+}
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT CMPKI]/ *@
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_CMPKI" data-form-javascript="true">
+@Html.Partial("Cmpki_JavaScript", Model, ViewData)
+</div>
+}
+
+@section code_javascript
+{
+	@codeJavascript()
+}
+
+@if (Request.IsAjaxRequest())
+{
+    @codeJavascript()
+    @includeStylesheets()
+}
+
+@helper includeStylesheets()
+{
+
+ }
+
+@section include_stylesheets {
+    @includeStylesheets()
+}

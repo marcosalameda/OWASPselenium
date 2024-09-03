@@ -1,0 +1,205 @@
+/*------------------------------GridSlideShow--------------------------------*/
+
+/*Div around images
+-----------------------------------------*/
+.divGrid {
+    width: 200px;
+    height: 120px;
+    margin-right: 12px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-right-style: none;
+    border-left-style: none;
+}
+
+.divMosaic {
+    width: 100px;
+    display: inline-block;
+    height: 100px;
+    margin-top: -3.9px;
+}
+
+.divSlideShow {
+    max-width: 800px;
+}
+/*----------------------------------------*/
+
+/*Slideshow
+-----------------------------*/
+.divIndSlideShow {
+    width: 100%;
+    height: 500px;
+    display: flex;
+    border: 1px solid #ddd;
+    border-right-style: none;
+    border-left-style: none;
+    background: #f9f9f9;
+}
+
+.slidedisplaynone {
+    display: none;
+}
+/*----------------------------*/
+
+/*Conts
+-------------------------*/
+.contSlide {
+    width: 100%;
+    margin: auto;
+    max-width: 800px;
+}
+
+/*-----------------------*/
+
+/*HR
+----------------------------------*/
+.hrSlideGrid {
+    margin: 18px 0;
+    border-top: 1px solid #e5e5e5;
+}
+/*--------------------------------*/
+
+/*Views
+-------------------------*/
+.divGroupViews {
+    float: right;
+    margin-top: -7px;
+    margin-right: 12px;
+}
+/*-----------------------*/
+
+/*Hovers
+-------------------------------------*/
+.imgGrid:hover {
+    box-shadow: 5px 5px 10px #999;
+    -webkit-transition: all .5s ease;
+    transition: all .2s ease;
+}
+
+.imgSlideShow:hover {
+    box-shadow: 5px 5px 10px #999;
+    -webkit-transition: all .5s ease;
+    transition: all .2s ease;
+}
+/*------------------------------------*/
+
+/*Btns slideshow---------*/
+.btnGridRight {
+    display: none;
+}
+
+.btnGridLeft {
+    display: none;
+}
+/*-----------------------*/
+
+/*Dropdown actions
+----------------------------*/
+
+.gss-dropdownActions {
+    right: 16px !important;
+    left: auto !important;
+    position: relative;
+    float: right;
+    outline: none;
+}
+
+.gss-dropdownActions div.btn {
+	padding: 0.375rem 0.475rem;
+	line-height: 0.750rem;
+	border: none;
+}
+
+/*--------------------------*/
+/*div actions
+-----------------------*/
+.divGroupActions {
+    margin-left: 12px;
+    display: inline;
+}
+
+
+/*---------------------*/
+/*No image
+--------------------------*/
+.noImageMosaic {
+    margin-bottom: 95px;
+    margin-left: 15px;
+}
+/*------------------------*/
+/*Images
+--------------------------------------*/
+.imgGrid {
+    max-width: 200.7px !important;
+    display: flex;
+    max-height: 120px;
+    position: absolute;
+}
+
+.imgSlideShow {
+    display: flex;
+    margin: auto;
+    max-width: 800px;
+    max-height: 500px;
+    width: 100%;
+}
+
+.imgMosaic {
+    max-height: 100px;
+    position: absolute;
+    clip: rect(0px,100px,100px,0px);
+}
+
+/*-----------------------------------------*/
+/*-------------------------------Legend-------------------------------*/
+.legendGrid {
+    display: none;
+}
+
+.legendSlideShow {
+    vertical-align: middle !important;
+    margin-top: -25px;
+    color: #fff !important;
+    font-size: 18px;
+    background-color: #6b6a6a;
+    border-color: rgba(0,0,0,0.1) rgba(0,0,0,0.1) rgba(0,0,0,0.25);
+    padding: 15px 30px 15px 30px;
+}
+/*--------------------------------------------------------------------*/
+/*--------Selection--------*/
+.imgGridSelected {
+    border-width: 10px;
+    border-style: solid;
+}
+/*-------------------------*/
+
+/*For when button Select is not clicked*/
+.selectDisplayNone {
+    display: none !important;
+}
+
+/*---------------------------------------------------------------------------------------*/
+/*----------------------------------End of GridSlideMosaic control-------------------------------------------*/
+
+
+/*  Bootstrap 4 */
+
+.i-gridslideshow__body {
+	display: flex;
+	justify-content: center;
+}
+
+.i-gridslideshow-group-actions {
+	float: left;
+}
+
+.i-gridslideshow button {
+	margin-left: 12px;
+	margin-top: -7px;
+	display: inline;
+}
+
+.i-gridslideshow__btn-delete {
+	display: inline;
+}
+

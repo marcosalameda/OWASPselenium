@@ -1,0 +1,276 @@
+﻿@model GenioMVC.ViewModels.Pedid.Pedid_ViewModel
+@using GenioMVC.Models.Navigation;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Form = "Pedid";
+	ViewBag.Title = @Resources.EQUIPMENT_REQUEST62893;
+    ViewBag.formmode = Model.GetFormMode;
+	ViewBag.ClassForFormLayout = "form-flow";
+}
+
+
+@if (!Model.NestedForm) {
+    if(Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+    {
+        using (Html.BeginForm("Action", "Pedid", FormMethod.Post, new { @class = "form-horizontal", area="Pedid", data_form="Pedid" }))
+        {
+            @form_content_alert()
+            @Html.QValidationSummary()
+	        @LoadDefault()
+        }
+    }
+    else
+    {
+        <div class="form-horizontal" id="Pedid" area="Pedid" data-form="Pedid">
+	        @LoadDefault()
+        </div>
+    }
+}
+else {
+    <div class="c-card nested-form" id="Pedid_well" area="Pedid" data-form="Pedid">
+        @Html.QValidationSummary()
+		@LoadDefault()
+    </div>
+}
+
+@helper form_content_body() {
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-date-picker draggable " id="CONTAINER_LED_PEDID___PEDIDDTPEDIDO">
+								<div class="d-inline-flex">
+								@Html.LabelFor(model => model.ValDtpedido, new { label_id="LED_PEDID___PEDIDDTPEDIDO", @class = " i-text__label", id="LABEL_LED_PEDID___PEDIDDTPEDIDO"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_PEDID___PEDIDDTPEDIDO','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DateFor(model => model.ValDtpedido, new {help_id = "LED_PEDID___PEDIDDTPEDIDO", @class = "i-input-group__field b-icon-text input-small", data_identifier = "LED_PEDID___PEDIDDTPEDIDO", @pers_cs_area = "Pedid", @pers_cs_field = "ValDtpedido", @db_field = "ValDtpedido", title = @Resources.DATE_55218 })
+								@Html.ValidationMessageFor(model => model.ValDtpedido)
+							</div>
+						<div class="i-text draggable " id="CONTAINER_LED_PEDID___PEDIDNRPEDIDO">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValNrpedido, new { label_id="LED_PEDID___PEDIDNRPEDIDO", @class = " i-text__label", id="LABEL_LED_PEDID___PEDIDNRPEDIDO"}, true, true)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_PEDID___PEDIDNRPEDIDO','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValNrpedido, new {help_id = "LED_PEDID___PEDIDNRPEDIDO", @class = "Number text-right i-text__field i-text input-mini", data_sequencial = "M1", data_identifier = "LED_PEDID___PEDIDNRPEDIDO", @pers_cs_area = "Pedid", @pers_cs_field = "ValNrpedido", @db_field = "ValNrpedido", title = @Resources.NUMBER35625, data_number_integer = "6", data_number_decimals = "0", data_number_format = "999999" })
+								@Html.ValidationMessageFor(model => model.ValNrpedido)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-textarea draggable " id="CONTAINER_LED_PEDID___PEDIDMOTIVO__">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValMotivo, new { label_id="LED_PEDID___PEDIDMOTIVO__", @class = " i-text__label", id="LABEL_LED_PEDID___PEDIDMOTIVO__"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_PEDID___PEDIDMOTIVO__','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextAreaFor(model => model.ValMotivo, 3, 85, new {help_id = "LED_PEDID___PEDIDMOTIVO__", @class = "i-textarea__field i-textarea input-xxlarge", data_identifier = "LED_PEDID___PEDIDMOTIVO__", @pers_cs_area = "Pedid", @pers_cs_field = "ValMotivo", @db_field = "ValMotivo", title = @Resources.MOTIVE_64781 })
+								@Html.ValidationMessageFor(model => model.ValMotivo)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="row-large-control">
+						<div class="row-line-group" id="CONTAINER_IFF_PEDID___PSEUDLINHAS__">
+								<div id="Pedid_ValLinhas" data-identifier="IFF_PEDID___PSEUDLINHAS__"  data-extra-options="" > 
+									@{ Html.RenderAction("Pedid_ValLinhas", "Pedid", new { id = Model.ValCodpedid, partialView = "Pedid_ValLinhas"}); }
+								</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="row-large-control">
+						<div class="row-line-group" id="CONTAINER_IFF_PEDID___PSEUDDESAGREG">
+								<div id="Pedid_ValDesagreg" data-identifier="IFF_PEDID___PSEUDDESAGREG"  data-extra-options="" > 
+									@{ Html.RenderAction("Pedid_ValDesagreg", "Pedid", new { id = Model.ValCodpedid, partialView = "Pedid_ValDesagreg"}); }
+								</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="row-large-control">
+						<div class="row-line-group" id="CONTAINER_IFF_PEDID___PSEUDAGRUPAME">
+								<div id="Pedid_ValAgrupame" data-identifier="IFF_PEDID___PSEUDAGRUPAME"  data-extra-options="" > 
+									@{ Html.RenderAction("Pedid_ValAgrupame", "Pedid", new { id = Model.ValCodpedid, partialView = "Pedid_ValAgrupame"}); }
+								</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			@Html.HiddenFor(model => model.ValCodpedid, new { @pers_cs_field="ValCodpedid", @pers_cs_area="Pedid", data_refresh = "true", @form_area="true", @data_value = Model.ValCodpedid, @data_identifier = "LED_PEDID___PEDIDCODPEDID" })
+
+            @Html.Hidden("IgnoreWarnings", "false", new { id = "IgnoreWarnings" })
+
+			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Pedid" })
+            @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Pedid" })
+            @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Pedid" })
+			if (!Model.NestedForm)
+            {
+                @Html.AntiForgeryToken()
+            }
+}
+
+@helper form_content_alert() {
+	if(Model.FormMode == FormMode.Delete) {
+		<div class="c-alert c-alert--warning">
+			<i class="glyphicons glyphicons-alert c-alert__icon" aria-hidden="true"></i>
+			<div class="c-alert__text">
+				&ensp;@Resources.DESEJA_ELIMINAR_ESTA24564
+			</div>
+		<!--Ao confirmar esta ficha irá ser eliminada da base de dados. Cancele caso não tenha a certeza.-->
+		</div>
+	}
+}
+
+@helper form_content_buttons() {
+
+
+
+
+    @* Extended support form *@
+    if (Model.NestedForm)
+    {
+        if (Model.IsEditableMode)
+        {
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("Pedid", Model.FormMode).ToString(), "Pedid")", "Pedid_well")' qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>
+                    @Resources.SAVE04165
+            </button>
+            <button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Pedid_Delete", "Pedid", new {id = @Model.ValCodpedid} )", "Pedid_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+
+            <script type="application/javascript">
+                $(document).ready(function () { loaded($("#Pedid_well")); });
+            </script>
+        }
+
+        @* javascript code_javascript *@
+        @*@codeJavascript()*@
+    }
+    @* Normal mode *@
+    else
+    {
+        if (Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+        {
+            if (Model.FormMode == FormMode.New && Convert.ToBoolean(Model.Navigation.CurrentLevel.GetEntry("repeatInsertion")))
+            {
+            <button type="button" data-end-pers="true" name="Pedid_repete_insertion" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitPedid(event, true)" qbutton="ok_new">@Resources.GRAVAR_E_CRIAR_NOVA17771</button>
+            }
+            if(Model.FormMode == FormMode.Delete)
+            {
+				<button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Pedid", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitDeletePedid(event)" qbutton="delete">
+                    <i class="glyphicons glyphicons-check e-icon" aria-hidden="true"></i>@Resources.CONFIRMAR09808
+                </button>
+            }
+            else
+            {
+                <button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Pedid", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitPedid(event)" title="@Resources.SAVE04165" data-selector="true" qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>@Resources.SAVE04165
+                </button>
+            }
+
+            <button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-href="@Url.Action("Pedid_Cancel", "Pedid", new { niv = Model.Navigation.CurrentLevel.Level })" onclick="javascript:window.Form_Pedid.Cancel()" title="@Resources.CANCEL65428" data-selector="true" qbutton="cancel">
+                <i class="glyphicons glyphicons-ban-circle e-icon" aria-hidden="true"></i>@Resources.CANCEL65428
+            </button>
+        }
+        else if (!(ViewBag.isHomePage ?? false))
+        {
+            @Html.ActionLinkWithIcon(@Resources.RETROCEDER16633, "Pedid_Cancel","Pedid","glyphicons glyphicons-arrow-left e-icon", null, new { @class = "b-icon-text b-icon-text--secondary", @data_end_pers = "true", @title = @Resources.RETROCEDER16633, qbutton = "cancel" })
+        }
+    }
+}
+
+@helper LoadDefault() {
+    if (Model.NestedForm)
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div class="c-card__header">
+                    <div class="c-card__header-tag">
+						<span class="form-header" style="padding:0;">
+							<i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+						</span>
+                    </div>
+                </div>
+                <div class="c-card__body">
+                    @form_content_body()
+                    <div elem-identifier="FormActions" class="form-actions" data-form-actions="Pedid">
+                        @form_content_buttons()
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    }
+    else
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div id="c-stickyHeader">
+                    <div class="c-action-bar d-flex">
+                        <span class="form-header">
+                            <i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+                        </span>
+                        <div data-parent-form="Pedid" data-q-ref="form-btns-main_container"></div>
+                    </div>
+                </div>
+
+                @form_content_body()
+                <div elem-identifier="FormActions" class="form-actions" data-form-actions="Pedid">
+                @form_content_buttons()
+                </div>
+            </div>
+        </fieldset>
+    }
+}
+
+@helper LoadFromLayout()
+{
+}
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT PEDID]/ *@
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_PEDID" data-form-javascript="true">
+@Html.Partial("Pedid_JavaScript", Model, ViewData)
+</div>
+}
+
+@section code_javascript
+{
+	@codeJavascript()
+}
+
+@if (Request.IsAjaxRequest())
+{
+    @codeJavascript()
+    @includeStylesheets()
+}
+
+@helper includeStylesheets()
+{
+
+ }
+
+@section include_stylesheets {
+    @includeStylesheets()
+}

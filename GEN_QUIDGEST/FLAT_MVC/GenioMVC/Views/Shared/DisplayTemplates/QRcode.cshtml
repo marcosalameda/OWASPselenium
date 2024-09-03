@@ -1,0 +1,20 @@
+﻿@model string
+
+@{
+    string src;
+    var category = (ViewData["category"] ?? "").ToString();
+
+    if (String.IsNullOrEmpty(Model))
+    {
+        src = Url.Content("~/Content/img/empty-qr.png");
+    }
+    else
+    {
+        byte[] bytes = CSGenio.business.GlobalFunctions.StringToQRcode(Model);
+        src = "data:image;base64," + Convert.ToBase64String(bytes);
+    }
+}
+
+<div class="qr-code">
+    <img src="@src" class="@category" alt="QR code" data-orig="@Model" />
+</div>

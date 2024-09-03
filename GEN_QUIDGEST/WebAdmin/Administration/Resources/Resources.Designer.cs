@@ -12841,6 +12841,15 @@ namespace Administration.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "E2EText"
+        /// </summary>
+        public static string E2ETEXT44371 {
+            get {
+                return ResourceManager.GetString("E2ETEXT44371", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to " 1123"
         /// </summary>
         public static string _112319369 {

@@ -21,6 +21,8 @@ namespace CSGenio.framework
         
         public static readonly Role ROLE_1; //Query
         public static readonly Role ROLE_2; //Vendedor
+        public static readonly Role ROLE_3; //Officer
+        public static readonly Role ROLE_4; //Agent
         public static readonly Role ROLE_20; //Manager
         //Roles
 		public static readonly Role ROLE_A; //Authorizer
@@ -109,6 +111,12 @@ namespace CSGenio.framework
             ROLE_2 = new Role(LevelAccess.NV2, "VENDEDOR34177");
             ALL_ROLES.Add("2", ROLE_2);
 
+            ROLE_3 = new Role(LevelAccess.NV3, "OFFICER20358");
+            ALL_ROLES.Add("3", ROLE_3);
+
+            ROLE_4 = new Role(LevelAccess.NV4, "AGENT00994");
+            ALL_ROLES.Add("4", ROLE_4);
+
             ROLE_20 = new Role(LevelAccess.NV20, "MANAGER60821");
             ALL_ROLES.Add("20", ROLE_20);
 
@@ -122,10 +130,22 @@ namespace CSGenio.framework
 			ROLE_A.Add(ROLE_20);         
 			ROLE_A.Add(ADMINISTRATION);         
 			ROLE_A.Add(ROLE_20);         
+			ROLE_A.Add(ADMINISTRATION);         
+			ROLE_A.Add(ROLE_20);         
+			ROLE_A.Add(ADMINISTRATION);         
+			ROLE_A.Add(ROLE_20);         
 
 			ROLE_ADMINISTRATOR.Add(ROLE_SYSADMIN);         
 			ROLE_ADMINISTRATOR.Add(ROLE_SYSADMIN);         
+			ROLE_ADMINISTRATOR.Add(ROLE_SYSADMIN);         
+			ROLE_ADMINISTRATOR.Add(ROLE_SYSADMIN);         
 
+			ROLE_EDIT.Add(ROLE_MANAGER);         
+			ROLE_EDIT.Add(ROLE_SYSADMIN);         
+			ROLE_EDIT.Add(ROLE_ADMINISTRATOR);         
+			ROLE_EDIT.Add(ROLE_MANAGER);         
+			ROLE_EDIT.Add(ROLE_SYSADMIN);         
+			ROLE_EDIT.Add(ROLE_ADMINISTRATOR);         
 			ROLE_EDIT.Add(ROLE_MANAGER);         
 			ROLE_EDIT.Add(ROLE_SYSADMIN);         
 			ROLE_EDIT.Add(ROLE_ADMINISTRATOR);         
@@ -137,10 +157,18 @@ namespace CSGenio.framework
 			ROLE_EDIT_PESSO.Add(ROLE_ADMINISTRATOR);         
 			ROLE_EDIT_PESSO.Add(ROLE_20);         
 			ROLE_EDIT_PESSO.Add(ROLE_ADMINISTRATOR);         
+			ROLE_EDIT_PESSO.Add(ROLE_20);         
+			ROLE_EDIT_PESSO.Add(ROLE_ADMINISTRATOR);         
+			ROLE_EDIT_PESSO.Add(ROLE_20);         
+			ROLE_EDIT_PESSO.Add(ROLE_ADMINISTRATOR);         
 
 			ROLE_EMPLOYEE.Add(ROLE_MANAGER);         
 			ROLE_EMPLOYEE.Add(ROLE_MANAGER);         
+			ROLE_EMPLOYEE.Add(ROLE_MANAGER);         
+			ROLE_EMPLOYEE.Add(ROLE_MANAGER);         
 
+			ROLE_MANAGER.Add(ROLE_ADMINISTRATOR);         
+			ROLE_MANAGER.Add(ROLE_ADMINISTRATOR);         
 			ROLE_MANAGER.Add(ROLE_ADMINISTRATOR);         
 			ROLE_MANAGER.Add(ROLE_ADMINISTRATOR);         
 
@@ -149,7 +177,17 @@ namespace CSGenio.framework
 			ROLE_VIEW.Add(ROLE_EMPLOYEE);         
 			ROLE_VIEW.Add(ROLE_EDIT);         
 			ROLE_VIEW.Add(ROLE_EMPLOYEE);         
+			ROLE_VIEW.Add(ROLE_EDIT);         
+			ROLE_VIEW.Add(ROLE_EMPLOYEE);         
+			ROLE_VIEW.Add(ROLE_EDIT);         
+			ROLE_VIEW.Add(ROLE_EMPLOYEE);         
 
+			ROLE_VIEW_PESSO.Add(ROLE_EDIT_PESSO);         
+			ROLE_VIEW_PESSO.Add(ROLE_1);         
+			ROLE_VIEW_PESSO.Add(ROLE_EMPLOYEE);         
+			ROLE_VIEW_PESSO.Add(ROLE_EDIT_PESSO);         
+			ROLE_VIEW_PESSO.Add(ROLE_1);         
+			ROLE_VIEW_PESSO.Add(ROLE_EMPLOYEE);         
 			ROLE_VIEW_PESSO.Add(ROLE_EDIT_PESSO);         
 			ROLE_VIEW_PESSO.Add(ROLE_1);         
 			ROLE_VIEW_PESSO.Add(ROLE_EMPLOYEE);         
@@ -160,13 +198,24 @@ namespace CSGenio.framework
 
 			UNAUTHORIZED.Add(ROLE_1);
 			UNAUTHORIZED.Add(ROLE_2);
+			UNAUTHORIZED.Add(ROLE_3);
+			UNAUTHORIZED.Add(ROLE_4);
 			UNAUTHORIZED.Add(ROLE_20);
 			UNAUTHORIZED.Add(ADMINISTRATION);
 			ROLE_1.Add(ROLE_2);
+			ROLE_1.Add(ROLE_3);
+			ROLE_1.Add(ROLE_4);
 			ROLE_1.Add(ROLE_20);
 			ROLE_1.Add(ADMINISTRATION);
+			ROLE_2.Add(ROLE_3);
+			ROLE_2.Add(ROLE_4);
 			ROLE_2.Add(ROLE_20);
 			ROLE_2.Add(ADMINISTRATION);
+			ROLE_3.Add(ROLE_4);
+			ROLE_3.Add(ROLE_20);
+			ROLE_3.Add(ADMINISTRATION);
+			ROLE_4.Add(ROLE_20);
+			ROLE_4.Add(ADMINISTRATION);
 			ROLE_20.Add(ADMINISTRATION);
 			foreach(Role role in ALL_ROLES.Values)
 				role.FlattenRole();

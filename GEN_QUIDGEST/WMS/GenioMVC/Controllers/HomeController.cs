@@ -248,7 +248,12 @@ namespace GenioMVC.Controllers
 				{
 					sp.openConnection();
 					var userOldValues = CSGenioApsw.search(sp, user.Codpsw, user, new string[] { CSGenioApsw.FldPassword.Field, CSGenioApsw.FldSalt.Field, CSGenioApsw.FldPswtype.Field });
-					error = PasswordFactory.CheckValidPassToChange(user.Name, model.OldPassword, model.NewPassword, model.ConfirmPassword, userOldValues.ValPassword, userOldValues.ValSalt, userOldValues.ValPswtype, user.Language);
+					var factory = new UserFactory(sp, user);
+					factory.ChangePassword(userOldValues, model.NewPassword, model.ConfirmPassword, model.OldPassword);
+				}
+				catch(InvalidPasswordException ipe)
+				{
+					error = ipe.Message;
 				}
 				catch
 				{
@@ -528,6 +533,9 @@ namespace GenioMVC.Controllers
 		[HttpGet]
 		public ActionResult QDebug()
 		{
+			// We only allow code debugging when event tracing is active.
+			if(!Configuration.EventTracking)
+				return RedirectToAction("Index", "Home");
 			QDebug_ViewModel model = new QDebug_ViewModel(Navigation);
 			return PartialView(model);
 		}

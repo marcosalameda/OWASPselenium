@@ -10,6 +10,26 @@ namespace CSGenio.framework
     {
         protected string userMessage;
         protected string exceptionSite;
+        public string[] ErrorStack { get; protected set;}
+
+
+        /// <summary>
+        /// Initializes a new instance of the GenioException class.
+        /// </summary>
+        /// <param name="userMessage">Message that describes the current exception to the user.</param>
+        /// <param name="exceptionSite">Name of the method that throws the current exception.</param>
+        /// <param name="exceptionCause">Message that describes the direct cause of the current exception.</param>
+        /// <param name="innerException">The Exception instance that caused the current exception.</param>
+        /// <param name="errorStack">The Exception instance that caused the current exception.</param>
+        public GenioException(string userMessage, string exceptionSite, string exceptionCause, Exception innerException, string[] errorStack)
+            : base(exceptionCause, innerException)
+        {
+            this.userMessage = userMessage;
+            this.exceptionSite = exceptionSite ?? "";
+            ErrorStack = errorStack;
+
+            LogError();
+        }
 
         /// <summary>
         /// Initializes a new instance of the GenioException class.

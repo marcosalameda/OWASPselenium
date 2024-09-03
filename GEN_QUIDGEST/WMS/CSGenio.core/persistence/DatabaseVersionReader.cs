@@ -102,5 +102,29 @@ namespace CSGenio.core.persistence
 			}
 		}
 
+        /// <summary>
+        /// Checks if the database is up to date
+        /// </summary>
+        /// <param name="user">The current user</param>
+        /// <returns>true or false</returns>
+        public static bool IsDatabaseUpToDate(User user)
+        {
+            if (user == null) return false;
+
+            bool isValidVersion = Configuration.GetDbVersion(user.Year) == Configuration.VersionDbGen;
+            bool isValidIndex = Configuration.GetDbUpgrIndx(user.Year) >= Configuration.VersionUpgrIndxGen;
+
+            return isValidVersion && isValidIndex;
+        }
+
+        /// <summary>
+        /// Checks if the configuration is up to date
+        /// </summary>
+        /// <returns>true or false</returns>
+        public static bool IsConfigurationUpToDate()
+        {
+            return Configuration.ConfigVersion == GenioServer.framework.ConfigXMLMigration.CurConfigurationVerion.ToString();
+        }
+
     }
 }

@@ -1,17 +1,19 @@
-﻿using System;
+﻿using CSGenio.business;
+using CSGenio.core.messaging;
+using CSGenio.framework;
+using ExecuteQueryCore;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using CSGenio.framework;
-using CSGenio.business;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
-using ExecuteQueryCore;
-using System.Reflection;
 using System.Threading;
-using System.Linq;
 
 namespace CSGenio.persistence
 {
@@ -169,6 +171,10 @@ namespace CSGenio.persistence
         /// <returns>The syntax dialect</returns>
         public virtual Dialect Dialect { get; protected set; }
 
+        /// <summary>
+        /// Dataset Id that created this persistent support
+        /// </summary>
+        public string Id { get; protected set; }
         /// <summary>
         /// logged client from "frontend" app
         /// </summary>
@@ -486,18 +492,32 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         }
 
         /// <summary>
-        /// Create a database backup
+        /// Gets the default backups location.
         /// </summary>
-        /// <param name="year">Year</param>
-        /// <param name="username">User db</param>
-        /// <param name="password">password</param>
-        public static void Backup(string year, string username, string password, string location = "")
+        /// <returns>A string representing the path to the default backups location.</returns>
+        public static string GetDefaultBackupsLocation()
+        {
+            return System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "dbs", "backup");
+        }
+
+        /// <summary>
+        /// Creates a backup of the specified database schema for a given year.
+        /// </summary>
+        /// <param name="year">The year identifier for the database configuration.</param>
+        /// <param name="username">The username for the database connection.</param>
+        /// <param name="password">The password for the database connection.</param>
+        /// <param name="location">Optional. The directory path where the backup file will be saved. 
+        /// If not provided, the default backup location will be used.</param>
+        /// <returns>The full path to the created backup file.</returns>
+        /// <exception cref="PersistenceException">Thrown when there is an error during the backup process.</exception>
+        public static string Backup(string year, string username, string password, string location = "")
         {
             try
             {
                 DataSystemXml dataSystem = Configuration.ResolveDataSystem(year, Configuration.DbTypes.NORMAL);
                 var sp = getPersistentSupportMaster(year, username, password);
-                sp.Backup(dataSystem.Schemas[0].Schema, location);
+
+                return sp.Backup(dataSystem.Schemas[0].Schema, location);
             }
             catch (FrameworkException ex)
             {
@@ -508,7 +528,14 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             }
         }
 
-        public virtual void Backup(string schema, string location = "")
+        /// <summary>
+        /// Performs the backup operation for the specified database schema.
+        /// </summary>
+        /// <param name="schema">The name of the database schema to back up.</param>
+        /// <param name="location">Optional. The directory path where the backup file will be saved. 
+        /// If not provided, the default backup location will be used.</param>
+        /// <returns>The full path to the created backup file.</returns>
+        public virtual string Backup(string schema, string location = "")
         {
             throw new NotImplementedException();
         }
@@ -520,19 +547,14 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         /// <param name="username">User db</param>
         /// <param name="password">password</param>
         /// <param name="path">path to the backup of the db</param>
-        /// <param name="currentYear">Current database year</param>
-        public static void Restore(string year, string username, string password, string path, string currentYear = "")
+        public static void Restore(string year, string username, string password, string path)
         {
             try
             {
                 DataSystemXml dataSystem = Configuration.ResolveDataSystem(year, Configuration.DbTypes.NORMAL);
-
-                string userSchema = "";
-                if (!string.IsNullOrEmpty(currentYear))
-                    userSchema = Configuration.ResolveDataSystem(currentYear, Configuration.DbTypes.NORMAL).Schemas[0].Schema;
-
                 var sp = getPersistentSupportMaster(year, username, password);
-                sp.Restore(dataSystem.Schemas[0].Schema, path, userSchema);
+
+                sp.Restore(dataSystem.Schemas[0].Schema, path);
             }
             catch (FrameworkException ex)
             {
@@ -543,7 +565,12 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             }
         }
 
-        public virtual void Restore(string schema, string path, string userSchema = "")
+        /// <summary>
+        /// Restores a database from a specified backup file.
+        /// </summary>
+        /// <param name="schema">The name of the target database to be restored.</param>
+        /// <param name="path">The full path to the backup file.</param>
+        public virtual void Restore(string schema, string path)
         {
             throw new NotImplementedException();
         }
@@ -551,12 +578,14 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         /// <summary>
         /// Path to the reindex profiling log
         /// </summary>
-        public static string LogReindexPath(string path = "") {
+        public static string LogReindexPath(string path = "")
+        {
             if (string.IsNullOrEmpty(path))
                 path = AppDomain.CurrentDomain.BaseDirectory;
 
             return System.IO.Path.Combine(path, "temp", "logReindex.xml");
         }
+
         /// <summary>
         /// Database Reindex
         /// </summary>
@@ -912,6 +941,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             var ds = Configuration.ResolveDataSystem(id, dbType);
             var res = m_spfactory(ds.GetDatabaseType());
             res.DatabaseType = ds.GetDatabaseType();
+            res.Id = id;
             res.ClientId = user;
             res.ReadOnly = readOnly;
             res.MapSchemas(ds);
@@ -951,6 +981,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             var ds = Configuration.ResolveDataSystem(id, Configuration.DbTypes.NORMAL);
             var res = m_spfactory(ds.GetDatabaseType());
             res.DatabaseType = ds.GetDatabaseType();
+            res.Id = id;
             res.ClientId = login;
             res.IsMaster = true;
             res.MapSchemas(ds);
@@ -1015,6 +1046,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                 if (Connection.State != ConnectionState.Closed)
                 {
 				    SendDeferedQueues();
+                    SendDeferredMessages();
                     Log.Debug("Fecha a conexão à base de dados.");
                     Connection.Close();
                 }
@@ -1026,6 +1058,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             finally
             {
                 ClearDeferedQueues();
+                ClearDeferredMessages();
             }
         }
 
@@ -1063,11 +1096,13 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                 if (Transaction != null)
                 {
                     Log.Debug("commit da transacção à base de dados.");
+                    SendDeferredMessages();
                     Transaction.Commit();
 					SendDeferedQueues();
                     Transaction.Dispose();
                     Transaction = null;
 					ClearDeferedQueues();
+                    ClearDeferredMessages();
                     closeConnection();
                 }
             }
@@ -1079,6 +1114,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
 			finally
             {
                 ClearDeferedQueues();
+                ClearDeferredMessages();
             }
         }
 
@@ -1104,6 +1140,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             finally
             {
 				ClearDeferedQueues();
+                ClearDeferredMessages();
                 closeConnection();
 				if (Transaction != null)
                 {
@@ -1140,6 +1177,82 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             foreach (var q in m_deferedQueues)
                 insertPseud(q);
         }
+
+        //---------------------------------------------------------
+        private class DeferedMessageEntry
+        {
+            public PublisherMetadata pub;
+            public AreaDataset dataset;
+        }
+
+        private List<DeferedMessageEntry> m_deferedMessages = new List<DeferedMessageEntry>();
+
+        private AreaDatasetTable GetDeferedDatatable(PublisherMetadata pub, PublisherTable table)
+        {
+            //if there isnt a dataset for this publisher yet, create one
+            var entry = m_deferedMessages.Find(x => x.pub == pub);
+            if (entry == null)
+            {
+                entry = new DeferedMessageEntry
+                {
+                    pub = pub,
+                    dataset = new AreaDataset()
+                };
+                m_deferedMessages.Add(entry);
+            }
+
+            //ensure the table is added to the dataset
+            return entry.dataset.AddTable(table.Table);
+        }
+
+        /// <summary>
+        /// Defers the update message to be send when the transaction is commited
+        /// </summary>
+        /// <param name="pub">The publication of the message</param>
+        /// <param name="table">The table being updated</param>
+        /// <param name="row">The row to update</param>
+        public void DeferMessageUpdate(PublisherMetadata pub, PublisherTable table, Area row)
+        {
+            AreaDatasetTable dst = GetDeferedDatatable(pub, table);
+
+            // if the row is already in the dataset rows update it   
+            if (dst.Updated.ContainsKey(row.QPrimaryKey))
+                dst.Updated[row.QPrimaryKey] = row;
+            // if the row is already in the dataset rows add the row
+            else
+                dst.Updated.Add(row.QPrimaryKey, row);
+        }
+
+        /// <summary>
+        /// Defers the delete message to be send when the transaction is commited
+        /// </summary>
+        /// <param name="pub">The publication of the message</param>
+        /// <param name="table">The table being deleted</param>
+        /// <param name="row">The row to delete</param>
+        public void DeferMessageDelete(PublisherMetadata pub, PublisherTable table, Area row)
+        {
+            AreaDatasetTable dst = GetDeferedDatatable(pub, table);
+
+            // if the row is already in the updated rows we need to remove it
+            dst.Updated.Remove(row.QPrimaryKey);
+
+            // add this primary key to the list of removed rows
+            if(!dst.Deleted.Contains(row.QPrimaryKey))
+                dst.Deleted.Add(row.QPrimaryKey);
+        }
+
+        private void SendDeferredMessages()
+        {
+            MessagingService messaging = MessagingService.Instance;
+            foreach (var entry in m_deferedMessages)
+                messaging.SendMessage(entry.pub, entry.dataset, Id);
+        }
+
+        private void ClearDeferredMessages()
+        {
+            m_deferedMessages.Clear();
+        }
+        //---------------------------------------------------------
 
 		public delegate void RetryableAction();
 

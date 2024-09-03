@@ -391,7 +391,7 @@ namespace GenioMVC.Controllers
 			if (sink.Redirect || (qs["IgnoreWarnings"] == "true" && sink.FormType == QFormType.PopUp))
 				return RedirectToAction(sink.MethodName + "_Redirect", new { internalRedirect = true });
 			else
-				return Json(new { Success = true, Operation = "Edit", Message = Resources.Resources.ALTERACOES_EFECTUADA64514, currentNavigationLevel = Navigation.CurrentLevel.Level }, JsonRequestBehavior.AllowGet);
+				return Json(new { Success = true, Operation = "Edit", Message = Resources.Resources.ALTERACOES_EFETUADAS10166, currentNavigationLevel = Navigation.CurrentLevel.Level }, JsonRequestBehavior.AllowGet);
 		}
 
 		protected ActionResult GenericHandlePostFormApply(EventSink sink, ICrudViewModel model)
@@ -459,7 +459,7 @@ namespace GenioMVC.Controllers
 				TempData["NEW_SAVE_LIST"] = ""; //Make sure that no custom message is displayed when the flashMessage is empty
 			}
 
-			return Json(new { Success = true, Operation = "Apply", Message = Resources.Resources.ALTERACOES_EFECTUADA64514 }, JsonRequestBehavior.AllowGet);
+			return Json(new { Success = true, Operation = "Apply", Message = Resources.Resources.ALTERACOES_EFETUADAS10166 }, JsonRequestBehavior.AllowGet);
 		}
 
 		protected ActionResult GenericHandlePostFormDelete(EventSink sink, ICrudViewModel model)
@@ -797,7 +797,7 @@ namespace GenioMVC.Controllers
 			if(mode == "INSERT")
 				return Json(new { Success = true, Operation = "MFSave", Message = Resources.Resources.REGISTO_CRIADO_COM_S18746 });
 			else
-				return Json(new { Success = true, Operation = "MFSave", Message = Resources.Resources.ALTERACOES_EFECTUADA64514 });
+				return Json(new { Success = true, Operation = "MFSave", Message = Resources.Resources.ALTERACOES_EFETUADAS10166 });
 		}
 
 		protected JsonResult GenericHandlePostMultiFormDelete(EventSink sink, ICrudViewModel model)
@@ -993,7 +993,7 @@ namespace GenioMVC.Controllers
 							msg = Resources.Resources.REGISTO_CRIADO_COM_S18746;
 							break;
 						case FormMode.Edit:
-							msg = Resources.Resources.ALTERACOES_EFECTUADA64514;
+							msg = Resources.Resources.ALTERACOES_EFETUADAS10166;
 							break;
 						case FormMode.Delete:
 							msg = Resources.Resources.REGISTO_APAGADO_COM_64671;
@@ -1209,7 +1209,7 @@ namespace GenioMVC.Controllers
 				saveMethod.Invoke(row, null);
 				UserContext.Current.PersistentSupport.closeTransaction();
 
-				return Json(new { Success = true, Message = Resources.Resources.ALTERACOES_EFECTUADA64514 }, "application/json");
+				return Json(new { Success = true, Message = Resources.Resources.ALTERACOES_EFETUADAS10166 }, "application/json");
 			}
 			catch (Exception ex)
 			{
@@ -1326,7 +1326,7 @@ namespace GenioMVC.Controllers
 				saveMethod.Invoke(row, null);
 				UserContext.Current.PersistentSupport.closeConnection();
 
-				return Json(new { success = true, message = Resources.Resources.ALTERACOES_EFECTUADA64514 }, "application/json");
+				return Json(new { success = true, message = Resources.Resources.ALTERACOES_EFETUADAS10166 }, "application/json");
 			}
 			catch (Exception ex)
 			{

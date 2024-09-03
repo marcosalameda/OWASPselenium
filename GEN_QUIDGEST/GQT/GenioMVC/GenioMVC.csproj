@@ -303,6 +303,8 @@
     <Compile Include="Controllers\Cntry\*.cs" />
     <Compile Include="ViewModels\Repar\*_ViewModel.cs" />
     <Compile Include="Controllers\Repar\*.cs" />
+    <Compile Include="ViewModels\C_add\*_ViewModel.cs" />
+    <Compile Include="Controllers\C_add\*.cs" />
     <Compile Include="ViewModels\Sale\*_ViewModel.cs" />
     <Compile Include="Controllers\Sale\*.cs" />
     <Compile Include="ViewModels\Dispa\*_ViewModel.cs" />
@@ -331,6 +333,8 @@
     <Compile Include="Controllers\Lnhde\*.cs" />
     <Compile Include="ViewModels\Strat\*_ViewModel.cs" />
     <Compile Include="Controllers\Strat\*.cs" />
+    <Compile Include="ViewModels\C_brn\*_ViewModel.cs" />
+    <Compile Include="Controllers\C_brn\*.cs" />
     <Compile Include="ViewModels\Decom\*_ViewModel.cs" />
     <Compile Include="Controllers\Decom\*.cs" />
     <Compile Include="ViewModels\Room1\*_ViewModel.cs" />
@@ -345,12 +349,16 @@
     <Compile Include="Controllers\Regio\*.cs" />
     <Compile Include="ViewModels\Tpeq1\*_ViewModel.cs" />
     <Compile Include="Controllers\Tpeq1\*.cs" />
+    <Compile Include="ViewModels\Agent\*_ViewModel.cs" />
+    <Compile Include="Controllers\Agent\*.cs" />
     <Compile Include="ViewModels\Faqs\*_ViewModel.cs" />
     <Compile Include="Controllers\Faqs\*.cs" />
     <Compile Include="ViewModels\Tpcon\*_ViewModel.cs" />
     <Compile Include="Controllers\Tpcon\*.cs" />
     <Compile Include="ViewModels\S_apr\*_ViewModel.cs" />
     <Compile Include="Controllers\S_apr\*.cs" />
+    <Compile Include="ViewModels\Ctry\*_ViewModel.cs" />
+    <Compile Include="Controllers\Ctry\*.cs" />
     <Compile Include="ViewModels\Fami1\*_ViewModel.cs" />
     <Compile Include="Controllers\Fami1\*.cs" />
     <Compile Include="ViewModels\Movim\*_ViewModel.cs" />
@@ -397,6 +405,8 @@
     <Compile Include="Controllers\Dttyp\*.cs" />
     <Compile Include="ViewModels\Tblb\*_ViewModel.cs" />
     <Compile Include="Controllers\Tblb\*.cs" />
+    <Compile Include="ViewModels\Proph\*_ViewModel.cs" />
+    <Compile Include="Controllers\Proph\*.cs" />
     <Compile Include="ViewModels\Year1\*_ViewModel.cs" />
     <Compile Include="Controllers\Year1\*.cs" />
     <Compile Include="ViewModels\Regi1\*_ViewModel.cs" />
@@ -479,6 +489,8 @@
     <Compile Include="Controllers\Perso\*.cs" />
     <Compile Include="ViewModels\Lang1\*_ViewModel.cs" />
     <Compile Include="Controllers\Lang1\*.cs" />
+    <Compile Include="ViewModels\Procn\*_ViewModel.cs" />
+    <Compile Include="Controllers\Procn\*.cs" />
     <Compile Include="ViewModels\Psw\*_ViewModel.cs" />
     <Compile Include="Controllers\Psw\*.cs" />
     <Compile Include="ViewModels\Messa\*_ViewModel.cs" />
@@ -545,6 +557,8 @@
     <Compile Include="Controllers\S_arg\*.cs" />
     <Compile Include="ViewModels\Equip\*_ViewModel.cs" />
     <Compile Include="Controllers\Equip\*.cs" />
+    <Compile Include="ViewModels\City\*_ViewModel.cs" />
+    <Compile Include="Controllers\City\*.cs" />
     <Compile Include="ViewModels\Pworg\*_ViewModel.cs" />
     <Compile Include="Controllers\Pworg\*.cs" />
     <Compile Include="ViewModels\Cate3\*_ViewModel.cs" />
@@ -573,6 +587,8 @@
     <Compile Include="Controllers\Evcat\*.cs" />
     <Compile Include="ViewModels\Lnhag\*_ViewModel.cs" />
     <Compile Include="Controllers\Lnhag\*.cs" />
+    <Compile Include="ViewModels\Prope\*_ViewModel.cs" />
+    <Compile Include="Controllers\Prope\*.cs" />
     <Compile Include="ViewModels\UserAdmin\*.cs" />
     <Compile Include="ViewModels\Breadcrumbs_ViewModel.cs" />
     <Compile Include="ViewModels\Messages_ViewModel.cs" />

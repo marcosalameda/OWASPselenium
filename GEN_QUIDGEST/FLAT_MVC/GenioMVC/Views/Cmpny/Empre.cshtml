@@ -1,0 +1,329 @@
+﻿@model GenioMVC.ViewModels.Cmpny.Empre_ViewModel
+@using GenioMVC.Models.Navigation;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Title = @Resources.COMPANY52963;
+	ViewBag.formmode = Model.GetFormMode;
+}
+
+<div class="c-modal__dialog c-modal--lg">
+	@using (Ajax.BeginForm("Action", "Cmpny", null, new AjaxOptions { UpdateTargetId = "form-modal" }, new { @class = "c-modal__content", area = "Cmpny", data_form = "Empre" }))
+	{
+		<div class="c-modal__content">
+			<div class="c-modal__header" elem-identifier="modal-header">
+				@form_header()
+			</div>
+			<div elem-identifier="ModalBody" class="c-modal__body">
+				<div class="form-flow">
+					@form_body()
+				</div>
+			</div>
+			<div class="c-modal__footer">
+				<div elem-identifier="Actions" class="actions" data-form-actions="Empre">
+					@form_footer()
+				</div>
+			</div>
+		</div>
+	}
+</div>
+
+@helper form_header() {
+	@* BEGIN MVC Flash messages *@
+	@Html.Action("Index", "Messages")
+	@* END MVC Flash messages *@
+		<div class="c-modal__header-title">
+			<div class="d-flex">
+				<div class="c-action-bar d-flex">
+					<i class="form-popup-header-legend icon-@ViewBag.formmode ViewMode-@ViewBag.formmode"></i><h2>@ViewBag.Title</h2>
+					<div data-parent-form="Empre" data-q-ref="form-btns-main_container"></div>
+				</div>
+			</div>
+		</div>
+}
+
+@helper form_body() {
+	@form_content_alert()
+	@Html.QValidationSummary()
+	<fieldset>
+		<legend class="hidden-elem">@ViewBag.Title</legend>
+		<div class="form-flow">
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+                            <div class="c-groupbox " id="GROUPBOX_EMPRE_NOVOGR02">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_EMPRE___PSEUDNOVOGR02" 
+                                    label-id="IFF_EMPRE___PSEUDNOVOGR02">
+                                    <span>@Resources.LOGO62483</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_EMPRE___PSEUDNOVOGR02','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-image draggable " id="CONTAINER_LED_EMPRE___CMPNYLOGO____">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValLogo, new { label_id="LED_EMPRE___CMPNYLOGO____", @class = " i-text__label", id="LABEL_LED_EMPRE___CMPNYLOGO____"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EMPRE___CMPNYLOGO____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													<div data-identifier="LED_EMPRE___CMPNYLOGO____" pers-cs-area="Cmpny" pers-cs-field="ValLogo" class="image-control-wrapper" >
+													@if(Model.IsEditableMode) {
+														@Html.EditorFor(m => m.ValLogo, new {help_id = "LED_EMPRE___CMPNYLOGO____", @class = "col-auto ", data_identifier = "LED_EMPRE___CMPNYLOGO____", title = @Resources.LOGO62483, guid = @Model.ValCodempre, controller = "Cmpny", fldname = "ValLogo", identifier = "FEMPRE", style = "height: 47pt; display: inline-block;" })
+													} else {
+														@Html.DisplayFor(m => m.ValLogo, new {help_id = "LED_EMPRE___CMPNYLOGO____", @class = "col-auto ", data_identifier = "LED_EMPRE___CMPNYLOGO____", title = @Resources.LOGO62483, guid = @Model.ValCodempre, controller = "Cmpny", fldname = "ValLogo", identifier = "FEMPRE", style = "height: 47pt; display: inline-block;" })
+													}
+													</div>
+													@Html.ValidationMessageFor(model => model.ValLogo)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+                            <div class="c-groupbox " id="GROUPBOX_EMPRE_NOVOGR01">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_EMPRE___PSEUDNOVOGR01" 
+                                    label-id="IFF_EMPRE___PSEUDNOVOGR01">
+                                    <span>@Resources.COMPANY52963</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_EMPRE___PSEUDNOVOGR01','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_EMPRE___CMPNYACRONYM_">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValAcronym, new { label_id="LED_EMPRE___CMPNYACRONYM_", @class = " i-text__label", id="LABEL_LED_EMPRE___CMPNYACRONYM_"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EMPRE___CMPNYACRONYM_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValAcronym, new {help_id = "LED_EMPRE___CMPNYACRONYM_", @class = "i-text__field i-text input-medium", data_identifier = "LED_EMPRE___CMPNYACRONYM_", @pers_cs_area = "Cmpny", @pers_cs_field = "ValAcronym", @db_field = "ValAcronym", title = @Resources.ACRONYM00872, maxlength = "15", rows = "15" })
+													@Html.ValidationMessageFor(model => model.ValAcronym)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_EMPRE___CMPNYNIF_____">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValNif, new { label_id="LED_EMPRE___CMPNYNIF_____", @class = " i-text__label", id="LABEL_LED_EMPRE___CMPNYNIF_____"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EMPRE___CMPNYNIF_____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValNif, new {help_id = "LED_EMPRE___CMPNYNIF_____", @class = "i-text__field i-text input-medium", data_identifier = "LED_EMPRE___CMPNYNIF_____", @pers_cs_area = "Cmpny", @pers_cs_field = "ValNif", @db_field = "ValNif", title = @Resources.TAX_IDENTIFICATION_55044, maxlength = "15", rows = "15" })
+													@Html.ValidationMessageFor(model => model.ValNif)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_EMPRE___CMPNYTELEPHON">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValTelephon, new { label_id="LED_EMPRE___CMPNYTELEPHON", @class = " i-text__label", id="LABEL_LED_EMPRE___CMPNYTELEPHON"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EMPRE___CMPNYTELEPHON','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValTelephon, new {help_id = "LED_EMPRE___CMPNYTELEPHON", @class = "i-text__field i-text input-medium", data_identifier = "LED_EMPRE___CMPNYTELEPHON", @pers_cs_area = "Cmpny", @pers_cs_field = "ValTelephon", @db_field = "ValTelephon", title = @Resources.TELEPHONE28697, maxlength = "20", rows = "20" })
+													@Html.ValidationMessageFor(model => model.ValTelephon)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-text draggable " id="CONTAINER_LED_EMPRE___CMPNYEMAIL___">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValEmail, new { label_id="LED_EMPRE___CMPNYEMAIL___", @class = " i-text__label", id="LABEL_LED_EMPRE___CMPNYEMAIL___"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_EMPRE___CMPNYEMAIL___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.TextBoxFor(model => model.ValEmail, new {help_id = "LED_EMPRE___CMPNYEMAIL___", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_EMPRE___CMPNYEMAIL___", @pers_cs_area = "Cmpny", @pers_cs_field = "ValEmail", @db_field = "ValEmail", title = @Resources.EMAIL_44228, maxlength = "254", rows = "85" })
+													@Html.ValidationMessageFor(model => model.ValEmail)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_EMPRE___CMPNYDESIGNAT">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValDesignat, new { label_id="LED_EMPRE___CMPNYDESIGNAT", @class = " i-text__label", id="LABEL_LED_EMPRE___CMPNYDESIGNAT"}, true, true)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_EMPRE___CMPNYDESIGNAT','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextBoxFor(model => model.ValDesignat, new {help_id = "LED_EMPRE___CMPNYDESIGNAT", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_EMPRE___CMPNYDESIGNAT", @pers_cs_area = "Cmpny", @pers_cs_field = "ValDesignat", @db_field = "ValDesignat", title = @Resources.DESIGNATION35876, maxlength = "85", rows = "85" })
+								@Html.ValidationMessageFor(model => model.ValDesignat)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="row-line-group">
+                            <div class="c-groupbox " id="GROUPBOX_EMPRE_NOVOGR03">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_EMPRE___PSEUDNOVOGR03" 
+                                    label-id="IFF_EMPRE___PSEUDNOVOGR03">
+                                    <span>@Resources.ORIGIN03068</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_EMPRE___PSEUDNOVOGR03','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-dbedit draggable " id="CONTAINER_IFF_EMPRE___CNTRYCOUNTRY_">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.TableCntryCountry, new { label_id="IFF_EMPRE___CNTRYCOUNTRY_", @class = " i-text__label", id="LABEL_IFF_EMPRE___CNTRYCOUNTRY_"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('IFF_EMPRE___CNTRYCOUNTRY_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DropDownListFor(model => model.ValCodcntry, Model.TableCntryCountry.List , "", new {help_id = "IFF_EMPRE___CNTRYCOUNTRY_", @class = "i-select chosen-dropdown input-xxlarge", data_identifier = "IFF_EMPRE___CNTRYCOUNTRY_", @pers_cs_area = "Cntry", @pers_cs_field = "ValCodcntry", @db_field = "ValCodcntry", @db_full_field_name = "cmpny.codcntry", data_has_more = Model.TableCntryCountry.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableCntryCountry.Selected, data_dbedit_value = Model.TableCntryCountry.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodempre, @data_see_more = "Empre_CntryValCountry", title = @Resources.COUNTRY64133, data_see_more_url = @Url.Action("Empre_CntryValCountry","Cmpny"), data_is_dbedit = "true", data_fields = "cntry.codcntry,cntry.country", data_main_field = "Cntry.ValCountry", data_elements = 0, data_filled_by_history = Model.TableCntryCountry.FilledByHistory, @dependant_fields = "cntry.codcntry,cntry.country" })
+													@Html.ValidationMessageFor(model => model.TableCntryCountry)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_EMPRE___CMPNYQTDPESSO">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValQtdpesso, new { label_id="LED_EMPRE___CMPNYQTDPESSO", @class = " i-text__label", id="LABEL_LED_EMPRE___CMPNYQTDPESSO"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_EMPRE___CMPNYQTDPESSO','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValQtdpesso, new {help_id = "LED_EMPRE___CMPNYQTDPESSO", @class = "Number text-right i-text__field i-text input-medium", data_refresh = "true", data_tipoform = "SR", data_identifier = "LED_EMPRE___CMPNYQTDPESSO", @pers_cs_area = "Cmpny", @pers_cs_field = "ValQtdpesso", @db_field = "ValQtdpesso", fixed_field = "true", @readonly = "readonly", title = @Resources.QUANTITY_OF_PEOPLE64893, data_number_integer = "10", data_number_decimals = "0", data_number_format = "9999999999" })
+								@Html.ValidationMessageFor(model => model.ValQtdpesso)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="row-large-control">
+						<div class="row-line-group" id="CONTAINER_LED_EMPRE___CMPNYHEADLOC_">
+								@Html.EditorFor(model => model.ValHeadloc, new {help_id = "LED_EMPRE___CMPNYHEADLOC_", @class = "input-block-level", data_identifier = "LED_EMPRE___CMPNYHEADLOC_", @pers_cs_area = "Cmpny", @pers_cs_field = "ValHeadloc", @db_field = "ValHeadloc", title = @Resources.HEADQUARTER_LOCATION30734, rows = "30" })
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			@Html.HiddenFor(model => model.ValCodempre, new { @pers_cs_field="ValCodempre", @pers_cs_area="Cmpny", @form_area="true", @data_value = Model.ValCodempre, @data_identifier = "LED_EMPRE___CMPNYCODEMPRE" })
+
+			@Html.Hidden("IgnoreWarnings", "false", new { id = "IgnoreWarnings" })
+
+			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Empre" })
+			@Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Empre" })
+			@Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Empre" })
+			@Html.AntiForgeryToken()
+		</div>
+	</fieldset>
+}
+
+@helper form_content_alert(){
+	if(Model.FormMode == FormMode.Delete) {
+		<div class="c-alert c-alert--warning">
+			<i class="glyphicons glyphicons-alert c-alert__icon" aria-hidden="true"></i>
+			<div class="c-alert__text">
+				&ensp;@Resources.DESEJA_ELIMINAR_ESTA24564
+			</div>
+		<!--Ao confirmar esta ficha irá ser eliminada da base de dados. Cancele caso não tenha a certeza.-->
+		</div>
+	}
+}
+
+@helper form_footer() {
+
+
+
+			if (Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+			{
+
+				if(Model.FormMode == FormMode.New && Convert.ToBoolean(Request.QueryString.Get("repeatInsertion")))
+				{
+				<button type="button" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" data-end-pers="true" data-modal-close="true" data-modal-form="true" data-modal-repeat-insertion="true" name="@(Helpers.FormModeActionName("Empre", Model.FormMode))" data-modal-url='@Url.Action(Helpers.FormModeActionName("Empre", Model.FormMode).ToString())' qbutton="ok_new"><i class="SaveIcon e-icon" aria-hidden="true"></i>@Resources.GRAVAR_E_CRIAR_NOVA17771</button>
+				}
+				<button type="button" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" data-end-pers="true" data-modal-close="true" data-modal-form="true" name="@(Helpers.FormModeActionName("Empre", Model.FormMode))" data-modal-url='@Url.Action(Helpers.FormModeActionName("Empre", Model.FormMode).ToString(), "Cmpny")' qbutton="ok">
+				@if(Model.FormMode == FormMode.Delete)
+				{
+					<i class="glyphicons glyphicons-glyphicons-check e-icon" aria-hidden="true"></i>
+					@Resources.CONFIRMAR09808
+				}
+				else
+				{
+					<i class="SaveIcon e-icon" aria-hidden="true"></i>
+					@Resources.SAVE04165
+				}
+				</button>
+			}
+		   <button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-modal-close="true" data-modal-form="true" data-modal-cancel="true" data-modal-url='@Url.Action("Empre_Cancel")' qbutton="cancel"><i class="glyphicons glyphicons-ban-circle e-icon" aria-hidden="true"></i>@Resources.CANCEL65428</button>
+}
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT EMPRE]/ *@
+
+@if (Request.IsAjaxRequest())
+{
+	@codeJavascript()
+	@includeStylesheets()
+}
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_EMPRE" data-form-javascript="true">
+@Html.Partial("Empre_JavaScript", Model, ViewData)
+</div>
+}
+
+@section code_javascript {
+	@codeJavascript()
+}
+
+@helper includeStylesheets()
+{
+
+ }
+
+@section include_stylesheets {
+	@includeStylesheets()
+}

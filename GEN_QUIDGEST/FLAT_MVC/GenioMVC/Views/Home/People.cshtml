@@ -1,0 +1,81 @@
+﻿@model GenioMVC.ViewModels.People_ViewModel
+
+@{
+    ViewBag.Title = "";
+}
+
+
+@LoadDefault()
+
+@helper LoadDefault() {
+<div class="form-horizontal" area="Home" data-form="People">
+	<fieldset>
+		<legend class="form-header">@ViewBag.Title</legend>
+<div class="form-flow">
+@form_content_body()
+</div>
+@form_content_buttons()
+		@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "People" })
+		@Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "People" })
+        @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "People" })
+        @Html.AntiForgeryToken()
+	</fieldset>
+</div>
+}
+
+@helper form_content_body() {
+			<div class="row">
+				<div class="col-12">
+					<div class="row-large-control">
+						<div class="row-line-group" id="CONTAINER_IFF_PEOPLE__PSEUDPEOPLELS">
+								<div id="People_ValPeoplels" data-identifier="IFF_PEOPLE__PSEUDPEOPLELS"  data-extra-options="" > 
+									@{ Html.RenderAction("People_ValPeoplels", "Home", new {  partialView = "People_ValPeoplels"}); }
+								</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+}
+
+@helper form_content_buttons() {
+  if(!(ViewBag.isHomePage ?? false))
+  {
+    <div elem-identifier="FormActions" class="form-actions" data-form-actions="People">
+      <button class="b-icon-text b-icon-text--secondary float-right" type="button" onclick="javascript:history.back();" title="@Resources.RETROCEDER16633" data-selector="true"><i class="glyphicons glyphicons-arrow-left e-icon"></i>@Resources.RETROCEDER16633</button>
+        @*@Html.ActionLink(@Resources.RETROCEDER16633, "People_Cancel", "Home" ,null, new { @class = "btn", qbutton="cancel" })*@
+    </div>
+  }
+}
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT PEOPLE]/ *@
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_PEOPLE" data-form-javascript="true">
+@* USE /[MANUAL GQT FORM_INCLUDEJS PEOPLE]/ *@
+<script>
+    $(document).ready(function (e) {
+        InitSpecialControls($('[data-form]'));
+    });
+
+
+
+
+
+
+// USE /[MANUAL GQT FORM_CODEJS PEOPLE]/
+</script>
+</div>
+}
+
+@if(ViewBag.isHomePage ?? false)
+{
+  @codeJavascript()
+}
+
+@section code_javascript {
+	@codeJavascript()
+}

@@ -1,0 +1,47 @@
+﻿@model GenioMVC.ViewModels.Fami1.Fami1_ValTiposeq1_ViewModel
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@* USE /[MANUAL GQT TABLE_FOR FAMI1_TIPOSEQ1]/ *@
+
+@{
+    var Tree = Html.TreeFor(edit: Model.IsEditableMode)
+        .SetPermissions(canView: true, canInsert: true, canEdit: true, canDuplicate: false, canDelete: false)
+        .SetForm("TPEQ1", "TPEQ1", false, false)
+        .DataSource(Model.Tree);
+}
+<div id="Fami1_ValTiposeq1_TreeBody" class="n-treeview"></div>
+<div class="tree-footer">
+    @Tree.CreateInsertAction()
+</div>
+
+<script>
+
+$(document).ready(function() {
+    try {
+        if (jQuery) {
+            try {
+
+
+                @*var empty = @Resources.VAZIO58398*@
+                var JSON = {
+					tree: @Tree.ToJSON(),
+                    requestsUrl: 'Fami1_ValTiposeq1',
+                    container: 'Fami1_ValTiposeq1'
+				};
+                window.ValTiposeq1 = $('#Fami1_ValTiposeq1_TreeBody').treeFor(JSON);
+                loaded($('#Fami1_ValTiposeq1'));
+                //InitSpecialControls($('#Fami1_ValTiposeq1'));
+                $('#Fami1_ValTiposeq1').trigger('SET_QCONTROL_LOADED', [true]);
+
+// USE /[MANUAL GQT LISTING_JS FAMI1_TIPOSEQ1]/
+
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+</script>

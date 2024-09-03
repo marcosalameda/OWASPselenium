@@ -1,0 +1,119 @@
+﻿@model GenioMVC.ViewModels.Equip.Equip_ValReparaco_ViewModel
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@using Newtonsoft.Json;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@*List properties DBEDIT BUTTONS*@
+<div class="row">
+	<div class="col">
+		<div elem-identifier="List"  help-id="IFF_EQUIP___PSEUDREPARACO" style="padding-top: 0.5rem;"><label class = "i-text__label table-title c-table__title" > <h2 list-header>@Resources.EQUIPMENT_REPAIRS62266</h2 list-header> </label></div>
+	</div>
+</div>
+
+@* USE /[MANUAL GQT TABLE_FOR EQUIP_REPARACO]/ *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@using GenioMVC.ViewModels.Repar;    
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Repar>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodrepar, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN EQUIP_REPARACO_REPAR_NRREPARA]/
+		column.Expression(p => p.ValNrrepara).Title(@Resources.NO_RUMOUR_IN_THE_COM15248).Field("ValNrrepara").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN EQUIP_REPARACO_REPAR_DTREPARA]/
+		column.Expression(p => p.ValDtrepara).Title(@Resources.FIXED_IN00179).Field("ValDtrepara").Size(16);
+// USE /[MANUAL GQT CUSTOM_COLUMN EQUIP_REPARACO_CATE1_CATEGORY]/
+		column.Expression(p => p.Cate1.ValCategoria).Title(@Resources.SPECIALTY09304).Field("Cate1.ValCategoria").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN EQUIP_REPARACO_PESSO_NAME]/
+		column.Expression(p => p.Pesso.ValName).Title(@Resources.EXPERT27393).Field("Pesso.ValName").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN EQUIP_REPARACO_REPAR_DESCRIPT]/
+		column.Expression(p => p.ValDescript).Title(@Resources.DESCRIPTION_OF_THE_R26085).Field("ValDescript").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN EQUIP_REPARACO_REPAR_HOURS]/
+		column.Expression(p => p.ValHours).Title(@Resources.SPENT_ON_HOURS19285).Field("ValHours").Size(10);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Repar")
+        .Id("ValReparaco")
+        .AjaxRequest("Equip_ValReparaco")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .TableList(hasFilters: false)
+        .RequestLink(@Url.Action("Equip_ValReparaco", new { id = Model.ValCodequip, partialView = "Equip_ValReparaco"}))
+        .Form("Repar", false, false)
+        .SetFollowUp("Repar_Show", "Repar" , (Func<GenioMVC.Models.Repar, object>)(item => new { id = item.ValCodrepar }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
+        .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
+		;
+        
+}
+
+@tbl.ToHtml()
+
+<script>
+
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qValReparaco, #ValReparaco_complex_filter th input, #ValReparaco_filters input").change(function() {
+                    $("#pValReparaco").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#ValReparaco_tableFilters').val(false);")
+                    @Html.Raw("$('#ValReparaco_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#ValReparaco_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $('#ValReparaco_complex_filter button#applyComplexFilter').click();
+                    @:      event.preventDefault();
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#ValReparaco_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_ValReparaco').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+
+
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='ValReparaco']"));
+                    InitSpecialControls($('#ValReparaco'));
+                    $('#ValReparaco').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS EQUIP_VALREPARACO]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+</script>

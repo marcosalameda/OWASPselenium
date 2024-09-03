@@ -17,6 +17,8 @@ using GenioMVC.Helpers.ModelBinders;
 using GenioMVC.CustomEngines;
 using System.Collections.Generic;
 using CSGenio.persistence;
+using CSGenio.core.messaging;
+using CSGenio.messaging;
 
 namespace GenioMVC
 {
@@ -78,7 +80,25 @@ namespace GenioMVC
             // For Asp.NET to be able to communicate with Reporting Services or other services published over HTTPS and with the old SSL protocols disabled.
             // To turn on TLS 1.2 and 1.3 without affecting other protocols.
             System.Net.ServicePointManager.SecurityProtocol |= System.Net.SecurityProtocolType.Tls12 | System.Net.SecurityProtocolType.Tls13;
+
+            // Messaging
+            if(Configuration.Messaging.Enabled)
+            {
+                _messagingService = MessagingService.Instance;
+                _messagingService.Start(
+                    metadata: MessageMetadataFactory.GeneratedMetadata(),
+                    providerType: Configuration.Messaging.Host.Provider,
+                    enableSubscribe: false
+                );
+            }
         }
+
+        protected void Application_End()
+        {
+            _messagingService?.Close();
+        }
+
+        private static MessagingService _messagingService;
 
         private static void RestartAppPool(object sender, System.IO.FileSystemEventArgs e)
         {

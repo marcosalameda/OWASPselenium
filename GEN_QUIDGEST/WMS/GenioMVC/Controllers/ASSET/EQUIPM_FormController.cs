@@ -468,12 +468,12 @@ namespace GenioMVC.Controllers
 			string saveMsg = TempData["NEW_SAVE_LIST"] as string;
 
 			if (!internalRedirect || !Request.IsAjaxRequest())
-				SuccessMessage(String.IsNullOrEmpty(saveMsg) ? Resources.Resources.ALTERACOES_EFECTUADA64514 + GetHumanKeyToQMessage("asset", Convert.ToString(Navigation.CurrentLevel.GetEntry("asset"))) : saveMsg);
+				SuccessMessage(String.IsNullOrEmpty(saveMsg) ? Resources.Resources.ALTERACOES_EFETUADAS10166 + GetHumanKeyToQMessage("asset", Convert.ToString(Navigation.CurrentLevel.GetEntry("asset"))) : saveMsg);
 
 			Navigation.RemoveHistoryLevel();
 
 			if (Request.IsAjaxRequest()) // Ajax result for nested form
-				return Json(new { Success = true, Operation = "Edit", Message = String.IsNullOrEmpty(saveMsg) ? Resources.Resources.ALTERACOES_EFECTUADA64514 : saveMsg, Warnings = warningMsgs }, JsonRequestBehavior.AllowGet);
+				return Json(new { Success = true, Operation = "Edit", Message = String.IsNullOrEmpty(saveMsg) ? Resources.Resources.ALTERACOES_EFETUADAS10166 : saveMsg, Warnings = warningMsgs }, JsonRequestBehavior.AllowGet);
 
 			//verify if the current level has a skipifjustone option, and remove it from history
 			if (Navigation.CurrentLevel.CheckEntry("SkipIfJustOne"))
@@ -982,7 +982,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Equipm_ManufValName_ViewModel model = new Equipm_ManufValName_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodasset = id;
 			TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
 			// TODO: Remove the old version of limits that pass every field in separate parameters
 			if (Limits != null)
@@ -1026,7 +1025,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation.Clone();
 			Equipm_KindeValDesignat_ViewModel model = new Equipm_KindeValDesignat_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodasset = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1057,7 +1055,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Equip02_ValAttachme_ViewModel model = new Equip02_ValAttachme_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodasset = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1088,7 +1085,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Equip03_ValDocument_ViewModel model = new Equip03_ValDocument_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodasset = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1148,7 +1144,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Equip04_ValParamloa_ViewModel model = new Equip04_ValParamloa_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodasset = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1208,7 +1203,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Equip04_ValManuals_ViewModel model = new Equip04_ValManuals_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodasset = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 
@@ -1239,7 +1233,6 @@ namespace GenioMVC.Controllers
 			var navigation = Navigation;
 			Equip04_ValParamete_ViewModel model = new Equip04_ValParamete_ViewModel(navigation);
 			model.setModes(Request.QueryString["m"]);
-			model.ValCodasset = id;
 
 			model.Load(perPage, requestValues, Request.IsAjaxRequest());
 

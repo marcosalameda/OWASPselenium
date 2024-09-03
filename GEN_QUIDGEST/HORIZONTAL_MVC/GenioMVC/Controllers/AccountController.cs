@@ -303,8 +303,7 @@ namespace GenioMVC.Controllers
                     //var user = SecurityFactory.GetUser(principal.Identity,u,sp);
                     var user = userFactory.GetUser(userId);
                     //Change password
-                    Password password = new Password(model.NewPassword, model.ConfirmPassword);
-                    userFactory.ChangePassword(user, password);
+                    userFactory.ChangePassword(user, model.NewPassword, model.ConfirmPassword);
 					try
                     {
                         sp.openTransaction();

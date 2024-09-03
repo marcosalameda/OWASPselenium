@@ -12,6 +12,7 @@ using GenioMVC.Models;
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.Attributes;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using Quidgest.Persistence.GenericQuery;
 using CSGenio.persistence;
 using CSGenio.business;
@@ -382,12 +383,10 @@ namespace GenioMVC.Controllers
                 Psw psw = Psw.Find(model.ValCodpsw);
                 var userFactory = new GenioServer.security.UserFactory(UserContext.Current.PersistentSupport, UserContext.Current.User);
                 if (!String.IsNullOrEmpty(model.ValPassword))
-                {
-                    var password = new GenioServer.security.Password(model.ValPassword, model.ValConfirmPassword);
-                    userFactory.ChangePassword(psw.klass, password);
-                }
+                    userFactory.ChangePassword(psw.klass, model.ValPassword, model.ValConfirmPassword);
 
                 psw.ValNome = model.ValNome;
+                psw.ValEmail = model.ValEmail;
 
                 sp.openTransaction();
 				model.flashMessage = psw.Save(sp);
@@ -422,7 +421,7 @@ namespace GenioMVC.Controllers
             if (CSGenio.framework.Log.IsDebugEnabled)
                 CSGenio.framework.Log.Debug("Controller success " + (DateTime.Now.Ticks - st) / TimeSpan.TicksPerMillisecond + "ms");
             if (Request.IsAjaxRequest())
-                return Json(new { Success = true, Operation = "Edit", Message = Resources.Resources.ALTERACOES_EFECTUADA64514 });
+                return Json(new { Success = true, Operation = "Edit", Message = Resources.Resources.ALTERACOES_EFETUADAS10166 });
 
             Navigation.RemoveHistoryLevel();
 

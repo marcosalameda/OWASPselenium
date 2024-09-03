@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using CSGenio.core.persistence;
 using CSGenio.config;
+using CSGenio.core.messaging;
 
 
 namespace CSGenio.framework
@@ -54,7 +55,7 @@ namespace CSGenio.framework
         /// <summary>
         /// Application version
         /// </summary>
-        public static int Version { get; } = 3707;
+        public static int Version { get; } = 3763;
 
         /// <summary>
         /// System id
@@ -84,12 +85,12 @@ namespace CSGenio.framework
         /// <summary>
         /// Version of the database
         /// </summary>
-        public const int VersionDbGen = 3707;
+        public const int VersionDbGen = 3763;
 
         /// <summary>
         /// Version of the database indexes
         /// </summary>
-        public const int VersionIdxDbGen = 1360;
+        public const int VersionIdxDbGen = 1423;
 
         /// <summary>
         /// Version of the latest upgrade index version
@@ -104,12 +105,12 @@ namespace CSGenio.framework
         /// <summary>
         /// Genio generator version
         /// </summary>
-        public const string GenioVersion = "347.12";
+        public const string GenioVersion = "349.31";
 
         /// <summary>
         /// Solution build version
         /// </summary>
-        public const int BuildVersionGen = 2730;
+        public const int BuildVersionGen = 2783;
         /// <summary>
         /// Solution release version
         /// </summary>
@@ -256,6 +257,10 @@ namespace CSGenio.framework
         /// </summary>
         public static bool EventTracking { get; private set; } = false;
 
+        /// <summary>
+        /// Publisher/Subscriber Messaging
+        /// </summary>
+        public static MessagingXml Messaging { get; private set; } = new MessagingXml();
 
         //-----------------------------------------------
         /// <summary>
@@ -455,6 +460,10 @@ namespace CSGenio.framework
             PasswordRecoveryEmail = readXML.PasswordRecoveryEmail;
 
             EventTracking = readXML.EventTracking;
+
+            Messaging = readXML.Messaging;
+            if (Messaging == null)
+                Messaging = new MessagingXml();
         }
 
 

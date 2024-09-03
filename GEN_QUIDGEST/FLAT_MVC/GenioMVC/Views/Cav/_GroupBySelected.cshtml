@@ -1,0 +1,140 @@
+﻿@model GenioMVC.ViewModels.Cav.GlobalViewModel
+<div id="ms-GroupBySelected" class="ms-container">  
+    
+    <div class="row">    
+        <div class="col-md-6">  
+            <div class="g-reporting__flow-search">                    
+                <div class="i-input-group" id="">
+                    <input id="search3" class="searchInput i-input-group__field input-medium" placeholder="@Resources.PESQUISA_DE_CAMPOS08087" type="text" autocomplete="off" title="@Resources.PESQUISA_DE_CAMPOS08087" type="text" value="">
+                    <div class="i-input-group--right">
+                        <button type="button" class="b-icon--primary i-input-group__button--secondary " title="Pesquisar">
+                            <i class="glyphicons glyphicons-search i-input-group__tag-icon i-input-group__button-icon" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="ms-selectable g-reporting__flow-content-selectable">
+                        <ul class="ms-list">
+                            @for (int i = 0; i < Model.Tables.Count; i++)
+                            {
+                                GenioMVC.Models.Cav.CAVTable table = Model.Tables[i];
+                                if (Model.Tables[i].Fields.Count > 0)
+                                {
+                                    if (Model.FieldsSelectedList != null)
+                                    {
+                                        bool first = true;
+                                        for (int j = 0; j < table.Fields.Count; j++)
+                                        {
+                                            GenioMVC.Models.Cav.Field field = table.Fields[j];
+                                            if (Model.FieldsSelectedList.Exists(x => x.FieldId == field.Id))
+                                            {
+                                                if (first)
+                                                {
+                                                    @:<li class="ms-optgroup-container g-reporting__flow-content-selectable-item" id="ms-FieldsSelected-optgroup-@i">
+                                                        @:<ul class="ms-optgroup" ms-value="@table.TableUpId">
+                                                            <li class="ms-optgroup-label">
+                                                                <div>
+                                                                    <i class="glyphicons glyphicons-list e-icon--reporting mr-2" aria-hidden="true"></i>
+                                                                    @Resources.ResourceManager.GetString(@table.Description)
+                                                                    <i class="e-icon--group glyphicons glyphicons-plus-sign"></i>
+                                                                </div>
+                                                            </li>
+                                                            first = false;
+                                                        }
+                                                        @:<li class="ms-elem-selectable" ms-type="@field.Type" ms-value="@field.Id" ms-group="@Resources.ResourceManager.GetString(@table.Description)">@Resources.ResourceManager.GetString(@field.Description)<i class="glyphicons glyphicons-circle-arrow-right e-icon--reporting"></i></li>
+                                                    }
+                                                }
+                                                if (!first)
+                                                {
+                                                @:</ul>
+                                            @:</li>
+                                        }
+                                    }
+                                }
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="pagination mt-3 mb-1">
+                <a id="groupBack" href="#" class="b-icon-text b-icon-text--secondary">
+                    <i class="glyphicons glyphicons-chevron-left e-icon" aria-hidden="true"></i>
+                    @Resources.RETROCEDER16633 
+                </a>
+                <a id="groupNext" href="#" class="b-icon-text b-icon-text--primary">
+                    @Resources.AVANCAR20939
+                    <i class="glyphicons glyphicons-chevron-right e-icon" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="ms-selection">
+                <div>
+                    <h4 class="g-reporting__flow-subtitle" style="margin-top: 1.25rem;">@Resources.GRUPOS62631</h4>
+                </div>
+                <div class="ui-widget-content ui-droppable">
+                    <ul class="ms-list listSelected" ms-type="G">
+                        @if (Model.Query.Groups != null)
+                        {
+                            for (int i = 0; i < Model.Query.Groups.Count; i++)
+                            {
+                                GenioMVC.Helpers.Cav.ReportGroup entry = Model.Query.Groups[i];
+                                <li class="ms-elem-selected group" style="padding-left: @(i > 0 ? i * 30 : 10)px; width: auto;">
+                                    <div class="group-title">Grupo @(i + 1) - Quebra de Página: <input type="checkbox" @(entry.PageBreak ? "checked" : "") name="pagebreak" value="true"></div>
+                                    @foreach (GenioMVC.Helpers.Cav.ReportField field in entry.Fields.FindAll(x => string.IsNullOrEmpty(x.TotalType)))
+                                    {
+                                        string[] splited = field.FieldId.Split('.');
+                                        string table = splited[0];
+                                        var t = Model.Tables.Find(x => x.Id == table);
+                                        var f = t.Fields.Find(x => x.Id == field.FieldId);
+                                        <ul>
+                                            <li class="ms-elem-selected @(f.Type)" ms-value="@(field.FieldId)">
+                                                <div class="delete" style="position:relative; height: 20px; width:22px; float:right; cursor:pointer;"></div>
+                                                <div class="text-lis"><div><strong>[@Resources.ResourceManager.GetString(@t.Description)]</strong></div></div>
+                                                <div class="text-lis"><div>@Resources.ResourceManager.GetString(@f.Description)</div></div>
+                                            </li>
+                                        </ul>
+                                    }
+                                </li>
+                            }
+
+                            if (Model.Query.Groups.Count == 0)
+                            {
+                                <li class="ms-elem-selected group">
+                                    <div class="group-title">@Resources.GRUPO22663 1 - @Resources.QUEBRA_DE_PAGINA16720: <input type="checkbox" name="pagebreak" value="true"></div>
+                                    <ul></ul>
+                                </li>
+                            }
+                        }
+                        else if (Model.Query.Groups == null)
+                        {
+                            <li class="ms-elem-selected group">
+                                <div class="group-title">@Resources.GRUPO22663 1 - @Resources.QUEBRA_DE_PAGINA16720: <input type="checkbox" name="pagebreak" value="true"></div>
+                                <ul></ul>
+                            </li>
+                        }
+                    </ul>
+                </div>                
+            </div>
+        </div>
+    </div>        
+    
+     <div id="groupButtons" style="float:left;">
+        <a class="button ibutton icon arrowleft" id="group-up"></a>
+        <a class="button ibutton icon arrowright" id="group-down"></a>
+    </div>
+</div>
+<script type="text/javascript">
+        $(document).ready(function () {
+            $('#groupBack').on('click', function () {
+                $('#cavtabs a[data-target="#condicoes"]').click();
+            });
+            $('#groupNext').on('click', function () {
+                $('#cavtabs a[data-target="#ordenacao"]').click();
+            });
+        });
+</script>

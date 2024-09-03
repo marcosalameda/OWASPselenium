@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Wareh
         /// Initializes a new instance of the <see cref="Armaz_ValPessarma_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Armaz_ValPessarma_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Armaz_ValPessarma_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCodwareh = currentNavigation.CurrentLevel.GetEntry("wareh")?.ToString();
         }
 
         /// <inheritdoc/>
@@ -73,9 +73,9 @@ namespace GenioMVC.ViewModels.Wareh
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAwpess.FldNfunc, FieldType.NUMERO, Resources.Resources.NOFUNCIONARIO21429, 6, 0, true),
                 new Exports.QColumn(CSGenioAwpess.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
                 new Exports.QColumn(CSGenioAwpess.FldSex, FieldType.ARRAY_COD_TEXTO, Resources.Resources.SEXO52099, 9, 0, true, "SEXO"),
+                new Exports.QColumn(CSGenioAwpess.FldNfunc, FieldType.NUMERO, Resources.Resources.NOFUNCIONARIO21429, 6, 0, true),
             };
 
             columns.RemoveAll(item => item == null);
@@ -105,19 +105,13 @@ namespace GenioMVC.ViewModels.Wareh
             }
         }
 
-        /// <summary>
-		/// Builds the list CriteriaSet with all the limits, filters and conditions
-		/// </summary>
-		/// <param name="requestValues">Table filters</param>
-        /// <param name="tableReload">[Quick fix] Indicates whether the data list should be loaded. If set to false within the method, it signals that the data list should not display rows due to unmet mandatory limits.</param>
-        /// <param name="crs">Pass a CriteriaSet by reference to be modified</param>
-		/// <param name="isToExport">If the  table is to be exported</param>
-		public CriteriaSet BuildCriteriaSet(NameValueCollection requestValues, out bool tableReload, CriteriaSet crs = null, bool isToExport = false)
+		/// <inheritdoc/>
+		public override CriteriaSet BuildCriteriaSet(NameValueCollection requestValues, out bool tableReload, CriteriaSet crs = null, bool isToExport = false)
 		{
 			User u = UserContext.Current.User;
             tableReload = true;
 
-			if(crs == null)
+			if (crs == null)
 				crs = CriteriaSet.And();
 
 
@@ -129,8 +123,6 @@ namespace GenioMVC.ViewModels.Wareh
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("WPESS.NFUNC", new OrderedDictionary());
-			allSortOrders["WPESS.NFUNC"].Add("WPESS.NFUNC", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValPessarma_"));
@@ -226,8 +218,6 @@ namespace GenioMVC.ViewModels.Wareh
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("WPESS.NFUNC", new OrderedDictionary());
-			allSortOrders["WPESS.NFUNC"].Add("WPESS.NFUNC", "A");
 
 
 
@@ -240,14 +230,8 @@ namespace GenioMVC.ViewModels.Wareh
 
 			List<ColumnSort> sorts = GetRequestSorts(this.Menu, "sValPessarma", "dValPessarma", requestValues, "wpess", allSortOrders);
 
-			if (sorts == null || sorts.Count == 0)
-			{
-				sorts = new List<ColumnSort>();
-				sorts.Add(new ColumnSort(new ColumnReference(CSGenioAwpess.FldNfunc), SortOrder.Ascending));
 
-			}
-
-FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.FldZzstate, CSGenioAwpess.FldNfunc, CSGenioAwpess.FldName, CSGenioAwpess.FldSex };
+FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.FldZzstate, CSGenioAwpess.FldName, CSGenioAwpess.FldSex, CSGenioAwpess.FldNfunc };
 
 
 			//columns by users list (TemplateDBEditViewModel)
@@ -276,7 +260,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.Fld
 					}
 				}
 				else
-					firstVisibleColumn = new FieldRef("wpess", "nfunc");
+					firstVisibleColumn = new FieldRef("wpess", "name");
 
 
 			// Limitations
@@ -298,7 +282,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.Fld
 
 			CriteriaSet armaz___pseudpessarmaConds = BuildCriteriaSet(requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
             tableReload &= hasAllRequiredLimits;
-			
+
 // USE /[MANUAL GQT OVERRQ ARMAZ_PSEUDPESSARMA]/
 
             // This will happen in case there is an error
@@ -347,7 +331,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.Fld
 				//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 				if (pageNumber < 1)
 					pageNumber = 1;
-	
+
 
 				Menu.Elements = MapArmaz_ValPessarma(listing);
 
@@ -427,14 +411,14 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.Fld
 
         private static readonly string[] _fieldsToSerialize =
         {
-            "Wpess", "Wpess.ValCodpess", "Wpess.ValZzstate", "Wpess.ValNfunc", "Wpess.ValName", "Wpess.ValSex", "Wpess.ValCodwareh"
+            "Wpess", "Wpess.ValCodpess", "Wpess.ValZzstate", "Wpess.ValName", "Wpess.ValSex", "Wpess.ValNfunc", "Wpess.ValCodwareh"
         };
 
         private static readonly List<TableSearchColumn> _searchableColumns = new List<TableSearchColumn>
         {
-            new TableSearchColumn("ValNfunc", CSGenioAwpess.FldNfunc, typeof(decimal?)),
             new TableSearchColumn("ValName", CSGenioAwpess.FldName, typeof(string), defaultSearch : true),
-            new TableSearchColumn("ValSex", CSGenioAwpess.FldSex, typeof(string), array : "SEXO")
+            new TableSearchColumn("ValSex", CSGenioAwpess.FldSex, typeof(string), array : "SEXO"),
+            new TableSearchColumn("ValNfunc", CSGenioAwpess.FldNfunc, typeof(decimal?))
         };
     }
 }

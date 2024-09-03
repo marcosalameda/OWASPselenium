@@ -18,6 +18,21 @@ namespace CSGenio.business
         /// <param name="exceptionSite">Name of the method that throws the current exception.</param>
         /// <param name="exceptionCause">Message that describes the direct cause of the current exception.</param>
         /// <param name="innerException">The Exception instance that caused the current exception.</param>
+        /// <param name="errorStack">The error stack.</param>
+        public BusinessException(string userMessage, string exceptionSite, string exceptionCause, Exception innerException, string[] errorStack)
+            : base(userMessage, exceptionSite, exceptionCause, innerException, errorStack)
+        {
+
+        }
+
+
+        /// <summary>
+        /// Initializes a new instance of the BusinessException class.
+        /// </summary>
+        /// <param name="userMessage">Message that describes the current exception to the user.</param>
+        /// <param name="exceptionSite">Name of the method that throws the current exception.</param>
+        /// <param name="exceptionCause">Message that describes the direct cause of the current exception.</param>
+        /// <param name="innerException">The Exception instance that caused the current exception.</param>
         public BusinessException(string userMessage, string exceptionSite, string exceptionCause, Exception innerException)
             : base(userMessage, exceptionSite, exceptionCause, innerException)
         {

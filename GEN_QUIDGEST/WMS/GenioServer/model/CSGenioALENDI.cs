@@ -62,6 +62,7 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "_COMOMODOR01469";
 
 			Qfield.Dupmsg = "";
+            Qfield.SufNDup = "lendinnr";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -240,19 +241,19 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(13);
-			info.Pathways.Add("pess1","pess1");
 			info.Pathways.Add("pess2","pess2");
+			info.Pathways.Add("pess1","pess1");
 			info.Pathways.Add("equip","equip");
-			info.Pathways.Add("stake","pess1");
+			info.Pathways.Add("stake","pess2");
+			info.Pathways.Add("cmpny","pess2");
+			info.Pathways.Add("cntry","pess2");
 			info.Pathways.Add("cate2","pess1");
-			info.Pathways.Add("cmpny","pess1");
-			info.Pathways.Add("cntry","pess1");
-			info.Pathways.Add("wareh","equip");
 			info.Pathways.Add("decom","equip");
-			info.Pathways.Add("item","equip");
+			info.Pathways.Add("wareh","equip");
 			info.Pathways.Add("tpequ","equip");
-			info.Pathways.Add("gitem","equip");
+			info.Pathways.Add("item","equip");
 			info.Pathways.Add("famil","equip");
+			info.Pathways.Add("gitem","equip");
 		}
 
 		/// <summary>

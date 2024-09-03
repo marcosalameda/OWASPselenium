@@ -28,7 +28,7 @@ namespace CSGenio.framework
             CriaLog = false;
             VisivelCav = CavVisibilityType.Sempre;
         }
-
+ 
         /// <summary>
         /// Hashcode for the object
         /// </summary>
@@ -121,6 +121,11 @@ namespace CSGenio.framework
         /// Unique prefix
         /// </summary>
         public string PrefNDup { get; set; }
+		
+		/// <summary>
+        /// Unique suffix (The field that has this field as its unique prefix)
+        /// </summary>
+        public string SufNDup { get; set; }
 
         /// <summary>
         /// Unique message
@@ -258,7 +263,11 @@ namespace CSGenio.framework
                         return true;
                     break;
                 case FieldFormatting.LOGICO:
-                    if ((int)Qvalue == 0)
+                    //When a boolean field has a default value in the form (true or false), Qvalue is a bool (true or false).
+                    if (Qvalue is Boolean)
+                        return (bool)Qvalue == false;
+                     //When a boolean field has a default value in the table (true or false), Qvalue is an int (1 or 0).
+                    else if ((int)Qvalue == 0)
                         return true;
                     break;
                 case FieldFormatting.CARACTERES:

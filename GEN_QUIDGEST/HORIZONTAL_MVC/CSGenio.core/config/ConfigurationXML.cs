@@ -158,14 +158,6 @@ namespace CSGenio
             get;set;
         }
 
-        private AdminCfgEl m_admin = null;
-        [XmlElement("admin")]
-        public AdminCfgEl Admin
-        {
-            get { return m_admin; }
-            set { m_admin = value; }
-        }
-
         private NumberFormatXml m_numberFormat = null;
         [XmlElement("numberFormat")]
         public NumberFormatXml NumberFormat
@@ -220,6 +212,9 @@ namespace CSGenio
             get; set;
         }
 
+        [XmlElement("Messaging")]
+        public MessagingXml Messaging { get; set; }
+
         /*
             Functions
         */
@@ -264,7 +259,11 @@ namespace CSGenio
             {
                 Elasticsearch = new ElasticsearchXml();
                 Elasticsearch.Colours = new List<CoreXml>();
+            }
 
+            if (Messaging == null)
+            {
+                Messaging = new MessagingXml();
             }
         }
 
@@ -278,6 +277,7 @@ namespace CSGenio
             Elasticsearch.Colours = new List<CoreXml>();
             maisPropriedades = ExtraProperties.GetInitialValues();
             ConfigVersion = ConfigXMLMigration.CurConfigurationVerion.ToString();
+            Messaging = new MessagingXml();
         }
 
         public static ConfigurationXML readXML(string filename)
@@ -712,6 +712,7 @@ namespace CSGenio
             security.m_users = m_users.Select(identity => (UserCfgEl)identity.Clone()).ToList();
             security.m_maxAttempts = m_maxAttempts;
             security.m_sessionTimeOut = m_sessionTimeOut;
+            security.UsePasswordBlacklist = UsePasswordBlacklist;
 
             return security;
         }
@@ -833,6 +834,8 @@ namespace CSGenio
             set { m_sessionTimeOut = value; }
         }
         
+        [XmlAttribute("usePasswordBlacklist")]
+        public bool UsePasswordBlacklist { get; set; } = false;
     }
 
     [XmlRoot("AppPath")]
@@ -850,35 +853,6 @@ namespace CSGenio
         Regular,
         Guest,
         Admin
-    }
-
-    [XmlRoot("admin")]
-    public class AdminCfgEl
-    {
-        private string m_name;
-        private string m_password;
-        private string m_password_format;
-
-        [XmlAttribute("name")]
-        public string Name
-        {
-            get { return m_name; }
-            set { m_name = value; }
-        }
-
-        [XmlAttribute("password")]
-        public string Password
-        {
-            get { return m_password; }
-            set { m_password = value; }
-        }
-
-        [XmlAttribute("passwordFormat")]
-        public string PasswordFormat
-        {
-            get { return m_password_format; }
-            set { m_password_format = value; }
-        }
     }
 
     [XmlRoot("numberFormat")]
@@ -1161,6 +1135,49 @@ namespace CSGenio
         public EmailServer()
         {
 
+        }
+
+    }
+
+    [XmlRoot("Messaging")]
+    public class MessagingXml
+    {
+        [XmlAttribute]
+        public bool Enabled { get; set; } = false;
+
+        [XmlElement]
+        public MessagingHostXml Host { get; set; } = new MessagingHostXml();
+
+        [XmlArray("Publications")]
+        [XmlArrayItem("Pub")]
+        public List<string> EnabledPublications { get; set; } = new List<string>();
+
+        [XmlArray("Subscriptions")]
+        [XmlArrayItem("Sub")]
+        public List<string> EnabledSubscriptions { get; set; } = new List<string>();
+    }
+
+    [XmlRoot("Host")]
+    public class MessagingHostXml
+    {
+        [XmlElement]
+        public string Provider { get; set; } = "RabbitMq";
+        [XmlElement]
+        public string Endpoint { get; set; } = "amqp://localhost";
+        [XmlElement]
+        public string Username { get; set; } = string.Empty;
+        [XmlElement]
+        public string Password { get; set; } = string.Empty;
+
+        public string PasswordDecode()
+        {
+            if (Password == null) return null;
+            return System.Text.Encoding.Unicode.GetString(Convert.FromBase64String(Password));
+        }
+        public string UsernameDecode()
+        {
+            if (Username == null) return null;
+            return System.Text.Encoding.Unicode.GetString(Convert.FromBase64String(Username));
         }
 
     }

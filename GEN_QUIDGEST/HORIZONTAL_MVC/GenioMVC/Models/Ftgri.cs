@@ -25,7 +25,9 @@ namespace GenioMVC.Models
 
 		private Glob _globTable;
 		/// <summary>
-		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
+		/// Gets a reference to the GLOB table
+		/// to provide access to the necessary fields
+		/// to client and server-side formulas.
 		/// </summary>
 		[JsonIgnore]
 		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(false, this?._fieldsToSerialize); return _globTable; } }
@@ -35,7 +37,7 @@ namespace GenioMVC.Models
 		public string ValCodphoto { get { return klass.ValCodphoto; } set { klass.ValCodphoto = value; } }
 		public bool ShouldSerializeValCodphoto() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Ftgri.ValCodphoto");
 
-		[DisplayName("Fotos")]
+		[DisplayName("Photos")]
 		/// <summary>Field : "Fotos" Tipo: "IJ" Formula:  ""</summary>
 		[Newtonsoft.Json.JsonConverter(typeof(Helpers.ResizeImageSerializer), 75, 75, true)]
 		public byte[] ValFoto { get { return klass.ValFoto; } set { klass.ValFoto = value; } }

@@ -56,7 +56,7 @@ namespace CSGenio.business
 
 			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field("foto", FieldType.IMAGEM_JPEG);
-			Qfield.FieldDescription = "Fotos";
+			Qfield.FieldDescription = "Photos";
 			Qfield.FieldSize =  3;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;

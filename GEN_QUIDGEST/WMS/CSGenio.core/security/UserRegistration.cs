@@ -141,11 +141,14 @@ namespace GenioServer.security
                 }
                                
 
-                MailMessage mail = new MailMessage(emailServer.From, to);
-                mail.IsBodyHtml = true;
-                mail.Subject = subject;
-                mail.AlternateViews.Add(view);
-                client.Send(mail);
+                //inserted inside a using to dispose images in alternativeviews
+                using (MailMessage mail = new MailMessage(emailServer.From, to))
+                {
+                    mail.IsBodyHtml = true;
+                    mail.Subject = subject;
+                    mail.AlternateViews.Add(view);
+                    client.Send(mail);
+                }
 
 
             }

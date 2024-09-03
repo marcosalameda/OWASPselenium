@@ -147,7 +147,7 @@ namespace CSGenio.business
 			info.ShadowTabKeyName="";
 
 			info.PrimaryKeyName="codcateg";
-			info.HumanKeyName="abbreviation,".TrimEnd(',');
+			info.HumanKeyName="categoria,abbreviation,".TrimEnd(',');
 			info.Alias="categ";
 			info.IsDomain = true;
 			info.PersistenceType = PersistenceType.Database;

@@ -173,7 +173,7 @@
               <MENU TYPE="ITEM" ID="2D2121" PRTID="2D212" IMG="" ACT="GenGenio.MenuFormConsulta" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="2D2121" />
             </MENU>
             <MENU TYPE="ITEM" DESC="ROUTINE58306" ID="2D213" PRTID="2D21" HELPTITLE="" IMG="" ACT="GenGenio.MenuBotoesEspecificos" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="2D213">
-              <MENU TYPE="ITEM" ID="2D2131" PRTID="2D213" IMG="" ACT="GenGenio.MenuRotinaManual" ACTMVC="GQT_MenuR_Test" CONT="TPEQU" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="2D2131" />
+              <MENU TYPE="ITEM" ID="2D2131" PRTID="2D213" IMG="" ACT="GenGenio.MenuRotinaManual" ACTMVC="GQT_Menu_2D21_MenuR_TEST" CONT="TPEQU" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="2D2131" />
             </MENU>
             <MENU TYPE="ITEM" DESC="REPORT48266" ID="2D214" PRTID="2D21" HELPTITLE="" IMG="" ACT="GenGenio.MenuBotoesEspecificos" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="2D214">
               <MENU TYPE="REPORT" ID="2D2141" PRTID="2D214" IMG="" ACT="GenGenio.MenuReport" ACTMVC="GQT_Report_2D2141" ACTVUE="" CONT="TPEQU" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" FORMMODE="SRS" ORDER="2D2141" />
@@ -550,8 +550,8 @@
       </MENU>
       <MENU TYPE="ITEM" DESC="SPECIFIC_BUTTONS____08735" SIGLA="" ID="36" PRTID="3" HELPTITLE="" LVL="2" PREVIEW="false" SEPARATES="true" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="36" DEFAULTACTION="">
         <ACCESS>1</ACCESS>
-        <MENU TYPE="ITEM" DESC="AIRLINES42267" ID="361" PRTID="36" IMG="" ACT="GenGenio.MenuDBEdit" ACTMVC="PTN_Menu_361" ACTVUE="menu-PTN_361" CONT="AERO" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="361">
-          <MENU TYPE="ITEM" DESC="ACTION_BUTTON___EDIT46455" ID="3611" PRTID="361" HELPTITLE="" IMG="" ACT="GenGenio.MenuBotoesEspecificos" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="3611">
+        <MENU TYPE="ITEM" DESC="DESPESAS23133" ID="361" PRTID="36" IMG="" ACT="GenGenio.MenuDBEdit" ACTMVC="PTN_Menu_361" ACTVUE="menu-PTN_361" CONT="EXPEN" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="361">
+          <MENU TYPE="ITEM" DESC="CUSTOM_ACTION_BUTTON06691" ID="3611" PRTID="361" HELPTITLE="" IMG="" ACT="GenGenio.MenuBotoesEspecificos" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="3611">
             <MENU TYPE="ITEM" ID="36111" PRTID="3611" IMG="" ACT="GenGenio.MenuFormConsulta" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="36111" />
           </MENU>
         </MENU>
@@ -615,15 +615,33 @@
         <ACCESS>1</ACCESS>
         <MENU TYPE="ITEM" DESC="LENDING18782" ID="3E1" PRTID="3E" IMG="" ACT="GenGenio.MenuDBEditMultiplaEscolha" ACTMVC="PTN_Menu_3E1" ACTVUE="menu-PTN_3E1" CONT="LENDI" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="3E1">
           <MENU TYPE="ITEM" DESC="DELETE_SINGLE_RECORD05929" ID="3E11" PRTID="3E1" HELPTITLE="" IMG="~/Content/img/delete.svg" ACT="GenGenio.MenuBotoesEspecificos" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="3E11">
-            <MENU TYPE="ITEM" ID="3E111" PRTID="3E11" IMG="" ACT="GenGenio.MenuRotinaManual" ACTMVC="PTN_MenuR_DELETEONEROW" CONT="LENDI" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="3E111" />
+            <MENU TYPE="ITEM" ID="3E111" PRTID="3E11" IMG="" ACT="GenGenio.MenuRotinaManual" ACTMVC="PTN_Menu_3E1_MenuR_DELETEONEROW" CONT="LENDI" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="3E111" />
           </MENU>
           <MENU TYPE="ITEM" DESC="DELETE_MULTIPLE_RECO17551" ID="D" PRTID="3E1" HELPTITLE="" IMG="~/Content/img/delete.svg" ACT="GenGenio.MenuBotoesEspecificos" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="3E12">
-            <MENU TYPE="ITEM" ID="3E121" PRTID="D" IMG="" ACT="GenGenio.MenuRotinaManual" ACTMVC="PTN_MenuR_DELETEROWS" CONT="LENDI" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="3E121" />
+            <MENU TYPE="ITEM" ID="3E121" PRTID="D" IMG="" ACT="GenGenio.MenuRotinaManual" ACTMVC="PTN_Menu_3E1_MenuR_DELETEROWS" CONT="LENDI" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="3E121" />
           </MENU>
           <MENU TYPE="ITEM" DESC="DELETE_OPTIONAL_RECO37994" ID="3E13" PRTID="3E1" HELPTITLE="" IMG="~/Content/img/delete.svg" ACT="GenGenio.MenuBotoesEspecificos" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="3E13">
-            <MENU TYPE="ITEM" ID="3E131" PRTID="3E13" IMG="" ACT="GenGenio.MenuRotinaManual" ACTMVC="PTN_MenuR_DELETEROWS" CONT="LENDI" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="3E131" />
+            <MENU TYPE="ITEM" ID="3E131" PRTID="3E13" IMG="" ACT="GenGenio.MenuRotinaManual" ACTMVC="PTN_Menu_3E1_MenuR_DELETEROWS" CONT="LENDI" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="3E131" />
           </MENU>
         </MENU>
+      </MENU>
+      <MENU TYPE="ITEM" DESC="TRIGGER____DB___MB__39172" SIGLA="" ID="3F" PRTID="3" HELPTITLE="" LVL="2" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="3F" DEFAULTACTION="">
+        <ACCESS>1</ACCESS>
+        <MENU TYPE="ITEM" DESC="DESPESAS23133" ID="3F1" PRTID="3F" IMG="" ACT="GenGenio.MenuDBEdit" ACTMVC="PTN_Menu_3F1" ACTVUE="menu-PTN_3F1" CONT="EXPEN" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="3F1">
+          <MENU TYPE="ITEM" DESC="BUTTON_TO_TRIGGER30903" ID="3F11" PRTID="3F1" HELPTITLE="" IMG="" ACT="GenGenio.MenuBotoesEspecificos" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="3F11">
+            <MENU TYPE="ITEM" ID="3F111" PRTID="3F11" IMG="" ACT="GenGenio.MenuTrigger" ACTMVC="PTN_MenuTR_3F111" CONT="EXPEN" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="3F111" />
+          </MENU>
+        </MENU>
+      </MENU>
+      <MENU TYPE="ITEM" DESC="TRIGGER____DB___TR__64009" SIGLA="" ID="3G" PRTID="3" HELPTITLE="" LVL="2" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="3G" DEFAULTACTION="">
+        <ACCESS>1</ACCESS>
+        <MENU TYPE="ITEM" DESC="DESPESAS23133" ID="3G1" PRTID="3G" IMG="" ACT="GenGenio.MenuDBEdit" ACTMVC="PTN_Menu_3G1" ACTVUE="menu-PTN_3G1" CONT="EXPEN" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="3G1">
+          <MENU TYPE="ITEM" ID="3G11" PRTID="3G1" IMG="" ACT="GenGenio.MenuTrigger" ACTMVC="PTN_MenuTR_3G11" CONT="EXPEN" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="3G11" />
+        </MENU>
+      </MENU>
+      <MENU TYPE="ITEM" DESC="DASHBOARD51597" SIGLA="" ID="3H" PRTID="3" HELPTITLE="" LVL="2" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="3H" DEFAULTACTION="">
+        <ACCESS>1</ACCESS>
+        <MENU TYPE="ITEM" ID="3H1" PRTID="3H" IMG="" ACT="GenGenio.MenuDSDashboard" ACTMVC="PTN_Menu_3H1" ACTVUE="menu-PTN_3H1" CONT="Dashboard" LVL="-1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="3H1" />
       </MENU>
     </MENU>
     <MENU TYPE="ITEM" DESC="ROW_ORDERING37275" SIGLA="" ID="4" HELPTITLE="" LVL="1" PREVIEW="false" SEPARATES="false" SUMMENU="false" HIDEMENUSUM="false" HASCONDITION="false" ISFORM="false" ORDER="4" DEFAULTACTION="">

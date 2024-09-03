@@ -191,4 +191,39 @@ namespace CSGenio.framework.TableConfiguration
             }
         }
     }
+	
+	public class TableConfigurationHelpers
+	{
+		/// <summary>
+		/// Determine the number of rows per page to use based on the tables options and configuration
+		/// </summary>
+		/// <param name="tableConfigRowsPerPage">Number of rows per page in table configuration</param>
+		/// <param name="defaultRowsPerPage">Default number of rows per page</param>
+		/// <param name="rowsPerPageOptionsString">Rows per page options as a string of values separated by commas</param>
+		/// <returns>The number of rows per page.</returns>
+		public static int DetermineRowsPerPage(int tableConfigRowsPerPage, int defaultRowsPerPage, string rowsPerPageOptionsString)
+		{
+			List<int> rowsPerPageOptions = new List<int>();
+
+			// Split string into array of string values
+			string[] optionsStrArr = string.IsNullOrEmpty(rowsPerPageOptionsString) ? new string[0] : rowsPerPageOptionsString.Split(',');
+			int res;
+
+			// Convert string values to integers and add to list
+			foreach (string str in optionsStrArr)
+			{
+				if (int.TryParse(str, out res))
+					rowsPerPageOptions.Add(res);
+			}
+
+			// If rows per page is the default or a value in the defined options, use it
+			if (tableConfigRowsPerPage == defaultRowsPerPage
+				|| (rowsPerPageOptions != null
+				&& rowsPerPageOptions.Contains(tableConfigRowsPerPage)))
+				return tableConfigRowsPerPage;
+
+			// If not, use the default
+			return defaultRowsPerPage;
+		}
+	}
 }

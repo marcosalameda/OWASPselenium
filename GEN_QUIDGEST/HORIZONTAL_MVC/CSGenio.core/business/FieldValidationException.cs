@@ -16,7 +16,7 @@ namespace CSGenio.business
         public StatusMessage StatusMessage;
 
         public FieldValidationException(StatusMessage statusMessage, string exceptionSite) :
-            base(statusMessage.PrintMessages(), exceptionSite, "Field validation failed", null)
+            base(statusMessage.PrintMessages(), exceptionSite, "Field validation failed", null, statusMessage.GetStackMessages())
         {
             this.StatusMessage = statusMessage;
         }

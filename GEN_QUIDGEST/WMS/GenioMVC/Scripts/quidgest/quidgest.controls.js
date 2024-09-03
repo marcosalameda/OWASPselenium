@@ -2683,6 +2683,33 @@ function QNumericControl(element, qParentForm) {
 
 QNumericControl.prototype = Object.create(QControl.prototype);
 
+/**
+ * To prevent failures in comparing the original value, where in Decimals from the latest versions 
+ *  it appears as 0 in the initial request for New, but after reloading it appears as 0.00.
+ *  The numeric value will be returned directly instead of the string (in the normal form fields).
+ */
+Object.defineProperty(QNumericControl.prototype, 'renderedValue', {
+    get: function () {
+        // Check if the element exists
+        if (!this.element[0]) return undefined;
+
+        // Try to get the 'original-value' attribute
+        let originalValue = this.element.attr('original-value');
+        if (originalValue !== undefined) {
+            return parseFloat(originalValue);
+        }
+
+        // Try to get the 'value' attribute
+        originalValue = this.element.attr('value');
+        if (originalValue !== undefined) {
+            return originalValue;
+        }
+
+         // Return the value stored in data('value') as a fallback
+        return this.element.data('value');
+    }
+});
+
 QNumericControl.prototype.ParseControlValue = function () {
     /// <summary>
     /// Parses the html to extract the value
@@ -2701,7 +2728,20 @@ QNumericControl.prototype.UpdateControlValue = function () {
 
 QNumericControl.prototype.Init = function () {
     var negativeNumberOpt = { 'translation': { 'N': { pattern: /-/, optional: true } } };
-    this.ParseControlValue();
+    
+    /**
+     * We cannot use "$.val()" which is used by "ParseControlValue" before initializing the plugins because 
+     *  if non-standard formatting is used, it will initialize the ".value" with the incorrect value and then 
+     *  create problems in the recalculation of formulas, especially for defaults that have already been modified by the user. 
+     * e.g: The value in persistence will be numeric with decimal places, and the parsed value might not have them, 
+     *  leading to a false ChangeEvent and recalculating the formulas.
+     * However, the control can be initialized on a field that is not a normal form control.
+     */
+    var tempVal = $(this.element).attr("original-value");
+    if (typeof tempVal === 'undefined') tempVal = $(this.element).val();
+    if (tempVal === undefined || tempVal == "") tempVal = 0;
+    this.value = parseFloat(tempVal);
+
     this.originalValue = this.value;
 
     if (this.isSequencial && this.value < 0) {

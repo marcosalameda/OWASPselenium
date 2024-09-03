@@ -436,7 +436,7 @@ namespace GenioMVC.Models
 
 		[DisplayName("Document Path")]
 		/// <summary>Field : "Document Path" Tipo: "IB" Formula:  ""</summary>
-		[Document("ValDocbd", false, true, false, false)]
+		[Document("ValDocbd", true, false, false)]
 		public string ValDocbd { get { return klass.ValDocbd; } set { klass.ValDocbd = value; } }
 		public string ValDocbdfk { get { return klass.ValDocbdfk; } set { klass.ValDocbdfk = value; } }
 		public bool ShouldSerializeValDocbd() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Glob.ValDocbd");

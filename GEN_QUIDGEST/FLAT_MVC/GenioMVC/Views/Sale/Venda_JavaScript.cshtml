@@ -1,0 +1,349 @@
+﻿@model GenioMVC.ViewModels.Sale.Venda_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS VENDA]/ *@
+<script  type="text/javascript">
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Venda !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Venda = new QForm($('[data-form="Venda"]'), "Form_Venda");
+		}
+		window.Form_Venda.baseArea = "sale";
+		window.Form_Venda.FormMode = '@Model.GetFormMode';
+		window.Form_Venda.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Venda.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Sale")',
+			GetDependants:		'@Url.Action("GetDependants", "Sale")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Venda", "Sale")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Venda", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Sale", "Sale")',
+		};
+		window.Form_Venda.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Venda.formSaveEdit = '@Url.Action("Venda_SaveEdit", "Sale")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Venda.formAction = 'Venda_New';
+		window.Form_Venda.formRedirectURL = '@Url.Action("Venda_New_Redirect", "Sale")';
+		window.Form_Venda.formSubmitURL = '@Url.Action("Venda_New", "Sale")';
+		window.Form_Venda.formRedirectURL_repeatInsertion = '@Url.Action("Venda_New_Redirect", "Sale", new { repeatInsertion = true})';
+		window.Form_Venda.formSubmitURL_repeatInsertion = '@Url.Action("Venda_New", "Sale", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Venda.formAction = 'Venda_Edit';
+		window.Form_Venda.formRedirectURL = '@Url.Action("Venda_Edit_Redirect", "Sale")';
+		window.Form_Venda.formSubmitURL = '@Url.Action("Venda_Edit", "Sale")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Venda.formAction = 'Venda_Duplicate';
+		window.Form_Venda.formRedirectURL = '@Url.Action("Venda_Duplicate_Redirect", "Sale")';
+		window.Form_Venda.formSubmitURL = '@Url.Action("Venda_Duplicate", "Sale")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Venda.formAction = 'Venda_Delete';
+		window.Form_Venda.formRedirectURL = '@Url.Action("Venda_Delete_Redirect", "Sale")';
+		window.Form_Venda.formSubmitURL = '@Url.Action("Venda_Delete", "Sale")';
+	</text>
+}
+		window.Form_Venda.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.IFF_VENDA___ORGANORGANIZA = new QDbeditControl($('[data-identifier="IFF_VENDA___ORGANORGANIZA"]', this.element), window.Form_Venda);
+
+			this.Controls.LED_VENDA___SALE_NRLIDE__ = new QNumericControl($('[data-identifier="LED_VENDA___SALE_NRLIDE__"]', this.element), window.Form_Venda);
+
+			this.Controls.LED_VENDA___SALE_STARTDT_ = new QDateControl($('[data-identifier="LED_VENDA___SALE_STARTDT_"]', this.element), window.Form_Venda);
+
+			this.Controls.IFF_VENDA___PSEUDNOVOGR01 = new QGenericControl($('[data-identifier="IFF_VENDA___PSEUDNOVOGR01"]', this.element), window.Form_Venda);
+
+			this.Controls.LED_VENDA___SALE_IDENTIFI = new QTextControl($('[data-identifier="LED_VENDA___SALE_IDENTIFI"]', this.element), window.Form_Venda);
+
+			this.Controls.LED_VENDA___SALE_POTCOMPR = new QTextControl($('[data-identifier="LED_VENDA___SALE_POTCOMPR"]', this.element), window.Form_Venda);
+
+			this.Controls.LED_VENDA___SALE_PROSPECC = new QCheckBoxControl($('[data-identifier="LED_VENDA___SALE_PROSPECC"]', this.element), window.Form_Venda);
+
+			this.Controls.IFF_VENDA___PSEUDNOVOGR02 = new QGenericControl($('[data-identifier="IFF_VENDA___PSEUDNOVOGR02"]', this.element), window.Form_Venda);
+
+			this.Controls.LED_VENDA___SALE_INTERESS = new QCheckBoxControl($('[data-identifier="LED_VENDA___SALE_INTERESS"]', this.element), window.Form_Venda);
+
+			this.Controls.LED_VENDA___SALE_SEMRFINA = new QCheckBoxControl($('[data-identifier="LED_VENDA___SALE_SEMRFINA"]', this.element), window.Form_Venda);
+
+			this.Controls.LED_VENDA___SALE_SEMCAPAC = new QCheckBoxControl($('[data-identifier="LED_VENDA___SALE_SEMCAPAC"]', this.element), window.Form_Venda);
+
+			this.Controls.LED_VENDA___SALE_DTQUALIF = new QDateControl($('[data-identifier="LED_VENDA___SALE_DTQUALIF"]', this.element), window.Form_Venda);
+
+			this.Controls.LED_VENDA___SALE_QUALIFIC = new QCheckBoxControl($('[data-identifier="LED_VENDA___SALE_QUALIFIC"]', this.element), window.Form_Venda);
+
+			this.Controls.IFF_VENDA___PSEUDNOVOGR03 = new QGenericControl($('[data-identifier="IFF_VENDA___PSEUDNOVOGR03"]', this.element), window.Form_Venda);
+
+			this.Controls.LED_VENDA___SALE_PREABORD = new QDateControl($('[data-identifier="LED_VENDA___SALE_PREABORD"]', this.element), window.Form_Venda);
+
+			this.Controls.LED_VENDA___SALE_HOMEWORK = new QCheckBoxControl($('[data-identifier="LED_VENDA___SALE_HOMEWORK"]', this.element), window.Form_Venda);
+
+			this.Controls.IFF_VENDA___PSEUDNOVOGR04 = new QGenericControl($('[data-identifier="IFF_VENDA___PSEUDNOVOGR04"]', this.element), window.Form_Venda);
+
+			this.Controls.LED_VENDA___SALE_DTABORDA = new QDateControl($('[data-identifier="LED_VENDA___SALE_DTABORDA"]', this.element), window.Form_Venda);
+
+			this.Controls.LED_VENDA___SALE_APPROACH = new QCheckBoxControl($('[data-identifier="LED_VENDA___SALE_APPROACH"]', this.element), window.Form_Venda);
+
+			this.Controls.IFF_VENDA___PSEUDNOVOGR05 = new QGenericControl($('[data-identifier="IFF_VENDA___PSEUDNOVOGR05"]', this.element), window.Form_Venda);
+
+			this.Controls.LED_VENDA___SALE_DTAPRESE = new QDateControl($('[data-identifier="LED_VENDA___SALE_DTAPRESE"]', this.element), window.Form_Venda);
+
+			this.Controls.LED_VENDA___SALE_APRESENT = new QCheckBoxControl($('[data-identifier="LED_VENDA___SALE_APRESENT"]', this.element), window.Form_Venda);
+
+			this.Controls.IFF_VENDA___PSEUDNOVOGR06 = new QGenericControl($('[data-identifier="IFF_VENDA___PSEUDNOVOGR06"]', this.element), window.Form_Venda);
+
+			this.Controls.LED_VENDA___SALE_DTSUPERA = new QDateControl($('[data-identifier="LED_VENDA___SALE_DTSUPERA"]', this.element), window.Form_Venda);
+
+			this.Controls.IFF_VENDA___PSEUDNOVOGR07 = new QGenericControl($('[data-identifier="IFF_VENDA___PSEUDNOVOGR07"]', this.element), window.Form_Venda);
+
+			this.Controls.LED_VENDA___SALE_TENTFECH = new QDateControl($('[data-identifier="LED_VENDA___SALE_TENTFECH"]', this.element), window.Form_Venda);
+
+			this.Controls.LED_VENDA___SALE_DTVENDA_ = new QDateControl($('[data-identifier="LED_VENDA___SALE_DTVENDA_"]', this.element), window.Form_Venda);
+
+			this.Controls.IFF_VENDA___PSEUDNOVOGR08 = new QGenericControl($('[data-identifier="IFF_VENDA___PSEUDNOVOGR08"]', this.element), window.Form_Venda);
+
+			this.Controls.LED_VENDA___SALE_DTACOMPA = new QDateControl($('[data-identifier="LED_VENDA___SALE_DTACOMPA"]', this.element), window.Form_Venda);
+
+
+
+
+			this.Controls.LED_VENDA___SALE_CODVENDA = new QHiddenControl($('[data-identifier="LED_VENDA___SALE_CODVENDA"]', this.element), window.Form_Venda);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	</text>
+}
+
+		window.Form_Venda.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Venda.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI VENDA]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Venda.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS VENDA]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Venda.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS VENDA]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Venda.Data.RelationKeysSelector = {
+				get organ() { return $(':not([elem-identifier="Multiform"]) > #ValCodorgan[pers-cs-area="Organ"]', $('[data-form="Venda"]')); /* DBEdit */ },
+		};
+
+		window.Form_Venda.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Venda.Data.RelationKeys = {
+			get formContext() { return window.Form_Venda; },
+			get organ() { return (this.formContext.Data.RelationKeysSelector.organ.getQControl() || {}).Value; /* DBEdit */ },
+			set organ(newValue) { (this.formContext.Data.RelationKeysSelector.organ.getQControl() || {}).Value = newValue; /* DBEdit */ },
+		};
+	</text>
+}
+
+	window.Form_Venda.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Venda.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitVenda(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Venda.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeleteVenda(event) {
+			event.preventDefault();
+			window.Form_Venda.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+    var ajaxCallsRemaining = $(".flash object embed").length;
+    $('form [elem-identifier="ButtonPrimary"]').click(function() {
+        var flashObjects = $(".flash object embed");
+        ajaxCallsRemaining = flashObjects.length;
+        if(flashObjects.length == 0)
+            return true;
+        else {
+            flashObjects.each(function() {
+               var flashObj = GetFlash($(this).attr('id'));
+               flashObj.UsedFlash.TriggerSave(flashObj);
+            });
+            return false;
+        }
+    });
+    </text>
+}
+// USE /[MANUAL GQT FORM_CODEJS VENDA]/
+
+
+
+ 
+
+    $($('[elem-identifier="FormActions"]'), $('[data-form="Venda"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using CSGenio.core.persistence;
 using CSGenio.config;
+using CSGenio.core.messaging;
 
 
 namespace CSGenio.framework
@@ -54,7 +55,7 @@ namespace CSGenio.framework
         /// <summary>
         /// Application version
         /// </summary>
-        public static int Version { get; } = 3596;
+        public static int Version { get; } = 3763;
 
         /// <summary>
         /// System id
@@ -84,12 +85,12 @@ namespace CSGenio.framework
         /// <summary>
         /// Version of the database
         /// </summary>
-        public const int VersionDbGen = 3596;
+        public const int VersionDbGen = 3763;
 
         /// <summary>
         /// Version of the database indexes
         /// </summary>
-        public const int VersionIdxDbGen = 1246;
+        public const int VersionIdxDbGen = 1423;
 
         /// <summary>
         /// Version of the latest upgrade index version
@@ -104,12 +105,12 @@ namespace CSGenio.framework
         /// <summary>
         /// Genio generator version
         /// </summary>
-        public const string GenioVersion = "344.73";
+        public const string GenioVersion = "349.31";
 
         /// <summary>
         /// Solution build version
         /// </summary>
-        public const int BuildVersionGen = 2689;
+        public const int BuildVersionGen = 2783;
         /// <summary>
         /// Solution release version
         /// </summary>
@@ -143,11 +144,6 @@ namespace CSGenio.framework
         /// Security configuration
         /// </summary>
         public static SecurityCfgEl Security { get; private set; } = null;
-
-        /// <summary>
-        /// Administration configuration
-        /// </summary>
-        public static AdminCfgEl Admin { get; private set; } = null;
 
         /// <summary>
         /// Audit configuration
@@ -261,6 +257,10 @@ namespace CSGenio.framework
         /// </summary>
         public static bool EventTracking { get; private set; } = false;
 
+        /// <summary>
+        /// Publisher/Subscriber Messaging
+        /// </summary>
+        public static MessagingXml Messaging { get; private set; } = new MessagingXml();
 
         //-----------------------------------------------
         /// <summary>
@@ -436,7 +436,6 @@ namespace CSGenio.framework
 			//--------------------------------------------------
 
             MessageQueueing = readXML.MessageQueueing;
-            Admin = readXML.Admin;
             NumberFormat = readXML.NumberFormat ?? new NumberFormatXml();
             DateFormat = readXML.DateFormat ?? new DateFormatXml();
             //------------------------------------------------
@@ -461,6 +460,10 @@ namespace CSGenio.framework
             PasswordRecoveryEmail = readXML.PasswordRecoveryEmail;
 
             EventTracking = readXML.EventTracking;
+
+            Messaging = readXML.Messaging;
+            if (Messaging == null)
+                Messaging = new MessagingXml();
         }
 
 
@@ -513,7 +516,7 @@ namespace CSGenio.framework
         /// </summary>
         public static string DefaultYear
         {
-            get { return DataSystems.Count!=0?DataSystems[0].Name:"0" ; }
+            get { return DataSystems?.Count > 0 ? DataSystems[0].Name : "0"; }
         }
 
         /// <summary>

@@ -452,6 +452,20 @@ namespace GenioMVC.Helpers.Menus
             }
             return m_flatMenus[findKey];
         }
+		
+		/// <summary>
+		/// Finds a menu
+		/// (Wraps FindMenu() here but this function has a slightly different implementation in Vue.)
+		/// </summary>
+		/// <param name="userContext">User context we want to check</param>
+		/// <param name="module">Module the entry is in</param>
+		/// <param name="menuID">ID of the entry</param>
+		/// <param name="count">Whether to count</param>
+		/// <returns></returns>
+		public static MenuEntry FindMenuForUserRec(UserContext userContext, string module, string menuID, bool count = false)
+        {
+            return FindMenu(module, menuID);
+        }
 
         public static MenuEntry FindMenuActionName(string module, string menuID)
         {

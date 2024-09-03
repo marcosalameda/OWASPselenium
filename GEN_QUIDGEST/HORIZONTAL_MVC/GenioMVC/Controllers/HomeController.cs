@@ -26,6 +26,12 @@ namespace GenioMVC.Controllers
 		#region NavigationLocation Names
 
 		private static readonly NavigationLocation ACTION_LSTUSR_EDIT = new NavigationLocation("LISTA_DE_UTILIZADORE37232", "ChangeListProperties", "Home");
+		private static readonly NavigationLocation ACTION_PEOPLE_SHOW = new NavigationLocation("CONSULTA40695", "People_Show", "Home")  { vueRouteName = "form-PEOPLE", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_PEOPLE_EDIT = new NavigationLocation("EDITAR11616", "People_Edit", "Home")  { vueRouteName = "form-PEOPLE", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_WID_GRAP_SHOW = new NavigationLocation("CONSULTA40695", "Wid_grap_Show", "Home")  { vueRouteName = "form-WID_GRAP", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_WID_GRAP_EDIT = new NavigationLocation("EDITAR11616", "Wid_grap_Edit", "Home")  { vueRouteName = "form-WID_GRAP", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_WID_PESS_SHOW = new NavigationLocation("CONSULTA40695", "Wid_pess_Show", "Home")  { vueRouteName = "form-WID_PESS", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_WID_PESS_EDIT = new NavigationLocation("EDITAR11616", "Wid_pess_Edit", "Home")  { vueRouteName = "form-WID_PESS", mode = "EDIT" };
 
 		#endregion
 
@@ -181,6 +187,285 @@ namespace GenioMVC.Controllers
 		}
 
 
+		#region Form Methods -> People ()
+
+		// GET: /Home/People_Show
+		[AuthorizeForUsers]
+		public ActionResult People_Show()
+		{
+			var qs = Request.QueryString;
+			var nestedForm = qs["nestedForm"] == "true";
+			var model = new People_ViewModel(Navigation, nestedForm);
+			CSGenio.framework.StatusMessage permission = model.CheckPermissions(FormMode.Show);
+			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
+			ViewBag.isHomePage = isHomePage;
+			if (isHomePage)
+				Navigation.SetValue("HomePage", "People");
+			if (permission.Status.Equals(CSGenio.framework.Status.E))
+			{
+				if (!Request.IsAjaxRequest() && !isHomePage)
+					return View("_PermissionError", model: permission.Message);
+				else
+					return PartialView("_PermissionError", model: permission.Message);
+			}
+
+			if (!isHomePage && IsNewLocation(ACTION_PEOPLE_SHOW))
+				Navigation.AddHistoryLevel(ACTION_PEOPLE_SHOW.SetRoutedValues(new { m = Request.QueryString["m"] }), FormMode.Show, nestedForm);
+			// Audit
+			CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.FORM54242 + " " + ACTION_PEOPLE_SHOW.ShortDescription());
+
+// USE /[MANUAL GQT BEFORE_LOAD_SHOW PEOPLE]/
+
+			model.Load(qs);
+
+// USE /[MANUAL GQT AFTER_LOAD_SHOW PEOPLE]/
+
+			if (!Request.IsAjaxRequest() && !isHomePage)
+				return View("People", model);
+			else
+				return PartialView("People", model);
+		}
+
+		// GET: /Home/People_Edit
+		[AuthorizeForUsers]
+		public ActionResult People_Edit()
+		{
+			var qs = Request.QueryString;
+			var nestedForm = qs["nestedForm"] == "true";
+			var model = new People_ViewModel(Navigation, nestedForm);
+			CSGenio.framework.StatusMessage permission = model.CheckPermissions(FormMode.Edit);
+			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
+			ViewBag.isHomePage = isHomePage;
+			if (isHomePage)
+				Navigation.SetValue("HomePage", "People");
+
+			if (!isHomePage && IsNewLocation(ACTION_PEOPLE_EDIT))
+				Navigation.AddHistoryLevel(ACTION_PEOPLE_EDIT.SetRoutedValues(new { m = Request.QueryString["m"] }), FormMode.Show, nestedForm);
+			// Audit
+			CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.FORM54242 + " " + ACTION_PEOPLE_EDIT.ShortDescription());
+
+// USE /[MANUAL GQT BEFORE_LOAD_EDIT PEOPLE]/
+
+			model.Load(qs);
+
+// USE /[MANUAL GQT AFTER_LOAD_EDIT PEOPLE]/
+
+			return JsonOK(model);
+		}
+
+		//
+		// GET: /Home/People_Cancel
+// USE /[MANUAL GQT CONTROLLER_CANCEL_GET PEOPLE]/
+		[AuthorizeForUsers]
+		public ActionResult People_Cancel()
+		{
+			return JsonOK(new { Success = true });
+		}
+
+		//
+		// GET: /Home/People_ValPeoplels
+		// POST: /Home/People_ValPeoplels
+		[AuthorizeForUsers]
+		[ActionName("People_ValPeoplels")]
+		public ActionResult People_ValPeoplels()
+		{
+			NameValueCollection requestValues = Request.Unvalidated.Form.Count > 0 ? Request.Unvalidated.Form : Request.QueryString; //TSX (01.07.2020) Can not access directly to the FormCollection or made Request.Form otherwise the tags on viewmodel will be ignored
+
+			People_ValPeoplels_ViewModel model = new People_ValPeoplels_ViewModel(Navigation);
+
+
+			model.Load(2, requestValues, Request.IsAjaxRequest());
+
+			return PartialView("People_ValPeoplels", model);
+		}
+
+		#endregion
+		#region Form Methods -> Wid_grap ()
+
+		// GET: /Home/Wid_grap_Show
+		[AuthorizeForUsers]
+		public ActionResult Wid_grap_Show()
+		{
+			var qs = Request.QueryString;
+			var nestedForm = qs["nestedForm"] == "true";
+			var model = new Wid_grap_ViewModel(Navigation, nestedForm);
+			CSGenio.framework.StatusMessage permission = model.CheckPermissions(FormMode.Show);
+			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
+			ViewBag.isHomePage = isHomePage;
+			if (isHomePage)
+				Navigation.SetValue("HomePage", "Wid_grap");
+			if (permission.Status.Equals(CSGenio.framework.Status.E))
+			{
+				if (!Request.IsAjaxRequest() && !isHomePage)
+					return View("_PermissionError", model: permission.Message);
+				else
+					return PartialView("_PermissionError", model: permission.Message);
+			}
+
+			if (!isHomePage && IsNewLocation(ACTION_WID_GRAP_SHOW))
+				Navigation.AddHistoryLevel(ACTION_WID_GRAP_SHOW.SetRoutedValues(new { m = Request.QueryString["m"] }), FormMode.Show, nestedForm);
+			// Audit
+			CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.FORM54242 + " " + ACTION_WID_GRAP_SHOW.ShortDescription());
+
+// USE /[MANUAL GQT BEFORE_LOAD_SHOW WID_GRAP]/
+
+			model.Load(qs);
+
+// USE /[MANUAL GQT AFTER_LOAD_SHOW WID_GRAP]/
+
+			if (!Request.IsAjaxRequest() && !isHomePage)
+				return View("Wid_grap", model);
+			else
+				return PartialView("Wid_grap", model);
+		}
+
+		// GET: /Home/Wid_grap_Edit
+		[AuthorizeForUsers]
+		public ActionResult Wid_grap_Edit()
+		{
+			var qs = Request.QueryString;
+			var nestedForm = qs["nestedForm"] == "true";
+			var model = new Wid_grap_ViewModel(Navigation, nestedForm);
+			CSGenio.framework.StatusMessage permission = model.CheckPermissions(FormMode.Edit);
+			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
+			ViewBag.isHomePage = isHomePage;
+			if (isHomePage)
+				Navigation.SetValue("HomePage", "Wid_grap");
+
+			if (!isHomePage && IsNewLocation(ACTION_WID_GRAP_EDIT))
+				Navigation.AddHistoryLevel(ACTION_WID_GRAP_EDIT.SetRoutedValues(new { m = Request.QueryString["m"] }), FormMode.Show, nestedForm);
+			// Audit
+			CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.FORM54242 + " " + ACTION_WID_GRAP_EDIT.ShortDescription());
+
+// USE /[MANUAL GQT BEFORE_LOAD_EDIT WID_GRAP]/
+
+			model.Load(qs);
+
+// USE /[MANUAL GQT AFTER_LOAD_EDIT WID_GRAP]/
+
+			return JsonOK(model);
+		}
+
+		//
+		// GET: /Home/Wid_grap_Cancel
+// USE /[MANUAL GQT CONTROLLER_CANCEL_GET WID_GRAP]/
+		[AuthorizeForUsers]
+		public ActionResult Wid_grap_Cancel()
+		{
+			return JsonOK(new { Success = true });
+		}
+
+		//
+		// GET: /Home/Wid_grap_ValField001
+		// POST: /Home/Wid_grap_ValField001
+		[AuthorizeForUsers]
+		[ActionName("Wid_grap_ValField001")]
+		public ActionResult Wid_grap_ValField001()
+		{
+			NameValueCollection requestValues = Request.Unvalidated.Form.Count > 0 ? Request.Unvalidated.Form : Request.QueryString; //TSX (01.07.2020) Can not access directly to the FormCollection or made Request.Form otherwise the tags on viewmodel will be ignored
+
+			Wid_grap_ValField001_ViewModel model = new Wid_grap_ValField001_ViewModel(Navigation);
+
+
+			model.Load(CSGenio.framework.Configuration.NrRegDBedit, requestValues, Request.IsAjaxRequest());
+
+			return PartialView("Wid_grap_ValField001", model);
+		}
+
+		#endregion
+		#region Form Methods -> Wid_pess ()
+
+		// GET: /Home/Wid_pess_Show
+		[AuthorizeForUsers]
+		public ActionResult Wid_pess_Show()
+		{
+			var qs = Request.QueryString;
+			var nestedForm = qs["nestedForm"] == "true";
+			var model = new Wid_pess_ViewModel(Navigation, nestedForm);
+			CSGenio.framework.StatusMessage permission = model.CheckPermissions(FormMode.Show);
+			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
+			ViewBag.isHomePage = isHomePage;
+			if (isHomePage)
+				Navigation.SetValue("HomePage", "Wid_pess");
+			if (permission.Status.Equals(CSGenio.framework.Status.E))
+			{
+				if (!Request.IsAjaxRequest() && !isHomePage)
+					return View("_PermissionError", model: permission.Message);
+				else
+					return PartialView("_PermissionError", model: permission.Message);
+			}
+
+			if (!isHomePage && IsNewLocation(ACTION_WID_PESS_SHOW))
+				Navigation.AddHistoryLevel(ACTION_WID_PESS_SHOW.SetRoutedValues(new { m = Request.QueryString["m"] }), FormMode.Show, nestedForm);
+			// Audit
+			CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.FORM54242 + " " + ACTION_WID_PESS_SHOW.ShortDescription());
+
+// USE /[MANUAL GQT BEFORE_LOAD_SHOW WID_PESS]/
+
+			model.Load(qs);
+
+// USE /[MANUAL GQT AFTER_LOAD_SHOW WID_PESS]/
+
+			if (!Request.IsAjaxRequest() && !isHomePage)
+				return View("Wid_pess", model);
+			else
+				return PartialView("Wid_pess", model);
+		}
+
+		// GET: /Home/Wid_pess_Edit
+		[AuthorizeForUsers]
+		public ActionResult Wid_pess_Edit()
+		{
+			var qs = Request.QueryString;
+			var nestedForm = qs["nestedForm"] == "true";
+			var model = new Wid_pess_ViewModel(Navigation, nestedForm);
+			CSGenio.framework.StatusMessage permission = model.CheckPermissions(FormMode.Edit);
+			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
+			ViewBag.isHomePage = isHomePage;
+			if (isHomePage)
+				Navigation.SetValue("HomePage", "Wid_pess");
+
+			if (!isHomePage && IsNewLocation(ACTION_WID_PESS_EDIT))
+				Navigation.AddHistoryLevel(ACTION_WID_PESS_EDIT.SetRoutedValues(new { m = Request.QueryString["m"] }), FormMode.Show, nestedForm);
+			// Audit
+			CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.FORM54242 + " " + ACTION_WID_PESS_EDIT.ShortDescription());
+
+// USE /[MANUAL GQT BEFORE_LOAD_EDIT WID_PESS]/
+
+			model.Load(qs);
+
+// USE /[MANUAL GQT AFTER_LOAD_EDIT WID_PESS]/
+
+			return JsonOK(model);
+		}
+
+		//
+		// GET: /Home/Wid_pess_Cancel
+// USE /[MANUAL GQT CONTROLLER_CANCEL_GET WID_PESS]/
+		[AuthorizeForUsers]
+		public ActionResult Wid_pess_Cancel()
+		{
+			return JsonOK(new { Success = true });
+		}
+
+		//
+		// GET: /Home/Wid_pess_ValPesslist
+		// POST: /Home/Wid_pess_ValPesslist
+		[AuthorizeForUsers]
+		[ActionName("Wid_pess_ValPesslist")]
+		public ActionResult Wid_pess_ValPesslist()
+		{
+			NameValueCollection requestValues = Request.Unvalidated.Form.Count > 0 ? Request.Unvalidated.Form : Request.QueryString; //TSX (01.07.2020) Can not access directly to the FormCollection or made Request.Form otherwise the tags on viewmodel will be ignored
+
+			Wid_pess_ValPesslist_ViewModel model = new Wid_pess_ValPesslist_ViewModel(Navigation);
+
+
+			model.Load(CSGenio.framework.Configuration.NrRegDBedit, requestValues, Request.IsAjaxRequest());
+
+			return PartialView("Wid_pess_ValPesslist", model);
+		}
+
+		#endregion
 
 		private void recreateUser()
 		{
@@ -248,7 +533,12 @@ namespace GenioMVC.Controllers
 				{
 					sp.openConnection();
 					var userOldValues = CSGenioApsw.search(sp, user.Codpsw, user, new string[] { CSGenioApsw.FldPassword.Field, CSGenioApsw.FldSalt.Field, CSGenioApsw.FldPswtype.Field });
-					error = PasswordFactory.CheckValidPassToChange(user.Name, model.OldPassword, model.NewPassword, model.ConfirmPassword, userOldValues.ValPassword, userOldValues.ValSalt, userOldValues.ValPswtype, user.Language);
+					var factory = new UserFactory(sp, user);
+					factory.ChangePassword(userOldValues, model.NewPassword, model.ConfirmPassword, model.OldPassword);
+				}
+				catch(InvalidPasswordException ipe)
+				{
+					error = ipe.Message;
 				}
 				catch
 				{
@@ -528,6 +818,9 @@ namespace GenioMVC.Controllers
 		[HttpGet]
 		public ActionResult QDebug()
 		{
+			// We only allow code debugging when event tracing is active.
+			if(!Configuration.EventTracking)
+				return RedirectToAction("Index", "Home");
 			QDebug_ViewModel model = new QDebug_ViewModel(Navigation);
 			return PartialView(model);
 		}

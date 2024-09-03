@@ -1,0 +1,524 @@
+﻿@model GenioMVC.ViewModels.Flds.Listacam_ViewModel
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+	<div id="Listacam_tabs">
+        <div elem-identifier="Tabbable" class="tabbable">
+			<ul class="nav c-tab c-tab__divider" role="tablist">
+				<li class="nav-item c-tab__item" elem-identifier="TabbableIdentifier" id="tab_camtexto" data-tab="camtexto"><a class="nav-link" tabindex="0" data-target="#camtexto" data-toggle="tab">@Resources.TEXT_FIELDS40102</a></li>
+				<li class="nav-item c-tab__item" elem-identifier="TabbableIdentifier" id="tab_camnum" data-tab="camnum"><a class="nav-link" tabindex="0" data-target="#camnum" data-toggle="tab">@Resources.NUMERIC_FIELDS45771</a></li>
+				<li class="nav-item c-tab__item" elem-identifier="TabbableIdentifier" id="tab_camdate" data-tab="camdate"><a class="nav-link" tabindex="0" data-target="#camdate" data-toggle="tab">@Resources.DATE_FIELDS55234</a></li>
+				<li class="nav-item c-tab__item" elem-identifier="TabbableIdentifier" id="tab_cammask" data-tab="cammask"><a class="nav-link" tabindex="0" data-target="#cammask" data-toggle="tab">@Resources.INPUTS_WITH_MASKS08900</a></li>
+				<li class="nav-item c-tab__item" elem-identifier="TabbableIdentifier" id="tab_camenum" data-tab="camenum"><a class="nav-link" tabindex="0" data-target="#camenum" data-toggle="tab">@Resources.ENUMERATIONS_FIELDS36502</a></li>
+				<li class="nav-item c-tab__item" elem-identifier="TabbableIdentifier" id="tab_camdocs" data-tab="camdocs"><a class="nav-link" tabindex="0" data-target="#camdocs" data-toggle="tab">@Resources.EXTERNAL_DOCS_FIELDS46956</a></li>
+				<li class="nav-item c-tab__item" elem-identifier="TabbableIdentifier" id="tab_camaudit" data-tab="camaudit"><a class="nav-link" tabindex="0" data-target="#camaudit" data-toggle="tab">@Resources.DATA_AUDIT01314</a></li>
+ 			</ul>
+
+			<div class="c-tab__item-container">
+				<div class="c-tab__item-content" id="camtexto" data-identifier="IFF_LISTACAMPSEUDCAMTEXTO">
+					<div class="form-flow">
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-text draggable " id="CONTAINER_LED_CAMTEXTOFLDS_TXTFIELD">
+										<div class="d-flex">
+										@Html.LabelFor(model => model.ValTxtfield, new { label_id="LED_CAMTEXTOFLDS_TXTFIELD", @class = " i-text__label", id="LABEL_LED_CAMTEXTOFLDS_TXTFIELD"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_CAMTEXTOFLDS_TXTFIELD','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.TextBoxFor(model => model.ValTxtfield, new {help_id = "LED_CAMTEXTOFLDS_TXTFIELD", @class = "i-text__field i-text input-large", data_identifier = "LED_CAMTEXTOFLDS_TXTFIELD", @pers_cs_area = "Flds", @pers_cs_field = "ValTxtfield", @db_field = "ValTxtfield", title = @Resources.TEXT_FIELD41810, maxlength = "50", rows = "30" })
+										@Html.ValidationMessageFor(model => model.ValTxtfield)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-textarea draggable " id="CONTAINER_LED_CAMTEXTOFLDS_DESCRIP_">
+										<div class="d-flex">
+										@Html.LabelFor(model => model.ValDescrip, new { label_id="LED_CAMTEXTOFLDS_DESCRIP_", @class = " i-text__label", id="LABEL_LED_CAMTEXTOFLDS_DESCRIP_"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_CAMTEXTOFLDS_DESCRIP_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.TextAreaFor(model => model.ValDescrip, 3, 30, new {help_id = "LED_CAMTEXTOFLDS_DESCRIP_", @class = "i-textarea__field i-textarea input-large", data_identifier = "LED_CAMTEXTOFLDS_DESCRIP_", @pers_cs_area = "Flds", @pers_cs_field = "ValDescrip", @db_field = "ValDescrip", title = @Resources.DESCRIPTION07383 })
+										@Html.ValidationMessageFor(model => model.ValDescrip)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="c-tab__item-content" id="camnum" data-identifier="IFF_LISTACAMPSEUDCAMNUM__">
+					<div class="form-flow">
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-text draggable " id="CONTAINER_LED_CAMNUM__FLDS_NPASSAGE">
+										<div class="d-flex">
+										@Html.LabelFor(model => model.ValNpassage, new { label_id="LED_CAMNUM__FLDS_NPASSAGE", @class = " i-text__label", id="LABEL_LED_CAMNUM__FLDS_NPASSAGE"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_CAMNUM__FLDS_NPASSAGE','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.NumberFor(model => model.ValNpassage, new {help_id = "LED_CAMNUM__FLDS_NPASSAGE", @class = "Number text-right i-text__field i-text input-mini", data_identifier = "LED_CAMNUM__FLDS_NPASSAGE", @pers_cs_area = "Flds", @pers_cs_field = "ValNpassage", @db_field = "ValNpassage", title = @Resources.NUMERIC19292, data_number_integer = "3", data_number_decimals = "0", data_number_format = "999" })
+										@Html.ValidationMessageFor(model => model.ValNpassage)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-text draggable " id="CONTAINER_LED_CAMNUM__FLDS_DURATION">
+										<div class="d-flex">
+										@Html.LabelFor(model => model.ValDuration, new { label_id="LED_CAMNUM__FLDS_DURATION", @class = " i-text__label", id="LABEL_LED_CAMNUM__FLDS_DURATION"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_CAMNUM__FLDS_DURATION','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.NumberFor(model => model.ValDuration, new {help_id = "LED_CAMNUM__FLDS_DURATION", @class = "Number text-right i-text__field i-text input-small", data_identifier = "LED_CAMNUM__FLDS_DURATION", @pers_cs_area = "Flds", @pers_cs_field = "ValDuration", @db_field = "ValDuration", title = @Resources.NUMERIC_DECIMAL37352, data_number_integer = "2", data_number_decimals = "2", data_number_format = "99.99" })
+										@Html.ValidationMessageFor(model => model.ValDuration)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-text draggable " id="CONTAINER_LED_CAMNUM__FLDS_PRICE___">
+										<div class="d-inline-flex">
+										@Html.LabelFor(model => model.ValPrice, new { label_id="LED_CAMNUM__FLDS_PRICE___", @class = " i-text__label", id="LABEL_LED_CAMNUM__FLDS_PRICE___"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_CAMNUM__FLDS_PRICE___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.NumberFor(model => model.ValPrice, new {help_id = "LED_CAMNUM__FLDS_PRICE___", @class = "i-input-group__field text-right i-text__field i-text input-mini", data_identifier = "LED_CAMNUM__FLDS_PRICE___", @pers_cs_area = "Flds", @pers_cs_field = "ValPrice", @db_field = "ValPrice", title = @Resources.CURRENCY13881, data_currency = "True", data_number_integer = "3", data_number_decimals = "2", data_number_format = "999.99" })
+										@Html.ValidationMessageFor(model => model.ValPrice)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-text draggable " id="CONTAINER_LED_CAMNUM__FLDS_PRECOBIL">
+										<div class="d-inline-flex">
+										@Html.LabelFor(model => model.ValPrecobil, new { label_id="LED_CAMNUM__FLDS_PRECOBIL", @class = " i-text__label", id="LABEL_LED_CAMNUM__FLDS_PRECOBIL"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_CAMNUM__FLDS_PRECOBIL','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.NumberFor(model => model.ValPrecobil, new {help_id = "LED_CAMNUM__FLDS_PRECOBIL", @class = "i-input-group__field text-right i-text__field i-text input-small", data_identifier = "LED_CAMNUM__FLDS_PRECOBIL", @pers_cs_area = "Flds", @pers_cs_field = "ValPrecobil", @db_field = "ValPrecobil", title = @Resources.CURRENCY_DECIMAL48296, data_currency = "True", data_number_integer = "3", data_number_decimals = "2", data_number_format = "999.99" })
+										@Html.ValidationMessageFor(model => model.ValPrecobil)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="c-tab__item-content" id="camdate" data-identifier="IFF_LISTACAMPSEUDCAMDATE_">
+					<div class="form-flow">
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-text draggable " id="CONTAINER_LED_CAMDATE_FLDS_YEAR____">
+										<div class="d-flex">
+										@Html.LabelFor(model => model.ValYear, new { label_id="LED_CAMDATE_FLDS_YEAR____", @class = " i-text__label", id="LABEL_LED_CAMDATE_FLDS_YEAR____"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_CAMDATE_FLDS_YEAR____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.NumberFor(model => model.ValYear, new {help_id = "LED_CAMDATE_FLDS_YEAR____", data_toggle = "tooltip", title = @Resources.___3161967, data_placement = "top", description = "", @class = "Number text-right i-text__field i-text input-mini", data_identifier = "LED_CAMDATE_FLDS_YEAR____", @pers_cs_area = "Flds", @pers_cs_field = "ValYear", @db_field = "ValYear", data_number_integer = "4", data_number_decimals = "0", data_number_format = "9999" })
+										@Html.ValidationMessageFor(model => model.ValYear)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-date-picker draggable " id="CONTAINER_LED_CAMDATE_FLDS_DATE____">
+										<div class="d-inline-flex">
+										@Html.LabelFor(model => model.ValDate, new { label_id="LED_CAMDATE_FLDS_DATE____", @class = " i-text__label", id="LABEL_LED_CAMDATE_FLDS_DATE____"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_CAMDATE_FLDS_DATE____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.DateFor(model => model.ValDate, new {help_id = "LED_CAMDATE_FLDS_DATE____", data_toggle = "tooltip", title = @Resources.___3261074, data_placement = "top", description = "", @class = "i-input-group__field b-icon-text input-small", data_identifier = "LED_CAMDATE_FLDS_DATE____", @pers_cs_area = "Flds", @pers_cs_field = "ValDate", @db_field = "ValDate" })
+										@Html.ValidationMessageFor(model => model.ValDate)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-date-picker draggable " id="CONTAINER_LED_CAMDATE_FLDS_DATETIME">
+										<div class="d-inline-flex">
+										@Html.LabelFor(model => model.ValDatetime, new { label_id="LED_CAMDATE_FLDS_DATETIME", @class = " i-text__label", id="LABEL_LED_CAMDATE_FLDS_DATETIME"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_CAMDATE_FLDS_DATETIME','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.DateFor(model => model.ValDatetime, new {help_id = "LED_CAMDATE_FLDS_DATETIME", data_toggle = "tooltip", title = @Resources.___3360901, data_placement = "top", description = "", @class = "i-input-group__field b-icon-text input-medium", data_identifier = "LED_CAMDATE_FLDS_DATETIME", @pers_cs_area = "Flds", @pers_cs_field = "ValDatetime", @db_field = "ValDatetime" })
+										@Html.ValidationMessageFor(model => model.ValDatetime)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-date-picker draggable " id="CONTAINER_LED_CAMDATE_FLDS_DATESECO">
+										<div class="d-inline-flex">
+										@Html.LabelFor(model => model.ValDateseco, new { label_id="LED_CAMDATE_FLDS_DATESECO", @class = " i-text__label", id="LABEL_LED_CAMDATE_FLDS_DATESECO"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_CAMDATE_FLDS_DATESECO','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.DateFor(model => model.ValDateseco, new {help_id = "LED_CAMDATE_FLDS_DATESECO", data_toggle = "tooltip", title = @Resources.___3465504, data_placement = "top", description = "", @class = "i-input-group__field b-icon-text input-medium", data_identifier = "LED_CAMDATE_FLDS_DATESECO", @pers_cs_area = "Flds", @pers_cs_field = "ValDateseco", @db_field = "ValDateseco" })
+										@Html.ValidationMessageFor(model => model.ValDateseco)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-date-picker draggable " id="CONTAINER_LED_CAMDATE_FLDS_TIME____">
+										<div class="d-inline-flex">
+										@Html.LabelFor(model => model.ValTime, new { label_id="LED_CAMDATE_FLDS_TIME____", @class = " i-text__label", id="LABEL_LED_CAMDATE_FLDS_TIME____"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_CAMDATE_FLDS_TIME____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.DateFor(model => model.ValTime, new {help_id = "LED_CAMDATE_FLDS_TIME____", data_toggle = "tooltip", title = @Resources.___3561555, data_placement = "top", description = "", @class = "i-input-group__field b-icon-text input-mini", data_identifier = "LED_CAMDATE_FLDS_TIME____", @pers_cs_area = "Flds", @pers_cs_field = "ValTime", @db_field = "ValTime" })
+										@Html.ValidationMessageFor(model => model.ValTime)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="c-tab__item-content" id="cammask" data-identifier="IFF_LISTACAMPSEUDCAMMASK_">
+					<div class="form-flow">
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-text draggable " id="CONTAINER_LED_CAMMASK_FLDS_ZIPFIELD">
+										<div class="d-flex">
+										@Html.LabelFor(model => model.ValZipfield, new { label_id="LED_CAMMASK_FLDS_ZIPFIELD", @class = " i-text__label", id="LABEL_LED_CAMMASK_FLDS_ZIPFIELD"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_CAMMASK_FLDS_ZIPFIELD','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.MaskFor(model => model.ValZipfield, new {help_id = "LED_CAMMASK_FLDS_ZIPFIELD", @class = "input-small", data_identifier = "LED_CAMMASK_FLDS_ZIPFIELD", @pers_cs_area = "Flds", @pers_cs_field = "ValZipfield", @db_field = "ValZipfield", title = @Resources.ZIPCODE21021, placeholder = @Resources.XXXX_XXX51420, data_plac2lab = "false", maxlength = "8" })
+										@Html.ValidationMessageFor(model => model.ValZipfield)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-text draggable " id="CONTAINER_LED_CAMMASK_FLDS_VATNUMBR">
+										<div class="d-flex">
+										@Html.LabelFor(model => model.ValVatnumbr, new { label_id="LED_CAMMASK_FLDS_VATNUMBR", @class = " i-text__label", id="LABEL_LED_CAMMASK_FLDS_VATNUMBR"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_CAMMASK_FLDS_VATNUMBR','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.MaskFor(model => model.ValVatnumbr, new {help_id = "LED_CAMMASK_FLDS_VATNUMBR", @class = "input-small", data_identifier = "LED_CAMMASK_FLDS_VATNUMBR", @pers_cs_area = "Flds", @pers_cs_field = "ValVatnumbr", @db_field = "ValVatnumbr", title = @Resources.VAT_NUMBER24236, placeholder = @Resources._12345678953785, data_plac2lab = "false", maxlength = "9" })
+										@Html.ValidationMessageFor(model => model.ValVatnumbr)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-text draggable " id="CONTAINER_LED_CAMMASK_FLDS_LICPLATE">
+										<div class="d-flex">
+										@Html.LabelFor(model => model.ValLicplate, new { label_id="LED_CAMMASK_FLDS_LICPLATE", @class = " i-text__label", id="LABEL_LED_CAMMASK_FLDS_LICPLATE"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_CAMMASK_FLDS_LICPLATE','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.MaskFor(model => model.ValLicplate, new {help_id = "LED_CAMMASK_FLDS_LICPLATE", @class = "input-small", data_identifier = "LED_CAMMASK_FLDS_LICPLATE", @pers_cs_area = "Flds", @pers_cs_field = "ValLicplate", @db_field = "ValLicplate", title = @Resources.LICENCE_PLATE07627, placeholder = @Resources.XX_00_XX10122, data_plac2lab = "false", maxlength = "8" })
+										@Html.ValidationMessageFor(model => model.ValLicplate)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-text draggable " id="CONTAINER_LED_CAMMASK_FLDS_SSNUMBER">
+										<div class="d-flex">
+										@Html.LabelFor(model => model.ValSsnumber, new { label_id="LED_CAMMASK_FLDS_SSNUMBER", @class = " i-text__label", id="LABEL_LED_CAMMASK_FLDS_SSNUMBER"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_CAMMASK_FLDS_SSNUMBER','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.MaskFor(model => model.ValSsnumber, new {help_id = "LED_CAMMASK_FLDS_SSNUMBER", @class = "input-medium", data_identifier = "LED_CAMMASK_FLDS_SSNUMBER", @pers_cs_area = "Flds", @pers_cs_field = "ValSsnumber", @db_field = "ValSsnumber", title = @Resources.SOCIAL_SECURITY_NO48150, placeholder = @Resources._1234567891237929, data_plac2lab = "false", maxlength = "11" })
+										@Html.ValidationMessageFor(model => model.ValSsnumber)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-text draggable " id="CONTAINER_LED_CAMMASK_FLDS_BANKNMBR">
+										<div class="d-flex">
+										@Html.LabelFor(model => model.ValBanknmbr, new { label_id="LED_CAMMASK_FLDS_BANKNMBR", @class = " i-text__label", id="LABEL_LED_CAMMASK_FLDS_BANKNMBR"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_CAMMASK_FLDS_BANKNMBR','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.MaskFor(model => model.ValBanknmbr, new {help_id = "LED_CAMMASK_FLDS_BANKNMBR", @class = "input-large", data_identifier = "LED_CAMMASK_FLDS_BANKNMBR", @pers_cs_area = "Flds", @pers_cs_field = "ValBanknmbr", @db_field = "ValBanknmbr", title = @Resources.BANKING_ACCOUNT_NUMB62548, placeholder = @Resources._1234_5678_90123456761043, data_plac2lab = "false", maxlength = "24" })
+										@Html.ValidationMessageFor(model => model.ValBanknmbr)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-text draggable " id="CONTAINER_LED_CAMMASK_FLDS_EMAILFLD">
+										<div class="d-flex">
+										@Html.LabelFor(model => model.ValEmailfld, new { label_id="LED_CAMMASK_FLDS_EMAILFLD", @class = " i-text__label", id="LABEL_LED_CAMMASK_FLDS_EMAILFLD"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_CAMMASK_FLDS_EMAILFLD','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.TextBoxFor(model => model.ValEmailfld, new {help_id = "LED_CAMMASK_FLDS_EMAILFLD", @class = "i-text__field i-text input-large", data_identifier = "LED_CAMMASK_FLDS_EMAILFLD", @pers_cs_area = "Flds", @pers_cs_field = "ValEmailfld", @db_field = "ValEmailfld", title = @Resources.EMAIL25170, placeholder = @Resources.QUIDGESTAT_QUIDGEST_PT47872, data_plac2lab = "false", maxlength = "50", rows = "30" })
+										@Html.ValidationMessageFor(model => model.ValEmailfld)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-text draggable " id="CONTAINER_LED_CAMMASK_FLDS_IBANFIEL">
+										<div class="d-flex">
+										@Html.LabelFor(model => model.ValIbanfiel, new { label_id="LED_CAMMASK_FLDS_IBANFIEL", @class = " i-text__label", id="LABEL_LED_CAMMASK_FLDS_IBANFIEL"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_CAMMASK_FLDS_IBANFIEL','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.MaskFor(model => model.ValIbanfiel, new {help_id = "LED_CAMMASK_FLDS_IBANFIEL", @class = "input-large", data_identifier = "LED_CAMMASK_FLDS_IBANFIEL", @pers_cs_area = "Flds", @pers_cs_field = "ValIbanfiel", @db_field = "ValIbanfiel", title = @Resources.IBAN28506, placeholder = @Resources.PT12345678901234567820477, data_plac2lab = "false", maxlength = "34" })
+										@Html.ValidationMessageFor(model => model.ValIbanfiel)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-text draggable " id="CONTAINER_LED_CAMMASK_FLDS_UPPRTEXT">
+										<div class="d-flex">
+										@Html.LabelFor(model => model.ValUpprtext, new { label_id="LED_CAMMASK_FLDS_UPPRTEXT", @class = " i-text__label", id="LABEL_LED_CAMMASK_FLDS_UPPRTEXT"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_CAMMASK_FLDS_UPPRTEXT','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.TextBoxFor(model => model.ValUpprtext, new {help_id = "LED_CAMMASK_FLDS_UPPRTEXT", @class = "i-text__field i-text uppercase input-xlarge", data_identifier = "LED_CAMMASK_FLDS_UPPRTEXT", @pers_cs_area = "Flds", @pers_cs_field = "ValUpprtext", @db_field = "ValUpprtext", title = @Resources.UPPERCASE48238, placeholder = @Resources.QUIDGEST56322, data_plac2lab = "false", maxlength = "50", rows = "30" })
+										@Html.ValidationMessageFor(model => model.ValUpprtext)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="c-tab__item-content" id="camenum" data-identifier="IFF_LISTACAMPSEUDCAMENUM_">
+					<div class="form-flow">
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-radio__control draggable " id="CONTAINER_LED_CAMENUM_FLDS_CLASSNUM">
+										<div class="d-flex">
+										@Html.LabelFor(model => model.ValClassnum, new { label_id="LED_CAMENUM_FLDS_CLASSNUM", @class = " i-text__label", id="LABEL_LED_CAMENUM_FLDS_CLASSNUM"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_CAMENUM_FLDS_CLASSNUM','Classnum')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.RadioButtonForSelectList(model => model.ValClassnum, Model.List_ValClassnum, @Resources.ESCOLHA___40245, new {help_id = "LED_CAMENUM_FLDS_CLASSNUM", data_toggle = "tooltip", title = @Resources.___1845555, data_placement = "top", description = "", @class = "input-small", data_identifier = "LED_CAMENUM_FLDS_CLASSNUM", @pers_cs_area = "Flds", @pers_cs_field = "ValClassnum", @db_field = "ValClassnum", data_array_type = "AN" }, 3)
+										@Html.ValidationMessageFor(model => model.ValClassnum)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-dbedit draggable " id="CONTAINER_LED_CAMENUM_FLDS_CLASS___">
+										<div class="d-flex">
+										@Html.LabelFor(model => model.ValClass, new { label_id="LED_CAMENUM_FLDS_CLASS___", @class = " i-text__label", id="LABEL_LED_CAMENUM_FLDS_CLASS___"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_CAMENUM_FLDS_CLASS___','Class')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.ArrayDropDownListFor(model => model.ValClass, Model.List_ValClass, CSGenio.business.ArrayClass.GetElement, "", new {help_id = "LED_CAMENUM_FLDS_CLASS___", data_toggle = "tooltip", title = @Resources.___2712722, data_placement = "top", description = "", @class = "i-select chosen-dropdown input-medium", data_identifier = "LED_CAMENUM_FLDS_CLASS___", @pers_cs_area = "Flds", @pers_cs_field = "ValClass", @db_field = "ValClass", data_array_type = "AC", data_placeholder = @Resources.ESCOLHA___40245, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_value = Model.List_ValClass.SelectedValue, data_is_array = "true" })
+										@Html.ValidationMessageFor(model => model.ValClass)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-dbedit draggable " id="CONTAINER_LED_CAMENUM_FLDS_LOGICENU">
+										<div class="d-flex">
+										@Html.LabelFor(model => model.ValLogicenu, new { label_id="LED_CAMENUM_FLDS_LOGICENU", @class = " i-text__label", id="LABEL_LED_CAMENUM_FLDS_LOGICENU"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_CAMENUM_FLDS_LOGICENU','Primviag')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.ArrayLogicalFor(model => model.ValLogicenu, Model.List_ValLogicenu, CSGenio.business.ArrayPrimviag.GetElement, false, new {help_id = "LED_CAMENUM_FLDS_LOGICENU", data_toggle = "tooltip", title = @Resources.___2813103, data_placement = "top", description = "", @class = "input-medium", data_identifier = "LED_CAMENUM_FLDS_LOGICENU", @pers_cs_area = "Flds", @pers_cs_field = "ValLogicenu", @db_field = "ValLogicenu" })
+										@Html.ValidationMessageFor(model => model.ValLogicenu)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="c-tab__item-content" id="camdocs" data-identifier="IFF_LISTACAMPSEUDCAMDOCS_">
+					<div class="form-flow">
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-image draggable " id="CONTAINER_LED_CAMDOCS_FLDS_LOGO____">
+										<div class="d-flex">
+										@Html.LabelFor(model => model.ValLogo, new { label_id="LED_CAMDOCS_FLDS_LOGO____", @class = " i-text__label", id="LABEL_LED_CAMDOCS_FLDS_LOGO____"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_CAMDOCS_FLDS_LOGO____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										<div data-identifier="LED_CAMDOCS_FLDS_LOGO____" pers-cs-area="Flds" pers-cs-field="ValLogo" class="image-control-wrapper" >
+										@if(Model.IsEditableMode) {
+											@Html.EditorFor(m => m.ValLogo, new {help_id = "LED_CAMDOCS_FLDS_LOGO____", data_toggle = "tooltip", title = @Resources.___2916088, data_placement = "top", description = "", @class = "col-auto ", data_identifier = "LED_CAMDOCS_FLDS_LOGO____", guid = @Model.ValCodflds, controller = "Flds", fldname = "ValLogo", identifier = "FLISTACAM", style = "height: 47pt; display: inline-block;" })
+										} else {
+											@Html.DisplayFor(m => m.ValLogo, new {help_id = "LED_CAMDOCS_FLDS_LOGO____", data_toggle = "tooltip", title = @Resources.___2916088, data_placement = "top", description = "", @class = "col-auto ", data_identifier = "LED_CAMDOCS_FLDS_LOGO____", guid = @Model.ValCodflds, controller = "Flds", fldname = "ValLogo", identifier = "FLISTACAM", style = "height: 47pt; display: inline-block;" })
+										}
+										</div>
+										@Html.ValidationMessageFor(model => model.ValLogo)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-document draggable " id="CONTAINER_LED_CAMDOCS_FLDS_ATTACH__">
+										<div class="d-flex">
+										@Html.LabelFor(model => model.ValAttach, new { label_id="LED_CAMDOCS_FLDS_ATTACH__", @class = " i-text__label", id="LABEL_LED_CAMDOCS_FLDS_ATTACH__"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_CAMDOCS_FLDS_ATTACH__','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@if (Model.IsEditableMode) {
+											@Html.EditorFor(model => model.ValAttach, new { fieldFk = Model.ValAttachfk, docProperties = Model.ValAttachPropertiesVM, baseArea = "Flds", baseAreaKey = Model.ValCodflds, useTemplates =  false, data_identifier="LED_CAMDOCS_FLDS_ATTACH__", identifier = "FLISTACAM", fieldSize = "input-large", isRequired = false, maxSize = "null", allowedTypes = "null", htmlAttributes = new {help_id = "LED_CAMDOCS_FLDS_ATTACH__", data_toggle = "tooltip", title = @Resources.___3061884, data_placement = "top", description = "" }})
+										} else {
+											@Html.DisplayFor(model => model.ValAttach, new { fieldFk = Model.ValAttachfk, docProperties = Model.ValAttachPropertiesVM, baseArea = "Flds", baseAreaKey = Model.ValCodflds, useTemplates =  false, data_identifier="LED_CAMDOCS_FLDS_ATTACH__", identifier = "FLISTACAM", fieldSize = "input-large", htmlAttributes = new {help_id = "LED_CAMDOCS_FLDS_ATTACH__", data_toggle = "tooltip", title = @Resources.___3061884, data_placement = "top", description = "" }})
+										}
+										@Html.ValidationMessageFor(model => model.ValAttach)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="c-tab__item-content" id="camaudit" data-identifier="IFF_LISTACAMPSEUDCAMAUDIT">
+					<div class="form-flow">
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-text draggable " id="CONTAINER_LED_CAMAUDITFLDS_CREATUSE">
+										<div class="d-flex">
+										@Html.LabelFor(model => model.ValCreatuse, new { label_id="LED_CAMAUDITFLDS_CREATUSE", @class = " i-text__label", id="LABEL_LED_CAMAUDITFLDS_CREATUSE"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_CAMAUDITFLDS_CREATUSE','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.TextBoxFor(model => model.ValCreatuse, new {help_id = "LED_CAMAUDITFLDS_CREATUSE", @class = "i-text__field i-text input-medium", data_identifier = "LED_CAMAUDITFLDS_CREATUSE", @pers_cs_area = "Flds", @pers_cs_field = "ValCreatuse", @db_field = "ValCreatuse", fixed_field = "true", @readonly = "readonly", title = @Resources.CREATED_BY12292 })
+										@Html.ValidationMessageFor(model => model.ValCreatuse)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-date-picker draggable " id="CONTAINER_LED_CAMAUDITFLDS_CREATDAT">
+										<div class="d-flex">
+										@Html.LabelFor(model => model.ValCreatdat, new { label_id="LED_CAMAUDITFLDS_CREATDAT", @class = " i-text__label", id="LABEL_LED_CAMAUDITFLDS_CREATDAT"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_CAMAUDITFLDS_CREATDAT','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.DateFor(model => model.ValCreatdat, new {help_id = "LED_CAMAUDITFLDS_CREATDAT", @class = "i-input-group__field b-icon-text input-small", data_identifier = "LED_CAMAUDITFLDS_CREATDAT", @pers_cs_area = "Flds", @pers_cs_field = "ValCreatdat", @db_field = "ValCreatdat", fixed_field = "true", @readonly = "readonly", title = @Resources.DATE_OF_CREATION49487 })
+										@Html.ValidationMessageFor(model => model.ValCreatdat)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-date-picker draggable " id="CONTAINER_LED_CAMAUDITFLDS_CREATHOU">
+										<div class="d-flex">
+										@Html.LabelFor(model => model.ValCreathou, new { label_id="LED_CAMAUDITFLDS_CREATHOU", @class = " i-text__label", id="LABEL_LED_CAMAUDITFLDS_CREATHOU"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_CAMAUDITFLDS_CREATHOU','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.DateFor(model => model.ValCreathou, new {help_id = "LED_CAMAUDITFLDS_CREATHOU", @class = "i-input-group__field b-icon-text input-small", data_identifier = "LED_CAMAUDITFLDS_CREATHOU", @pers_cs_area = "Flds", @pers_cs_field = "ValCreathou", @db_field = "ValCreathou", fixed_field = "true", @readonly = "readonly", title = @Resources.CREATION_HOUR49876 })
+										@Html.ValidationMessageFor(model => model.ValCreathou)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-date-picker draggable " id="CONTAINER_LED_CAMAUDITFLDS_CREATINS">
+										<div class="d-flex">
+										@Html.LabelFor(model => model.ValCreatins, new { label_id="LED_CAMAUDITFLDS_CREATINS", @class = " i-text__label", id="LABEL_LED_CAMAUDITFLDS_CREATINS"}, true, false)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_CAMAUDITFLDS_CREATINS','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.DateFor(model => model.ValCreatins, new {help_id = "LED_CAMAUDITFLDS_CREATINS", @class = "i-input-group__field b-icon-text input-medium", data_identifier = "LED_CAMAUDITFLDS_CREATINS", @pers_cs_area = "Flds", @pers_cs_field = "ValCreatins", @db_field = "ValCreatins", fixed_field = "true", @readonly = "readonly", title = @Resources.COMPLETE_DATE_OF_CRE57046 })
+										@Html.ValidationMessageFor(model => model.ValCreatins)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+ 			</div>
+        </div>
+	</div>
+	<!-- end tab content -->
+	<script type="application/javascript">
+		$(document).ready(function () {
+			// to select the first tab
+			var a = $('[elem-identifier="TabbableIdentifier"] > a', "#Listacam_tabs").first();
+            a.addClass("active");
+
+			var li = $('[elem-identifier="TabbableIdentifier"]', "#Listacam_tabs").first();			
+			var tabId = li.attr("data-tab");
+			$("#" + tabId).addClass("active");			
+		});
+	</script>

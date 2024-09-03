@@ -1,17 +1,19 @@
-﻿using System;
+﻿using CSGenio.business;
+using CSGenio.core.messaging;
+using CSGenio.framework;
+using ExecuteQueryCore;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using CSGenio.framework;
-using CSGenio.business;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
-using ExecuteQueryCore;
-using System.Reflection;
 using System.Threading;
-using System.Linq;
 
 namespace CSGenio.persistence
 {
@@ -169,6 +171,10 @@ namespace CSGenio.persistence
         /// <returns>The syntax dialect</returns>
         public virtual Dialect Dialect { get; protected set; }
 
+        /// <summary>
+        /// Dataset Id that created this persistent support
+        /// </summary>
+        public string Id { get; protected set; }
         /// <summary>
         /// logged client from "frontend" app
         /// </summary>
@@ -331,8 +337,6 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
 
             AddParameters(adapter.SelectCommand, parameters);
 
-			//if you received error "DataReader.GetFieldType([x]) returned null" and the [x] field is "geography" data type, please check if you have the component SQLServer Types installed
-			//your web.config have reference to the SQLServer Types version 2012
             DataSet ds = new DataSet();
             adapter.Fill(ds);
 
@@ -488,18 +492,32 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         }
 
         /// <summary>
-        /// Create a database backup
+        /// Gets the default backups location.
         /// </summary>
-        /// <param name="year">Year</param>
-        /// <param name="username">User db</param>
-        /// <param name="password">password</param>
-        public static void Backup(string year, string username, string password, string location = "")
+        /// <returns>A string representing the path to the default backups location.</returns>
+        public static string GetDefaultBackupsLocation()
+        {
+            return System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "dbs", "backup");
+        }
+
+        /// <summary>
+        /// Creates a backup of the specified database schema for a given year.
+        /// </summary>
+        /// <param name="year">The year identifier for the database configuration.</param>
+        /// <param name="username">The username for the database connection.</param>
+        /// <param name="password">The password for the database connection.</param>
+        /// <param name="location">Optional. The directory path where the backup file will be saved. 
+        /// If not provided, the default backup location will be used.</param>
+        /// <returns>The full path to the created backup file.</returns>
+        /// <exception cref="PersistenceException">Thrown when there is an error during the backup process.</exception>
+        public static string Backup(string year, string username, string password, string location = "")
         {
             try
             {
                 DataSystemXml dataSystem = Configuration.ResolveDataSystem(year, Configuration.DbTypes.NORMAL);
                 var sp = getPersistentSupportMaster(year, username, password);
-                sp.Backup(dataSystem.Schemas[0].Schema, location);
+
+                return sp.Backup(dataSystem.Schemas[0].Schema, location);
             }
             catch (FrameworkException ex)
             {
@@ -510,7 +528,14 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             }
         }
 
-        public virtual void Backup(string schema, string location = "")
+        /// <summary>
+        /// Performs the backup operation for the specified database schema.
+        /// </summary>
+        /// <param name="schema">The name of the database schema to back up.</param>
+        /// <param name="location">Optional. The directory path where the backup file will be saved. 
+        /// If not provided, the default backup location will be used.</param>
+        /// <returns>The full path to the created backup file.</returns>
+        public virtual string Backup(string schema, string location = "")
         {
             throw new NotImplementedException();
         }
@@ -522,19 +547,14 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         /// <param name="username">User db</param>
         /// <param name="password">password</param>
         /// <param name="path">path to the backup of the db</param>
-        /// <param name="currentYear">Current database year</param>
-        public static void Restore(string year, string username, string password, string path, string currentYear = "")
+        public static void Restore(string year, string username, string password, string path)
         {
             try
             {
                 DataSystemXml dataSystem = Configuration.ResolveDataSystem(year, Configuration.DbTypes.NORMAL);
-
-                string userSchema = "";
-                if (!string.IsNullOrEmpty(currentYear))
-                    userSchema = Configuration.ResolveDataSystem(currentYear, Configuration.DbTypes.NORMAL).Schemas[0].Schema;
-
                 var sp = getPersistentSupportMaster(year, username, password);
-                sp.Restore(dataSystem.Schemas[0].Schema, path, userSchema);
+
+                sp.Restore(dataSystem.Schemas[0].Schema, path);
             }
             catch (FrameworkException ex)
             {
@@ -545,7 +565,12 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             }
         }
 
-        public virtual void Restore(string schema, string path, string userSchema = "")
+        /// <summary>
+        /// Restores a database from a specified backup file.
+        /// </summary>
+        /// <param name="schema">The name of the target database to be restored.</param>
+        /// <param name="path">The full path to the backup file.</param>
+        public virtual void Restore(string schema, string path)
         {
             throw new NotImplementedException();
         }
@@ -553,12 +578,14 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         /// <summary>
         /// Path to the reindex profiling log
         /// </summary>
-        public static string LogReindexPath(string path = "") {
+        public static string LogReindexPath(string path = "")
+        {
             if (string.IsNullOrEmpty(path))
                 path = AppDomain.CurrentDomain.BaseDirectory;
 
             return System.IO.Path.Combine(path, "temp", "logReindex.xml");
         }
+
         /// <summary>
         /// Database Reindex
         /// </summary>
@@ -914,6 +941,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             var ds = Configuration.ResolveDataSystem(id, dbType);
             var res = m_spfactory(ds.GetDatabaseType());
             res.DatabaseType = ds.GetDatabaseType();
+            res.Id = id;
             res.ClientId = user;
             res.ReadOnly = readOnly;
             res.MapSchemas(ds);
@@ -953,6 +981,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             var ds = Configuration.ResolveDataSystem(id, Configuration.DbTypes.NORMAL);
             var res = m_spfactory(ds.GetDatabaseType());
             res.DatabaseType = ds.GetDatabaseType();
+            res.Id = id;
             res.ClientId = login;
             res.IsMaster = true;
             res.MapSchemas(ds);
@@ -1017,6 +1046,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                 if (Connection.State != ConnectionState.Closed)
                 {
 				    SendDeferedQueues();
+                    SendDeferredMessages();
                     Log.Debug("Fecha a conexão à base de dados.");
                     Connection.Close();
                 }
@@ -1028,6 +1058,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             finally
             {
                 ClearDeferedQueues();
+                ClearDeferredMessages();
             }
         }
 
@@ -1065,11 +1096,13 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                 if (Transaction != null)
                 {
                     Log.Debug("commit da transacção à base de dados.");
+                    SendDeferredMessages();
                     Transaction.Commit();
 					SendDeferedQueues();
                     Transaction.Dispose();
                     Transaction = null;
 					ClearDeferedQueues();
+                    ClearDeferredMessages();
                     closeConnection();
                 }
             }
@@ -1081,6 +1114,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
 			finally
             {
                 ClearDeferedQueues();
+                ClearDeferredMessages();
             }
         }
 
@@ -1106,6 +1140,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             finally
             {
 				ClearDeferedQueues();
+                ClearDeferredMessages();
                 closeConnection();
 				if (Transaction != null)
                 {
@@ -1142,6 +1177,82 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             foreach (var q in m_deferedQueues)
                 insertPseud(q);
         }
+
+        //---------------------------------------------------------
+        private class DeferedMessageEntry
+        {
+            public PublisherMetadata pub;
+            public AreaDataset dataset;
+        }
+
+        private List<DeferedMessageEntry> m_deferedMessages = new List<DeferedMessageEntry>();
+
+        private AreaDatasetTable GetDeferedDatatable(PublisherMetadata pub, PublisherTable table)
+        {
+            //if there isnt a dataset for this publisher yet, create one
+            var entry = m_deferedMessages.Find(x => x.pub == pub);
+            if (entry == null)
+            {
+                entry = new DeferedMessageEntry
+                {
+                    pub = pub,
+                    dataset = new AreaDataset()
+                };
+                m_deferedMessages.Add(entry);
+            }
+
+            //ensure the table is added to the dataset
+            return entry.dataset.AddTable(table.Table);
+        }
+
+        /// <summary>
+        /// Defers the update message to be send when the transaction is commited
+        /// </summary>
+        /// <param name="pub">The publication of the message</param>
+        /// <param name="table">The table being updated</param>
+        /// <param name="row">The row to update</param>
+        public void DeferMessageUpdate(PublisherMetadata pub, PublisherTable table, Area row)
+        {
+            AreaDatasetTable dst = GetDeferedDatatable(pub, table);
+
+            // if the row is already in the dataset rows update it   
+            if (dst.Updated.ContainsKey(row.QPrimaryKey))
+                dst.Updated[row.QPrimaryKey] = row;
+            // if the row is already in the dataset rows add the row
+            else
+                dst.Updated.Add(row.QPrimaryKey, row);
+        }
+
+        /// <summary>
+        /// Defers the delete message to be send when the transaction is commited
+        /// </summary>
+        /// <param name="pub">The publication of the message</param>
+        /// <param name="table">The table being deleted</param>
+        /// <param name="row">The row to delete</param>
+        public void DeferMessageDelete(PublisherMetadata pub, PublisherTable table, Area row)
+        {
+            AreaDatasetTable dst = GetDeferedDatatable(pub, table);
+
+            // if the row is already in the updated rows we need to remove it
+            dst.Updated.Remove(row.QPrimaryKey);
+
+            // add this primary key to the list of removed rows
+            if(!dst.Deleted.Contains(row.QPrimaryKey))
+                dst.Deleted.Add(row.QPrimaryKey);
+        }
+
+        private void SendDeferredMessages()
+        {
+            MessagingService messaging = MessagingService.Instance;
+            foreach (var entry in m_deferedMessages)
+                messaging.SendMessage(entry.pub, entry.dataset, Id);
+        }
+
+        private void ClearDeferredMessages()
+        {
+            m_deferedMessages.Clear();
+        }
+        //---------------------------------------------------------
 
 		public delegate void RetryableAction();
 
@@ -1587,19 +1698,28 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
 
         public DataMatrix returnValuesDocums(IArea area, string fieldName, SelectField[] Qvalues, CriteriaSet condition, ColumnSort[] order)
         {
+            return returnValuesDocums(area, fieldName, true, Qvalues, condition, order);
+        }
+
+        public DataMatrix returnValuesDocums(IArea area, string fieldName, bool isForeignKey, SelectField[] Qvalues, CriteriaSet condition, ColumnSort[] order)
+        {
             DataMatrix res = null;
             string tabelaDocums = "docums";
             object primaryKeyValue = area.returnValueField(area.Alias + "." + area.PrimaryKeyName);
-            Object chaveDocums = null;
+            object chaveDocums = null;
 
-            if (area.DBFields.ContainsKey(fieldName + "fk"))
+            string dbFieldName = fieldName;
+            if (isForeignKey)
+                dbFieldName += "fk";
+
+            if (area.DBFields.ContainsKey(dbFieldName))
             {
-                chaveDocums = area.returnValueField(area.Alias + "." + fieldName + "fk");
+                chaveDocums = area.returnValueField(area.Alias + "." + dbFieldName);
             }
             else
             {
                 SelectQuery qs1 = new SelectQuery()
-                    .Select(area.Alias, fieldName + "fk")
+                    .Select(area.Alias, dbFieldName)
                     .From(area.QSystem, area.TableName, area.Alias)
                     .Where(CriteriaSet.And()
                         .Equal(area.Alias, area.PrimaryKeyName, primaryKeyValue));
@@ -1609,8 +1729,8 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                 {
                     chaveDocums = mx.GetDirect(0, 0);
                 }
-
             }
+
             if (chaveDocums == null || chaveDocums == DBNull.Value || chaveDocums.Equals(""))
             {
                 return res;
@@ -1663,6 +1783,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                     chaveDocums = mx.GetDirect(0, 0);
                 }
             }
+
             if (chaveDocums == null || chaveDocums == DBNull.Value || chaveDocums.Equals(""))
             {
                 return "";
@@ -2406,49 +2527,6 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             query.PageSize(pageSize);
             return query;
         }
-		/*
-        /// <summary>
-        /// Reorders a field within a subset from 1 to N maintaining the relative order of the records
-        /// </summary>
-        /// <param name="arearef">The table to reorder</param>
-        /// <param name="orderField">The field to reorder</param>
-        /// <param name="partition">The partition corresponding to the rows to be reordered</param>
-        public void ReorderSequence(AreaRef arearef, FieldRef orderField, CriteriaSet partition, List<Relation> relations = null)
-        {
-            // UPDATE [GENNOV0].[dbo].[gencmpbd]
-            // SET [num] = [renum_campo].[new_num]
-            // FROM [GENNOV0].[dbo].[gencmpbd] [campo]
-            // JOIN (SELECT  (ROW_NUMBER() OVER (ORDER BY [campo].[num]  ASC)) AS [new_num],  ([campo].[codcmpbd]) AS [pk]
-            //          FROM [GENNOV0].[dbo].[gencmpbd] AS [campo]
-            //          WHERE ([campo].[codtabel] = @param1)) AS [renum_campo]
-            // ON ([renum_campo].[pk] = [campo].[codcmpbd])
-
-            string pkName = Area.GetInfoArea(arearef.Alias).PrimaryKeyName;
-
-            SelectQuery sq = new SelectQuery()
-                .Select(SqlFunctions.RowNumber(orderField, SortOrder.Ascending, orderField), "new_num")
-                .Select(arearef.Alias, pkName, "pk")
-                .From(arearef)
-                .Where(partition);
-
-            if(relations != null)
-            {
-                foreach (Relation r in relations)
-                {
-                    sq.Join(r.TargetTable, r.AliasTargetTab, TableJoinType.Left)
-                        .On(CriteriaSet.And()
-                            .Equal(r.AliasSourceTab, r.SourceRelField, r.AliasTargetTab, r.TargetRelField));
-                }
-            }
-
-            UpdateQuery up = new UpdateQuery().Update(arearef)
-                .Set(orderField.Field, new ColumnReference("renum_" + arearef.Alias, "new_num"))
-                .Join(sq, "renum_" + arearef.Alias, TableJoinType.Inner).On(CriteriaSet.And().Equal("renum_" + arearef.Alias, "pk", arearef.Alias, pkName))
-                ;
-
-            Execute(up);
-        }
-		/**/
 
 		/// <summary>
         /// Reorders a field within a subset from startPos to N maintaining the relative order of the records
@@ -2487,8 +2565,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
 
             UpdateQuery up = new UpdateQuery().Update(arearef)
                 .Set(orderField.Field, new ColumnReference("renum_" + arearef.Alias, "new_num"))
-                .Join(sq, "renum_" + arearef.Alias, TableJoinType.Inner).On(CriteriaSet.And().Equal("renum_" + arearef.Alias, "pk", arearef.Alias, pkName))
-                ;
+                .Join(sq, "renum_" + arearef.Alias, TableJoinType.Inner).On(CriteriaSet.And().Equal("renum_" + arearef.Alias, "pk", arearef.Alias, pkName));
 
             Execute(up);
         }
@@ -2649,7 +2726,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             return valorMaximo;
         }
 
-        public object insertValueDocums(IArea area, string fieldName, string fileName, string extension, Byte[] file, FieldFormatting formatting)
+        public object insertValueDocums(IArea area, string fieldName, string fileName, string extension, byte[] file)
         {
             string tabelaDocums = "docums";
             object primaryKeyValue = area.returnValueField(area.Alias + "." + area.PrimaryKeyName);
@@ -2659,7 +2736,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             object valorChavePrimariaDocums = generatePrimaryKey(tabelaDocums, chaveDocums.FieldSize, CSGenioAdocums.GetInformation().KeyType);
 
             //RS(2010.09.16) The table docums starts to gardar several verses and the author of the document
-                        InsertQuery query = new InsertQuery()
+            InsertQuery query = new InsertQuery()
                 .Into(tabelaDocums)
                 .Value("coddocums", valorChavePrimariaDocums)
                 .Value("documid", valorChavePrimariaDocums)
@@ -2911,18 +2988,18 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             Execute(query);
         }
 
-        public void changeValueDocums(object keyValueDocums, Byte[] file, string fileName, string extension, string Qversion, string operChange)
+        public void changeValueDocums(object keyValueDocums, byte[] file, string fileName, string extension, string Qversion, string operChange)
         {
             changeValueDocums(keyValueDocums, file, fileName, extension, Qversion, operChange, "DEFAULT");
         }
 
-        public void changeValueDocums(object keyValueDocums, Byte[] file, string fileName, string extension, string Qversion, string operChange, string alias)
+        public void changeValueDocums(object keyValueDocums, byte[] file, string fileName, string extension, string Qversion, string operChange, string alias)
         {
-            if (Log.IsDebugEnabled) Log.Debug(string.Format("Altera o documento. [ficheiro] {0}", fileName));
+            if (Log.IsDebugEnabled)
+                Log.Debug(string.Format("Altera o documento. [ficheiro] {0}", fileName));
 
-            //RS(2010.09.16) The table docums starts to gardar several verses and the author of the document
+            // RS(2010.09.16) The table docums starts to save several versions and the author of the document
             string tabelaDocums = "docums";
-
 
             UpdateQuery query = new UpdateQuery()
                 .Update(tabelaDocums)

@@ -1,0 +1,12 @@
+﻿@model byte[]
+
+@using System.Web.Mvc;
+
+@{
+    string guid = ViewData["guid"].ToString();
+    string controller = ViewData["controller"].ToString();
+    string fldname = ViewData["fldname"].ToString();
+    string cssClass = ViewData["class"].ToString();
+}
+
+@Html.ImageMagnifer(@Model, guid, controller, fldname, new { @class = cssClass })

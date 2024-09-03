@@ -12,6 +12,7 @@ using GenioMVC.Models;
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.Attributes;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using Quidgest.Persistence.GenericQuery;
 using CSGenio.persistence;
 using CSGenio.business;

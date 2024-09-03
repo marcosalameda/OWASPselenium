@@ -62,6 +62,7 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "_COMPANY02087";
 
 			Qfield.Dupmsg = "";
+            Qfield.SufNDup = "sequennr";
 //Actualiza as seguintes réplicas:
 			Qfield.ReplicaDestinationList = new List<ReplicaDestination>();
 			Qfield.ReplicaDestinationList.Add( new ReplicaDestination("GQT", "gqtrepar", "codequip", "codempre"));
@@ -222,7 +223,7 @@ namespace CSGenio.business
 			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field("frequenc", FieldType.ARRAY_COD_NUMERICO);
 			Qfield.FieldDescription = "Loan frequency";
-			Qfield.FieldSize =  1;
+			Qfield.FieldSize =  2;
 			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "LOAN_FREQUENCY00701";
 
@@ -412,15 +413,15 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(11);
-			info.Pathways.Add("wareh","wareh");
 			info.Pathways.Add("decom","decom");
-			info.Pathways.Add("item","item");
-			info.Pathways.Add("cmpny","cmpny");
+			info.Pathways.Add("wareh","wareh");
 			info.Pathways.Add("tpequ","tpequ");
+			info.Pathways.Add("cmpny","cmpny");
+			info.Pathways.Add("item","item");
 			info.Pathways.Add("pess1","pess1");
-			info.Pathways.Add("gitem","item");
-			info.Pathways.Add("cntry","cmpny");
 			info.Pathways.Add("famil","tpequ");
+			info.Pathways.Add("cntry","cmpny");
+			info.Pathways.Add("gitem","item");
 			info.Pathways.Add("stake","pess1");
 			info.Pathways.Add("cate2","pess1");
 			info.Pathways.Add("room1","room1");

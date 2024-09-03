@@ -42,6 +42,8 @@ namespace CSGenio.business
         private static AreaRef m_AreaCNTRY = new AreaRef("GQT", "gqtcntry", "cntry");
         public static AreaRef AreaREPAR { get { return m_AreaREPAR; } }
         private static AreaRef m_AreaREPAR = new AreaRef("GQT", "gqtrepar", "repar");
+        public static AreaRef AreaC_ADD { get { return m_AreaC_ADD; } }
+        private static AreaRef m_AreaC_ADD = new AreaRef("GQT", "gqtctry", "c_add");
         public static AreaRef AreaSALE { get { return m_AreaSALE; } }
         private static AreaRef m_AreaSALE = new AreaRef("GQT", "gqtsale", "sale");
         public static AreaRef AreaDISPA { get { return m_AreaDISPA; } }
@@ -70,6 +72,8 @@ namespace CSGenio.business
         private static AreaRef m_AreaLNHDE = new AreaRef("GQT", "gqtlnhde", "lnhde");
         public static AreaRef AreaSTRAT { get { return m_AreaSTRAT; } }
         private static AreaRef m_AreaSTRAT = new AreaRef("GQT", "gqtstrat", "strat");
+        public static AreaRef AreaC_BRN { get { return m_AreaC_BRN; } }
+        private static AreaRef m_AreaC_BRN = new AreaRef("GQT", "gqtctry", "c_brn");
         public static AreaRef AreaDECOM { get { return m_AreaDECOM; } }
         private static AreaRef m_AreaDECOM = new AreaRef("GQT", "gqtdecom", "decom");
         public static AreaRef AreaROOM1 { get { return m_AreaROOM1; } }
@@ -84,12 +88,16 @@ namespace CSGenio.business
         private static AreaRef m_AreaREGIO = new AreaRef("GQT", "gqtregio", "regio");
         public static AreaRef AreaTPEQ1 { get { return m_AreaTPEQ1; } }
         private static AreaRef m_AreaTPEQ1 = new AreaRef("GQT", "gqttpequ", "tpeq1");
+        public static AreaRef AreaAGENT { get { return m_AreaAGENT; } }
+        private static AreaRef m_AreaAGENT = new AreaRef("GQT", "gqtagent", "agent");
         public static AreaRef AreaFAQS { get { return m_AreaFAQS; } }
         private static AreaRef m_AreaFAQS = new AreaRef("GQT", "gqtfaqs", "faqs");
         public static AreaRef AreaTPCON { get { return m_AreaTPCON; } }
         private static AreaRef m_AreaTPCON = new AreaRef("GQT", "gqttpcon", "tpcon");
         public static AreaRef AreaS_APR { get { return m_AreaS_APR; } }
         private static AreaRef m_AreaS_APR = new AreaRef("GQT", "asyncprocess", "s_apr");
+        public static AreaRef AreaCTRY { get { return m_AreaCTRY; } }
+        private static AreaRef m_AreaCTRY = new AreaRef("GQT", "gqtctry", "ctry");
         public static AreaRef AreaFAMI1 { get { return m_AreaFAMI1; } }
         private static AreaRef m_AreaFAMI1 = new AreaRef("GQT", "gqtfamil", "fami1");
         public static AreaRef AreaMOVIM { get { return m_AreaMOVIM; } }
@@ -136,6 +144,8 @@ namespace CSGenio.business
         private static AreaRef m_AreaDTTYP = new AreaRef("GQT", "gqtdatatypes", "dttyp");
         public static AreaRef AreaTBLB { get { return m_AreaTBLB; } }
         private static AreaRef m_AreaTBLB = new AreaRef("GQT", "gqttblb", "tblb");
+        public static AreaRef AreaPROPH { get { return m_AreaPROPH; } }
+        private static AreaRef m_AreaPROPH = new AreaRef("GQT", "gqtproph", "proph");
         public static AreaRef AreaYEAR1 { get { return m_AreaYEAR1; } }
         private static AreaRef m_AreaYEAR1 = new AreaRef("GQT", "gqtyear", "year1");
         public static AreaRef AreaREGI1 { get { return m_AreaREGI1; } }
@@ -218,6 +228,8 @@ namespace CSGenio.business
         private static AreaRef m_AreaPERSO = new AreaRef("GQT", "gqtperson", "perso");
         public static AreaRef AreaLANG1 { get { return m_AreaLANG1; } }
         private static AreaRef m_AreaLANG1 = new AreaRef("GQT", "gqtlangu", "lang1");
+        public static AreaRef AreaPROCN { get { return m_AreaPROCN; } }
+        private static AreaRef m_AreaPROCN = new AreaRef("GQT", "gqtprocn", "procn");
         public static AreaRef AreaPSW { get { return m_AreaPSW; } }
         private static AreaRef m_AreaPSW = new AreaRef("GQT", "userlogin", "psw");
         public static AreaRef AreaMESSA { get { return m_AreaMESSA; } }
@@ -284,6 +296,8 @@ namespace CSGenio.business
         private static AreaRef m_AreaS_ARG = new AreaRef("GQT", "asyncprocessargument", "s_arg");
         public static AreaRef AreaEQUIP { get { return m_AreaEQUIP; } }
         private static AreaRef m_AreaEQUIP = new AreaRef("GQT", "gqtequip", "equip");
+        public static AreaRef AreaCITY { get { return m_AreaCITY; } }
+        private static AreaRef m_AreaCITY = new AreaRef("GQT", "gqtcity", "city");
         public static AreaRef AreaPWORG { get { return m_AreaPWORG; } }
         private static AreaRef m_AreaPWORG = new AreaRef("GQT", "gqtpworg", "pworg");
         public static AreaRef AreaCATE3 { get { return m_AreaCATE3; } }
@@ -312,6 +326,8 @@ namespace CSGenio.business
         private static AreaRef m_AreaEVCAT = new AreaRef("GQT", "gqtevcat", "evcat");
         public static AreaRef AreaLNHAG { get { return m_AreaLNHAG; } }
         private static AreaRef m_AreaLNHAG = new AreaRef("GQT", "gqtlnhag", "lnhag");
+        public static AreaRef AreaPROPE { get { return m_AreaPROPE; } }
+        private static AreaRef m_AreaPROPE = new AreaRef("GQT", "gqtprope", "prope");
         //areas hardcoded
         public static AreaRef AreaDELEGA { get { return m_AreaDELEGA; } }
         private static AreaRef m_AreaDELEGA = new AreaRef("GQTdelega", "delega");
@@ -359,6 +375,7 @@ namespace CSGenio.business
             "s_pax",
             "cntry",
             "repar",
+            "c_add",
             "sale",
             "dispa",
             "inpgr",
@@ -373,6 +390,7 @@ namespace CSGenio.business
             "gitem",
             "lnhde",
             "strat",
+            "c_brn",
             "decom",
             "room1",
             "proje",
@@ -380,9 +398,11 @@ namespace CSGenio.business
             "tabpr",
             "regio",
             "tpeq1",
+            "agent",
             "faqs",
             "tpcon",
             "s_apr",
+            "ctry",
             "fami1",
             "movim",
             "langu",
@@ -406,6 +426,7 @@ namespace CSGenio.business
             "lcext",
             "dttyp",
             "tblb",
+            "proph",
             "year1",
             "regi1",
             "space",
@@ -447,6 +468,7 @@ namespace CSGenio.business
             "perio",
             "perso",
             "lang1",
+            "procn",
             "psw",
             "messa",
             "outpt",
@@ -480,6 +502,7 @@ namespace CSGenio.business
             "rogl1",
             "s_arg",
             "equip",
+            "city",
             "pworg",
             "cate3",
             "grid",
@@ -494,6 +517,7 @@ namespace CSGenio.business
             "agreg",
             "evcat",
             "lnhag",
+            "prope",
         });
 
         /// <summary>

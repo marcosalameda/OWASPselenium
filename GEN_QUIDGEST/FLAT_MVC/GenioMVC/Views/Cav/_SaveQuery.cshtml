@@ -1,0 +1,74 @@
+﻿
+    <div id="Menu" class="modal-fbody">        
+        @using (Ajax.BeginForm("SaveQueryData", "Cav",new AjaxOptions
+        {
+            HttpMethod= "POST",
+            InsertionMode = InsertionMode.InsertBefore,
+            UpdateTargetId = "Menu",
+            OnSuccess = "AfterSaveQuery"
+        }))
+        {
+            <input type="hidden" name="table" id="table" value="@ViewBag.Table" />
+            <div class="container-fluid">
+                <div class="form-group row">
+                    <label class="i-text__label">@Resources.NOME_DA_CONSULTA15812</label>                   
+                    <input type="text" class="form-control i-text__field i-text input-large" name="title" id="queryname" value="@ViewBag.QueryDesc" />
+                    <input type="text" class="d-none" name="id" value="@ViewBag.QueryId" />
+                </div>
+                <fieldset class="form-group">
+                    <div class="row">
+                        <legend class="i-text__label">@Resources.ACESSO_DA_CONSULTA62026</legend>
+                        <div class="col-sm-12">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="access" id="gridRadios1" value="PUB" checked>
+                                <label class="form-check-label" for="gridRadios1">
+                                    @Resources.PUBLICA03827
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="access" id="gridRadios2" value="PES">
+                                <label class="form-check-label" for="gridRadios2">
+                                    @Resources.PESSOAL41600
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="access" id="gridRadios3" value="INA">
+                                <label class="form-check-label" for="gridRadios3">
+                                    @Resources.INACTIVA17630
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="form-group row">
+                    @if ((ViewBag.QueryId ?? "new") != "new")
+                    {
+                        <div class="col-sm-12">
+                            <div class="form-check">                                
+                                <input class="form-check-input" type="checkbox" name="override" id="gridCheck1" checked>
+                                <label class="form-check-label" for="gridRadios3">@Resources.SOBREPOR_A_CONSULTA_05240</label>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <input type="hidden" name="duplicate" id="overwrite" />
+                    }
+                </div>
+            </div>
+
+            <input class="b-icon-text b-icon-text--primary ml-2 mb-2" type="submit" id="SubmitQuery" value="@Resources.GRAVAR45301" />
+            @Html.AntiForgeryToken()
+        }
+    </div>
+
+    <script>    
+        function AfterSaveQuery() {
+            bootbox.alert(quidgestGlobals.Resources.CONSULTA_GRAVADA_COM37033);
+            $("#savequerybtn").dropdown('toggle');            
+        }    
+    </script>
+
+
+        
+

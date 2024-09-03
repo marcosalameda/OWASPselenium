@@ -91,7 +91,6 @@ namespace CSGenio.business
 			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "DOCUMENT00695";
 
-            Qfield.NotNull = true;
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
  			Qfield = new Field("documentfk", FieldType.CHAVE_ESTRANGEIRA_GUID);
@@ -164,15 +163,15 @@ namespace CSGenio.business
 			info.Pathways = new Dictionary<string, string>(13);
 			info.Pathways.Add("langu","langu");
 			info.Pathways.Add("equip","equip");
-			info.Pathways.Add("wareh","equip");
 			info.Pathways.Add("decom","equip");
-			info.Pathways.Add("item","equip");
-			info.Pathways.Add("cmpny","equip");
+			info.Pathways.Add("wareh","equip");
 			info.Pathways.Add("tpequ","equip");
+			info.Pathways.Add("cmpny","equip");
+			info.Pathways.Add("item","equip");
 			info.Pathways.Add("pess1","equip");
-			info.Pathways.Add("gitem","equip");
-			info.Pathways.Add("cntry","equip");
 			info.Pathways.Add("famil","equip");
+			info.Pathways.Add("cntry","equip");
+			info.Pathways.Add("gitem","equip");
 			info.Pathways.Add("stake","equip");
 			info.Pathways.Add("cate2","equip");
 		}

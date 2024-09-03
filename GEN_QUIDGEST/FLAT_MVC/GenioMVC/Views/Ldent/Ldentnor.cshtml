@@ -1,0 +1,261 @@
+﻿@model GenioMVC.ViewModels.Ldent.Ldentnor_ViewModel
+@using GenioMVC.Models.Navigation;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Form = "Ldentnor";
+	ViewBag.Title = @Resources.ENTRY29068;
+    ViewBag.formmode = Model.GetFormMode;
+	ViewBag.ClassForFormLayout = "form-flow";
+}
+
+
+@if (!Model.NestedForm) {
+    if(Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+    {
+        using (Html.BeginForm("Action", "Ldent", FormMethod.Post, new { @class = "form-horizontal", area="Ldent", data_form="Ldentnor" }))
+        {
+            @form_content_alert()
+            @Html.QValidationSummary()
+	        @LoadDefault()
+        }
+    }
+    else
+    {
+        <div class="form-horizontal" id="Ldentnor" area="Ldent" data-form="Ldentnor">
+	        @LoadDefault()
+        </div>
+    }
+}
+else {
+    <div class="c-card nested-form" id="Ldentnor_well" area="Ldent" data-form="Ldentnor">
+        @Html.QValidationSummary()
+		@LoadDefault()
+    </div>
+}
+
+@helper form_content_body() {
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-dbedit draggable " id="CONTAINER_IFF_LDENTNORWAREHWAREHDES">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.TableWarehWarehdes, new { label_id="IFF_LDENTNORWAREHWAREHDES", @class = " i-text__label", id="LABEL_IFF_LDENTNORWAREHWAREHDES"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('IFF_LDENTNORWAREHWAREHDES','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DropDownListFor(model => model.ValCodwareh, Model.TableWarehWarehdes.List , "", new {help_id = "IFF_LDENTNORWAREHWAREHDES", @class = "i-select chosen-dropdown input-xxlarge", data_refresh = "true", data_tipoform = "DF", data_identifier = "IFF_LDENTNORWAREHWAREHDES", @pers_cs_area = "Wareh", @pers_cs_field = "ValCodwareh", @db_field = "ValCodwareh", @db_full_field_name = "ldent.codwareh", data_has_more = Model.TableWarehWarehdes.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableWarehWarehdes.Selected, data_dbedit_value = Model.TableWarehWarehdes.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodldent, @data_see_more = "Ldentnor_WarehValWarehdes", title = @Resources.WAREHOUSE51864, data_see_more_url = @Url.Action("Ldentnor_WarehValWarehdes","Ldent"), data_is_dbedit = "true", data_fields = "wareh.codwareh,wareh.warehdes", data_main_field = "Wareh.ValWarehdes", data_elements = 0, data_filled_by_history = Model.TableWarehWarehdes.FilledByHistory, @dependant_fields = "wareh.codwareh,wareh.warehdes" })
+								@Html.ValidationMessageFor(model => model.TableWarehWarehdes)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_LDENTNORLDENTLINE____">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValLine, new { label_id="LED_LDENTNORLDENTLINE____", @class = " i-text__label", id="LABEL_LED_LDENTNORLDENTLINE____"}, true, true)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_LDENTNORLDENTLINE____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValLine, new {help_id = "LED_LDENTNORLDENTLINE____", @class = "Number text-right i-text__field i-text input-mini", data_sequencial = "M1", data_identifier = "LED_LDENTNORLDENTLINE____", @pers_cs_area = "Ldent", @pers_cs_field = "ValLine", @db_field = "ValLine", title = @Resources.LINE27983, data_number_integer = "3", data_number_decimals = "1", data_number_format = "999.9" })
+								@Html.ValidationMessageFor(model => model.ValLine)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-dbedit draggable " id="CONTAINER_IFF_LDENTNORITEM_ITEMDES_">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.TableItemItemdes, new { label_id="IFF_LDENTNORITEM_ITEMDES_", @class = " i-text__label", id="LABEL_IFF_LDENTNORITEM_ITEMDES_"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('IFF_LDENTNORITEM_ITEMDES_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DropDownListFor(model => model.ValCoditem, Model.TableItemItemdes.List , "", new {help_id = "IFF_LDENTNORITEM_ITEMDES_", @class = "i-select chosen-dropdown input-xxlarge", data_identifier = "IFF_LDENTNORITEM_ITEMDES_", @pers_cs_area = "Item", @pers_cs_field = "ValCoditem", @db_field = "ValCoditem", @db_full_field_name = "ldent.coditem", dependant_area = "Wareh", dependant = "ValCodwareh", key_field = "ValCoditem", data_has_more = Model.TableItemItemdes.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableItemItemdes.Selected, data_dbedit_value = Model.TableItemItemdes.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodldent, @data_see_more = "Ldentnor_ItemValItemdes", title = @Resources.ITEM40802, data_see_more_url = @Url.Action("Ldentnor_ItemValItemdes","Ldent"), data_is_dbedit = "true", data_fields = "item.coditem,item.itemdes,item.itemcod", data_main_field = "Item.ValItemdes", data_elements = 0, data_filled_by_history = Model.TableItemItemdes.FilledByHistory, @dependant_fields = "item.coditem,item.itemdes" })
+								@Html.ValidationMessageFor(model => model.TableItemItemdes)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_LDENTNORLDENTQTDENTRA">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValQtdentra, new { label_id="LED_LDENTNORLDENTQTDENTRA", @class = " i-text__label", id="LABEL_LED_LDENTNORLDENTQTDENTRA"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_LDENTNORLDENTQTDENTRA','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValQtdentra, new {help_id = "LED_LDENTNORLDENTQTDENTRA", @class = "Number text-right i-text__field i-text input-small", data_identifier = "LED_LDENTNORLDENTQTDENTRA", @pers_cs_area = "Ldent", @pers_cs_field = "ValQtdentra", @db_field = "ValQtdentra", title = @Resources.INPUT_QUANTITY01675, data_number_integer = "10", data_number_decimals = "0", data_number_format = "9999999999" })
+								@Html.ValidationMessageFor(model => model.ValQtdentra)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row hidden">
+				<div class="col-12 hidden">
+					<div class="control-row-group hidden">
+						<div>
+								@Html.HiddenFor(model => model.ValCoddentr, new {help_id = "IFF_LDENTNORINDOCDOCUMENR", @class = "", data_sequencial = "M1", data_identifier = "IFF_LDENTNORINDOCDOCUMENR", @pers_cs_area = "Ldent", @dependant_fields = "indoc.coddentr,indoc.documenr,indoc.codwareh", data_main_field = "Indoc.ValDocumenr", trelate = "Indoc", tfrelate = "Coddentr", hidden_dbedit = "true", @pers_cs_field = "ValCoddentr", data_value = Model.ValCoddentr })
+						</div>
+						<div>
+								@Html.TextBoxFor(model => model.IndocValCodwareh, new {help_id = "LED_LDENTNORINDOCCODWAREH", @class = "i-text__field i-text input-mini", data_identifier = "LED_LDENTNORINDOCCODWAREH", @pers_cs_area = "Indoc", @pers_cs_field = "ValCodwareh", @db_field = "ValCodwareh", fixed_field = "true", @readonly = "readonly", dependant = "ValCoddentr", key_field = "ValCoddentr", dependant_area = "Indoc" })
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			@Html.HiddenFor(model => model.ValCodldent, new { @pers_cs_field="ValCodldent", @pers_cs_area="Ldent", data_refresh = "true", @form_area="true", @data_value = Model.ValCodldent, @data_identifier = "LED_LDENTNORLDENTCODLDENT" })
+
+            @Html.Hidden("IgnoreWarnings", "false", new { id = "IgnoreWarnings" })
+
+			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Ldentnor" })
+            @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Ldentnor" })
+            @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Ldentnor" })
+			if (!Model.NestedForm)
+            {
+                @Html.AntiForgeryToken()
+            }
+}
+
+@helper form_content_alert() {
+	if(Model.FormMode == FormMode.Delete) {
+		<div class="c-alert c-alert--warning">
+			<i class="glyphicons glyphicons-alert c-alert__icon" aria-hidden="true"></i>
+			<div class="c-alert__text">
+				&ensp;@Resources.DESEJA_ELIMINAR_ESTA24564
+			</div>
+		<!--Ao confirmar esta ficha irá ser eliminada da base de dados. Cancele caso não tenha a certeza.-->
+		</div>
+	}
+}
+
+@helper form_content_buttons() {
+
+
+
+
+    @* Extended support form *@
+    if (Model.NestedForm)
+    {
+        if (Model.IsEditableMode)
+        {
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("Ldentnor", Model.FormMode).ToString(), "Ldent")", "Ldentnor_well")' qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>
+                    @Resources.GRAVAR45301
+            </button>
+            <button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Ldentnor_Delete", "Ldent", new {id = @Model.ValCodldent} )", "Ldentnor_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+
+            <script type="application/javascript">
+                $(document).ready(function () { loaded($("#Ldentnor_well")); });
+            </script>
+        }
+
+        @* javascript code_javascript *@
+        @*@codeJavascript()*@
+    }
+    @* Normal mode *@
+    else
+    {
+        if (Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+        {
+            if (Model.FormMode == FormMode.New && Convert.ToBoolean(Model.Navigation.CurrentLevel.GetEntry("repeatInsertion")))
+            {
+            <button type="button" data-end-pers="true" name="Ldentnor_repete_insertion" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitLdentnor(event, true)" qbutton="ok_new">@Resources.GRAVAR_E_CRIAR_NOVA17771</button>
+            }
+            if(Model.FormMode == FormMode.Delete)
+            {
+				<button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Ldentnor", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitDeleteLdentnor(event)" qbutton="delete">
+                    <i class="glyphicons glyphicons-check e-icon" aria-hidden="true"></i>@Resources.CONFIRMAR09808
+                </button>
+            }
+            else
+            {
+                <button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Ldentnor", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitLdentnor(event)" title="@Resources.GRAVAR45301" data-selector="true" qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>@Resources.GRAVAR45301
+                </button>
+            }
+
+            <button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-href="@Url.Action("Ldentnor_Cancel", "Ldent", new { niv = Model.Navigation.CurrentLevel.Level })" onclick="javascript:window.Form_Ldentnor.Cancel()" title="@Resources.CANCEL65428" data-selector="true" qbutton="cancel">
+                <i class="glyphicons glyphicons-ban-circle e-icon" aria-hidden="true"></i>@Resources.CANCEL65428
+            </button>
+        }
+        else if (!(ViewBag.isHomePage ?? false))
+        {
+            @Html.ActionLinkWithIcon(@Resources.RETROCEDER16633, "Ldentnor_Cancel","Ldent","glyphicons glyphicons-arrow-left e-icon", null, new { @class = "b-icon-text b-icon-text--secondary", @data_end_pers = "true", @title = @Resources.RETROCEDER16633, qbutton = "cancel" })
+        }
+    }
+}
+
+@helper LoadDefault() {
+    if (Model.NestedForm)
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div class="c-card__header">
+                    <div class="c-card__header-tag">
+						<span class="form-header" style="padding:0;">
+							<i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+						</span>
+                    </div>
+                </div>
+                <div class="c-card__body">
+                    @form_content_body()
+                    <div elem-identifier="FormActions" class="form-actions" data-form-actions="Ldentnor">
+                        @form_content_buttons()
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    }
+    else
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div id="c-stickyHeader">
+                    <div class="c-action-bar d-flex">
+                        <span class="form-header">
+                            <i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+                        </span>
+                        <div data-parent-form="Ldentnor" data-q-ref="form-btns-main_container"></div>
+                    </div>
+                </div>
+
+                @form_content_body()
+                <div elem-identifier="FormActions" class="form-actions" data-form-actions="Ldentnor">
+                @form_content_buttons()
+                </div>
+            </div>
+        </fieldset>
+    }
+}
+
+@helper LoadFromLayout()
+{
+}
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT LDENTNOR]/ *@
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_LDENTNOR" data-form-javascript="true">
+@Html.Partial("Ldentnor_JavaScript", Model, ViewData)
+</div>
+}
+
+@section code_javascript
+{
+	@codeJavascript()
+}
+
+@if (Request.IsAjaxRequest())
+{
+    @codeJavascript()
+    @includeStylesheets()
+}
+
+@helper includeStylesheets()
+{
+
+ }
+
+@section include_stylesheets {
+    @includeStylesheets()
+}

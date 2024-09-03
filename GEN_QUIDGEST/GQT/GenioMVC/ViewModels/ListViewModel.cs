@@ -517,6 +517,15 @@ namespace GenioMVC.ViewModels
         /// Gets the list of columns to export.
         /// </summary>
         /// <param name="ajaxRequest">Whether the request was initiated via AJAX.</param>
-        abstract public List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false);
+        public abstract List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false);
+
+        /// <summary>
+        /// Builds the list CriteriaSet with all the limits, filters and conditions
+        /// </summary>
+        /// <param name="requestValues">Table filters</param>
+        /// <param name="tableReload">[Quick fix] Indicates whether the data list should be loaded. If set to false within the method, it signals that the data list should not display rows due to unmet mandatory limits.</param>
+        /// <param name="crs">Pass a CriteriaSet by reference to be modified</param>
+        /// <param name="isToExport">If the  table is to be exported</param>
+        public abstract CriteriaSet BuildCriteriaSet(NameValueCollection requestValues, out bool tableReload, CriteriaSet crs = null, bool isToExport = false);
     }
 }

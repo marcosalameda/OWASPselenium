@@ -25,7 +25,9 @@ namespace GenioMVC.Models
 
 		private Glob _globTable;
 		/// <summary>
-		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
+		/// Gets a reference to the GLOB table
+		/// to provide access to the necessary fields
+		/// to client and server-side formulas.
 		/// </summary>
 		[JsonIgnore]
 		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(false, this?._fieldsToSerialize); return _globTable; } }
@@ -149,7 +151,7 @@ namespace GenioMVC.Models
 
 		[DisplayName("Document")]
 		/// <summary>Field : "Document" Tipo: "IB" Formula:  ""</summary>
-		[Document("ValAttach", false, true, false, false)]
+		[Document("ValAttach", true, false, false)]
 		public string ValAttach { get { return klass.ValAttach; } set { klass.ValAttach = value; } }
 		public string ValAttachfk { get { return klass.ValAttachfk; } set { klass.ValAttachfk = value; } }
 		public bool ShouldSerializeValAttach() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Flds.ValAttach");

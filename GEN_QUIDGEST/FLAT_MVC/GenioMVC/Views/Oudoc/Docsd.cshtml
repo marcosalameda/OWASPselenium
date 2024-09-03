@@ -1,0 +1,245 @@
+﻿@model GenioMVC.ViewModels.Oudoc.Docsd_ViewModel
+@using GenioMVC.Models.Navigation;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Form = "Docsd";
+	ViewBag.Title = @Resources.OUTPUT_DOCUMENT44972;
+    ViewBag.formmode = Model.GetFormMode;
+	ViewBag.ClassForFormLayout = "form-flow";
+}
+
+
+@if (!Model.NestedForm) {
+    if(Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+    {
+        using (Html.BeginForm("Action", "Oudoc", FormMethod.Post, new { @class = "form-horizontal", area="Oudoc", data_form="Docsd" }))
+        {
+            @form_content_alert()
+            @Html.QValidationSummary()
+	        @LoadDefault()
+        }
+    }
+    else
+    {
+        <div class="form-horizontal" id="Docsd" area="Oudoc" data-form="Docsd">
+	        @LoadDefault()
+        </div>
+    }
+}
+else {
+    <div class="c-card nested-form" id="Docsd_well" area="Oudoc" data-form="Docsd">
+        @Html.QValidationSummary()
+		@LoadDefault()
+    </div>
+}
+
+@helper form_content_body() {
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_DOCSD___OUDOCNRDOCSDA">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValNrdocsda, new { label_id="LED_DOCSD___OUDOCNRDOCSDA", @class = " i-text__label", id="LABEL_LED_DOCSD___OUDOCNRDOCSDA"}, true, true)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_DOCSD___OUDOCNRDOCSDA','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValNrdocsda, new {help_id = "LED_DOCSD___OUDOCNRDOCSDA", @class = "Number text-right i-text__field i-text input-small", data_sequencial = "M1", data_identifier = "LED_DOCSD___OUDOCNRDOCSDA", @pers_cs_area = "Oudoc", @pers_cs_field = "ValNrdocsda", @db_field = "ValNrdocsda", title = @Resources.NUMBER_64178, data_number_integer = "10", data_number_decimals = "0", data_number_format = "9999999999" })
+								@Html.ValidationMessageFor(model => model.ValNrdocsda)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-date-picker draggable " id="CONTAINER_LED_DOCSD___OUDOCDTDOCSDA">
+								<div class="d-inline-flex">
+								@Html.LabelFor(model => model.ValDtdocsda, new { label_id="LED_DOCSD___OUDOCDTDOCSDA", @class = " i-text__label", id="LABEL_LED_DOCSD___OUDOCDTDOCSDA"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_DOCSD___OUDOCDTDOCSDA','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DateFor(model => model.ValDtdocsda, new {help_id = "LED_DOCSD___OUDOCDTDOCSDA", @class = "i-input-group__field b-icon-text input-medium", data_identifier = "LED_DOCSD___OUDOCDTDOCSDA", @pers_cs_area = "Oudoc", @pers_cs_field = "ValDtdocsda", @db_field = "ValDtdocsda", title = @Resources.DATE_55218 })
+								@Html.ValidationMessageFor(model => model.ValDtdocsda)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_DOCSD___OUDOCTITLE___">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValTitle, new { label_id="LED_DOCSD___OUDOCTITLE___", @class = " i-text__label", id="LABEL_LED_DOCSD___OUDOCTITLE___"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_DOCSD___OUDOCTITLE___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextBoxFor(model => model.ValTitle, new {help_id = "LED_DOCSD___OUDOCTITLE___", @class = "i-text__field i-text input-xlarge", data_identifier = "LED_DOCSD___OUDOCTITLE___", @pers_cs_area = "Oudoc", @pers_cs_field = "ValTitle", @db_field = "ValTitle", title = @Resources.TITLE21885, maxlength = "50", rows = "50" })
+								@Html.ValidationMessageFor(model => model.ValTitle)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			@Html.HiddenFor(model => model.ValCoddocsd, new { @pers_cs_field="ValCoddocsd", @pers_cs_area="Oudoc", data_refresh = "true", @form_area="true", @data_value = Model.ValCoddocsd, @data_identifier = "LED_DOCSD___OUDOCCODDOCSD" })
+
+            @Html.Hidden("IgnoreWarnings", "false", new { id = "IgnoreWarnings" })
+
+			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Docsd" })
+            @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Docsd" })
+            @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Docsd" })
+			if (!Model.NestedForm)
+            {
+                @Html.AntiForgeryToken()
+            }
+}
+
+@helper form_content_alert() {
+	if(Model.FormMode == FormMode.Delete) {
+		<div class="c-alert c-alert--warning">
+			<i class="glyphicons glyphicons-alert c-alert__icon" aria-hidden="true"></i>
+			<div class="c-alert__text">
+				&ensp;@Resources.DESEJA_ELIMINAR_ESTA24564
+			</div>
+		<!--Ao confirmar esta ficha irá ser eliminada da base de dados. Cancele caso não tenha a certeza.-->
+		</div>
+	}
+}
+
+@helper form_content_buttons() {
+
+
+
+
+    @* Extended support form *@
+    if (Model.NestedForm)
+    {
+        if (Model.IsEditableMode)
+        {
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("Docsd", Model.FormMode).ToString(), "Oudoc")", "Docsd_well")' qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>
+                    @Resources.SAVE04165
+            </button>
+            <button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Docsd_Delete", "Oudoc", new {id = @Model.ValCoddocsd} )", "Docsd_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+
+            <script type="application/javascript">
+                $(document).ready(function () { loaded($("#Docsd_well")); });
+            </script>
+        }
+
+        @* javascript code_javascript *@
+        @*@codeJavascript()*@
+    }
+    @* Normal mode *@
+    else
+    {
+        if (Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+        {
+            if (Model.FormMode == FormMode.New && Convert.ToBoolean(Model.Navigation.CurrentLevel.GetEntry("repeatInsertion")))
+            {
+            <button type="button" data-end-pers="true" name="Docsd_repete_insertion" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitDocsd(event, true)" qbutton="ok_new">@Resources.GRAVAR_E_CRIAR_NOVA17771</button>
+            }
+            if(Model.FormMode == FormMode.Delete)
+            {
+				<button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Docsd", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitDeleteDocsd(event)" qbutton="delete">
+                    <i class="glyphicons glyphicons-check e-icon" aria-hidden="true"></i>@Resources.CONFIRMAR09808
+                </button>
+            }
+            else
+            {
+                <button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Docsd", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitDocsd(event)" title="@Resources.SAVE04165" data-selector="true" qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>@Resources.SAVE04165
+                </button>
+            }
+
+            <button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-href="@Url.Action("Docsd_Cancel", "Oudoc", new { niv = Model.Navigation.CurrentLevel.Level })" onclick="javascript:window.Form_Docsd.Cancel()" title="@Resources.CANCEL65428" data-selector="true" qbutton="cancel">
+                <i class="glyphicons glyphicons-ban-circle e-icon" aria-hidden="true"></i>@Resources.CANCEL65428
+            </button>
+        }
+        else if (!(ViewBag.isHomePage ?? false))
+        {
+            @Html.ActionLinkWithIcon(@Resources.RETROCEDER16633, "Docsd_Cancel","Oudoc","glyphicons glyphicons-arrow-left e-icon", null, new { @class = "b-icon-text b-icon-text--secondary", @data_end_pers = "true", @title = @Resources.RETROCEDER16633, qbutton = "cancel" })
+        }
+    }
+}
+
+@helper LoadDefault() {
+    if (Model.NestedForm)
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div class="c-card__header">
+                    <div class="c-card__header-tag">
+						<span class="form-header" style="padding:0;">
+							<i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+						</span>
+                    </div>
+                </div>
+                <div class="c-card__body">
+                    @form_content_body()
+                    <div elem-identifier="FormActions" class="form-actions" data-form-actions="Docsd">
+                        @form_content_buttons()
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    }
+    else
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div id="c-stickyHeader">
+                    <div class="c-action-bar d-flex">
+                        <span class="form-header">
+                            <i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+                        </span>
+                        <div data-parent-form="Docsd" data-q-ref="form-btns-main_container"></div>
+                    </div>
+                </div>
+
+                @form_content_body()
+                <div elem-identifier="FormActions" class="form-actions" data-form-actions="Docsd">
+                @form_content_buttons()
+                </div>
+            </div>
+        </fieldset>
+    }
+}
+
+@helper LoadFromLayout()
+{
+}
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT DOCSD]/ *@
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_DOCSD" data-form-javascript="true">
+@Html.Partial("Docsd_JavaScript", Model, ViewData)
+</div>
+}
+
+@section code_javascript
+{
+	@codeJavascript()
+}
+
+@if (Request.IsAjaxRequest())
+{
+    @codeJavascript()
+    @includeStylesheets()
+}
+
+@helper includeStylesheets()
+{
+
+ }
+
+@section include_stylesheets {
+    @includeStylesheets()
+}

@@ -1903,7 +1903,11 @@ namespace GenioMVC.Helpers
             vals["data-group-sep"] = groupSeparator;
 
             if (metadata.Model is Decimal)
+            {
                 value = ((Decimal)metadata.Model).ToString(formatCulture);
+                // The numeric value must be in JavaScript format to avoid issues when comparing the field value with the value from persistence.
+                vals["original-value"] = ((Decimal)metadata.Model).ToString(CultureInfo.InvariantCulture);
+            }
 
             MvcHtmlString input = null;
             if (!string.IsNullOrEmpty(value))
@@ -3026,6 +3030,46 @@ namespace GenioMVC.Helpers
             return new MvcHtmlString(filterMenu.ToString());
         }
 		#endregion
+
+        #region Elasticsearch
+        /// <summary>
+        /// Create search filter button to popup advanced search window
+        /// </summary>
+        /// <param name="id">The ID</param>
+        /// <returns>HTML of advanced search filter button</returns>
+        public static MvcHtmlString SearchFilterBtnPopUp(this HtmlHelper html, string id, string dataTable)
+        {
+            TagBuilder advSearchDiv1 = new TagBuilder("div");
+            advSearchDiv1.Attributes.Add("id", "btn_adv_div1_" + id);
+            advSearchDiv1.AddCssClass("col-auto float-right");
+            advSearchDiv1.Attributes.Add("style", "padding: 0; padding-right: 15px");
+
+            TagBuilder advSearchDiv2 = new TagBuilder("div");
+            advSearchDiv2.Attributes.Add("id", "btn_adv_div2_" + id);
+            advSearchDiv2.AddCssClass("b-btn-group float-right");
+
+
+            var urlHelper = new UrlHelper(html.ViewContext.RequestContext);
+
+            TagBuilder filterBtn = new TagBuilder("button");
+            filterBtn.AddCssClass("b-btn b-icon b-icon--secondary");
+            filterBtn.Attributes.Add("type", "button");
+            filterBtn.Attributes.Add("data-modal-form", "ESAdvFilter");
+            filterBtn.Attributes.Add("data-modal-id", "ESAdvFilter-edit-modal");
+            filterBtn.Attributes.Add("data-table", dataTable);
+            filterBtn.Attributes.Add("data-modal-url", urlHelper.Action("AdvancedElasticsearchFilterView", dataTable));
+            filterBtn.Attributes.Add("title", Resources.Resources.FILTROS_AVANCADOS32501);
+
+            TagBuilder iconBtn = new TagBuilder("i");
+            iconBtn.AddCssClass("glyphicons glyphicons-list e-icon");
+            filterBtn.InnerHtml += iconBtn;
+            advSearchDiv2.InnerHtml += filterBtn;
+            advSearchDiv1.InnerHtml += advSearchDiv2;
+
+            return new MvcHtmlString(advSearchDiv1.ToString());
+        }
+        #endregion
+
     }
 
     #region LabelExtensions

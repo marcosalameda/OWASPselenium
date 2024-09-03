@@ -292,4 +292,31 @@ namespace CSGenio.business.Triggers
 			AddAction(2, new UpdateFieldValueAction(context, "glob", "legend", formula, false));
 		}
 	}
+
+	/// <summary>
+	/// Trigger TRIGMENU2
+	/// </summary>
+	/// <seealso cref="CSGenio.business.Trigger" />
+	public class TriggerTrigmenu2 : Trigger
+	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="TriggerTrigmenu2" /> class.
+		/// </summary>
+		/// <param name="context">The context.</param>
+		public TriggerTrigmenu2(TriggerContext context) : base(context)
+		{
+			_id = "TRIGMENU2";
+
+			// Actions
+			List<ByAreaArguments> argumentsListByArea;
+			InternalOperationFormula formula;
+
+			argumentsListByArea = new List<ByAreaArguments>();
+			formula = new InternalOperationFormula(argumentsListByArea, 0, delegate(object[] args, User user, string module, PersistentSupport sp) {
+				return "Teste do trigger";
+			});
+
+			AddAction(1, new UpdateFieldValueAction(context, "expen", "descript", formula, false));
+		}
+	}
 }

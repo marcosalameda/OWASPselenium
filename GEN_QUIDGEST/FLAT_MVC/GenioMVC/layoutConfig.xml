@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LayoutConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<DbEditActionPlacement>left</DbEditActionPlacement> <!-- left, right -->
+	<FormAnchorsPosition>sidebar</FormAnchorsPosition> <!-- form-header, sidebar -->
+	<DbEditPagerPlacement>left</DbEditPagerPlacement> <!-- left, right -->
+	<DbEditMultipleActionPlacement>left</DbEditMultipleActionPlacement> <!-- left, right -->
+	<LoginStyle>embeded_page</LoginStyle> <!-- single_page, embeded_page -->
+	<LanguagePlacement>in_footer</LanguagePlacement> <!-- in_header, in_footer -->
+	<UserRegisterStyle>button</UserRegisterStyle> <!-- button, hyperlink -->
+	<FooterEnable>true</FooterEnable> <!-- true, false -->
+	<BreadcrumbsContent>detailed</BreadcrumbsContent> <!-- simplified, detailed, hidden -->
+	<RowActionDisplay>dropdown</RowActionDisplay> <!-- inline, dropdown -->
+	<DefaultSidebarState>opened</DefaultSidebarState> <!-- opened, closed -->
+	<ModulesStyle>collapsible</ModulesStyle> <!-- list, dropdown, collapsible -->
+	<MenuSearchEnable>false</MenuSearchEnable> <!-- true, false -->
+	<BookmarkEnable>true</BookmarkEnable> <!-- true, false -->
+	<ShowPasswordToggle>true</ShowPasswordToggle> <!-- true, false -->
+	<AuthenticationStyle>default</AuthenticationStyle> <!-- default, light, secondary -->
+	<HelpListShort>Subtitle</HelpListShort> <!-- Tooltip, Popover, Subtitle, Info-banner -->
+	<HelpListDetail>Popover</HelpListDetail> <!-- Popover, Subtitle, Info-banner -->
+	<HelpInputShort>subtext</HelpInputShort> <!-- Tooltip, Subtext -->
+	<HelpInputDetail>Popover</HelpInputDetail> <!-- Popover -->
+	<HelpGroupShort>Tooltip</HelpGroupShort> <!-- Tooltip, Popover, Subtitle -->
+	<HelpGroupDetail>Popover</HelpGroupDetail> <!-- Popover, Subtitle -->
+	<HeaderPlacement>in_menuPanel</HeaderPlacement> <!-- in_contentPanel, in_menuPanel -->
+	<MenuBackgroundColor>dark</MenuBackgroundColor> <!-- dark, light -->
+	<MenuBrand>Text</MenuBrand> <!-- Image, Text -->
+</LayoutConfig>

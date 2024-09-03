@@ -345,7 +345,7 @@
 @if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
 {
 	<text>
-	function Tpequ_BC_UNICO (id) {
+	function Tpequ_ValUnico_BC_UNICO (id) {
 		$.when(window.Form_Tpequ.Apply()).then(function (isSaved) {
 		if (!isSaved) {
 			return;

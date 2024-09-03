@@ -1,0 +1,366 @@
+﻿@model GenioMVC.ViewModels.Menu_ViewModel
+@using GenioMVC.Models.Navigation;
+
+@helper MakeLink(GenioMVC.Helpers.Menus.MenuEntry menu, string module, bool firstLevel = false)
+{
+object htmlAttributes = null;
+if (firstLevel)
+{
+    htmlAttributes = new { @class = "nav-link n-sidebar__nav-link" };
+}
+
+if (menu.Action != null && menu.Action.Contains("Menu") && menu.TreeLevel == 1)
+{
+     htmlAttributes = new { @class = "nav-link n-sidebar__nav-link" };
+}
+else if (menu.Action != null && !menu.Action.Contains("Menu") && menu.TreeLevel > 1)
+{
+     htmlAttributes = new { @class = "dropdown-submenu" };
+}
+else if (menu.TreeLevel > 1)
+{
+     htmlAttributes = new { @class = "nav-link n-sidebar__nav-link" };
+}
+
+var innerHtml = "";
+if (!String.IsNullOrEmpty(menu.Image))
+{
+    TagBuilder i = new TagBuilder("i");
+    i.AddCssClass("icon-custom");
+
+    TagBuilder img = new TagBuilder("img");
+    img.MergeAttribute("src", Url.Content(menu.Image));
+    img.MergeAttribute("style", "vertical-align:text-top;");
+    img.MergeAttribute("height", "14");
+
+    try { img.MergeAttribute("alt", "icon-" + Helpers.GetTextFromResources(menu.Title)); }
+    catch (Exception) { img.MergeAttribute("alt", "icon-" + menu.Title); }
+
+    i.InnerHtml += img;
+
+    innerHtml += i + " ";
+}
+else if(!String.IsNullOrEmpty(menu.Font))
+{
+    TagBuilder i = new TagBuilder("i");
+    i.AddCssClass(menu.Font + " e-icon nav-icon n-sidebar__icon");
+    i.Attributes["style"] = "margin-right: 0.45rem;";
+    innerHtml += i + " ";
+}
+
+try
+{
+    //Only use acronym if an image has not been defined and acronym is filled
+    if (String.IsNullOrEmpty(menu.Image) && String.IsNullOrEmpty(menu.Font) && !String.IsNullOrEmpty(menu.Sigla))
+    {
+        innerHtml += "<span class=\"e-badge--mini-menu\">" + menu.Sigla + "</span>";
+    }
+
+    TagBuilder pg = new TagBuilder("p");
+
+    pg.InnerHtml = Helpers.GetTextFromResources(menu.Title);
+
+    if (menu.Count > 0)
+    {
+        pg.InnerHtml += " <span class=\"e-badge e-badge--dark\" title=\"(" + menu.Count + " " + @Resources.REGISTOS53981 + ")\"><span aria-hidden=\"true\">" + menu.Count + "</span></span>";
+    }
+
+    if (menu.Children.Count > 0)
+    {
+        pg.InnerHtml += "<i class=\"right glyphicons glyphicons-chevron-down\"></i>";
+    }
+
+    innerHtml += pg;
+}
+catch (Exception) { innerHtml += menu.Title; }
+    @Html.MenuAction(menu, Url, module, innerHtml,htmlAttributes);
+}
+
+@helper ShowSubItems(GenioMVC.Helpers.Menus.MenuEntry menu, string module, int level, bool root)
+{
+    //string extra = root ? "nav-item n-sidebar__nav-item" : "nav-item n-sidebar__nav-item n-sidebar__nav-sub-item1";
+    string extra = "nav-item n-sidebar__nav-item";
+    extra = menu.Children.Count > 0 ? extra + " has-treeview" : extra;
+
+    if (menu.Separates)
+    {
+        <li class='dropdown-divider'></li>
+    }
+    <li class='@extra' id="@module@menu.ID">
+        @if (menu.Children.Count > 0)
+        {
+            @MakeLink(menu, module, level == 0)
+
+            string sMenu = (menu.TreeLevel == 2 ? "nav nav-treeview n-sidebar__nav--level3":"nav nav-treeview");
+
+            <ul class="@sMenu" id="@module@menu.ID">
+                @foreach (GenioMVC.Helpers.Menus.MenuEntry subMenu in menu.Children)
+                {
+                    if (subMenu.Type == "ITEM")
+                    {
+                        @ShowSubItems(subMenu, module, level + 1, false)
+                    }
+                    else if (subMenu.Type == "LIST")
+                    {
+                        Html.RenderAction(subMenu.Action_MVC, subMenu.Controller);
+                    }
+                    else if (subMenu.Type == "REPORT")
+                    {
+                        <li>
+                            @MakeLink(subMenu, module)
+                        </li>
+                    }
+                }
+            </ul>
+
+        }
+        else
+        {
+            @MakeLink(menu, module)
+            // @Html.ActionLink(menu.Title, menu.Action_MVC, menu.Controller, new { module = module }, null);
+        }
+    </li>
+}
+
+@helper SearchBox()
+{
+<div class="n-sidebar__section menu-search">
+    <div class="i-input-group" id="MenuSearchGroup">
+        <input class="i-input-group__field" id="MenuSearchInput" name="menuSearchInput" onkeyup="SearchMenu()" placeholder="@Resources.PESQUISA_DE_MENUS30314" type="text" value="">
+        <div class="i-input-group--right">
+            <button type="button" elem-identifier="MenuSearchButton" class="b-icon--primary i-input-group__button--primary " title="@Resources.PESQUISAR34506" onclick="SearchMenu()"><i class="glyphicons glyphicons-search i-input-group__tag-icon i-input-group__button-icon"></i></button>
+        </div>
+    </div>
+
+    <div id="SearchMenuArea"></div>
+</div>
+}
+
+@helper Bookmarks()
+{
+    if (!@GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest())
+    {
+        @*          Bookmarks          *@
+        @Html.Action("Bookmarks", "Home")
+        @* --------------------------- *@
+    }
+}
+
+
+@helper DrawMenu()
+{
+    if (GenioMVC.LayoutConfig.config.MenuSearchEnable)
+    {
+        @SearchBox()
+    }
+    if (GenioMVC.LayoutConfig.config.BookmarkEnable)
+    {
+        @Bookmarks()
+    }
+
+    <div class="n-sidebar__section">
+        <ul class="nav nav-pills nav-sidebar flex-column n-sidebar__nav" data-widget="treeview" role="menu" data-accordion="true">
+            @{
+                int x = 0;
+                foreach (GenioMVC.Helpers.Menus.MenuEntry menu in Model.MenuList)
+                {
+                    @ShowSubItems(@menu, @Model.CurrentModule, x, true)
+                }
+            }
+        </ul>
+    </div>
+}
+
+@helper DrawMenuFlat()
+{
+var classIcon = "glyphicons glyphicons-menu-hamburger";
+var module = @Model.AvailableModules.FirstOrDefault(p => p.ID.Equals(@Model.CurrentModule));
+var moduleCount = @Model.AvailableModules.Count;
+classIcon = (module ==null || string.IsNullOrEmpty(module.Font) ? classIcon : module.Font);
+var moduleTitle = (module ==null || string.IsNullOrEmpty(module.Title) ? "" : module.Title);
+var menuBackgroundColor = GenioMVC.LayoutConfig.config.menuBackgroundColor.Equals(GenioMVC.MenuBackgroundColor.dark) ? "sidebar-dark-primary" : "sidebar-light-primary";
+
+    <nav class="main-header navbar navbar-expand c-header--sidebar">
+        <ul class="navbar-nav c-header__content--sidebar">
+            <li class="nav-item c-header__item--sidebar">
+                <span class="nav-link c-header__link--sidebar" data-widget="pushmenu" data-identifier="sidemenu_push_button"><i class="glyphicons glyphicons-menu-hamburger n-sidebar__toggler-icon"></i></span>
+            </li>
+            @if (CSGenio.framework.Configuration.QAEnvironment == 1)
+            {
+                <li class="nav-item c-header__item--sidebar">
+                    <span class="nav-link c-header__link--sidebar betatesting">
+                        <i class="glyphicons glyphicons-alert e-icon"></i> TESTING
+                    </span>
+                </li>
+            }
+        </ul>
+        <ul class="navbar-nav ml-auto n-menu__aside">
+    @if (!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest())
+    {
+		if (GenioMVC.Models.Navigation.UserContext.Current.User.Years.Count > 1)
+        {
+            <li class="nav-item dropdown n-DByear__item n-menu__aside-item">
+                <a class="nav-link dropdown-toggle n-DByear__link n-menu__aside-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="glyphicons glyphicons-calendar n-menu__icon nav-icon n-sidebar__icon"></span>@GenioMVC.Models.Navigation.UserContext.Current.User.Year
+                </a>
+                <div class="dropdown-menu n-DByear__dropdown dropdown-menu-right n-module__dropdown" aria-labelledby="navbarDropdown" style="min-width: 7rem;">
+                    <div class="c-card n-module__container">
+                        @foreach (var year in GenioMVC.Models.Navigation.UserContext.Current.User.Years)
+                        {
+                        <a class="dropdown-item" style="text-align: center;" href="@Url.Action("Index", "Home", new { system = year })">@year</a>
+                        }
+                    </div>
+                </div>
+            </li>
+        }
+            @Html.Partial("_UserAvatar")
+	}
+	else
+	{
+		<li class="dropdown_login">
+            <a class="dropdown-toggle b-icon-text b-icon-text--primary" data-toggle="dropdown" href="#">
+				<i class="glyphicons glyphicons-log-in e-icon"></i>
+				@Resources.ENTRAR16118
+			</a>
+            <div class="dropdown-menu dropdown-menu-right c-user__dropdown" aria-labelledby="dropdownMenuButton" style="padding: 15px; padding: 0px;">
+                <div class="c-card c-card--text-center">
+                    <div class="c-card__body">
+                        @{ Html.RenderAction("LogOnPartial", "Account", new { }); }
+                    </div>
+                </div>
+            </div>
+        </li>
+	}
+
+        </ul>
+    </nav>
+
+    <aside class="main-sidebar @menuBackgroundColor n-menu--sidebar">
+        <div class="n-sidebar__brand">
+            @if (GenioMVC.LayoutConfig.config.menuBrand.Equals(GenioMVC.MenuBrand.Image))
+            {
+                <a href="@Url.Action("Index", "Home")">
+                    <img src="@Url.Content("~/Content/img/Q_icon.png")" alt="Quidgest" class="n-sidebar__img">
+                </a>
+                <img src="@Url.Content("~/Content/img/logotipo_header.png")" alt="Quidgest" class="brand-image">
+            }
+            else
+            {
+                <a href="@Url.Action("Index", "Home")">
+                    <img src="@Url.Content("~/Content/img/Q_icon.png")" alt="Quidgest" class="n-sidebar__img">
+				    <span class="brand-text n-sidebar__brand-text">@Resources.STYLES28487</span>
+			    </a>
+            }
+        </div>
+        @*<div class="n-sidebar__panel">
+            <div class="c-header__user-id text-right">
+                @Html.Partial("_LogOnPartial")
+            </div>
+        </div>*@
+
+        <div class="sidebar n-sidebar" data-identifier="sidemenu_container">
+            <!-- Sidebar modules -->
+            @*<div class="mt-3 pb-3 d-flex n-sidebar__module">
+                <div class="n-sidebar__module-img">
+                    @Html.Partial("_Modules")
+                </div>
+            </div>*@
+
+            <!-- Sidebar Menu -->
+            <nav class="mt-2">
+@if (GenioMVC.LayoutConfig.config.MenuSearchEnable)
+{
+                @SearchBox()
+}
+@if (GenioMVC.LayoutConfig.config.BookmarkEnable)
+{
+                @Bookmarks()
+}
+@if (moduleCount > 1)
+{
+                <div class="n-sidebar__section">
+@if (GenioMVC.LayoutConfig.config.modulesStyle.Equals(GenioMVC.ModulesStyle.list))
+{
+                    <span id="modulesTitle" class="n-sidebar__title d-flex">
+                        <i class="glyphicons glyphicons-show-thumbnails nav-icon n-sidebar__icon e-icon"></i>
+                        <span>@Resources.MODULOS17298</span>
+                    </span>
+}
+                    @Html.Partial("_Modules")
+                </div>
+}
+                <div class="n-sidebar__section">
+@if (GenioMVC.LayoutConfig.config.modulesStyle.Equals(GenioMVC.ModulesStyle.list) && moduleCount > 1)
+{
+                    <span id="moduleItemsTitle" class="n-sidebar__title d-flex" data-identifier="sidemenu_push_button">
+                        <i class="glyphicons glyphicons-menu-hamburger nav-icon n-sidebar__icon e-icon"></i>
+                        <span>@Resources.ITENS_DO_MODULO58305</span>
+                    </span>
+}
+else if(GenioMVC.LayoutConfig.config.modulesStyle.Equals(GenioMVC.ModulesStyle.collapsible) && moduleCount > 1)
+{
+                    <span class="n-sidebar__active-module n-sidebar__title d-flex" style="text-transform:unset" data-identifier="sidemenu_push_button">
+                        <i class="@classIcon nav-icon n-sidebar__icon e-icon"></i>
+                        <span>@Helpers.GetTextFromResources(moduleTitle)</span>
+                    </span>
+}
+                    <ul class="nav nav-pills nav-sidebar flex-column n-sidebar__nav" data-widget="treeview" role="menu" data-accordion="true">
+                        @{
+                            int x = 0;
+                            foreach (GenioMVC.Helpers.Menus.MenuEntry menu in Model.MenuList)
+                            {
+                                @ShowSubItems(@menu, @Model.CurrentModule, x, true)
+                            }
+                        }
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </aside>
+}
+
+@{
+    if (GenioMVC.LayoutConfig.config.headerPlacement.Equals(GenioMVC.HeaderPlacement.in_menuPanel))
+    {
+        @DrawMenuFlat()
+    }
+    else
+    {
+        @DrawMenu()
+    }
+}
+
+<script type="text/javascript">
+    var currentSearchRequest = null;
+
+    function SearchMenu() {
+        var searchText = $("#MenuSearchInput").val();
+        if (!searchText) {
+            var area = $("#SearchMenuArea");
+            area.empty();
+            area.parent().next().show();
+            return;
+        }
+        currentSearchRequest = $.ajax({
+            url: '@Url.Action("Search", "MenuSearch")',
+            data: { searchString: searchText },
+            //Abort previous request
+            beforeSend: function () {
+                if(currentSearchRequest != null) {
+                    currentSearchRequest.abort();
+                    currentSearchRequest = null;
+                }
+            },
+            success: function (data) {
+                var area = $("#SearchMenuArea");
+                area.html(data);
+                if (area.height() > area.parent().parent().height() / 2) {
+                    area.parent().next().hide();
+                }
+                else {
+                    area.parent().next().show();
+                }
+            }
+        });
+    }
+</script>

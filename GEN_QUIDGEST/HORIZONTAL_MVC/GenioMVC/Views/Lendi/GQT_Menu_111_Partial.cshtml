@@ -49,7 +49,7 @@
         .DBEdit()
         .Filters(this.Model.Menu.Filters)
         .Form("Comod", false, true)
-        .SetFollowUp("Comod_Edit", "Lendi" , (Func<GenioMVC.Models.Lendi, object>)(item => new { id = item.ValCodlendi }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
+        .SetFollowUp("Comod_Show", "Lendi" , (Func<GenioMVC.Models.Lendi, object>)(item => new { id = item.ValCodlendi }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
         .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
 		;
         
@@ -59,8 +59,8 @@
 
 
 <script>
- 
- 
+
+
 
 $(document).ready(function() {
 

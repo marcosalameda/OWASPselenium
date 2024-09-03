@@ -196,129 +196,125 @@ namespace CSGenio.framework
                 System.Net.Mail.SmtpClient cliente = new System.Net.Mail.SmtpClient(host, port);
 
                 System.Net.Mail.MailAddress from = new System.Net.Mail.MailAddress(de, nomeremetente, System.Text.Encoding.Default);
-                System.Net.Mail.MailMessage msg = new System.Net.Mail.MailMessage();
-                msg.From = from;
-
-                string[] listaMail = to.Split(new char[] { (';'), (',') });
-                for (int j = 0; j < listaMail.Length; j++)
+                using (System.Net.Mail.MailMessage msg = new System.Net.Mail.MailMessage())
                 {
-                    if (validateMail(listaMail[j]))
-                    {
-                        System.Net.Mail.MailAddress endereco = new System.Net.Mail.MailAddress(listaMail[j], null, System.Text.Encoding.Default);
-                        msg.To.Add(endereco);
-                    }
-                }
+                    msg.From = from;
 
-                //(CH 2024.01.26) - 
-                if (!string.IsNullOrEmpty(this.ReplyTo)) // Verifica se o campo 'Reply-To' foi definido
-                {
-                    msg.ReplyToList.Add(new MailAddress(this.ReplyTo)); // Adiciona o endereço ao campo 'Reply-To'
-                }
-
-                //(SF 2016.02.10) - Acrecentar imagem da assinatura no body do email
-                if (!string.IsNullOrEmpty(pathimg) || streamimagens != null) //extensão para uma lista com stream de imagens
-                {
-                   // body = body + "<img src=\"cid:image1\">" + textass;
-				    System.Net.Mail.AlternateView av = null;
-                    System.Net.Mail.LinkedResource lr = null;
-                    if (!string.IsNullOrEmpty(pathimg))
+                    string[] listaMail = to.Split(new char[] { (';'), (',') });
+                    for (int j = 0; j < listaMail.Length; j++)
                     {
-                        body = body + "<img src=\"cid:image1\">" + textass;
-                        lr = new System.Net.Mail.LinkedResource(pathimg, System.Net.Mime.MediaTypeNames.Image.Jpeg);
-						av = System.Net.Mail.AlternateView.CreateAlternateViewFromString(body,null, System.Net.Mime.MediaTypeNames.Text.Html);
-                        lr.ContentId = "image1";
-                        av.LinkedResources.Add(lr);
-                        msg.AlternateViews.Add(av);
-                    }
-                    else
-                    {
-                        bodyhtml = true;
-                        foreach (var imagem in streamimagens)
+                        if (validateMail(listaMail[j]))
                         {
-                            if (imagem != null)
-                            {
-                                var image = new LinkedResource(imagem);
-                                image.ContentId = Guid.NewGuid().ToString();
-                                
-                                body += string.Format(@"<br/><img src=""cid:{0}"" />", image.ContentId);
-                                body += "<br/>" + textass;
-                                body = body.Replace("\r\n", "<br/>");
-                                
-                                AlternateView view = AlternateView.CreateAlternateViewFromString(body, null, "text/html");
-                                view.LinkedResources.Add(image);
-                                msg.AlternateViews.Add(view);
-                                
-                            }
+                            System.Net.Mail.MailAddress endereco = new System.Net.Mail.MailAddress(listaMail[j], null, System.Text.Encoding.Default);
+                            msg.To.Add(endereco);
                         }
                     }
-                    msg.Body = body;
-                }
-                else
-                    msg.Body = body + textass;
 
-                msg.Subject = subject;
-                msg.SubjectEncoding = System.Text.Encoding.Default;
-
-                for (int i = 0; i < attachment.Length; i++)
-                {
-                    if (!attachment[i].Equals("") && File.Exists(attachment[i]))
+                    //(CH 2024.01.26) - 
+                    if (!string.IsNullOrEmpty(this.ReplyTo)) // Verifica se o campo 'Reply-To' foi definido
                     {
-                        System.Net.Mail.Attachment fanexo = new System.Net.Mail.Attachment(attachment[i]);
-                        msg.Attachments.Add(fanexo);
+                        msg.ReplyToList.Add(new MailAddress(this.ReplyTo)); // Adiciona o endereço ao campo 'Reply-To'
                     }
-                }
 
-                //extensão para anexos em dictionary <string,stream>
-                if(dictionaryanexos !=null)
-                foreach (var anexo in dictionaryanexos)
-                {
-                    System.Net.Mail.Attachment attach = new System.Net.Mail.Attachment(anexo.Value, anexo.Key);
-                    msg.Attachments.Add(attach);
-                }
-
-                msg.BodyEncoding = System.Text.Encoding.Default;
-
-                //(FFS 2014.10.16)
-                if (bodyhtml)
-                    msg.IsBodyHtml = true;
-                cliente.Port = port;      // (MA 2009.10.07)
-                cliente.EnableSsl = ssl;  // (MA 2009.10.07)
-
-                //(JMT 2011.04.04) - Acrescentado to tratar os endereços
-                string[] listaMailCC = cc.Split(new char[] { (';'),(',') });
-                foreach (string mailCC in listaMailCC)
-                {
-                    if (validateMail(mailCC))
+                    //(SF 2016.02.10) - Acrecentar imagem da assinatura no body do email
+                    if (!string.IsNullOrEmpty(pathimg) || streamimagens != null) //extensão para uma lista com stream de imagens
                     {
-                        System.Net.Mail.MailAddress enderecoCC = new System.Net.Mail.MailAddress(mailCC, null, System.Text.Encoding.Default);
-                        msg.CC.Add(enderecoCC);
-                    }
-                }
-                //
+                        // body = body + "<img src=\"cid:image1\">" + textass;
+                        System.Net.Mail.AlternateView av = null;
+                        System.Net.Mail.LinkedResource lr = null;
+                        if (!string.IsNullOrEmpty(pathimg))
+                        {
+                            body = body + "<img src=\"cid:image1\">" + textass;
+                            lr = new System.Net.Mail.LinkedResource(pathimg, System.Net.Mime.MediaTypeNames.Image.Jpeg);
+                            av = System.Net.Mail.AlternateView.CreateAlternateViewFromString(body, null, System.Net.Mime.MediaTypeNames.Text.Html);
+                            lr.ContentId = "image1";
+                            av.LinkedResources.Add(lr);
+                            msg.AlternateViews.Add(av);
+                        }
+                        else
+                        {
+                            bodyhtml = true;
+                            foreach (var imagem in streamimagens)
+                            {
+                                if (imagem != null)
+                                {
+                                    var image = new LinkedResource(imagem);
+                                    image.ContentId = Guid.NewGuid().ToString();
 
-                //(PR 2012.10.16) - Acrescentado to tratar os endereços em Bcc
-                string[] listaMailBcc = bcc.Split(new char[] { (';'), (',') });
-                foreach (string mailBcc in listaMailBcc)
-                {
-                    if (validateMail(mailBcc))
-                    {
-                        System.Net.Mail.MailAddress enderecoBcc = new System.Net.Mail.MailAddress(mailBcc, null, System.Text.Encoding.Default);
-                        msg.Bcc.Add(enderecoBcc);
+                                    body += string.Format(@"<br/><img src=""cid:{0}"" />", image.ContentId);
+                                    body += "<br/>" + textass;
+                                    body = body.Replace("\r\n", "<br/>");
+
+                                    AlternateView view = AlternateView.CreateAlternateViewFromString(body, null, "text/html");
+                                    view.LinkedResources.Add(image);
+                                    msg.AlternateViews.Add(view);
+
+                                }
+                            }
+                        }
+                        msg.Body = body;
                     }
-                }
-                
-                if (auth)
-                {
-                    cliente.DeliveryMethod = SmtpDeliveryMethod.Network;
-                    cliente.Credentials = new NetworkCredential(user, pass);
-                }
-                try
-                {
+                    else
+                        msg.Body = body + textass;
+
+                    msg.Subject = subject;
+                    msg.SubjectEncoding = System.Text.Encoding.Default;
+
+                    for (int i = 0; i < attachment.Length; i++)
+                    {
+                        if (!attachment[i].Equals("") && File.Exists(attachment[i]))
+                        {
+                            System.Net.Mail.Attachment fanexo = new System.Net.Mail.Attachment(attachment[i]);
+                            msg.Attachments.Add(fanexo);
+                        }
+                    }
+
+                    //extensão para anexos em dictionary <string,stream>
+                    if (dictionaryanexos != null)
+                        foreach (var anexo in dictionaryanexos)
+                        {
+                            System.Net.Mail.Attachment attach = new System.Net.Mail.Attachment(anexo.Value, anexo.Key);
+                            msg.Attachments.Add(attach);
+                        }
+
+                    msg.BodyEncoding = System.Text.Encoding.Default;
+
+                    //(FFS 2014.10.16)
+                    if (bodyhtml)
+                        msg.IsBodyHtml = true;
+                    cliente.Port = port;      // (MA 2009.10.07)
+                    cliente.EnableSsl = ssl;  // (MA 2009.10.07)
+
+                    //(JMT 2011.04.04) - Acrescentado to tratar os endereços
+                    string[] listaMailCC = cc.Split(new char[] { (';'), (',') });
+                    foreach (string mailCC in listaMailCC)
+                    {
+                        if (validateMail(mailCC))
+                        {
+                            System.Net.Mail.MailAddress enderecoCC = new System.Net.Mail.MailAddress(mailCC, null, System.Text.Encoding.Default);
+                            msg.CC.Add(enderecoCC);
+                        }
+                    }
+                    //
+
+                    //(PR 2012.10.16) - Acrescentado to tratar os endereços em Bcc
+                    string[] listaMailBcc = bcc.Split(new char[] { (';'), (',') });
+                    foreach (string mailBcc in listaMailBcc)
+                    {
+                        if (validateMail(mailBcc))
+                        {
+                            System.Net.Mail.MailAddress enderecoBcc = new System.Net.Mail.MailAddress(mailBcc, null, System.Text.Encoding.Default);
+                            msg.Bcc.Add(enderecoBcc);
+                        }
+                    }
+
+                    if (auth)
+                    {
+                        cliente.DeliveryMethod = SmtpDeliveryMethod.Network;
+                        cliente.Credentials = new NetworkCredential(user, pass);
+                    }
+
                     cliente.Send(msg);
-                }
-                finally
-                {
-                    msg.Attachments.Dispose();
                 }
 				
                 return true;

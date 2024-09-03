@@ -113,24 +113,26 @@ namespace CSGenio.persistence
             return codigoNovo.ToString();
         }
 
-
-        public override void Backup(string schema, string location = "")
+        /// <inheritdoc/>
+        public override string Backup(string schema, string location = "")
         {
             try
             {
                 openConnection();
 
                 IDbCommand c = Connection.CreateCommand();
-                string path = "";
-                if(string.IsNullOrEmpty(location))
-                    path = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "dbs", "backup", schema);
-                else 
-                    path = System.IO.Path.Combine(location, schema);
 
-                string fullPath = path + "_" + DateTime.Today.Year.ToString() + "_" +
-                                    DateTime.Today.Month.ToString("D2") + "_" +
-                                    DateTime.Today.Day.ToString("D2") + "_" +
-                                    DateTime.Now.Hour.ToString("D2") + DateTime.Now.Minute.ToString("D2") + ".bak";
+                string backupsFolder = string.IsNullOrEmpty(location)
+                    ? GetDefaultBackupsLocation()
+                    : location;
+
+                // Ensure the backups folder exists.
+                // TODO: We could probably move the responsibility of creating this folder elsewhere
+                // and throw an exception here if it does not exist.
+                Directory.CreateDirectory(backupsFolder);
+
+                string fileName = $"{schema}_{DateTime.Now:yyyy_MM_dd_HHmm}.bak",
+                    fullPath = Path.Combine(backupsFolder, fileName);
 
                 c.CommandText = "BACKUP DATABASE @databasename TO DISK = @path WITH INIT, COPY_ONLY";
                 c.Parameters.Add(new SqlParameter("@databasename", schema));
@@ -143,6 +145,8 @@ namespace CSGenio.persistence
                 c.ExecuteNonQuery();
 
                 closeConnection();
+
+                return fullPath;
             }
             catch (Exception e)
             {
@@ -157,7 +161,7 @@ namespace CSGenio.persistence
         public override void Drop(string schema)
         {
             if (string.IsNullOrEmpty(schema))
-                throw new ArgumentNullException("schema", "This argument is Madatory") ;
+                throw new ArgumentNullException("schema", "This argument is Mandatory") ;
 
             try
             {
@@ -183,50 +187,111 @@ namespace CSGenio.persistence
             }
         }
 
-        /// <summary>
-        /// Restore database from backup file
-        /// </summary>
-        /// <param name="schema">Current application database schema</param>
-        /// <param name="path">Backup path file</param>
-        /// <param name="userSchema">Must be filled if the target database is not the current application database</param>
-        /// <exception cref="PersistenceException"></exception>
-        public override void Restore(string schema, string path, string userSchema = "")
+        /// <inheritdoc/>
+        public override void Restore(string schema, string path)
         {
+            bool targetDbExists = false;
+
             try
             {
-                openConnection();
-                IDbCommand c = Connection.CreateCommand();
-                IDbCommand c1 = Connection.CreateCommand();
-                IDbCommand c2 = Connection.CreateCommand();
-    
-                //o ALTER DATABASE não aceita parametros directamente
-                c.CommandText = "declare @dynsql nvarchar(1000) = N'USE Master ALTER DATABASE ' + QUOTENAME(@databaseName) + N' SET Single_User WITH Rollback Immediate' EXEC(@dynsql)";
-                c.Parameters.Add(new SqlParameter("@databasename", schema));
-                c.ExecuteNonQuery();
-                   
-                // Last updated by [CJP] at [2016.07.27]
-                // Remove timeout from command, in order to complete the database restoration
-                if (!string.IsNullOrEmpty(userSchema) )                
-                    c1.CommandText = $"USE {userSchema} EXEC dbo.DoRestoreDatabase @path,@databasename";                                    
-                else
-                    c1.CommandText = "USE Master RESTORE DATABASE @databasename FROM DISK = @path";
+                targetDbExists = CheckIfDatabaseExists(schema);
 
-                c1.Parameters.Add(new SqlParameter("@path", path));
-                c1.Parameters.Add(new SqlParameter("@databasename", schema));
-                //c1.Parameters.Add(new SqlParameter("@userdatabase", userSchema));
-                c1.CommandTimeout = 0;
-                int result = c1.ExecuteNonQuery();
-    
-                //o ALTER DATABASE não aceita parametros directamente
-                c2.CommandText = "declare @dynsql nvarchar(1000) = N'USE Master ALTER DATABASE ' + QUOTENAME(@databaseName) + N' SET Multi_User' EXEC(@dynsql)";
-                c2.Parameters.Add(new SqlParameter("@databasename", schema));
-                c2.ExecuteNonQuery();
-                closeConnection();
+                openConnection();
+
+                if (targetDbExists)
+                    SetDatabaseSingleUserMode(schema);
+
+                ExecuteRestoreCommand(schema, path);
             }
             catch (Exception e)
             {
                 throw new PersistenceException("Erro ao restaurar a base de dados.", "PersistentSupportSQLServer2000.Restore", "Error restoring the database: " + e.Message, e);
             }
+            finally
+            {
+                if (targetDbExists)
+                    SetDatabaseMultiUserMode(schema);
+
+                closeConnection();
+            }
+        }
+
+        private void SetDatabaseSingleUserMode(string schema)
+        {
+            IDbCommand setSingleUserModeCmd = Connection.CreateCommand();
+            setSingleUserModeCmd.CommandText = @"
+                declare @dynsql nvarchar(1000) = N'USE Master ALTER DATABASE ' + QUOTENAME(@databaseName) + N' SET Single_User WITH Rollback Immediate' 
+                EXEC(@dynsql)";
+            setSingleUserModeCmd.Parameters.Add(new SqlParameter("@databaseName", schema));
+            setSingleUserModeCmd.ExecuteNonQuery();
+        }
+
+        private void ExecuteRestoreCommand(string schema, string path)
+        {
+            IDbCommand cmd = Connection.CreateCommand();
+            cmd.CommandText = @"
+                USE Master;
+                DECLARE @dataFileName NVARCHAR(256);
+                DECLARE @logFileName NVARCHAR(256);
+                DECLARE @defaultDataPath NVARCHAR(512);
+                DECLARE @defaultLogPath NVARCHAR(512);
+                DECLARE @filelist TABLE
+                (
+                    LogicalName NVARCHAR(256),
+                    PhysicalName NVARCHAR(512),
+                    [Type] VARCHAR(1), 
+                    [FileGroupName] VARCHAR(128), 
+                    [Size] VARCHAR(128),
+                    [MaxSize] VARCHAR(128), 
+                    [FileId] VARCHAR(128), 
+                    [CreateLSN] VARCHAR(128), 
+                    [DropLSN] VARCHAR(128), 
+                    [UniqueId] VARCHAR(128), 
+                    [ReadOnlyLSN] VARCHAR(128), 
+                    [ReadWriteLSN] VARCHAR(128),
+                    [BackupSizeInBytes] VARCHAR(128), 
+                    [SourceBlockSize] VARCHAR(128), 
+                    [FileGroupId] VARCHAR(128), 
+                    [LogGroupGUID] VARCHAR(128), 
+                    [DifferentialBaseLSN] VARCHAR(128), 
+                    [DifferentialBaseGUID] VARCHAR(128), 
+                    [IsReadOnly] VARCHAR(128), 
+                    [IsPresent] VARCHAR(128), 
+                    [TDEThumbprint] VARCHAR(128),
+                    [SnapshotUrl] VARCHAR(128)
+                );
+
+                INSERT INTO @filelist
+                EXEC('RESTORE FILELISTONLY FROM DISK = ''' + @path + '''');
+
+                SELECT @dataFileName = LogicalName FROM @filelist WHERE Type = 'D';
+                SELECT @logFileName = LogicalName FROM @filelist WHERE Type = 'L';  
+
+                SELECT @defaultDataPath = CAST(SERVERPROPERTY('InstanceDefaultDataPath') AS NVARCHAR(512));
+                SELECT @defaultLogPath = CAST(SERVERPROPERTY('InstanceDefaultLogPath') AS NVARCHAR(512));
+                
+                DECLARE @restoreQuery NVARCHAR(1000);
+                SET @restoreQuery = 
+                    'RESTORE DATABASE ' + @databaseName + ' FROM DISK = ''' + @path + '''' +
+                    ' WITH REPLACE, MOVE ''' + @dataFileName + ''' TO ''' + @defaultDataPath + '\' + @databaseName + '.mdf'', MOVE ''' +
+                    @logFileName + ''' TO ''' + @defaultLogPath + '\' + @databaseName + '.ldf''';
+
+                EXEC sp_executesql @restoreQuery;
+            ";
+            cmd.Parameters.Add(new SqlParameter("@path", path));
+            cmd.Parameters.Add(new SqlParameter("@databaseName", schema));
+            cmd.CommandTimeout = 0;
+            cmd.ExecuteNonQuery();
+        }
+
+        private void SetDatabaseMultiUserMode(string schema)
+        {
+            IDbCommand setMultiUserModeCmd = Connection.CreateCommand();
+            setMultiUserModeCmd.CommandText = @"
+                declare @dynsql nvarchar(1000) = N'USE Master ALTER DATABASE ' + QUOTENAME(@databaseName) + N' SET Multi_User' 
+                EXEC(@dynsql)";
+            setMultiUserModeCmd.Parameters.Add(new SqlParameter("@databaseName", schema));
+            setMultiUserModeCmd.ExecuteNonQuery();
         }
 		
 		/// <summary>

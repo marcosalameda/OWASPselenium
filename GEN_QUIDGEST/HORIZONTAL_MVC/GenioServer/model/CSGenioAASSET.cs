@@ -161,23 +161,23 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codmanuf", FieldType.CHAVE_ESTRANGEIRA_GUID);
-			Qfield.FieldDescription = ">>Manufacturer";
-			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
-			Qfield.MQueue = false;
-			Qfield.CavDesignation = "__MANUFACTURER02870";
-
-			Qfield.Dupmsg = "";
-			info.RegisterFieldDB(Qfield);
-
-			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field("codkinde", FieldType.CHAVE_ESTRANGEIRA_GUID);
 			Qfield.FieldDescription = ">>Kind of equipment";
 			Qfield.FieldSize =  36;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "__KIND_OF_EQUIPMENT01899";
+
+			Qfield.Dupmsg = "";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field("codmanuf", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield.FieldDescription = "";
+			Qfield.FieldSize =  36;
+			Qfield.Alias = info.Alias;
+			Qfield.MQueue = false;
+			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -439,18 +439,6 @@ namespace CSGenio.business
 		}
 
 
-		/// <summary>Field : ">>Manufacturer" Tipo: "CE" Formula:  ""</summary>
-		public static FieldRef FldCodmanuf { get { return m_fldCodmanuf; } }
-		private static FieldRef m_fldCodmanuf = new FieldRef("asset", "codmanuf");
-
-		/// <summary>Field : ">>Manufacturer" Tipo: "CE" Formula:  ""</summary>
-		public string ValCodmanuf
-		{
-			get { return (string)returnValueField(FldCodmanuf); }
-			set { insertNameValueField(FldCodmanuf, value); }
-		}
-
-
 		/// <summary>Field : ">>Kind of equipment" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodkinde { get { return m_fldCodkinde; } }
 		private static FieldRef m_fldCodkinde = new FieldRef("asset", "codkinde");
@@ -460,6 +448,18 @@ namespace CSGenio.business
 		{
 			get { return (string)returnValueField(FldCodkinde); }
 			set { insertNameValueField(FldCodkinde, value); }
+		}
+
+
+		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
+		public static FieldRef FldCodmanuf { get { return m_fldCodmanuf; } }
+		private static FieldRef m_fldCodmanuf = new FieldRef("asset", "codmanuf");
+
+		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
+		public string ValCodmanuf
+		{
+			get { return (string)returnValueField(FldCodmanuf); }
+			set { insertNameValueField(FldCodmanuf, value); }
 		}
 
 

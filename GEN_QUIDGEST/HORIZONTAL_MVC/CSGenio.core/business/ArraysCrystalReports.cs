@@ -162,6 +162,14 @@ namespace CSGenio.business
 			            Qresult.AppendLine("if {{{0}}} = \"12\" then \"Dezembro\" else");
             Qresult.Append("\"                                              \"");
             todasArrays.Add("ameses", Qresult.ToString());
+			// aparttyp
+            Qresult = new StringBuilder();
+			Qresult.AppendLine("if {{{0}}} = 0 then \"T0\" else");
+			Qresult.AppendLine("if {{{0}}} = 1 then \"T1\" else");
+			Qresult.AppendLine("if {{{0}}} = 2 then \"T2\" else");
+			Qresult.AppendLine("if {{{0}}} = 3 then \"T3 and others\" else");
+            Qresult.Append("\"                                              \"");
+            todasArrays.Add("aparttyp", Qresult.ToString());
 			// aperacum
             Qresult = new StringBuilder();
 			            Qresult.AppendLine("if {{{0}}} = \"P\" then \"Período\" else");
@@ -342,6 +350,13 @@ namespace CSGenio.business
 			            Qresult.AppendLine("if {{{0}}} = \"OB\" then \"OpenBank\" else");
             Qresult.Append("\"                                              \"");
             todasArrays.Add("bankcomp", Qresult.ToString());
+			// buildtyp
+            Qresult = new StringBuilder();
+			            Qresult.AppendLine("if {{{0}}} = \"A\" then \"Apartment\" else");
+			            Qresult.AppendLine("if {{{0}}} = \"H\" then \"House\" else");
+			            Qresult.AppendLine("if {{{0}}} = \"O\" then \"Other\" else");
+            Qresult.Append("\"                                              \"");
+            todasArrays.Add("buildtyp", Qresult.ToString());
 			// class
             Qresult = new StringBuilder();
 			            Qresult.AppendLine("if {{{0}}} = \"1C\" then \"1ªClasse\" else");

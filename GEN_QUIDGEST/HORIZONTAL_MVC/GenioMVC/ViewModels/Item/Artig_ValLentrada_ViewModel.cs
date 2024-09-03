@@ -63,9 +63,9 @@ namespace GenioMVC.ViewModels.Item
         /// Initializes a new instance of the <see cref="Artig_ValLentrada_ViewModel" /> class.
         /// </summary>
         /// <param name="currentNavigation">The current navigation</param>
-        public Artig_ValLentrada_ViewModel(NavigationContext currentNavigation)
-            : base(currentNavigation)
+        public Artig_ValLentrada_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
+            ValCoditem = currentNavigation.CurrentLevel.GetEntry("item")?.ToString();
         }
 
         /// <inheritdoc/>
@@ -106,19 +106,13 @@ namespace GenioMVC.ViewModels.Item
             }
         }
 
-        /// <summary>
-		/// Builds the list CriteriaSet with all the limits, filters and conditions
-		/// </summary>
-		/// <param name="requestValues">Table filters</param>
-        /// <param name="tableReload">[Quick fix] Indicates whether the data list should be loaded. If set to false within the method, it signals that the data list should not display rows due to unmet mandatory limits.</param>
-        /// <param name="crs">Pass a CriteriaSet by reference to be modified</param>
-		/// <param name="isToExport">If the  table is to be exported</param>
-		public CriteriaSet BuildCriteriaSet(NameValueCollection requestValues, out bool tableReload, CriteriaSet crs = null, bool isToExport = false)
+		/// <inheritdoc/>
+		public override CriteriaSet BuildCriteriaSet(NameValueCollection requestValues, out bool tableReload, CriteriaSet crs = null, bool isToExport = false)
 		{
 			User u = UserContext.Current.User;
             tableReload = true;
 
-			if(crs == null)
+			if (crs == null)
 				crs = CriteriaSet.And();
 
 
@@ -299,7 +293,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAldent.FldCodldent, CSGenioAldent.Fl
 
 			CriteriaSet artig___pseudlentradaConds = BuildCriteriaSet(requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
             tableReload &= hasAllRequiredLimits;
-			
+
 // USE /[MANUAL GQT OVERRQ ARTIG_PSEUDLENTRADA]/
 
             // This will happen in case there is an error
@@ -348,7 +342,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAldent.FldCodldent, CSGenioAldent.Fl
 				//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 				if (pageNumber < 1)
 					pageNumber = 1;
-	
+
 
 				Menu.Elements = MapArtig_ValLentrada(listing);
 

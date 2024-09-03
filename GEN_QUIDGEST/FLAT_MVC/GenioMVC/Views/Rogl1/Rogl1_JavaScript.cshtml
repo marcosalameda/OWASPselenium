@@ -1,0 +1,290 @@
+﻿@model GenioMVC.ViewModels.Rogl1.Rogl1_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS ROGL1]/ *@
+<script  type="text/javascript">
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Rogl1 !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Rogl1 = new QForm($('[data-form="Rogl1"]'), "Form_Rogl1");
+		}
+		window.Form_Rogl1.baseArea = "rogl1";
+		window.Form_Rogl1.FormMode = '@Model.GetFormMode';
+		window.Form_Rogl1.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Rogl1.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Rogl1")',
+			GetDependants:		'@Url.Action("GetDependants", "Rogl1")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Rogl1", "Rogl1")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Rogl1", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Rogl1", "Rogl1")',
+		};
+		window.Form_Rogl1.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Rogl1.formSaveEdit = '@Url.Action("Rogl1_SaveEdit", "Rogl1")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Rogl1.formAction = 'Rogl1_New';
+		window.Form_Rogl1.formRedirectURL = '@Url.Action("Rogl1_New_Redirect", "Rogl1")';
+		window.Form_Rogl1.formSubmitURL = '@Url.Action("Rogl1_New", "Rogl1")';
+		window.Form_Rogl1.formRedirectURL_repeatInsertion = '@Url.Action("Rogl1_New_Redirect", "Rogl1", new { repeatInsertion = true})';
+		window.Form_Rogl1.formSubmitURL_repeatInsertion = '@Url.Action("Rogl1_New", "Rogl1", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Rogl1.formAction = 'Rogl1_Edit';
+		window.Form_Rogl1.formRedirectURL = '@Url.Action("Rogl1_Edit_Redirect", "Rogl1")';
+		window.Form_Rogl1.formSubmitURL = '@Url.Action("Rogl1_Edit", "Rogl1")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Rogl1.formAction = 'Rogl1_Duplicate';
+		window.Form_Rogl1.formRedirectURL = '@Url.Action("Rogl1_Duplicate_Redirect", "Rogl1")';
+		window.Form_Rogl1.formSubmitURL = '@Url.Action("Rogl1_Duplicate", "Rogl1")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Rogl1.formAction = 'Rogl1_Delete';
+		window.Form_Rogl1.formRedirectURL = '@Url.Action("Rogl1_Delete_Redirect", "Rogl1")';
+		window.Form_Rogl1.formSubmitURL = '@Url.Action("Rogl1_Delete", "Rogl1")';
+	</text>
+}
+		window.Form_Rogl1.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.LED_ROGL1___ROGL1TITLE___ = new QTextControl($('[data-identifier="LED_ROGL1___ROGL1TITLE___"]', this.element), window.Form_Rogl1);
+
+
+
+
+			this.Controls.LED_ROGL1___ROGL1CODROGL1 = new QHiddenControl($('[data-identifier="LED_ROGL1___ROGL1CODROGL1"]', this.element), window.Form_Rogl1);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	</text>
+}
+
+		window.Form_Rogl1.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Rogl1.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI ROGL1]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Rogl1.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS ROGL1]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Rogl1.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS ROGL1]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Rogl1.Data.RelationKeysSelector = {
+		};
+
+		window.Form_Rogl1.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Rogl1.Data.RelationKeys = {
+			get formContext() { return window.Form_Rogl1; },
+		};
+	</text>
+}
+
+	window.Form_Rogl1.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Rogl1.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitRogl1(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Rogl1.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeleteRogl1(event) {
+			event.preventDefault();
+			window.Form_Rogl1.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+    var ajaxCallsRemaining = $(".flash object embed").length;
+    $('form [elem-identifier="ButtonPrimary"]').click(function() {
+        var flashObjects = $(".flash object embed");
+        ajaxCallsRemaining = flashObjects.length;
+        if(flashObjects.length == 0)
+            return true;
+        else {
+            flashObjects.each(function() {
+               var flashObj = GetFlash($(this).attr('id'));
+               flashObj.UsedFlash.TriggerSave(flashObj);
+            });
+            return false;
+        }
+    });
+    </text>
+}
+// USE /[MANUAL GQT FORM_CODEJS ROGL1]/
+
+
+
+ 
+
+    $($('[elem-identifier="FormActions"]'), $('[data-form="Rogl1"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

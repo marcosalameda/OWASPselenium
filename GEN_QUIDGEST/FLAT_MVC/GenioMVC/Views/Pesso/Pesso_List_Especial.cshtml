@@ -1,0 +1,40 @@
+﻿@model GenioMVC.ViewModels.Pesso.Pesso_ViewModel
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@* USE /[MANUAL GQT TABLE_FOR PESSO_ESPECIAL]/ *@
+	<div class="input-xxlarge checkList">
+		@(Html.CheckListFor<GenioMVC.Models.Speci>(edit: Model.IsEditableMode)
+			.Columns(column =>
+			{
+				column.Expression(p => p.ValCodespec, true).Hidden();
+						column.Expression(p => p.ValEspecial).Title(@Resources.SPECIALTY09304).Field("ValEspecial").Size(30);
+						column.Expression(p => p.ArrayValareatecn).Title(@Resources.TECHNICAL_AREA50773).Field("ValAreatecn", "ArrayAreatecn").Size(1);
+			})
+			.DataSource(this.Model.List_Especial)
+			.Name("List_Especial_Ids")
+			.SelectedIds(this.Model.List_Especial_SelectedIds)
+			.ToHtml()
+		)
+	</div>
+
+
+<script>
+$(document).ready(function() {
+    try {
+        if (jQuery) {
+            try {
+                $(document).ready(function () {
+                    loaded($("[id='List_Especial']"));
+                    InitSpecialControls($('#List_Especial'));
+                });
+
+// USE /[MANUAL GQT LISTING_JS PESSO_ESPECIAL]/
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+</script>

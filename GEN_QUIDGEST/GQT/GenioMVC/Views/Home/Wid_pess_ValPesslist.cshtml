@@ -1,0 +1,143 @@
+﻿@model GenioMVC.ViewModels.Wid_pess_ValPesslist_ViewModel
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@using Newtonsoft.Json;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@*List properties DBEDIT BUTTONS*@
+<div class="row">
+	<div class="col">
+		<div elem-identifier="List"  help-id="IFF_WID_PESSPSEUDPESSLIST" style="padding-top: 0.5rem;"><label class = "i-text__label table-title c-table__title" > <h2 list-header>@Resources.ALL_PEOPLE14919</h2 list-header> </label></div>
+	</div>
+	<div class="col-auto search">
+	</div>
+	@{
+		var listBtnCssClass = Model.IsViewModeHidden("LIST") ? "b-icon--secondary" : "b-icon--primary";
+		var alternativeViewBtnCssClass = Model.IsViewModeHidden("LIST") ? "b-icon--primary" : "b-icon--secondary";
+		
+		<div class="col-auto" style="padding: 0; padding-right: 15px">
+			<div class="b-btn-group">
+				<button class="b-btn b-icon @listBtnCssClass" type="button" onclick="window.ValPesslist.ToggleViewMode('Wid_pess_ValPesslist', '', 'Pesso', codlista ='', 1)" title="@Resources.MUDAR_PARA_VISTA_EM_03626"><i class="glyphicons glyphicons-show-lines e-icon"></i></button>
+				<button class="b-btn b-icon @alternativeViewBtnCssClass" type="button" onclick="window.ValPesslist.ToggleViewMode('Wid_pess_ValPesslist', '', 'Pesso', codlista ='', 2)" title="@Resources.MUDAR_PARA_VISTA_ALT46064"><i class="glyphicons glyphicons-show-big-thumbnails e-icon"></i></button>
+			</div>
+		</div>
+	}
+</div>
+
+@* USE /[MANUAL GQT TABLE_FOR WID_PESS_PESSLIST]/ *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Pesso>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodpesso, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN WID_PESS_PESSLIST_PESSO_NAME]/
+		column.Expression(p => p.ValName).Title(@Resources.NAME31974).Field("ValName").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WID_PESS_PESSLIST_PESSO_PHOTOGRA]/
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValPhotogra, new {alt=@Resources.PHOTO51874,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCodpesso, modelname = "Pesso", fldname = "ValPhotogra" }))).Title(@Resources.PHOTO51874).Field("ValPhotogra").Size(3);
+// USE /[MANUAL GQT CUSTOM_COLUMN WID_PESS_PESSLIST_PESSO_EMAIL]/
+		column.Expression(p => p.ValEmail).Title(@Resources.EMAIL25170).Field("ValEmail").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WID_PESS_PESSLIST_CATEG_CATEGORY]/
+		column.Expression(p => p.Categ.ValCategoria).Title(@Resources.CATEGORY18978).Field("Categ.ValCategoria").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN WID_PESS_PESSLIST_CMPNY_DESIGNAT]/
+		column.Expression(p => p.Cmpny.ValDesignat).Title(@Resources.COMPANY52963).Field("Cmpny.ValDesignat").Size(30);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Pesso")
+        .Id("ValPesslist")
+        .AjaxRequest("Wid_pess_ValPesslist")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .TableList(hasFilters: false)
+        .RequestLink(@Url.Action("Wid_pess_ValPesslist", new { partialView = "Wid_pess_ValPesslist"}))
+        .Permissions(canView: false, canInsert: false, canEdit: false, canDelete: false, canDuplicate: false)
+		;
+        
+    var cards = data
+        .ToSpecialRendering()
+		.SetSpecialRendering(this.Model.ViewModesCfg.SpecialRenderings.FirstOrDefault(sr => sr.Id == "CARDS"))
+        .RequestLink(@Url.Action("Wid_pess_ValPesslist", new { partialView = "Wid_pess_ValPesslist"}))
+        .Permissions(canView: false, canInsert: false, canEdit: false, canDelete: false, canDuplicate: false)
+		;
+        
+}
+
+@{ renderings.Clear(); }
+@{ renderings.Add(Model.GetViewModePosition("LIST"), tbl.ToHtml(hidden: Model.IsViewModeHidden("LIST"))); }
+
+@{ renderings.Add(Model.GetViewModePosition("CARDS"), cards.ToSpecialRenderingHtml(hidden: Model.IsViewModeHidden("CARDS"))); }
+
+
+@foreach (var render in renderings.ToList().OrderBy(r => r.Key))
+{
+    @Html.Raw(render.Value.ToHtmlString());
+}
+
+<script>
+
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qValPesslist, #ValPesslist_complex_filter th input, #ValPesslist_filters input").change(function() {
+                    $("#pValPesslist").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#ValPesslist_tableFilters').val(false);")
+                    @Html.Raw("$('#ValPesslist_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#ValPesslist_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $('#ValPesslist_complex_filter button#applyComplexFilter').click();
+                    @:      event.preventDefault();
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#ValPesslist_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_ValPesslist').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+
+
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='ValPesslist']"));
+                    InitSpecialControls($('#ValPesslist'));
+                    $('#ValPesslist').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS WID_PESS_VALPESSLIST]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+</script>

@@ -4262,6 +4262,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id="Date:" code="DATE_55218">
     <ENUS>Date:</ENUS>
   </msg>
+  <msg id="E2EText" code="E2ETEXT44371">
+    <ENUS>E2E resource Text</ENUS>
+  </msg>
   <msg id=" 1123" code="_112319369">
   </msg>
   <msg id="Hora de criação" code="HORA_DE_CRIACAO40754">

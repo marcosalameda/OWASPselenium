@@ -3900,63 +3900,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="ENTIRE_ADDRESS64248" xml:space="preserve">
 		<value>Entire address</value>
 	</data>
-	<data name="__KIND_OF_EQUIPMENT01899" xml:space="preserve">
-		<value>&gt;&gt;Kind of equipment</value>
-	</data>
-	<data name="PROPERTIES34868" xml:space="preserve">
-		<value>Properties</value>
-	</data>
-	<data name="OUTPUT44370" xml:space="preserve">
-		<value>Output</value>
-	</data>
-	<data name="TRAINING_EXERCISE_1842361" xml:space="preserve">
-		<value>Training Exercise 18</value>
-	</data>
-	<data name="AT_REQUIRED65277" xml:space="preserve">
-		<value>@required</value>
-	</data>
-	<data name="EQUIPMENTS06276" xml:space="preserve">
-		<value>Equipments</value>
-	</data>
-	<data name="CONTACT_GENRE31604" xml:space="preserve">
-		<value>Contact Genre</value>
-	</data>
-	<data name="BASELINE26563" xml:space="preserve">
-		<value>Baseline</value>
-	</data>
-	<data name="WEIGHTING26298" xml:space="preserve">
-		<value>Weighting</value>
-	</data>
-	<data name="AGENTS29376" xml:space="preserve">
-		<value>Agents</value>
-	</data>
-	<data name="___3763273" xml:space="preserve">
-		<value>This help is for a field of type Creation: Instant</value>
-	</data>
-	<data name="ATTACHED26247" xml:space="preserve">
-		<value>Attached</value>
-	</data>
-	<data name="NO__OF_THE_DADATO35934" xml:space="preserve">
-		<value>No. of the dadato</value>
-	</data>
-	<data name="DOCUMENT_NUMBER28451" xml:space="preserve">
-		<value>Document number</value>
-	</data>
-	<data name="_113139329" xml:space="preserve">
-		<value>Valor do limite mau, abaixo do qual a barra do indicador aparece encarnada. Acima deste valor é desenhada a amarelo.</value>
-	</data>
-	<data name="RESPONSIBLE_FOR_THE_21918" xml:space="preserve">
-		<value>Responsible for the Indicator</value>
-	</data>
-	<data name="GENIO_PATTERNS30857" xml:space="preserve">
-		<value>Genio Patterns</value>
-	</data>
-	<data name="MOVING_ACCESSES29715" xml:space="preserve">
-		<value>Moving accesses</value>
-	</data>
-	<data name="_STY_OVERVIEW_COUNT_30342" xml:space="preserve">
-		<value>&#123;STY_OVERVIEW_Count&#125; cards have been created</value>
-	</data>
 	<data name="DIGITAL_DOCUMENT59580" xml:space="preserve">
 		<value>Digital document</value>
 	</data>
@@ -4315,6 +4258,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="WORD56536" xml:space="preserve">
 		<value>Word</value>
 	</data>
+	<data name="_STY_OVERVIEW_COUNT_30342" xml:space="preserve">
+		<value>&#123;STY_OVERVIEW_Count&#125; cards have been created</value>
+	</data>
 	<data name="BEGINNING_OF_THE_YEA06960" xml:space="preserve">
 		<value>Beginning of the year</value>
 	</data>
@@ -4443,6 +4389,99 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	</data>
 	<data name="PT12345678901234567820477" xml:space="preserve">
 		<value>PT12345678901234567890123</value>
+	</data>
+	<data name="__KIND_OF_EQUIPMENT01899" xml:space="preserve">
+		<value>&gt;&gt;Kind of equipment</value>
+	</data>
+	<data name="PROPERTIES34868" xml:space="preserve">
+		<value>Properties</value>
+	</data>
+	<data name="OUTPUT44370" xml:space="preserve">
+		<value>Output</value>
+	</data>
+	<data name="TRAINING_EXERCISE_1842361" xml:space="preserve">
+		<value>Training Exercise 18</value>
+	</data>
+	<data name="AT_REQUIRED65277" xml:space="preserve">
+		<value>@required</value>
+	</data>
+	<data name="EQUIPMENTS06276" xml:space="preserve">
+		<value>Equipments</value>
+	</data>
+	<data name="CONTACT_GENRE31604" xml:space="preserve">
+		<value>Contact Genre</value>
+	</data>
+	<data name="BASELINE26563" xml:space="preserve">
+		<value>Baseline</value>
+	</data>
+	<data name="E2ETEXT44371" xml:space="preserve">
+		<value>E2E resource Text</value>
+	</data>
+	<data name="WEIGHTING26298" xml:space="preserve">
+		<value>Weighting</value>
+	</data>
+	<data name="AGENTS29376" xml:space="preserve">
+		<value>Agents</value>
+	</data>
+	<data name="___3763273" xml:space="preserve">
+		<value>This help is for a field of type Creation: Instant</value>
+	</data>
+	<data name="ATTACHED26247" xml:space="preserve">
+		<value>Attached</value>
+	</data>
+	<data name="NO__OF_THE_DADATO35934" xml:space="preserve">
+		<value>No. of the dadato</value>
+	</data>
+	<data name="DOCUMENT_NUMBER28451" xml:space="preserve">
+		<value>Document number</value>
+	</data>
+	<data name="_113139329" xml:space="preserve">
+		<value>Valor do limite mau, abaixo do qual a barra do indicador aparece encarnada. Acima deste valor é desenhada a amarelo.</value>
+	</data>
+	<data name="RESPONSIBLE_FOR_THE_21918" xml:space="preserve">
+		<value>Responsible for the Indicator</value>
+	</data>
+	<data name="GENIO_PATTERNS30857" xml:space="preserve">
+		<value>Genio Patterns</value>
+	</data>
+	<data name="MOVING_ACCESSES29715" xml:space="preserve">
+		<value>Moving accesses</value>
+	</data>
+	<data name="PARAMETERS28294" xml:space="preserve">
+		<value>Parameters</value>
+	</data>
+	<data name="MULTIPLE_SELECT_LIST41638" xml:space="preserve">
+		<value>Multiple Select List</value>
+	</data>
+	<data name="TOTAL_NAO_APLICAVEIS52564" xml:space="preserve">
+		<value>Total Não Aplicáveis</value>
+	</data>
+	<data name="TREE_MAP10370" xml:space="preserve">
+		<value>Tree Map</value>
+	</data>
+	<data name="COMODANTES42347" xml:space="preserve">
+		<value>Comodantes</value>
+	</data>
+	<data name="BIANUAL25027" xml:space="preserve">
+		<value>Bianual</value>
+	</data>
+	<data name="POTENTIAL_BUYERS44829" xml:space="preserve">
+		<value>Potential buyers</value>
+	</data>
+	<data name="_1124_VERBOSE42774" xml:space="preserve">
+		<value>Help in button to form</value>
+	</data>
+	<data name="__11160722" xml:space="preserve">
+		<value>Short name of the indicator so that it can be easily identified in all tables and reports. The indicator is the operational element of the Strategy Map. It is at the level of the indicator that the various targets will be defined and the Initiatives, Projects and Activities associated.</value>
+	</data>
+	<data name="WAREHOUSE_MANAGEMENT10443" xml:space="preserve">
+		<value>Warehouse Management System</value>
+	</data>
+	<data name="___9708486" xml:space="preserve">
+		<value>Default values for the lower limit of the reference interval for any and all targets, as a percentage of the target itself. The aim is to draw the target for each and every goal in the abstract, in order to limit the reference interval for evaluating the various levels of assessment and achievement. In the case of targets for indicators with a &apos;lower is better&apos; polarity, i.e. of a decreasing type, this value must represent an achievement in results that is lower than our best expectation.</value>
+	</data>
+	<data name="TOP31303" xml:space="preserve">
+		<value>Top</value>
 	</data>
 	<data name="SALES__PHASES_20442" xml:space="preserve">
 		<value>Sales (phases)</value>
@@ -4602,9 +4641,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	</data>
 	<data name="EQUIPMENT_REPAIRS62266" xml:space="preserve">
 		<value>Equipment Repairs</value>
-	</data>
-	<data name="BIANUAL25027" xml:space="preserve">
-		<value>Bianual</value>
 	</data>
 	<data name="INTERESSADO26080" xml:space="preserve">
 		<value>Interessado</value>
@@ -5476,9 +5512,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="DECIMAL_PLACES62575" xml:space="preserve">
 		<value>Decimal places</value>
 	</data>
-	<data name="PARAMETERS28294" xml:space="preserve">
-		<value>Parameters</value>
-	</data>
 	<data name="__17959155" xml:space="preserve">
 		<value>If the data is entered on a pre-established date (single date) you must tick the box.</value>
 	</data>
@@ -5573,9 +5606,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="MINIMUMVALUE_0_AND_M49089" xml:space="preserve">
 		<value>minimumValue=0 and maximumValue=1000000000</value>
 	</data>
-	<data name="TOP31303" xml:space="preserve">
-		<value>Top</value>
-	</data>
 	<data name="PROSPECTION_CARRIED_20791" xml:space="preserve">
 		<value>Prospection carried out</value>
 	</data>
@@ -5667,9 +5697,6 @@ Proceso:  Centran su medición en el desarrollo de las actividades, las cuales e
 	</data>
 	<data name="BAD_LIMIT_219964" xml:space="preserve">
 		<value>Bad limit 2</value>
-	</data>
-	<data name="TREE_MAP10370" xml:space="preserve">
-		<value>Tree Map</value>
 	</data>
 	<data name="ALLOW_DRAWING_MARKER56732" xml:space="preserve">
 		<value>Allow drawing markers</value>
@@ -6078,9 +6105,6 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
 	<data name="ADD_POINTS_ACTIVITIE57884" xml:space="preserve">
 		<value>Add Points Activities</value>
 	</data>
-	<data name="WAREHOUSE_MANAGEMENT10443" xml:space="preserve">
-		<value>Warehouse Management System</value>
-	</data>
 	<data name="SEQUENTIAL_NO_04803" xml:space="preserve">
 		<value>Sequential No.</value>
 	</data>
@@ -6219,9 +6243,6 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
 	</data>
 	<data name="_TEAM_PLAYING_AT_HOM03863" xml:space="preserve">
 		<value>&gt;TEAM PLAYING AT HOME</value>
-	</data>
-	<data name="TOTAL_NAO_APLICAVEIS52564" xml:space="preserve">
-		<value>Total Não Aplicáveis</value>
 	</data>
 	<data name="DATE_TIME_INPUTS06842" xml:space="preserve">
 		<value>Date/Time Inputs</value>
@@ -7086,9 +7107,6 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</value>
 	<data name="INVERSA_53723" xml:space="preserve">
 		<value>Inversa?</value>
 	</data>
-	<data name="_1124_VERBOSE42774" xml:space="preserve">
-		<value>Help in button to form</value>
-	</data>
 	<data name="VISIBLE_ON_HOMEPAGE_28937" xml:space="preserve">
 		<value>Visible on homepage?</value>
 	</data>
@@ -7625,9 +7643,6 @@ The end value includes any matching date/time. For example, the period 2011-05-2
 	<data name="REVERSE_34696" xml:space="preserve">
 		<value>Reverse?</value>
 	</data>
-	<data name="MULTIPLE_SELECT_LIST41638" xml:space="preserve">
-		<value>Multiple Select List</value>
-	</data>
 	<data name="ALERTA41713" xml:space="preserve">
 		<value>Alerta</value>
 	</data>
@@ -7717,9 +7732,6 @@ The end value includes any matching date/time. For example, the period 2011-05-2
 	</data>
 	<data name="MONITORING_AND_MONIT34109" xml:space="preserve">
 		<value>Monitoring and monitoring instruments</value>
-	</data>
-	<data name="___9708486" xml:space="preserve">
-		<value>Default values for the lower limit of the reference interval for any and all targets, as a percentage of the target itself. The aim is to draw the target for each and every goal in the abstract, in order to limit the reference interval for evaluating the various levels of assessment and achievement. In the case of targets for indicators with a &apos;lower is better&apos; polarity, i.e. of a decreasing type, this value must represent an achievement in results that is lower than our best expectation.</value>
 	</data>
 	<data name="__42536262" xml:space="preserve">
 		<value>E-mail Remetente</value>
@@ -7834,9 +7846,6 @@ The end value includes any matching date/time. For example, the period 2011-05-2
 	</data>
 	<data name="OTHER_INPUTS32089" xml:space="preserve">
 		<value>Other Inputs</value>
-	</data>
-	<data name="POTENTIAL_BUYERS44829" xml:space="preserve">
-		<value>Potential buyers</value>
 	</data>
 	<data name="NEW_STATIC34114" xml:space="preserve">
 		<value>New Static</value>
@@ -8317,9 +8326,6 @@ The end value includes any matching date/time. For example, the period 2011-05-2
 	<data name="MINIMUM_MAP_COLOR51094" xml:space="preserve">
 		<value>Minimum Map Color</value>
 	</data>
-	<data name="COMODANTES42347" xml:space="preserve">
-		<value>Comodantes</value>
-	</data>
 	<data name="LOGICAL47485" xml:space="preserve">
 		<value>Logical</value>
 	</data>
@@ -8412,14 +8418,14 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</valu
 	<data name="ESTADO_DO_PROCESSO07540" xml:space="preserve">
 		<value>Estado do processo</value>
 	</data>
+	<data name="_114932654" xml:space="preserve">
+		<value>E2E Help test</value>
+	</data>
 	<data name="GROUND_SIZE62055" xml:space="preserve">
 		<value>Ground Size</value>
 	</data>
 	<data name="MAXIMUM_PERC_21724" xml:space="preserve">
 		<value>Maximum Perc.</value>
-	</data>
-	<data name="__11160722" xml:space="preserve">
-		<value>Short name of the indicator so that it can be easily identified in all tables and reports. The indicator is the operational element of the Strategy Map. It is at the level of the indicator that the various targets will be defined and the Initiatives, Projects and Activities associated.</value>
 	</data>
 	<data name="PATTERNS16056" xml:space="preserve">
 		<value>Patterns</value>

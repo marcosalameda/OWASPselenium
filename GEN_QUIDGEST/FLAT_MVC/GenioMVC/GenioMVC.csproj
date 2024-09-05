@@ -343,6 +343,8 @@
     <Compile Include="Controllers\Strat\*.cs" />
     <Compile Include="ViewModels\C_brn\*_ViewModel.cs" />
     <Compile Include="Controllers\C_brn\*.cs" />
+    <Compile Include="ViewModels\\*_ViewModel.cs" />
+    <Compile Include="Controllers\\*.cs" />
     <Compile Include="ViewModels\Decom\*_ViewModel.cs" />
     <Compile Include="Controllers\Decom\*.cs" />
     <Compile Include="ViewModels\Room1\*_ViewModel.cs" />
@@ -471,6 +473,8 @@
     <Compile Include="Controllers\Tppro\*.cs" />
     <Compile Include="ViewModels\Pesso\*_ViewModel.cs" />
     <Compile Include="Controllers\Pesso\*.cs" />
+    <Compile Include="ViewModels\E2ets\*_ViewModel.cs" />
+    <Compile Include="Controllers\E2ets\*.cs" />
     <Compile Include="ViewModels\Grpb\*_ViewModel.cs" />
     <Compile Include="Controllers\Grpb\*.cs" />
     <Compile Include="ViewModels\Users\*_ViewModel.cs" />

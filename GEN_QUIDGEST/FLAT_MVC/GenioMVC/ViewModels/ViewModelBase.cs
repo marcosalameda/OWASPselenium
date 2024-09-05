@@ -34,6 +34,11 @@ namespace GenioMVC.ViewModels
         void setModes(string m);
 
         StatusMessage CheckPermissions(FormMode mode);
+
+        /// <summary>
+        /// Sanitizes the ViewModel content by cleaning HTML fragments and documents from constructs that could lead to XSS attacks and compromise application security.
+        /// </summary>
+        void SanitizeContent();
     }
 
     public abstract class ViewModelBase : IViewModel
@@ -1569,6 +1574,19 @@ namespace GenioMVC.ViewModels
             var propertyInfo = this.GetType().GetProperty(propertyName);
             return propertyInfo.GetMethod.Invoke(this, null);
         }
+
+		/// <summary>
+		///  Sanitizes the contents of fields with HTML support on the client-side by cleaning HTML fragments and documents of constructs that could lead to XSS attacks and compromise application security.
+		/// </summary>
+        protected virtual void SanitizeHTMLFields() { /* Method intentionally left empty. */ }
+
+		/// <summary>
+		/// Sanitizes the ViewModel content by cleaning HTML fragments and documents from constructs that could lead to XSS attacks and compromise application security.
+		/// </summary>
+		public void SanitizeContent()
+		{
+			SanitizeHTMLFields();
+		}
     }
 
     public static class ViewModelConversion

@@ -4414,9 +4414,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="DATE_55218" xml:space="preserve">
 		<value>Date:</value>
 	</data>
-	<data name="E2ETEXT44371" xml:space="preserve">
-		<value>E2E resource Text</value>
-	</data>
 	<data name="_112319369" xml:space="preserve">
 		<value>Help in table list</value>
 	</data>

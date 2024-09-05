@@ -2992,6 +2992,78 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
 	<data name="COMPANHIA_AEREA16237" xml:space="preserve">
 		<value>companhia aérea</value>
 	</data>
+	<data name="EXTERNAL_ENTITY00698" xml:space="preserve">
+		<value>External Entity</value>
+	</data>
+	<data name="ERRO_ON_SENDING_THE_05516" xml:space="preserve">
+		<value>Erro on sending the email</value>
+	</data>
+	<data name="TEXT__UPPER_CASE_62204" xml:space="preserve">
+		<value>Text (Upper case)</value>
+	</data>
+	<data name="PROFILE_PICTURE26817" xml:space="preserve">
+		<value>Profile picture</value>
+	</data>
+	<data name="ALLOW_FEATURE_DRAGGI09054" xml:space="preserve">
+		<value>Allow feature dragging</value>
+	</data>
+	<data name="ROOMS06809" xml:space="preserve">
+		<value>Rooms</value>
+	</data>
+	<data name="SEQUENTIAL_MOVEMENTS40923" xml:space="preserve">
+		<value>Sequential Movements</value>
+	</data>
+	<data name="DISPATCHES13773" xml:space="preserve">
+		<value>Dispatches</value>
+	</data>
+	<data name="RESPONSAVEL08700" xml:space="preserve">
+		<value>Responsavél</value>
+	</data>
+	<data name="EMAIL__CONFIRM_56391" xml:space="preserve">
+		<value>Email (confirm)</value>
+	</data>
+	<data name="CODE_49120" xml:space="preserve">
+		<value>Code:</value>
+	</data>
+	<data name="PROFILE65433" xml:space="preserve">
+		<value>Profile</value>
+	</data>
+	<data name="RARE54339" xml:space="preserve">
+		<value>Rare</value>
+	</data>
+	<data name="DATA_EFEITO54573" xml:space="preserve">
+		<value>Data Efeito</value>
+	</data>
+	<data name="_CATEGORY37591" xml:space="preserve">
+		<value>&gt;CATEGORy</value>
+	</data>
+	<data name="REGION_OF_THE_PERSON14756" xml:space="preserve">
+		<value>Region of the person:</value>
+	</data>
+	<data name="DELIVERED26597" xml:space="preserve">
+		<value>Delivered</value>
+	</data>
+	<data name="__37942339" xml:space="preserve">
+		<value>Designação a dar em vez de &quot;Objetivo&quot;.</value>
+	</data>
+	<data name="ATIVA_45603" xml:space="preserve">
+		<value>Ativa?</value>
+	</data>
+	<data name="STRATEGIC_OBJECTIVES32021" xml:space="preserve">
+		<value>Strategic Objectives / Operational Objectives</value>
+	</data>
+	<data name="PERSPECTIVA53871" xml:space="preserve">
+		<value>Perspectiva</value>
+	</data>
+	<data name="PROFESSIONAL_ABBREVI57700" xml:space="preserve">
+		<value>Professional abbreviation</value>
+	</data>
+	<data name="__35609308" xml:space="preserve">
+		<value>Avanço no intervalo do Gantt</value>
+	</data>
+	<data name="MOVING46562" xml:space="preserve">
+		<value>Moving</value>
+	</data>
 	<data name="NO_MECANOGRAFICO18516" xml:space="preserve">
 		<value>Nº Mecanográfico</value>
 	</data>
@@ -3427,9 +3499,6 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
 	<data name="INDICADOR21795" xml:space="preserve">
 		<value>Indicador</value>
 	</data>
-	<data name="ATIVA_45603" xml:space="preserve">
-		<value>Ativa?</value>
-	</data>
 	<data name="DESCRICAO51618" xml:space="preserve">
 		<value>Descricao</value>
 	</data>
@@ -3462,9 +3531,6 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
 	</data>
 	<data name="FACILITY_NAME19514" xml:space="preserve">
 		<value>Facility name</value>
-	</data>
-	<data name="ALLOW_FEATURE_DRAGGI09054" xml:space="preserve">
-		<value>Allow feature dragging</value>
 	</data>
 	<data name="ALPHABETIC_232435" xml:space="preserve">
 		<value>Alphabetic 2</value>
@@ -4378,138 +4444,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="PT12345678901234567820477" xml:space="preserve">
 		<value>PT12345678901234567890123</value>
 	</data>
-	<data name="_109531561" xml:space="preserve">
-		<value>An address that is both physical and postal.</value>
-	</data>
-	<data name="HEIGHT__ME_36593" xml:space="preserve">
-		<value>Height (ME)</value>
-	</data>
-	<data name="CARD_IMG_BACKGROUND51759" xml:space="preserve">
-		<value>Card-Img-Background</value>
-	</data>
-	<data name="__41553071" xml:space="preserve">
-		<value>Subtitulo no kpi</value>
-	</data>
-	<data name="RECEIPT_NUMBER31380" xml:space="preserve">
-		<value>Receipt number</value>
-	</data>
-	<data name="GERAR_AUTOMATICAMENT15171" xml:space="preserve">
-		<value>Gerar automaticamente</value>
-	</data>
-	<data name="_1114_VERBOSE42095" xml:space="preserve">
-		<value>Help in the zone verbose</value>
-	</data>
-	<data name="Y_POSITION09776" xml:space="preserve">
-		<value>Y position</value>
-	</data>
-	<data name="PHOTOS_42586" xml:space="preserve">
-		<value>Photos:</value>
-	</data>
-	<data name="MINIMO33485" xml:space="preserve">
-		<value>Mínimo</value>
-	</data>
-	<data name="DESCRIPTION07383" xml:space="preserve">
-		<value>Description</value>
-	</data>
-	<data name="ERRO_ON_SENDING_THE_05516" xml:space="preserve">
-		<value>Erro on sending the email</value>
-	</data>
-	<data name="E2ETEXT44371" xml:space="preserve">
-		<value>E2E resource Text</value>
-	</data>
-	<data name="WAREHOUSE_EMPLOYEES19716" xml:space="preserve">
-		<value>Warehouse employees</value>
-	</data>
-	<data name="X_POSITION52184" xml:space="preserve">
-		<value>X Position</value>
-	</data>
-	<data name="ASSET_IDENTIFICATION53152" xml:space="preserve">
-		<value>Asset identification</value>
-	</data>
-	<data name="INDICATOR_RESPONSIBL35030" xml:space="preserve">
-		<value>Indicator Responsible</value>
-	</data>
-	<data name="TRAINING_EXERCISE_1947850" xml:space="preserve">
-		<value>Training Exercise 19</value>
-	</data>
-	<data name="QUALIFICACAO07026" xml:space="preserve">
-		<value>Qualificação</value>
-	</data>
-	<data name="NONE51124" xml:space="preserve">
-		<value>None</value>
-	</data>
-	<data name="APPROVAL_DATE21560" xml:space="preserve">
-		<value>Approval Date</value>
-	</data>
-	<data name="GAME57681" xml:space="preserve">
-		<value>Game</value>
-	</data>
-	<data name="EXTERNAL_ENTITY00698" xml:space="preserve">
-		<value>External Entity</value>
-	</data>
-	<data name="TEXT__UPPER_CASE_62204" xml:space="preserve">
-		<value>Text (Upper case)</value>
-	</data>
-	<data name="PROFILE_PICTURE26817" xml:space="preserve">
-		<value>Profile picture</value>
-	</data>
-	<data name="ROOMS06809" xml:space="preserve">
-		<value>Rooms</value>
-	</data>
-	<data name="SEQUENTIAL_MOVEMENTS40923" xml:space="preserve">
-		<value>Sequential Movements</value>
-	</data>
-	<data name="DISPATCHES13773" xml:space="preserve">
-		<value>Dispatches</value>
-	</data>
-	<data name="RESPONSAVEL08700" xml:space="preserve">
-		<value>Responsavél</value>
-	</data>
-	<data name="EMAIL__CONFIRM_56391" xml:space="preserve">
-		<value>Email (confirm)</value>
-	</data>
-	<data name="CODE_49120" xml:space="preserve">
-		<value>Code:</value>
-	</data>
-	<data name="PROFILE65433" xml:space="preserve">
-		<value>Profile</value>
-	</data>
-	<data name="RARE54339" xml:space="preserve">
-		<value>Rare</value>
-	</data>
-	<data name="DATA_EFEITO54573" xml:space="preserve">
-		<value>Data Efeito</value>
-	</data>
-	<data name="_CATEGORY37591" xml:space="preserve">
-		<value>&gt;CATEGORy</value>
-	</data>
-	<data name="REGION_OF_THE_PERSON14756" xml:space="preserve">
-		<value>Region of the person:</value>
-	</data>
-	<data name="DELIVERED26597" xml:space="preserve">
-		<value>Delivered</value>
-	</data>
-	<data name="__37942339" xml:space="preserve">
-		<value>Designação a dar em vez de &quot;Objetivo&quot;.</value>
-	</data>
-	<data name="STRATEGIC_OBJECTIVES32021" xml:space="preserve">
-		<value>Strategic Objectives / Operational Objectives</value>
-	</data>
-	<data name="PERSPECTIVA53871" xml:space="preserve">
-		<value>Perspectiva</value>
-	</data>
-	<data name="PROFESSIONAL_ABBREVI57700" xml:space="preserve">
-		<value>Professional abbreviation</value>
-	</data>
-	<data name="__35609308" xml:space="preserve">
-		<value>Avanço no intervalo do Gantt</value>
-	</data>
-	<data name="_114932654" xml:space="preserve">
-		<value>E2E Help test</value>
-	</data>
-	<data name="MOVING46562" xml:space="preserve">
-		<value>Moving</value>
-	</data>
 	<data name="SALES__PHASES_20442" xml:space="preserve">
 		<value>Sales (phases)</value>
 	</data>
@@ -4642,6 +4576,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="__17357517" xml:space="preserve">
 		<value>Medida que se vai usar para este indicador</value>
 	</data>
+	<data name="__41553071" xml:space="preserve">
+		<value>Subtitulo no kpi</value>
+	</data>
 	<data name="CAMINHO_PARA_DOCUMEN06620" xml:space="preserve">
 		<value>Caminho para Documentos</value>
 	</data>
@@ -4698,6 +4635,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	</data>
 	<data name="NO_HORAS_SEMANAIS27486" xml:space="preserve">
 		<value>Nº Horas Semanais</value>
+	</data>
+	<data name="MINIMO33485" xml:space="preserve">
+		<value>Mínimo</value>
 	</data>
 	<data name="STMP_USER_ACCESS42993" xml:space="preserve">
 		<value>STMP User Access</value>
@@ -4954,6 +4894,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="MANUALS14730" xml:space="preserve">
 		<value>Manuals</value>
 	</data>
+	<data name="INDICATOR_RESPONSIBL35030" xml:space="preserve">
+		<value>Indicator Responsible</value>
+	</data>
 	<data name="EM_EXECUCAO53706" xml:space="preserve">
 		<value>Em execução</value>
 	</data>
@@ -5185,6 +5128,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="BOUGHT35496" xml:space="preserve">
 		<value>bought</value>
 	</data>
+	<data name="GAME57681" xml:space="preserve">
+		<value>Game</value>
+	</data>
 	<data name="EMPLOYEE_NUMBER05861" xml:space="preserve">
 		<value>Employee Number</value>
 	</data>
@@ -5208,6 +5154,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	</data>
 	<data name="ALTURA57630" xml:space="preserve">
 		<value>Altura</value>
+	</data>
+	<data name="_1114_VERBOSE42095" xml:space="preserve">
+		<value>Help in the zone verbose</value>
 	</data>
 	<data name="PASSENGER_CAPACITY_O45867" xml:space="preserve">
 		<value>Passenger capacity on the plane</value>
@@ -5606,6 +5555,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="CHANGED_BY08967" xml:space="preserve">
 		<value>Changed by</value>
 	</data>
+	<data name="Y_POSITION09776" xml:space="preserve">
+		<value>Y position</value>
+	</data>
 	<data name="IDENTIFICATION40793" xml:space="preserve">
 		<value>IDENTIFICATION</value>
 	</data>
@@ -5880,6 +5832,9 @@ Proceso:  Centran su medición en el desarrollo de las actividades, las cuales e
 	</data>
 	<data name="STYLES28487" xml:space="preserve">
 		<value>Styles</value>
+	</data>
+	<data name="PHOTOS_42586" xml:space="preserve">
+		<value>Photos:</value>
 	</data>
 	<data name="FORM54242" xml:space="preserve">
 		<value>Form</value>
@@ -6511,6 +6466,9 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
 	<data name="FLOOR_NUMBER26169" xml:space="preserve">
 		<value>Floor number</value>
 	</data>
+	<data name="WAREHOUSE_EMPLOYEES19716" xml:space="preserve">
+		<value>Warehouse employees</value>
+	</data>
 	<data name="DISPLACEMENT_AND_REL64077" xml:space="preserve">
 		<value>Displacement and relationship to the destination side of the connecting line</value>
 	</data>
@@ -6606,6 +6564,42 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
 	</data>
 	<data name="REAL_ESTATE15399" xml:space="preserve">
 		<value>real estate</value>
+	</data>
+	<data name="_109531561" xml:space="preserve">
+		<value>An address that is both physical and postal.</value>
+	</data>
+	<data name="HEIGHT__ME_36593" xml:space="preserve">
+		<value>Height (ME)</value>
+	</data>
+	<data name="CARD_IMG_BACKGROUND51759" xml:space="preserve">
+		<value>Card-Img-Background</value>
+	</data>
+	<data name="RECEIPT_NUMBER31380" xml:space="preserve">
+		<value>Receipt number</value>
+	</data>
+	<data name="GERAR_AUTOMATICAMENT15171" xml:space="preserve">
+		<value>Gerar automaticamente</value>
+	</data>
+	<data name="DESCRIPTION07383" xml:space="preserve">
+		<value>Description</value>
+	</data>
+	<data name="X_POSITION52184" xml:space="preserve">
+		<value>X Position</value>
+	</data>
+	<data name="ASSET_IDENTIFICATION53152" xml:space="preserve">
+		<value>Asset identification</value>
+	</data>
+	<data name="TRAINING_EXERCISE_1947850" xml:space="preserve">
+		<value>Training Exercise 19</value>
+	</data>
+	<data name="QUALIFICACAO07026" xml:space="preserve">
+		<value>Qualificação</value>
+	</data>
+	<data name="NONE51124" xml:space="preserve">
+		<value>None</value>
+	</data>
+	<data name="APPROVAL_DATE21560" xml:space="preserve">
+		<value>Approval Date</value>
 	</data>
 	<data name="_AFFINITY_GENRE64973" xml:space="preserve">
 		<value>&gt;AFFINITY GENRE</value>

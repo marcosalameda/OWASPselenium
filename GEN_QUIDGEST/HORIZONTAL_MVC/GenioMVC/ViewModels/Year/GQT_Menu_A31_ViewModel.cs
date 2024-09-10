@@ -390,6 +390,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAyear.FldCodyear, CSGenioAyear.FldZz
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Year> MapGQT_Menu_A31(ListingMVC<CSGenioAyear> Qlisting)
@@ -462,5 +464,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAyear.FldCodyear, CSGenioAyear.FldZz
             new TableSearchColumn("ValYear", CSGenioAyear.FldYear, typeof(string), defaultSearch : true),
             new TableSearchColumn("ValValue", CSGenioAyear.FldValue, typeof(decimal?))
         };
+
     }
 }

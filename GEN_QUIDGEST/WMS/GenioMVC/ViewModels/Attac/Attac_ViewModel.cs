@@ -563,6 +563,7 @@ namespace GenioMVC.ViewModels.Attac
         private readonly string[] _fieldsToSerialize_ATTAC___ASSETNAME____ = { "Asset", "Asset.ValCodasset", "Asset.ValZzstate", "Asset.ValName" };
 
 
+
 		#region Charts
 		#endregion
 

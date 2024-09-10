@@ -11,12 +11,13 @@ using CSGenio.persistence;
 using Quidgest.Persistence.GenericQuery;
 using Quidgest.Persistence;
 
-using MigraDoc.DocumentObjectModel;
-using MigraDoc.DocumentObjectModel.Tables;
-using MigraDoc.Rendering;
+using MigraDocCore.DocumentObjectModel;
+using MigraDocCore.DocumentObjectModel.Tables;
+using MigraDocCore.Rendering;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using Ionic.Zip;
+using PdfSharpCore.Drawing;
 
 namespace CSGenio.framework
 {
@@ -332,14 +333,15 @@ namespace CSGenio.framework
 
         private class ExportToPDF
         {
-            readonly static double TableMaxWidth = PdfSharp.PageSizeConverter.ToSize(PdfSharp.PageSize.A4).Height - Unit.FromCentimeter(2.2).Point;
+            readonly static double TableMaxWidth = PdfSharpCore.PageSizeConverter.ToSize(PdfSharpCore.PageSize.A4).Height - Unit.FromCentimeter(2.2).Point;
             readonly static double WidthScaleFactorMin = 0.5; // do not reduce column width by more than half
-            readonly static MigraDoc.DocumentObjectModel.Color TableBorder = new MigraDoc.DocumentObjectModel.Color(0, 0, 0);
-            readonly static MigraDoc.DocumentObjectModel.Color TableBlue = new MigraDoc.DocumentObjectModel.Color(235, 240, 249);
-            readonly static MigraDoc.DocumentObjectModel.Color TableGray = new MigraDoc.DocumentObjectModel.Color(242, 242, 242);
-            readonly static MigraDoc.DocumentObjectModel.Font HeaderFont = new Font("Arial", 12);
-            readonly static MigraDoc.DocumentObjectModel.Font TableFont = new Font("Arial", 10);
-            readonly static MigraDoc.DocumentObjectModel.Unit TableBorderWidth = new Unit(1);
+            readonly static Color TableBorder = new Color(0, 0, 0);
+            readonly static Color TableBlue = new Color(235, 240, 249);
+            readonly static Color TableGray = new Color(242, 242, 242);
+            readonly static Font HeaderFont = new Font("Arial", 12);
+            readonly static Font TableFont = new Font("Arial", 10);
+            readonly static Unit TableBorderWidth = new Unit(1);
+            readonly static XGraphics DefaultGraphics = XGraphics.CreateMeasureContext(new XSize(2000, 2000), XGraphicsUnit.Point, XPageDirection.Downwards);
 
 
             private Document document;
@@ -413,7 +415,7 @@ namespace CSGenio.framework
                 // Create a new style called Table based on style Normal
                 style = this.document.Styles.AddStyle("Table", "Normal");
                 style.Font = TableFont.Clone();
-                style.Font.Color = MigraDoc.DocumentObjectModel.Colors.Black;
+                style.Font.Color = Colors.Black;
 
                 // Create a new style called Reference based on style Normal
                 style = this.document.Styles.AddStyle("Reference", "Normal");
@@ -429,10 +431,10 @@ namespace CSGenio.framework
             public static bool ValidatePage(List<QColumn> columns, DataMatrix values, User user = null)
             {
                 // Measure strings for column width estimation
-                MigraDoc.DocumentObjectModel.Font tableHeaderFont = HeaderFont.Clone();
+                Font tableHeaderFont = HeaderFont.Clone();
                 tableHeaderFont.Bold = true;
-                TextMeasurement tmHeader = new TextMeasurement(tableHeaderFont);
-                TextMeasurement tmBody = new TextMeasurement(TableFont);
+                TextMeasurement tmHeader = new TextMeasurement(DefaultGraphics, tableHeaderFont);
+                TextMeasurement tmBody = new TextMeasurement(DefaultGraphics, TableFont);
                 double totalColWidth = 0;
 
                 for (int i = 0; i < columns.Count; i++)
@@ -491,7 +493,7 @@ namespace CSGenio.framework
                 to.Format.Font = HeaderFont.Clone();
                 to.Format.Font.Bold = true;
                 //to.Format.Font.Color = MigraDoc.DocumentObjectModel.Colors.DarkGray;
-                to.Format.Font.Color = MigraDoc.DocumentObjectModel.Colors.Black;
+                to.Format.Font.Color = Colors.Black;
                 to.AddText(namebdedit);
                 section.Headers.Primary.Add(to);
                 section.AddParagraph();
@@ -515,10 +517,10 @@ namespace CSGenio.framework
                 this.table.Rows.LeftIndent = 0;
 
                 // Measure strings for column width estimation
-                MigraDoc.DocumentObjectModel.Font tableHeaderFont = HeaderFont.Clone();
+                Font tableHeaderFont = HeaderFont.Clone();
                 tableHeaderFont.Bold = true;
-                TextMeasurement tmHeader = new TextMeasurement(tableHeaderFont);
-                TextMeasurement tmBody = new TextMeasurement(this.document.Styles["Table"].Font.Clone());
+                TextMeasurement tmHeader = new TextMeasurement(DefaultGraphics, tableHeaderFont);
+                TextMeasurement tmBody = new TextMeasurement(DefaultGraphics, this.document.Styles["Table"].Font.Clone());
                 double totalColWidth = 0;
 
                 for (int i = 0; i < columns.Count; i++)
@@ -574,7 +576,7 @@ namespace CSGenio.framework
                 row.Shading.Color = Colors.DodgerBlue;
                 row.Format.Font.Color = Colors.White;
 
-                this.table.SetEdge(0, 0, columns.Count, 1, Edge.Box, BorderStyle.Single, 0.75, MigraDoc.DocumentObjectModel.Color.Empty);
+                this.table.SetEdge(0, 0, columns.Count, 1, Edge.Box, BorderStyle.Single, 0.75, Color.Empty);
 
                 for (int c = 0; c < columns.Count; c++)
                 {
@@ -601,7 +603,7 @@ namespace CSGenio.framework
 
                     if (rowPDF.Index % 2 == 0)
                     {
-                        rowPDF.Shading.Color = MigraDoc.DocumentObjectModel.Colors.LightGray;
+                        rowPDF.Shading.Color = Colors.LightGray;
                     }
 
                     this.table.SetEdge(0, this.table.Rows.Count - 1, columns.Count, 1, Edge.Box, BorderStyle.Single, 0.75);
@@ -658,7 +660,7 @@ namespace CSGenio.framework
             /// </summary>
             private bool TooWide(string word, Unit width)
             {
-                TextMeasurement tm = new TextMeasurement(this.document.Styles["Table"].Font.Clone());
+                TextMeasurement tm = new TextMeasurement(DefaultGraphics, this.document.Styles["Table"].Font.Clone());
                 double f = tm.MeasureString(word, UnitType.Point).Width;
                 return f > width.Point;
             }

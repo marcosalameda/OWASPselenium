@@ -370,6 +370,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioApropr.FldCodpropr, CSGenioApropr.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Propr> MapRegiapro_ValImoveiss(ListingMVC<CSGenioApropr> Qlisting)
@@ -449,5 +451,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioApropr.FldCodpropr, CSGenioApropr.Fl
             new TableSearchColumn("Pais1_ValCountry", CSGenioApais1.FldCountry, typeof(string)),
             new TableSearchColumn("Cntry_ValCountry", CSGenioAcntry.FldCountry, typeof(string))
         };
+
     }
 }

@@ -1,6 +1,11 @@
 ﻿<template>
   <div id="system_reports_container">
-    <h1 class="f-header__title">{{ Resources.RELATORIO_DO_SISTEMA49744 }}</h1>
+    <div class="q-stack--column">
+			<h1 class="f-header__title">
+			{{ Resources.RELATORIO_DO_SISTEMA49744 }}
+			</h1>
+		</div>
+    <hr>
     
     <row>
       <select class="form-control" style="float:right; width: 200px;" v-model="currentApp">

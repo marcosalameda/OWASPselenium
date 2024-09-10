@@ -346,6 +346,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAexpen.FldCoddespe, CSGenioAexpen.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Expen> MapAno_ValTodasdes(ListingMVC<CSGenioAexpen> Qlisting)
@@ -418,5 +420,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAexpen.FldCoddespe, CSGenioAexpen.Fl
             new TableSearchColumn("ValDescript", CSGenioAexpen.FldDescript, typeof(string)),
             new TableSearchColumn("ValValue", CSGenioAexpen.FldValue, typeof(decimal?))
         };
+
     }
 }

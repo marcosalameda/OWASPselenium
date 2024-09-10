@@ -340,6 +340,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtrsb.FldCodtrsb, CSGenioAtrsb.FldZz
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Trsb> MapTblk_TrsbValName(ListingMVC<CSGenioAtrsb> Qlisting)
@@ -411,5 +413,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtrsb.FldCodtrsb, CSGenioAtrsb.FldZz
         {
             new TableSearchColumn("ValName", CSGenioAtrsb.FldName, typeof(string))
         };
+
     }
 }

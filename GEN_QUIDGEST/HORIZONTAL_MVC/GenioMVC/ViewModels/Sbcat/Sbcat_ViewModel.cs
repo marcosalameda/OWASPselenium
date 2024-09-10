@@ -322,6 +322,7 @@ namespace GenioMVC.ViewModels.Sbcat
 
 
 
+
 		#region Charts
 		#endregion
 

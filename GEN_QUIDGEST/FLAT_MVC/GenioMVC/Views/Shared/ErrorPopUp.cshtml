@@ -1,0 +1,26 @@
+﻿@model string
+
+@{
+    ViewBag.Title = @Resources.ERRO38355;
+}
+
+<div class="c-modal__dialog c-modal--lg">
+    <div class="c-modal__content">
+        <div class="c-modal__header">
+            <div class="c-modal__header-title">
+                @ViewBag.Title
+            </div>
+        </div>
+        <div class="alert c-alert c-alert-E permissionErrorPopUp">
+            <i class="glyphicons glyphicons-light-beacon c-alert__icon"></i>
+            <div class="c-alert__text">
+                @Model
+            </div>
+        </div>
+        <div class="c-modal__footer">
+            <div class="actions">
+                <button class="b-icon-text b-icon-text--secondary" data-dismiss="modal" aria-hidden="true">@Resources.FECHAR32496</button>
+            </div>
+        </div>
+    </div>
+</div>

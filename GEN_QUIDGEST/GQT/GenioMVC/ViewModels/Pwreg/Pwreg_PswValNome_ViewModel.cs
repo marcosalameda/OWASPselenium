@@ -340,6 +340,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioApsw.FldCodpsw, CSGenioApsw.FldZzsta
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Psw> MapPwreg_PswValNome(ListingMVC<CSGenioApsw> Qlisting)
@@ -411,5 +413,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioApsw.FldCodpsw, CSGenioApsw.FldZzsta
         {
             new TableSearchColumn("ValNome", CSGenioApsw.FldNome, typeof(string))
         };
+
     }
 }

@@ -1496,6 +1496,7 @@ namespace GenioMVC.ViewModels.Pesso
         private readonly string[] _fieldsToSerialize_PESSO___REGI1REGIAO__ = { "Regi1", "Regi1.ValCodregia", "Regi1.ValZzstate", "Regi1.ValRegiao" };
 
 
+
 		#region Charts
 		#endregion
 

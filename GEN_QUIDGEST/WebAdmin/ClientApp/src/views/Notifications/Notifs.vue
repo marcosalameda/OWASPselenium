@@ -95,10 +95,7 @@
                 name: "NumMessagesConfig",
                 sort: true
             }],
-            config: {
-              table_title: () => vm.$t('NOTIFICACOES03935')
-            }
-        }
+                                            }
       };
     },
     methods: {

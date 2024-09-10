@@ -417,6 +417,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAasset.FldCodasset, CSGenioAasset.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Asset> MapWMS_Menu_ASSET_CARD(ListingMVC<CSGenioAasset> Qlisting)
@@ -575,5 +577,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAasset.FldCodasset, CSGenioAasset.Fl
         };
 
         override public SpecialRenderingsCfg ViewModesCfg { get => _viewModes; }
+
     }
 }

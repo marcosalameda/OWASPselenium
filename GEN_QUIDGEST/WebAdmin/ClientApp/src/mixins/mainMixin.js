@@ -3,33 +3,52 @@ import moment from 'moment';
 import { QUtils } from '@/utils/mainUtils';
 
 export const reusableMixin = {
-  methods: {
-    navigateTo: function (name) { 
-        var vm = this;
-        vm.$router.push({ name: name, params: { culture: vm.currentLang, system: vm.currentYear } });
-    },
-    isEmptyArray: function (arr) {
-      return !(arr && arr.length > 0);
-    },
-    isEmptyObject: function (obj) {
-      return $.isEmptyObject(obj);
-    },
-    formatDate: function (date) {
-        if ($.isEmptyObject(date)) return '';
-        else if ($.type(date) === 'string') {
-            date = QUtils.tryParseDate(date);
-        }
-        if ($.type(date) === 'date' || moment.isMoment(date)) {
-            if (date._isAMomentObject) { date = date.toDate(); }
-            var text = date.toLocaleDateString('pt-PT') + ' ' + date.toLocaleTimeString('pt-PT');
-            if (text === 'Invalid Date Invalid Date' || date.getFullYear() <= 0) { // IE11 and Null date
-                text = '-';
+    methods: {
+        navigateTo(event, name, hasSubmenu = false) { 
+            var vm = this;
+            vm.isSelected = false;
+            vm.isMenuOpen = hasSubmenu ? !vm.isMenuOpen : false;
+
+            vm.$router.push({ name: name, params: { culture: vm.currentLang, system: vm.currentYear } });
+
+            if (vm.currentSelected) {
+                vm.currentSelected.classList.remove('selected');
             }
-            return text;
+
+            if (!hasSubmenu) {
+                event.currentTarget.classList.add('selected');
+                vm.currentSelected = event.currentTarget;
+            } else {
+                event.currentTarget.classList.add('selected');
+                vm.currentSelected = event.currentTarget;
+                if (vm.Model.Applications.length > 0) {
+                    const firstSubItem = vm.Model.Applications[0];
+                    vm.currentApp = firstSubItem.Id;
+                }
+            }
+        },
+        isEmptyArray(arr) {
+            return !(arr && arr.length > 0);
+        },
+        isEmptyObject(obj) {
+            return $.isEmptyObject(obj);
+        },
+        formatDate(date) {
+            if ($.isEmptyObject(date)) return '';
+            else if ($.type(date) === 'string') {
+                date = QUtils.tryParseDate(date);
+            }
+            if ($.type(date) === 'date' || moment.isMoment(date)) {
+                if (date._isAMomentObject) { date = date.toDate(); }
+                var text = date.toLocaleDateString('pt-PT') + ' ' + date.toLocaleTimeString('pt-PT');
+                if (text === 'Invalid Date Invalid Date' || date.getFullYear() <= 0) { // IE11 and Null date
+                    text = '-';
+                }
+                return text;
+            }
+            else return '';
         }
-        else return '';
-    }
-  },
+    },
 	data()
 	{
 		var vm = this;

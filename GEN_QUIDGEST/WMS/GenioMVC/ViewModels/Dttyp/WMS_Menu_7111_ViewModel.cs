@@ -412,6 +412,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAdttyp.FldCoddttyp, CSGenioAdttyp.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Dttyp> MapWMS_Menu_7111(ListingMVC<CSGenioAdttyp> Qlisting)
@@ -505,5 +507,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAdttyp.FldCoddttyp, CSGenioAdttyp.Fl
             new TableSearchColumn("ValStart", CSGenioAdttyp.FldStart, typeof(DateTime?)),
             new TableSearchColumn("ValEnd", CSGenioAdttyp.FldEnd, typeof(DateTime?))
         };
+
     }
 }

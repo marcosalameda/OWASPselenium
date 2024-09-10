@@ -61,7 +61,12 @@ namespace GenioMVC.Helpers.Table.Utils
 
             queryString = temp;
 
-            StringBuilder sb = new StringBuilder(table.requestsLink);
+            /*
+                This method seems to be used only in special cases when the list does not have Ajax requests to the server.
+                The way this method creates URLs is incorrect because it ends up concatenationg the string, resulting in a URL with two query string,
+                    since the base address already has the `?nav=...` parameter.
+            */
+            StringBuilder sb = new StringBuilder(HttpUtility.JavaScriptStringEncode(table.requestsLink));
 
             sb.Append("?");
             for (int i = 0; i < queryString.Count; i++)

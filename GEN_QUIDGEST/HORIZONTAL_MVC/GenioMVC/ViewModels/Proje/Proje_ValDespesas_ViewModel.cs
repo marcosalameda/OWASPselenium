@@ -347,6 +347,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAexpen.FldCoddespe, CSGenioAexpen.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Expen> MapProje_ValDespesas(ListingMVC<CSGenioAexpen> Qlisting)
@@ -422,5 +424,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAexpen.FldCoddespe, CSGenioAexpen.Fl
             new TableSearchColumn("ValValue", CSGenioAexpen.FldValue, typeof(decimal?)),
             new TableSearchColumn("Year_ValYear", CSGenioAyear.FldYear, typeof(string))
         };
+
     }
 }

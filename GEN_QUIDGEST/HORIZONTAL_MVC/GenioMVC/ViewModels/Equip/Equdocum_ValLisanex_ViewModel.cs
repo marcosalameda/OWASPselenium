@@ -349,6 +349,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAanexd.FldCodanexd, CSGenioAanexd.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Anexd> MapEqudocum_ValLisanex(ListingMVC<CSGenioAanexd> Qlisting)
@@ -424,5 +426,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAanexd.FldCodanexd, CSGenioAanexd.Fl
             new TableSearchColumn("ValTittradu", CSGenioAanexd.FldTittradu, typeof(string)),
             new TableSearchColumn("ValReferenc", CSGenioAanexd.FldReferenc, typeof(string))
         };
+
     }
 }

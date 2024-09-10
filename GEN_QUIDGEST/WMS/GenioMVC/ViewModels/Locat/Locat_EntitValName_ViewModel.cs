@@ -341,6 +341,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAentit.FldCodentit, CSGenioAentit.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Entit> MapLocat_EntitValName(ListingMVC<CSGenioAentit> Qlisting)
@@ -413,5 +415,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAentit.FldCodentit, CSGenioAentit.Fl
             new TableSearchColumn("ValName", CSGenioAentit.FldName, typeof(string)),
             new TableSearchColumn("ValInitials", CSGenioAentit.FldInitials, typeof(string))
         };
+
     }
 }

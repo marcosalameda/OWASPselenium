@@ -458,6 +458,7 @@ namespace GenioMVC.ViewModels.Rules
 
 
 
+
 		#region Charts
 		#endregion
 

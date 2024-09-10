@@ -351,6 +351,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAvisit.FldCodvisit, CSGenioAvisit.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Visit> MapFullcale_ValFullcale(ListingMVC<CSGenioAvisit> Qlisting)
@@ -428,5 +430,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAvisit.FldCodvisit, CSGenioAvisit.Fl
             new TableSearchColumn("ValColor", CSGenioAvisit.FldColor, typeof(string)),
             new TableSearchColumn("ValBack", CSGenioAvisit.FldBack, typeof(bool))
         };
+
     }
 }

@@ -392,6 +392,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAuicom.FldCoduicom, CSGenioAuicom.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Uicom> MapSTY_Menu_OVERVIEW(ListingMVC<CSGenioAuicom> Qlisting)
@@ -507,5 +509,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAuicom.FldCoduicom, CSGenioAuicom.Fl
         };
 
         override public SpecialRenderingsCfg ViewModesCfg { get => _viewModes; }
+
     }
 }

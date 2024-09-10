@@ -849,6 +849,7 @@ namespace GenioMVC.ViewModels.Item
         private readonly string[] _fieldsToSerialize_ARTIGVALWAREHWAREHDES = { "Wareh", "Wareh.ValCodwareh", "Wareh.ValZzstate", "Wareh.ValWarehdes" };
 
 
+
 		#region Charts
 		#endregion
 

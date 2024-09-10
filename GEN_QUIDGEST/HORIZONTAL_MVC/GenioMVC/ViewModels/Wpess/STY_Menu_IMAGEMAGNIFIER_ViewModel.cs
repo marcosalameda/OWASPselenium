@@ -424,6 +424,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.Fld
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Wpess> MapSTY_Menu_IMAGEMAGNIFIER(ListingMVC<CSGenioAwpess> Qlisting)
@@ -508,5 +510,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.Fld
             new TableSearchColumn("ValNacional", CSGenioAwpess.FldNacional, typeof(string)),
             new TableSearchColumn("Wareh_ValWarehdes", CSGenioAwareh.FldWarehdes, typeof(string))
         };
+
     }
 }

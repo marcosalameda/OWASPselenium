@@ -422,6 +422,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Equip> MapGQT_Menu_2D111(ListingMVC<CSGenioAequip> Qlisting)
@@ -506,5 +508,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
             new TableSearchColumn("Wareh_ValWarehdes", CSGenioAwareh.FldWarehdes, typeof(string), visible : false),
             new TableSearchColumn("Item_ValItemdes", CSGenioAitem.FldItemdes, typeof(string), visible : false)
         };
+
     }
 }

@@ -189,7 +189,7 @@
 										@if(Model.IsEditableMode) {
 											@Html.EditorFor(model => model.ValDescript, new {help_id = "IFF_PROPR03_PROPRDESCRIPT", @class = "input-xxlarge", data_identifier = "IFF_PROPR03_PROPRDESCRIPT", data_readonly = !Model.IsEditableMode })
 										} else {
-											@Html.Raw(Server.HtmlDecode(Model.ValDescript))
+											@Html.Raw(Helpers.SanitizeHTML(Server.HtmlDecode(Model.ValDescript), true))
 										}
 										</div>
 										@Html.ValidationMessageFor(model => model.ValDescript)

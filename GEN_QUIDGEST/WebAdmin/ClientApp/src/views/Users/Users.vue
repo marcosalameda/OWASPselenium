@@ -1,6 +1,11 @@
 ﻿<template>
   <div>
-    <h1 class="f-header__title">{{ Resources.GESTAO_DE_UTILIZADOR20428 }}</h1>
+    <div class="q-stack--column">
+			<h1 class="f-header__title">
+			{{ Resources.GESTAO_DE_UTILIZADOR20428 }}
+			</h1>
+		</div>
+    <hr>
     <ul class="nav nav-tabs c-tab c-tab__divider" id="users_tabs" role="tablist">
         <li class="nav-item c-tab__item">
             <a class="nav-link c-tab__item-header active" id="all-users-tab" data-toggle="tab" data-target="#all-users" role="tab" aria-controls="all-users" aria-selected="true">{{ Resources.UTILIZADORES39761 }}</a>

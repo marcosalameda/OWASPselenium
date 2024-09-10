@@ -356,6 +356,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAesppe.FldCodesppe, CSGenioAesppe.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Esppe> MapPesso_ValEspecitl(ListingMVC<CSGenioAesppe> Qlisting)
@@ -430,5 +432,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAesppe.FldCodesppe, CSGenioAesppe.Fl
             new TableSearchColumn("Speci_ValEspecial", CSGenioAspeci.FldEspecial, typeof(string)),
             new TableSearchColumn("Speci_ValAreatecn", CSGenioAspeci.FldAreatecn, typeof(string), array : "AreaTecn")
         };
+
     }
 }

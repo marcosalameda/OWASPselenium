@@ -351,6 +351,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAoutpt.FldCodoutpt, CSGenioAoutpt.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Outpt> MapLdsai_OutptValDocumenr(ListingMVC<CSGenioAoutpt> Qlisting)
@@ -423,5 +425,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAoutpt.FldCodoutpt, CSGenioAoutpt.Fl
             new TableSearchColumn("ValDocumenr", CSGenioAoutpt.FldDocumenr, typeof(decimal?)),
             new TableSearchColumn("ValDhdocume", CSGenioAoutpt.FldDhdocume, typeof(DateTime?))
         };
+
     }
 }

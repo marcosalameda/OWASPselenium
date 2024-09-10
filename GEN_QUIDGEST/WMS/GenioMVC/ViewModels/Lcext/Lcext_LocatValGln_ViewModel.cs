@@ -340,6 +340,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlocat.FldCodlocat, CSGenioAlocat.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Locat> MapLcext_LocatValGln(ListingMVC<CSGenioAlocat> Qlisting)
@@ -411,5 +413,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlocat.FldCodlocat, CSGenioAlocat.Fl
         {
             new TableSearchColumn("ValGln", CSGenioAlocat.FldGln, typeof(string))
         };
+
     }
 }

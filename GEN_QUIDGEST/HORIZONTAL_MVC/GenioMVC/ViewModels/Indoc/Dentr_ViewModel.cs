@@ -1240,6 +1240,7 @@ namespace GenioMVC.ViewModels.Indoc
         private readonly string[] _fieldsToSerialize_DENTR___WARE1WAREHDES = { "Ware1", "Ware1.ValCodwareh", "Ware1.ValZzstate", "Ware1.ValWarehdes" };
 
 
+
 		#region Charts
 		#endregion
 

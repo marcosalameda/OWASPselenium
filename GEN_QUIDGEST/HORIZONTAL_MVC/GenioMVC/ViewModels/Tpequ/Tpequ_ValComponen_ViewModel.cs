@@ -360,6 +360,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcmpki.FldCodcmpki, CSGenioAcmpki.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Cmpki> MapTpequ_ValComponen(ListingMVC<CSGenioAcmpki> Qlisting)
@@ -438,5 +440,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcmpki.FldCodcmpki, CSGenioAcmpki.Fl
             new TableSearchColumn("ValCode", CSGenioAcmpki.FldCode, typeof(string)),
             new TableSearchColumn("ValUrl", CSGenioAcmpki.FldUrl, typeof(string))
         };
+
     }
 }

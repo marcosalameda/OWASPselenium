@@ -746,6 +746,7 @@ namespace GenioMVC.ViewModels.Itemc
         private readonly string[] _fieldsToSerialize_CATAR___CATTPTPCATEGO = { "Cattp", "Cattp.ValCodtpcat", "Cattp.ValZzstate", "Cattp.ValTpcatego" };
 
 
+
 		#region Charts
 		#endregion
 

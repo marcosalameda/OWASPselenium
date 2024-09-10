@@ -37,7 +37,7 @@
 using System;
 using System.Diagnostics;
 using System.ComponentModel;
-using PdfSharp.Drawing;
+using PdfSharpCore.Drawing;
 
 namespace MigraDoc.DocumentObjectModel
 {
@@ -49,7 +49,7 @@ namespace MigraDoc.DocumentObjectModel
         /// <summary>
         /// Initializes a new instance of the TextMeasurement class with the specified font.
         /// </summary>
-        public TextMeasurement(Font font)
+        public TextMeasurement(XFont font)
         {
             if (font == null)
                 throw new ArgumentNullException("font");
@@ -60,12 +60,12 @@ namespace MigraDoc.DocumentObjectModel
         /// <summary>
         /// Returns the size of the bounding box of the specified text.
         /// </summary>
-        public XSize MeasureString(string text, UnitType unitType)
+        public XSize MeasureString(string text, XGraphicsUnit unitType)
         {
             if (text == null)
                 throw new ArgumentNullException("text");
 
-            if (!Enum.IsDefined(typeof(UnitType), unitType))
+            if (!Enum.IsDefined(typeof(XGraphicsUnit), unitType))
                 throw new InvalidEnumArgumentException();
 
             XGraphics graphics = Realize();
@@ -73,27 +73,22 @@ namespace MigraDoc.DocumentObjectModel
             XSize size = graphics.MeasureString(text, _gdiFont/*, new XPoint(0, 0), StringFormat.GenericTypographic*/);
             switch (unitType)
             {
-                case UnitType.Point:
+                case XGraphicsUnit.Point:
                     break;
 
-                case UnitType.Centimeter:
+                case XGraphicsUnit.Centimeter:
                     size.Width = (float)(size.Width * 2.54 / 72);
                     size.Height = (float)(size.Height * 2.54 / 72);
                     break;
 
-                case UnitType.Inch:
+                case XGraphicsUnit.Inch:
                     size.Width = size.Width / 72;
                     size.Height = size.Height / 72;
                     break;
 
-                case UnitType.Millimeter:
+                case XGraphicsUnit.Millimeter:
                     size.Width = (float)(size.Width * 25.4 / 72);
                     size.Height = (float)(size.Height * 25.4 / 72);
-                    break;
-
-                case UnitType.Pica:
-                    size.Width = size.Width / 12;
-                    size.Height = size.Height / 12;
                     break;
 
                 default:
@@ -108,13 +103,13 @@ namespace MigraDoc.DocumentObjectModel
         /// </summary>
         public XSize MeasureString(string text)
         {
-            return MeasureString(text, UnitType.Point);
+            return MeasureString(text, XGraphicsUnit.Point);
         }
 
         /// <summary>
         /// Gets or sets the font used for measurement.
         /// </summary>
-        public Font Font
+        public XFont Font
         {
             get { return _font; }
             set
@@ -128,7 +123,7 @@ namespace MigraDoc.DocumentObjectModel
                 }
             }
         }
-        Font _font;
+        XFont _font;
 
         /// <summary>
         /// Initializes appropriate GDI+ objects.

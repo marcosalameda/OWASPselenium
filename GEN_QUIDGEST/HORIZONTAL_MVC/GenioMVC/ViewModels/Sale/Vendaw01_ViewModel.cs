@@ -549,6 +549,7 @@ namespace GenioMVC.ViewModels.Sale
         private readonly string[] _fieldsToSerialize_VENDAW01ORGANORGANIZA = { "Organ", "Organ.ValCodorgan", "Organ.ValZzstate", "Organ.ValOrganiza" };
 
 
+
 		#region Charts
 		#endregion
 

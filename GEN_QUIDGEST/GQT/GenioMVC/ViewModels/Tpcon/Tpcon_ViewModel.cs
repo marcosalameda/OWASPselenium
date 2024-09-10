@@ -535,6 +535,7 @@ namespace GenioMVC.ViewModels.Tpcon
         private readonly string[] _fieldsToSerialize_TPCON___GENREGENDER__ = { "Genre", "Genre.ValCodgenre", "Genre.ValZzstate", "Genre.ValGender" };
 
 
+
 		#region Charts
 		#endregion
 

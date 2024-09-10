@@ -360,6 +360,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAitem.FldCoditem, CSGenioAitem.FldZz
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Item> MapArmaz03_ValArtigos(ListingMVC<CSGenioAitem> Qlisting)
@@ -435,5 +437,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAitem.FldCoditem, CSGenioAitem.FldZz
             new TableSearchColumn("ValExits", CSGenioAitem.FldExits, typeof(decimal?)),
             new TableSearchColumn("ValExistenc", CSGenioAitem.FldExistenc, typeof(decimal?))
         };
+
     }
 }

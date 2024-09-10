@@ -350,6 +350,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAinsta.FldCodinsta, CSGenioAinsta.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Insta> MapEquip_ValInstalac(ListingMVC<CSGenioAinsta> Qlisting)
@@ -495,5 +497,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAinsta.FldCodinsta, CSGenioAinsta.Fl
         };
 
         override public SpecialRenderingsCfg ViewModesCfg { get => _viewModes; }
+
     }
 }

@@ -355,6 +355,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpeq1.FldCodtpequ, CSGenioAtpeq1.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Tpeq1> MapFami1_ValTiposequ(ListingMVC<CSGenioAtpeq1> Qlisting)
@@ -436,5 +438,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpeq1.FldCodtpequ, CSGenioAtpeq1.Fl
             new TableSearchColumn("ValQtdequip", CSGenioAtpeq1.FldQtdequip, typeof(decimal?)),
             new TableSearchColumn("ValKit", CSGenioAtpeq1.FldKit, typeof(bool))
         };
+
     }
 }

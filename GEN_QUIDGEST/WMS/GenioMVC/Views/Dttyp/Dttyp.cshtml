@@ -149,7 +149,7 @@ else {
 													@if(Model.IsEditableMode) {
 														@Html.EditorFor(model => model.ValMultili3, new {help_id = "IFF_DTTYP___DTTYPMULTILI3", @class = "input-xxlarge", data_identifier = "IFF_DTTYP___DTTYPMULTILI3", data_readonly = !Model.IsEditableMode })
 													} else {
-														@Html.Raw(Server.HtmlDecode(Model.ValMultili3))
+														@Html.Raw(Helpers.SanitizeHTML(Server.HtmlDecode(Model.ValMultili3), true))
 													}
 													</div>
 													@Html.ValidationMessageFor(model => model.ValMultili3)
@@ -550,7 +550,7 @@ else {
     {
         if (Model.IsEditableMode)
         {
-            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("Dttyp", Model.FormMode).ToString(), "Dttyp")", "Dttyp_well")' qbutton="ok">
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@HttpUtility.JavaScriptStringEncode(Url.Action(Helpers.FormModeActionName("Dttyp", Model.FormMode).ToString(), "Dttyp"))", "Dttyp_well")' qbutton="ok">
                     <i class="SaveIcon e-icon" aria-hidden="true"></i>
                     @Resources.SAVE04165
             </button>
@@ -563,6 +563,13 @@ else {
                 $(document).ready(function () { loaded($("#Dttyp_well")); });
             </script>
         }
+		else if (Model.FormMode == FormMode.Delete)
+		{
+			<button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Dttyp_Delete", "Dttyp", new {id = @Model.ValCoddttyp} )", "Dttyp_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+		}
 
         @* javascript code_javascript *@
         @*@codeJavascript()*@

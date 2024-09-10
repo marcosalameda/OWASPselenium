@@ -698,6 +698,7 @@ namespace GenioMVC.Controllers
 				BeforeOp = (sink, sp) =>
 				{
 // USE /[MANUAL GQT BEFORE_SAVE_DUPLICATE EQUIP]/
+					MergeNN(model.Navigation, "Equip", model.ValCodequip, "Movim", "Codequip", "Codrooms", model.List_Movimevv_SelectedIds);
 				},
 				AfterOp = (sink, sp) =>
 				{
@@ -1570,7 +1571,7 @@ namespace GenioMVC.Controllers
 			return PartialView(partialView, model);
 		}
 
-
+ 
 		// POST: /Equip/Equip_SaveEdit
 		[AuthorizeForUsers]
 		[HttpPost]

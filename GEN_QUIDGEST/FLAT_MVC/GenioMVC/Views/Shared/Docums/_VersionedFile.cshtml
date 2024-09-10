@@ -1,0 +1,33 @@
+﻿@model GenioMVC.ViewModels.DocumsControl_ViewModel
+
+@{
+    string fieldSize = ViewData["fieldSize"] == null ? "" : ViewData["fieldSize"].ToString();
+    string identifier = ViewData["data_identifier"] == null ? "" : ViewData["data_identifier"].ToString();
+    bool isRequired = ViewData["isRequired"] == null ? false : Convert.ToBoolean(ViewData["isRequired"]);
+    string maxFileSize = ViewData["maxSize"] == null ? "null" : ViewData["maxSize"].ToString();
+    string regex = ViewData["allowedTypes"] == null ? "null" : ViewData["allowedTypes"].ToString();
+    string sysMaxSize = "";
+    string sysRegex = "";
+    CSGenio.framework.DocumentViewTypeMode viewType = (CSGenio.framework.DocumentViewTypeMode)(ViewData["viewType"] == null ? 1 : CSGenio.persistence.DBConversion.ToInteger(ViewData["viewType"]));
+
+	@*Platform: MVC | Type: DOCUMENT_UPLOAD_CONFIG | Module: GQT | Parameter:  | File:  | Order: 0*@
+@*BEGIN_MANUALCODE_CODMANUA:1b8c31be-6b1e-45d5-bf07-9fe5ea43b901*@
+string options = "{ maxFileSize: 209715200, acceptFileTypes: /(\\.|\\/)(gif|jpe?g|png|docx?|xlsx?|xml|xltm|xlsm|xlt|pptx?|ods|csv|infopathxml|xps|txt|pdf|zip|rar|7z|msg|dot|mp4)$/i, maxChunkSize: undefined}";
+@*END_MANUALCODE*@
+
+    sysMaxSize = options.Split(',')[0].Split(':')[1].Trim();
+    sysRegex = options.Split(',')[1].Split(':')[1].Replace("}", "").Trim();
+    maxFileSize = maxFileSize != "null" ? maxFileSize : sysMaxSize;
+    regex = regex != "null" ? regex : sysRegex;
+
+    options = "{maxFileSize: " + maxFileSize + ", acceptFileTypes: " + regex + "}";
+}
+
+@Html.Document(Model, new { @class = fieldSize }, identifier, fieldSize, isRequired, viewType)
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		$("input[id='@Model.FieldName']").InitFileControl(@options);
+		$("input[id='@Model.FieldName']").trigger('change');
+	})
+</script>

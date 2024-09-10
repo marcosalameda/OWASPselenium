@@ -401,6 +401,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Equip> MapSTY_Menu_TABLE(ListingMVC<CSGenioAequip> Qlisting)
@@ -491,5 +493,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
             new TableSearchColumn("Room1_ValRoomnr", CSGenioAroom1.FldRoomnr, typeof(string)),
             new TableSearchColumn("ValSitefabr", CSGenioAequip.FldSitefabr, typeof(string))
         };
+
     }
 }

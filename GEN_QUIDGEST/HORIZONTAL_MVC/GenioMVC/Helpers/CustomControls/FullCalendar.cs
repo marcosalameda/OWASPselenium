@@ -125,7 +125,7 @@ namespace GenioMVC.Helpers
             scriptBase.AppendLine("license: '" + GetLicense() + "',");
             scriptBase.AppendLine("data:" + GetEvents() + ",");
             scriptBase.AppendLine("resources:" + GetResources() + ",");
-            scriptBase.AppendLine("linkReload: '" + Builder.requestsLink + "',");
+            scriptBase.AppendLine("linkReload: '" + System.Web.HttpUtility.JavaScriptStringEncode(Builder.requestsLink) + "',");
             scriptBase.AppendLine("IsModal:" + (Builder.Form.OpenInPopup ? "true," : "false,"));
             scriptBase.AppendLine(string.Format("locale: '{0}',", FullCalendarHelper.FullCallendarLocale.Key));
 

@@ -698,6 +698,7 @@ namespace GenioMVC.Controllers
 				BeforeOp = (sink, sp) =>
 				{
 // USE /[MANUAL GQT BEFORE_SAVE_DUPLICATE PESSO]/
+					MergeNN(model.Navigation, "Pesso", model.ValCodpesso, "Esppe", "Codpesso", "Codespec", model.List_Especial_SelectedIds);
 				},
 				AfterOp = (sink, sp) =>
 				{

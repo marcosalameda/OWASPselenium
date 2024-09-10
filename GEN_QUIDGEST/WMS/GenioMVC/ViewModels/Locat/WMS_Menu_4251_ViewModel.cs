@@ -391,6 +391,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlocat.FldCodlocat, CSGenioAlocat.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Locat> MapWMS_Menu_4251(ListingMVC<CSGenioAlocat> Qlisting)
@@ -468,5 +470,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlocat.FldCodlocat, CSGenioAlocat.Fl
             new TableSearchColumn("Facil_ValName", CSGenioAfacil.FldName, typeof(string)),
             new TableSearchColumn("ValGln", CSGenioAlocat.FldGln, typeof(string), defaultSearch : true)
         };
+
     }
 }

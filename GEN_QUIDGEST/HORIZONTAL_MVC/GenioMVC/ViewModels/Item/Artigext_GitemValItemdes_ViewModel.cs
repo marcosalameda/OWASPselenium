@@ -351,6 +351,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgitem.FldCodgitem, CSGenioAgitem.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Gitem> MapArtigext_GitemValItemdes(ListingMVC<CSGenioAgitem> Qlisting)
@@ -423,5 +425,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgitem.FldCodgitem, CSGenioAgitem.Fl
             new TableSearchColumn("ValItemdes", CSGenioAgitem.FldItemdes, typeof(string)),
             new TableSearchColumn("ValItemgcod", CSGenioAgitem.FldItemgcod, typeof(string))
         };
+
     }
 }

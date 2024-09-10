@@ -395,6 +395,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAexpen.FldCoddespe, CSGenioAexpen.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Expen> MapPTN_Menu_361(ListingMVC<CSGenioAexpen> Qlisting)
@@ -478,5 +480,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAexpen.FldCoddespe, CSGenioAexpen.Fl
             new TableSearchColumn("ValPrevval", CSGenioAexpen.FldPrevval, typeof(decimal?)),
             new TableSearchColumn("Proje_ValProjecto", CSGenioAproje.FldProjecto, typeof(string))
         };
+
     }
 }

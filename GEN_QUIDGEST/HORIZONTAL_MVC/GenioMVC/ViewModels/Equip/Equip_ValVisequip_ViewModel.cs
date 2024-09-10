@@ -376,6 +376,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAvisit.FldCodvisit, CSGenioAvisit.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Visit> MapEquip_ValVisequip(ListingMVC<CSGenioAvisit> Qlisting)
@@ -526,5 +528,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAvisit.FldCodvisit, CSGenioAvisit.Fl
         };
 
         override public SpecialRenderingsCfg ViewModesCfg { get => _viewModes; }
+
     }
 }

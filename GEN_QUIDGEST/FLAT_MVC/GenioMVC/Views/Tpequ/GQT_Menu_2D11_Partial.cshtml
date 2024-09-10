@@ -1,0 +1,162 @@
+﻿@model GenioMVC.ViewModels.Tpequ.GQT_Menu_2D11_ViewModel
+@using Newtonsoft.Json;
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@using GenioMVC.ViewModels.Tpequ;    
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Tpequ>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodtpequ, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_2D11_FAMIL_FAMILY]/
+		column.Expression(p => p.Famil.ValFamily).Title(@Resources.FAMILIA_DE_EQUIPAMEN12158).Field("Famil.ValFamily").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_2D11_TPEQU_TIPOEQUI]/
+		column.Expression(p => p.ValTipoequi).Title(@Resources.TYPE_OF_EQUIPMENT18080).Field("ValTipoequi").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_2D11_TPEQU_TPEQUCOD]/
+		column.Expression(p => p.ValTpequcod).Title(@Resources.CODE49225).Field("ValTpequcod").Size(20);
+// USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_2D11_TPEQU_TPEQUPAI]/
+		column.Expression(p => p.ValTpequpai).Title(@Resources.DEPENDENT_ON28321).Field("ValTpequpai").Size(20);
+// USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_2D11_TPEQU_NIVEL]/
+		column.Expression(p => p.ValNivel).Title(@Resources.LEVEL06184).Field("ValNivel").Size(3);
+// USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_2D11_TPEQU_BACKCOLO]/
+		column.Expression(p => p.ValBackcolo).Title(@Resources.BACKGROUND_COLOR47883).Field("ValBackcolo").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_2D11_TPEQU_CORLETRA]/
+		column.Expression(p => p.ValCorletra).Title(@Resources.LETTER_COLOR15736).Field("ValCorletra").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_2D11_TPEQU_PRECOMAX]/
+		column.Expression(p => p.ValPrecomax).Title(@Resources.MAXIMUM_PRICE55489).Field("ValPrecomax").Size(12);
+// USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_2D11_TPEQU_PRECOULT]/
+		column.Expression(p => p.ValPrecoult).Title(@Resources.LAST_PRICE25852).Field("ValPrecoult").Size(12);
+// USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_2D11_TPEQU_SINCE]/
+		column.Expression(p => p.ValSince).Title(@Resources.SINCE47259).Field("ValSince").Size(16);
+// USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_2D11_TPEQU_QTDEQUIP]/
+		column.Expression(p => p.ValQtdequip).Title(@Resources.AMOUNT46885).Field("ValQtdequip").Size(6);
+// USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_2D11_TPEQU_KIT]/
+		column.Expression(p => p.ValKit).Title(@Resources.KIT27179).Field("ValKit").Size(1);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Tpequ")
+        .Id("GQT_Menu_2D11")
+        .AjaxRequest("Menu")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .DBEdit()
+        .MultipleSelection()
+        .Filters(this.Model.Menu.Filters)
+        .Form("Tpequ", false, false)
+        .AddTableAction("SubmitMultiSelection", "Tpequ", null, "glyphicons glyphicons-check tabel_action_icon", @Resources.SUBMETER21206, isBootStrapIcon:true, isRoutine: true, multipleSelection: true, isAjaxAction: true, htmlAttributes: new { })
+        .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
+		;
+        
+}
+
+@tbl.ToHtml()
+
+
+<script>
+
+
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qGQT_Menu_2D11, #GQT_Menu_2D11_complex_filter th input, #GQT_Menu_2D11_filters input").change(function() {
+                    $("#pGQT_Menu_2D11").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#GQT_Menu_2D11_tableFilters').val(false);")
+                    @Html.Raw("$('#GQT_Menu_2D11_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#GQT_Menu_2D11_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $("[data-form='GQT_Menu_2D11']").submit();
+                    @:      event.preventDefault();
+                    @:      ClearSearchBox('qGQT_Menu_2D11');
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#GQT_Menu_2D11_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_GQT_Menu_2D11').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+                 @if (this.Model.Menu.Filters.FiltersValues.Count >= 1) {
+                    var activeFields = Newtonsoft.Json.JsonConvert.SerializeObject(this.Model.Menu.Filters.FiltersValues);
+                    @: SetActiveFilters('GQT_Menu_2D11', 'TPEQU', @Html.Raw(activeFields))
+                  }
+
+
+                setupHistoryClicks()
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='Menu']"));
+                    InitSpecialControls($('#Menu'));
+                    $('#Menu').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS GQT_MENU_2D11]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+// USE /[MANUAL GQT LISTING_CODEJS GQT_MENU_2D11]/
+async function SubmitMultiSelection(jsonRouteValues, multipleValues = false) {
+    var url = '@Url.Action("GQT_Menu_2D11_Selections", "Tpequ", new { nav = @Navigation.NavigationId })';
+
+    let promiseRes = await new Promise((resolve, reject) => {
+        $.ajax({
+            url: url,
+            cache: false,
+            type: "POST",
+            dataType: "json",
+            data: $.param(jsonRouteValues, true)
+        }).done(function() {
+            urlNext = '@Url.Action("GQT_Menu_2D111", "Equip", new { nav = @Navigation.NavigationId })';
+
+            let tblId = "GQT_Menu_2D11";
+            let tblControl = $(`#${tblId}`).getQTableList();
+
+            if(urlNext.includes('?')) urlNext = `${urlNext}&allSelected=${tblControl.isAllSelected()}`;
+            else urlNext = `${urlNext}?allSelected=${tblControl.isAllSelected()}`;
+
+
+            QUtils.NavigateTo = urlNext;
+        });
+    });
+
+	if (promiseRes && !multipleValues) {
+		QUtils.NavigateTo = promiseRes;
+	}
+
+    return promiseRes;
+}
+</script>

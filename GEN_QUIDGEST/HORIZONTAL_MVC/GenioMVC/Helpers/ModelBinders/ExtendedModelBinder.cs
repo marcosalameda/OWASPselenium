@@ -19,5 +19,14 @@ namespace GenioMVC.Helpers.ModelBinders
 
 			base.BindProperty(controllerContext, bindingContext, propertyDescriptor);
 		}
+
+        protected override void SetProperty(ControllerContext controllerContext, ModelBindingContext bindingContext, PropertyDescriptor propertyDescriptor, object value)
+		{
+
+            var propSetAttr = propertyDescriptor.Attributes.OfType<HtmlSanitizerAttribute>().FirstOrDefault();
+			propSetAttr?.SetProperty(propertyDescriptor, ref value);
+
+            base.SetProperty(controllerContext, bindingContext, propertyDescriptor, value);
+		}
 	}
 }

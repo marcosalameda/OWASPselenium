@@ -1,0 +1,56 @@
+﻿@model GenioMVC.ViewModels.Home_ViewModel
+
+@{
+    ViewBag.Title = @Resources.STYLES28487;
+}
+@* USE /[MANUAL GQT INDEX_AUTHENTICATED]/ *@
+@* USE /[MANUAL GQT INDEX_AUTHENTICATED FLAT_MVC]/ *@
+
+<style>
+    
+    .content-wrapper {
+@if (Model.HomePage_model == null || !Model.HomePage_model.HasHomePage)
+{
+    <text>
+        background-image: url("@Url.Content("~/Content/img/fundo_shadow.png")");
+    </text>
+}
+        background-repeat: round;
+    }
+
+    .wellcomeAuthenticated{
+        color: #2a609a;
+        margin: 0 auto;
+        width: 500px;
+        text-align: center;        
+        margin-top: 38%;
+        line-height:50px;
+    }
+    .wellcomeAuthenticated h1, .wellcomeAuthenticated h6{
+        font-weight: bold;
+    }
+</style>
+
+	@if (Model.HomePage_model != null && Model.HomePage_model.HasHomePage)
+	{
+		<div elem-identifier="home-page-form" class="home-page-form">
+			<div class="container-fluid" style="flex: 1 1 auto;">
+				@{ Html.RenderAction(Model.HomePage_model.HomePageAction, Model.HomePage_model.HomePageController, new { module = Model.HomePage_model.HomePageDef.Module, isHomePage = true }); }
+			</div>
+		</div>
+	}
+	else
+	{
+		<div class="wellcomeAuthenticated">
+			<font size="30" style="vertical-align:middle ">@Resources.BEM_VINDO38622 @GenioMVC.Models.Navigation.UserContext.Current.User.Name </font>
+		</div>
+	}
+
+
+@section code_javascript
+{
+<script>
+    QLocalStorage.remLocalStorage("savedInfo");
+</script>
+}
+

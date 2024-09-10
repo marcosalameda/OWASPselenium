@@ -340,6 +340,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAfaci1.FldCodfacil, CSGenioAfaci1.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Faci1> MapEntit_Faci1ValName(ListingMVC<CSGenioAfaci1> Qlisting)
@@ -411,5 +413,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAfaci1.FldCodfacil, CSGenioAfaci1.Fl
         {
             new TableSearchColumn("ValName", CSGenioAfaci1.FldName, typeof(string))
         };
+
     }
 }

@@ -394,6 +394,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAanexd.FldCodanexd, CSGenioAanexd.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Anexd> MapGQT_Menu_931(ListingMVC<CSGenioAanexd> Qlisting)
@@ -474,5 +476,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAanexd.FldCodanexd, CSGenioAanexd.Fl
             new TableSearchColumn("Langu_ValLangua", CSGenioAlangu.FldLangua, typeof(string)),
             new TableSearchColumn("ValTittradu", CSGenioAanexd.FldTittradu, typeof(string))
         };
+
     }
 }

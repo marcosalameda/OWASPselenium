@@ -850,6 +850,7 @@ namespace GenioMVC.ViewModels.Pesso
         private readonly string[] _fieldsToSerialize_PESSOS00CMPNYDESIGNAT = { "Cmpny", "Cmpny.ValCodempre", "Cmpny.ValZzstate", "Cmpny.ValDesignat", "Cmpny.ValAcronym", "Cmpny.ValNif", "Cmpny.ValTelephon", "Cmpny.ValEmail", "Cmpny.ValLogo" };
 
 
+
 		#region Charts
 		#endregion
 

@@ -382,6 +382,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioApwcom.FldCodpwcom, CSGenioApwcom.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Pwcom> MapGQT_Menu_711(ListingMVC<CSGenioApwcom> Qlisting)
@@ -459,5 +461,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioApwcom.FldCodpwcom, CSGenioApwcom.Fl
             new TableSearchColumn("Pess1_ValName", CSGenioApess1.FldName, typeof(string)),
             new TableSearchColumn("ValNridenti", CSGenioApwcom.FldNridenti, typeof(decimal?))
         };
+
     }
 }

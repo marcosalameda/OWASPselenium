@@ -391,6 +391,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioApedid.FldCodpedid, CSGenioApedid.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Pedid> MapGQT_Menu_281(ListingMVC<CSGenioApedid> Qlisting)
@@ -464,5 +466,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioApedid.FldCodpedid, CSGenioApedid.Fl
             new TableSearchColumn("ValNrpedido", CSGenioApedid.FldNrpedido, typeof(decimal?), defaultSearch : true),
             new TableSearchColumn("ValMotivo", CSGenioApedid.FldMotivo, typeof(string))
         };
+
     }
 }

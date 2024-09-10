@@ -408,6 +408,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAsale.FldCodvenda, CSGenioAsale.FldZ
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Sale> MapGQT_Menu_511(ListingMVC<CSGenioAsale> Qlisting)
@@ -498,5 +500,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAsale.FldCodvenda, CSGenioAsale.FldZ
             new TableSearchColumn("ValDtvenda", CSGenioAsale.FldDtvenda, typeof(DateTime?)),
             new TableSearchColumn("ValDtacompa", CSGenioAsale.FldDtacompa, typeof(DateTime?))
         };
+
     }
 }

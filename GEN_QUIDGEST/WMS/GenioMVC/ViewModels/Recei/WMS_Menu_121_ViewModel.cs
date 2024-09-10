@@ -421,6 +421,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioArecei.FldCodrecei, CSGenioArecei.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Recei> MapWMS_Menu_121(ListingMVC<CSGenioArecei> Qlisting)
@@ -500,5 +502,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioArecei.FldCodrecei, CSGenioArecei.Fl
             new TableSearchColumn("ValTocheck", CSGenioArecei.FldTocheck, typeof(bool)),
             new TableSearchColumn("ValDtstorag", CSGenioArecei.FldDtstorag, typeof(DateTime?))
         };
+
     }
 }

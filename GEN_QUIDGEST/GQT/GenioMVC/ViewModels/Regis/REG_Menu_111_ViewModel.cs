@@ -393,6 +393,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAregis.FldCodregis, CSGenioAregis.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Regis> MapREG_Menu_111(ListingMVC<CSGenioAregis> Qlisting)
@@ -468,5 +470,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAregis.FldCodregis, CSGenioAregis.Fl
             new TableSearchColumn("ValEmail2", CSGenioAregis.FldEmail2, typeof(string)),
             new TableSearchColumn("ValTelephon", CSGenioAregis.FldTelephon, typeof(string))
         };
+
     }
 }

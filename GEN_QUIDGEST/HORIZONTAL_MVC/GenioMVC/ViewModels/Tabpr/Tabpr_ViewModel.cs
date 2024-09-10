@@ -542,6 +542,7 @@ namespace GenioMVC.ViewModels.Tabpr
         private readonly string[] _fieldsToSerialize_TABPR___TPEQUTIPOEQUI = { "Tpequ", "Tpequ.ValCodtpequ", "Tpequ.ValZzstate", "Tpequ.ValTipoequi" };
 
 
+
 		#region Charts
 		#endregion
 

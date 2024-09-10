@@ -337,6 +337,7 @@ namespace GenioMVC.ViewModels.Sale
 
 
 
+
 		#region Charts
 		#endregion
 

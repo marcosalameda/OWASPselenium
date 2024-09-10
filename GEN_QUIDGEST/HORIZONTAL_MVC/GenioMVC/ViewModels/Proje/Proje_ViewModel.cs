@@ -591,6 +591,7 @@ namespace GenioMVC.ViewModels.Proje
         private readonly string[] _fieldsToSerialize_PROJE___YEAR1YEAR____ = { "Year1", "Year1.ValCodyear", "Year1.ValZzstate", "Year1.ValYear" };
 
 
+
 		#region Charts
 		#endregion
 

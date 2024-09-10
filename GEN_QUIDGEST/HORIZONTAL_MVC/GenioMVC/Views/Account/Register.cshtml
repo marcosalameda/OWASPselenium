@@ -38,7 +38,7 @@
 				</div>
 				<div class="form-actions">
 					<button id="RegistrationsubmitButton" class="b-icon-text b-icon-text--primary"><i class="SaveIcon e-icon"></i>@Resources.REGISTAR62252</button>
-					<button id="RegistrationCanceltButton" type="button" class="b-icon-text b-icon-text--secondary" onclick="window.location ='@Url.Action("Index", "Home")' ">
+					<button id="RegistrationCanceltButton" type="button" class="b-icon-text b-icon-text--secondary" onclick="window.location ='@HttpUtility.JavaScriptStringEncode(Url.Action("Index", "Home"))' ">
 						<i class="glyphicons glyphicons-ban-circle e-icon"></i>
                          @Resources.SAIR20169
                     </button>

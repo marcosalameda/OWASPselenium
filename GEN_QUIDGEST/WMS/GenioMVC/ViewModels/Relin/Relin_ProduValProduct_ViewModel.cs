@@ -340,6 +340,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAprodu.FldCodprodu, CSGenioAprodu.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Produ> MapRelin_ProduValProduct(ListingMVC<CSGenioAprodu> Qlisting)
@@ -411,5 +413,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAprodu.FldCodprodu, CSGenioAprodu.Fl
         {
             new TableSearchColumn("ValProduct", CSGenioAprodu.FldProduct, typeof(string))
         };
+
     }
 }

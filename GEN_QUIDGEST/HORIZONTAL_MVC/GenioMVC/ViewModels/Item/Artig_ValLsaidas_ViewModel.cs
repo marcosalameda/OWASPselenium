@@ -358,6 +358,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAoutpu.FldCodoutpu, CSGenioAoutpu.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Outpu> MapArtig_ValLsaidas(ListingMVC<CSGenioAoutpu> Qlisting)
@@ -434,5 +436,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAoutpu.FldCodoutpu, CSGenioAoutpu.Fl
             new TableSearchColumn("ValLine", CSGenioAoutpu.FldLine, typeof(decimal?)),
             new TableSearchColumn("ValExitqnty", CSGenioAoutpu.FldExitqnty, typeof(decimal?))
         };
+
     }
 }

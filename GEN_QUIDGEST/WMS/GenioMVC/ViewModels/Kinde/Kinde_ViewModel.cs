@@ -330,6 +330,7 @@ namespace GenioMVC.ViewModels.Kinde
 
 
 
+
 		#region Charts
 		#endregion
 

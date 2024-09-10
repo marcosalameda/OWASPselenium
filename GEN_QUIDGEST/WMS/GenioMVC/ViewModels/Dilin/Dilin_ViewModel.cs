@@ -778,6 +778,7 @@ namespace GenioMVC.ViewModels.Dilin
         private readonly string[] _fieldsToSerialize_DILIN___PRODUPRODUCT_ = { "Produ", "Produ.ValCodprodu", "Produ.ValZzstate", "Produ.ValProduct" };
 
 
+
 		#region Charts
 		#endregion
 

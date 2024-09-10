@@ -347,6 +347,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAmanua.FldCodmanua, CSGenioAmanua.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Manua> MapKinde_ValManuals(ListingMVC<CSGenioAmanua> Qlisting)
@@ -420,5 +422,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAmanua.FldCodmanua, CSGenioAmanua.Fl
             new TableSearchColumn("ValDigdocum", CSGenioAmanua.FldDigdocum, typeof(string)),
             new TableSearchColumn("ValNotes", CSGenioAmanua.FldNotes, typeof(string))
         };
+
     }
 }

@@ -1,0 +1,504 @@
+﻿@using GenioMVC.Helpers.Culture
+@using GenioMVC.Helpers
+@{
+    var culture = UrlNames.GlobalizeCulture;
+    var momentLocal = UrlNames.MomentLocal;
+	var authClass = "";
+	var mainStyle = "padding-top: 3.1rem;";
+	bool loginSplash = false;
+	bool isLoginPage = GenioMVC.RouteConfig.IsPreLogin(ViewContext.RouteData.GetRequiredString("action"));
+	var mainStyles = GenioMVC.LayoutConfig.config.defaultSidebarState.Equals(GenioMVC.DefaultSidebarState.opened) && !isLoginPage ? "margin-right: 50px;" : "margin-right: 0px;";
+}
+<!DOCTYPE html>
+<html lang="@culture.Key">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="author" content="Quidgest">
+		<meta name="description" content="">
+		<meta name="theme-color" content="#007ABC">
+		<meta name="copyright" content="Quidgest">
+		<meta name="apple-touch-fullscreen" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+		<meta name="msapplication-navbutton-color" content="blue">
+		<meta name="mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="msapplication-TileColor" content="#007ABC" />
+        <link href="@Url.Content("~/favicon.ico")" rel="shortcut icon" type="image/x-icon" />
+		<link rel="icon" type="image/png" href="~/Content/img/Q.png" sizes="300x300">
+		<link rel="apple-touch-icon" href="~/Content/img/Q.png">
+		<link rel="manifest" href="~/manifest.json">
+		<meta name="msapplication-square310x310logo" content="~/Content/img/Q.png">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		@{ if (ViewBag.Title == null && ViewData != null && ViewData.Model != null) { if (ViewData.Model.GetType().GetProperty("DBEditTitle") != null) { ViewBag.Title = ViewData.Model.DBEditTitle; } } }
+		<title>@ViewBag.Title</title>
+
+		<!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+		<!--[if lt IE 9]>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+
+		<!-- Le styles -->
+        @Styles.Render("~/Content/css/d3andJQueryCss")
+    	@Styles.Render("~/Content/css/bootstrapPluginsCss")
+    	@Styles.Render("~/Content/SideMenu")
+
+    	@Styles.Render("~/Content/css/bootstrpcss")
+    	@*@Styles.Render("~/Content/css/globalStyles")*@
+		@if (IsSectionDefined("include_stylesheets"))
+        {
+            @RenderSection("include_stylesheets", required: false)
+        }
+
+        @* Themes for modules *@
+        @{
+            var module = ViewContext.RouteData.Values["module"] ?? "Public";
+        }
+        @switch (module.ToString())
+        {
+
+            case "STY":
+				break;
+            case "GQT":
+				break;
+            case "PTN":
+				break;
+            default:
+                break;
+        }
+
+@* USE /[MANUAL GQT LAYOUT_INCLUDECSS]/ *@
+
+		<!-- Le javascripts -->
+		@Scripts.Render("~/Scripts/jquery3CoreJs")
+		@Scripts.Render("~/Scripts/other3CoreJs")
+		@Scripts.Render(UrlNames.GlobalizeCulture.Value)
+		@Scripts.Render("~/Scripts/bootstrap4CoreJs")
+        @if (!String.IsNullOrEmpty(momentLocal.Value))
+        {
+            <script type="text/javascript" src="@Url.Content(momentLocal.Value)"></script>
+        }
+		@Scripts.Render("~/Scripts/VerticalMenu")
+
+		@if (GenioMVC.LayoutConfig.config.loginStyle.Equals(GenioMVC.LoginStyle.single_page))
+		{
+			if(GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest()
+        		&& !GenioMVC.RouteConfig.IsAllowedByGuest(ViewContext.RouteData.GetRequiredString("action")))
+			{
+            <script>
+                window.location.href = '@Url.Action("LogOn", "Account", new { ReturnUrl = Request.Params["ReturnUrl"] })';
+            </script>
+			}
+        }
+	</head>
+@{
+    var bodyClass = "";
+	//if(GenioMVC.LayoutConfig.config.headerPlacement.Equals(GenioMVC.HeaderPlacement.in_menuPanel) &&
+       //(GenioMVC.LayoutConfig.config.modulesStyle.Equals(GenioMVC.ModulesStyle.list) || GenioMVC.LayoutConfig.config.modulesStyle.Equals(GenioMVC.ModulesStyle.collapsible)) )
+    if(GenioMVC.LayoutConfig.config.headerPlacement.Equals(GenioMVC.HeaderPlacement.in_menuPanel))
+    {
+        var sidebarMode = Session["sidebarMode"];
+        bodyClass = "hold-transition sidebar-mini " + (sidebarMode == null?"":sidebarMode);
+    }
+}
+	<body class="@bodyClass">
+@if (isLoginPage)
+{
+	authClass = "loginPage";
+    loginSplash = true;
+	mainStyle = "";
+}
+@if(GenioMVC.LayoutConfig.config.headerPlacement.Equals(GenioMVC.HeaderPlacement.in_contentPanel))
+{
+		<div class="overlay"></div>
+		<div id="wrap" class="@authClass">
+			@if (!loginSplash)
+			{
+				<div id="header-container">
+@* USE /[MANUAL GQT LAYOUT_HEADER]/ *@
+					@Html.Action("NavigationalBar", "Home")
+                    <!-- BEGIN Right Sidebar -->
+                    @if (!@GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest())
+                    {
+                        @Html.Partial("_RightSidebar");
+                    }
+					else
+					{
+                        <div class="wrapper"></div>
+                    }
+                    <!-- END Right Sidebar -->
+				</div>
+			}
+			<div id="main" style="margin-top:2rem @mainStyles">
+			<!-- BEGIN Breadcrumb content -->
+@* USE /[MANUAL GQT LAYOUT_BREADCRUMBS]/ *@
+			@if (IsSectionDefined("breadcrumbs"))
+			{
+				<div class="breadcrumbs">
+					<div class="container-fluid">
+						<ul class="breadcrumb">
+							<li>
+								<i class="icon-home"></i> <a href="@Url.Action("Index", "Home")">@Resources.INICIO15853</a> <span class="divider">/</span>
+							</li>
+							@RenderSection("breadcrumbs", false)
+						</ul>
+					</div>
+				</div>
+			}
+			else {
+				@Html.Action("Index", "Breadcrumbs")
+			}
+			<!-- END Breadcrumb content-->
+
+			<!-- BEGIN Main content -->
+			@Html.Action("Index", "Messages")
+@* USE /[MANUAL GQT LAYOUT_CONTENT]/ *@
+			<div class="content" style="display:flex;">
+				<div id="result-report"></div>
+				<!-- BEGIN MVC Flash messages -->
+				<!-- END MVC Flash messages -->
+				<div id="formContainer" class="container-fluid" style="flex: 1;">
+                    @RenderBody()
+                </div>
+			@if (!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest())
+            {
+				<div id="cavContainer" class="c-g-reporting" style="width:100%;flex-basis:auto;display:none;;padding-left:0.5rem;padding-right:0.5rem;flex:1;">
+					<div class="c-action-bar">
+						<i class="glyphicons glyphicons-stats c-sidebar__tab-title" aria-hidden="true"></i>
+						<h2 class="c-sidebar__tab-title">Reporting</h2>
+						<nav class="navbar b-btn-group">
+							<ul class="navbar-nav">
+								<li class="nav-item">
+									<a class="b-btn b-icon b-icon--secondary" id="new-button" title="@Resources.NOVO_RELATORIO35800" href="#" data-original-title="@Resources.NOVO_RELATORIO35800">
+										<i class="glyphicons glyphicons-file-plus e-icon"></i>
+									</a>
+								</li>
+								<li class="nav-item">
+									<a class="b-btn b-icon b-icon--secondary" id="open-button" title="@Resources.ABRIR_RELATORIO41784" href="#" data-original-title="@Resources.ABRIR_RELATORIO41784">
+										<i class="glyphicons glyphicons-folder-open e-icon  "></i>
+									</a>
+								</li>
+								<li class="nav-item c-dropdown--save">
+									<div class="dropdown_logi c-dropdown">
+										<a class="b-btn b-icon b-icon--secondary" id="savequerybtn" title="@Resources.GRAVAR_CONSULTA22045" data-toggle="dropdown" href="#">
+											<i class="SaveIcon e-icon"></i>
+										</a>
+										<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+											<div class="c-card">
+												<div class="c-card__title">@Resources.GRAVAR_CONSULTA22045</div>
+												<div class="c-card__body" id="savequerycontainer">
+													@*@{ Html.RenderAction("SaveQuery", "Cav", new { }); }*@
+												</div>
+											</div>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</nav>
+					</div>
+					<div id="cavContent">
+					</div>
+				</div>
+			}
+			</div>
+			<div id="push"></div>
+		</div>
+			<!-- END Main content -->
+		</div>
+
+		<!-- BEGIN Footer -->
+
+		if (GenioMVC.LayoutConfig.config.FooterEnable)
+		{
+			Html.RenderPartial("_Footer");
+		}
+}
+else
+{
+
+	<div id="wrapper" class="@authClass" style="height:100%;display: flex;flex-direction: column;">
+		<div class="overlay"></div>
+			@if (!loginSplash)
+			{
+				<div id="header-container">
+@* USE /[MANUAL GQT LAYOUT_HEADER]/ *@
+					@Html.Action("NavigationalBar", "Home")
+                    <!-- BEGIN Right Sidebar -->
+                    @if (!@GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest())
+                    {
+                        @Html.Partial("_RightSidebar");
+                    }
+                    <!-- END Right Sidebar -->
+				</div>
+			}
+
+			<!-- BEGIN Main content -->
+@* USE /[MANUAL GQT LAYOUT_CONTENT]/ *@
+			<div id="main" class="content-wrapper" style="flex-basis:100%;display: flex;flex-direction: column;@mainStyle @mainStyles ">
+		<!-- BEGIN Breadcrumb content -->
+@* USE /[MANUAL GQT LAYOUT_BREADCRUMBS]/ *@
+			@if (IsSectionDefined("breadcrumbs"))
+			{
+				<div class="breadcrumbs">
+					<div class="container-fluid">
+						<ul class="breadcrumb">
+							<li>
+								<i class="icon-home"></i> <a href="@Url.Action("Index", "Home")">@Resources.INICIO15853</a> <span class="divider">/</span>
+							</li>
+							@RenderSection("breadcrumbs", false)
+						</ul>
+					</div>
+				</div>
+			}
+			else {
+				@Html.Action("Index", "Breadcrumbs")
+			}
+			<!-- END Breadcrumb content-->
+				<div style="display:flex;flex-direction:row;flex-basis:100%" >
+					<div id="formContainer" class="container-fluid" style="flex: 1;">
+						<div id="result-report"></div>
+						<!-- BEGIN MVC Flash messages -->
+						@Html.Action("Index", "Messages")
+						<!-- END MVC Flash messages -->
+						@RenderBody()
+					</div>
+           @if (!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest())
+           {
+					<div id="cavContainer" class="c-g-reporting" style="width:100%;flex-basis:auto;display:none;;padding-left:0.5rem;padding-right:0.5rem;flex:1;">
+                        <div class="c-action-bar">
+                            <i class="glyphicons glyphicons-stats c-sidebar__tab-title" aria-hidden="true"></i>
+                            <h2 class="c-sidebar__tab-title">Reporting</h2>
+							<nav class="navbar b-btn-group">
+                                <ul class="navbar-nav">
+                                    <li class="nav-item">
+                                        <a class="b-btn b-icon b-icon--secondary" id="new-button" title="@Resources.NOVO_RELATORIO35800" href="#" data-original-title="@Resources.NOVO_RELATORIO35800">
+                                            <i class="glyphicons glyphicons-file-plus e-icon"></i>
+                                        </a>
+                                    </li>
+									<li class="nav-item">
+										<a class="b-btn b-icon b-icon--secondary" id="open-button" title="@Resources.ABRIR_RELATORIO41784" href="#" data-original-title="@Resources.ABRIR_RELATORIO41784">
+											<i class="glyphicons glyphicons-folder-open e-icon  "></i>
+										</a>
+									</li>
+									<li class="nav-item c-dropdown--save">
+                                        <div class="dropdown_logi c-dropdown">
+                                            <a class="b-btn b-icon b-icon--secondary" id="savequerybtn" title="@Resources.GRAVAR_CONSULTA22045" data-toggle="dropdown" href="#">
+                                                <i class="SaveIcon e-icon"></i>
+                                            </a>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <div class="c-card">
+                                                    <div class="c-card__title">@Resources.GRAVAR_CONSULTA22045</div>
+                                                    <div class="c-card__body" id="savequerycontainer">
+														@*@{ Html.RenderAction("SaveQuery", "Cav", new { }); }*@
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+						<div id="cavContent">
+                        </div>
+					</div>
+			}
+				</div>
+
+				@{
+					if (GenioMVC.LayoutConfig.config.FooterEnable)
+					{
+						Html.RenderPartial("_Footer");
+					}
+				}
+			</div>
+			<div id="push"></div>
+			<!-- END Main content -->
+
+	</div>
+}
+    <!-- Suggestion side bar -->
+    <div id="suggestcontent" class="suggest suggest--hidden suggest-buttons btn-group-vertical">
+        <button class="btn btn-primary b-icon b-btn primary" onclick="OpenModalForm('@HttpUtility.JavaScriptStringEncode(Url.Action("List","Suggestion"))')" title="@Resources.FORMULARIO_MODAL_ABE50004">
+            <i class="glyphicons glyphicons-eye-open e-icon"></i>
+        </button>
+        <button class="btn btn-primary b-icon b-btn" onclick="OpenSuggestion('','')" title="@Resources.SUGESTAO_ABERTA21277">
+            <i class="glyphicons glyphicons-pencil e-icon"></i>
+        </button>
+        <button class="btn btn-primary b-icon b-btn" onclick="TurnSuggestionsOff()" title="@Resources.DESATIVAR_SUGESTOES42466">
+            <i class="glyphicons glyphicons-remove e-icon"></i>
+        </button>
+    </div>
+
+        <!-- BEGIN Modal Form -->
+        <div id="form-modal" class="modal container-fluid hide" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        </div>
+        <div class="qloading-modal"><div class="loader"></div></div>
+		<div id="dialog" class="modal container-fluid hide fade">
+			<div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title modal-header-title">Placeholder</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>One fine body…</p>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+			</div>
+		</div>
+        <!-- END Modal Form -->
+
+
+		<!-- Rest of the javascripts placed at the end of the document so the pages load faster -->
+		<!-- Script placed at top to ensures golbal variables are available-->
+		<script type="application/javascript">
+			@Html.Partial("_Javascript")
+		</script>
+        @Scripts.Render("~/Scripts/javascriptControls")
+		@Scripts.Render("~/Scripts/SideMenu")
+
+@* USE /[MANUAL GQT LAYOUT_INCLUDEJS]/ *@
+@*- TODO: Arranjar forma de incluir estes ficheiros na solução (.csproj)*@
+		@Html.RenderScripts()
+		@RenderSection("code_javascript", required: false)
+
+		<script type="application/javascript">
+			if ('serviceWorker' in navigator) {
+				navigator.serviceWorker
+					.register('@Url.Content("~/serviceworker.js")')
+					.then(function () { console.log('Service Worker Registered'); });
+			}
+			$(document).ready(function () {
+				var opened = QLocalStorage.getLocalStorage('reportingMode');
+
+				//Reporting mode is ON
+				if (!$.isEmptyObject(opened) && opened == "true") {
+					 $('#formContainer').addClass("reportmodeon");
+					 $('#advacedReportModeToggle').attr("title",quidgestGlobals.Resources.SAIR_DO_MODO_DE_RELA07329);
+					 $(".report-mode").removeClass("d-none");
+					 $('#cavContainer').show();
+					 $(".draggable").draggable({ helper: "clone" });
+
+                     var areaBase = $('.form-horizontal').attr('area');
+
+                    if(areaBase != undefined){
+                        $.ajax({
+						    url: '@Url.Action("Index", "Cav")',
+						    contentType: 'application/json',
+						    type: "GET",
+                            data:{area:areaBase},
+						    success: function (data) {
+							    $('#cavContent').html(data);
+						    },
+						    error:function(err){
+							    console.log(err);
+						    }
+					    });
+                    }
+
+					 $('.form-horizontal .e-icon--reporting').on('click', function(){
+                        var formElem = this.closest('.draggable')
+                        var field =  $('input,select',  $(formElem))
+
+                        if (field) {
+                            var fieldName =  $(field).attr('pers-cs-field');
+
+                            var dataMainField =  $(field).attr('data-main-field');
+                            if (dataMainField != undefined) {
+                                var splitedData = dataMainField.split('.');
+                                if (splitedData.length == 2) {
+                                    fieldName = splitedData[1];
+                                }
+                            }
+
+                             $.ajax({
+                                url: '@Url.Action("AddField", "Cav")',
+                                data: JSON.stringify({ tableId:  $(field).attr('pers-cs-area'), fieldId: fieldName }),
+                                contentType: 'application/json',
+                                type: "POST",
+                                success: function (data) {
+                                    if (data.Success == false) {
+                                         bootbox.alert(data.Message);
+                                    }
+                                    else {
+                                         $('#dropblearea').html(data);
+                                    }
+                                }
+                            })
+                        }
+                    })
+				}
+				else {
+					//$('#cavContainer').hide();
+					$(".draggable.ui-draggable").draggable('destroy');
+				}
+			});
+
+			$('#new-button').on('click', function(){
+				NewReport('@Url.Action("NewQuery", "Cav")');
+			});
+
+			$('#open-button').on('click', function(){
+				OpenReport('@Url.Action("LoadQueryList", "Cav")', '@Url.Action("LoadQuery", "Cav")')
+			});
+
+			$('.dropdown_logi').on('show.bs.dropdown', function () {
+			   $('#savequerycontainer').load('@Url.Action("SaveQuery", "Cav", new { })');
+			});
+        </script>
+		<script type="text/javascript">
+
+			//Load avatar
+			var currentAvatar = null;
+
+			function LoadAvatar(elem) {
+				currentAvatar = $.ajax({
+					url: '@Url.Action("GetImage", "Account", Request.RequestContext.RouteData.Values)',
+					data: {  },
+					success: function (data) {
+						var area = $(elem);
+						area.html(data.img);
+
+						if (data.fullname) {
+							$("#fullname").text(data.fullname);
+						}
+
+						if (data.position) {
+							$("#titleposition").text(data.position);
+						}
+					}
+				});
+			}
+
+			$(document).ready(function () {
+				//Prevent duplicate IDs of UserAvatar menu elements and only load UserAvatar menu in visible element
+				$.each($('[data-id="UserAvatar"]'), function () {
+					if($(this).is(":visible"))
+						this.id = "UserAvatar"
+						LoadAvatar(this);
+				});
+				$.each($('[data-id="fullname"]'), function () {
+					if($(this).parent().parent().parent().parent().is(":visible"))
+						this.id = "fullname"
+				});
+				$.each($('[data-id="titleposition"]'), function () {
+					if($(this).parent().parent().parent().parent().is(":visible"))
+						this.id = "titleposition"
+				});
+				$.each($('[data-id="toggle-suggestion"]'), function () {
+					if($(this).parent().parent().parent().parent().parent().is(":visible"))
+						this.id = "toggle-suggestion"
+				});
+				$.each($('[elem-identifier="sidebarCollapse"]'), function () {
+					if($(this).parent().parent().parent().parent().is(":visible"))
+						this.id = "sidebarCollapse"
+				});
+
+ 
+			});
+		</script>
+	</body>
+</html>

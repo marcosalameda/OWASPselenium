@@ -826,6 +826,7 @@ namespace GenioMVC.ViewModels.Asset
         private readonly string[] _fieldsToSerialize_EQUIPM__KINDEDESIGNAT = { "Kinde", "Kinde.ValCodkinde", "Kinde.ValZzstate", "Kinde.ValDesignat" };
 
 
+
 		#region Charts
 		#endregion
 

@@ -338,6 +338,7 @@ namespace GenioMVC.ViewModels.Cmpny
 
 
 
+
 		#region Charts
 		#endregion
 

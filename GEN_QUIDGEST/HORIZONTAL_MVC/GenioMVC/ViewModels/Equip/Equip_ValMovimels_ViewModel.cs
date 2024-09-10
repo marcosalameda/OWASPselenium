@@ -358,6 +358,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAmovim.FldCodmovim, CSGenioAmovim.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Movim> MapEquip_ValMovimels(ListingMVC<CSGenioAmovim> Qlisting)
@@ -434,5 +436,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAmovim.FldCodmovim, CSGenioAmovim.Fl
             new TableSearchColumn("Rooms_ValDesignat", CSGenioArooms.FldDesignat, typeof(string)),
             new TableSearchColumn("ValObservat", CSGenioAmovim.FldObservat, typeof(string))
         };
+
     }
 }

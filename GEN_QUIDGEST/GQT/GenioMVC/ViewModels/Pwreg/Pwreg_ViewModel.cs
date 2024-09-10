@@ -740,6 +740,7 @@ namespace GenioMVC.ViewModels.Pwreg
         private readonly string[] _fieldsToSerialize_PWREG___REGIOREGIAO__ = { "Regio", "Regio.ValCodregia", "Regio.ValZzstate", "Regio.ValRegiao" };
 
 
+
 		#region Charts
 		#endregion
 

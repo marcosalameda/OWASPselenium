@@ -390,6 +390,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioArordi.FldCodrordi, CSGenioArordi.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Rordi> MapPTN_Menu_421(ListingMVC<CSGenioArordi> Qlisting)
@@ -476,5 +478,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioArordi.FldCodrordi, CSGenioArordi.Fl
             new TableSearchColumn("ValOrder", CSGenioArordi.FldOrder, typeof(decimal?)),
             new TableSearchColumn("ValTitle", CSGenioArordi.FldTitle, typeof(string))
         };
+
     }
 }

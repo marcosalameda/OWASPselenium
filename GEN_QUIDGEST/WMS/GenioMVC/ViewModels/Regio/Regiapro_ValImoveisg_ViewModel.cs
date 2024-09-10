@@ -339,6 +339,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioApropr.FldCodpropr, CSGenioApropr.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Propr> MapRegiapro_ValImoveisg(ListingMVC<CSGenioApropr> Qlisting)
@@ -412,5 +414,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioApropr.FldCodpropr, CSGenioApropr.Fl
             new TableSearchColumn("ValPrecoest", CSGenioApropr.FldPrecoest, typeof(decimal?)),
             new TableSearchColumn("ValDescript", CSGenioApropr.FldDescript, typeof(string))
         };
+
     }
 }

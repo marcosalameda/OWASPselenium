@@ -12843,15 +12843,6 @@ namespace GenioMVC.Resources
 		}
 
 		/// <summary>
-		///   Looks up a localized string similar to "E2EText"
-		/// </summary>
-		public static string E2ETEXT44371 {
-			get {
-				return ResourceManager.GetString("E2ETEXT44371", resourceCulture);
-			}
-		}
-
-		/// <summary>
 		///   Looks up a localized string similar to " 1123"
 		/// </summary>
 		public static string _112319369 {
@@ -28557,6 +28548,15 @@ namespace GenioMVC.Resources
 		}
 
 		/// <summary>
+		///   Looks up a localized string similar to "Iniciar configuração"
+		/// </summary>
+		public static string INICIAR_CONFIGURACAO43417 {
+			get {
+				return ResourceManager.GetString("INICIAR_CONFIGURACAO43417", resourceCulture);
+			}
+		}
+
+		/// <summary>
 		///   Looks up a localized string similar to "Campo da BD com o Nome"
 		/// </summary>
 		public static string CAMPO_DA_BD_COM_O_NO27665 {
@@ -40329,6 +40329,15 @@ namespace GenioMVC.Resources
 		}
 
 		/// <summary>
+		///   Looks up a localized string similar to "Configuração da Aplicação"
+		/// </summary>
+		public static string CONFIGURACAO_DA_APLI59110 {
+			get {
+				return ResourceManager.GetString("CONFIGURACAO_DA_APLI59110", resourceCulture);
+			}
+		}
+
+		/// <summary>
 		///   Looks up a localized string similar to "Procure para mais resultados"
 		/// </summary>
 		public static string PROCURE_PARA_MAIS_RE41208 {
@@ -41774,6 +41783,15 @@ namespace GenioMVC.Resources
 		public static string PLATAFORMA28085 {
 			get {
 				return ResourceManager.GetString("PLATAFORMA28085", resourceCulture);
+			}
+		}
+
+		/// <summary>
+		///   Looks up a localized string similar to "Acrónimo"
+		/// </summary>
+		public static string ACRONIMO12609 {
+			get {
+				return ResourceManager.GetString("ACRONIMO12609", resourceCulture);
 			}
 		}
 
@@ -47340,6 +47358,15 @@ namespace GenioMVC.Resources
 		}
 
 		/// <summary>
+		///   Looks up a localized string similar to "Link para resolver o erro"
+		/// </summary>
+		public static string LINK_PARA_RESOLVER_O25588 {
+			get {
+				return ResourceManager.GetString("LINK_PARA_RESOLVER_O25588", resourceCulture);
+			}
+		}
+
+		/// <summary>
 		///   Looks up a localized string similar to "Password recovery"
 		/// </summary>
 		public static string PASSWORD_RECOVERY53114 {
@@ -49604,6 +49631,33 @@ namespace GenioMVC.Resources
 		public static string NEW_CONFIGURATION_CR61652 {
 			get {
 				return ResourceManager.GetString("NEW_CONFIGURATION_CR61652", resourceCulture);
+			}
+		}
+
+		/// <summary>
+		///   Looks up a localized string similar to "Configurar o seu projeto."
+		/// </summary>
+		public static string CONFIGURAR_O_SEU_PRO20345 {
+			get {
+				return ResourceManager.GetString("CONFIGURAR_O_SEU_PRO20345", resourceCulture);
+			}
+		}
+
+		/// <summary>
+		///   Looks up a localized string similar to "Atualizar a base de dados."
+		/// </summary>
+		public static string ATUALIZAR_A_BASE_DE_47288 {
+			get {
+				return ResourceManager.GetString("ATUALIZAR_A_BASE_DE_47288", resourceCulture);
+			}
+		}
+
+		/// <summary>
+		///   Looks up a localized string similar to "Criar perfil de utilizador."
+		/// </summary>
+		public static string CRIAR_PERFIL_DE_UTIL09072 {
+			get {
+				return ResourceManager.GetString("CRIAR_PERFIL_DE_UTIL09072", resourceCulture);
 			}
 		}
 

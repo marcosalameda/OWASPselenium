@@ -340,6 +340,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAproje.FldCodproje, CSGenioAproje.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Proje> MapAgreg_ProjeValProjecto(ListingMVC<CSGenioAproje> Qlisting)
@@ -411,5 +413,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAproje.FldCodproje, CSGenioAproje.Fl
         {
             new TableSearchColumn("ValProjecto", CSGenioAproje.FldProjecto, typeof(string))
         };
+
     }
 }

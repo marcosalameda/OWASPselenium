@@ -124,7 +124,7 @@
                 </div>
                 <div class="row">
                     <div class="col-12 mt-1 mb-1">
-                        <button elem-identifier="ButtonPrimary" id="secondTabApply" class="b-icon-text b-icon-text--secondary" onclick="window.GQT_Menu_251_Control.Send('@Url.Action("GQT_Menu_251_Execute")', '@Url.Action("GQT_Menu_251", Helpers.ToRouteValues(Request.QueryString))')" qbutton="apply"><i class="glyphicons glyphicons-bring-forward e-icon"></i>@Resources.APLICAR33981</button>
+                        <button elem-identifier="ButtonPrimary" id="secondTabApply" class="b-icon-text b-icon-text--secondary" onclick="window.GQT_Menu_251_Control.Send('@HttpUtility.JavaScriptStringEncode(Url.Action("GQT_Menu_251_Execute"))', '@Url.Action("GQT_Menu_251", Helpers.ToRouteValues(Request.QueryString))')" qbutton="apply"><i class="glyphicons glyphicons-bring-forward e-icon"></i>@Resources.APLICAR33981</button>
                     </div>
                 </div>
                 <div class="row">

@@ -47,7 +47,7 @@ namespace GenioMVC.ViewModels.Faqs
 		/// <summary>Campo : "Answer" Tipo:"MO"</summary>
 		[Display(Name = "ANSWER22961", ResourceType = typeof(Resources.Resources))]
 		[UIHint("tinymce")]
-		[AllowHtml]
+		[AllowHtml, Helpers.Attributes.HtmlSanitizer(isDocument: true)]
 		public string ValAnswer { get; set; }
 
 
@@ -333,6 +333,13 @@ namespace GenioMVC.ViewModels.Faqs
 		}
 
 
+
+
+		/// <inheritdoc/>
+		protected override void SanitizeHTMLFields()
+		{
+			ValAnswer = Helpers.HtmlSanitizerHelper.SanitizeHTML(ValAnswer, true);
+		}
 
 		#region Charts
 		#endregion

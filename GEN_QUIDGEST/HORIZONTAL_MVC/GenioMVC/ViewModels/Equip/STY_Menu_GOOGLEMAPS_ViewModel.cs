@@ -434,6 +434,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Equip> MapSTY_Menu_GOOGLEMAPS(ListingMVC<CSGenioAequip> Qlisting)
@@ -542,5 +544,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
             new TableSearchColumn("ValMoviment", CSGenioAequip.FldMoviment, typeof(string)),
             new TableSearchColumn("ValQtdmovim", CSGenioAequip.FldQtdmovim, typeof(decimal?))
         };
+
     }
 }

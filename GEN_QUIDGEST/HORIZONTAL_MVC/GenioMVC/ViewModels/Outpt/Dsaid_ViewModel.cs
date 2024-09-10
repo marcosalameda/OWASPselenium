@@ -548,6 +548,7 @@ namespace GenioMVC.ViewModels.Outpt
         private readonly string[] _fieldsToSerialize_DSAID___WARE1WAREHDES = { "Ware1", "Ware1.ValCodwareh", "Ware1.ValZzstate", "Ware1.ValWarehdes" };
 
 
+
 		#region Charts
 		#endregion
 

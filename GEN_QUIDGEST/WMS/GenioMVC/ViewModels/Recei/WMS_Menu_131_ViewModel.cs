@@ -391,6 +391,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioArecei.FldCodrecei, CSGenioArecei.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Recei> MapWMS_Menu_131(ListingMVC<CSGenioArecei> Qlisting)
@@ -466,5 +468,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioArecei.FldCodrecei, CSGenioArecei.Fl
             new TableSearchColumn("ValDtreceip", CSGenioArecei.FldDtreceip, typeof(DateTime?)),
             new TableSearchColumn("Entit_ValName", CSGenioAentit.FldName, typeof(string))
         };
+
     }
 }

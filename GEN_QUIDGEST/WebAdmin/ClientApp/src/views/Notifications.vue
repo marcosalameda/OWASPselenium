@@ -1,5 +1,11 @@
 ﻿<template>
   <div id="notifications_container">
+  <div class="q-stack--column">
+			<h1 class="f-header__title">
+			{{ Resources.NOTIFICACOES03935 }}
+			</h1>
+		</div>
+    <hr>
       <!-- This used to be a tab an it's now a self contained page-->
       <notifications_notifs :Notifications="Model.notifications" @updateModal="fetchData"></notifications_notifs>
   </div>

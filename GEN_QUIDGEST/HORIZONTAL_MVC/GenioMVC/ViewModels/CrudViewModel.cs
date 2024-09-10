@@ -125,6 +125,7 @@ namespace GenioMVC.ViewModels
 			// Here we already have access to the model, so we can fill the remaining values.
 			FillExtraProperties();
 			LoadPartial(qs ?? new NameValueCollection(), lazyLoad);
+			SanitizeContent();
 		}
 
 		/// <summary>

@@ -411,6 +411,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwareh.FldCodwareh, CSGenioAwareh.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Wareh> MapSTY_Menu_EXTENDFORM(ListingMVC<CSGenioAwareh> Qlisting)
@@ -484,5 +486,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwareh.FldCodwareh, CSGenioAwareh.Fl
             new TableSearchColumn("ValWarehcod", CSGenioAwareh.FldWarehcod, typeof(string)),
             new TableSearchColumn("ValActivity", CSGenioAwareh.FldActivity, typeof(int), array : "activida")
         };
+
     }
 }

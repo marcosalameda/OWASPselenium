@@ -391,6 +391,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAindoc.FldCoddentr, CSGenioAindoc.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Indoc> MapGQT_Menu_431(ListingMVC<CSGenioAindoc> Qlisting)
@@ -466,5 +468,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAindoc.FldCoddentr, CSGenioAindoc.Fl
             new TableSearchColumn("ValDhdocume", CSGenioAindoc.FldDhdocume, typeof(DateTime?)),
             new TableSearchColumn("Ware1_ValWarehdes", CSGenioAware1.FldWarehdes, typeof(string))
         };
+
     }
 }

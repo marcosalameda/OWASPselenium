@@ -924,6 +924,7 @@ namespace GenioMVC.ViewModels.Equip
         private readonly string[] _fieldsToSerialize_ACCORDI_PESS1NAME____ = { "Pess1", "Pess1.ValCodpesso", "Pess1.ValZzstate", "Pess1.ValName" };
 
 
+
 		#region Charts
 		#endregion
 

@@ -391,6 +391,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAfeeca.FldCodfeeca, CSGenioAfeeca.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Feeca> MapTBS_Menu_1931(ListingMVC<CSGenioAfeeca> Qlisting)
@@ -466,5 +468,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAfeeca.FldCodfeeca, CSGenioAfeeca.Fl
             new TableSearchColumn("ValFeedback", CSGenioAfeeca.FldFeedback, typeof(string), defaultSearch : true),
             new TableSearchColumn("Flds_ValAttach", CSGenioAflds.FldAttach, typeof(string))
         };
+
     }
 }

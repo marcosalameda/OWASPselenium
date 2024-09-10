@@ -549,6 +549,7 @@ namespace GenioMVC.ViewModels.Photo
         private readonly string[] _fieldsToSerialize_FOTOS___EQUIPREGISTNR = { "Equip", "Equip.ValCodequip", "Equip.ValZzstate", "Equip.ValRegistnr" };
 
 
+
 		#region Charts
 		#endregion
 

@@ -361,6 +361,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioApess1.FldCodpesso, CSGenioApess1.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Pess1> MapEquigrou_Pess1ValName(ListingMVC<CSGenioApess1> Qlisting)
@@ -432,5 +434,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioApess1.FldCodpesso, CSGenioApess1.Fl
         {
             new TableSearchColumn("ValName", CSGenioApess1.FldName, typeof(string), defaultSearch : true)
         };
+
     }
 }

@@ -347,6 +347,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.Fld
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Wpess> MapArmaz_ValPessarma(ListingMVC<CSGenioAwpess> Qlisting)
@@ -420,5 +422,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.Fld
             new TableSearchColumn("ValSex", CSGenioAwpess.FldSex, typeof(string), array : "SEXO"),
             new TableSearchColumn("ValNfunc", CSGenioAwpess.FldNfunc, typeof(decimal?))
         };
+
     }
 }

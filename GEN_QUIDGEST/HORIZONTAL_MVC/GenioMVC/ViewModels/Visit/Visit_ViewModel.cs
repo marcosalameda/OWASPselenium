@@ -61,7 +61,7 @@ namespace GenioMVC.ViewModels.Visit
 		/// <summary>Campo : "Description" Tipo:"MO"</summary>
 		[Display(Name = "DESCRIPTION07383", ResourceType = typeof(Resources.Resources))]
 		[UIHint("tinymce")]
-		[AllowHtml]
+		[AllowHtml, Helpers.Attributes.HtmlSanitizer(isDocument: true)]
 		public string ValDescript { get; set; }
 
 		/// <summary>Campo : "Day" Tipo:"L"</summary>
@@ -578,6 +578,13 @@ namespace GenioMVC.ViewModels.Visit
 
         private readonly string[] _fieldsToSerialize_VISIT___EQUIPREGISTNR = { "Equip", "Equip.ValCodequip", "Equip.ValZzstate", "Equip.ValRegistnr" };
 
+
+
+		/// <inheritdoc/>
+		protected override void SanitizeHTMLFields()
+		{
+			ValDescript = Helpers.HtmlSanitizerHelper.SanitizeHTML(ValDescript, true);
+		}
 
 		#region Charts
 		#endregion

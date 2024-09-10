@@ -1,6 +1,11 @@
 <template>
   <div id="notifications_container">
-    <h1 class="f-header__title">{{ Resources.SERVIDORES_DE_EMAIL15136 }}</h1>
+    <div class="q-stack--column">
+			<h1 class="f-header__title">
+			{{ Resources.SERVIDORES_DE_EMAIL15136 }}
+			</h1>
+		</div>
+    <hr>
     <template v-if="!isEmptyObject(Model.ResultMsg)">
             <div class="alert alert-info">
                 <p><b class="status-message">{{ Model.ResultMsg }}</b></p>

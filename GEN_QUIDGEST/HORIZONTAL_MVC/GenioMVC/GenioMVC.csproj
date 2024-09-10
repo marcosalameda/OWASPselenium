@@ -111,6 +111,12 @@
     <PackageReference Include="EPPlus">
       <Version>4.5.3.3</Version>
     </PackageReference>
+    <PackageReference Include="HtmlSanitizer">
+      <Version>8.1.870</Version>
+    </PackageReference>
+    <PackageReference Include="System.Memory">
+      <Version>4.5.5</Version>
+    </PackageReference>
                     <Reference Include="Microsoft.ReportViewer.DataVisualization, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <HintPath>..\CSGenio.reporting\Libs\Microsoft.ReportViewer.DataVisualization.dll</HintPath>
       <Private>True</Private>
@@ -160,6 +166,7 @@
     <Compile Include="Helpers\ResizeImageSerializer.cs" />
     <Compile Include="Helpers\SelectListSerializer.cs" />
     <Compile Include="Helpers\NavigationSerializer.cs" />
+    <Compile Include="Helpers\HtmlSanitizerHelper.cs" />
 
     <Compile Include="Helpers\Attributes\ActionSessionStateAttribute.cs" />
     <Compile Include="Helpers\Attributes\AuthorizeForUsers.cs" />
@@ -178,6 +185,7 @@
     <Compile Include="Helpers\Attributes\NumericAttribute.cs" />
     <Compile Include="Helpers\Attributes\DynamicJsonAttribute.cs" />
     <Compile Include="Helpers\Attributes\HyperLinkAttribute.cs" />
+    <Compile Include="Helpers\Attributes\HtmlSanitizerAttribute.cs" />
 
     <Compile Include="Helpers\CacheUtility.cs" />
 

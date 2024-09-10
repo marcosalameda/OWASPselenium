@@ -350,6 +350,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAsbcat.FldCodsbcat, CSGenioAsbcat.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Sbcat> MapTpcat_SbcatValSubcateg(ListingMVC<CSGenioAsbcat> Qlisting)
@@ -421,5 +423,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAsbcat.FldCodsbcat, CSGenioAsbcat.Fl
         {
             new TableSearchColumn("ValSubcateg", CSGenioAsbcat.FldSubcateg, typeof(string))
         };
+
     }
 }

@@ -550,6 +550,7 @@ namespace GenioMVC.ViewModels.Glob
         private readonly string[] _fieldsToSerialize_GLOBFACTFACTYTYPE____ = { "Facty", "Facty.ValCodfacty", "Facty.ValZzstate", "Facty.ValType" };
 
 
+
 		#region Charts
 		#endregion
 

@@ -72,7 +72,7 @@ namespace GenioMVC.ViewModels.Dttyp
 		/// <summary>Campo : "Multiline text (Text editor)" Tipo:"MO"</summary>
 		[Display(Name = "MULTILINE_TEXT__TEXT35132", ResourceType = typeof(Resources.Resources))]
 		[UIHint("tinymce")]
-		[AllowHtml]
+		[AllowHtml, Helpers.Attributes.HtmlSanitizer(isDocument: true)]
 		public string ValMultili3 { get; set; }
 
 		/// <summary>Campo : "Logical (tinyint) (storage: 1 byte)" Tipo:"L"</summary>
@@ -484,6 +484,13 @@ namespace GenioMVC.ViewModels.Dttyp
 		}
 
 
+
+
+		/// <inheritdoc/>
+		protected override void SanitizeHTMLFields()
+		{
+			ValMultili3 = Helpers.HtmlSanitizerHelper.SanitizeHTML(ValMultili3, true);
+		}
 
 		#region Charts
 		#endregion

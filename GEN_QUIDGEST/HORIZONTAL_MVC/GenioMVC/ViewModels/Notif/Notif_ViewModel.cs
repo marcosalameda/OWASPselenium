@@ -625,6 +625,7 @@ namespace GenioMVC.ViewModels.Notif
         private readonly string[] _fieldsToSerialize_NOTIF___PESS2NAME____ = { "Pess2", "Pess2.ValCodpesso", "Pess2.ValZzstate", "Pess2.ValName" };
 
 
+
 		#region Charts
 		#endregion
 

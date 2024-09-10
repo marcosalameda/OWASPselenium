@@ -358,6 +358,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAevcat.FldCodprogr, CSGenioAevcat.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Evcat> MapPessos01_ValEvolucao(ListingMVC<CSGenioAevcat> Qlisting)
@@ -434,5 +436,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAevcat.FldCodprogr, CSGenioAevcat.Fl
             new TableSearchColumn("ValFimperio", CSGenioAevcat.FldFimperio, typeof(DateTime?)),
             new TableSearchColumn("ValObservat", CSGenioAevcat.FldObservat, typeof(string))
         };
+
     }
 }

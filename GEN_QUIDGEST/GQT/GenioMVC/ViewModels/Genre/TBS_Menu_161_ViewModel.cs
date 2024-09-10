@@ -392,6 +392,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgenre.FldCodgenre, CSGenioAgenre.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Genre> MapTBS_Menu_161(ListingMVC<CSGenioAgenre> Qlisting)
@@ -466,5 +468,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgenre.FldCodgenre, CSGenioAgenre.Fl
             new TableSearchColumn("ValBackcolo", CSGenioAgenre.FldBackcolo, typeof(string), visible : false),
             new TableSearchColumn("ValTextcolo", CSGenioAgenre.FldTextcolo, typeof(string), visible : false)
         };
+
     }
 }

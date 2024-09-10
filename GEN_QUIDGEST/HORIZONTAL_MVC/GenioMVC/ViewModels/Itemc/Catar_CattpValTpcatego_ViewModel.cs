@@ -350,6 +350,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcattp.FldCodtpcat, CSGenioAcattp.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Cattp> MapCatar_CattpValTpcatego(ListingMVC<CSGenioAcattp> Qlisting)
@@ -421,5 +423,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcattp.FldCodtpcat, CSGenioAcattp.Fl
         {
             new TableSearchColumn("ValTpcatego", CSGenioAcattp.FldTpcatego, typeof(string))
         };
+
     }
 }

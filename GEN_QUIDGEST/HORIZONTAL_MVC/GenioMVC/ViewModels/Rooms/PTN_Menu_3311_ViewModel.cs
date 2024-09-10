@@ -390,6 +390,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioArooms.FldCodrooms, CSGenioArooms.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Rooms> MapPTN_Menu_3311(ListingMVC<CSGenioArooms> Qlisting)
@@ -462,5 +464,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioArooms.FldCodrooms, CSGenioArooms.Fl
             new TableSearchColumn("ValRoomnr", CSGenioArooms.FldRoomnr, typeof(string), defaultSearch : true),
             new TableSearchColumn("ValDesignat", CSGenioArooms.FldDesignat, typeof(string))
         };
+
     }
 }

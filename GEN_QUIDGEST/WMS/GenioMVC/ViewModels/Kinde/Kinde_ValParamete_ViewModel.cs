@@ -357,6 +357,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAparam.FldCodparam, CSGenioAparam.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Param> MapKinde_ValParamete(ListingMVC<CSGenioAparam> Qlisting)
@@ -430,5 +432,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAparam.FldCodparam, CSGenioAparam.Fl
             new TableSearchColumn("ValDatatype", CSGenioAparam.FldDatatype, typeof(string), array : "DataType"),
             new TableSearchColumn("ValDecimalplaces", CSGenioAparam.FldDecimalplaces, typeof(decimal), array : "DecPlace")
         };
+
     }
 }

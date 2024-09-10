@@ -400,6 +400,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAmessa.FldCodmessa, CSGenioAmessa.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Messa> MapWMS_Menu_611(ListingMVC<CSGenioAmessa> Qlisting)
@@ -486,5 +488,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAmessa.FldCodmessa, CSGenioAmessa.Fl
             new TableSearchColumn("Perso_ValName", CSGenioAperso.FldName, typeof(string)),
             new TableSearchColumn("ValDocum_nr", CSGenioAmessa.FldDocum_nr, typeof(decimal?))
         };
+
     }
 }

@@ -389,6 +389,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAkinde.FldCodkinde, CSGenioAkinde.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Kinde> MapWMS_Menu_4121(ListingMVC<CSGenioAkinde> Qlisting)
@@ -460,5 +462,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAkinde.FldCodkinde, CSGenioAkinde.Fl
         {
             new TableSearchColumn("ValDesignat", CSGenioAkinde.FldDesignat, typeof(string), defaultSearch : true)
         };
+
     }
 }

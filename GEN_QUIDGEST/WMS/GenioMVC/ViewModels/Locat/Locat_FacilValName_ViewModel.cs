@@ -346,6 +346,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAfacil.FldCodfacil, CSGenioAfacil.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Facil> MapLocat_FacilValName(ListingMVC<CSGenioAfacil> Qlisting)
@@ -417,5 +419,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAfacil.FldCodfacil, CSGenioAfacil.Fl
         {
             new TableSearchColumn("ValName", CSGenioAfacil.FldName, typeof(string))
         };
+
     }
 }

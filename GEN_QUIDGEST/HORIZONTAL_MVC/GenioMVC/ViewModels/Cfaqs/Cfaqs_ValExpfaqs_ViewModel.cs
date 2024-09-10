@@ -346,6 +346,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAfaqs.FldCodfaqs, CSGenioAfaqs.FldZz
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Faqs> MapCfaqs_ValExpfaqs(ListingMVC<CSGenioAfaqs> Qlisting)
@@ -418,5 +420,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAfaqs.FldCodfaqs, CSGenioAfaqs.FldZz
             new TableSearchColumn("ValQuestion", CSGenioAfaqs.FldQuestion, typeof(string), defaultSearch : true),
             new TableSearchColumn("ValAnswer", CSGenioAfaqs.FldAnswer, typeof(string))
         };
+
     }
 }

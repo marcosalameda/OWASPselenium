@@ -403,6 +403,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioApesso.FldCodpesso, CSGenioApesso.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Pesso> MapGQT_Menu_271(ListingMVC<CSGenioApesso> Qlisting)
@@ -530,5 +532,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioApesso.FldCodpesso, CSGenioApesso.Fl
         };
 
         override public SpecialRenderingsCfg ViewModesCfg { get => _viewModes; }
+
     }
 }

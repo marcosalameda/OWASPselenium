@@ -356,6 +356,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpeq1.FldCodtpequ, CSGenioAtpeq1.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Tpeq1> MapLnhde_Tpeq1ValTipoequi(ListingMVC<CSGenioAtpeq1> Qlisting)
@@ -428,5 +430,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpeq1.FldCodtpequ, CSGenioAtpeq1.Fl
             new TableSearchColumn("ValTpequcod", CSGenioAtpeq1.FldTpequcod, typeof(string)),
             new TableSearchColumn("ValTipoequi", CSGenioAtpeq1.FldTipoequi, typeof(string))
         };
+
     }
 }

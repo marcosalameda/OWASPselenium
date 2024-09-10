@@ -340,6 +340,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAorgan.FldCodorgan, CSGenioAorgan.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Organ> MapVenda_OrganValOrganiza(ListingMVC<CSGenioAorgan> Qlisting)
@@ -411,5 +413,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAorgan.FldCodorgan, CSGenioAorgan.Fl
         {
             new TableSearchColumn("ValOrganiza", CSGenioAorgan.FldOrganiza, typeof(string))
         };
+
     }
 }

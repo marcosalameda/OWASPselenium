@@ -345,6 +345,7 @@ namespace GenioMVC.ViewModels.Uicom
 
 
 
+
 		#region Charts
 		#endregion
 

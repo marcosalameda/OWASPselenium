@@ -350,6 +350,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAfamil.FldCodfamil, CSGenioAfamil.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Famil> MapTpequ_FamilValFamily(ListingMVC<CSGenioAfamil> Qlisting)
@@ -421,5 +423,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAfamil.FldCodfamil, CSGenioAfamil.Fl
         {
             new TableSearchColumn("ValFamily", CSGenioAfamil.FldFamily, typeof(string))
         };
+
     }
 }

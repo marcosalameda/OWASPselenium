@@ -61,7 +61,7 @@
             // The Crystal Repors without preview will invoke method by the Ajax request (PrintToPrinter)
             var isAjaxReportRequest = menu.Mode == "CRY";
             a.MergeAttribute("href", "javascript:void(0)");
-            a.MergeAttribute("onclick", string.Format("javascript:requestReport('{0}', {1});", Url.Action(menu.Action_MVC, menu.Controller, new { newMenu = true }), isAjaxReportRequest.ToString().ToLower()));
+            a.MergeAttribute("onclick", string.Format("javascript:requestReport('{0}', {1});", HttpUtility.JavaScriptStringEncode(Url.Action(menu.Action_MVC, menu.Controller, new { newMenu = true })), isAjaxReportRequest.ToString().ToLower()));
 
         }
         else

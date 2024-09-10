@@ -578,6 +578,7 @@ namespace GenioMVC.ViewModels.Recei
         private readonly string[] _fieldsToSerialize_RECEI___ENTITNAME____ = { "Entit", "Entit.ValCodentit", "Entit.ValZzstate", "Entit.ValName", "Entit.ValInitials", "Entit.ValTaxnumbe", "Entit.ValEmail", "Entit.ValPhonenum", "Entit.ValContact", "Entit.ValLanguage" };
 
 
+
 		#region Charts
 		#endregion
 

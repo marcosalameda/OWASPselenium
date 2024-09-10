@@ -340,6 +340,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAdecom.FldCoddeco, CSGenioAdecom.Fld
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Decom> MapEquip_DecomValDecomnr(ListingMVC<CSGenioAdecom> Qlisting)
@@ -411,5 +413,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAdecom.FldCoddeco, CSGenioAdecom.Fld
         {
             new TableSearchColumn("ValDecomnr", CSGenioAdecom.FldDecomnr, typeof(decimal?))
         };
+
     }
 }

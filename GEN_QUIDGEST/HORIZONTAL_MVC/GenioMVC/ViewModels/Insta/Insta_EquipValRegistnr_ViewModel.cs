@@ -377,6 +377,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Equip> MapInsta_EquipValRegistnr(ListingMVC<CSGenioAequip> Qlisting)
@@ -453,5 +455,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
             new TableSearchColumn("ValDtdeco", CSGenioAequip.FldDtdeco, typeof(DateTime?)),
             new TableSearchColumn("ValValortot", CSGenioAequip.FldValortot, typeof(decimal?))
         };
+
     }
 }

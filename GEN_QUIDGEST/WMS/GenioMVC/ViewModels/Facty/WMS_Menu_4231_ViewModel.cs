@@ -402,6 +402,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAfacty.FldCodfacty, CSGenioAfacty.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Facty> MapWMS_Menu_4231(ListingMVC<CSGenioAfacty> Qlisting)
@@ -486,5 +488,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAfacty.FldCodfacty, CSGenioAfacty.Fl
             new TableSearchColumn("ValShadowhe", CSGenioAfacty.FldShadowhe, typeof(decimal?)),
             new TableSearchColumn("ValShadowwi", CSGenioAfacty.FldShadowwi, typeof(decimal?))
         };
+
     }
 }

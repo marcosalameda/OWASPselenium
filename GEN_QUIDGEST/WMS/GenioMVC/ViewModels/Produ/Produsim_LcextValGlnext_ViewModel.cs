@@ -346,6 +346,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlcext.FldCodlcext, CSGenioAlcext.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Lcext> MapProdusim_LcextValGlnext(ListingMVC<CSGenioAlcext> Qlisting)
@@ -417,5 +419,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlcext.FldCodlcext, CSGenioAlcext.Fl
         {
             new TableSearchColumn("ValGlnext", CSGenioAlcext.FldGlnext, typeof(string))
         };
+
     }
 }

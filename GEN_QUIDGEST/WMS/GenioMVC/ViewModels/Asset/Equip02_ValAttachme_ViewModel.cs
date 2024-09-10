@@ -357,6 +357,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAattac.FldCodattac, CSGenioAattac.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Attac> MapEquip02_ValAttachme(ListingMVC<CSGenioAattac> Qlisting)
@@ -430,5 +432,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAattac.FldCodattac, CSGenioAattac.Fl
             new TableSearchColumn("ValNote", CSGenioAattac.FldNote, typeof(string)),
             new TableSearchColumn("ValDocument", CSGenioAattac.FldDocument, typeof(string))
         };
+
     }
 }

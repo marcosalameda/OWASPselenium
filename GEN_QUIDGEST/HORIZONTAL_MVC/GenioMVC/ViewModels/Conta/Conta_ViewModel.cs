@@ -977,6 +977,7 @@ namespace GenioMVC.ViewModels.Conta
         private readonly string[] _fieldsToSerialize_CONTA___TPCONTIPOCONT = { "Tpcon", "Tpcon.ValCodtpcon", "Tpcon.ValZzstate", "Tpcon.ValTipocont" };
 
 
+
 		#region Charts
 		#endregion
 

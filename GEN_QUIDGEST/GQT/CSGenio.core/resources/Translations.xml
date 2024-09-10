@@ -4262,9 +4262,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id="Date:" code="DATE_55218">
     <ENUS>Date:</ENUS>
   </msg>
-  <msg id="E2EText" code="E2ETEXT44371">
-    <ENUS>E2E resource Text</ENUS>
-  </msg>
   <msg id=" 1123" code="_112319369">
   </msg>
   <msg id="Hora de criação" code="HORA_DE_CRIACAO40754">
@@ -9464,6 +9461,9 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="Texto das Mensagens" code="TEXTO_DAS_MENSAGENS25657">
     <ENUS>Text of messages</ENUS>
   </msg>
+  <msg id="Iniciar configuração" code="INICIAR_CONFIGURACAO43417">
+    <ENUS>Start configuration</ENUS>
+  </msg>
   <msg id="Campo da BD com o Nome" code="CAMPO_DA_BD_COM_O_NO27665">
     <ENUS>Name of field in DB</ENUS>
   </msg>
@@ -13388,6 +13388,9 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="Configuração do Sistema" code="CONFIGURACAO_DO_SIST39343">
     <ENUS>System Configuration</ENUS>
   </msg>
+  <msg id="Configuração da Aplicação" code="CONFIGURACAO_DA_APLI59110">
+    <ENUS>Application Configuration</ENUS>
+  </msg>
   <msg id="Procure para mais resultados" code="PROCURE_PARA_MAIS_RE41208">
     <ENUS>Search for more results</ENUS>
   </msg>
@@ -13870,6 +13873,9 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   </msg>
   <msg id="Plataforma" code="PLATAFORMA28085">
     <ENUS>Platform</ENUS>
+  </msg>
+  <msg id="Acrónimo" code="ACRONIMO12609">
+    <ENUS>Acronym</ENUS>
   </msg>
   <msg id="Contactos" code="CONTACTOS35567">
     <ENUS>Contacts</ENUS>
@@ -15725,6 +15731,9 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="Descartar" code="DESCARTAR04620">
     <ENUS>Discard</ENUS>
   </msg>
+  <msg id="Link para resolver o erro" code="LINK_PARA_RESOLVER_O25588">
+    <ENUS>Link to solve the error</ENUS>
+  </msg>
   <msg id="Password recovery" code="PASSWORD_RECOVERY53114">
     <ENUS>Password recovery</ENUS>
   </msg>
@@ -16480,6 +16489,15 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   </msg>
   <msg id="New configuration created." code="NEW_CONFIGURATION_CR61652">
     <ENUS>New configuration created.</ENUS>
+  </msg>
+  <msg id="Configurar o seu projeto." code="CONFIGURAR_O_SEU_PRO20345">
+    <ENUS>Configure your project.</ENUS>
+  </msg>
+  <msg id="Atualizar a base de dados." code="ATUALIZAR_A_BASE_DE_47288">
+    <ENUS>Update database.</ENUS>
+  </msg>
+  <msg id="Criar perfil de utilizador." code="CRIAR_PERFIL_DE_UTIL09072">
+    <ENUS>Create user profile.</ENUS>
   </msg>
   <msg id="There was an error creating a new configuration file:" code="THERE_WAS_AN_ERROR_C44163">
     <ENUS>There was an error creating a new configuration file:</ENUS>

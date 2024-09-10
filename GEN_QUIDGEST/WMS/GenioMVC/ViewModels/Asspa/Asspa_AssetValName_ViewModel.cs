@@ -340,6 +340,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAasset.FldCodasset, CSGenioAasset.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Asset> MapAsspa_AssetValName(ListingMVC<CSGenioAasset> Qlisting)
@@ -411,5 +413,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAasset.FldCodasset, CSGenioAasset.Fl
         {
             new TableSearchColumn("ValName", CSGenioAasset.FldName, typeof(string))
         };
+
     }
 }

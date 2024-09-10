@@ -1,10 +1,6 @@
 @import './plugins/adminlte.min.css';
 @import './quidgest.scss';
 
-body {
-    background-color: white !important;
-}
-
 .textRight {
     text-align: right;
 }
@@ -15,11 +11,12 @@ body {
 }
 
 /*******HOME PAGE********/
-#content-wrapper.content-wrapper-dashboard {
+#content-wrapper.content-wrapper {
     padding: 30px;
     height: 100%;
     vertical-align: middle;
-    margin: 0px;
+    margin-left: 240px;
+    margin-top: -75px;
     transition: none;
 }
 
@@ -61,6 +58,10 @@ body {
 .i-date-picker,
 .i-radio__control {
     margin-right: 0.25rem;
+}
+
+hr{
+    margin: .75rem 0 1rem 0;
 }
 
 table tbody td:first-child .b-icon {

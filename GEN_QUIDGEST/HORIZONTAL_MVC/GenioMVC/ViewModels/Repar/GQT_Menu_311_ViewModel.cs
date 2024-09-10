@@ -398,6 +398,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioArepar.FldCodrepar, CSGenioArepar.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Repar> MapGQT_Menu_311(ListingMVC<CSGenioArepar> Qlisting)
@@ -486,5 +488,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioArepar.FldCodrepar, CSGenioArepar.Fl
             new TableSearchColumn("ValHours", CSGenioArepar.FldHours, typeof(decimal?)),
             new TableSearchColumn("Cmpny_ValDesignat", CSGenioAcmpny.FldDesignat, typeof(string), visible : false)
         };
+
     }
 }

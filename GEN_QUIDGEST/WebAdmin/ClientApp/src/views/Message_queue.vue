@@ -1,6 +1,11 @@
 ﻿<template>
   <div id="message_queue_container">
-    <h1 class="f-header__title">{{ Resources.MESSAGE_QUEUEING34227 }}</h1>
+    <div class="q-stack--column">
+			<h1 class="f-header__title">
+			{{ Resources.MESSAGE_QUEUEING34227 }}
+			</h1>
+		</div>
+    <hr>
     
     <div>
         <ul class="nav nav-tabs c-tab c-tab__divider" id="system_setup_tabs" role="tablist">

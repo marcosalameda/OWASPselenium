@@ -1055,6 +1055,7 @@ namespace GenioMVC.ViewModels.Lendi
         private readonly string[] _fieldsToSerialize_COMOD___EQUIPREGISTNR = { "Equip", "Equip.ValCodequip", "Equip.ValZzstate", "Equip.ValRegistnr", "Tpequ", "Tpequ.ValTipoequi", "Equip.ValDesignat", "Equip.ValDtaquisi", "Equip.ValDtdeco", "Equip.ValPhotogra", "Equip.ValValortot" };
 
 
+
 		#region Charts
 		#endregion
 

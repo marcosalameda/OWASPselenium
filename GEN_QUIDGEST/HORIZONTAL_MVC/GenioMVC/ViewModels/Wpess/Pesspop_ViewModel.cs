@@ -628,6 +628,7 @@ namespace GenioMVC.ViewModels.Wpess
         private readonly string[] _fieldsToSerialize_PESSPOP_WAREHWAREHDES = { "Wareh", "Wareh.ValCodwareh", "Wareh.ValZzstate", "Wareh.ValWarehdes" };
 
 
+
 		#region Charts
 		#endregion
 

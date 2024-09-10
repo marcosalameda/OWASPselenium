@@ -350,6 +350,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioApess2.FldCodpesso, CSGenioApess2.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Pess2> MapComod_Pess2ValName(ListingMVC<CSGenioApess2> Qlisting)
@@ -421,5 +423,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioApess2.FldCodpesso, CSGenioApess2.Fl
         {
             new TableSearchColumn("ValName", CSGenioApess2.FldName, typeof(string))
         };
+
     }
 }

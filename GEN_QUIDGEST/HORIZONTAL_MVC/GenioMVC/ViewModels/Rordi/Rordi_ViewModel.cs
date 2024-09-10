@@ -330,6 +330,7 @@ namespace GenioMVC.ViewModels.Rordi
 
 
 
+
 		#region Charts
 		#endregion
 

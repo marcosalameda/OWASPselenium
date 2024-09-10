@@ -251,6 +251,7 @@ namespace GenioMVC.Controllers
                         values.TryUpdate(field.Key, "", DateTime.MinValue);
                 }
 
+                // TODO: Sanitize HTML content
                 return JsonOK(values);
             }
 			catch (Exception) { return JsonERROR("On Get Dependants - " + Identifier );}

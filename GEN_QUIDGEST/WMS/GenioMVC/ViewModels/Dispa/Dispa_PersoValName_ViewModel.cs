@@ -340,6 +340,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAperso.FldCodperso, CSGenioAperso.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Perso> MapDispa_PersoValName(ListingMVC<CSGenioAperso> Qlisting)
@@ -411,5 +413,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAperso.FldCodperso, CSGenioAperso.Fl
         {
             new TableSearchColumn("ValName", CSGenioAperso.FldName, typeof(string))
         };
+
     }
 }

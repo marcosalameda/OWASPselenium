@@ -361,6 +361,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAfacil.FldCodfacil, CSGenioAfacil.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Facil> MapEntix_ValFacilite(ListingMVC<CSGenioAfacil> Qlisting)
@@ -438,5 +440,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAfacil.FldCodfacil, CSGenioAfacil.Fl
             new TableSearchColumn("ValLatitude", CSGenioAfacil.FldLatitude, typeof(decimal?)),
             new TableSearchColumn("ValLongitud", CSGenioAfacil.FldLongitud, typeof(decimal?))
         };
+
     }
 }

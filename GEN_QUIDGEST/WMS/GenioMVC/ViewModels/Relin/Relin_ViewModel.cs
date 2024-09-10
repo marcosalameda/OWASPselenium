@@ -790,6 +790,7 @@ namespace GenioMVC.ViewModels.Relin
         private readonly string[] _fieldsToSerialize_RELIN___PRODUPRODUCT_ = { "Produ", "Produ.ValCodprodu", "Produ.ValZzstate", "Produ.ValProduct" };
 
 
+
 		#region Charts
 		#endregion
 

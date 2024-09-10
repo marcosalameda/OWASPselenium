@@ -1144,6 +1144,7 @@ namespace GenioMVC.ViewModels.Equip
         private readonly string[] _fieldsToSerialize_EQUIGROUTPEQUTIPOEQUI = { "Tpequ", "Tpequ.ValCodtpequ", "Tpequ.ValZzstate", "Tpequ.ValTipoequi" };
 
 
+
 		#region Charts
 		#endregion
 

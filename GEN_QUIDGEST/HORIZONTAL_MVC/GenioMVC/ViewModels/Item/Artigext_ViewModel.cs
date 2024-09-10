@@ -785,6 +785,7 @@ namespace GenioMVC.ViewModels.Item
         private readonly string[] _fieldsToSerialize_ARTIGEXTGITEMITEMDES_ = { "Gitem", "Gitem.ValCodgitem", "Gitem.ValZzstate", "Gitem.ValItemdes", "Gitem.ValItemgcod" };
 
 
+
 		#region Charts
 		#endregion
 

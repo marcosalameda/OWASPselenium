@@ -556,6 +556,7 @@ namespace GenioMVC.ViewModels.Lcext
         private readonly string[] _fieldsToSerialize_LCEXT___LOCATGLN_____ = { "Locat", "Locat.ValCodlocat", "Locat.ValZzstate", "Locat.ValGln" };
 
 
+
 		#region Charts
 		#endregion
 

@@ -778,6 +778,7 @@ namespace GenioMVC.ViewModels.Evcat
         private readonly string[] _fieldsToSerialize_EVCAT___CATE1CATEGORY = { "Cate1", "Cate1.ValCodcateg", "Cate1.ValZzstate", "Cate1.ValCategoria", "Cate1.ValAbbreviation" };
 
 
+
 		#region Charts
 		#endregion
 

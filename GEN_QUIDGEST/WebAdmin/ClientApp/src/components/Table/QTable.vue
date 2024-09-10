@@ -1508,10 +1508,6 @@ export default {
     -webkit-appearance: searchfield;
     }
 
-    input[type="search"]::-webkit-search-cancel-button {
-    -webkit-appearance: searchfield-cancel-button;
-    }
-
     /* Bootstrap 4 text input with clear icon on the right */
 
     .has-clear-right {

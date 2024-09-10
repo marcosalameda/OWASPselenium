@@ -100,7 +100,7 @@ else {
     {
         if (Model.IsEditableMode)
         {
-            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("Aero", Model.FormMode).ToString(), "Aero")", "Aero_well")' qbutton="ok">
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@HttpUtility.JavaScriptStringEncode(Url.Action(Helpers.FormModeActionName("Aero", Model.FormMode).ToString(), "Aero"))", "Aero_well")' qbutton="ok">
                     <i class="SaveIcon e-icon" aria-hidden="true"></i>
                     @Resources.INSERIR43365
             </button>
@@ -113,6 +113,13 @@ else {
                 $(document).ready(function () { loaded($("#Aero_well")); });
             </script>
         }
+		else if (Model.FormMode == FormMode.Delete)
+		{
+			<button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Aero_Delete", "Aero", new {id = @Model.ValCodaero} )", "Aero_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+		}
 
         @* javascript code_javascript *@
         @*@codeJavascript()*@

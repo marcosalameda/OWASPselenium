@@ -248,7 +248,7 @@ else {
     {
         if (Model.IsEditableMode)
         {
-            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("Pais", Model.FormMode).ToString(), "Cntry")", "Pais_well")' qbutton="ok">
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@HttpUtility.JavaScriptStringEncode(Url.Action(Helpers.FormModeActionName("Pais", Model.FormMode).ToString(), "Cntry"))", "Pais_well")' qbutton="ok">
                     <i class="SaveIcon e-icon" aria-hidden="true"></i>
                     @Resources.INSERT30329
             </button>
@@ -261,6 +261,13 @@ else {
                 $(document).ready(function () { loaded($("#Pais_well")); });
             </script>
         }
+		else if (Model.FormMode == FormMode.Delete)
+		{
+			<button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Pais_Delete", "Cntry", new {id = @Model.ValCodcntry} )", "Pais_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+		}
 
         @* javascript code_javascript *@
         @*@codeJavascript()*@

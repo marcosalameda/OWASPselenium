@@ -411,6 +411,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAdispa.FldCoddispa, CSGenioAdispa.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Dispa> MapWMS_Menu_2211(ListingMVC<CSGenioAdispa> Qlisting)
@@ -486,5 +488,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAdispa.FldCoddispa, CSGenioAdispa.Fl
             new TableSearchColumn("ValDispanr", CSGenioAdispa.FldDispanr, typeof(decimal?), defaultSearch : true),
             new TableSearchColumn("Entit_ValName", CSGenioAentit.FldName, typeof(string))
         };
+
     }
 }

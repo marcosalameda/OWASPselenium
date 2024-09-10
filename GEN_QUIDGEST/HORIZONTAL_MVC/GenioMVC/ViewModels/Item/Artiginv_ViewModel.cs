@@ -803,6 +803,7 @@ namespace GenioMVC.ViewModels.Item
         private readonly string[] _fieldsToSerialize_ARTIGINVWAREHWAREHDES = { "Wareh", "Wareh.ValCodwareh", "Wareh.ValZzstate", "Wareh.ValWarehdes" };
 
 
+
 		#region Charts
 		#endregion
 

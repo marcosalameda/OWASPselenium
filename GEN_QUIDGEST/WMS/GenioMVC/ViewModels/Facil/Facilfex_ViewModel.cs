@@ -792,6 +792,7 @@ namespace GenioMVC.ViewModels.Facil
         private readonly string[] _fieldsToSerialize_FACILFEXFACTYTYPE____ = { "Facty", "Facty.ValCodfacty", "Facty.ValZzstate", "Facty.ValType" };
 
 
+
 		#region Charts
 		#endregion
 

@@ -346,6 +346,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtabpr.FldCodtabpr, CSGenioAtabpr.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Tabpr> MapTpequ_ValEvolucao(ListingMVC<CSGenioAtabpr> Qlisting)
@@ -418,5 +420,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtabpr.FldCodtabpr, CSGenioAtabpr.Fl
             new TableSearchColumn("ValSince", CSGenioAtabpr.FldSince, typeof(DateTime?)),
             new TableSearchColumn("ValPrecohor", CSGenioAtabpr.FldPrecohor, typeof(decimal?))
         };
+
     }
 }

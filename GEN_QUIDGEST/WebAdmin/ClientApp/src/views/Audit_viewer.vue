@@ -1,6 +1,11 @@
 ﻿<template>
   <div id="audit_viewer_container">
-    <h1 class="f-header__title">{{ Resources.AUDITORIA_DO_SISTEMA08460 }}</h1>
+    <div class="q-stack--column">
+        <h1 class="f-header__title">
+        {{ Resources.AUDITORIA_DO_SISTEMA08460 }}
+        </h1>
+    </div>
+    <hr>
 
       <row v-if="!isEmptyObject(Model.ResultMsg)">
           <div class="alert alert-danger">

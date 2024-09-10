@@ -389,6 +389,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAfami1.FldCodfamil, CSGenioAfami1.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Fami1> MapGQT_Menu_2921(ListingMVC<CSGenioAfami1> Qlisting)
@@ -460,5 +462,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAfami1.FldCodfamil, CSGenioAfami1.Fl
         {
             new TableSearchColumn("ValFamily", CSGenioAfami1.FldFamily, typeof(string), defaultSearch : true)
         };
+
     }
 }

@@ -1,6 +1,11 @@
 ﻿<template>
   <div id="maintenance_container">
-    <h1 class="pb-2 mt-4 mb-2 border-bottom">{{ Resources.MANUTENCAO_DA_BASE_D10092 }}</h1>
+    <div class="q-stack--column">
+			<h1 class="f-header__title">
+			{{ Resources.MANUTENCAO_DA_BASE_D10092 }}
+			</h1>
+		</div>
+    <hr>
     <div>
       <ul class="nav nav-tabs c-tab c-tab__divider" id="maintenance_tabs" role="tablist">
         <li class="nav-item c-tab__item">

@@ -1,0 +1,357 @@
+﻿@model GenioMVC.ViewModels.Item.Artigval_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS ARTIGVAL]/ *@
+<script  type="text/javascript">
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Artigval !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Artigval = new QForm($('[data-form="Artigval"]'), "Form_Artigval");
+		}
+		window.Form_Artigval.baseArea = "item";
+		window.Form_Artigval.FormMode = '@Model.GetFormMode';
+		window.Form_Artigval.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Artigval.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Item")',
+			GetDependants:		'@Url.Action("GetDependants", "Item")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Artigval", "Item")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Artigval", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Item", "Item")',
+		};
+		window.Form_Artigval.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Artigval.formSaveEdit = '@Url.Action("Artigval_SaveEdit", "Item")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Artigval.formAction = 'Artigval_New';
+		window.Form_Artigval.formRedirectURL = '@Url.Action("Artigval_New_Redirect", "Item")';
+		window.Form_Artigval.formSubmitURL = '@Url.Action("Artigval_New", "Item")';
+		window.Form_Artigval.formRedirectURL_repeatInsertion = '@Url.Action("Artigval_New_Redirect", "Item", new { repeatInsertion = true})';
+		window.Form_Artigval.formSubmitURL_repeatInsertion = '@Url.Action("Artigval_New", "Item", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Artigval.formAction = 'Artigval_Edit';
+		window.Form_Artigval.formRedirectURL = '@Url.Action("Artigval_Edit_Redirect", "Item")';
+		window.Form_Artigval.formSubmitURL = '@Url.Action("Artigval_Edit", "Item")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Artigval.formAction = 'Artigval_Duplicate';
+		window.Form_Artigval.formRedirectURL = '@Url.Action("Artigval_Duplicate_Redirect", "Item")';
+		window.Form_Artigval.formSubmitURL = '@Url.Action("Artigval_Duplicate", "Item")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Artigval.formAction = 'Artigval_Delete';
+		window.Form_Artigval.formRedirectURL = '@Url.Action("Artigval_Delete_Redirect", "Item")';
+		window.Form_Artigval.formSubmitURL = '@Url.Action("Artigval_Delete", "Item")';
+	</text>
+}
+		window.Form_Artigval.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.LED_ARTIGVALITEM_IMAGE___ = new QImageControl($('[data-identifier="LED_ARTIGVALITEM_IMAGE___"]', this.element), window.Form_Artigval, '@Html.Raw(Url.Action("ImageDelete", "Item", new { id=Model.ValCoditem, modelname="Item", fldname="ValImage" }))', '@Html.Raw(Url.Action("ImageCropper", "Item", new { key=Model.ValCoditem, modelname= "Item", fldname= "ValImage", identifier= "FARTIGVAL", FormName= "Artigval", FieldId= "LED_ARTIGVALITEM_IMAGE___" }))',@Html.IsImageEmpty(Model.ValImage));
+
+			this.Controls.IFF_ARTIGVALGITEMITEMDES_ = new QDbeditControl($('[data-identifier="IFF_ARTIGVALGITEMITEMDES_"]', this.element), window.Form_Artigval);
+
+			this.Controls.IFF_ARTIGVALWAREHWAREHDES = new QDbeditControl($('[data-identifier="IFF_ARTIGVALWAREHWAREHDES"]', this.element), window.Form_Artigval);
+
+			this.Controls.LED_ARTIGVALITEM_ITEMTYPE = new QArrayControl($('[data-identifier="LED_ARTIGVALITEM_ITEMTYPE"]', this.element), window.Form_Artigval);
+
+			this.Controls.LED_ARTIGVALITEM_ITEMCOD_ = new QTextControl($('[data-identifier="LED_ARTIGVALITEM_ITEMCOD_"]', this.element), window.Form_Artigval);
+
+			this.Controls.LED_ARTIGVALITEM_ITEMDES_ = new QTextControl($('[data-identifier="LED_ARTIGVALITEM_ITEMDES_"]', this.element), window.Form_Artigval);
+
+			this.Controls.LED_ARTIGVALITEM_DATE____ = new QDateControl($('[data-identifier="LED_ARTIGVALITEM_DATE____"]', this.element), window.Form_Artigval);
+
+			this.Controls.LED_ARTIGVALITEM_ENTRIES_ = new QNumericControl($('[data-identifier="LED_ARTIGVALITEM_ENTRIES_"]', this.element), window.Form_Artigval);
+
+			this.Controls.LED_ARTIGVALITEM_EXITS___ = new QNumericControl($('[data-identifier="LED_ARTIGVALITEM_EXITS___"]', this.element), window.Form_Artigval);
+
+			this.Controls.LED_ARTIGVALITEM_EXISTENC = new QNumericControl($('[data-identifier="LED_ARTIGVALITEM_EXISTENC"]', this.element), window.Form_Artigval);
+
+			this.Controls.LED_ARTIGVALITEM_CATEGORY = new QGenericControl($('[data-identifier="LED_ARTIGVALITEM_CATEGORY"]', this.element), window.Form_Artigval);
+
+			this.Controls.LED_ARTIGVALITEM_DISPONIB = new QArrayControl($('[data-identifier="LED_ARTIGVALITEM_DISPONIB"]', this.element), window.Form_Artigval);
+
+
+
+
+			this.Controls.LED_ARTIGVALITEM_CODITEM_ = new QHiddenControl($('[data-identifier="LED_ARTIGVALITEM_CODITEM_"]', this.element), window.Form_Artigval);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+			this.Controls.LED_ARTIGVALGITEMITEMGCOD = new QSpecialControl($('[data-identifier="LED_ARTIGVALGITEMITEMGCOD"]', this.element), window.Form_Artigval);
+			this.Controls.LED_ARTIGVALGITEMITEMGCOD.InitData(@JavaScriptConversion.ToString(@Model.GitemValItemgcod));
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	</text>
+}
+
+		window.Form_Artigval.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Artigval.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI ARTIGVAL]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Artigval.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS ARTIGVAL]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Artigval.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS ARTIGVAL]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Artigval.Data.RelationKeysSelector = {
+				get gitem() { return $(':not([elem-identifier="Multiform"]) > #ValCodgitem[pers-cs-area="Gitem"]', $('[data-form="Artigval"]')); /* DBEdit */ },
+				get wareh() { return $(':not([elem-identifier="Multiform"]) > #ValCodwareh[pers-cs-area="Wareh"]', $('[data-form="Artigval"]')); /* DBEdit */ },
+		};
+
+		window.Form_Artigval.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Artigval.Data.RelationKeys = {
+			get formContext() { return window.Form_Artigval; },
+			get gitem() { return (this.formContext.Data.RelationKeysSelector.gitem.getQControl() || {}).Value; /* DBEdit */ },
+			set gitem(newValue) { (this.formContext.Data.RelationKeysSelector.gitem.getQControl() || {}).Value = newValue; /* DBEdit */ },
+			get wareh() { return (this.formContext.Data.RelationKeysSelector.wareh.getQControl() || {}).Value; /* DBEdit */ },
+			set wareh(newValue) { (this.formContext.Data.RelationKeysSelector.wareh.getQControl() || {}).Value = newValue; /* DBEdit */ },
+		};
+	</text>
+}
+
+	window.Form_Artigval.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+		@* Default of the 'ValItemcod' field *@
+		window.Form_Artigval.SetFormulaDefault('LED_ARTIGVALITEM_ITEMCOD_', function() {
+						return ( getFieldValue($(':not([elem-identifier="Multiform"]) > #GitemValItemgcod', $('[data-form="Artigval"]'))));
+		}, 'GITEMVALITEMGCOD_CHANGE');
+		
+		@* Default of the 'ValItemdes' field *@
+		window.Form_Artigval.SetFormulaDefault('LED_ARTIGVALITEM_ITEMDES_', function() {
+						return ( getFieldValue($(':not([elem-identifier="Multiform"]) > #ValCodgitem', $('[data-form="Artigval"]')), true));
+		}, 'GITEMVALITEMDES_CHANGE');
+		
+		@* Formula of the 'ValDisponib' field *@
+		$(qForm).bind('VALEXISTENC_CHANGE', function(event, eTarget) {
+				try {
+						var newValue = (qApi.iif( getFieldValue($(':not([elem-identifier="Multiform"]) > #ValExistenc', $('[data-form="Artigval"]')))>0,"A",qApi.iif( getFieldValue($(':not([elem-identifier="Multiform"]) > #ValExistenc', $('[data-form="Artigval"]')))@(Html.Raw("<"))=0,"O","D")));
+						$.when(newValue).done(function (result) {
+								setFieldValue($(':not([elem-identifier="Multiform"]) > #ValDisponib', $('[data-form="Artigval"]')), result);
+								if($(':not([elem-identifier="Multiform"]) > #ValDisponib', $('[data-form="Artigval"]')).data('QObject') === undefined) $(':not([elem-identifier="Multiform"]) > #ValDisponib', $('[data-form="Artigval"]')).change(); //TODO: Remove this later...
+						});
+				} catch (err) { QError.AppendError('Formula of field ValDisponib: ' + err.message, err.stack, window.location.href); }
+		});
+		
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Artigval.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitArtigval(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Artigval.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeleteArtigval(event) {
+			event.preventDefault();
+			window.Form_Artigval.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+    modal_QuidgestGlobals = {
+        UrlAction: {
+            newWindow: '@Url.Action("newWindow")',
+            ReloadDBEdit: '@Url.Action("ReloadDBEdit")',
+            formArea: '	@Url.Action("form", "area")',
+            UpdateValues: '@Url.Action("UpdateValues")',
+            LogJavaScriptError: '@Url.Action("LogJavaScriptError", "ApplicationErrors")',
+            syncFormKeys: '@Url.Action("syncFormKeys")',
+            GetDependants: 		'@Url.Action("GetDependants")',
+            ImageHandlerPut:		'@Url.Action("ImageHandlerPut")',
+            ImageHandlerGet:		'@Url.Action("ImageHandlerGet")'
+        }
+    };
+$(document).ready(function () {
+	loaded($("#form-modal"));
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+	var ajaxCallsRemaining = $("#form-modal .flash object embed").length;
+	$('#form-modal form [elem-identifier="ButtonPrimary"]').click(function() {
+		var flashObjects = $("#form-modal .flash object embed");
+		ajaxCallsRemaining = flashObjects.length;
+		if(flashObjects.length == 0)
+			return true;
+		else {
+			flashObjects.each(function() {
+			   var flashObj = GetFlash($(this).attr('id'))
+			   flashObj.UsedFlash.TriggerSave(flashObj);
+			});
+			return false;
+		}
+	});
+    </text>
+}
+});
+// USE /[MANUAL GQT FORM_CODEJS ARTIGVAL]/
+
+
+
+ 
+
+    $($('[elem-identifier="Actions"]'), $('[data-form="Artigval"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

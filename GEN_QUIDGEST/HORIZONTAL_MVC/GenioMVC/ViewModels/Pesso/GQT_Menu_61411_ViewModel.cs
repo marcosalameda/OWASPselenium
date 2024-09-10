@@ -463,6 +463,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioApesso.FldCodpesso, CSGenioApesso.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Pesso> MapGQT_Menu_61411(ListingMVC<CSGenioApesso> Qlisting)
@@ -559,5 +561,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioApesso.FldCodpesso, CSGenioApesso.Fl
             new TableSearchColumn("Pais1_ValCountry", CSGenioApais1.FldCountry, typeof(string)),
             new TableSearchColumn("Regi1_ValRegiao", CSGenioAregi1.FldRegiao, typeof(string))
         };
+
     }
 }

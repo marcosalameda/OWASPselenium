@@ -368,6 +368,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioApropr.FldCodpropr, CSGenioApropr.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Propr> MapProppais_ValPropried(ListingMVC<CSGenioApropr> Qlisting)
@@ -459,5 +461,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioApropr.FldCodpropr, CSGenioApropr.Fl
             new TableSearchColumn("ValCoordgeo", CSGenioApropr.FldCoordgeo, typeof(string)),
             new TableSearchColumn("ValName", CSGenioApesso.FldName, typeof(string))
         };
+
     }
 }

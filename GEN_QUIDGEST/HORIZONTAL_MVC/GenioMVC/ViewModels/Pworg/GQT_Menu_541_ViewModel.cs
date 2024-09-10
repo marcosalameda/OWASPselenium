@@ -380,6 +380,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioApworg.FldCodpworg, CSGenioApworg.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Pworg> MapGQT_Menu_541(ListingMVC<CSGenioApworg> Qlisting)
@@ -456,5 +458,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioApworg.FldCodpworg, CSGenioApworg.Fl
             new TableSearchColumn("Psw_ValNome", CSGenioApsw.FldNome, typeof(string)),
             new TableSearchColumn("Organ_ValOrganiza", CSGenioAorgan.FldOrganiza, typeof(string))
         };
+
     }
 }

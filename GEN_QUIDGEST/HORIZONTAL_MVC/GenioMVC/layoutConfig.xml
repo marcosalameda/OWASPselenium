@@ -18,7 +18,7 @@
 	<AuthenticationStyle>default</AuthenticationStyle> <!-- default, light, secondary -->
 	<HelpListShort>Subtitle</HelpListShort> <!-- Tooltip, Popover, Subtitle, Info-banner -->
 	<HelpListDetail>Popover</HelpListDetail> <!-- Popover, Subtitle, Info-banner -->
-	<HelpInputShort>Tooltip</HelpInputShort> <!-- Tooltip, Subtext -->
+	<HelpInputShort>Tooltip</HelpInputShort> <!-- Tooltip, Subtext, Popover -->
 	<HelpInputDetail>Popover</HelpInputDetail> <!-- Popover -->
 	<HelpGroupShort>Tooltip</HelpGroupShort> <!-- Tooltip, Popover, Subtitle -->
 	<HelpGroupDetail>Popover</HelpGroupDetail> <!-- Popover, Subtitle -->

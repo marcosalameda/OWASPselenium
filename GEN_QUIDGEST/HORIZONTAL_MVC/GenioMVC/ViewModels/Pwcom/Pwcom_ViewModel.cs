@@ -753,6 +753,7 @@ namespace GenioMVC.ViewModels.Pwcom
         private readonly string[] _fieldsToSerialize_PWCOM___PESS1NAME____ = { "Pess1", "Pess1.ValCodpesso", "Pess1.ValZzstate", "Pess1.ValName" };
 
 
+
 		#region Charts
 		#endregion
 

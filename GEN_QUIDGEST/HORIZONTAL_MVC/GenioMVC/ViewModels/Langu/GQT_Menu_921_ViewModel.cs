@@ -390,6 +390,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlangu.FldCodlang, CSGenioAlangu.Fld
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Langu> MapGQT_Menu_921(ListingMVC<CSGenioAlangu> Qlisting)
@@ -462,5 +464,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlangu.FldCodlang, CSGenioAlangu.Fld
             new TableSearchColumn("ValLangua", CSGenioAlangu.FldLangua, typeof(string), defaultSearch : true),
             new TableSearchColumn("ValAcron", CSGenioAlangu.FldAcron, typeof(string))
         };
+
     }
 }

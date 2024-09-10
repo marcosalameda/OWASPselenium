@@ -351,6 +351,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAindoc.FldCoddentr, CSGenioAindoc.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Indoc> MapLdentnor_IndocValDocumenr(ListingMVC<CSGenioAindoc> Qlisting)
@@ -423,5 +425,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAindoc.FldCoddentr, CSGenioAindoc.Fl
             new TableSearchColumn("ValDocumenr", CSGenioAindoc.FldDocumenr, typeof(decimal?)),
             new TableSearchColumn("ValDhdocume", CSGenioAindoc.FldDhdocume, typeof(DateTime?))
         };
+
     }
 }

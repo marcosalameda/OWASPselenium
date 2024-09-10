@@ -418,6 +418,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAperso.FldCodperso, CSGenioAperso.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Perso> MapWMS_Menu_43211(ListingMVC<CSGenioAperso> Qlisting)
@@ -496,5 +498,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAperso.FldCodperso, CSGenioAperso.Fl
             new TableSearchColumn("ValMonth", CSGenioAperso.FldMonth, typeof(decimal), visible : false, array : "Months"),
             new TableSearchColumn("ValTob", CSGenioAperso.FldTob, typeof(string), visible : false)
         };
+
     }
 }

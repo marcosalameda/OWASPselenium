@@ -396,6 +396,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcmpny.FldCodempre, CSGenioAcmpny.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Cmpny> MapGQT_Menu_6111(ListingMVC<CSGenioAcmpny> Qlisting)
@@ -475,5 +477,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcmpny.FldCodempre, CSGenioAcmpny.Fl
             new TableSearchColumn("Cntry_ValCountry", CSGenioAcntry.FldCountry, typeof(string)),
             new TableSearchColumn("ValQtdpesso", CSGenioAcmpny.FldQtdpesso, typeof(decimal?))
         };
+
     }
 }

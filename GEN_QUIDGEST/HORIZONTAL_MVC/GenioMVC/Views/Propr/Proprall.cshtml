@@ -186,7 +186,7 @@ else {
 													@if(Model.IsEditableMode) {
 														@Html.EditorFor(model => model.ValDescript, new {help_id = "IFF_PROPRALLPROPRDESCRIPT", @class = "input-xxlarge", data_identifier = "IFF_PROPRALLPROPRDESCRIPT", data_readonly = !Model.IsEditableMode })
 													} else {
-														@Html.Raw(Server.HtmlDecode(Model.ValDescript))
+														@Html.Raw(Helpers.SanitizeHTML(Server.HtmlDecode(Model.ValDescript), true))
 													}
 													</div>
 													@Html.ValidationMessageFor(model => model.ValDescript)
@@ -367,7 +367,7 @@ else {
     {
         if (Model.IsEditableMode)
         {
-            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("Proprall", Model.FormMode).ToString(), "Propr")", "Proprall_well")' qbutton="ok">
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@HttpUtility.JavaScriptStringEncode(Url.Action(Helpers.FormModeActionName("Proprall", Model.FormMode).ToString(), "Propr"))", "Proprall_well")' qbutton="ok">
                     <i class="SaveIcon e-icon" aria-hidden="true"></i>
                     @Resources.SAVE04165
             </button>
@@ -380,6 +380,13 @@ else {
                 $(document).ready(function () { loaded($("#Proprall_well")); });
             </script>
         }
+		else if (Model.FormMode == FormMode.Delete)
+		{
+			<button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Proprall_Delete", "Propr", new {id = @Model.ValCodpropr} )", "Proprall_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+		}
 
         @* javascript code_javascript *@
         @*@codeJavascript()*@

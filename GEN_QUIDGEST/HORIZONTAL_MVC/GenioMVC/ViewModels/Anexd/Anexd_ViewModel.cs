@@ -792,6 +792,7 @@ namespace GenioMVC.ViewModels.Anexd
         private readonly string[] _fieldsToSerialize_ANEXD___LANGULANGUA__ = { "Langu", "Langu.ValCodlang", "Langu.ValZzstate", "Langu.ValLangua" };
 
 
+
 		#region Charts
 		#endregion
 

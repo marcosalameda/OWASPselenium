@@ -1,0 +1,46 @@
+﻿@model GenioMVC.ViewModels.Decom.Abatereq_ViewModel
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+	<div id="Abatereq_tabs">
+        <div elem-identifier="Tabbable" class="tabbable">
+			<ul class="nav c-tab c-tab__divider" role="tablist">
+				<li class="nav-item c-tab__item" elem-identifier="TabbableIdentifier" id="tab_abatetab" data-tab="abatetab"><a class="nav-link" tabindex="0" data-target="#abatetab" data-toggle="tab">@Resources.TAB41839</a></li>
+ 			</ul>
+
+			<div class="c-tab__item-container">
+				<div class="c-tab__item-content" id="abatetab" data-identifier="IFF_ABATEREQPSEUDABATETAB">
+					<div class="form-flow">
+						<div class="row">
+							<div class="col-12">
+								<div class="control-row-group">
+									<div class="control-join-group">
+									<div class="i-date-picker draggable " id="CONTAINER_LED_ABATETABDECOMDTDECO__">
+										<div class="d-inline-flex">
+										@Html.LabelFor(model => model.ValDtdeco, new { label_id="LED_ABATETABDECOMDTDECO__", @class = " i-text__label", id="LABEL_LED_ABATETABDECOMDTDECO__"}, true, true)
+										<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+										<a href="javascript:OpenSuggestion('LED_ABATETABDECOMDTDECO__','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+										@Html.DateFor(model => model.ValDtdeco, new {help_id = "LED_ABATETABDECOMDTDECO__", @class = "i-input-group__field b-icon-text input-medium", data_refresh = "true", data_tipoform = "DF", data_identifier = "LED_ABATETABDECOMDTDECO__", @pers_cs_area = "Decom", @pers_cs_field = "ValDtdeco", @db_field = "ValDtdeco", title = @Resources.DECOMISSION14486 })
+										@Html.ValidationMessageFor(model => model.ValDtdeco)
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+ 			</div>
+        </div>
+	</div>
+	<!-- end tab content -->
+	<script type="application/javascript">
+		$(document).ready(function () {
+			// to select the first tab
+			var a = $('[elem-identifier="TabbableIdentifier"] > a', "#Abatereq_tabs").first();
+            a.addClass("active");
+
+			var li = $('[elem-identifier="TabbableIdentifier"]', "#Abatereq_tabs").first();			
+			var tabId = li.attr("data-tab");
+			$("#" + tabId).addClass("active");			
+		});
+	</script>

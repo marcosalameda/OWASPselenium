@@ -356,6 +356,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAphoto.FldCodphoto, CSGenioAphoto.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Photo> MapEquip_ValFotoequi(ListingMVC<CSGenioAphoto> Qlisting)
@@ -427,5 +429,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAphoto.FldCodphoto, CSGenioAphoto.Fl
         {
             new TableSearchColumn("ValTitle", CSGenioAphoto.FldTitle, typeof(string))
         };
+
     }
 }

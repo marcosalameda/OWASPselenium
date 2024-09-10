@@ -366,6 +366,7 @@ namespace GenioMVC.ViewModels.Tblb
 
 
 
+
 		#region Charts
 		#endregion
 

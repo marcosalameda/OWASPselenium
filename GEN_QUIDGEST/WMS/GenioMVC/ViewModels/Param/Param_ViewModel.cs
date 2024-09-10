@@ -560,6 +560,7 @@ namespace GenioMVC.ViewModels.Param
         private readonly string[] _fieldsToSerialize_PARAM___KINDEDESIGNAT = { "Kinde", "Kinde.ValCodkinde", "Kinde.ValZzstate", "Kinde.ValDesignat" };
 
 
+
 		#region Charts
 		#endregion
 

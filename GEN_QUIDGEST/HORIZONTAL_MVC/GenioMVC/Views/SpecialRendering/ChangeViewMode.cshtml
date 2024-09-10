@@ -46,6 +46,9 @@
                 @Html.AntiForgeryToken()
             }
         </div>
+        @*
+            TODO: Change the «XPTO» identifier to some other id.
+        *@
         <div class="c-modal__footer" id="xptoActions">  
             <div class="actions">     
                 <button type="button" class="b-icon-text b-icon-text--primary" data-end-pers="true" data-modal-close="true" data-modal-form="true" name="XPTO" onclick="window.ValLstcol.SaveEditRows()" data-modal-url='@Url.Action("Save", "SpecialRendering", new { idlist = Navigation.CurrentLevel.GetEntry("idlist") })'>

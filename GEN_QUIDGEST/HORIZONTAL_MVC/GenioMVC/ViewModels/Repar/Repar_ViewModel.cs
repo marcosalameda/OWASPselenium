@@ -1055,6 +1055,7 @@ namespace GenioMVC.ViewModels.Repar
         private readonly string[] _fieldsToSerialize_REPAR___PESSONAME____ = { "Pesso", "Pesso.ValCodpesso", "Pesso.ValZzstate", "Pesso.ValName" };
 
 
+
 		#region Charts
 		#endregion
 

@@ -400,6 +400,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAfacil.FldCodfacil, CSGenioAfacil.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Facil> MapWMS_Menu_4211(ListingMVC<CSGenioAfacil> Qlisting)
@@ -483,5 +485,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAfacil.FldCodfacil, CSGenioAfacil.Fl
             new TableSearchColumn("ValLatitude", CSGenioAfacil.FldLatitude, typeof(decimal?), visible : false),
             new TableSearchColumn("ValLongitud", CSGenioAfacil.FldLongitud, typeof(decimal?), visible : false)
         };
+
     }
 }

@@ -718,6 +718,7 @@ namespace GenioMVC.ViewModels.Flds
         private readonly string[] _fieldsToSerialize_CAMPO___AERO_NAME____ = { "Aero", "Aero.ValCodaero", "Aero.ValZzstate", "Aero.ValName" };
 
 
+
 		#region Charts
 		#endregion
 

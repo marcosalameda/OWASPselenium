@@ -380,6 +380,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioApwreg.FldCodpwreg, CSGenioApwreg.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Pwreg> MapIMO_Menu_LISTA_REGIAO(ListingMVC<CSGenioApwreg> Qlisting)
@@ -456,5 +458,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioApwreg.FldCodpwreg, CSGenioApwreg.Fl
             new TableSearchColumn("Psw_ValNome", CSGenioApsw.FldNome, typeof(string)),
             new TableSearchColumn("Regio_ValRegiao", CSGenioAregio.FldRegiao, typeof(string))
         };
+
     }
 }

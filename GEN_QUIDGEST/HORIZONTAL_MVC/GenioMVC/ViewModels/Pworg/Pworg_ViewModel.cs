@@ -740,6 +740,7 @@ namespace GenioMVC.ViewModels.Pworg
         private readonly string[] _fieldsToSerialize_PWORG___ORGANORGANIZA = { "Organ", "Organ.ValCodorgan", "Organ.ValZzstate", "Organ.ValOrganiza" };
 
 
+
 		#region Charts
 		#endregion
 

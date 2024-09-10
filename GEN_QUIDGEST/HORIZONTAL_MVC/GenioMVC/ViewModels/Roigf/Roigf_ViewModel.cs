@@ -543,6 +543,7 @@ namespace GenioMVC.ViewModels.Roigf
         private readonly string[] _fieldsToSerialize_ROIGF___ROGL1TITLE___ = { "Rogl1", "Rogl1.ValCodrogl1", "Rogl1.ValZzstate", "Rogl1.ValTitle" };
 
 
+
 		#region Charts
 		#endregion
 

@@ -324,6 +324,7 @@ namespace GenioMVC.ViewModels.Wareh
 
 
 
+
 		#region Charts
 		#endregion
 

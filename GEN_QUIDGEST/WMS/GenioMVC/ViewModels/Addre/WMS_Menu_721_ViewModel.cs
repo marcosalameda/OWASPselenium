@@ -398,6 +398,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAaddre.FldCodaddre, CSGenioAaddre.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Addre> MapWMS_Menu_721(ListingMVC<CSGenioAaddre> Qlisting)
@@ -478,5 +480,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAaddre.FldCodaddre, CSGenioAaddre.Fl
             new TableSearchColumn("ValPeriodstart", CSGenioAaddre.FldPeriodstart, typeof(DateTime?)),
             new TableSearchColumn("ValPeriodend", CSGenioAaddre.FldPeriodend, typeof(DateTime?))
         };
+
     }
 }

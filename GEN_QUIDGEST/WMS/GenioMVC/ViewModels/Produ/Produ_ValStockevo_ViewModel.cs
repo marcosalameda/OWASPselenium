@@ -350,6 +350,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAstock.FldCodstock, CSGenioAstock.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Stock> MapProdu_ValStockevo(ListingMVC<CSGenioAstock> Qlisting)
@@ -426,5 +428,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAstock.FldCodstock, CSGenioAstock.Fl
             new TableSearchColumn("ValQuantity", CSGenioAstock.FldQuantity, typeof(decimal?)),
             new TableSearchColumn("ValBalance", CSGenioAstock.FldBalance, typeof(decimal?))
         };
+
     }
 }

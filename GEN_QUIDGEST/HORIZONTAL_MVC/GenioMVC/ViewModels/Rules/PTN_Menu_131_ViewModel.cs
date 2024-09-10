@@ -381,6 +381,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioArules.FldCodregra, CSGenioArules.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Rules> MapPTN_Menu_131(ListingMVC<CSGenioArules> Qlisting)
@@ -454,5 +456,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioArules.FldCodregra, CSGenioArules.Fl
             new TableSearchColumn("ValDescript", CSGenioArules.FldDescript, typeof(string)),
             new TableSearchColumn("ValLocal", CSGenioArules.FldLocal, typeof(string), array : "aLocRegr")
         };
+
     }
 }

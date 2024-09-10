@@ -1,0 +1,319 @@
+﻿@model GenioMVC.ViewModels.Notif.Notif_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS NOTIF]/ *@
+<script  type="text/javascript">
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Notif !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Notif = new QForm($('[data-form="Notif"]'), "Form_Notif");
+		}
+		window.Form_Notif.baseArea = "notif";
+		window.Form_Notif.FormMode = '@Model.GetFormMode';
+		window.Form_Notif.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Notif.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Notif")',
+			GetDependants:		'@Url.Action("GetDependants", "Notif")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Notif", "Notif")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Notif", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Notif", "Notif")',
+		};
+		window.Form_Notif.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Notif.formSaveEdit = '@Url.Action("Notif_SaveEdit", "Notif")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Notif.formAction = 'Notif_New';
+		window.Form_Notif.formRedirectURL = '@Url.Action("Notif_New_Redirect", "Notif")';
+		window.Form_Notif.formSubmitURL = '@Url.Action("Notif_New", "Notif")';
+		window.Form_Notif.formRedirectURL_repeatInsertion = '@Url.Action("Notif_New_Redirect", "Notif", new { repeatInsertion = true})';
+		window.Form_Notif.formSubmitURL_repeatInsertion = '@Url.Action("Notif_New", "Notif", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Notif.formAction = 'Notif_Edit';
+		window.Form_Notif.formRedirectURL = '@Url.Action("Notif_Edit_Redirect", "Notif")';
+		window.Form_Notif.formSubmitURL = '@Url.Action("Notif_Edit", "Notif")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Notif.formAction = 'Notif_Duplicate';
+		window.Form_Notif.formRedirectURL = '@Url.Action("Notif_Duplicate_Redirect", "Notif")';
+		window.Form_Notif.formSubmitURL = '@Url.Action("Notif_Duplicate", "Notif")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Notif.formAction = 'Notif_Delete';
+		window.Form_Notif.formRedirectURL = '@Url.Action("Notif_Delete_Redirect", "Notif")';
+		window.Form_Notif.formSubmitURL = '@Url.Action("Notif_Delete", "Notif")';
+	</text>
+}
+		window.Form_Notif.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.LED_NOTIF___NOTIFNRCOMODA = new QNumericControl($('[data-identifier="LED_NOTIF___NOTIFNRCOMODA"]', this.element), window.Form_Notif);
+
+			this.Controls.LED_NOTIF___NOTIFBEGIN___ = new QDateControl($('[data-identifier="LED_NOTIF___NOTIFBEGIN___"]', this.element), window.Form_Notif);
+
+			this.Controls.LED_NOTIF___NOTIFEND_____ = new QDateControl($('[data-identifier="LED_NOTIF___NOTIFEND_____"]', this.element), window.Form_Notif);
+
+			this.Controls.LED_NOTIF___NOTIFEMAIL___ = new QTextControl($('[data-identifier="LED_NOTIF___NOTIFEMAIL___"]', this.element), window.Form_Notif);
+
+			this.Controls.LED_NOTIF___NOTIFIDNOTIF_ = new QTextControl($('[data-identifier="LED_NOTIF___NOTIFIDNOTIF_"]', this.element), window.Form_Notif);
+
+			this.Controls.LED_NOTIF___NOTIFIDMSG___ = new QTextControl($('[data-identifier="LED_NOTIF___NOTIFIDMSG___"]', this.element), window.Form_Notif);
+
+			this.Controls.LED_NOTIF___NOTIFMESSAGE_ = new QGenericControl($('[data-identifier="LED_NOTIF___NOTIFMESSAGE_"]', this.element), window.Form_Notif);
+
+			this.Controls.LED_NOTIF___NOTIFMAILERR_ = new QTextControl($('[data-identifier="LED_NOTIF___NOTIFMAILERR_"]', this.element), window.Form_Notif);
+
+			this.Controls.LED_NOTIF___NOTIFDESIGNAT = new QTextControl($('[data-identifier="LED_NOTIF___NOTIFDESIGNAT"]', this.element), window.Form_Notif);
+
+			this.Controls.LED_NOTIF___NOTIFCREATDAT = new QDateControl($('[data-identifier="LED_NOTIF___NOTIFCREATDAT"]', this.element), window.Form_Notif);
+
+			this.Controls.LED_NOTIF___NOTIFCREATOPE = new QTextControl($('[data-identifier="LED_NOTIF___NOTIFCREATOPE"]', this.element), window.Form_Notif);
+
+			this.Controls.LED_NOTIF___NOTIFRETURNED = new QCheckBoxControl($('[data-identifier="LED_NOTIF___NOTIFRETURNED"]', this.element), window.Form_Notif);
+
+			this.Controls.LED_NOTIF___NOTIFDTDEVOLU = new QDateControl($('[data-identifier="LED_NOTIF___NOTIFDTDEVOLU"]', this.element), window.Form_Notif);
+
+			this.Controls.IFF_NOTIF___PESS2NAME____ = new QDbeditControl($('[data-identifier="IFF_NOTIF___PESS2NAME____"]', this.element), window.Form_Notif);
+
+
+
+
+			this.Controls.LED_NOTIF___NOTIFCODNOTIF = new QHiddenControl($('[data-identifier="LED_NOTIF___NOTIFCODNOTIF"]', this.element), window.Form_Notif);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	</text>
+}
+
+		window.Form_Notif.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Notif.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI NOTIF]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Notif.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS NOTIF]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Notif.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS NOTIF]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Notif.Data.RelationKeysSelector = {
+				get pess2() { return $(':not([elem-identifier="Multiform"]) > #ValCodpesso[pers-cs-area="Pess2"]', $('[data-form="Notif"]')); /* DBEdit */ },
+		};
+
+		window.Form_Notif.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Notif.Data.RelationKeys = {
+			get formContext() { return window.Form_Notif; },
+			get pess2() { return (this.formContext.Data.RelationKeysSelector.pess2.getQControl() || {}).Value; /* DBEdit */ },
+			set pess2(newValue) { (this.formContext.Data.RelationKeysSelector.pess2.getQControl() || {}).Value = newValue; /* DBEdit */ },
+		};
+	</text>
+}
+
+	window.Form_Notif.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Notif.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitNotif(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Notif.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeleteNotif(event) {
+			event.preventDefault();
+			window.Form_Notif.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+    var ajaxCallsRemaining = $(".flash object embed").length;
+    $('form [elem-identifier="ButtonPrimary"]').click(function() {
+        var flashObjects = $(".flash object embed");
+        ajaxCallsRemaining = flashObjects.length;
+        if(flashObjects.length == 0)
+            return true;
+        else {
+            flashObjects.each(function() {
+               var flashObj = GetFlash($(this).attr('id'));
+               flashObj.UsedFlash.TriggerSave(flashObj);
+            });
+            return false;
+        }
+    });
+    </text>
+}
+// USE /[MANUAL GQT FORM_CODEJS NOTIF]/
+
+
+
+ 
+
+    $($('[elem-identifier="FormActions"]'), $('[data-form="Notif"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

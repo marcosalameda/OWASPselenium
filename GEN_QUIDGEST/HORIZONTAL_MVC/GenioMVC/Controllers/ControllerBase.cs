@@ -3080,6 +3080,7 @@ namespace GenioMVC.Controllers
 				var backupFields = model.BackupAgregationFields();
 				map(model);
 				model.MergeFields(backupFields);
+				// TODO: Sanitize HTML content
 				return JsonOK(model.RecalculateFormulas());
 			}
 			catch (Exception)

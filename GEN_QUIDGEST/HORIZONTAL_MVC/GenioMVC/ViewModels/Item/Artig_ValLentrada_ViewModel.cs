@@ -358,6 +358,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAldent.FldCodldent, CSGenioAldent.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Ldent> MapArtig_ValLentrada(ListingMVC<CSGenioAldent> Qlisting)
@@ -434,5 +436,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAldent.FldCodldent, CSGenioAldent.Fl
             new TableSearchColumn("ValLine", CSGenioAldent.FldLine, typeof(decimal?)),
             new TableSearchColumn("ValQtdentra", CSGenioAldent.FldQtdentra, typeof(decimal?))
         };
+
     }
 }

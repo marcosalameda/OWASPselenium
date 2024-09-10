@@ -1,0 +1,71 @@
+﻿@model GenioMVC.ViewModels.Sale.Vendaw08_ViewModel
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+<div id="Vendaw08" class="form-horizontal" area="Sale" data-form="Vendaw08">
+	@Html.QValidationSummary()
+	<div class="f-wizard-body">
+		@LoadDefault()
+	</div>
+</div>
+
+@helper LoadDefault()
+{
+	<fieldset>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="row-line-group">
+                            <div class="c-groupbox " id="GROUPBOX_VENDAW08_NOVOGR08">
+
+                                <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_VENDAW08PSEUDNOVOGR08" 
+                                    label-id="IFF_VENDAW08PSEUDNOVOGR08">
+                                    <span>@Resources.ASSISTANCE20070</span>
+                                    <span><a href="javascript:OpenSuggestion('IFF_VENDAW08PSEUDNOVOGR08','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></span>
+								</div>
+                                <div class="form-flow">
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-date-picker draggable " id="CONTAINER_LED_VENDAW08SALE_DTACOMPA">
+													<div class="d-inline-flex">
+													@Html.LabelFor(model => model.ValDtacompa, new { label_id="LED_VENDAW08SALE_DTACOMPA", @class = " i-text__label", id="LABEL_LED_VENDAW08SALE_DTACOMPA"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_VENDAW08SALE_DTACOMPA','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@Html.DateFor(model => model.ValDtacompa, new {help_id = "LED_VENDAW08SALE_DTACOMPA", @class = "i-input-group__field b-icon-text input-medium", data_identifier = "LED_VENDAW08SALE_DTACOMPA", @pers_cs_area = "Sale", @pers_cs_field = "ValDtacompa", @db_field = "ValDtacompa", title = @Resources.ASSISTANCE20070 })
+													@Html.ValidationMessageFor(model => model.ValDtacompa)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+ 						</div>
+					</div>
+				</div>
+			</div>
+
+
+		@Html.HiddenFor(model=> model.ValIdentifi, new { @pers_cs_area = "Sale", @pers_cs_field = "ValIdentifi", @data_identifier = "LED_VENDAW08SALE_IDENTIFI" })
+
+			@Html.HiddenFor(model => model.ValCodorgan, new { @pers_cs_field="ValCodorgan", @pers_cs_area="Sale", @data_value = Model.ValCodorgan, @db_field="ValCodorgan", @trelate="Organ", @tfrelate="Codorgan", @data_identifier="LED_VENDAW08ORGANCODORGAN" })
+
+			@Html.HiddenFor(model => model.ValCodvenda, new { @pers_cs_field="ValCodvenda", @pers_cs_area="Sale", data_refresh = "true", @form_area="true", @data_value = Model.ValCodvenda, @data_identifier = "LED_VENDAW08SALE_CODVENDA" })
+	</fieldset>
+}
+
+@helper codeJavascript()
+{
+	<div class="hidden" id="FormJavaScript_VENDAW08" data-form-javascript="true">
+		@Html.Partial("~/Views/Sale/Vendaw08_JavaScript.cshtml", Model, ViewData)
+	</div>
+}
+
+
+ 
+@section include_stylesheets
+{
+}
+
+@codeJavascript()

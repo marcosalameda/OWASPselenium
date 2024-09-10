@@ -577,6 +577,7 @@ namespace GenioMVC.ViewModels.Visit
         private readonly string[] _fieldsToSerialize_VISIT2__EQUIPREGISTNR = { "Equip", "Equip.ValCodequip", "Equip.ValZzstate", "Equip.ValRegistnr" };
 
 
+
 		#region Charts
 		#endregion
 

@@ -760,6 +760,7 @@ namespace GenioMVC.ViewModels.Regio
         private readonly string[] _fieldsToSerialize_REGIAPROPAIS1COUNTRY_ = { "Pais1", "Pais1.ValCodcntry", "Pais1.ValZzstate", "Pais1.ValCountry" };
 
 
+
 		#region Charts
 		#endregion
 

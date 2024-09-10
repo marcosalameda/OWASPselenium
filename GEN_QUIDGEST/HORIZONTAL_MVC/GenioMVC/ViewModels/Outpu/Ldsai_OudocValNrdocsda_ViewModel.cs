@@ -352,6 +352,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAoudoc.FldCoddocsd, CSGenioAoudoc.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Oudoc> MapLdsai_OudocValNrdocsda(ListingMVC<CSGenioAoudoc> Qlisting)
@@ -425,5 +427,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAoudoc.FldCoddocsd, CSGenioAoudoc.Fl
             new TableSearchColumn("ValDtdocsda", CSGenioAoudoc.FldDtdocsda, typeof(DateTime?)),
             new TableSearchColumn("ValTitle", CSGenioAoudoc.FldTitle, typeof(string))
         };
+
     }
 }

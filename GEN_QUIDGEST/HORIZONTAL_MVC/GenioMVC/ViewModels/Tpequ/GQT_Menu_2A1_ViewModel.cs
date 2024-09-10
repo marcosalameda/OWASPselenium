@@ -396,6 +396,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Tpequ> MapGQT_Menu_2A1(ListingMVC<CSGenioAtpequ> Qlisting)
@@ -474,5 +476,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.Fl
             new TableSearchColumn("ValPrecomax", CSGenioAtpequ.FldPrecomax, typeof(decimal?)),
             new TableSearchColumn("ValPrecoult", CSGenioAtpequ.FldPrecoult, typeof(decimal?))
         };
+
     }
 }

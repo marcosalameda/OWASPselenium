@@ -349,6 +349,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAinsta.FldCodinsta, CSGenioAinsta.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Insta> MapAccordi_ValInstalag(ListingMVC<CSGenioAinsta> Qlisting)
@@ -424,5 +426,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAinsta.FldCodinsta, CSGenioAinsta.Fl
             new TableSearchColumn("ValPrecohor", CSGenioAinsta.FldPrecohor, typeof(decimal?)),
             new TableSearchColumn("ValValue", CSGenioAinsta.FldValue, typeof(decimal?))
         };
+
     }
 }

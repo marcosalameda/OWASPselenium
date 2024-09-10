@@ -351,6 +351,7 @@ namespace GenioMVC.ViewModels.Equip
 
 
 
+
 		#region Charts
 		#endregion
 

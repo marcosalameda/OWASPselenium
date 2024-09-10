@@ -610,6 +610,7 @@ namespace GenioMVC.ViewModels.Tpeq1
         private readonly string[] _fieldsToSerialize_TPEQ1___FAMI1FAMILY__ = { "Fami1", "Fami1.ValCodfamil", "Fami1.ValZzstate", "Fami1.ValFamily" };
 
 
+
 		#region Charts
 		#endregion
 

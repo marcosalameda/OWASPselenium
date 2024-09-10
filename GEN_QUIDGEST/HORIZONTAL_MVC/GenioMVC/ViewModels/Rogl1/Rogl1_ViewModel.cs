@@ -322,6 +322,7 @@ namespace GenioMVC.ViewModels.Rogl1
 
 
 
+
 		#region Charts
 		#endregion
 

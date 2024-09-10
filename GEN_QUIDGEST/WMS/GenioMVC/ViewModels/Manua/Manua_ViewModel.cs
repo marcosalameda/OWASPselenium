@@ -564,6 +564,7 @@ namespace GenioMVC.ViewModels.Manua
         private readonly string[] _fieldsToSerialize_MANUA___KINDEDESIGNAT = { "Kinde", "Kinde.ValCodkinde", "Kinde.ValZzstate", "Kinde.ValDesignat" };
 
 
+
 		#region Charts
 		#endregion
 

@@ -1,6 +1,11 @@
 ﻿<template>
   <div id="report_management_container">
-    <h1 class="f-header__title">{{ Resources.GESTAO_DE_RELATORIOS37970 }}</h1>
+    <div class="q-stack--column">
+			<h1 class="f-header__title">
+			{{ Resources.GESTAO_DE_RELATORIOS37970 }}
+			</h1>
+		</div>
+    <hr>
     <row>
       <static-text v-model="Model.ReportsPath" :label="Resources.DIRECTORIA_DE_RELATO59580"></static-text>
     </row>

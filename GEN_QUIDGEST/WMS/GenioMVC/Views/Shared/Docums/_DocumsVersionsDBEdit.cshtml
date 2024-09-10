@@ -16,7 +16,7 @@
                     <div class="i-input-group" id="_DocumsVersionsDBEdit_simple_filter">
                         @Html.TextBox("q_DocumsVersionsDBEdit", Model.Menu.Query, new { @class = "i-input-group__field input-xxlarge" })
                         <div class="i-input-group--right">
-                            <button type="button" class="b-icon--primary i-input-group__button--primary  listSearchButton" onclick="makeAjaxRequest('@Url.Action("GetDocumsVersionsDBEdit", new { ticket = Model.Ticket, isRequired })', '_DocumsVersionsDBEdit', 'DocumsVersionsDBEDit')">
+                            <button type="button" class="b-icon--primary i-input-group__button--primary  listSearchButton" onclick="makeAjaxRequest('@HttpUtility.JavaScriptStringEncode(Url.Action("GetDocumsVersionsDBEdit", new { ticket = Model.Ticket, isRequired }))', '_DocumsVersionsDBEdit', 'DocumsVersionsDBEDit')">
                                 <i class="glyphicons glyphicons-search i-input-group__tag-icon i-input-group__button-icon"></i>
                             </button>
                             <button id="DocumsVersionsDBEdit_extra" class="b-icon--primary i-input-group__button--primary" type="button" onclick="changeFilters('#_DocumsVersionsDBEdit_complex_filter', '_DocumsVersionsDBEdit_tableFilters')" title="@Resources.PESQUISA_AVANCADA06198">

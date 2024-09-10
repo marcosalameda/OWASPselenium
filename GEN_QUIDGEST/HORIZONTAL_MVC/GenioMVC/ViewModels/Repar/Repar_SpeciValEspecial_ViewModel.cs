@@ -380,6 +380,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAspeci.FldCodespec, CSGenioAspeci.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Speci> MapRepar_SpeciValEspecial(ListingMVC<CSGenioAspeci> Qlisting)
@@ -452,5 +454,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAspeci.FldCodespec, CSGenioAspeci.Fl
             new TableSearchColumn("ValEspecial", CSGenioAspeci.FldEspecial, typeof(string)),
             new TableSearchColumn("ValAreatecn", CSGenioAspeci.FldAreatecn, typeof(string), array : "AreaTecn")
         };
+
     }
 }

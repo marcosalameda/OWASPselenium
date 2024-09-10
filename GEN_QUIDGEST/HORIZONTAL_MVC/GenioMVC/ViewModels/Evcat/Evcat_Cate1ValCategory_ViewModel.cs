@@ -351,6 +351,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcate1.FldCodcateg, CSGenioAcate1.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Cate1> MapEvcat_Cate1ValCategoria(ListingMVC<CSGenioAcate1> Qlisting)
@@ -423,5 +425,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcate1.FldCodcateg, CSGenioAcate1.Fl
             new TableSearchColumn("ValCategoria", CSGenioAcate1.FldCategoria, typeof(string)),
             new TableSearchColumn("ValAbbreviation", CSGenioAcate1.FldAbbreviation, typeof(string))
         };
+
     }
 }

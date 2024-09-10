@@ -60,7 +60,7 @@ namespace GenioMVC.Helpers.Table.Renderer
 				//added action button to delete record
                 if (Builder.HasExtendedHelpForm && Builder.IsInEditMode && Builder.Permissions.CanDelete)
                 {
-                    object routeData = new { id = routeValueDictionary["id"] };
+                    object routeData = new { id = routeValueDictionary["id"], nestedForm = "true" };
                     result +=
                             System.Web.Mvc.Ajax.AjaxExtensions.ActionLink(
                                 new System.Web.Mvc.AjaxHelper(Builder.HtmlHelper.ViewContext, Builder.HtmlHelper.ViewDataContainer, Builder.HtmlHelper.RouteCollection),

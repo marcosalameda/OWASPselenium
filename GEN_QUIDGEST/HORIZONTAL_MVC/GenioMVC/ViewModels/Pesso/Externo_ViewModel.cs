@@ -594,6 +594,7 @@ namespace GenioMVC.ViewModels.Pesso
         private readonly string[] _fieldsToSerialize_EXTERNO_CMPNYDESIGNAT = { "Cmpny", "Cmpny.ValCodempre", "Cmpny.ValZzstate", "Cmpny.ValDesignat" };
 
 
+
 		#region Charts
 		#endregion
 

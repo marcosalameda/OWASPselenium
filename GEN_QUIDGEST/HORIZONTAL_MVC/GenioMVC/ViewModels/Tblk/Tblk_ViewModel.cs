@@ -748,6 +748,7 @@ namespace GenioMVC.ViewModels.Tblk
         private readonly string[] _fieldsToSerialize_TBLK____TRSB_NAME____ = { "Trsb", "Trsb.ValCodtrsb", "Trsb.ValZzstate", "Trsb.ValName" };
 
 
+
 		#region Charts
 		#endregion
 

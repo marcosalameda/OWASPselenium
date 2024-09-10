@@ -330,6 +330,7 @@ namespace GenioMVC.ViewModels.Langu
 
 
 
+
 		#region Charts
 		#endregion
 

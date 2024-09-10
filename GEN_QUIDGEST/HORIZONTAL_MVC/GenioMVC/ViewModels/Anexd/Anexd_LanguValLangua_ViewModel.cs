@@ -340,6 +340,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlangu.FldCodlang, CSGenioAlangu.Fld
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Langu> MapAnexd_LanguValLangua(ListingMVC<CSGenioAlangu> Qlisting)
@@ -411,5 +413,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlangu.FldCodlang, CSGenioAlangu.Fld
         {
             new TableSearchColumn("ValLangua", CSGenioAlangu.FldLangua, typeof(string))
         };
+
     }
 }

@@ -356,6 +356,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.Fld
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Wpess> MapMltform_ValMltform1(ListingMVC<CSGenioAwpess> Qlisting)
@@ -438,5 +440,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.Fld
             new TableSearchColumn("ValCellphon", CSGenioAwpess.FldCellphon, typeof(decimal?)),
             new TableSearchColumn("ValWarehdes", CSGenioAwareh.FldWarehdes, typeof(string))
         };
+
     }
 }

@@ -408,6 +408,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAdecom.FldCoddeco, CSGenioAdecom.Fld
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Decom> MapGQT_Menu_2C111(ListingMVC<CSGenioAdecom> Qlisting)
@@ -481,5 +483,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAdecom.FldCoddeco, CSGenioAdecom.Fld
             new TableSearchColumn("ValDtdeco", CSGenioAdecom.FldDtdeco, typeof(DateTime?)),
             new TableSearchColumn("ValNote", CSGenioAdecom.FldNote, typeof(string))
         };
+
     }
 }

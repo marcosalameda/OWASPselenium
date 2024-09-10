@@ -350,6 +350,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgenre.FldCodgenre, CSGenioAgenre.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Genre> MapConta_GenreValGender(ListingMVC<CSGenioAgenre> Qlisting)
@@ -421,5 +423,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgenre.FldCodgenre, CSGenioAgenre.Fl
         {
             new TableSearchColumn("ValGender", CSGenioAgenre.FldGender, typeof(string))
         };
+
     }
 }

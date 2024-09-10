@@ -392,6 +392,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlcext.FldCodlcext, CSGenioAlcext.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Lcext> MapWMS_Menu_4261(ListingMVC<CSGenioAlcext> Qlisting)
@@ -468,5 +470,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlcext.FldCodlcext, CSGenioAlcext.Fl
             new TableSearchColumn("ValSpacetyp", CSGenioAlcext.FldSpacetyp, typeof(string), array : "SpaceTyp"),
             new TableSearchColumn("ValSpaceobs", CSGenioAlcext.FldSpaceobs, typeof(string))
         };
+
     }
 }

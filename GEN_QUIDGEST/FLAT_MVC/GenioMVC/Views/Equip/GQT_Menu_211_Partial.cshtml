@@ -1,0 +1,141 @@
+﻿@model GenioMVC.ViewModels.Equip.GQT_Menu_211_ViewModel
+@using Newtonsoft.Json;
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@using GenioMVC.ViewModels.Equip;    
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Equip>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: true)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCodequip, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_211_CMPNY_DESIGNAT]/
+		column.Expression(p => p.Cmpny.ValDesignat).Title(@Resources.DESIGNATION35876).Field("Cmpny.ValDesignat").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_211_EQUIP_SEQUENNR]/
+		column.Expression(p => p.ValSequennr).Title(@Resources.SEQUENTIAL_NO_38590).Field("ValSequennr").Size(6);
+// USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_211_EQUIP_REGISTNR]/
+		column.Expression(p => p.ValRegistnr).Title(@Resources.NO__REGISTER04207).Field("ValRegistnr").Size(6);
+// USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_211_TPEQU_TIPOEQUI]/
+		column.Expression(p => p.Tpequ.ValTipoequi).Title(@Resources.TYPE_OF_EQUIPMENT18080).Field("Tpequ.ValTipoequi").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_211_EQUIP_DESIGNAT]/
+		column.Expression(p => p.ValDesignat).Title(@Resources.DESIGNATION35876).Field("ValDesignat").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_211_EQUIP_DTAQUISI]/
+		column.Expression(p => p.ValDtaquisi).Title(@Resources.ACQUISITION44180).Field("ValDtaquisi").Size(8).Format("{0:d}");
+// USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_211_EQUIP_DTDECO]/
+		column.Expression(p => p.ValDtdeco).Title(@Resources.DECOMISSION14486).Field("ValDtdeco").Size(8).Format("{0:d}");
+// USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_211_EQUIP_SITEFABR]/
+		column.Expression(p => p.ValSitefabr).Title(@Resources.SITIO_FABRICANTE26458).Field("ValSitefabr").Size(30);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Equip")
+        .Id("GQT_Menu_211")
+        .AjaxRequest("Menu")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .DBEdit()
+        .Filters(this.Model.Menu.Filters)
+        .Form("Equip", false, true)
+        .SetFollowUp("Equip_Edit", "Equip" , (Func<GenioMVC.Models.Equip, object>)(item => new { id = item.ValCodequip }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
+        .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
+		;
+        
+    var chart = data
+        .ToSpecialRendering()
+		.SetSpecialRendering(this.Model.ViewModesCfg.SpecialRenderings.FirstOrDefault(sr => sr.Id == "CHART"))
+        .Filters(this.Model.Menu.Filters)
+        .Form("Equip", false, true)
+        .SetFollowUp("Equip_Edit", "Equip" , (Func<GenioMVC.Models.Equip, object>)(item => new { id = item.ValCodequip }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
+        .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
+		;
+        
+}
+
+@{ renderings.Clear(); }
+@{ renderings.Add(Model.GetViewModePosition("LIST"), tbl.ToHtml(hidden: Model.IsViewModeHidden("LIST"))); }
+
+@{ renderings.Add(Model.GetViewModePosition("CHART"), chart.ToSpecialRenderingHtml(hidden: Model.IsViewModeHidden("CHART"))); }
+
+
+@foreach (var render in renderings.ToList().OrderBy(r => r.Key))
+{
+    @Html.Raw(render.Value.ToHtmlString());
+}
+
+
+<script>
+
+
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qGQT_Menu_211, #GQT_Menu_211_complex_filter th input, #GQT_Menu_211_filters input").change(function() {
+                    $("#pGQT_Menu_211").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#GQT_Menu_211_tableFilters').val(false);")
+                    @Html.Raw("$('#GQT_Menu_211_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#GQT_Menu_211_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $("[data-form='GQT_Menu_211']").submit();
+                    @:      event.preventDefault();
+                    @:      ClearSearchBox('qGQT_Menu_211');
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#GQT_Menu_211_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_GQT_Menu_211').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+                 @if (this.Model.Menu.Filters.FiltersValues.Count >= 1) {
+                    var activeFields = Newtonsoft.Json.JsonConvert.SerializeObject(this.Model.Menu.Filters.FiltersValues);
+                    @: SetActiveFilters('GQT_Menu_211', 'EQUIP', @Html.Raw(activeFields))
+                  }
+
+
+                setupHistoryClicks()
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='Menu']"));
+                    InitSpecialControls($('#Menu'));
+                    $('#Menu').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS GQT_MENU_211]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+// USE /[MANUAL GQT LISTING_CODEJS GQT_MENU_211]/
+</script>

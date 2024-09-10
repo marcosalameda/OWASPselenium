@@ -350,6 +350,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAstake.FldCodparte, CSGenioAstake.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Stake> MapPess1_StakeValDesignat(ListingMVC<CSGenioAstake> Qlisting)
@@ -421,5 +423,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAstake.FldCodparte, CSGenioAstake.Fl
         {
             new TableSearchColumn("ValDesignat", CSGenioAstake.FldDesignat, typeof(string))
         };
+
     }
 }

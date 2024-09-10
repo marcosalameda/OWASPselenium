@@ -355,6 +355,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcmpny.FldCodempre, CSGenioAcmpny.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Cmpny> MapPesso1_CmpnyValDesignat(ListingMVC<CSGenioAcmpny> Qlisting)
@@ -430,5 +432,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcmpny.FldCodempre, CSGenioAcmpny.Fl
             new TableSearchColumn("ValTelephon", CSGenioAcmpny.FldTelephon, typeof(string)),
             new TableSearchColumn("ValEmail", CSGenioAcmpny.FldEmail, typeof(string))
         };
+
     }
 }

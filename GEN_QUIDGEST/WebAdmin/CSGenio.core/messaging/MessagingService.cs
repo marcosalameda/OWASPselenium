@@ -184,25 +184,33 @@ namespace CSGenio.core.messaging
                         //ignore means we return without sending an ack regardless of config
                         return;
                     }
+                    //if it returns an error or ok we follow through to send an ack
                     break;
                 }
-                catch (Exception e)
+                catch (CSGenio.persistence.PersistenceException e)
                 {
-                    //TODO: Only certain exception types are recoverable errors:
-                    //Connection failures, deadlock victim, etc.
+                    //Only certain exception types are recoverable errors:
+                    // Connection failures, deadlock victim, etc.
                     //A recoverable error is one that has a time dependency.
                     //Business logic errors are not considered recoverable.
                     retries++;
-                    if (retries > _maxRetries)
+                    if(e.IsRetryable && retries <= _maxRetries)
                     {
-                        ack.Status = AckStatus.Error;
-                        //add a top level error to the error list
-                        ack.ErrorList.Add(new AckError { Id = "", Table = "", Message = e.Message });
-                        break;
+                        //linear increase retry timeout interval
+                        await Task.Delay(_retryInterval * retries);
+                        continue;
                     }
-                    //linear increase retry timeout interval
-                    await Task.Delay(_retryInterval * retries);
+
+                    //add a top level error to the error list
+                    ack.Status = AckStatus.Error;
+                    ack.ErrorList.Add(new AckError { Id = "", Table = "", Message = e.Message });
                 }
+                catch (Exception e)
+                {
+                    ack.Status = AckStatus.Error;
+                    ack.ErrorList.Add(new AckError { Id = "", Table = "", Message = e.Message });
+                }
+                break;
             }
 
             //signal the end of processing

@@ -979,6 +979,7 @@ namespace GenioMVC.ViewModels.Item
 		}
 
 
+
 		#region Charts
 		#endregion
 

@@ -748,6 +748,7 @@ namespace GenioMVC.ViewModels.Agreg
         private readonly string[] _fieldsToSerialize_AGREG___YEAR_YEAR____ = { "Year", "Year.ValCodyear", "Year.ValZzstate", "Year.ValYear" };
 
 
+
 		#region Charts
 		#endregion
 

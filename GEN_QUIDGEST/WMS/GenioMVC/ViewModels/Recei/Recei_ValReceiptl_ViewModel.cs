@@ -361,6 +361,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioArelin.FldCoddilin, CSGenioArelin.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Relin> MapRecei_ValReceiptl(ListingMVC<CSGenioArelin> Qlisting)
@@ -440,5 +442,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioArelin.FldCoddilin, CSGenioArelin.Fl
             new TableSearchColumn("ValReceived", CSGenioArelin.FldReceived, typeof(decimal?)),
             new TableSearchColumn("ValOutstand", CSGenioArelin.FldOutstand, typeof(decimal?))
         };
+
     }
 }

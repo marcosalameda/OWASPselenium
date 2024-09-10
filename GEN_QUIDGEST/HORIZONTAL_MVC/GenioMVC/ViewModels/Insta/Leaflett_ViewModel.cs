@@ -642,6 +642,7 @@ namespace GenioMVC.ViewModels.Insta
         private readonly string[] _fieldsToSerialize_LEAFLETTEQUIPREGISTNR = { "Equip", "Equip.ValCodequip", "Equip.ValZzstate", "Equip.ValRegistnr" };
 
 
+
 		#region Charts
 		#endregion
 

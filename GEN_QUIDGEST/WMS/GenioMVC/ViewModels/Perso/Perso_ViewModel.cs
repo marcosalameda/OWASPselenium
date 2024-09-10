@@ -421,6 +421,7 @@ namespace GenioMVC.ViewModels.Perso
 
 
 
+
 		#region Charts
 		#endregion
 

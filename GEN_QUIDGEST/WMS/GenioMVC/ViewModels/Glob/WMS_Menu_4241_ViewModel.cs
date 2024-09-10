@@ -379,6 +379,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAglob.FldCodglob, CSGenioAglob.FldZz
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Glob> MapWMS_Menu_4241(ListingMVC<CSGenioAglob> Qlisting)
@@ -452,5 +454,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAglob.FldCodglob, CSGenioAglob.FldZz
         {
             new TableSearchColumn("Facty_ValType", CSGenioAfacty.FldType, typeof(string))
         };
+
     }
 }

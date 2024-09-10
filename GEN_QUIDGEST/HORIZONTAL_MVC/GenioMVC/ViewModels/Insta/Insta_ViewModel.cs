@@ -878,6 +878,7 @@ namespace GenioMVC.ViewModels.Insta
         private readonly string[] _fieldsToSerialize_INSTA___EQUIPREGISTNR = { "Equip", "Equip.ValCodequip", "Equip.ValZzstate", "Equip.ValDesignat", "Equip.ValRegistnr", "Equip.ValSequennr", "Equip.ValDtaquisi", "Equip.ValDtdeco", "Equip.ValPhotogra", "Equip.ValValortot" };
 
 
+
 		#region Charts
 		#endregion
 

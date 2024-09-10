@@ -628,6 +628,7 @@ namespace GenioMVC.ViewModels.Tpequ
         private readonly string[] _fieldsToSerialize_TPEQU___FAMILFAMILY__ = { "Famil", "Famil.ValCodfamil", "Famil.ValZzstate", "Famil.ValFamily" };
 
 
+
 		#region Charts
 		#endregion
 

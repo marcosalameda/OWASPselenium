@@ -21,7 +21,8 @@ import GroupBoxContainer from '@/components/GroupBoxContainer.vue';
 import {
     QButton,
 	QButtonGroup,
-	QIcon
+	QIcon,
+	QSelect
 } from '@quidgest/ui/components'
 
 export default function ComponentsInit(app) {
@@ -47,4 +48,5 @@ export default function ComponentsInit(app) {
     app.component('QButton', QButton)
     app.component('QButtonGroup', QButtonGroup)
     app.component('QIcon', QIcon)
+    app.component('QSelect', QSelect)
 }

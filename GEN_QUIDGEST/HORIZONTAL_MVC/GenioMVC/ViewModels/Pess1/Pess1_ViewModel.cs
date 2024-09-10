@@ -839,6 +839,7 @@ namespace GenioMVC.ViewModels.Pess1
         private readonly string[] _fieldsToSerialize_PESS1___STAKEDESIGNAT = { "Stake", "Stake.ValCodparte", "Stake.ValZzstate", "Stake.ValDesignat" };
 
 
+
 		#region Charts
 		#endregion
 

@@ -590,6 +590,7 @@ namespace GenioMVC.ViewModels.Cmpny
         private readonly string[] _fieldsToSerialize_EMPRE___CNTRYCOUNTRY_ = { "Cntry", "Cntry.ValCodcntry", "Cntry.ValZzstate", "Cntry.ValCountry" };
 
 
+
 		#region Charts
 		#endregion
 

@@ -426,6 +426,7 @@ namespace GenioMVC.ViewModels.Facty
 
 
 
+
 		#region Charts
 		#endregion
 

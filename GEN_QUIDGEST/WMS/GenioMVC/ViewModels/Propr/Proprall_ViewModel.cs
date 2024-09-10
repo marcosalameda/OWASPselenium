@@ -122,7 +122,7 @@ namespace GenioMVC.ViewModels.Propr
 		/// <summary>Campo : "Description" Tipo:"MO"</summary>
 		[Display(Name = "DESCRIPTION07383", ResourceType = typeof(Resources.Resources))]
 		[UIHint("tinymce")]
-		[AllowHtml]
+		[AllowHtml, Helpers.Attributes.HtmlSanitizer(isDocument: true)]
 		public string ValDescript { get; set; }
 
 		/// <summary>Campo : "Geographic Coordinates" Tipo:"GG"</summary>
@@ -1308,6 +1308,13 @@ namespace GenioMVC.ViewModels.Propr
 
         private readonly string[] _fieldsToSerialize_PROPRALLPESSONAME____ = { "Pesso", "Pesso.ValCodpesso", "Pesso.ValZzstate", "Pesso.ValName" };
 
+
+
+		/// <inheritdoc/>
+		protected override void SanitizeHTMLFields()
+		{
+			ValDescript = Helpers.HtmlSanitizerHelper.SanitizeHTML(ValDescript, true);
+		}
 
 		#region Charts
 		#endregion

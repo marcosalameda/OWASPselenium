@@ -388,6 +388,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAregi1.FldCodregia, CSGenioAregi1.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Regi1> MapPesso_Regi1ValRegiao(ListingMVC<CSGenioAregi1> Qlisting)
@@ -459,5 +461,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAregi1.FldCodregia, CSGenioAregi1.Fl
         {
             new TableSearchColumn("ValRegiao", CSGenioAregi1.FldRegiao, typeof(string))
         };
+
     }
 }

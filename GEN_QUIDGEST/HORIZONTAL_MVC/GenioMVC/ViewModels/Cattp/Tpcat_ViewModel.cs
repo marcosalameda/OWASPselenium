@@ -535,6 +535,7 @@ namespace GenioMVC.ViewModels.Cattp
         private readonly string[] _fieldsToSerialize_TPCAT___SBCATSUBCATEG = { "Sbcat", "Sbcat.ValCodsbcat", "Sbcat.ValZzstate", "Sbcat.ValSubcateg" };
 
 
+
 		#region Charts
 		#endregion
 

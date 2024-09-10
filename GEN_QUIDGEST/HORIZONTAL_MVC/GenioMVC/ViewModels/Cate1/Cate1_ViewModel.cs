@@ -331,6 +331,7 @@ namespace GenioMVC.ViewModels.Cate1
 
 
 
+
 		#region Charts
 		#endregion
 

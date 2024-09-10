@@ -944,6 +944,7 @@ namespace GenioMVC.ViewModels.Entit
         private readonly string[] _fieldsToSerialize_ENTIX___FACI2NAME____ = { "Faci2", "Faci2.ValCodfacil", "Faci2.ValZzstate" };
 
 
+
 		#region Charts
 		#endregion
 

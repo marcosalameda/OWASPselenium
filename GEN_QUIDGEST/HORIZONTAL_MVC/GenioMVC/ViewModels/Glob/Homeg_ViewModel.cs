@@ -40,7 +40,7 @@ namespace GenioMVC.ViewModels.Glob
 
 		/// <summary>Campo : "" Tipo:"MO"</summary>
 		[UIHint("tinymce")]
-		[AllowHtml]
+		[AllowHtml, Helpers.Attributes.HtmlSanitizer(isDocument: true)]
 		public string ValHome { get; set; }
 
 
@@ -341,6 +341,13 @@ namespace GenioMVC.ViewModels.Glob
 		}
 
 
+
+
+		/// <inheritdoc/>
+		protected override void SanitizeHTMLFields()
+		{
+			ValHome = Helpers.HtmlSanitizerHelper.SanitizeHTML(ValHome, true);
+		}
 
 		#region Charts
 		#endregion

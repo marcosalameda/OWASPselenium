@@ -850,6 +850,7 @@ namespace GenioMVC.ViewModels.Flds
         private readonly string[] _fieldsToSerialize_FIELDHLPAERO_NAME____ = { "Aero", "Aero.ValCodaero", "Aero.ValZzstate", "Aero.ValName" };
 
 
+
 		#region Charts
 		#endregion
 

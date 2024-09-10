@@ -418,6 +418,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAprodu.FldCodprodu, CSGenioAprodu.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Produ> MapWMS_Menu_321(ListingMVC<CSGenioAprodu> Qlisting)
@@ -500,5 +502,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAprodu.FldCodprodu, CSGenioAprodu.Fl
             new TableSearchColumn("Locat_ValGln", CSGenioAlocat.FldGln, typeof(string)),
             new TableSearchColumn("Lcext_ValGlnext", CSGenioAlcext.FldGlnext, typeof(string))
         };
+
     }
 }

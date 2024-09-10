@@ -330,6 +330,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioArecei.FldCodrecei, CSGenioArecei.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Recei> MapRelin_ReceiValNumber(ListingMVC<CSGenioArecei> Qlisting)
@@ -401,5 +403,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioArecei.FldCodrecei, CSGenioArecei.Fl
         {
             new TableSearchColumn("ValNumber", CSGenioArecei.FldNumber, typeof(decimal?))
         };
+
     }
 }

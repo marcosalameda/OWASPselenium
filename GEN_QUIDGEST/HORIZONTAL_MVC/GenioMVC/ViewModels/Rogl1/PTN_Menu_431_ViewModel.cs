@@ -389,6 +389,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioArogl1.FldCodrogl1, CSGenioArogl1.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Rogl1> MapPTN_Menu_431(ListingMVC<CSGenioArogl1> Qlisting)
@@ -460,5 +462,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioArogl1.FldCodrogl1, CSGenioArogl1.Fl
         {
             new TableSearchColumn("ValTitle", CSGenioArogl1.FldTitle, typeof(string), defaultSearch : true)
         };
+
     }
 }

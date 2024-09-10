@@ -573,6 +573,7 @@ namespace GenioMVC.ViewModels.Feeca
         private readonly string[] _fieldsToSerialize_FEECA___FLDS_DESCRIP_ = { "Flds", "Flds.ValCodflds", "Flds.ValZzstate", "Flds.ValDescrip" };
 
 
+
 		#region Charts
 		#endregion
 

@@ -357,6 +357,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlnhde.FldCodlnhde, CSGenioAlnhde.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Lnhde> MapPedid_ValDesagreg(ListingMVC<CSGenioAlnhde> Qlisting)
@@ -432,5 +434,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlnhde.FldCodlnhde, CSGenioAlnhde.Fl
             new TableSearchColumn("Tpeq1_ValTipoequi", CSGenioAtpeq1.FldTipoequi, typeof(string)),
             new TableSearchColumn("ValQuantida", CSGenioAlnhde.FldQuantida, typeof(decimal?))
         };
+
     }
 }

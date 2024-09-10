@@ -337,6 +337,7 @@ namespace GenioMVC.ViewModels.Grpb
 
 
 
+
 		#region Charts
 		#endregion
 

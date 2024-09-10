@@ -390,6 +390,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpcon.FldCodtpcon, CSGenioAtpcon.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Tpcon> MapTBS_Menu_151(ListingMVC<CSGenioAtpcon> Qlisting)
@@ -462,5 +464,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpcon.FldCodtpcon, CSGenioAtpcon.Fl
             new TableSearchColumn("ValGenconta", CSGenioAtpcon.FldGenconta, typeof(string), array : "GenConta"),
             new TableSearchColumn("ValTipocont", CSGenioAtpcon.FldTipocont, typeof(string), defaultSearch : true)
         };
+
     }
 }

@@ -371,6 +371,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpcon.FldCodtpcon, CSGenioAtpcon.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Tpcon> MapConta_TpconValTipocont(ListingMVC<CSGenioAtpcon> Qlisting)
@@ -442,5 +444,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpcon.FldCodtpcon, CSGenioAtpcon.Fl
         {
             new TableSearchColumn("ValTipocont", CSGenioAtpcon.FldTipocont, typeof(string))
         };
+
     }
 }

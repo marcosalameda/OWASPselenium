@@ -330,6 +330,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAflds.FldCodflds, CSGenioAflds.FldZz
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Flds> MapFeeca_FldsValDescrip(ListingMVC<CSGenioAflds> Qlisting)
@@ -401,5 +403,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAflds.FldCodflds, CSGenioAflds.FldZz
         {
             new TableSearchColumn("ValDescrip", CSGenioAflds.FldDescrip, typeof(string))
         };
+
     }
 }

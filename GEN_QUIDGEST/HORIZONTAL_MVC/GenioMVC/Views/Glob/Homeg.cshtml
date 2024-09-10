@@ -47,7 +47,7 @@ else {
 								@if(Model.IsEditableMode) {
 									@Html.EditorFor(model => model.ValHome, new {help_id = "IFF_HOMEG___GLOB_HOME____", @class = "input-xxlarge", data_identifier = "IFF_HOMEG___GLOB_HOME____", data_readonly = !Model.IsEditableMode })
 								} else {
-									@Html.Raw(Server.HtmlDecode(Model.ValHome))
+									@Html.Raw(Helpers.SanitizeHTML(Server.HtmlDecode(Model.ValHome), true))
 								}
 								</div>
 								@Html.ValidationMessageFor(model => model.ValHome)
@@ -95,7 +95,7 @@ else {
     {
         if (Model.IsEditableMode)
         {
-            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("Homeg", Model.FormMode).ToString(), "Glob")", "Homeg_well")' qbutton="ok">
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@HttpUtility.JavaScriptStringEncode(Url.Action(Helpers.FormModeActionName("Homeg", Model.FormMode).ToString(), "Glob"))", "Homeg_well")' qbutton="ok">
                     <i class="SaveIcon e-icon" aria-hidden="true"></i>
                     @Resources.GRAVAR45301
             </button>
@@ -108,6 +108,13 @@ else {
                 $(document).ready(function () { loaded($("#Homeg_well")); });
             </script>
         }
+		else if (Model.FormMode == FormMode.Delete)
+		{
+			<button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Homeg_Delete", "Glob", new {id = @Model.ValCodglob} )", "Homeg_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+		}
 
         @* javascript code_javascript *@
         @*@codeJavascript()*@

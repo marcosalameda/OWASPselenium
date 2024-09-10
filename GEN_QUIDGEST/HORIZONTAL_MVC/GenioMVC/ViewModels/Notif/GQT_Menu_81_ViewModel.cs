@@ -442,6 +442,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAnotif.FldCodnotif, CSGenioAnotif.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Notif> MapGQT_Menu_81(ListingMVC<CSGenioAnotif> Qlisting)
@@ -528,5 +530,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAnotif.FldCodnotif, CSGenioAnotif.Fl
             new TableSearchColumn("ValDtdevolu", CSGenioAnotif.FldDtdevolu, typeof(DateTime?)),
             new TableSearchColumn("Pess2_ValName", CSGenioApess2.FldName, typeof(string))
         };
+
     }
 }

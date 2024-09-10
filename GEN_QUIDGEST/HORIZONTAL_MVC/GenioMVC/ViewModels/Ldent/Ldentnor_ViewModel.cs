@@ -995,6 +995,7 @@ namespace GenioMVC.ViewModels.Ldent
         private readonly string[] _fieldsToSerialize_LDENTNORITEM_ITEMDES_ = { "Item", "Item.ValCoditem", "Item.ValZzstate", "Item.ValItemdes", "Item.ValItemcod" };
 
 
+
 		#region Charts
 		#endregion
 

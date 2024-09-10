@@ -760,6 +760,7 @@ namespace GenioMVC.ViewModels.Lnhpd
         private readonly string[] _fieldsToSerialize_LNHPD___TPEQUTIPOEQUI = { "Tpequ", "Tpequ.ValCodtpequ", "Tpequ.ValZzstate", "Tpequ.ValTipoequi" };
 
 
+
 		#region Charts
 		#endregion
 

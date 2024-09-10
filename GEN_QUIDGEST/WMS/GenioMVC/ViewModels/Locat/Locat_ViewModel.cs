@@ -768,6 +768,7 @@ namespace GenioMVC.ViewModels.Locat
         private readonly string[] _fieldsToSerialize_LOCAT___FACILNAME____ = { "Facil", "Facil.ValCodfacil", "Facil.ValZzstate", "Facil.ValName" };
 
 
+
 		#region Charts
 		#endregion
 

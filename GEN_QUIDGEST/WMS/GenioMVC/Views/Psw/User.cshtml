@@ -206,11 +206,11 @@ else {
 				}
 				else if (Model.IsEditableMode)
 				{
-					<button type="button" data-end-pers="true" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@Url.Action(Helpers.FormModeActionName("User", Model.FormMode).ToString(), "Psw")", "User_well")'>
+					<button type="button" data-end-pers="true" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@HttpUtility.JavaScriptStringEncode(Url.Action(Helpers.FormModeActionName("User", Model.FormMode).ToString(), "Psw"))", "User_well")'>
                         <i class="SaveIcon e-icon"></i>
                         @Resources.GRAVAR45301
                     </button>
-					<button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("User_Delete", "Psw")", "User_well")'><i class="glyphicons glyphicons-ban-circle e-icon"></i>@Resources.CANCELAR49513</button>
+					<button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@HttpUtility.JavaScriptStringEncode(Url.Action("User_Delete", "Psw"))", "User_well")'><i class="glyphicons glyphicons-ban-circle e-icon"></i>@Resources.CANCELAR49513</button>
 
 					//javascript code_javascript
 					@codeJavascript()

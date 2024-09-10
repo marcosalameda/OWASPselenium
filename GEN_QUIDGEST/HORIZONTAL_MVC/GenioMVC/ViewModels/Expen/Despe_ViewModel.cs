@@ -1028,6 +1028,7 @@ namespace GenioMVC.ViewModels.Expen
         private readonly string[] _fieldsToSerialize_DESPE___AGREGVALUE___ = { "Agreg", "Agreg.ValCodaggre", "Agreg.ValZzstate", "Agreg.ValValue" };
 
 
+
 		#region Charts
 		#endregion
 

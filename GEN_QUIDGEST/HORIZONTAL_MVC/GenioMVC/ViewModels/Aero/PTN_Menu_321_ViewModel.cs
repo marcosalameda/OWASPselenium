@@ -390,6 +390,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAaero.FldCodaero, CSGenioAaero.FldZz
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Aero> MapPTN_Menu_321(ListingMVC<CSGenioAaero> Qlisting)
@@ -462,5 +464,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAaero.FldCodaero, CSGenioAaero.FldZz
             new TableSearchColumn("ValCodcmaer", CSGenioAaero.FldCodcmaer, typeof(decimal?)),
             new TableSearchColumn("ValName", CSGenioAaero.FldName, typeof(string), defaultSearch : true)
         };
+
     }
 }

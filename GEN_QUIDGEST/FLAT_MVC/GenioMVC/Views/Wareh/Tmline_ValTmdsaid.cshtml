@@ -1,0 +1,58 @@
+﻿@model GenioMVC.ViewModels.Wareh.Tmline_ValTmdsaid_ViewModel
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@using Newtonsoft.Json;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@*List properties DBEDIT BUTTONS*@
+<div class="row">
+	<div class="col">
+	</div>
+</div>
+
+@* USE /[MANUAL GQT TABLE_FOR TMLINE_TMDSAID]/ *@
+@{ 
+
+    
+	var tbl = Html.TimelineFor<GenioMVC.Models.TimelineItem>(false)
+        .Name("ValTmdsaid")
+        .DataSource(this.Model.Menu.Elements)        
+;}
+@tbl.ToHtml()
+<script>
+
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+
+
+
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='ValTmdsaid']"));
+                    InitSpecialControls($('#ValTmdsaid'));
+                    $('#ValTmdsaid').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS TMLINE_VALTMDSAID]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+</script>

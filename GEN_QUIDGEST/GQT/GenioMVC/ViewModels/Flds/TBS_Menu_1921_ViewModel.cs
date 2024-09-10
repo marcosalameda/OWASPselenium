@@ -412,6 +412,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAflds.FldCodflds, CSGenioAflds.FldZz
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Flds> MapTBS_Menu_1921(ListingMVC<CSGenioAflds> Qlisting)
@@ -508,5 +510,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAflds.FldCodflds, CSGenioAflds.FldZz
             new TableSearchColumn("ValCreatins", CSGenioAflds.FldCreatins, typeof(DateTime?)),
             new TableSearchColumn("Equip_ValRegistnr", CSGenioAequip.FldRegistnr, typeof(string))
         };
+
     }
 }

@@ -356,6 +356,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioApropr.FldCodpropr, CSGenioApropr.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Propr> MapPais_ValProprie1(ListingMVC<CSGenioApropr> Qlisting)
@@ -428,5 +430,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioApropr.FldCodpropr, CSGenioApropr.Fl
             new TableSearchColumn("ValName", CSGenioApropr.FldName, typeof(string)),
             new TableSearchColumn("ValPrecoest", CSGenioApropr.FldPrecoest, typeof(decimal?))
         };
+
     }
 }

@@ -1,0 +1,292 @@
+﻿@model GenioMVC.ViewModels.Rordf.Rordf_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS RORDF]/ *@
+<script  type="text/javascript">
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Rordf !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Rordf = new QForm($('[data-form="Rordf"]'), "Form_Rordf");
+		}
+		window.Form_Rordf.baseArea = "rordf";
+		window.Form_Rordf.FormMode = '@Model.GetFormMode';
+		window.Form_Rordf.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Rordf.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Rordf")',
+			GetDependants:		'@Url.Action("GetDependants", "Rordf")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Rordf", "Rordf")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Rordf", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Rordf", "Rordf")',
+		};
+		window.Form_Rordf.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Rordf.formSaveEdit = '@Url.Action("Rordf_SaveEdit", "Rordf")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Rordf.formAction = 'Rordf_New';
+		window.Form_Rordf.formRedirectURL = '@Url.Action("Rordf_New_Redirect", "Rordf")';
+		window.Form_Rordf.formSubmitURL = '@Url.Action("Rordf_New", "Rordf")';
+		window.Form_Rordf.formRedirectURL_repeatInsertion = '@Url.Action("Rordf_New_Redirect", "Rordf", new { repeatInsertion = true})';
+		window.Form_Rordf.formSubmitURL_repeatInsertion = '@Url.Action("Rordf_New", "Rordf", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Rordf.formAction = 'Rordf_Edit';
+		window.Form_Rordf.formRedirectURL = '@Url.Action("Rordf_Edit_Redirect", "Rordf")';
+		window.Form_Rordf.formSubmitURL = '@Url.Action("Rordf_Edit", "Rordf")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Rordf.formAction = 'Rordf_Duplicate';
+		window.Form_Rordf.formRedirectURL = '@Url.Action("Rordf_Duplicate_Redirect", "Rordf")';
+		window.Form_Rordf.formSubmitURL = '@Url.Action("Rordf_Duplicate", "Rordf")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Rordf.formAction = 'Rordf_Delete';
+		window.Form_Rordf.formRedirectURL = '@Url.Action("Rordf_Delete_Redirect", "Rordf")';
+		window.Form_Rordf.formSubmitURL = '@Url.Action("Rordf_Delete", "Rordf")';
+	</text>
+}
+		window.Form_Rordf.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.LED_RORDF___RORDFORDER___ = new QNumericControl($('[data-identifier="LED_RORDF___RORDFORDER___"]', this.element), window.Form_Rordf);
+
+			this.Controls.LED_RORDF___RORDFTITLE___ = new QTextControl($('[data-identifier="LED_RORDF___RORDFTITLE___"]', this.element), window.Form_Rordf);
+
+
+
+
+			this.Controls.LED_RORDF___RORDFCODRORDF = new QHiddenControl($('[data-identifier="LED_RORDF___RORDFCODRORDF"]', this.element), window.Form_Rordf);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	</text>
+}
+
+		window.Form_Rordf.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Rordf.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI RORDF]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Rordf.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS RORDF]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Rordf.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS RORDF]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Rordf.Data.RelationKeysSelector = {
+		};
+
+		window.Form_Rordf.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Rordf.Data.RelationKeys = {
+			get formContext() { return window.Form_Rordf; },
+		};
+	</text>
+}
+
+	window.Form_Rordf.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Rordf.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitRordf(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Rordf.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeleteRordf(event) {
+			event.preventDefault();
+			window.Form_Rordf.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+    var ajaxCallsRemaining = $(".flash object embed").length;
+    $('form [elem-identifier="ButtonPrimary"]').click(function() {
+        var flashObjects = $(".flash object embed");
+        ajaxCallsRemaining = flashObjects.length;
+        if(flashObjects.length == 0)
+            return true;
+        else {
+            flashObjects.each(function() {
+               var flashObj = GetFlash($(this).attr('id'));
+               flashObj.UsedFlash.TriggerSave(flashObj);
+            });
+            return false;
+        }
+    });
+    </text>
+}
+// USE /[MANUAL GQT FORM_CODEJS RORDF]/
+
+
+
+ 
+
+    $($('[elem-identifier="FormActions"]'), $('[data-form="Rordf"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

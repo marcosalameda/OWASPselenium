@@ -579,6 +579,7 @@ namespace GenioMVC.ViewModels.Flds
 
 
 
+
 		#region Charts
 		#endregion
 

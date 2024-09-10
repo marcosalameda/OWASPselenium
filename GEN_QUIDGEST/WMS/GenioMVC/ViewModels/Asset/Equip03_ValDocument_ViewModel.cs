@@ -347,6 +347,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAassma.FldCodassma, CSGenioAassma.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Assma> MapEquip03_ValDocument(ListingMVC<CSGenioAassma> Qlisting)
@@ -420,5 +422,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAassma.FldCodassma, CSGenioAassma.Fl
             new TableSearchColumn("ValDigdocum", CSGenioAassma.FldDigdocum, typeof(string)),
             new TableSearchColumn("ValNotes", CSGenioAassma.FldNotes, typeof(string))
         };
+
     }
 }

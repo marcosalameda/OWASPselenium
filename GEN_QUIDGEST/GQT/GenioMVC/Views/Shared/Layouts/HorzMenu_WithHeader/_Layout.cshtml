@@ -197,7 +197,7 @@
 
 		<!-- Suggestion side bar -->
 		<div id="suggestcontent" class="suggest suggest--hidden suggest-buttons btn-group-vertical">
-			<button class="btn btn-primary b-icon b-btn primary" onclick="OpenModalForm('@Url.Action("List","Suggestion")')" title="@Resources.FORMULARIO_MODAL_ABE50004">
+			<button class="btn btn-primary b-icon b-btn primary" onclick="OpenModalForm('@HttpUtility.JavaScriptStringEncode(Url.Action("List","Suggestion"))')" title="@Resources.FORMULARIO_MODAL_ABE50004">
 				<i class="glyphicons glyphicons-eye-open e-icon"></i>
 			</button>
 			<button class="btn btn-primary b-icon b-btn" onclick="OpenSuggestion('','')" title="@Resources.SUGESTAO_ABERTA21277">

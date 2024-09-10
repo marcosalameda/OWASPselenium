@@ -41,7 +41,7 @@ namespace GenioMVC.ViewModels.Glob
 		/// <summary>Campo : "Home text" Tipo:"MO"</summary>
 		[Display(Name = "HOME_TEXT11153", ResourceType = typeof(Resources.Resources))]
 		[UIHint("tinymce")]
-		[AllowHtml]
+		[AllowHtml, Helpers.Attributes.HtmlSanitizer(isDocument: true)]
 		public string ValHome { get; set; }
 
 		/// <summary>Campo : "External API address" Tipo:"C"</summary>
@@ -357,6 +357,13 @@ namespace GenioMVC.ViewModels.Glob
 		}
 
 
+
+
+		/// <inheritdoc/>
+		protected override void SanitizeHTMLFields()
+		{
+			ValHome = Helpers.HtmlSanitizerHelper.SanitizeHTML(ValHome, true);
+		}
 
 		#region Charts
 		#endregion

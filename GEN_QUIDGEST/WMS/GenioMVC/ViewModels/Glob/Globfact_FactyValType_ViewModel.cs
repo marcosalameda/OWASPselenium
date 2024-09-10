@@ -350,6 +350,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAfacty.FldCodfacty, CSGenioAfacty.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Facty> MapGlobfact_FactyValType(ListingMVC<CSGenioAfacty> Qlisting)
@@ -421,5 +423,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAfacty.FldCodfacty, CSGenioAfacty.Fl
         {
             new TableSearchColumn("ValType", CSGenioAfacty.FldType, typeof(string))
         };
+
     }
 }

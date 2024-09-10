@@ -361,6 +361,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAasspa.FldCodasspa, CSGenioAasspa.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Asspa> MapEquip04_ValParamete(ListingMVC<CSGenioAasspa> Qlisting)
@@ -440,5 +442,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAasspa.FldCodasspa, CSGenioAasspa.Fl
             new TableSearchColumn("ValDate", CSGenioAasspa.FldDate, typeof(DateTime?), visible : false),
             new TableSearchColumn("ValToshow", CSGenioAasspa.FldToshow, typeof(string), defaultSearch : true)
         };
+
     }
 }

@@ -539,6 +539,7 @@ namespace GenioMVC.ViewModels.Regio
         private readonly string[] _fieldsToSerialize_REGIA___CNTRYCOUNTRY_ = { "Cntry", "Cntry.ValCodcntry", "Cntry.ValZzstate", "Cntry.ValCountry" };
 
 
+
 		#region Charts
 		#endregion
 

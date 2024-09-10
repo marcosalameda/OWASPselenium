@@ -457,6 +457,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlendi.FldCodlendi, CSGenioAlendi.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Lendi> MapGQT_Menu_1211(ListingMVC<CSGenioAlendi> Qlisting)
@@ -545,5 +547,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlendi.FldCodlendi, CSGenioAlendi.Fl
             new TableSearchColumn("ValReturned", CSGenioAlendi.FldReturned, typeof(bool), visible : false),
             new TableSearchColumn("ValDayslimi", CSGenioAlendi.FldDayslimi, typeof(decimal?))
         };
+
     }
 }

@@ -415,6 +415,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcmpki.FldCodcmpki, CSGenioAcmpki.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Cmpki> MapGQT_Menu_2A11(ListingMVC<CSGenioAcmpki> Qlisting)
@@ -507,5 +509,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcmpki.FldCodcmpki, CSGenioAcmpki.Fl
             new TableSearchColumn("Tpeq1_ValTipoequi", CSGenioAtpeq1.FldTipoequi, typeof(string)),
             new TableSearchColumn("ValQuantida", CSGenioAcmpki.FldQuantida, typeof(decimal?))
         };
+
     }
 }

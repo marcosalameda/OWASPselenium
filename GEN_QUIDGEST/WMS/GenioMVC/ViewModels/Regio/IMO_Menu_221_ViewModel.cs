@@ -390,6 +390,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAregio.FldCodregia, CSGenioAregio.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Regio> MapIMO_Menu_221(ListingMVC<CSGenioAregio> Qlisting)
@@ -464,5 +466,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAregio.FldCodregia, CSGenioAregio.Fl
             new TableSearchColumn("Cntry_ValCountry", CSGenioAcntry.FldCountry, typeof(string)),
             new TableSearchColumn("ValRegiao", CSGenioAregio.FldRegiao, typeof(string), defaultSearch : true)
         };
+
     }
 }

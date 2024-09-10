@@ -785,6 +785,7 @@ namespace GenioMVC.ViewModels.Dispa
         private readonly string[] _fieldsToSerialize_DISPA___PERSONAME____ = { "Perso", "Perso.ValCodperso", "Perso.ValZzstate", "Perso.ValName" };
 
 
+
 		#region Charts
 		#endregion
 

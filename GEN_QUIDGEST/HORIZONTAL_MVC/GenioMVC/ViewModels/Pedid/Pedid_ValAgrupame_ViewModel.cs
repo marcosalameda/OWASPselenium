@@ -356,6 +356,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlnhag.FldCodlnhag, CSGenioAlnhag.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Lnhag> MapPedid_ValAgrupame(ListingMVC<CSGenioAlnhag> Qlisting)
@@ -430,5 +432,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlnhag.FldCodlnhag, CSGenioAlnhag.Fl
             new TableSearchColumn("Tpeq1_ValTipoequi", CSGenioAtpeq1.FldTipoequi, typeof(string)),
             new TableSearchColumn("ValQtdtpequ", CSGenioAlnhag.FldQtdtpequ, typeof(decimal?))
         };
+
     }
 }

@@ -356,6 +356,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAagreg.FldCodaggre, CSGenioAagreg.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Agreg> MapProje_ValAgregado(ListingMVC<CSGenioAagreg> Qlisting)
@@ -430,5 +432,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAagreg.FldCodaggre, CSGenioAagreg.Fl
             new TableSearchColumn("Year_ValYear", CSGenioAyear.FldYear, typeof(string)),
             new TableSearchColumn("ValValue", CSGenioAagreg.FldValue, typeof(decimal?))
         };
+
     }
 }

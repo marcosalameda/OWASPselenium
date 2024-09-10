@@ -349,6 +349,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioArepar.FldCodrepar, CSGenioArepar.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Repar> MapTimequip_ValReparaco(ListingMVC<CSGenioArepar> Qlisting)
@@ -424,5 +426,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioArepar.FldCodrepar, CSGenioArepar.Fl
             new TableSearchColumn("ValDescript", CSGenioArepar.FldDescript, typeof(string)),
             new TableSearchColumn("ValHours", CSGenioArepar.FldHours, typeof(decimal?))
         };
+
     }
 }

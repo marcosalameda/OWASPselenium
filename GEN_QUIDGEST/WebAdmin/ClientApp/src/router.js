@@ -43,6 +43,12 @@ export function setupRouter(i18n) {
       props: true
     },
     {
+      path: '/:culture/:system/AppConfig',
+      name: 'app_configuration',
+      component: () => import(/* webpackChunkName: "app_configuration" */ './views/App_configuration.vue'),
+      props: true
+    },
+    {
       path: '/:culture/:system/ConfigMigration',
       name: 'config_migration',
       component: () => import(/* webpackChunkName: "config_migration" */ './views/Config_migration.vue'),

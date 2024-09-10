@@ -381,6 +381,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcfaqs.FldCodcfaqs, CSGenioAcfaqs.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Cfaqs> MapGQT_Menu_B1(ListingMVC<CSGenioAcfaqs> Qlisting)
@@ -453,5 +455,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcfaqs.FldCodcfaqs, CSGenioAcfaqs.Fl
             new TableSearchColumn("ValCategory", CSGenioAcfaqs.FldCategory, typeof(string)),
             new TableSearchColumn("ValDescript", CSGenioAcfaqs.FldDescript, typeof(string))
         };
+
     }
 }

@@ -340,6 +340,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAparam.FldCodparam, CSGenioAparam.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Param> MapAsspa_ParamValParameter(ListingMVC<CSGenioAparam> Qlisting)
@@ -411,5 +413,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAparam.FldCodparam, CSGenioAparam.Fl
         {
             new TableSearchColumn("ValParameter", CSGenioAparam.FldParameter, typeof(string))
         };
+
     }
 }

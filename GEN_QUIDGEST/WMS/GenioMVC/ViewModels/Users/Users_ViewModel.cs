@@ -740,6 +740,7 @@ namespace GenioMVC.ViewModels.Users
         private readonly string[] _fieldsToSerialize_USERS___PERSONAME____ = { "Perso", "Perso.ValCodperso", "Perso.ValZzstate", "Perso.ValName" };
 
 
+
 		#region Charts
 		#endregion
 

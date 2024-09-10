@@ -764,6 +764,7 @@ namespace GenioMVC.ViewModels.Tradu
         private readonly string[] _fieldsToSerialize_TRADU___LANG2LANGUA__ = { "Lang2", "Lang2.ValCodlang", "Lang2.ValZzstate", "Lang2.ValLangua" };
 
 
+
 		#region Charts
 		#endregion
 

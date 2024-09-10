@@ -793,6 +793,7 @@ namespace GenioMVC.ViewModels.Asspa
         private readonly string[] _fieldsToSerialize_ASSPA___PARAMPARAMETE = { "Param", "Param.ValCodparam", "Param.ValZzstate", "Param.ValParameter" };
 
 
+
 		#region Charts
 		#endregion
 

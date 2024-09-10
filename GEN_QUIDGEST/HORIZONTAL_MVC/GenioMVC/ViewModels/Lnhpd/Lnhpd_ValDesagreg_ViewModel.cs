@@ -360,6 +360,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlnhde.FldCodlnhde, CSGenioAlnhde.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Lnhde> MapLnhpd_ValDesagreg(ListingMVC<CSGenioAlnhde> Qlisting)
@@ -438,5 +440,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlnhde.FldCodlnhde, CSGenioAlnhde.Fl
             new TableSearchColumn("ValCode", CSGenioAlnhde.FldCode, typeof(string)),
             new TableSearchColumn("ValUrl", CSGenioAlnhde.FldUrl, typeof(string))
         };
+
     }
 }

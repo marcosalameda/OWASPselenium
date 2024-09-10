@@ -350,6 +350,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAware1.FldCodwareh, CSGenioAware1.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Ware1> MapDentr_Ware1ValWarehdes(ListingMVC<CSGenioAware1> Qlisting)
@@ -421,5 +423,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAware1.FldCodwareh, CSGenioAware1.Fl
         {
             new TableSearchColumn("ValWarehdes", CSGenioAware1.FldWarehdes, typeof(string))
         };
+
     }
 }

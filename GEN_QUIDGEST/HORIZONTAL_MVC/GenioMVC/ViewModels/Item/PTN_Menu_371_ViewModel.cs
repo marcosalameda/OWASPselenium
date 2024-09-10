@@ -382,6 +382,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAitem.FldCoditem, CSGenioAitem.FldZz
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Item> MapPTN_Menu_371(ListingMVC<CSGenioAitem> Qlisting)
@@ -455,5 +457,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAitem.FldCoditem, CSGenioAitem.FldZz
             new TableSearchColumn("ValDisponib", CSGenioAitem.FldDisponib, typeof(string), array : "dsiponib"),
             new TableSearchColumn("ValValid", CSGenioAitem.FldValid, typeof(bool))
         };
+
     }
 }

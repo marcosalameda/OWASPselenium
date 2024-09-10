@@ -1209,6 +1209,7 @@ namespace GenioMVC.ViewModels.Outpu
         private readonly string[] _fieldsToSerialize_LDSAI___OUDOCNRDOCSDA = { "Oudoc", "Oudoc.ValCoddocsd", "Oudoc.ValZzstate", "Oudoc.ValNrdocsda", "Oudoc.ValDtdocsda", "Oudoc.ValTitle" };
 
 
+
 		#region Charts
 		#endregion
 

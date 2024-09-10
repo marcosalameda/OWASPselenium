@@ -350,6 +350,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtppro.FldCodtppro, CSGenioAtppro.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Tppro> MapProprall_TpproValTppropri(ListingMVC<CSGenioAtppro> Qlisting)
@@ -421,5 +423,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtppro.FldCodtppro, CSGenioAtppro.Fl
         {
             new TableSearchColumn("ValTppropri", CSGenioAtppro.FldTppropri, typeof(string))
         };
+
     }
 }

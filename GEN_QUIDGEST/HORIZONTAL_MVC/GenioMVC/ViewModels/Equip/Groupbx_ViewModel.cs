@@ -1352,6 +1352,7 @@ namespace GenioMVC.ViewModels.Equip
         private readonly string[] _fieldsToSerialize_GROUPBX_ROOM1ROOMNR__ = { "Room1", "Room1.ValCodrooms", "Room1.ValZzstate" };
 
 
+
 		#region Charts
 		#endregion
 

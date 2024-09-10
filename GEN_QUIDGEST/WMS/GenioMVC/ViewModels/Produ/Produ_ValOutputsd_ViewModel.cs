@@ -361,6 +361,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAdilin.FldCoddilin, CSGenioAdilin.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Dilin> MapProdu_ValOutputsd(ListingMVC<CSGenioAdilin> Qlisting)
@@ -442,5 +444,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAdilin.FldCoddilin, CSGenioAdilin.Fl
             new TableSearchColumn("ValDelivere", CSGenioAdilin.FldDelivere, typeof(decimal?)),
             new TableSearchColumn("ValOutstand", CSGenioAdilin.FldOutstand, typeof(decimal?))
         };
+
     }
 }

@@ -740,6 +740,7 @@ namespace GenioMVC.ViewModels.Esppe
         private readonly string[] _fieldsToSerialize_ESPPE___SPECIESPECIAL = { "Speci", "Speci.ValCodespec", "Speci.ValZzstate", "Speci.ValEspecial" };
 
 
+
 		#region Charts
 		#endregion
 

@@ -393,6 +393,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtradu.FldCodtradu, CSGenioAtradu.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Tradu> MapGQT_Menu_911(ListingMVC<CSGenioAtradu> Qlisting)
@@ -472,5 +474,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtradu.FldCodtradu, CSGenioAtradu.Fl
             new TableSearchColumn("Lang2_ValLangua", CSGenioAlang2.FldLangua, typeof(string)),
             new TableSearchColumn("ValTraduzid", CSGenioAtradu.FldTraduzid, typeof(string))
         };
+
     }
 }

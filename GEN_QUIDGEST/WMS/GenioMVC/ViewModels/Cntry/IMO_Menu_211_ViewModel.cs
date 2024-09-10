@@ -446,6 +446,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcntry.FldCodcntry, CSGenioAcntry.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Cntry> MapIMO_Menu_211(ListingMVC<CSGenioAcntry> Qlisting)
@@ -521,5 +523,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcntry.FldCodcntry, CSGenioAcntry.Fl
             new TableSearchColumn("ValAlfa2", CSGenioAcntry.FldAlfa2, typeof(string)),
             new TableSearchColumn("ValAlfa3", CSGenioAcntry.FldAlfa3, typeof(string))
         };
+
     }
 }

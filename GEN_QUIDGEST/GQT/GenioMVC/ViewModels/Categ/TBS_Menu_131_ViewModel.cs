@@ -395,6 +395,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcateg.FldCodcateg, CSGenioAcateg.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Categ> MapTBS_Menu_131(ListingMVC<CSGenioAcateg> Qlisting)
@@ -467,5 +469,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcateg.FldCodcateg, CSGenioAcateg.Fl
             new TableSearchColumn("ValCategoria", CSGenioAcateg.FldCategoria, typeof(string), defaultSearch : true),
             new TableSearchColumn("ValAbbreviation", CSGenioAcateg.FldAbbreviation, typeof(string))
         };
+
     }
 }

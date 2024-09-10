@@ -30,6 +30,11 @@
     color: $gray-dark;
 }
 
+//Geral
+body {
+    background-color: #f0f0f1; //$background
+}
+
 #header-container {
     #header {
         background-color: transparent;
@@ -300,34 +305,26 @@
 
 
     &--sidebar {
-        background-color: #fff;
-        border-bottom: 2px solid $primary;
+        background-color: transparent;
+        color: #202428; //$on-background
+        height: 50px;
+
+        i:hover {
+            color: $hover-primary;
+        }
+
+        #system-years, #languages {
+            .q-field__control{
+                border: none;
+                outline: none;
+
+                span.mdi {
+                    font-size: 1.3em;
+                }
+            }
+        }
     }
 }
-
-.main-header.c-header--sidebar {
-    background-color: $primary;
-    color: $body-bg;
-    height: 50px;
-
-    i:hover {
-        color: $hover-primary;
-    }
-}
-
-.jumbotron {
-    margin-top: 20px !important;
-}
-
-.breadcrumb {
-    margin-top: 8px !important;
-}
-
-.navbar-dark .navbar-text .dropdown-menu a {
-    color: black;
-    padding-left: 6px;
-}
-
 
 .dropdown-menu {
     box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
@@ -482,16 +479,16 @@ html, body {
     height: 100vh;
     overflow-y: hidden;
     transition: margin-left .3s ease-in-out,width .3s ease-in-out;
-    width: 250px;
+    width: 270px;
     position: fixed;
     top: 0;
     left: 0;
     bottom: 0;
 
     &.n-menu--sidebar {
-        background-color: $secondary;
-        border-color: $gray-light;
-        box-shadow: 0 14px 28px rgba(0,0,0,.25),0 10px 10px rgba(0,0,0,.22);
+        background-color: #f0f0f1; //background
+        border-color: #f0f0f1;
+        box-shadow: none;
     }
 
     .n-sidebar__brand {
@@ -500,18 +497,20 @@ html, body {
         white-space: nowrap;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         height: 50px;
-        background-color: $secondary;
+        background-color: #f0f0f1; //$background
 
         &-text {
-            color: $primary;
-            margin-top: -10px;
-            line-height: 1.5rem;
-            font-weight: 600 !important;
-            &:hover {
-                color: $primary;
-                font-weight: 600 !important;
-                text-decoration: none;
-                letter-spacing: 0;
+            font-size: 1.25rem;
+            line-height: 1.5;
+            color: $secondary;
+            font-weight: 800 !important;
+        }
+    }
+
+    .n-sidebar__section {
+        .nav-sidebar {
+            hr {
+                margin: 0.25rem 0.75rem;
             }
         }
     }
@@ -564,7 +563,6 @@ html, body {
     }
 }
 
-
 .n-sidebar {
     &__toggler-icon {
         color: $icon-light;
@@ -575,16 +573,22 @@ html, body {
         }
     }
 
+    &__brand {
+        border-color: transparent;
+        background-color: transparent;
+
+        span {
+            color: $primary;
+            font-size: 1.25rem;
+            font-weight: 800;
+        }
+    }
+
     &__brand-text {
         font-size: 1.25rem;
         line-height: 1.5;
-        color: rgba(255, 255, 255, 0.9);
-
-        &:hover {
-            color: rgba(255, 255, 255, 0.5);
-            font-weight: 700 !important;
-            text-decoration: none;
-        }
+        color: $secondary;
+        font-weight: 800 !important;
     }
 
     &__img {
@@ -634,9 +638,22 @@ html, body {
     }
 
     &__nav-item {
+
         &--dropdown {
             margin-bottom: -1.25rem;
             margin-top: .5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.25rem 1rem;
+
+            p {
+                display: flex;
+                align-items: center;
+                margin-left: 0.25rem;
+            }
         }
     }
 
@@ -652,6 +669,15 @@ html, body {
         &-link {
             border-radius: .2rem;
 
+            &.selected {
+                box-shadow: inset 5px 0px 0px 0px $primary;
+                color: $primary;
+                background-color: rgba(0, 138, 210, .15);
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+                font-weight: 600;
+            }
+
             &--active {
                 color: $body-bg;
                 background-color: $primary;
@@ -660,10 +686,49 @@ html, body {
                 &:hover {
                     color: $secondary !important;
                     background-color: rgba(0, 0, 0, .25);
-                    font-weight: 700;
                 }
             }
         }
+    }
+
+    a:not([href]):not([tabindex]){
+        &.selected {
+            box-shadow: inset 5px 0px 0px 0px $primary;
+            color: $primary;
+            background-color: rgba(0, 138, 210, .15);
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+    
+        &.level-0 {
+
+            &.selected {
+                font-weight: 400;
+                box-shadow: none;
+                color: $gray;
+            }
+            
+            &.selected:has(+ ul .nav-item.selected) {
+                background-color: rgba(0, 138, 210, 0.15);
+                box-shadow: none;
+                color: $gray;
+                font-weight: 400;
+            }
+    
+            .openSelect {
+                display: inline-block;
+                width: .25rem;
+                font-size: 1.5em;
+                position: absolute;
+                left: 89%;
+            }
+        }
+    
+        color: $gray;
+    }
+
+    .nav-item .level-0.selected:has(+ ul .nav-item.selected) {
+        background-color: rgba(0, 138, 210, 0.15);
     }
 
     &__icon {
@@ -761,7 +826,12 @@ html, body {
 .nav-item.menu-open:hover > .nav-link:hover,
 .nav-item:hover > .nav-link:hover {
     color: #0064b7;
-    font-weight: 700;
+    font-weight: 400;
+}
+
+.selected {
+    color: #0064b7;
+    font-weight: 600;
 }
 
 .nav_menuContainer {
@@ -867,11 +937,16 @@ label{
     }
 }
 
-.loginPage .content-wrapper{
-    margin-left:0;
+.container-fluid {
+    span.app-brand {
+        position: absolute;
+        top: 1rem;
+        right: 1.5rem;
 
-    .container-fluid {
-        flex: 1 1 100% !important;
+        img {
+            height: 50px;
+            width: auto;
+        }
     }
 }
 
@@ -1042,9 +1117,9 @@ label{
         padding-left: .3rem;
     }
 
-    .sidebar-dark-primary .nav-sidebar>.nav-item.menu-open>.nav-link,
-    .sidebar-dark-primary .nav-sidebar>.nav-item:hover>.nav-link {
-        background-color: rgba(0, 0, 0, .25);
+    .nav-sidebar>.nav-item.menu-open>.nav-link,
+    .nav-sidebar>.nav-item:hover>.nav-link {
+        background-color: rgba(0, 138, 210, .10);
     }
 
     .nav-item.menu-open:hover>.nav-link:hover,
@@ -1053,30 +1128,30 @@ label{
     .c-tab__item:hover>.nav-link:hover,
     .c-tab__item:hover>.c-tab__item-header:hover {
         color: $primary;
-        font-weight: 400;
     }
 
-    .sidebar-dark-primary{
-        .nav-treeview>.nav-item>.nav-link:hover {
-            color: $primary;
-            background-color: rgba(0, 0, 0, .25);
+    .nav .nav-treeview {
+        display: block;
+    }
+
+    .nav-treeview>.nav-item>.nav-link:hover {
+        color: $primary;
+        background-color: rgba(0, 0, 0, .25);
+    }
+
+    a.nav-link {
+        color: $gray;
+        font-weight: 400;
+
+        &:hover {
+            color: $primary !important;
+            background-color: rgba(0, 138, 210, .10) !important; //$primary-rgb / 10
+            font-weight: 600;
         }
 
-        .sidebar {
-            a {
-                color: $body-bg;
-                font-weight: 400;
-
-                &:hover {
-                    color: $primary !important;
-                    font-weight: 400;
-                }
-            }
-
-            .n-sidebar__nav-item--dropdown a:hover {
-                color:$white !important;
-                font-weight: 400;
-            }
+        .n-sidebar__nav-item--dropdown a:hover {
+            color:$primary;
+            font-weight: 600;
         }
     }
 

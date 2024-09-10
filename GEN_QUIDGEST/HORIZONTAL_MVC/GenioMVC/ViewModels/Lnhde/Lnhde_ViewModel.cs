@@ -1062,6 +1062,7 @@ namespace GenioMVC.ViewModels.Lnhde
         private readonly string[] _fieldsToSerialize_LNHDE___TPEQ1TIPOEQUI = { "Tpeq1", "Tpeq1.ValCodtpequ", "Tpeq1.ValZzstate", "Tpeq1.ValTpequcod", "Tpeq1.ValTipoequi" };
 
 
+
 		#region Charts
 		#endregion
 

@@ -351,6 +351,7 @@ namespace GenioMVC.ViewModels.Genre
 
 
 
+
 		#region Charts
 		#endregion
 

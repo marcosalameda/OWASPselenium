@@ -782,6 +782,7 @@ namespace GenioMVC.ViewModels.Cmpki
         private readonly string[] _fieldsToSerialize_CMPKI___TPEQ1TIPOEQUI = { "Tpeq1", "Tpeq1.ValCodtpequ", "Tpeq1.ValZzstate", "Tpeq1.ValTipoequi" };
 
 
+
 		#region Charts
 		#endregion
 

@@ -348,6 +348,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAmanuf.FldCodentit, CSGenioAmanuf.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Manuf> MapEquipm_ManufValName(ListingMVC<CSGenioAmanuf> Qlisting)
@@ -420,5 +422,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAmanuf.FldCodentit, CSGenioAmanuf.Fl
             new TableSearchColumn("ValName", CSGenioAmanuf.FldName, typeof(string)),
             new TableSearchColumn("ValInitials", CSGenioAmanuf.FldInitials, typeof(string))
         };
+
     }
 }

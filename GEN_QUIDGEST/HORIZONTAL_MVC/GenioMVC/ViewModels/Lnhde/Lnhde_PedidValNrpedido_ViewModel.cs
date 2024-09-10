@@ -340,6 +340,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioApedid.FldCodpedid, CSGenioApedid.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Pedid> MapLnhde_PedidValNrpedido(ListingMVC<CSGenioApedid> Qlisting)
@@ -411,5 +413,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioApedid.FldCodpedid, CSGenioApedid.Fl
         {
             new TableSearchColumn("ValNrpedido", CSGenioApedid.FldNrpedido, typeof(decimal?))
         };
+
     }
 }

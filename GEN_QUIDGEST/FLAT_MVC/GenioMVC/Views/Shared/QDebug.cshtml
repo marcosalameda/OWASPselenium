@@ -1,0 +1,376 @@
+﻿@model GenioMVC.ViewModels.QDebug_ViewModel
+
+<div class="form-horizontal" id="QDubug">
+    <div class="c-modal__dialog c-modal--lg">
+        <div class = "c-modal__content">
+            <div class="c-modal__header">
+                <div class="c-modal__header-title">
+                    <i class="glyphicons glyphicons-info-sign c-alert__icon"></i> Quidgest - Debug
+                </div>
+            </div>
+            <div elem-identifier="ModalBody" class="c-modal__body">
+                <div class="form-flow">
+                    @form_content()
+                </div>
+            </div>
+            <div class="c-modal__footer">
+                <div class="actions">
+                    <button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-modal-close="true" onclick="closeQDebugForm()">@Resources.FECHAR32496</button>
+                </div>
+            </div>        
+        </div>
+    </div>
+</div>
+
+@helper form_content()
+{
+    @Html.ValidationSummary(false)
+    <fieldset>
+        <div class="col-xs-3">
+            <!-- Nav tabs -->
+            <ul class="nav c-tab c-tab__divider">
+                <li class="nav-item c-tab__item tl_li" data-tab="QGeneralInfo" >
+                    <a data-target="#QGeneralInfo" class="nav-link active" role="tab" data-toggle="tab">General information</a>
+                </li>
+                <li class="nav-item c-tab__item" data-tab="QErrorLog">
+                    <a data-target="#QErrorLog" data-toggle="tab" role="tab" class="nav-link" >Error Log</a>
+                </li>
+                <li class="nav-item c-tab__item"><a data-target="#QFormSerializeValues" data-toggle="tab" class="nav-link">Form Serialize</a></li>
+                <li class="nav-item c-tab__item"><a data-target="#QLocalStorage" data-toggle="tab" class="nav-link">Local Storage</a></li>
+                <li class="nav-item c-tab__item"><a data-target="#QFormControls" data-toggle="tab" class="nav-link">QForm Controls</a></li>
+                <li class="nav-item c-tab__item"><a data-target="#QAjax" data-toggle="tab" class="nav-link">Ajax Requests</a></li>
+            </ul>
+        </div>
+
+        <div class="col-xs-9">
+            <!-- Tab panes -->
+            <div class="c-tab__item-container">
+                <div class="tab-pane c-tab__item-content active" id="QGeneralInfo">
+                    @*Start of General information*@
+                    <div class="row">
+                        <div class="col-12">
+                            <div elem-identifier="RowControls" class="control-row-group">                                
+                                <div class="control-join-group">
+                                    <div class="i-text">
+                                        <label class="i-text__label" for="QGeneralInfo_CurrentForm">Current Form</label>
+                                        <input id="QGeneralInfo_CurrentForm" class="i-text__field"  type="text" readonly="readonly" value="@Model.lastAction" />
+                                    </div>
+                                </div>
+                                <div class="control-join-group">
+                                    <div class="i-text">
+                                        <label class="i-text__label" for="QGeneralInfo_CurrentForm">Controller</label>
+                                        <input id="QGeneralInfo_CurrentController" class="i-text__field" type="text" readonly="readonly" value="@Model.lastController" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div elem-identifier="RowControls" class="control-row-group">
+                                <div class="control-join-group">
+                                    <div class="i-text">
+                                        <label class="i-text__label" for="QGeneralInfo_CurrentUser">User</label>
+                                        <input class="i-text__field" id="QGeneralInfo_CurrentUser" type="text" readonly="readonly" value="@Model.curUser" />
+                                    </div>
+                                </div>
+                                <div class="control-join-group">
+                                    <div class="i-text">
+                                        <label class="i-text__label" for="QGeneralInfo_CurrentUserLevels">User Levels</label>
+                                        <input class="i-text__field input-xxlarge" id="QGeneralInfo_CurrentUserLevels" type="text" readonly="readonly" value="@Model.curUserLevels" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div elem-identifier="RowControls" class="control-row-group">
+                                <div class="control-join-group">
+                                    <div class="i-text">
+                                        <label class="i-text__label" for="QError_Count">Errors</label>
+                                        <div class="col-sm-10">
+                                            <p class="form-control-static mb-0" id="QError_Count"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="control-join-group">
+                                    <div class="i-text">
+                                        <label class="i-text__label" for="QAjax_Count">Ajax Requests</label>
+                                        <div class="col-sm-10">
+                                            <p class="form-control-static mb-0" id="QAjax_Count"></p>
+                                        </div>
+                                    </div>
+                               </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*End of General information*@
+                </div>
+                <div class="tab-pane c-tab__item-content" id="QErrorLog">
+                    @*Start of Error Log Table*@
+                    <div class="row">
+                        <div class="col-12">
+                            <div elem-identifier="RowLargeControl" class="row-large-control">
+                                <div class="row-line-group">
+                                    <label class="i-text__label table-title" for="QErrorLog_Content">Error Log</label>
+                                    <div style="overflow-x:auto;">
+                                        <table class="c-table">
+                                            <thead class="c-table__head">
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Message</th>
+                                                    <th>URL</th>
+                                                    <th>Code position</th>
+                                                    <th>Error</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="c-table__body" id="QErrorLog_Content"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*End of Error Log Table*@
+                </div>
+                <div class="c-tab__item-content" id="QFormSerializeValues">
+                    @*Start of Form Serialize Table*@
+                    <div class="row">
+                        <div class="col-12">
+                            <div elem-identifier="RowLargeControl" class="row-large-control">
+                                <div class="row-line-group">
+                                    <label class="flow-label table-title" for="QFormSerializeValues_Content">Form Serialize Values</label>
+                                    <div style="overflow-x:auto;">
+                                        <table class="c-table">
+                                            <thead class="c-table__head">
+                                                <tr>
+                                                    <th>Form</th>
+                                                    <th>Form area</th>
+                                                    <th>Field</th>
+                                                    <th>Value</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="c-table__body" id="QFormSerializeValues_Content"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*End of Form Serialize Table*@
+                </div>
+                <div class="c-tab__item-content" id="QLocalStorage">
+                    @*Start of Local Storage  GROUP*@
+                    <div elem-identifier="RowControls" class="control-row-group">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="control-join-group">
+                                    <div class="i-text">
+                                        <label class="i-text__label" for="QLocalStorage_Group">Current Group</label>
+                                        <input class="i-text__field" id="QLocalStorage_Group" type="text" readonly="readonly" value="" />
+                                    </div>
+                                </div>
+                                <div class="control-join-group">
+                                    <div class="i-text">
+                                        <label class="i-text__label" for="QLocalStorage_Selections">Current Selections</label>
+                                        <input class="i-text__field" id="QLocalStorage_Selections" type="text" readonly="readonly" value="" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @*End of Local Storage  Selections*@
+                    @*Start of Local Storage Table*@
+                    <div class="row">
+                        <div class="col-12">
+                            <div elem-identifier="RowLargeControl" class="row-large-control">
+                                <div class="row-line-group">
+                                    <label class="flow-label" for="QLocalStorage_Content">Current Local Storage Content</label>
+                                    <div style="overflow-x:auto;">
+                                        <table class="c-table">
+                                            <thead class="c-table__head">
+                                                <tr>
+                                                    <th>Form</th>
+                                                    <th>Area</th>
+                                                    <th>Area Primary Key</th>
+                                                    <th>Field</th>
+                                                    <th>Original Value</th>
+                                                    <th>Value</th>
+                                                    <th>Navigation level</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="c-table__body" id="QLocalStorage_Content"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*End of Local Storage Table*@
+                </div>
+                <div class="c-tab__item-content" id="QFormControls">
+                    @*Start of QForm Controls Table*@
+                    <div class="row">
+                        <div class="col-12">
+                            <div elem-identifier="RowLargeControl" class="row-large-control">
+                                <div class="row-line-group">
+                                    <label class="flow-label table-title" for="QFormControls_Content">QForm Controls</label>
+                                    <div style="overflow-x:auto;">
+                                        <table class="c-table">
+                                            <thead class="c-table__head">
+                                                <tr>
+                                                    <th>Form</th>
+                                                    <th>Form area</th>
+                                                    <th>Field area</th>
+                                                    <th>Field name</th>
+                                                    <th>Control Identifier</th>
+                                                    <th>Value</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="c-table__body" id="QFormControls_Content"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*End of QForm Controls Table*@
+                </div>
+                <div class="c-tab__item-content" id="QAjax">
+                    @*Start of Ajax Requests Table*@
+                    <div class="row">
+                        <div class="col-12">
+                            <div elem-identifier="RowLargeControl" class="row-large-control">
+                                <div class="row-line-group">
+                                    <label class="flow-label table-title" for="QAjax_Content">Ajax Requests</label>
+                                    <div style="overflow-x:auto;">
+                                        <table class="c-table">
+                                            <thead class="c-table__head">
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Time (ms)</th>
+                                                    <th>URL</th>
+                                                    <th>Type</th>
+                                                    <th>Data</th>
+                                                    <th>Response</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="c-table__body" id="QAjax_Content"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*End of Ajax Requests Table*@
+                </div>
+            </div>
+        </div>
+    </fieldset>
+}
+
+<style>
+.popover {
+    max-width: 57%;
+    max-height: 95%;
+    word-wrap: break-word;
+}
+.popover-body {
+  overflow-y : auto;
+  height: 200px;
+}
+.popover-footer {
+  margin: 0;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+  background-color: #F7F7F7;
+  border-bottom: 1px solid #EBEBEB;
+  border-radius: 5px 5px 0 0;
+}
+</style>
+
+@codeJavascript()
+
+@helper codeJavascript()
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#QErrorLog_Content').append(QDebug.FillTableErrorLog());
+            $('#QFormSerializeValues_Content').append(QDebug.FillTableFormSerialize());
+            $('#QLocalStorage_Content').append(QDebug.FillTableLocalStorage());
+            $('#QFormControls_Content').append(QDebug.FillTableQForm());
+            $('#QAjax_Content').append(QDebug.FillTableAjaxLog());
+
+            $('#QLocalStorage_Group').val(localStorage['grupo']);
+            $('#QLocalStorage_Selections').val(localStorage['selections']);
+
+            $('#QError_Count').text(QDebug.ErrorCount());
+            $('#QAjax_Count').text(QDebug.AjaxCount());
+
+            var ajaxLogger = window.QAjaxLogger;
+            //Fill Response data as Text
+            $.each(ajaxLogger, function (i, ajaxObj) {
+                var dest = $('#ResponseContent_' + ajaxObj.AjaxIdentifier);
+                if ($(dest).find('a').lenght !== 0) {
+                    dest = $(dest).find('a').first();
+                }
+                dest.text(ajaxObj.Response.length > 30 ? ajaxObj.Response.substring(0, 30) + ' (...)': ajaxObj.Response);
+            });
+
+            var popoverTemplate = '<div class="popover row" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-body"></div><div class="popover-footer"></div></div>';
+
+            $('[data-toggle=popover][data-qerrlogid]').popover({
+                html: false,
+                trigger: 'click',
+                container: '#QErrorLog',
+                content: function () {
+                    if ($(this).data('qerrlogid') !== undefined) {
+                        var id = $(this).data('qerrlogid');
+                        return window.QErrorLogger[id] !== undefined ? window.QErrorLogger[id].ErrorObject : '';
+                    }                    
+                },
+                title: function () {
+                    return 'Error Details';
+                },
+                template: popoverTemplate,
+            });
+
+            $('[data-toggle=popover][data-qjaxid]').popover({
+                html: false,
+                trigger: 'click',
+                container: '#QAjax',
+                content: function () {
+                    if ($(this).data('rowtype') == "Recive") {
+                        return ajaxLogger[$(this).data('qjaxid')].Response;
+                    }
+                    else if ($(this).data('rowtype') == "Send") {
+                        return ajaxLogger[$(this).data('qjaxid')].Data;
+                    }
+                },
+                title: function () {
+                    var _ajaxLogger = ajaxLogger[$(this).data('qjaxid')];
+                    return _ajaxLogger.Time + " (ms) - URL: " + _ajaxLogger.URL;
+                },
+                template: popoverTemplate,
+            });     
+        });
+
+        function closeQDebugForm() {
+            var formModal = $('#qdebug-form-modal');
+            $(formModal).data('open', false);
+            $(formModal).html('');
+            $(formModal).modal('hide');
+        };
+    </script>
+}
+
+@section code_javascript {
+    @codeJavascript()
+}
+@section include_stylesheets {
+}

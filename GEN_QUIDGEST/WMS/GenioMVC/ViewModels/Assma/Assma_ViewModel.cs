@@ -564,6 +564,7 @@ namespace GenioMVC.ViewModels.Assma
         private readonly string[] _fieldsToSerialize_ASSMA___ASSETNAME____ = { "Asset", "Asset.ValCodasset", "Asset.ValZzstate", "Asset.ValName" };
 
 
+
 		#region Charts
 		#endregion
 

@@ -361,6 +361,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlnhpd.FldCodlnhpd, CSGenioAlnhpd.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Lnhpd> MapLnhde_LnhpdValLine(ListingMVC<CSGenioAlnhpd> Qlisting)
@@ -432,5 +434,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlnhpd.FldCodlnhpd, CSGenioAlnhpd.Fl
         {
             new TableSearchColumn("ValLine", CSGenioAlnhpd.FldLine, typeof(decimal?))
         };
+
     }
 }

@@ -360,6 +360,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAccorr.FldCodccorr, CSGenioAccorr.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Ccorr> MapArtig_ValContacor(ListingMVC<CSGenioAccorr> Qlisting)
@@ -436,5 +438,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAccorr.FldCodccorr, CSGenioAccorr.Fl
             new TableSearchColumn("ValQnty", CSGenioAccorr.FldQnty, typeof(decimal?)),
             new TableSearchColumn("ValBalance", CSGenioAccorr.FldBalance, typeof(decimal?))
         };
+
     }
 }

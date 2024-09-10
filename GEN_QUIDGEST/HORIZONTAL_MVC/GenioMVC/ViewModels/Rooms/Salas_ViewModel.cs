@@ -330,6 +330,7 @@ namespace GenioMVC.ViewModels.Rooms
 
 
 
+
 		#region Charts
 		#endregion
 

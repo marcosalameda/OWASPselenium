@@ -756,6 +756,7 @@ namespace GenioMVC.ViewModels.Movim
         private readonly string[] _fieldsToSerialize_MOVIM___ROOMSROOMNR__ = { "Rooms", "Rooms.ValCodrooms", "Rooms.ValZzstate", "Rooms.ValRoomnr" };
 
 
+
 		#region Charts
 		#endregion
 

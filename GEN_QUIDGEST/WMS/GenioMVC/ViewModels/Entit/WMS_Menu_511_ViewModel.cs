@@ -416,6 +416,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAentit.FldCodentit, CSGenioAentit.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Entit> MapWMS_Menu_511(ListingMVC<CSGenioAentit> Qlisting)
@@ -518,5 +520,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAentit.FldCodentit, CSGenioAentit.Fl
             new TableSearchColumn("ValCarrier", CSGenioAentit.FldCarrier, typeof(bool)),
             new TableSearchColumn("ValSupplier", CSGenioAentit.FldSupplier, typeof(bool))
         };
+
     }
 }

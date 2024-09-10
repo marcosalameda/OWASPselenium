@@ -371,6 +371,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAitem.FldCoditem, CSGenioAitem.FldZz
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Item> MapLdsai_ItemValItemdes(ListingMVC<CSGenioAitem> Qlisting)
@@ -442,5 +444,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAitem.FldCoditem, CSGenioAitem.FldZz
         {
             new TableSearchColumn("ValItemdes", CSGenioAitem.FldItemdes, typeof(string))
         };
+
     }
 }

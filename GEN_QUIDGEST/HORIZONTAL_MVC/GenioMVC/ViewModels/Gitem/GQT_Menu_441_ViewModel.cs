@@ -395,6 +395,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgitem.FldCodgitem, CSGenioAgitem.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Gitem> MapGQT_Menu_441(ListingMVC<CSGenioAgitem> Qlisting)
@@ -467,5 +469,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgitem.FldCodgitem, CSGenioAgitem.Fl
             new TableSearchColumn("ValItemdes", CSGenioAgitem.FldItemdes, typeof(string), defaultSearch : true),
             new TableSearchColumn("ValItemgcod", CSGenioAgitem.FldItemgcod, typeof(string))
         };
+
     }
 }

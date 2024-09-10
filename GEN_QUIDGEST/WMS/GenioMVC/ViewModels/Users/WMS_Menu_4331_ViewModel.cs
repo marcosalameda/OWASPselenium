@@ -380,6 +380,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAusers.FldCodusers, CSGenioAusers.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Users> MapWMS_Menu_4331(ListingMVC<CSGenioAusers> Qlisting)
@@ -456,5 +458,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAusers.FldCodusers, CSGenioAusers.Fl
             new TableSearchColumn("Psw_ValNome", CSGenioApsw.FldNome, typeof(string)),
             new TableSearchColumn("Perso_ValName", CSGenioAperso.FldName, typeof(string))
         };
+
     }
 }

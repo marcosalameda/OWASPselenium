@@ -392,15 +392,27 @@ namespace GenioMVC.Helpers
                     extension = "image/svg+xml";
                 else
                 {
-                    using (var ms = new System.IO.MemoryStream(image))
+                    try
                     {
-                        using (System.Drawing.Image _Image = System.Drawing.Image.FromStream(ms))
+                        using (var ms = new System.IO.MemoryStream(image))
                         {
-                            using (System.Drawing.Image _ResizedImage = new System.Drawing.Bitmap(_Image, new System.Drawing.Size(75, 75)))
+                            using (System.Drawing.Image _Image = System.Drawing.Image.FromStream(ms))
                             {
-                                image = (byte[])new System.Drawing.ImageConverter().ConvertTo(_ResizedImage, typeof(byte[]));
+                                using (System.Drawing.Image _ResizedImage = new System.Drawing.Bitmap(_Image, new System.Drawing.Size(75, 75)))
+                                {
+                                    image = (byte[])new System.Drawing.ImageConverter().ConvertTo(_ResizedImage, typeof(byte[]));
+                                }
                             }
                         }
+                    }
+                    /*
+                        If the content is invalid, executing this code causes a error 500. 
+                        This can happen in cases where the image file upload did not validate either the MIME type or the content.
+                    */
+                    catch(Exception ex)
+                    {
+                        Log.Error($"Helpers - Error creating image tag. Error message: {ex.Message}");
+                        image = null;
                     }
                 }
             }
@@ -784,8 +796,8 @@ namespace GenioMVC.Helpers
             {
                 displayName.Attributes.Add("style", "cursor:pointer");
                 string url = html.Raw(urlHelper.Action("GetFile", baseArea, routeValues)).ToHtmlString();
-                string target = ViewType == DocumentViewTypeMode.Print ? "_self" : "_blankl";
-                displayName.Attributes.Add("onclick", string.Format("javascript:QUtils.WindowOpen('{0}','{1}')", url, target));
+                string target = ViewType == DocumentViewTypeMode.Print ? "_self" : "_blank";
+                displayName.Attributes.Add("onclick", string.Format("javascript:QUtils.WindowOpen('{0}','{1}')", HttpUtility.JavaScriptStringEncode(url), target));
             }
             TagBuilder divGroup = new TagBuilder("div");
             divGroup.Attributes.Add("elem-identifier", "BtnGroup");
@@ -2787,7 +2799,7 @@ namespace GenioMVC.Helpers
             else if (menu.Action != null && (menu.Action.Equals("GenGenio.MenuSeleccaoUmLimite") || menu.Action.Equals("GenGenio.MenuSeleccaoEntreLimites")))
             {
                 a.MergeAttribute("href", "javascript:void(0)");
-                a.MergeAttribute("data-link", urlHelper.Action(menu.Action_MVC, menu.Controller, new { module = module, newMenu = true }));
+                a.MergeAttribute("data-link", HttpUtility.JavaScriptStringEncode(urlHelper.Action(menu.Action_MVC, menu.Controller, new { module = module, newMenu = true })));
                 a.MergeAttribute("data-menu-id", menu.Action_MVC);
                 if (menu.Action.Equals("GenGenio.MenuSeleccaoUmLimite"))
                 {
@@ -2805,11 +2817,11 @@ namespace GenioMVC.Helpers
                     // The Crystal Repors without preview will invoke method by the Ajax request (PrintToPrinter)
                     var isAjaxReportRequest = menu.Mode == "CRY";
                     a.MergeAttribute("href", "javascript:void(0)");
-                    a.MergeAttribute("onclick", string.Format("javascript:requestReport('{0}', {1});", urlHelper.Action(menu.Action_MVC, menu.Controller, new { newMenu = true }), isAjaxReportRequest.ToString().ToLower()));
+                    a.MergeAttribute("onclick", string.Format("javascript:requestReport('{0}', {1});", HttpUtility.JavaScriptStringEncode(urlHelper.Action(menu.Action_MVC, menu.Controller, new { newMenu = true })), isAjaxReportRequest.ToString().ToLower()));
                 }
                 else
                 {
-                    var link = String.IsNullOrEmpty(menu.Action_MVC) ? "javascript:void(0)" : urlHelper.Action(menu.Action_MVC, menu.Controller, new { module = module, newMenu = true });
+                    var link = String.IsNullOrEmpty(menu.Action_MVC) ? "javascript:void(0)" : HttpUtility.JavaScriptStringEncode(urlHelper.Action(menu.Action_MVC, menu.Controller, new { module = module, newMenu = true }));
                     a.MergeAttribute("href", link);
                     a.MergeAttribute("target", "_blank");
                 }
@@ -2818,7 +2830,7 @@ namespace GenioMVC.Helpers
             {
                 var link = String.IsNullOrEmpty(menu.Action_MVC) ?
                     "javascript:void(0)" :
-                    urlHelper.Action(menu.Action_MVC, menu.Controller, new { module = module, newMenu = true });
+                    HttpUtility.JavaScriptStringEncode(urlHelper.Action(menu.Action_MVC, menu.Controller, new { module = module, newMenu = true }));
                 a.MergeAttribute("href", link);
             }
 
@@ -3401,6 +3413,17 @@ namespace GenioMVC.Helpers
         {
             NONE,
             SUM_SEL
+        }
+
+        /// <summary>
+        /// Sanitizes HTML content.
+        /// </summary>
+        /// <param name="plainText">The HTML content to be sanitized.</param>
+        /// <param name="isDocument">Indicates whether the content is a complete HTML document.</param>
+        /// <returns>Sanitized HTML content.</returns>
+        public static string SanitizeHTML(string plainText, bool isDocument)
+        {
+            return HtmlSanitizerHelper.SanitizeHTML(plainText, isDocument);
         }
     }
 

@@ -868,6 +868,7 @@ namespace GenioMVC.ViewModels.Produ
         private readonly string[] _fieldsToSerialize_PRODU___LCEXTGLNEXT__ = { "Lcext", "Lcext.ValCodlcext", "Lcext.ValZzstate", "Lcext.ValGlnext" };
 
 
+
 		#region Charts
 		#endregion
 

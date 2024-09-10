@@ -816,6 +816,7 @@ namespace GenioMVC.ViewModels.Messa
         private readonly string[] _fieldsToSerialize_MESSA___PERSONAME____ = { "Perso", "Perso.ValCodperso", "Perso.ValZzstate", "Perso.ValName" };
 
 
+
 		#region Charts
 		#endregion
 

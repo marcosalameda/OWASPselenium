@@ -330,6 +330,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAdispa.FldCoddispa, CSGenioAdispa.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Dispa> MapDilin_DispaValDispanr(ListingMVC<CSGenioAdispa> Qlisting)
@@ -401,5 +403,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAdispa.FldCoddispa, CSGenioAdispa.Fl
         {
             new TableSearchColumn("ValDispanr", CSGenioAdispa.FldDispanr, typeof(decimal?))
         };
+
     }
 }

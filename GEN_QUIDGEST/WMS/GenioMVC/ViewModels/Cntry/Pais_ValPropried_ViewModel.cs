@@ -358,6 +358,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioApropr.FldCodpropr, CSGenioApropr.Fl
 
 			//Set table limits display property
 			FillTableLimitsDisplayData();
+
+            SanitizeContent();
 		}
 
         private List<Models.Propr> MapPais_ValPropried(ListingMVC<CSGenioApropr> Qlisting)
@@ -440,5 +442,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioApropr.FldCodpropr, CSGenioApropr.Fl
             new TableSearchColumn("ValDtdispon", CSGenioApropr.FldDtdispon, typeof(DateTime?)),
             new TableSearchColumn("ValDescript", CSGenioApropr.FldDescript, typeof(string))
         };
+
     }
 }

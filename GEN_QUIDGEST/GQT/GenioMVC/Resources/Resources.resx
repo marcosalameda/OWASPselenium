@@ -4414,9 +4414,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="DATE_55218" xml:space="preserve">
 		<value>Date:</value>
 	</data>
-	<data name="E2ETEXT44371" xml:space="preserve">
-		<value>E2E resource Text</value>
-	</data>
 	<data name="_112319369" xml:space="preserve">
 		<value>Help in table list</value>
 	</data>
@@ -9693,6 +9690,9 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</valu
 	<data name="TEXTO_DAS_MENSAGENS25657" xml:space="preserve">
 		<value>Text of messages</value>
 	</data>
+	<data name="INICIAR_CONFIGURACAO43417" xml:space="preserve">
+		<value>Start configuration</value>
+	</data>
 	<data name="CAMPO_DA_BD_COM_O_NO27665" xml:space="preserve">
 		<value>Name of field in DB</value>
 	</data>
@@ -13617,6 +13617,9 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</valu
 	<data name="CONFIGURACAO_DO_SIST39343" xml:space="preserve">
 		<value>System Configuration</value>
 	</data>
+	<data name="CONFIGURACAO_DA_APLI59110" xml:space="preserve">
+		<value>Application Configuration</value>
+	</data>
 	<data name="PROCURE_PARA_MAIS_RE41208" xml:space="preserve">
 		<value>Search for more results</value>
 	</data>
@@ -14099,6 +14102,9 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</valu
 	</data>
 	<data name="PLATAFORMA28085" xml:space="preserve">
 		<value>Platform</value>
+	</data>
+	<data name="ACRONIMO12609" xml:space="preserve">
+		<value>Acronym</value>
 	</data>
 	<data name="CONTACTOS35567" xml:space="preserve">
 		<value>Contacts</value>
@@ -15954,6 +15960,9 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</valu
 	<data name="DESCARTAR04620" xml:space="preserve">
 		<value>Discard</value>
 	</data>
+	<data name="LINK_PARA_RESOLVER_O25588" xml:space="preserve">
+		<value>Link to solve the error</value>
+	</data>
 	<data name="PASSWORD_RECOVERY53114" xml:space="preserve">
 		<value>Password recovery</value>
 	</data>
@@ -16709,6 +16718,15 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</valu
 	</data>
 	<data name="NEW_CONFIGURATION_CR61652" xml:space="preserve">
 		<value>New configuration created.</value>
+	</data>
+	<data name="CONFIGURAR_O_SEU_PRO20345" xml:space="preserve">
+		<value>Configure your project.</value>
+	</data>
+	<data name="ATUALIZAR_A_BASE_DE_47288" xml:space="preserve">
+		<value>Update database.</value>
+	</data>
+	<data name="CRIAR_PERFIL_DE_UTIL09072" xml:space="preserve">
+		<value>Create user profile.</value>
 	</data>
 	<data name="THERE_WAS_AN_ERROR_C44163" xml:space="preserve">
 		<value>There was an error creating a new configuration file:</value>

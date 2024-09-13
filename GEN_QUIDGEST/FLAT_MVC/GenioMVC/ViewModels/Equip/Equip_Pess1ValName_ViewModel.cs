@@ -244,8 +244,6 @@ namespace GenioMVC.ViewModels.Equip
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Equip_Pess1ValName_tableFilters"] ?? "false"), true);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("PESS1.NAME", new OrderedDictionary());

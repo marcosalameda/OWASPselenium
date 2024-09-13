@@ -251,8 +251,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtradu.FldCodtradu, CSGenioAtradu.Fl
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["GQT_Menu_911_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("TRADU.REFERENC", new OrderedDictionary());

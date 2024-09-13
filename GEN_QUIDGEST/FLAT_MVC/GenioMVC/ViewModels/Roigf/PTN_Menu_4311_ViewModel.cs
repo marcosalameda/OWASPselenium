@@ -256,8 +256,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAroigf.FldCodroigf, CSGenioAroigf.Fl
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["PTN_Menu_4311_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("ROIGF.ORDER", new OrderedDictionary());

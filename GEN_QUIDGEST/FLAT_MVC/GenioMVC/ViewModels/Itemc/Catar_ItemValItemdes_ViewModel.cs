@@ -210,8 +210,6 @@ namespace GenioMVC.ViewModels.Itemc
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Catar_ItemValItemdes_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("ITEM.ITEMDES", new OrderedDictionary());

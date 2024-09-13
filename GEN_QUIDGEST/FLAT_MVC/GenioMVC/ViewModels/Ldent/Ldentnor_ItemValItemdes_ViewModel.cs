@@ -217,8 +217,6 @@ namespace GenioMVC.ViewModels.Ldent
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Ldentnor_ItemValItemdes_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("ITEM.ITEMDES", new OrderedDictionary());

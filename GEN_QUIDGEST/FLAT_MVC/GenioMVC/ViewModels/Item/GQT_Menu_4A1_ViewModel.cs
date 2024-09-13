@@ -250,8 +250,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAitem.FldCoditem, CSGenioAitem.FldZz
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["GQT_Menu_4A1_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("ITEM.ITEMCOD", new OrderedDictionary());

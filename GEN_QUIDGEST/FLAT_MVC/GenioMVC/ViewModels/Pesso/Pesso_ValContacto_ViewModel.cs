@@ -215,8 +215,6 @@ namespace GenioMVC.ViewModels.Pesso
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["ValContacto_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("TPCON.TIPOCONT", new OrderedDictionary());

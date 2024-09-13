@@ -263,8 +263,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioApesso.FldCodpesso, CSGenioApesso.Fl
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["GQT_Menu_6111311_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("PESSO.NAME", new OrderedDictionary());

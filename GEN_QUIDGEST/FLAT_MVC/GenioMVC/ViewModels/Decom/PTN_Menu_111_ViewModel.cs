@@ -253,8 +253,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAdecom.FldCoddeco, CSGenioAdecom.Fld
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["PTN_Menu_111_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("DECOM.DTDECO", new OrderedDictionary());

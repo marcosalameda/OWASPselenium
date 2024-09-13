@@ -213,8 +213,6 @@ namespace GenioMVC.ViewModels.Lnhde
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Lnhde_Tpeq1ValTipoequi_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("TPEQ1.TPEQUCOD", new OrderedDictionary());

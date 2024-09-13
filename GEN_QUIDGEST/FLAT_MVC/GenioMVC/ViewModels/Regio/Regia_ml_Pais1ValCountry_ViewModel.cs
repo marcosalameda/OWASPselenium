@@ -210,8 +210,6 @@ namespace GenioMVC.ViewModels.Regio
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Regia_ml_Pais1ValCountry_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("PAIS1.COUNTRY", new OrderedDictionary());

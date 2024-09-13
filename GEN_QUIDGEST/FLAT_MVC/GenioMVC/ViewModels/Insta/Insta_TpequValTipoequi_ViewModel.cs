@@ -212,8 +212,6 @@ namespace GenioMVC.ViewModels.Insta
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Insta_TpequValTipoequi_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("TPEQU.TPEQUCOD", new OrderedDictionary());

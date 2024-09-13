@@ -247,8 +247,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcfaqs.FldCodcfaqs, CSGenioAcfaqs.Fl
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["STY_Menu_3591_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 

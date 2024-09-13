@@ -210,8 +210,6 @@ namespace GenioMVC.ViewModels.Cmpki
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Cmpki_Tpeq1ValTipoequi_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("TPEQ1.TIPOEQUI", new OrderedDictionary());

@@ -211,8 +211,6 @@ namespace GenioMVC.ViewModels.Ldent
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Ldent_IndocValDocumenr_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("INDOC.DHDOCUME", new OrderedDictionary());

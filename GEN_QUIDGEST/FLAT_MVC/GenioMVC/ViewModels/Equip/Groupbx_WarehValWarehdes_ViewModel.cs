@@ -211,8 +211,6 @@ namespace GenioMVC.ViewModels.Equip
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Groupbx_WarehValWarehdes_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("WAREH.WAREHCOD", new OrderedDictionary());

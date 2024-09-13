@@ -247,8 +247,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcattp.FldCodtpcat, CSGenioAcattp.Fl
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["GQT_Menu_471_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("CATTP.TPCATEGO", new OrderedDictionary());

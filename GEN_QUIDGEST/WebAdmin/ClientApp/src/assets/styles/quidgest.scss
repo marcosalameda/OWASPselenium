@@ -2336,6 +2336,10 @@ dl.wa-environment {
         cursor: pointer;
         border-radius: $border-radius;
 
+        &.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
     }
 
     @if $enable-rounded {

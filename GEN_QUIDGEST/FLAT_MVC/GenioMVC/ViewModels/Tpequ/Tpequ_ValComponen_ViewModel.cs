@@ -219,8 +219,6 @@ namespace GenioMVC.ViewModels.Tpequ
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["ValComponen_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("CMPKI.ORDER", new OrderedDictionary());

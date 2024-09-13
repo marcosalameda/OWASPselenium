@@ -208,8 +208,6 @@ namespace GenioMVC.ViewModels.Lnhde
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Lnhde_PedidValNrpedido_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 

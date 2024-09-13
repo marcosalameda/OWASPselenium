@@ -210,8 +210,6 @@ namespace GenioMVC.ViewModels.Sale
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Vendaw01_OrganValOrganiza_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("ORGAN.ORGANIZA", new OrderedDictionary());

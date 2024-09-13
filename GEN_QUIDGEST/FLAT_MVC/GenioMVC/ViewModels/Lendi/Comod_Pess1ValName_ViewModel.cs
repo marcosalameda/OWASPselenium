@@ -210,8 +210,6 @@ namespace GenioMVC.ViewModels.Lendi
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Comod_Pess1ValName_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("PESS1.NAME", new OrderedDictionary());

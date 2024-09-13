@@ -210,8 +210,6 @@ namespace GenioMVC.ViewModels.Proje
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Proje_Year1ValYear_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("YEAR1.YEAR", new OrderedDictionary());

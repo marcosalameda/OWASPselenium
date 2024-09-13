@@ -210,8 +210,6 @@ namespace GenioMVC.ViewModels.Item
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Artigext_WarehValWarehdes_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("WAREH.WAREHDES", new OrderedDictionary());

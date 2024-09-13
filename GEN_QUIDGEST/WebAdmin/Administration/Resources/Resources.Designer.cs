@@ -47356,11 +47356,20 @@ namespace Administration.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Link para resolver o erro"
+        ///   Looks up a localized string similar to "Ir para Base de Dados"
         /// </summary>
-        public static string LINK_PARA_RESOLVER_O25588 {
+        public static string IR_PARA_BASE_DE_DADO51178 {
             get {
-                return ResourceManager.GetString("LINK_PARA_RESOLVER_O25588", resourceCulture);
+                return ResourceManager.GetString("IR_PARA_BASE_DE_DADO51178", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Criar Configuração do Sistema"
+        /// </summary>
+        public static string CRIAR_CONFIGURACAO_D17273 {
+            get {
+                return ResourceManager.GetString("CRIAR_CONFIGURACAO_D17273", resourceCulture);
             }
         }
 
@@ -49773,6 +49782,33 @@ namespace Administration.Resources {
         public static string O_CAMPO__0__TEM_UM_E13294 {
             get {
                 return ResourceManager.GetString("O_CAMPO__0__TEM_UM_E13294", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Não foi encontrado nenhum ficheiro de configuração. Por favor, crie um novo para continuar."
+        /// </summary>
+        public static string NAO_FOI_ENCONTRADO_N28305 {
+            get {
+                return ResourceManager.GetString("NAO_FOI_ENCONTRADO_N28305", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Esta ação está bloqueada porque ainda não existe um ficheiro de configuração. Estará disponível quando o ficheiro de configuração for criado corretamente."
+        /// </summary>
+        public static string ESTA_ACAO_ESTA_BLOQU25038 {
+            get {
+                return ResourceManager.GetString("ESTA_ACAO_ESTA_BLOQU25038", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Escolha o formato a partir do qual deseja fazer a exportação"
+        /// </summary>
+        public static string ESCOLHA_O_FORMATO_A_30283 {
+            get {
+                return ResourceManager.GetString("ESCOLHA_O_FORMATO_A_30283", resourceCulture);
             }
         }
 

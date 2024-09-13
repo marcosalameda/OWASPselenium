@@ -210,8 +210,6 @@ namespace GenioMVC.ViewModels.Lnhpd
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["ValDesconju_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 

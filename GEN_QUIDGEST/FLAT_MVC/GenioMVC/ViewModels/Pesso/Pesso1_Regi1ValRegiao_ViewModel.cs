@@ -215,8 +215,6 @@ namespace GenioMVC.ViewModels.Pesso
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Pesso1_Regi1ValRegiao_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("REGI1.REGIAO", new OrderedDictionary());

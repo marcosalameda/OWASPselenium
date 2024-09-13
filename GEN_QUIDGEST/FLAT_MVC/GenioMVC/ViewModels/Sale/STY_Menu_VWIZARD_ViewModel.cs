@@ -270,8 +270,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAsale.FldCodvenda, CSGenioAsale.FldZ
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["STY_Menu_VWIZARD_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("SALE.STARTDT", new OrderedDictionary());

@@ -22,7 +22,8 @@ import {
     QButton,
 	QButtonGroup,
 	QIcon,
-	QSelect
+	QSelect,
+	QTooltip
 } from '@quidgest/ui/components'
 
 export default function ComponentsInit(app) {
@@ -49,4 +50,5 @@ export default function ComponentsInit(app) {
     app.component('QButtonGroup', QButtonGroup)
     app.component('QIcon', QIcon)
     app.component('QSelect', QSelect)
+    app.component('QTooltip', QTooltip)
 }

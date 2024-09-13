@@ -210,8 +210,6 @@ namespace GenioMVC.ViewModels.Pesso
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Externo_CmpnyValDesignat_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("CMPNY.DESIGNAT", new OrderedDictionary());

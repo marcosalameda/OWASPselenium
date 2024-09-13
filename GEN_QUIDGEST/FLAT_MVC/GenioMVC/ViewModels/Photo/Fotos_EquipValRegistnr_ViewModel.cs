@@ -210,8 +210,6 @@ namespace GenioMVC.ViewModels.Photo
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Fotos_EquipValRegistnr_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("EQUIP.REGISTNR", new OrderedDictionary());

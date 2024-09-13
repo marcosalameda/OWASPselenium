@@ -15960,8 +15960,11 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</valu
   <data name="DESCARTAR04620" xml:space="preserve">
     <value>Discard</value>
   </data>
-  <data name="LINK_PARA_RESOLVER_O25588" xml:space="preserve">
-    <value>Link to solve the error</value>
+  <data name="IR_PARA_BASE_DE_DADO51178" xml:space="preserve">
+    <value>Go to Database</value>
+  </data>
+  <data name="CRIAR_CONFIGURACAO_D17273" xml:space="preserve">
+    <value>Create System configuration</value>
   </data>
   <data name="PASSWORD_RECOVERY53114" xml:space="preserve">
     <value>Password recovery</value>
@@ -16766,5 +16769,14 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</valu
   </data>
   <data name="O_CAMPO__0__TEM_UM_E13294" xml:space="preserve">
     <value>Field &#123;0&#125; has an invalid address.</value>
+  </data>
+  <data name="NAO_FOI_ENCONTRADO_N28305" xml:space="preserve">
+    <value>No configuration file was found. Please create a new one to proceed.</value>
+  </data>
+  <data name="ESTA_ACAO_ESTA_BLOQU25038" xml:space="preserve">
+    <value>This action is locked because there is no configuration file yet. It will be available once the configuration file is created successfully.</value>
+  </data>
+  <data name="ESCOLHA_O_FORMATO_A_30283" xml:space="preserve">
+    <value>Select the format from which you wish to export</value>
   </data>
 </root>

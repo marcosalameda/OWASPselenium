@@ -210,8 +210,6 @@ namespace GenioMVC.ViewModels.Wpess
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Armapess_WarehValWarehdes_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("WAREH.WAREHDES", new OrderedDictionary());

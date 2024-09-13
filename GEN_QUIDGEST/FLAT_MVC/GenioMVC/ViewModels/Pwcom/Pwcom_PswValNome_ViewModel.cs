@@ -210,8 +210,6 @@ namespace GenioMVC.ViewModels.Pwcom
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Pwcom_PswValNome_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("PSW.NOME", new OrderedDictionary());

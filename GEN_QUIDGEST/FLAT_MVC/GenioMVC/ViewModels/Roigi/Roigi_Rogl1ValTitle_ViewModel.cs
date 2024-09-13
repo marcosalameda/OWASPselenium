@@ -210,8 +210,6 @@ namespace GenioMVC.ViewModels.Roigi
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Roigi_Rogl1ValTitle_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("ROGL1.TITLE", new OrderedDictionary());

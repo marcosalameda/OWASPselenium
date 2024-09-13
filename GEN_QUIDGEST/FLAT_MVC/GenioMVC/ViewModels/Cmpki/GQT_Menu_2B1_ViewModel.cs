@@ -250,8 +250,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcmpki.FldCodcmpki, CSGenioAcmpki.Fl
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["GQT_Menu_2B1_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("CMPKI.ORDER", new OrderedDictionary());

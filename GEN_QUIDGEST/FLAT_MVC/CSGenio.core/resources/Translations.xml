@@ -15731,8 +15731,11 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="Descartar" code="DESCARTAR04620">
     <ENUS>Discard</ENUS>
   </msg>
-  <msg id="Link para resolver o erro" code="LINK_PARA_RESOLVER_O25588">
-    <ENUS>Link to solve the error</ENUS>
+  <msg id="Ir para Base de Dados" code="IR_PARA_BASE_DE_DADO51178">
+    <ENUS>Go to Database</ENUS>
+  </msg>
+  <msg id="Criar Configuração do Sistema" code="CRIAR_CONFIGURACAO_D17273">
+    <ENUS>Create System configuration</ENUS>
   </msg>
   <msg id="Password recovery" code="PASSWORD_RECOVERY53114">
     <ENUS>Password recovery</ENUS>
@@ -16537,5 +16540,14 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   </msg>
   <msg id="O campo {0} tem um endereço inválido." code="O_CAMPO__0__TEM_UM_E13294">
     <ENUS>Field &#123;0&#125; has an invalid address.</ENUS>
+  </msg>
+  <msg id="Não foi encontrado nenhum ficheiro de configuração. Por favor, crie um novo para continuar." code="NAO_FOI_ENCONTRADO_N28305">
+    <ENUS>No configuration file was found. Please create a new one to proceed.</ENUS>
+  </msg>
+  <msg id="Esta ação está bloqueada porque ainda não existe um ficheiro de configuração. Estará disponível quando o ficheiro de configuração for criado corretamente." code="ESTA_ACAO_ESTA_BLOQU25038">
+    <ENUS>This action is locked because there is no configuration file yet. It will be available once the configuration file is created successfully.</ENUS>
+  </msg>
+  <msg id="Escolha o formato a partir do qual deseja fazer a exportação" code="ESCOLHA_O_FORMATO_A_30283">
+    <ENUS>Select the format from which you wish to export</ENUS>
   </msg>
 </Messages>

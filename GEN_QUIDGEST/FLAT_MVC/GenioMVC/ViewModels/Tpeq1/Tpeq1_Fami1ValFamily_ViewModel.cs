@@ -210,8 +210,6 @@ namespace GenioMVC.ViewModels.Tpeq1
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Tpeq1_Fami1ValFamily_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("FAMI1.FAMILY", new OrderedDictionary());

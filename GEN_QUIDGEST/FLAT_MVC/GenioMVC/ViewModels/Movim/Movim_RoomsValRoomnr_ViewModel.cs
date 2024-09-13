@@ -210,8 +210,6 @@ namespace GenioMVC.ViewModels.Movim
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Movim_RoomsValRoomnr_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("ROOMS.ROOMNR", new OrderedDictionary());

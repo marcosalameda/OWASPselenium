@@ -217,8 +217,6 @@ namespace GenioMVC.ViewModels.Equip
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Equip_ItemValItemdes_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("ITEM.ITEMCOD", new OrderedDictionary());

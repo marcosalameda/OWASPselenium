@@ -210,8 +210,6 @@ namespace GenioMVC.ViewModels.Agreg
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Agreg_ProjeValProjecto_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("PROJE.PROJECTO", new OrderedDictionary());

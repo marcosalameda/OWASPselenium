@@ -218,8 +218,6 @@ namespace GenioMVC.ViewModels.Regio
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["ValImoveisl_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 

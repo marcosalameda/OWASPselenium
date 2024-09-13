@@ -17,45 +17,70 @@
 				<h4>{{ Resources.A_CARREGAR___34906 }}</h4>
 			</div>
 		</div>
-		<div v-if="Model.ResultErrors" class="alert alert-danger">
+		<div v-if="!Model.HasConfig" class="alert alert-danger">
+			<h4>{{ Resources.NO_CONFIGURATION_FIL40493 }}</h4>
+			<p><span v-html="Model.ResultErrors"></span></p>
+			
+			<q-button
+				:label="Resources.CRIAR_CONFIGURACAO_D17273"
+				@click.stop="createNewConfig" />
+		</div>
+		<div v-if="Model.ResultErrors && Model.HasConfig" class="alert alert-danger">
 			<h4>{{ Resources.ERROS_DETECTADOS17821 }}</h4>
 			<p><span v-html="Model.ResultErrors"></span></p>
-			<q-button
-				:label="Resources.LINK_PARA_RESOLVER_O25588"
-				@click.stop="navigateTo($event, 'maintenance')" />
+														</div>
+
+		<div v-if="Model.IsBetaTestig" class="alert alert-warning">
+			<p></p>
+			<p><b>{{ Resources.AMBIENTE_DE_QUALIDAD42119 }}</b></p>
 		</div>
-		<div v-if="!Model.HasConfig || (Model.DBSize === 0 && Model.VersionDb === 0) || UsersCount === 0">
-			<div class="alert alert-danger">
-				<q-icon icon="circle-alert" />
-				<h4>{{ Resources.FICHEIRO_DE_CONFIGUR54917 }}</h4>
-			</div>
-			<br>
+		
+		<div v-if="needsBasicConfig()">
+			<h4>{{ Resources.CONFIGURAR_O_SEU_PRO20345 }}</h4>
 			<div class="row mt-4">
-				<div class="col-auto">
-					<div class="c-card-dashboard" @click.stop="navigateTo($event, 'system_setup')">
+				<div class="col-auto" >
+					<div id="card-system"
+						:class="!Model.HasConfig ? 'disabled c-card-dashboard': 'c-card-dashboard'"
+						@click.stop="Model.HasConfig ? navigateTo($event, 'system_setup') : null">
 						<span class="iconCard feature-icon glyphicons glyphicons-settings"></span>
 						<div class="c-card__title">{{ Resources.CONFIGURACAO_DO_SIST39343 }}</div>
 					</div>
+					<q-tooltip
+						v-if="!Model.HasConfig"
+						anchor="#card-system"
+						:text="Resources.ESTA_ACAO_ESTA_BLOQU25038" />
 					<h4 class="q-type__subtitle">
 						<span>1&#46;</span>
 						{{ Resources.CONFIGURAR_O_SEU_PRO20345 }}
 					</h4>
 				</div>
 				<div class="col-auto">
-					<div class="c-card-dashboard" @click.stop="navigateTo($event, 'maintenance')">
+					<div id="card-database"
+						:class="!Model.HasConfig ? 'disabled c-card-dashboard': 'c-card-dashboard'"
+						@click.stop="Model.HasConfig ? navigateTo($event, 'maintenance') : null">
 						<span class="iconCard feature-icon glyphicons glyphicons-database"></span>
 						<div class="c-card__title">{{ Resources.MANUTENCAO_DA_BASE_D10092 }}</div>
 					</div>
+					<q-tooltip
+						v-if="!Model.HasConfig"
+						anchor="#card-database"
+						:text="Resources.ESTA_ACAO_ESTA_BLOQU25038" />
 					<h4 class="q-type__subtitle">
 						<span>2&#46;</span>
 						{{ Resources.ATUALIZAR_A_BASE_DE_47288 }}
 					</h4>
 				</div>
 				<div class="col-auto">
-					<div class="c-card-dashboard" @click.stop="navigateTo($event, 'users')">
+					<div id="card-user"
+						:class="!Model.HasConfig ? 'disabled c-card-dashboard': 'c-card-dashboard'"
+						@click.stop="Model.HasConfig ? navigateTo($event, 'users') : null">
 						<span class="iconCard feature-icon glyphicons glyphicons-user"></span>
 						<div class="c-card__title">{{ Resources.GESTAO_DE_UTILIZADOR20428 }}</div>
 					</div>
+					<q-tooltip
+						v-if="!Model.HasConfig"
+						anchor="#card-user"
+						:text="Resources.ESTA_ACAO_ESTA_BLOQU25038" />
 					<h4 class="q-type__subtitle">
 						<span>3&#46;</span>
 						{{ Resources.CRIAR_PERFIL_DE_UTIL09072 }}
@@ -64,13 +89,8 @@
 			</div>
 		</div>
 
-		<div v-if="Model.IsBetaTestig" class="alert alert-warning">
-			<p></p>
-			<p><b>{{ Resources.AMBIENTE_DE_QUALIDAD42119 }}</b></p>
-		</div>
-
 		<!-- INFORMATION -->
-		<div v-if="Model.HasConfig">
+		<div v-else>
 			<div class="row">
 				<div class="col-12">
 					<div class="control-row-group">
@@ -264,12 +284,17 @@ export default {
 				});
 			});
 		},
+		needsBasicConfig() {
+			return !this.Model.HasConfig || (this.Model.DBSize === 0 && this.Model.VersionDb === 0) || this.UsersCount === 0
+			
+		},
 		createNewConfig() {
 			var vm = this;
 			//Call method that creates a configuration file
 			QUtils.postData('Dashboard', 'CreateConfiguration', null, null, function (data) {
 					if (data.Success) {
 						bootbox.alert(vm.Resources.NEW_CONFIGURATION_CR61652);
+						vm.navigateTo(null, 'system_setup');
 					}
 					else {
 						bootbox.alert(vm.Resources.THERE_WAS_AN_ERROR_C44163 + "<br>" + data.Message);

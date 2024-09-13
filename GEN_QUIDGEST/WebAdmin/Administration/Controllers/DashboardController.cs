@@ -187,17 +187,17 @@ namespace Administration.Controllers
         {
             string msg = "";
             if (!model.HasEnvironment)
-                msg += Resources.Resources.NAO_FOI_LOCALIZADO_O50094 + " <b>" + Resources.Resources.PROCEDA_A_UMA_NOVA_C24513 + "</b>";
+                msg = Resources.Resources.NAO_FOI_ENCONTRADO_N28305;
 			else if (!model.HasValidConfig)
-                msg += Resources.Resources.E_NECESSARIO_PROCEDE36325 + "<br />";
+                msg = Resources.Resources.E_NECESSARIO_PROCEDE36325 + "<br />";
             else if (model.HasSGBDVersion)
-                msg += Resources.Resources.ERRO_NO_ACESSO_AO_SE43775 + "<br />";
+                msg = Resources.Resources.ERRO_NO_ACESSO_AO_SE43775 + "<br />";
             else if (model.HasDiffVersion && model.VersionDb == -1)
-                msg += Resources.Resources.NAO_FOI_POSSIVEL_LOC30521 + "<br />";
+                msg = Resources.Resources.NAO_FOI_POSSIVEL_LOC30521 + "<br />";
             else if((model.HasDiffVersion || model.HasDiffUserSettingsVersion) && model.VersionDb != -1)
-                msg += Resources.Resources.VERSAO_DE_BASE_DE_DA22093 + " <b>" + Resources.Resources.EXECUTE_A_OPERACAO_D01219 + "</b><br />";
+                msg = Resources.Resources.VERSAO_DE_BASE_DE_DA22093 + " <b>" + Resources.Resources.EXECUTE_A_OPERACAO_D01219 + "</b><br />";
             else if(model.HasDiffIdxVersion && model.VersionIdxDb != 0)
-                msg += Resources.Resources.VERSAO_DE_INDICES_IN26316 + " <b>" + Resources.Resources.EXECUTE_A_OPERACAO_D01219 + "</b><br />";
+                msg = Resources.Resources.VERSAO_DE_INDICES_IN26316 + " <b>" + Resources.Resources.EXECUTE_A_OPERACAO_D01219 + "</b><br />";
 
             return msg;
         }

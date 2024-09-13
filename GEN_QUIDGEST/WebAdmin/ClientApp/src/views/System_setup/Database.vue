@@ -174,19 +174,10 @@
       },
       SaveConfigDatabase: function () {
         var vm = this;
-        //let hasConfig = vm.Model.HasConfig;
         QUtils.log("SaveConfigDatabase - Request", QUtils.apiActionURL('Config', 'SaveConfigDatabase'));
         QUtils.postData('Config', 'SaveConfigDatabase', vm.Model, null, function (data) {
           QUtils.log("SaveConfigDatabase - Response", data);
-          setTimeout(function () {
-              vm.$router.push({ name: 'dashboard', params: { culture: vm.currentLang, system: vm.currentYear } });
-            }, 3000);
-          /*if (!hasConfig) {
-            setTimeout(function () {
-              vm.$router.push({ name: 'dashboard', params: { culture: vm.currentLang, system: vm.currentYear } });
-            }, 3000);
-          }*/
-          vm.$emit('updateModal', data);
+                                        vm.$emit('updateModal', data);
         });
       }
     }

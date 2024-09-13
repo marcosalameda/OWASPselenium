@@ -1571,7 +1571,7 @@ namespace GenioMVC.Controllers
 			return PartialView(partialView, model);
 		}
 
- 
+
 		// POST: /Equip/Equip_SaveEdit
 		[AuthorizeForUsers]
 		[HttpPost]

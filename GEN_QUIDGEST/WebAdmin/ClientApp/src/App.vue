@@ -31,7 +31,6 @@
 									<span class="mdi mdi-earth"></span>
 								</template>
 							</q-select>
-							<!-- <select-simple :showValue="false"></select-simple> -->
 						</template>
 					</li>
 				</ul>
@@ -62,15 +61,15 @@
 								</li>
 
 								<li class="nav-item n-sidebar__nav-item">
-									<a class="nav-link n-sidebar__nav-link" @click.stop="navigateTo($event, 'system_setup')">
+									<a :class="getMenuClasses()" @click.stop="tryNavigate($event, 'system_setup')">
 										<span class="mdi mdi-tools"></span>
 										<p>&nbsp;{{ Resources.CONFIGURACAO_DO_SIST39343 }}</p>
 									</a>
 								</li>
 
 								<li class="nav-item n-sidebar__nav-item">
-									<a :class="{'nav-link n-sidebar__nav-link level-0': true, 'selected': isSelected}"
-										@click.stop="navigateTo($event, 'app_configuration', true)">
+									<a :class="[getMenuClasses(), {'level-0': true, 'selected': isSelected}]"
+										@click.stop="tryNavigate($event, 'app_configuration', true)">
 										<span class="mdi mdi-application-cog-outline"></span>
 										<p>
 											&nbsp;{{ Resources.CONFIGURACAO_DA_APLI59110 }}
@@ -89,39 +88,39 @@
 								</li>
 
 								<li class="nav-item n-sidebar__nav-item">
-									<a class="nav-link n-sidebar__nav-link" @click.stop="navigateTo($event, 'maintenance')" style="white-space: nowrap !important;">
+									<a :class="getMenuClasses()" @click.stop="tryNavigate($event, 'maintenance')" style="white-space: nowrap !important;">
 										<span class="mdi mdi-database-cog"></span>
 										<p>&nbsp;{{ Resources.MANUTENCAO_DA_BASE_D10092 }}</p>
 									</a>
 								</li>
 
 								<li class="nav-item n-sidebar__nav-item">
-									<a class="nav-link n-sidebar__nav-link" @click.stop="navigateTo($event, 'users')">
+									<a :class="getMenuClasses()" @click.stop="tryNavigate($event, 'users')">
 										<span class="mdi mdi-account-cog"></span>
 										<p>&nbsp;{{ Resources.GESTAO_DE_UTILIZADOR20428 }}</p>
 									</a>
 								</li>
 								<hr>
 								<li class="nav-item n-sidebar__nav-item">
-									<a class="nav-link n-sidebar__nav-link" @click.stop="navigateTo($event, 'email')">
+									<a :class="getMenuClasses()" @click.stop="tryNavigate($event, 'email')">
 										<span class="mdi mdi-email"></span>
 										<p>&nbsp;{{ Resources.SERVIDOR_DE_EMAIL19063 }}</p>
 									</a>
 								</li>
 								<li class="nav-item n-sidebar__nav-item">
-									<a class="nav-link n-sidebar__nav-link" @click.stop="navigateTo($event, 'system_reports')">
+									<a :class="getMenuClasses()" @click.stop="tryNavigate($event, 'system_reports')">
 										<span class="mdi mdi-alert-outline"></span>
 										<p>&nbsp;{{ Resources.RELATORIO_DO_SISTEMA49744 }}</p>
 									</a>
 								</li>
 								<li class="nav-item n-sidebar__nav-item">
-									<a class="nav-link n-sidebar__nav-link" @click.stop="navigateTo($event, 'report_management')">
+									<a :class="getMenuClasses()" @click.stop="tryNavigate($event, 'report_management')">
 										<span class="mdi mdi-file-chart"></span>
 										<p>&nbsp;{{ Resources.GESTAO_DE_RELATORIOS37970 }}</p>
 									</a>
 								</li>
 								<li class="nav-item n-sidebar__nav-item">
-									<a class="nav-link n-sidebar__nav-link" @click.stop="navigateTo($event, 'notifications')">
+									<a :class="getMenuClasses()" @click.stop="tryNavigate($event, 'notifications')">
 										<span class="mdi mdi-bell-cog"></span>
 										<p>&nbsp;{{ Resources.GESTAO_DE_NOTIFICACO14803 }}</p>
 									</a>
@@ -154,6 +153,7 @@ export default {
 	mixins: [reusableMixin],
 	data() {
 		return {
+			loaded: false,
 			Model: {},
 			isMenuOpen: false,
 			Applications: [],
@@ -196,16 +196,32 @@ export default {
 				vm.setYears(data.Years, data.DefaultYear);
 			});
 		},
+		getConfig() {
+			var vm = this;
+			vm.loaded = false;
+			QUtils.FetchData(QUtils.apiActionURL('Dashboard', 'Index')).done(function (data) {
+				$.each(data.model, function (propName, value) { vm.Model[propName] = value; });
+				vm.loaded = true;
+			});
+		},
+		getMenuClasses() {
+			var vm = this;
+			return vm.Model.HasConfig ? 'nav-link n-sidebar__nav-link' : 'nav-link n-sidebar__nav-link disabled';
+		},
+		tryNavigate(event, route, hasSubmenu = false) {
+			var vm = this;
+			return vm.Model.HasConfig ? this.navigateTo(event, route, hasSubmenu) : null
+		},
 		setModal(data) {
 			var vm = this;
 			$.extend(vm.Model, data);
 			// Select the first exists application
 			if ($.isEmptyObject(vm.currentApp) && !$.isEmptyObject(vm.Model.Applications)) {
-			vm.currentApp = vm.Model.Applications[0].Id;
+				vm.currentApp = vm.Model.Applications[0].Id;
 			}
 			// Focus on errors div
 			if (!$.isEmptyObject(vm.Model.ResultMsg)) {
-			window.scrollTo(0,0);
+				window.scrollTo(0,0);
 			}
 		},
 		setApplications(applications) {
@@ -215,7 +231,7 @@ export default {
 		getApplications() {
 			var vm = this;
 			QUtils.FetchData(QUtils.apiActionURL('Main', 'GetApplications')).done(function (data) {
-			vm.setApplications(data.Applications);
+				vm.setApplications(data.Applications);
 			});
 		},
 		selectApp(event, appId) {
@@ -233,6 +249,7 @@ export default {
 		this.$eventHub.off('SET_SYSTEM');
 		this.$eventHub.off('SET_CULTURE');
 		this.$eventHub.off('SET_APPLICATIONS');
+		this.$eventHub.off('fetchSysConfig');
 	},
 	created() {
 		var vm = this;
@@ -245,17 +262,8 @@ export default {
 		this.$eventHub.on('SET_SYSTEM', function (value) { if (vm.currentYear != value) vm.currentYear = value; });
 		this.$eventHub.on('SET_CULTURE', function (value) { if (vm.currentLang != value) vm.currentLang = value; });
 		this.$eventHub.on('SET_APPLICATIONS', function (value) { vm.setApplications(value); });
+		this.$eventHub.on('fetchSysConfig', this.getConfig);
+		this.getConfig();
 	}
 };
 </script>
-
-<style scoped>
-	.sidebar .glyphicons {
-		font-size: 14pt;
-		padding-right: 5px;
-	}
-
-	.sidebar .nav-item {
-		cursor: pointer;
-	}
-</style>

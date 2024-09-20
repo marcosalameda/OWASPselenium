@@ -248,8 +248,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioArordi.FldCodrordi, CSGenioArordi.Fl
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["PTN_Menu_421_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("RORDI.ORDER", new OrderedDictionary());

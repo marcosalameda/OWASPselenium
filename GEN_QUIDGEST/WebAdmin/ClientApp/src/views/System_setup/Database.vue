@@ -178,6 +178,7 @@
         QUtils.postData('Config', 'SaveConfigDatabase', vm.Model, null, function (data) {
           QUtils.log("SaveConfigDatabase - Response", data);
                                         vm.$emit('updateModal', data);
+          vm.$eventHub.emit('fetchSysConfig', data);
         });
       }
     }

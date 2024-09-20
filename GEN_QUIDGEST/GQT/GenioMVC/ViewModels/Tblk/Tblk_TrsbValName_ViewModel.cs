@@ -210,8 +210,6 @@ namespace GenioMVC.ViewModels.Tblk
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Tblk_TrsbValName_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("TRSB.NAME", new OrderedDictionary());

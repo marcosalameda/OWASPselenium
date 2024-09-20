@@ -183,7 +183,7 @@ namespace Administration.Controllers
                     ReportingService2010SoapClient rs = new ReportingService2010SoapClient(rsBinding, rsEndpointAddress);
 
                     if (conf.ssrsServer.ContainsCredentials())
-                        rs.ClientCredentials.Windows.ClientCredential = new System.Net.NetworkCredential(Encoding.Unicode.GetString(Convert.FromBase64String(conf.ssrsServer.Username)), Encoding.Unicode.GetString(Convert.FromBase64String(conf.ssrsServer.Password)), conf.ssrsServer.Domain);
+                        rs.ClientCredentials.Windows.ClientCredential = new System.Net.NetworkCredential(conf.ssrsServer.UsernameDecode, conf.ssrsServer.PasswordDecode, conf.ssrsServer.Domain);
                     else
                         rs.ClientCredentials.Windows.ClientCredential = (System.Net.NetworkCredential)System.Net.CredentialCache.DefaultCredentials;
 

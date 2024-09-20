@@ -7737,6 +7737,8 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   <msg id="Style" code="STYLE47121">
     <ENUS>Style</ENUS>
   </msg>
+  <msg id="Legacy" code="LEGACY36133">
+  </msg>
   <msg id="Training Exercise 17" code="TRAINING_EXERCISE_1742948">
     <ENUS>Training Exercise 17</ENUS>
   </msg>
@@ -8413,6 +8415,8 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <ENUS>Creation date</ENUS>
   </msg>
   <msg id="Teste" code="TESTE23551">
+  </msg>
+  <msg id="WCF" code="WCF53361">
   </msg>
   <msg id="a:" code="A_47238">
     <ENUS>to:</ENUS>
@@ -15731,8 +15735,11 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="Descartar" code="DESCARTAR04620">
     <ENUS>Discard</ENUS>
   </msg>
-  <msg id="Link para resolver o erro" code="LINK_PARA_RESOLVER_O25588">
-    <ENUS>Link to solve the error</ENUS>
+  <msg id="Reindexar Base de Dados" code="REINDEXAR_BASE_DE_DA52902">
+    <ENUS>Reindex Database</ENUS>
+  </msg>
+  <msg id="Criar Configuração do Sistema" code="CRIAR_CONFIGURACAO_D17273">
+    <ENUS>Create System configuration</ENUS>
   </msg>
   <msg id="Password recovery" code="PASSWORD_RECOVERY53114">
     <ENUS>Password recovery</ENUS>
@@ -16490,14 +16497,17 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="New configuration created." code="NEW_CONFIGURATION_CR61652">
     <ENUS>New configuration created.</ENUS>
   </msg>
-  <msg id="Configurar o seu projeto." code="CONFIGURAR_O_SEU_PRO20345">
-    <ENUS>Configure your project.</ENUS>
+  <msg id="Configurar o seu projeto" code="CONFIGURAR_O_SEU_PRO44930">
+    <ENUS>Configure your project</ENUS>
   </msg>
-  <msg id="Atualizar a base de dados." code="ATUALIZAR_A_BASE_DE_47288">
-    <ENUS>Update database.</ENUS>
+  <msg id="Atualizar a base de dados" code="ATUALIZAR_A_BASE_DE_60308">
+    <ENUS>Update database</ENUS>
   </msg>
-  <msg id="Criar perfil de utilizador." code="CRIAR_PERFIL_DE_UTIL09072">
-    <ENUS>Create user profile.</ENUS>
+  <msg id="Criar perfil de utilizador" code="CRIAR_PERFIL_DE_UTIL50057">
+    <ENUS>Create user profile</ENUS>
+  </msg>
+  <msg id="Erro!" code="ERRO_35877">
+    <ENUS>Error!</ENUS>
   </msg>
   <msg id="There was an error creating a new configuration file:" code="THERE_WAS_AN_ERROR_C44163">
     <ENUS>There was an error creating a new configuration file:</ENUS>
@@ -16537,5 +16547,26 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   </msg>
   <msg id="O campo {0} tem um endereço inválido." code="O_CAMPO__0__TEM_UM_E13294">
     <ENUS>Field &#123;0&#125; has an invalid address.</ENUS>
+  </msg>
+  <msg id="Não foi encontrado nenhum ficheiro de configuração. Por favor, crie um novo para continuar." code="NAO_FOI_ENCONTRADO_N28305">
+    <ENUS>No configuration file was found. Please create a new one to proceed.</ENUS>
+  </msg>
+  <msg id="Esta ação está bloqueada porque ainda não existe um ficheiro de configuração. Estará disponível quando o ficheiro de configuração for criado corretamente." code="ESTA_ACAO_ESTA_BLOQU25038">
+    <ENUS>This action is locked because there is no configuration file yet. It will be available once the configuration file is created successfully.</ENUS>
+  </msg>
+  <msg id="Escolha o formato a partir do qual deseja fazer a exportação" code="ESCOLHA_O_FORMATO_A_30283">
+    <ENUS>Select the format from which you wish to export</ENUS>
+  </msg>
+  <msg id="Expressão Cron inválida" code="EXPRESSAO_CRON_INVAL33136">
+    <ENUS>Invalid Cron expression</ENUS>
+  </msg>
+  <msg id="Tarefas agendadas" code="TAREFAS_AGENDADAS24414">
+    <ENUS>Scheduled tasks</ENUS>
+  </msg>
+  <msg id="Tarefa agendada" code="TAREFA_AGENDADA03399">
+    <ENUS>Scheduled task</ENUS>
+  </msg>
+  <msg id="[Segundo Minuto Hora Dia Mês DiaDaSemana] Ver expressões de agendamento Cron para mais detalhes." code="_SEGUNDO_MINUTO_HORA37214">
+    <ENUS>&#91;Second Minute Hour Day Month DayOfWeek&#93; See Cron schedule expression for more details.</ENUS>
   </msg>
 </Messages>

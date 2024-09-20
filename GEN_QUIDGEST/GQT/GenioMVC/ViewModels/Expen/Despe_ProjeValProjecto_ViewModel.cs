@@ -210,8 +210,6 @@ namespace GenioMVC.ViewModels.Expen
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Despe_ProjeValProjecto_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("PROJE.PROJECTO", new OrderedDictionary());

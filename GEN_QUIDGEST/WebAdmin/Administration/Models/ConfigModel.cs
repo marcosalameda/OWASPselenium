@@ -173,6 +173,8 @@ namespace Administration.Models
 
         public MessagingXml Messaging { get; set; }
 
+        public SchedulerXml Scheduler { get; set; }
+
         public CSGenio.core.messaging.MessageMetadata MessagingMetadata {get; set;}
 
         [BindNever]
@@ -192,7 +194,8 @@ namespace Administration.Models
                     DisplayUserType = AuxFunctions.ToSelectList<DisplayUserType>(),
                     IdentityProviderTypeList = IdentityProviderCfg.TypeList,
                     RoleProviderTypeList = RoleProviderCfg.TypeList,
-                    PropertyList = MorePropertyCfg.PropertyList
+                    PropertyList = MorePropertyCfg.PropertyList,
+                    SchedulerTaskList = ScheduleTaskFactory.GetTaskOptions(),
                 };
             }
         }

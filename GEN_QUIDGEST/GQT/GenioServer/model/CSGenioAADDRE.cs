@@ -211,6 +211,10 @@ namespace CSGenio.business
 
 
 
+			info.RelatedSumFields = new string[] {
+			 "addresspostalcode"
+			};
+
 
 
 
@@ -432,11 +436,11 @@ namespace CSGenio.business
 		}
 
 
-		/// <summary>Field : "Address Postal Code" Tipo: "C" Formula:  ""</summary>
+		/// <summary>Field : "Address Postal Code" Tipo: "C" Formula: SR ""</summary>
 		public static FieldRef FldAddresspostalcode { get { return m_fldAddresspostalcode; } }
 		private static FieldRef m_fldAddresspostalcode = new FieldRef("addre", "addresspostalcode");
 
-		/// <summary>Field : "Address Postal Code" Tipo: "C" Formula:  ""</summary>
+		/// <summary>Field : "Address Postal Code" Tipo: "C" Formula: SR ""</summary>
 		public string ValAddresspostalcode
 		{
 			get { return (string)returnValueField(FldAddresspostalcode); }

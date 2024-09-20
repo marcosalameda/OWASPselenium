@@ -17,172 +17,181 @@
 				<h4>{{ Resources.A_CARREGAR___34906 }}</h4>
 			</div>
 		</div>
-		<div v-if="!Model.HasConfig" class="alert alert-danger">
-			<h4>{{ Resources.NO_CONFIGURATION_FIL40493 }}</h4>
-			<p><span v-html="Model.ResultErrors"></span></p>
-			
-			<q-button
-				:label="Resources.CRIAR_CONFIGURACAO_D17273"
-				@click.stop="createNewConfig" />
-		</div>
-		<div v-if="Model.ResultErrors && Model.HasConfig" class="alert alert-danger">
-			<h4>{{ Resources.ERROS_DETECTADOS17821 }}</h4>
-			<p><span v-html="Model.ResultErrors"></span></p>
-														</div>
-
-		<div v-if="Model.IsBetaTestig" class="alert alert-warning">
-			<p></p>
-			<p><b>{{ Resources.AMBIENTE_DE_QUALIDAD42119 }}</b></p>
-		</div>
-		
-		<div v-if="needsBasicConfig()">
-			<h4>{{ Resources.CONFIGURAR_O_SEU_PRO20345 }}</h4>
-			<div class="row mt-4">
-				<div class="col-auto" >
-					<div id="card-system"
-						:class="!Model.HasConfig ? 'disabled c-card-dashboard': 'c-card-dashboard'"
-						@click.stop="Model.HasConfig ? navigateTo($event, 'system_setup') : null">
-						<span class="iconCard feature-icon glyphicons glyphicons-settings"></span>
-						<div class="c-card__title">{{ Resources.CONFIGURACAO_DO_SIST39343 }}</div>
-					</div>
-					<q-tooltip
-						v-if="!Model.HasConfig"
-						anchor="#card-system"
-						:text="Resources.ESTA_ACAO_ESTA_BLOQU25038" />
-					<h4 class="q-type__subtitle">
-						<span>1&#46;</span>
-						{{ Resources.CONFIGURAR_O_SEU_PRO20345 }}
-					</h4>
-				</div>
-				<div class="col-auto">
-					<div id="card-database"
-						:class="!Model.HasConfig ? 'disabled c-card-dashboard': 'c-card-dashboard'"
-						@click.stop="Model.HasConfig ? navigateTo($event, 'maintenance') : null">
-						<span class="iconCard feature-icon glyphicons glyphicons-database"></span>
-						<div class="c-card__title">{{ Resources.MANUTENCAO_DA_BASE_D10092 }}</div>
-					</div>
-					<q-tooltip
-						v-if="!Model.HasConfig"
-						anchor="#card-database"
-						:text="Resources.ESTA_ACAO_ESTA_BLOQU25038" />
-					<h4 class="q-type__subtitle">
-						<span>2&#46;</span>
-						{{ Resources.ATUALIZAR_A_BASE_DE_47288 }}
-					</h4>
-				</div>
-				<div class="col-auto">
-					<div id="card-user"
-						:class="!Model.HasConfig ? 'disabled c-card-dashboard': 'c-card-dashboard'"
-						@click.stop="Model.HasConfig ? navigateTo($event, 'users') : null">
-						<span class="iconCard feature-icon glyphicons glyphicons-user"></span>
-						<div class="c-card__title">{{ Resources.GESTAO_DE_UTILIZADOR20428 }}</div>
-					</div>
-					<q-tooltip
-						v-if="!Model.HasConfig"
-						anchor="#card-user"
-						:text="Resources.ESTA_ACAO_ESTA_BLOQU25038" />
-					<h4 class="q-type__subtitle">
-						<span>3&#46;</span>
-						{{ Resources.CRIAR_PERFIL_DE_UTIL09072 }}
-					</h4>
-				</div>
-			</div>
-		</div>
-
-		<!-- INFORMATION -->
 		<div v-else>
-			<div class="row">
-				<div class="col-12">
-					<div class="control-row-group">
-						<QGroupBoxContainer :label="Resources.SOBRE44896">
-							<div class="container-fluid">
-								<dl class="row">
-									<dt>{{ Resources.SISTEMA05814 }}</dt>
-									<dd>GQT</dd>
-									<dt>{{ Resources.ACRONIMO12609 }}</dt>
-									<dd>QUIDGEST</dd>
-									<dt>{{ Resources.CLIENTE40500 }}</dt>
-									<dd>Quidgest - Management Consultants, S.A.</dd>
-								</dl>
-								<dl class="row">
-									<dt>{{ Resources.VERSAO_DE_SISTEMA07287 }}</dt>
-									<dd>2783</dd>
-									<dt>{{ Resources.VERSAO_DE_BASE_DE_DA46937 }}</dt>
-									<dd>{{ Model.VersionDbGen }}</dd>
-									<dt>{{ Resources.APP_MIGRATION_VERSIO41495 }}</dt>
-									<dd>0</dd>
-									<dt>{{ Resources.VERSAO_DOS_INDICES49454 }}</dt>
-									<dd>{{ Model.VersionIdxDbGen }}</dd>
-									<dt>{{ Resources.VERSAO_DE_GENIO44840 }}</dt>
-									<dd>349.31</dd>
-									<dt>{{ Resources.GERADO_EM27272 }}</dt>
-									<dd>08/27/2024</dd>
-								</dl>
-								<dl class="row">
-									<span class="app-brand">
-										<img src="@/assets/img/f-login__brand.png">
-									</span>
-								</dl> 
-							</div>
-						</QGroupBoxContainer>
+			<div v-if="!Model.HasConfig" class="alert alert-danger">
+				<h4>{{ Resources.NO_CONFIGURATION_FIL40493 }}</h4>
+				<p><span v-html="Model.ResultErrors"></span></p>
+				<q-button
+					:label="Resources.CRIAR_CONFIGURACAO_D17273"
+					@click.stop="createNewConfig" />
+			</div>
+			<div v-if="Model.ResultErrors && Model.HasConfig" class="alert alert-danger">
+				<h4>{{ Resources.ERRO_35877 }}</h4>
+				<p><span v-html="Model.ResultErrors"></span></p>
+				<q-button
+					v-if="showDBButton()"
+					:label="Resources.REINDEXAR_BASE_DE_DA52902"
+					@click.stop="navigateTo($event, 'maintenance')" />
+			</div>
+			<br>
+
+			<div v-if="Model.IsBetaTestig" class="alert alert-warning">
+				<p></p>
+				<p><b>{{ Resources.AMBIENTE_DE_QUALIDAD42119 }}</b></p>
+			</div>
+
+			<div v-if="needsBasicConfig()">
+				<h4>{{ Resources.CONFIGURAR_O_SEU_PRO44930 }}</h4>
+				<div class="row">
+					<div class="col-auto" >
+						<div id="card-system"
+							:class="getCardClass('card-system')"
+							@click.stop="Model.HasConfig ? navigateTo($event, 'system_setup') : null">
+							<span class="mdi mdi-tools"></span>
+							<div class="c-card__title">{{ Resources.CONFIGURACAO_DO_SIST39343 }}</div>
+						</div>
+						<q-tooltip
+							v-if="!Model.HasConfig"
+							anchor="#card-system"
+							:text="Resources.ESTA_ACAO_ESTA_BLOQU25038" />
+						<h4 class="q-type__subtitle">
+							<span>1&#46;</span>
+							{{ Resources.CONFIGURAR_O_SEU_PRO44930 }}
+							<span class="mdi mdi-check-bold"></span>
+						</h4>
+					</div>
+					<div class="col-auto">
+						<div id="card-database"
+							:class="getCardClass('card-database')"
+							@click.stop="Model.HasConfig ? navigateTo($event, 'maintenance') : null">
+							<span class="mdi mdi-database-cog"></span>
+							<div class="c-card__title">{{ Resources.MANUTENCAO_DA_BASE_D10092 }}</div>
+						</div>
+						<q-tooltip
+							v-if="!Model.HasConfig"
+							anchor="#card-database"
+							:text="Resources.ESTA_ACAO_ESTA_BLOQU25038" />
+						<h4 class="q-type__subtitle">
+							<span>2&#46;</span>
+							{{ Resources.ATUALIZAR_A_BASE_DE_60308 }}
+							<span class="mdi mdi-check-bold"></span>
+						</h4>
+					</div>
+					<div class="col-auto">
+						<div id="card-user"
+							:class="getCardClass('card-user')"
+							@click.stop="Model.HasConfig ? navigateTo($event, 'users') : null">
+							<span class="mdi mdi-account-cog"></span>
+							<div class="c-card__title">{{ Resources.GESTAO_DE_UTILIZADOR20428 }}</div>
+						</div>
+						<q-tooltip
+							v-if="!Model.HasConfig"
+							anchor="#card-user"
+							:text="Resources.ESTA_ACAO_ESTA_BLOQU25038" />
+						<h4 class="q-type__subtitle">
+							<span>3&#46;</span>
+							{{ Resources.CRIAR_PERFIL_DE_UTIL50057 }}
+							<span class="mdi mdi-check-bold"></span>
+						</h4>
 					</div>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col-12">
-					<div class="control-row-group">
-						<QGroupBoxContainer :label="Resources.AMBIENTE12083">
-							<dl class="wa-environment">
-								<dt>{{ Resources.SERVIDOR_DE_SGBD19838 }}</dt>
-								<dd>{{ Model.SGBDServer }}</dd>
-								<dt>{{ Resources.SGBD26061 }}</dt>
-								<dd>{{ Model.TpSGBD }}</dd>
-								<dt>{{ Resources.VERSAO_DO_SGBD43730 }}</dt>
-								<dd>{{ Model.SGBDVersion }}
-									<span
-										v-if="Model.HasSGBDVersion"
-										style="color:red;">&nbsp;
-										<i class="glyphicons glyphicons-exclamation-sign" aria-hidden="true"></i>
-									</span>
-								</dd>
-								<dt>{{ Resources.BASE_DE_DADOS58234 }}</dt>
-								<dd>{{ Model.DBSchema }}</dd>
-								<dt>{{ Resources.TAMANHO_DA_BD56664 }}</dt>
-								<dd>{{ Model.DBSize }} MB</dd>
-								<dt class="version">{{ Resources.VERSAO_DA_BD12683 }}</dt>
-								<dd class="version">{{ Model.VersionDb }}
-									<span class="icon" v-if="Model.HasDiffIdxVersion">
-										&nbsp;
-										<span class="mdi mdi-alert-circle"></span>
-									</span>
-								</dd>
-								<dt>{{ Resources.COMPUTADOR39938 }}</dt>
-								<dd>{{ Model.PCDesc }}</dd>
-								<dt>{{ Resources.SISTEMA_OPERATIVO30480 }}</dt>
-								<dd>{{ Model.SODesc }}</dd>
-								<dt>{{ Resources.PROCESSADOR36325 }}</dt>
-								<dd>{{ Model.HardwProcDesc }}</dd>
-								<dt>{{ Resources.MEMORIA09056 }}</dt>
-								<dd>{{ Model.HardwMemDesc }}</dd>
-								<dt>{{ Resources.DRIVES34119 }}</dt>
-								<dd>
-									<span v-html="Model.HardwDrivDesc"></span>
-								</dd>
-							</dl>
-						</QGroupBoxContainer>
+
+			<!-- INFORMATION -->
+			<div v-else>
+				<div class="row">
+					<div class="col-12">
+						<div class="control-row-group">
+							<QGroupBoxContainer :label="Resources.SOBRE44896">
+								<div class="container-fluid">
+									<dl class="row">
+										<dt>{{ Resources.SISTEMA05814 }}</dt>
+										<dd>GQT</dd>
+										<dt>{{ Resources.ACRONIMO12609 }}</dt>
+										<dd>QUIDGEST</dd>
+										<dt>{{ Resources.CLIENTE40500 }}</dt>
+										<dd>Quidgest - Management Consultants, S.A.</dd>
+									</dl>
+									<dl class="row">
+										<dt>{{ Resources.VERSAO_DE_SISTEMA07287 }}</dt>
+										<dd>2784</dd>
+										<dt>{{ Resources.VERSAO_DE_BASE_DE_DA46937 }}</dt>
+										<dd>{{ Model.VersionDbGen }}</dd>
+										<dt>{{ Resources.APP_MIGRATION_VERSIO41495 }}</dt>
+										<dd>0</dd>
+										<dt>{{ Resources.VERSAO_DOS_INDICES49454 }}</dt>
+										<dd>{{ Model.VersionIdxDbGen }}</dd>
+										<dt>{{ Resources.VERSAO_DE_GENIO44840 }}</dt>
+										<dd>349.90</dd>
+										<dt>{{ Resources.GERADO_EM27272 }}</dt>
+										<dd>09/13/2024</dd>
+									</dl>
+									<dl class="row">
+										<span class="app-brand">
+											<img src="@/assets/img/f-login__brand.png">
+										</span>
+									</dl> 
+								</div>
+							</QGroupBoxContainer>
+						</div>
 					</div>
 				</div>
-			</div>
-			<div class="row">
-				<div class="col-12">
-					<div class="control-row-group">
-						<QGroupBoxContainer :label="Resources.CONTACTOS35567">
-							<address>
-								<strong>Quidgest, S.A.</strong>
-								Rua Viriato, 7  1050-233 Lisboa &#124; Portugal  &#124;  (+351) 213 870 563
-								<a href="mailto:quidgest@quidgest.com">quidgest@quidgest.com</a>
-							</address>
-						</QGroupBoxContainer>
+				<div class="row">
+					<div class="col-12">
+						<div class="control-row-group">
+							<QGroupBoxContainer :label="Resources.AMBIENTE12083">
+								<dl class="wa-environment">
+									<dt>{{ Resources.SERVIDOR_DE_SGBD19838 }}</dt>
+									<dd>{{ Model.SGBDServer }}</dd>
+									<dt>{{ Resources.SGBD26061 }}</dt>
+									<dd>{{ Model.TpSGBD }}</dd>
+									<dt>{{ Resources.VERSAO_DO_SGBD43730 }}</dt>
+									<dd>{{ Model.SGBDVersion }}
+										<span
+											v-if="Model.HasSGBDVersion"
+											style="color:red;">&nbsp;
+											<i class="glyphicons glyphicons-exclamation-sign" aria-hidden="true"></i>
+										</span>
+									</dd>
+									<dt>{{ Resources.BASE_DE_DADOS58234 }}</dt>
+									<dd>{{ Model.DBSchema }}</dd>
+									<dt>{{ Resources.TAMANHO_DA_BD56664 }}</dt>
+									<dd>{{ Model.DBSize }} MB</dd>
+									<dt class="version">{{ Resources.VERSAO_DA_BD12683 }}</dt>
+									<dd class="version">{{ Model.VersionDb }}
+										<span class="icon" v-if="Model.HasDiffIdxVersion">
+											&nbsp;
+											<span class="mdi mdi-alert-circle"></span>
+										</span>
+									</dd>
+									<dt>{{ Resources.COMPUTADOR39938 }}</dt>
+									<dd>{{ Model.PCDesc }}</dd>
+									<dt>{{ Resources.SISTEMA_OPERATIVO30480 }}</dt>
+									<dd>{{ Model.SODesc }}</dd>
+									<dt>{{ Resources.PROCESSADOR36325 }}</dt>
+									<dd>{{ Model.HardwProcDesc }}</dd>
+									<dt>{{ Resources.MEMORIA09056 }}</dt>
+									<dd>{{ Model.HardwMemDesc }}</dd>
+									<dt>{{ Resources.DRIVES34119 }}</dt>
+									<dd>
+										<span v-html="Model.HardwDrivDesc"></span>
+									</dd>
+								</dl>
+							</QGroupBoxContainer>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12">
+						<div class="control-row-group">
+							<QGroupBoxContainer :label="Resources.CONTACTOS35567">
+								<address>
+									<strong>Quidgest, S.A.</strong>
+									Rua Viriato, 7  1050-233 Lisboa &#124; Portugal  &#124;  (+351) 213 870 563
+									<a href="mailto:quidgest@quidgest.com">quidgest@quidgest.com</a>
+								</address>
+							</QGroupBoxContainer>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -286,7 +295,24 @@ export default {
 		},
 		needsBasicConfig() {
 			return !this.Model.HasConfig || (this.Model.DBSize === 0 && this.Model.VersionDb === 0) || this.UsersCount === 0
-			
+		},
+		showDBButton() {
+			return this.Model.HasDiffVersion || this.Model.VersionDb != -1
+		},
+		getCardClass(cardId) {
+			switch (cardId) {
+				case 'card-system':
+					return this.Model.HasConfig ? 'c-card-dashboard done' : 'c-card-dashboard disabled';
+				
+				case 'card-database':
+					return this.Model.DBSize > 0 ? 'c-card-dashboard done' : 'c-card-dashboard disabled';
+
+				case 'card-user':
+					return this.UsersCount > 0 ? 'c-card-dashboard done' : 'c-card-dashboard disabled';
+
+				default:
+					return this.Model.HasConfig ? 'c-card-dashboard' : 'c-card-dashboard disabled';
+			}
 		},
 		createNewConfig() {
 			var vm = this;

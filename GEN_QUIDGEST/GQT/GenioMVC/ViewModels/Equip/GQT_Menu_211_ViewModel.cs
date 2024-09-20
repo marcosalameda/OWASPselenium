@@ -268,10 +268,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["GQT_Menu_211_tableFilters"] ?? "false"), false);
-			Menu.Filters.FilterDateStart = new FieldRef("equip", "dtaquisi");
-			Menu.Filters.FilterDateEnd = new FieldRef("equip", "dtdeco");
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("EQUIP.REGISTNR", new OrderedDictionary());

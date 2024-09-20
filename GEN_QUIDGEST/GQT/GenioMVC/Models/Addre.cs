@@ -75,7 +75,7 @@ namespace GenioMVC.Models
 		public bool ShouldSerializeValAddressstate() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Addre.ValAddressstate");
 
 		[DisplayName("Address Postal Code")]
-		/// <summary>Field : "Address Postal Code" Tipo: "C" Formula:  ""</summary>
+		/// <summary>Field : "Address Postal Code" Tipo: "C" Formula: SR ""</summary>
 		public string ValAddresspostalcode { get { return klass.ValAddresspostalcode; } set { klass.ValAddresspostalcode = value; } }
 		public bool ShouldSerializeValAddresspostalcode() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Addre.ValAddresspostalcode");
 

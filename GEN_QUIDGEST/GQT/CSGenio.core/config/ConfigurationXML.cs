@@ -215,6 +215,10 @@ namespace CSGenio
         [XmlElement("Messaging")]
         public MessagingXml Messaging { get; set; }
 
+
+        [XmlElement("Scheduler")]
+        public SchedulerXml Scheduler { get; set; }
+
         /*
             Functions
         */
@@ -380,6 +384,7 @@ namespace CSGenio
     {
         [XmlText]
         public string url { get; set; }
+
         [XmlAttribute("path")]
         public string path { get; set; }
 
@@ -391,10 +396,41 @@ namespace CSGenio
         {
             return !string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password) && !string.IsNullOrEmpty(Domain);
         }
+
         [XmlAttribute("username")]
         public string Username { get; set; }
+
+        [XmlIgnore]
+        public string UsernameDecode
+        {
+            get
+            {
+                if (Password == null) return null;
+                return System.Text.Encoding.Unicode.GetString(Convert.FromBase64String(Username));
+            }
+            set
+            {
+                Username = Convert.ToBase64String(Encoding.Unicode.GetBytes(value ?? string.Empty));
+            }
+        }
+
         [XmlAttribute("password")]
         public string Password { get; set; }
+
+        [XmlIgnore]
+        public string PasswordDecode
+        {
+            get
+            {
+                if (Password == null) return null;
+                return System.Text.Encoding.Unicode.GetString(Convert.FromBase64String(Password));
+            }
+            set
+            {
+                Password = Convert.ToBase64String(Encoding.Unicode.GetBytes(value ?? string.Empty));
+            }
+        }
+
         [XmlAttribute("domain")]
         public string Domain { get; set; }
     }
@@ -631,15 +667,28 @@ namespace CSGenio
 
             while (reader.NodeType != System.Xml.XmlNodeType.EndElement)
             {
+                object ak = reader.GetAttribute("key");
+                object av = reader.GetAttribute("value");
+                var isEmpty = reader.IsEmptyElement;
 
                 reader.ReadStartElement("item");
+
+                //no attributes means we are using elements instead
+                if(ak == null)
+                {
                 reader.ReadStartElement("key");
-                TKey key = (TKey)keySerializer.Deserialize(reader);
+                    ak = keySerializer.Deserialize(reader);
                 reader.ReadEndElement();
+                }                
+                if(av == null)
+                {
                 reader.ReadStartElement("value");
-                TValue value = (TValue)valueSerializer.Deserialize(reader);
+                    av = valueSerializer.Deserialize(reader);
                 reader.ReadEndElement();
-                this.Add(key, value);
+                }
+                this.Add((TKey)ak, (TValue)av);
+
+                if(!isEmpty)
                 reader.ReadEndElement();
                 reader.MoveToContent();
 
@@ -652,17 +701,30 @@ namespace CSGenio
             XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
             XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));
 
+            bool simplified = typeof(TKey) == typeof(string) && typeof(TValue) == typeof(string);
+
             foreach (TKey key in this.Keys)
             {
-                writer.WriteStartElement("item");
-                writer.WriteStartElement("key");
-                keySerializer.Serialize(writer, key);
-                writer.WriteEndElement();
-                writer.WriteStartElement("value");
-                TValue value = this[key];
-                valueSerializer.Serialize(writer, value);
-                writer.WriteEndElement();
-                writer.WriteEndElement();
+                //string dictionarys can be simplified a single element with attributes
+                if(simplified)
+                {
+                    writer.WriteStartElement("item");
+                    writer.WriteAttributeString("key", key.ToString());
+                    writer.WriteAttributeString("value", this[key].ToString());
+                    writer.WriteEndElement();
+                }
+                else //otherwise do a full key and value serialization
+                {
+	                writer.WriteStartElement("item");
+	                writer.WriteStartElement("key");
+	                keySerializer.Serialize(writer, key);
+	                writer.WriteEndElement();
+	                writer.WriteStartElement("value");
+	                TValue value = this[key];
+	                valueSerializer.Serialize(writer, value);
+	                writer.WriteEndElement();
+	                writer.WriteEndElement();
+                }
             }
         }
 
@@ -1180,6 +1242,41 @@ namespace CSGenio
             return System.Text.Encoding.Unicode.GetString(Convert.FromBase64String(Username));
         }
 
+    }
+
+    [XmlRoot("Scheduler")]
+    public class SchedulerXml
+    {
+        [XmlAttribute]
+        public bool Enabled { get; set; } = false;
+
+        [XmlArray("Jobs")]
+        [XmlArrayItem("Job")]
+        public List<SchedulerJobXml> Jobs { get; set; } = new List<SchedulerJobXml>();
+    }
+
+    [XmlRoot("Job")]
+    public class SchedulerJobXml
+    {
+        [XmlAttribute]
+        public string Id { get; set; }
+        [XmlAttribute]
+        public string TaskType { get; set; }
+        /// <summary>
+        /// Format is:
+        ///   Second Minute Hour DayOfMonth Month DayOfWeek
+        ///     * for all values
+        ///     x-y for a range between x and y
+        ///     x,y for a list of x and y values
+        ///     */n for running at every n'th value
+        /// </summary>
+        /// <seealso cref="https://github.com/HangfireIO/Cronos"/>
+        [XmlAttribute]
+        public string Cron { get; set; }
+        [XmlAttribute]
+        public bool Enabled { get; set; } = true;
+
+        public SerializableDictionary<string, string> Options { get; set; } = null;
     }
 
 }

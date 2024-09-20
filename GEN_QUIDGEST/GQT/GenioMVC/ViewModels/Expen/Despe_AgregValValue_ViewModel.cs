@@ -220,8 +220,6 @@ namespace GenioMVC.ViewModels.Expen
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Despe_AgregValValue_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("AGREG.VALUE", new OrderedDictionary());

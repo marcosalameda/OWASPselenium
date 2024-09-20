@@ -229,10 +229,6 @@ namespace GenioMVC.ViewModels.Equip
 		[Display(Name = "TIMELINE45857", ResourceType = typeof(Resources.Resources))]
 		public string ValTlequipa { get; set; }
 
-		/// <summary>Campo : "Show record" Tipo:"L"</summary>
-		[Display(Name = "SHOW_RECORD53851", ResourceType = typeof(Resources.Resources))]
-		public bool ValShowrc { get; set; }
-
 
 		#region Navigations
 		#endregion
@@ -397,7 +393,6 @@ namespace GenioMVC.ViewModels.Equip
  				ValPhotogra = ViewModelConversion.ToImage(m.ValPhotogra);
  				ValLastpho = ViewModelConversion.ToImage(m.ValLastpho);
  				ValIfabatif = ViewModelConversion.ToLogic(m.ValIfabatif);
- 				ValShowrc = ViewModelConversion.ToLogic(m.ValShowrc);
  				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
  				ValCoddeco = ViewModelConversion.ToString(m.ValCoddeco);
  				ValCoditem = ViewModelConversion.ToString(m.ValCoditem);
@@ -440,7 +435,6 @@ namespace GenioMVC.ViewModels.Equip
 				m.ValQtdmovim = ViewModelConversion.ToNumeric(ValQtdmovim);
 				m.ValMoviment = ViewModelConversion.ToString(ValMoviment);
 				m.ValIfabatif = ViewModelConversion.ToLogic(ValIfabatif);
-				m.ValShowrc = ViewModelConversion.ToLogic(ValShowrc);
 				m.ValCodempre = ViewModelConversion.ToString(ValCodempre);
 				m.ValCoddeco = ViewModelConversion.ToString(ValCoddeco);
 				m.ValCoditem = ViewModelConversion.ToString(ValCoditem);

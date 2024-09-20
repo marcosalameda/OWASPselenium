@@ -39,6 +39,9 @@
 				<a class="nav-link c-tab__item-header" id="messaging-tab" data-toggle="tab" data-target="#messaging" role="tab" aria-controls="messaging" aria-selected="false">Messaging</a>
 			</li>
 			<li class="nav-item c-tab__item">
+				<a class="nav-link c-tab__item-header" id="scheduler-tab" data-toggle="tab" data-target="#scheduler" role="tab" aria-controls="scheduler" aria-selected="false">Scheduler</a>
+			</li>
+			<li class="nav-item c-tab__item">
 				<a class="nav-link c-tab__item-header" id="others-tab" data-toggle="tab" data-target="#others" role="tab" aria-controls="others" aria-selected="false">{{ Resources.MAIS25935 }}</a>
 			</li>
 		</ul>
@@ -63,6 +66,10 @@
 			<div class="tab-pane c-tab__item-content" id="messaging" ref="messaging" role="tabpanel" aria-labelledby="messaging-tab">
 				<messaging v-if="Model && isActiveTab('messaging')"  :Model="Model.Messaging" :Metadata="Model.MessagingMetadata" @updateModal="fetchData"></messaging>
 			</div>
+			<!--Scheduler-->
+			<div class="tab-pane c-tab__item-content" id="scheduler" ref="scheduler" role="tabpanel" aria-labelledby="scheduler-tab">
+				<scheduler v-if="Model && isActiveTab('scheduler')" :Model="Model.Scheduler" :TaskList="Model.SelectLists.SchedulerTaskList" @updateModal="fetchData"></scheduler>
+			</div>
 			<!--Others-->
 			<div class="tab-pane c-tab__item-content" id="others" ref="others" role="tabpanel" aria-labelledby="others-tab">
 				<others v-if="Model && isActiveTab('others')" :Model="Model" :Cores="Cores" :SelectLists="Model.SelectLists" @updateModal="fetchData"></others>
@@ -85,11 +92,12 @@
 	import paths from './System_setup/Paths.vue';
 	import others from './System_setup/Others.vue';
 		import messaging from './System_setup/Messaging.vue';
+	import scheduler from './System_setup/Scheduler.vue';
 
 	export default {
     name: 'system_setup',
     mixins: [reusableMixin],
-    components: { database, security, audit, paths, others, messaging },
+    components: { database, security, audit, paths, others, messaging, scheduler },
 	data() {
 		return {
 			Model: {},

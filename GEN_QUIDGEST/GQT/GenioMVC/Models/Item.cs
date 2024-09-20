@@ -125,7 +125,7 @@ namespace GenioMVC.Models
 
 		[DisplayName("Specifications")]
 		/// <summary>Field : "Specifications" Tipo: "IB" Formula:  ""</summary>
-		[Document("ValTechspec", true, false, false)]
+		[Document("ValTechspec", false, true, false, false)]
 		public string ValTechspec { get { return klass.ValTechspec; } set { klass.ValTechspec = value; } }
 		public string ValTechspecfk { get { return klass.ValTechspecfk; } set { klass.ValTechspecfk = value; } }
 		public bool ShouldSerializeValTechspec() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Item.ValTechspec");

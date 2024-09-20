@@ -245,8 +245,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAglob.FldCodglob, CSGenioAglob.FldZz
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["TBS_Menu_171_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 

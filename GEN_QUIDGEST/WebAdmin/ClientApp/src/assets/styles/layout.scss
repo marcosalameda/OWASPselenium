@@ -564,6 +564,8 @@ html, body {
 }
 
 .n-sidebar {
+    padding: 0 .5rem;
+
     &__toggler-icon {
         color: $icon-light;
         font-size: 24px;
@@ -638,10 +640,15 @@ html, body {
     }
 
     &__nav-item {
+        cursor: pointer;
 
         &--dropdown {
             margin-bottom: -1.25rem;
             margin-top: .5rem;
+        }
+
+        &:has(.disabled) {
+            cursor: not-allowed;
         }
 
         .nav-link {
@@ -652,7 +659,11 @@ html, body {
             p {
                 display: flex;
                 align-items: center;
-                margin-left: 0.25rem;
+                margin: .25rem 0 .25rem .25rem;
+            }
+
+            &.disabled {
+                opacity: 0.5;
             }
         }
     }

@@ -101,6 +101,13 @@ namespace Administration.Controllers
                     model.Messaging.Host.Password = "";
                     model.MessagingMetadata = MessagingService.Metadata;
                 }
+                //----------------
+                // Scheduler
+                //----------------
+                if(conf.Scheduler != null)
+                {
+                    model.Scheduler = conf.Scheduler;
+                }
 
                 //----------------
                 // Others [PATHS , FORMATS , Elasticsearch]
@@ -118,7 +125,7 @@ namespace Administration.Controllers
                 model.ssrsServerPath = conf.ssrsServer.path;
                 model.isLocalReports = conf.ssrsServer.isLocalReports;
                 model.ssrsServerDomain = conf.ssrsServer.Domain;
-                model.ssrsServerUsername = Encoding.Unicode.GetString(Convert.FromBase64String(conf.ssrsServer.Username ?? string.Empty));
+                model.ssrsServerUsername = conf.ssrsServer.UsernameDecode ?? string.Empty;
                 
                 if (string.IsNullOrEmpty(conf.ssrsServer.Password)) model.hasSsrsServerPassword = false;
                 else model.hasSsrsServerPassword = true;
@@ -701,6 +708,82 @@ namespace Administration.Controllers
             return Json(new { Success = true });
         }
 
+
+        public IActionResult SaveSchedulerConfig([FromBody]SchedulerXml model)
+        {
+            var conf = configManager.GetExistingConfig();
+            conf.Scheduler.Enabled = model.Enabled;
+            configManager.StoreConfig(conf);
+
+            // Reload Configuration static instance in server with the new Configuracoes.xml data
+            CSGenio.framework.Configuration.ReadConfiguration(conf);
+
+            // Dynamically update the scheduler service with the new configuration
+            var service = this.HttpContext.RequestServices.GetRequiredService<SchedulerServiceHost>();
+            service.UpdateEnable();
+
+            return Json(new { Success = true });
+        }
+
+        public class FormRecordOperation<T>
+        {
+            public T Data { get; set; }
+            public string FormMode { get; set; }
+        }
+
+        public IActionResult SaveScheduledJob([FromBody]FormRecordOperation<SchedulerJobXml> model)
+        {
+            var row = model.Data;
+
+            var conf = configManager.GetExistingConfig();
+            var existing = conf.Scheduler.Jobs.Find(x => x.Id == row.Id);
+
+            switch(model.FormMode)
+            {
+                case "delete":
+                    if(existing is not null)
+                        conf.Scheduler.Jobs.Remove(existing);
+                    break;
+                case "new":
+                case "edit":
+                    //validate Cron
+                    if(!Cronos.CronExpression.TryParse(row.Cron, Cronos.CronFormat.IncludeSeconds, out var _))
+                        return Json(new { Success = false, Message = Resources.Resources.EXPRESSAO_CRON_INVAL33136  });
+
+                    //trim unused/empty options
+                    if(row.Options != null)
+                    {
+                        foreach(var kvp in row.Options)
+                            if(string.IsNullOrEmpty(kvp.Value))
+                                row.Options.Remove(kvp.Key);
+                        if(row.Options.Count == 0)
+                            row.Options = null;
+                    }
+
+                    //update the job list
+                    if(existing is not null)
+                        conf.Scheduler.Jobs.Remove(existing);
+                    conf.Scheduler.Jobs.Add(row);
+                    break;
+                default:
+                    Log.Error("Unknown form operation in SaveScheduledJob.");
+                    break;
+            }
+
+            configManager.StoreConfig(conf);
+
+            // Reload Configuration static instance in server with the new Configuracoes.xml data
+            CSGenio.framework.Configuration.ReadConfiguration(conf);
+
+            // Dynamically update the scheduler service with the new configuration
+            var service = this.HttpContext.RequestServices.GetRequiredService<SchedulerServiceHost>();
+            service.UpdateJobs();
+
+
+            return Json(new { Success = true });
+        }
+
+
 		[HttpGet]
         public IActionResult GetNewMorePropertyCfg()
         {
@@ -859,7 +942,7 @@ namespace Administration.Controllers
                 conf.ssrsServer.path = model.ssrsServerPath;
                 conf.ssrsServer.isLocalReports = model.isLocalReports;
                 conf.ssrsServer.Domain = model.ssrsServerDomain;
-                conf.ssrsServer.Username = Convert.ToBase64String(Encoding.Unicode.GetBytes(model.ssrsServerUsername));
+                conf.ssrsServer.UsernameDecode = model.ssrsServerUsername;
                 
                 if (!string.IsNullOrEmpty(model.ssrsServerUsername) && string.IsNullOrEmpty(model.ssrsServerPassword))
                     throw new BusinessException("SSR Password field is empty.", "EmailPropertiesModel.MapToModel", "SSR Password field is empty.");
@@ -868,7 +951,7 @@ namespace Administration.Controllers
                     throw new BusinessException("SSR Username field is empty.", "EmailPropertiesModel.MapToModel", "SSR Username field is empty.");
 
                 // Convert new password to base64
-                conf.ssrsServer.Password = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(model.ssrsServerPassword ?? ""));
+                conf.ssrsServer.PasswordDecode = model.ssrsServerPassword ?? "";
 
                 conf.DateFormat.Date = model.DateFormat.date;
                 conf.DateFormat.DateTime = model.DateFormat.dateTime;

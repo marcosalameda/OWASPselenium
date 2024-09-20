@@ -210,8 +210,6 @@ namespace GenioMVC.ViewModels.Propr
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Propr01_CntryValCountry_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("CNTRY.COUNTRY", new OrderedDictionary());

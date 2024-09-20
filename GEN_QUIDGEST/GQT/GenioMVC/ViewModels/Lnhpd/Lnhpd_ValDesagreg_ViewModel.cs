@@ -219,8 +219,6 @@ namespace GenioMVC.ViewModels.Lnhpd
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["ValDesagreg_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("LNHDE.ORDEM", new OrderedDictionary());

@@ -85,7 +85,7 @@ namespace GenioMVC.Controllers
                     // MH (11/10/2017) - Report Server credentials
                     if (Configuration.SSRSServer.ContainsCredentials())
                     {
-                        renderer.ServerReportInstance.ReportServerCredentials = new ReportServerCredentials(Configuration.SSRSServer.Username, Configuration.SSRSServer.Password, Configuration.SSRSServer.Domain);
+                        renderer.ServerReportInstance.ReportServerCredentials = new ReportServerCredentials(Configuration.SSRSServer.UsernameDecode, Configuration.SSRSServer.PasswordDecode, Configuration.SSRSServer.Domain);
                     }
                     renderer.ConstructReport(UserContext.Current.User, area, historicFieldNames, historicFieldValues, globFields, areasReport, limitation.ToArray(), specialFormulasFields);
                     result = renderer.Render("PDF");

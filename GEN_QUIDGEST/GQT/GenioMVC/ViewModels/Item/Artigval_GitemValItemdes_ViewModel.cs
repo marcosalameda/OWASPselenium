@@ -210,8 +210,6 @@ namespace GenioMVC.ViewModels.Item
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Artigval_GitemValItemdes_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("GITEM.ITEMDES", new OrderedDictionary());

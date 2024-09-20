@@ -210,8 +210,6 @@ namespace GenioMVC.ViewModels.Pesso
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Pesso_Pais1ValCountry_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("PAIS1.COUNTRY", new OrderedDictionary());

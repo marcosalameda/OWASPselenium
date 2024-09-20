@@ -53,7 +53,7 @@ namespace GenioMVC.Models
 
 		[DisplayName("Digital document")]
 		/// <summary>Field : "Digital document" Tipo: "IB" Formula:  ""</summary>
-		[Document("ValDigdocum", true, false, false)]
+		[Document("ValDigdocum", false, true, false, false)]
 		public string ValDigdocum { get { return klass.ValDigdocum; } set { klass.ValDigdocum = value; } }
 		public string ValDigdocumfk { get { return klass.ValDigdocumfk; } set { klass.ValDigdocumfk = value; } }
 		public bool ShouldSerializeValDigdocum() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Manua.ValDigdocum");

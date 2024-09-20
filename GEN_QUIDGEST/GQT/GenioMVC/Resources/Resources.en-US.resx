@@ -7941,6 +7941,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
 	<data name="STYLE47121" xml:space="preserve">
 		<value>Style</value>
 	</data>
+	<data name="LEGACY36133" xml:space="preserve">
+		<value>Legacy</value>
+	</data>
 	<data name="TRAINING_EXERCISE_1742948" xml:space="preserve">
 		<value>Training Exercise 17</value>
 	</data>
@@ -8642,6 +8645,9 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</valu
 	</data>
 	<data name="TESTE23551" xml:space="preserve">
 		<value>Teste</value>
+	</data>
+	<data name="WCF53361" xml:space="preserve">
+		<value>WCF</value>
 	</data>
 	<data name="A_47238" xml:space="preserve">
 		<value>to:</value>
@@ -15960,8 +15966,11 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</valu
 	<data name="DESCARTAR04620" xml:space="preserve">
 		<value>Discard</value>
 	</data>
-	<data name="LINK_PARA_RESOLVER_O25588" xml:space="preserve">
-		<value>Link to solve the error</value>
+	<data name="REINDEXAR_BASE_DE_DA52902" xml:space="preserve">
+		<value>Reindex Database</value>
+	</data>
+	<data name="CRIAR_CONFIGURACAO_D17273" xml:space="preserve">
+		<value>Create System configuration</value>
 	</data>
 	<data name="PASSWORD_RECOVERY53114" xml:space="preserve">
 		<value>Password recovery</value>
@@ -16719,14 +16728,17 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</valu
 	<data name="NEW_CONFIGURATION_CR61652" xml:space="preserve">
 		<value>New configuration created.</value>
 	</data>
-	<data name="CONFIGURAR_O_SEU_PRO20345" xml:space="preserve">
-		<value>Configure your project.</value>
+	<data name="CONFIGURAR_O_SEU_PRO44930" xml:space="preserve">
+		<value>Configure your project</value>
 	</data>
-	<data name="ATUALIZAR_A_BASE_DE_47288" xml:space="preserve">
-		<value>Update database.</value>
+	<data name="ATUALIZAR_A_BASE_DE_60308" xml:space="preserve">
+		<value>Update database</value>
 	</data>
-	<data name="CRIAR_PERFIL_DE_UTIL09072" xml:space="preserve">
-		<value>Create user profile.</value>
+	<data name="CRIAR_PERFIL_DE_UTIL50057" xml:space="preserve">
+		<value>Create user profile</value>
+	</data>
+	<data name="ERRO_35877" xml:space="preserve">
+		<value>Error!</value>
 	</data>
 	<data name="THERE_WAS_AN_ERROR_C44163" xml:space="preserve">
 		<value>There was an error creating a new configuration file:</value>
@@ -16766,5 +16778,26 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</valu
 	</data>
 	<data name="O_CAMPO__0__TEM_UM_E13294" xml:space="preserve">
 		<value>Field &#123;0&#125; has an invalid address.</value>
+	</data>
+	<data name="NAO_FOI_ENCONTRADO_N28305" xml:space="preserve">
+		<value>No configuration file was found. Please create a new one to proceed.</value>
+	</data>
+	<data name="ESTA_ACAO_ESTA_BLOQU25038" xml:space="preserve">
+		<value>This action is locked because there is no configuration file yet. It will be available once the configuration file is created successfully.</value>
+	</data>
+	<data name="ESCOLHA_O_FORMATO_A_30283" xml:space="preserve">
+		<value>Select the format from which you wish to export</value>
+	</data>
+	<data name="EXPRESSAO_CRON_INVAL33136" xml:space="preserve">
+		<value>Invalid Cron expression</value>
+	</data>
+	<data name="TAREFAS_AGENDADAS24414" xml:space="preserve">
+		<value>Scheduled tasks</value>
+	</data>
+	<data name="TAREFA_AGENDADA03399" xml:space="preserve">
+		<value>Scheduled task</value>
+	</data>
+	<data name="_SEGUNDO_MINUTO_HORA37214" xml:space="preserve">
+		<value>&#91;Second Minute Hour Day Month DayOfWeek&#93; See Cron schedule expression for more details.</value>
 	</data>
 </root>

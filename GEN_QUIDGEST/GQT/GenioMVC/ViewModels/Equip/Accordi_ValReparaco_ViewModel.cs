@@ -219,8 +219,6 @@ namespace GenioMVC.ViewModels.Equip
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["ValReparaco_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("REPAR.NRREPARA", new OrderedDictionary());

@@ -251,8 +251,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAregis.FldCodregis, CSGenioAregis.Fl
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["REG_Menu_111_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("REGIS.NAME", new OrderedDictionary());

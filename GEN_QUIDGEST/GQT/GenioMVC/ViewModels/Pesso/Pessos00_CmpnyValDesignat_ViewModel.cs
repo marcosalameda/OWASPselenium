@@ -221,8 +221,6 @@ namespace GenioMVC.ViewModels.Pesso
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Pessos00_CmpnyValDesignat_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("CMPNY.ACRONYM", new OrderedDictionary());

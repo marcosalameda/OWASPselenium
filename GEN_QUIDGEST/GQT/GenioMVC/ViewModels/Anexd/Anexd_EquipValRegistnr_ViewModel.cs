@@ -210,8 +210,6 @@ namespace GenioMVC.ViewModels.Anexd
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Anexd_EquipValRegistnr_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("EQUIP.REGISTNR", new OrderedDictionary());

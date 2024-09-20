@@ -213,8 +213,6 @@ namespace GenioMVC.ViewModels.Cfaqs
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["ValExpfaqs_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 

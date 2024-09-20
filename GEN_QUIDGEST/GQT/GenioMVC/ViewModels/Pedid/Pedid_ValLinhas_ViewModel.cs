@@ -215,8 +215,6 @@ namespace GenioMVC.ViewModels.Pedid
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["ValLinhas_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("LNHPD.LINE", new OrderedDictionary());

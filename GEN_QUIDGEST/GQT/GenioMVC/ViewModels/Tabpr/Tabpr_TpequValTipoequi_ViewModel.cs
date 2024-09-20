@@ -210,8 +210,6 @@ namespace GenioMVC.ViewModels.Tabpr
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Tabpr_TpequValTipoequi_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("TPEQU.TIPOEQUI", new OrderedDictionary());

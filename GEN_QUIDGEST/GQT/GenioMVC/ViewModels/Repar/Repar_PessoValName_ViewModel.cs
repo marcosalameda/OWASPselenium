@@ -231,8 +231,6 @@ namespace GenioMVC.ViewModels.Repar
 
 			bool tableReload = true;
 
-			Menu.SetFilters(bool.Parse(requestValues["Repar_PessoValName_tableFilters"] ?? "false"), false);
-
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 			allSortOrders.Add("PESSO.NAME", new OrderedDictionary());

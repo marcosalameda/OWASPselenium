@@ -106,10 +106,9 @@ namespace CSGenio.business
 			Qfield.FieldSize =  4;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
-			Qfield.VisivelCav = CavVisibilityType.Nunca;
+			Qfield.CavDesignation = "YEAR_NUMBER12856";
 
 			Qfield.Dupmsg = "";
-			Qfield.Formula = new ReplicaFormula("_replicRel_codyear", "yearnum");
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -165,12 +164,12 @@ namespace CSGenio.business
 
 
 			info.ReplicaFields = new string[] {
-			 "year","yearnumb"
+			 "year"
 			};
 
 
 			info.RelatedSumFields = new string[] {
-			 "value"
+			 "value","yearnumb"
 			};
 
 
@@ -341,11 +340,11 @@ namespace CSGenio.business
 		}
 
 
-		/// <summary>Field : "Year NUMBER" Tipo: "N" Formula: ++ "[YEAR->YEARNUM]"</summary>
+		/// <summary>Field : "Year NUMBER" Tipo: "N" Formula: SR "[YEAR->YEARNUM]"</summary>
 		public static FieldRef FldYearnumb { get { return m_fldYearnumb; } }
 		private static FieldRef m_fldYearnumb = new FieldRef("agreg", "yearnumb");
 
-		/// <summary>Field : "Year NUMBER" Tipo: "N" Formula: ++ "[YEAR->YEARNUM]"</summary>
+		/// <summary>Field : "Year NUMBER" Tipo: "N" Formula: SR "[YEAR->YEARNUM]"</summary>
 		public decimal ValYearnumb
 		{
 			get { return (decimal)returnValueField(FldYearnumb); }

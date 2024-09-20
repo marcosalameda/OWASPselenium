@@ -67,9 +67,21 @@ builder.Services.AddSingleton<IUserManagementService, UserManagement>();
 //Add configuration manager
 builder.Services.AddSingleton<CSGenio.config.IConfigurationManager>(new FileConfigurationManager(AppDomain.CurrentDomain.BaseDirectory));
 
+
+// Support for installing as a machine service (windows or linux)
+// In the cloud just install this as a normal WebApp with Always On option.
+if (OperatingSystem.IsWindows())
+    builder.Host.UseWindowsService();
+if (OperatingSystem.IsLinux())
+    builder.Host.UseSystemd();
+
 //Background services (messaging, scheduling, ...)
 builder.WebHost.UseShutdownTimeout(TimeSpan.FromSeconds(60));
 builder.Services.AddHostedService<MessagingServiceHost>();
+//register the scheduler host as a normal service as well so we can access it from the controllers
+builder.Services.AddSingleton<SchedulerServiceHost>();
+builder.Services.AddHostedService<SchedulerServiceHost>(p => p.GetRequiredService<SchedulerServiceHost>());
+
 
 // USE /[MANUAL GQT APP_INIT]/
 

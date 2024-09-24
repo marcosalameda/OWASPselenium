@@ -15,7 +15,7 @@
 // USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_231_EQUIP_DESIGNAT]/
 		column.Expression(p => p.ValDesignat).Title(@Resources.EQUIPMENT03632).Field("ValDesignat").Size(30);
 // USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_231_EQUIP_PHOTOGRA]/
-		column.Expression(p => Html.ImageMagnifierZoom(p.ValPhotogra, new {alt=@Resources.PHOTO51874,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCodequip, modelname = "Equip", fldname = "ValPhotogra" }))).Title(@Resources.PHOTO51874).Field("ValPhotogra").Size(3);
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValPhotogra, new {alt=@Resources.PHOTO51874,}, Url.Action("ImageHandlerGet", "Home", new { ticket = Helpers.GetFileTicket(UserContext.Current.User, "Equip", "ValPhotogra", "", p.ValCodequip, null) }))).Title(@Resources.PHOTO51874).Field("ValPhotogra").Size(3);
 // USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_231_ROOM1_ROOMNR]/
 		column.Expression(p => p.Room1.ValRoomnr).Title(@Resources.N_R__ROOM43805).Field("Room1.ValRoomnr").Size(10);
 // USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_231_TPEQU_TIPOEQUI]/

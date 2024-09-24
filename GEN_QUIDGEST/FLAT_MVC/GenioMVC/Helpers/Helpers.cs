@@ -326,7 +326,8 @@ namespace GenioMVC.Helpers
             if ((byteArray != null && byteArray.Length > 0) || (object.Equals(html.ViewBag.formmode, "new") || object.Equals(html.ViewBag.formmode, "edit")))
             {
                 var urlHelper = new UrlHelper(html.ViewContext.RequestContext);
-                string absUrl = urlHelper.Action("ImageHandlerGet", model, new { id = guid, modelname = model, fldname = field, formIdentifier });
+                var ticket = Helpers.GetFileTicket(UserContext.Current.User, model, field, "", guid);
+                string absUrl = urlHelper.Action("ImageHandlerGet", model, new { ticket, formIdentifier });
 
                 var imgCtrl = new TagBuilder("div");
                 imgCtrl.Attributes.Add("elem-identifier", "image-control");
@@ -341,6 +342,7 @@ namespace GenioMVC.Helpers
                 img.Attributes.Add("src", absUrl);
                 img.Attributes.Add("id", "thumbnail_" + field);
                 img.Attributes.Add("alt", field.StartsWith("Val") ? field.Substring(3) : field); // adds the field name as alt attribute (without 'Val') for better accessibility
+                img.Attributes.Add("img-ticket", ticket);
 
                 TagBuilder a = new TagBuilder("a");
                 a.Attributes.Add("elem-identifier", "image-control-magnify");
@@ -3425,6 +3427,22 @@ namespace GenioMVC.Helpers
         {
             return HtmlSanitizerHelper.SanitizeHTML(plainText, isDocument);
         }
+
+		/// <summary>
+		/// Generates a ticket that can be used by the client-side to access the specified resource.
+		/// </summary>
+		/// <param name="user">The user for whom this ticket is created.</param>
+		/// <param name="table">The table where the resource is located.</param>
+		/// <param name="fieldName">The name of the field in the table that contains the resource.</param>
+		/// <param name="primaryKeyField">The primary key field name of the table that contains resource.</param>
+		/// <param name="keyValue">The primary key value of the record associated with the resource.</param>
+		/// <param name="resourceName">Optional. The name of the resource.</param>
+		/// <returns>A ticket that provide access to the specified resource in the specified table field.</returns>
+		public static string GetFileTicket(User user, string table, string fieldName, string primaryKeyField, string keyValue, string resourceName = null)
+		{
+			ResourceQuery versionResource = new ResourceQuery(resourceName, table, fieldName, primaryKeyField, keyValue);
+			return QResources.CreateTicketEncryptedBase64(user.Name, user.Location, versionResource);
+		}
     }
 
     #endregion

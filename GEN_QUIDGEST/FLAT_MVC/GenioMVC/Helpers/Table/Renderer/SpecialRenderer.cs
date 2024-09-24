@@ -274,13 +274,9 @@ namespace GenioMVC.Helpers
                                         fldname = tc.ColumnField;
                                     }
 
+                                    var ticket = Helpers.GetFileTicket(Models.Navigation.UserContext.Current.User, modelName, fldname, "", id);
                                     value = new UrlHelper(Builder.HtmlHelper.ViewContext.RequestContext)
-                                        .Action("ImageHandlerGet", "Home", new
-                                        {
-                                            id,
-                                            modelname = modelName,
-                                            fldname
-                                        });
+                                        .Action("ImageHandlerGet", "Home", new { ticket });
                                 }
                                 /*
                                 * When the column is numeric, we want to avoid using Evaluate, since it

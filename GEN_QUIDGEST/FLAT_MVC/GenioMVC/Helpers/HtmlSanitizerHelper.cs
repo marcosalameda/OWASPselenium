@@ -16,6 +16,7 @@ namespace GenioMVC.Helpers
         static HtmlSanitizerHelper()
         {
             // Add allowed schemes and attributes during initialization
+            // https://github.com/mganss/HtmlSanitizer/wiki
             /*
             * sanitizer.AllowedSchemes.Add("mailto");
             * 

@@ -41,7 +41,7 @@
 // USE /[MANUAL GQT CUSTOM_COLUMN ARMAZ02_ARTIGOS_ITEM_EXISTENC]/
 		column.Expression(p => p.ValExistenc).Title(@Resources.STOCKS47349).Field("ValExistenc").Size(10);
 // USE /[MANUAL GQT CUSTOM_COLUMN ARMAZ02_ARTIGOS_ITEM_IMAGE]/
-		column.Expression(p => Html.ImageMagnifierZoom(p.ValImage, new {alt=@Resources.IMAGE65174,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCoditem, modelname = "Item", fldname = "ValImage" }))).Title(@Resources.IMAGE65174).Field("ValImage").Size(3);
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValImage, new {alt=@Resources.IMAGE65174,}, Url.Action("ImageHandlerGet", "Home", new { ticket = Helpers.GetFileTicket(UserContext.Current.User, "Item", "ValImage", "", p.ValCoditem, null) }))).Title(@Resources.IMAGE65174).Field("ValImage").Size(3);
             column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
         })
         .SetLimits(this.Model.tableLimits)

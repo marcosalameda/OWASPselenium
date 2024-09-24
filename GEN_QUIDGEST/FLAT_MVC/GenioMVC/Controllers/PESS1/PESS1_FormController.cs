@@ -653,7 +653,8 @@ namespace GenioMVC.Controllers
 					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
 
 				ErrorMessage(exceptionUserMessage);
-				return RedirectToLocation(Navigation.PreviousLevel.Location);
+				Navigation.RemoveHistoryLevel();
+				return RedirectToLocation(Navigation.CurrentLevel.Location);
 			}
 
 			if (!Request.IsAjaxRequest())

@@ -10,7 +10,7 @@
             column.Expression(p => p.ValCoditem, true).Hidden();
 
 // USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_371_ITEM_IMAGE]/
-		column.Expression(p => Html.ImageMagnifierZoom(p.ValImage, new {alt=@Resources.IMAGE65174,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCoditem, modelname = "Item", fldname = "ValImage" }))).Title(@Resources.IMAGE65174).Field("ValImage").Size(3);
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValImage, new {alt=@Resources.IMAGE65174,}, Url.Action("ImageHandlerGet", "Home", new { ticket = Helpers.GetFileTicket(UserContext.Current.User, "Item", "ValImage", "", p.ValCoditem, null) }))).Title(@Resources.IMAGE65174).Field("ValImage").Size(3);
 // USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_371_ITEM_DATE]/
 		column.Expression(p => p.ValDate).Title(@Resources.DATE18475).Field("ValDate").Size(8).Format("{0:d}");
 // USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_371_ITEM_DISPONIB]/

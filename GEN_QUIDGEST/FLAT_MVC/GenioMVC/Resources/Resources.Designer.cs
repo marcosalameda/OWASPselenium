@@ -23328,6 +23328,15 @@ namespace GenioMVC.Resources
 		}
 
 		/// <summary>
+		///   Looks up a localized string similar to "Legacy"
+		/// </summary>
+		public static string LEGACY36133 {
+			get {
+				return ResourceManager.GetString("LEGACY36133", resourceCulture);
+			}
+		}
+
+		/// <summary>
 		///   Looks up a localized string similar to "Training Exercise 17"
 		/// </summary>
 		public static string TRAINING_EXERCISE_1742948 {
@@ -25403,6 +25412,15 @@ namespace GenioMVC.Resources
 		public static string TESTE23551 {
 			get {
 				return ResourceManager.GetString("TESTE23551", resourceCulture);
+			}
+		}
+
+		/// <summary>
+		///   Looks up a localized string similar to "WCF"
+		/// </summary>
+		public static string WCF53361 {
+			get {
+				return ResourceManager.GetString("WCF53361", resourceCulture);
 			}
 		}
 
@@ -47358,11 +47376,11 @@ namespace GenioMVC.Resources
 		}
 
 		/// <summary>
-		///   Looks up a localized string similar to "Ir para Base de Dados"
+		///   Looks up a localized string similar to "Reindexar Base de Dados"
 		/// </summary>
-		public static string IR_PARA_BASE_DE_DADO51178 {
+		public static string REINDEXAR_BASE_DE_DA52902 {
 			get {
-				return ResourceManager.GetString("IR_PARA_BASE_DE_DADO51178", resourceCulture);
+				return ResourceManager.GetString("REINDEXAR_BASE_DE_DA52902", resourceCulture);
 			}
 		}
 
@@ -49644,29 +49662,38 @@ namespace GenioMVC.Resources
 		}
 
 		/// <summary>
-		///   Looks up a localized string similar to "Configurar o seu projeto."
+		///   Looks up a localized string similar to "Configurar o seu projeto"
 		/// </summary>
-		public static string CONFIGURAR_O_SEU_PRO20345 {
+		public static string CONFIGURAR_O_SEU_PRO44930 {
 			get {
-				return ResourceManager.GetString("CONFIGURAR_O_SEU_PRO20345", resourceCulture);
+				return ResourceManager.GetString("CONFIGURAR_O_SEU_PRO44930", resourceCulture);
 			}
 		}
 
 		/// <summary>
-		///   Looks up a localized string similar to "Atualizar a base de dados."
+		///   Looks up a localized string similar to "Atualizar a base de dados"
 		/// </summary>
-		public static string ATUALIZAR_A_BASE_DE_47288 {
+		public static string ATUALIZAR_A_BASE_DE_60308 {
 			get {
-				return ResourceManager.GetString("ATUALIZAR_A_BASE_DE_47288", resourceCulture);
+				return ResourceManager.GetString("ATUALIZAR_A_BASE_DE_60308", resourceCulture);
 			}
 		}
 
 		/// <summary>
-		///   Looks up a localized string similar to "Criar perfil de utilizador."
+		///   Looks up a localized string similar to "Criar perfil de utilizador"
 		/// </summary>
-		public static string CRIAR_PERFIL_DE_UTIL09072 {
+		public static string CRIAR_PERFIL_DE_UTIL50057 {
 			get {
-				return ResourceManager.GetString("CRIAR_PERFIL_DE_UTIL09072", resourceCulture);
+				return ResourceManager.GetString("CRIAR_PERFIL_DE_UTIL50057", resourceCulture);
+			}
+		}
+
+		/// <summary>
+		///   Looks up a localized string similar to "Erro!"
+		/// </summary>
+		public static string ERRO_35877 {
+			get {
+				return ResourceManager.GetString("ERRO_35877", resourceCulture);
 			}
 		}
 
@@ -49811,6 +49838,42 @@ namespace GenioMVC.Resources
 		public static string ESCOLHA_O_FORMATO_A_30283 {
 			get {
 				return ResourceManager.GetString("ESCOLHA_O_FORMATO_A_30283", resourceCulture);
+			}
+		}
+
+		/// <summary>
+		///   Looks up a localized string similar to "Expressão Cron inválida"
+		/// </summary>
+		public static string EXPRESSAO_CRON_INVAL33136 {
+			get {
+				return ResourceManager.GetString("EXPRESSAO_CRON_INVAL33136", resourceCulture);
+			}
+		}
+
+		/// <summary>
+		///   Looks up a localized string similar to "Tarefas agendadas"
+		/// </summary>
+		public static string TAREFAS_AGENDADAS24414 {
+			get {
+				return ResourceManager.GetString("TAREFAS_AGENDADAS24414", resourceCulture);
+			}
+		}
+
+		/// <summary>
+		///   Looks up a localized string similar to "Tarefa agendada"
+		/// </summary>
+		public static string TAREFA_AGENDADA03399 {
+			get {
+				return ResourceManager.GetString("TAREFA_AGENDADA03399", resourceCulture);
+			}
+		}
+
+		/// <summary>
+		///   Looks up a localized string similar to "[Segundo Minuto Hora Dia Mês DiaDaSemana] Ver expressões de agendamento Cron para mais detalhes."
+		/// </summary>
+		public static string _SEGUNDO_MINUTO_HORA37214 {
+			get {
+				return ResourceManager.GetString("_SEGUNDO_MINUTO_HORA37214", resourceCulture);
 			}
 		}
 

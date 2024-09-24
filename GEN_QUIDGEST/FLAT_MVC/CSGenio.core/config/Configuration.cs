@@ -55,7 +55,7 @@ namespace CSGenio.framework
         /// <summary>
         /// Application version
         /// </summary>
-        public static int Version { get; } = 3791;
+        public static int Version { get; } = 3796;
 
         /// <summary>
         /// System id
@@ -85,12 +85,12 @@ namespace CSGenio.framework
         /// <summary>
         /// Version of the database
         /// </summary>
-        public const int VersionDbGen = 3791;
+        public const int VersionDbGen = 3796;
 
         /// <summary>
         /// Version of the database indexes
         /// </summary>
-        public const int VersionIdxDbGen = 1451;
+        public const int VersionIdxDbGen = 1456;
 
         /// <summary>
         /// Version of the latest upgrade index version
@@ -105,12 +105,12 @@ namespace CSGenio.framework
         /// <summary>
         /// Genio generator version
         /// </summary>
-        public const string GenioVersion = "349.31";
+        public const string GenioVersion = "349.90";
 
         /// <summary>
         /// Solution build version
         /// </summary>
-        public const int BuildVersionGen = 2783;
+        public const int BuildVersionGen = 2784;
         /// <summary>
         /// Solution release version
         /// </summary>
@@ -262,6 +262,12 @@ namespace CSGenio.framework
         /// </summary>
         public static MessagingXml Messaging { get; private set; } = new MessagingXml();
 
+        /// <summary>
+        /// Scheduler configuration
+        /// </summary>
+        public static SchedulerXml Scheduler { get; private set; } = new SchedulerXml();
+
+
         //-----------------------------------------------
         /// <summary>
         /// ESTA PROPRIEDADE É PARA APAGAR O MAIS RAPIDO POSSIVEL!!!
@@ -411,13 +417,6 @@ namespace CSGenio.framework
             PathDocuments = path.pathDocuments;
             Domain = readXML.dominio;
             SSRSServer = readXML.ssrsServer;
-            // If the SSRS credentials are defined, converts them back from Base64 to readable text.
-            string encryptedPsw = SSRSServer.Password;
-            string encryptedUser = SSRSServer.Username;
-            if (encryptedPsw != null && encryptedPsw.Length > 0)
-                SSRSServer.Password = Encoding.Unicode.GetString(Convert.FromBase64String(encryptedPsw));
-            if (encryptedUser != null && encryptedUser.Length > 0)
-                SSRSServer.Username = Encoding.Unicode.GetString(Convert.FromBase64String(encryptedUser));
 			
 
             maisPropriedades = readXML.maisPropriedades;
@@ -461,9 +460,8 @@ namespace CSGenio.framework
 
             EventTracking = readXML.EventTracking;
 
-            Messaging = readXML.Messaging;
-            if (Messaging == null)
-                Messaging = new MessagingXml();
+            Messaging = readXML.Messaging ?? new MessagingXml();
+            Scheduler = readXML.Scheduler ?? new SchedulerXml();
         }
 
 

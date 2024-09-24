@@ -24,7 +24,7 @@
 // USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_3D1_PESS1_EMAIL]/
 		column.Expression(p => p.ValEmail).Title(@Resources.EMAIL25170).Field("ValEmail").Size(30);
 // USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_3D1_PESS1_PHOTOGRA]/
-		column.Expression(p => Html.ImageMagnifierZoom(p.ValPhotogra, new {alt=@Resources.PHOTO51874,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCodpesso, modelname = "Pess1", fldname = "ValPhotogra" }))).Title(@Resources.PHOTO51874).Field("ValPhotogra").Size(3);
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValPhotogra, new {alt=@Resources.PHOTO51874,}, Url.Action("ImageHandlerGet", "Home", new { ticket = Helpers.GetFileTicket(UserContext.Current.User, "Pess1", "ValPhotogra", "", p.ValCodpesso, null) }))).Title(@Resources.PHOTO51874).Field("ValPhotogra").Size(3);
             column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
         })
         .SetLimits(this.Model.tableLimits)

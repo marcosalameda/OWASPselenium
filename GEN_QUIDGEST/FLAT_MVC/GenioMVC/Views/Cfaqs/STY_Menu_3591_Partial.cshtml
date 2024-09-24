@@ -10,7 +10,7 @@
             column.Expression(p => p.ValCodcfaqs, true).Hidden();
 
 // USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_3591_CFAQS_ICON]/
-		column.Expression(p => Html.ImageMagnifierZoom(p.ValIcon, new {alt="",}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCodcfaqs, modelname = "Cfaqs", fldname = "ValIcon" }))).Field("ValIcon").Size(3);
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValIcon, new {alt="",}, Url.Action("ImageHandlerGet", "Home", new { ticket = Helpers.GetFileTicket(UserContext.Current.User, "Cfaqs", "ValIcon", "", p.ValCodcfaqs, null) }))).Field("ValIcon").Size(3);
 // USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_3591_CFAQS_CATEGORY]/
 		column.Expression(p => p.ValCategory).Title(@Resources.CATEGORY18978).Field("ValCategory").Size(30);
 // USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_3591_CFAQS_DESCRIPT]/

@@ -43,7 +43,7 @@
 // USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_611_FLDS_LOGICENU]/
 		column.Expression(p => p.ArrayVallogicenu).Title(@Resources.LOGICAL_ENUMERATION30276).Field("ValLogicenu", "ArrayPrimviag").Size(1);
 // USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_611_FLDS_LOGO]/
-		column.Expression(p => Html.ImageMagnifierZoom(p.ValLogo, new {alt=@Resources.LOGO62483,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCodflds, modelname = "Flds", fldname = "ValLogo" }))).Title(@Resources.LOGO62483).Field("ValLogo").Size(3);
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValLogo, new {alt=@Resources.LOGO62483,}, Url.Action("ImageHandlerGet", "Home", new { ticket = Helpers.GetFileTicket(UserContext.Current.User, "Flds", "ValLogo", "", p.ValCodflds, null) }))).Title(@Resources.LOGO62483).Field("ValLogo").Size(3);
 // USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_611_FLDS_ATTACH]/
 		column.Expression(p => p.ValAttach).Title(@Resources.DOCUMENT00695).Field("ValAttach").Size(30).Document(p => Url.Action("GetFile", "Flds", new { ticket = p.GetTicketForDocField("ValAttach"), viewType = (int)CSGenio.framework.DocumentViewTypeMode.Print}));
 // USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_611_FLDS_LOGOEXTE]/

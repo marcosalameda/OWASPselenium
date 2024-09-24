@@ -17,7 +17,7 @@
 // USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_OVERVIEW_UICOM_MENUID]/
 		column.Expression(p => p.ValMenuid).Title(@Resources.FIXED_MENU_NAME38578).Field("ValMenuid").Size(30);
 // USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_OVERVIEW_UICOM_THUMBNAI]/
-		column.Expression(p => Html.ImageMagnifierZoom(p.ValThumbnai, new {alt=@Resources.THUMBNAIL30025,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCoduicom, modelname = "Uicom", fldname = "ValThumbnai" }))).Title(@Resources.THUMBNAIL30025).Field("ValThumbnai").Size(3);
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValThumbnai, new {alt=@Resources.THUMBNAIL30025,}, Url.Action("ImageHandlerGet", "Home", new { ticket = Helpers.GetFileTicket(UserContext.Current.User, "Uicom", "ValThumbnai", "", p.ValCoduicom, null) }))).Title(@Resources.THUMBNAIL30025).Field("ValThumbnai").Size(3);
             column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
         })
         .SetLimits(this.Model.tableLimits)

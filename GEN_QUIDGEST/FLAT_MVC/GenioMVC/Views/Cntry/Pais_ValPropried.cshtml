@@ -42,7 +42,7 @@
 // USE /[MANUAL GQT CUSTOM_COLUMN PAIS_PROPRIED_PROPR_DTDISPON]/
 		column.Expression(p => p.ValDtdispon).Title(@Resources.AVAILABLE_FROM53703).Field("ValDtdispon").Size(8).Format("{0:d}");
 // USE /[MANUAL GQT CUSTOM_COLUMN PAIS_PROPRIED_PROPR_PHOTOGRA]/
-		column.Expression(p => Html.ImageMagnifierZoom(p.ValPhotogra, new {alt=@Resources.PHOTO51874,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCodpropr, modelname = "Propr", fldname = "ValPhotogra" }))).Title(@Resources.PHOTO51874).Field("ValPhotogra").Size(3);
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValPhotogra, new {alt=@Resources.PHOTO51874,}, Url.Action("ImageHandlerGet", "Home", new { ticket = Helpers.GetFileTicket(UserContext.Current.User, "Propr", "ValPhotogra", "", p.ValCodpropr, null) }))).Title(@Resources.PHOTO51874).Field("ValPhotogra").Size(3);
 // USE /[MANUAL GQT CUSTOM_COLUMN PAIS_PROPRIED_PROPR_DESCRIPT]/
 		column.Expression(p => p.ValDescript).Title(@Resources.DESCRIPTION07383).Field("ValDescript").Size(30);
 // USE /[MANUAL GQT CUSTOM_COLUMN PAIS_PROPRIED_PROPR_COORDGEO]/

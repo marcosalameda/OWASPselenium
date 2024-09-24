@@ -1395,28 +1395,62 @@ namespace GenioMVC.Controllers
 			return EmptyImageHandlerGet();
 		}
 
+        /// <summary>
+        /// Gets the resource associated to the specified ticket
+        /// </summary>
+        /// <param name="ticket">The ticket</param>
+        /// <returns>The resource, or null if the user doesn't have permission to access it</returns>
+        protected ResourceQuery GetResourceQueryFromTicket(string ticket)
+        {
+            object[] objs = QResources.DecryptTicketBase64(ticket);
+
+            string username = objs[0] as string;
+            string ip = objs[1] as string;
+
+            if (username != m_userContext.User.Name || ip != HttpContext.Request.GetClientIpAddress())
+                return null;
+
+            Resource rec = objs[2] as Resource;
+
+            if (rec is ResourceQuery)
+                return rec as ResourceQuery;
+
+            throw new BusinessException(Resources.Resources.OCORREU_UM_ERRO_AO_P53091, "GetResourceQueryFromTicket", "Resource wasn't of type ResourceQuery.");
+        }
+
 		/// <summary>
 		/// Obtains the byte[] image from the corresponding model
 		/// </summary>
-		/// <param name="id">The id of the row</param>
-		/// <param name="modelname">The model we are on</param>
-		/// <param name="fldname">The name of the property where the image is at</param>
+		/// <param name="ticket">The Resource Query ticket</param>
 		/// <param name="formIdentifier">Form Identifier</param>
 		/// <returns>The image data</returns>
 		[ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
-		public ActionResult ImageHandlerGet(string id, string modelname, string fldname, string formIdentifier)
+		public ActionResult ImageHandlerGet(string ticket, string formIdentifier)
 		{
 			try
 			{
+				// NOTE: Error messages will not be returned to the user to prevent brute force attacks, as the action is open to the unauthenticated user.
+				if(string.IsNullOrWhiteSpace(ticket))
+					throw new ArgumentException($"Invalid ticket argument: {ticket}", nameof(ticket));
+
+				ResourceQuery resource = GetResourceQueryFromTicket(ticket);
+
+				if(string.IsNullOrEmpty(ticket))
+					throw new ArgumentException($"Invalid image field value: {resource.KeyData}", nameof(resource.KeyData));
+				if (string.IsNullOrEmpty(ticket))
+					throw new ArgumentException($"Invalid image table value: {resource.Table}", nameof(resource.Table));
+				if (string.IsNullOrEmpty(ticket))
+					throw new ArgumentException($"Invalid primary key value: {resource.KeyValue}", nameof(resource.KeyValue));
+
 				// Grabbing the type that has the static generic method
-				Type type = Type.GetType("GenioMVC.Models." + modelname);
+				Type type = Type.GetType("GenioMVC.Models." + resource.Table);
 
 				// Grabbing the specific static method
 				MethodInfo methodInfo = type.GetMethod("Find", new Type[] { typeof(string), typeof(string), typeof(string[]), typeof(string[]) });
 
-				object row = methodInfo.Invoke(null, new object[] { id, formIdentifier, null, null });
+				object row = methodInfo.Invoke(null, new object[] { resource.KeyValue, formIdentifier, null, null });
 
-				PropertyInfo prop = type.GetProperty(fldname);
+				PropertyInfo prop = type.GetProperty(resource.KeyData);
 
 				// Skipping any validation etc - to read no-photo image [if data is not present] - for simplicity
 				byte[] image = row == null ? null : prop.GetValue(row, null) as byte[];
@@ -1444,9 +1478,47 @@ namespace GenioMVC.Controllers
 				else
 					return EmptyImageHandlerGet();
 			}
-			catch
+			catch (Exception ex)
 			{
+				Log.Error("Error on ImageHandlerGet - " + ex.Message);
 				return EmptyImageHandlerGet();
+			}
+		}
+
+		/// <summary>
+		/// Refresh the primary key of image ticket.
+		/// </summary>
+		/// <param name="ticket">The Resource Query ticket</param>
+		/// <returns>The image data</returns>
+		[ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
+		[HttpGet]
+		public JsonResult RefreshImageTicket(string ticket)
+		{
+			try
+			{
+				// NOTE: Error messages will not be returned to the user to prevent brute force attacks, as the action is open to the unauthenticated user.
+				if (string.IsNullOrWhiteSpace(ticket))
+					throw new ArgumentException($"Invalid ticket argument: {ticket}", nameof(ticket));
+
+				ResourceQuery resource = GetResourceQueryFromTicket(ticket);
+
+				if (string.IsNullOrEmpty(ticket))
+					throw new ArgumentException($"Invalid image field value: {resource.KeyData}", nameof(resource.KeyData));
+				if (string.IsNullOrEmpty(ticket))
+					throw new ArgumentException($"Invalid image table value: {resource.Table}", nameof(resource.Table));
+
+				var currentRecordPrimaryKey = Navigation.GetStrValue(resource.Table.ToLower());
+
+				if(string.IsNullOrEmpty(currentRecordPrimaryKey))
+					return Json(new { success = false  }, JsonRequestBehavior.AllowGet);
+
+				var newTicket = Helpers.Helpers.GetFileTicket(UserContext.Current.User, resource.Table, resource.KeyData, resource.KeyField, currentRecordPrimaryKey, resource.Name);
+				return Json(new { success = true, ticket = newTicket }, JsonRequestBehavior.AllowGet);
+			}
+			catch (Exception ex)
+			{
+				Log.Error("Error on RefreshImageTicket - " + ex.Message);
+				return Json(new { success = false }, JsonRequestBehavior.AllowGet);
 			}
 		}
 

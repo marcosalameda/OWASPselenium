@@ -3288,6 +3288,15 @@ Object.defineProperty(QImageControl.prototype, 'RowId', {
     }
 });
 
+Object.defineProperty(QImageControl.prototype, 'ImageTicket', {
+    set: function (val) {
+        this.imgControlImg.attr('img-ticket', val || '');
+    },
+    get: function () {
+        return this.imgControlImg.attr('img-ticket') || '';
+    }
+});
+
 QImageControl.prototype.Init = function () {
     var _this = this;
     if (_this.element.length == 0) return;
@@ -3357,15 +3366,39 @@ QImageControl.prototype.UpdateMargin = function() {
 };
 
 QImageControl.prototype.UpdateSrc = function () {
-    var url = quidgestGlobals.UrlAction.ImageHandlerGet;
-    url += "?id=" + encodeURIComponent(this.RowId);
-    url += "&modelname=" + this.ModelName;
-    url += "&fldname=" + this.FieldName;
-    url += "&formIdentifier=" + this.FormIdentifier;
-    //add a random number in the link to avoid cache
-    url += "&nocache=" + (Math.floor(Math.random() * 100000));
-	//this.SetMargin(0, 0);//Margins not used anymore. Caused problems with other CSS.
-    this.Value = url;
+    $.when(syncFormKeys(this._parentForm), this).done(function (_, qControl) {
+        if (!isEmpty(qControl.ImageTicket)) {
+            var actionUrl = quidgestGlobals.UrlAction.RefreshImageTicket;
+            const url = __updateQSNav(actionUrl, qControl.element)
+            $.ajax({
+                type: 'GET',
+                url,
+                data: { ticket: qControl.ImageTicket },
+                success: function (data) {
+                    if (data?.success) {
+                        qControl.ImageTicket = data.ticket;
+
+                        var url = quidgestGlobals.UrlAction.ImageHandlerGet;
+                        url += "?ticket=" + qControl.ImageTicket;
+                        url += "&formIdentifier=" + qControl.FormIdentifier;
+                        //add a random number in the link to avoid cache
+                        url += "&nocache=" + (Math.floor(Math.random() * 100000));
+
+                        qControl.Value = url;
+                    }
+                    else {
+                        qControl.Value = "";
+                    }
+                },
+                error: function () {
+                    qControl.Value = "";
+                }
+            });
+        }
+        else {
+            qControl.Value = "";
+        }
+    });
 };
 
 QImageControl.prototype.CreateFileUploader = function () {
@@ -3636,6 +3669,8 @@ QStaticImageControl.prototype = Object.create(QControl.prototype);
 //---------------------------------------------
 (function ($) {
     $.fn.getQForm = function () {
+        if (typeof this === "object" && this.length === 1 && this[0] instanceof QForm)
+            return this[0];
         var _formVariableName = $(this).attr("QForm");
         if (_formVariableName !== undefined && window[_formVariableName] !== undefined) {
             return window[_formVariableName];

@@ -90,6 +90,9 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "YEAR__NUMBERS_29394";
 
 			Qfield.Dupmsg = "";
+//Actualiza as seguintes réplicas:
+			Qfield.ReplicaDestinationList = new List<ReplicaDestination>();
+			Qfield.ReplicaDestinationList.Add( new ReplicaDestination("GQT", "gqtagreg", "codyear", "yearnumb"));
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -142,7 +145,7 @@ namespace CSGenio.business
 
 
 			info.FieldsParametersReplicas = new string[] {
-			 "year"
+			 "year","yearnum"
 			};
 
 			//Write conditions

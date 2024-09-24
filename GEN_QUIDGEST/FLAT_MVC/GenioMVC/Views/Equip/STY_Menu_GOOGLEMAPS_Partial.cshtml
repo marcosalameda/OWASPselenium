@@ -35,7 +35,7 @@
 // USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GOOGLEMAPS_EQUIP_IFABATIF]/
 		column.Expression(p => p.ValIfabatif).Title(@Resources.DOWNED_EQUIPMENT43331).Field("ValIfabatif").Size(1);
 // USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GOOGLEMAPS_EQUIP_PHOTOGRA]/
-		column.Expression(p => Html.ImageMagnifierZoom(p.ValPhotogra, new {alt=@Resources.PHOTO51874,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCodequip, modelname = "Equip", fldname = "ValPhotogra" }))).Title(@Resources.PHOTO51874).Field("ValPhotogra").Size(3);
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValPhotogra, new {alt=@Resources.PHOTO51874,}, Url.Action("ImageHandlerGet", "Home", new { ticket = Helpers.GetFileTicket(UserContext.Current.User, "Equip", "ValPhotogra", "", p.ValCodequip, null) }))).Title(@Resources.PHOTO51874).Field("ValPhotogra").Size(3);
 // USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GOOGLEMAPS_EQUIP_VALORTOT]/
 		column.Expression(p => p.ValValortot).Title(@Resources.TOTAL_VALUE30570).Field("ValValortot").Size(12);
 // USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GOOGLEMAPS_EQUIP_FREQUENC]/
@@ -57,7 +57,7 @@
 // USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GOOGLEMAPS_EQUIP_SITEFABR]/
 		column.Expression(p => p.ValSitefabr).Title(@Resources.MANUFACTURER_S_WEBSI11084).Field("ValSitefabr").Size(30);
 // USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GOOGLEMAPS_EQUIP_LASTPHO]/
-		column.Expression(p => Html.ImageMagnifierZoom(p.ValLastpho, new {alt=@Resources.LAST_PHOTO_ATTACHED43884,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCodequip, modelname = "Equip", fldname = "ValLastpho" }))).Title(@Resources.LAST_PHOTO_ATTACHED43884).Field("ValLastpho").Size(3);
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValLastpho, new {alt=@Resources.LAST_PHOTO_ATTACHED43884,}, Url.Action("ImageHandlerGet", "Home", new { ticket = Helpers.GetFileTicket(UserContext.Current.User, "Equip", "ValLastpho", "", p.ValCodequip, null) }))).Title(@Resources.LAST_PHOTO_ATTACHED43884).Field("ValLastpho").Size(3);
 // USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GOOGLEMAPS_EQUIP_MOVIMENT]/
 		column.Expression(p => p.ValMoviment).Title(@Resources.DRIVES34119).Field("ValMoviment").Size(30);
 // USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_GOOGLEMAPS_EQUIP_QTDMOVIM]/

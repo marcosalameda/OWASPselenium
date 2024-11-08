@@ -255,18 +255,6 @@ namespace CSGenio.business
 			return null;
         }
 
-        /// <summary>
-        /// Procura todos os registos desta area que obedecem a uma condição
-        /// </summary>
-        /// <param name="sp">O suporte persistente de onde obter a lista</param>
-        /// <param name="utilizador">O contexto do user</param>
-        /// <param name="where">A condição de procura dos registos. Usar null to obter todos os registos</param>
-        /// <returns>Uma lista de registos da areas com todos os fields preenchidos</returns>
-        [Obsolete("Use List<CSGenioAlstcol> searchList(PersistentSupport sp, User utilizador, CriteriaSet where) instead")]
-        public static List<CSGenioAlstcol> searchList(PersistentSupport sp, User user, string where)
-        {
-            return sp.searchListWhere<CSGenioAlstcol>(where, user, null);
-        }
 
         /// <summary>
         /// Procura todos os registos desta area que obedecem a uma condição
@@ -280,20 +268,6 @@ namespace CSGenio.business
             return searchList(sp, user, where, null);
         }
        
-        /// <summary>
-        /// Procura todos os registos desta area que obedecem a uma condição
-        /// </summary>
-        /// <param name="sp">O suporte persistente de onde obter a lista</param>
-        /// <param name="utilizador">O contexto do user</param>
-        /// <param name="where">A condição de procura dos registos. Usar null to obter todos os registos</param>
-        /// <param name="campos">Os fields a serem preenchidos na area</param>
-        /// <returns>Uma lista de registos da areas com todos os fields preenchidos</returns>
-        /// <remarks>Não devem ser utilizadas operações de persistence sobre um registo parcialmente posicionado</remarks>
-        [Obsolete("Use List<CSGenioAlstcol> searchList(PersistentSupport sp, User utilizador, CriteriaSet where, string []campos) instead")]
-        public static List<CSGenioAlstcol> searchList(PersistentSupport sp, User user, string where, string []fields)
-        {
-            return sp.searchListWhere<CSGenioAlstcol>(where, user, fields);
-        }
        
         /// <summary>
         /// Procura todos os registos desta area que obedecem a uma condição

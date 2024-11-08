@@ -21,7 +21,8 @@ namespace DbAdmin.IntegrationTest
         [SetUp] 
         public void SetUp() 
         {
-            PersistenceFactoryExtension.Use();
+            CSGenio.GenioDIDefault.UseLog();
+            CSGenio.GenioDIDefault.UseDatabase();
 
             //Builds a persistent support that will throw an exception if someone tries to commit a transaction
             var baseSp = PersistentSupport.getPersistentSupport(Configuration.DefaultYear);
@@ -29,7 +30,7 @@ namespace DbAdmin.IntegrationTest
             
 
             //From here forward, if someone tries to build a PersistentSupport it will throw an error
-            PersistentSupport.RegisterSpFactory(ThrowErrorBuildSp);
+            CSGenio.core.di.GenioDI.SpFactory = ThrowErrorBuildSp;
             sp.openTransaction();
 
         }

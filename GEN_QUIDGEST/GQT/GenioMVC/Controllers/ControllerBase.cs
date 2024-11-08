@@ -1159,47 +1159,70 @@ namespace GenioMVC.Controllers
 		/// <summary>
 		/// Fill the values to the model to open the view
 		/// </summary>
-		/// <param name="key">Form primary key</param>
-		/// <param name="modelname">Base area</param>
-		/// <param name="fldname">Image field to be edited</param>
+		/// <param name="ticket">Ticket for resource with table name, field name and record Id.</param>
 		/// <param name="identifier">Form identifier</param>
 		/// <param name="FormName">Form name</param>
 		/// <param name="FieldId">Field identifier</param>
 		/// <returns>ActionResult</returns>
-		public ActionResult ImageCropper(string key, string modelname, string fldname, string identifier, string FormName, string FieldId)
+		public ActionResult ImageCropper(string ticket, string identifier, string FormName, string FieldId)
 		{
-			ImageCropper_ViewModel model = new ImageCropper_ViewModel(key, modelname, fldname, identifier, FormName, FieldId);
-			return PartialView(model);
+			try
+			{
+				ResourceQuery res = GetResourceQueryFromTicket(ticket);
+				if(res == null)
+					return PartialView("ErrorPopUp", Resources.Resources.PEDIMOS_DESCULPA__OC63848);
+
+				/*
+				* res.KeyValue - The id of the model being used
+				* res.Table - The name of the model
+				* res.KeyData - Name of the property to be edited
+				*/
+				ImageCropper_ViewModel model = new ImageCropper_ViewModel(res.KeyValue, res.Table, res.KeyData, identifier, FormName, FieldId);
+				return PartialView(model);
+			}
+			catch (Exception ex)
+			{
+				CSGenio.framework.Log.Error("ImageCropper Error: " + ex.Message);
+				return PartialView("ErrorPopUp", Resources.Resources.PEDIMOS_DESCULPA__OC63848);
+			}
 		}
 
 		/// <summary>
 		/// Update the image with the cropped canvas
 		/// </summary>
 		/// <param name="fileData">Image in base 64</param>
-		/// <param name="id">Form primary key</param>
-		/// <param name="modelname">Base area</param>
-		/// <param name="fldname">Image field to be edited</param>
+		/// <param name="ticket">Ticket for resource with table name, field name and record Id.</param>
 		/// <param name="formIdentifier">Form identifier</param>
 		/// <returns>Returns a JSON with the result of the operation (either success or failure)</returns>
 		[HttpPost]
-		public ActionResult UploadImageCropper(string fileData, string id, string modelname, string fldname, string formIdentifier)
+		public ActionResult UploadImageCropper(string fileData, string ticket, string formIdentifier)
 		{
 			try
 			{
+				ResourceQuery res = GetResourceQueryFromTicket(ticket);
+				if (res == null)
+					return Json(new { Success = false, Message = Resources.Resources.PEDIMOS_DESCULPA__OC63848 }, "application/json");
+
+				/*
+				* res.KeyValue - The id of the model being used
+				* res.Table - The name of the model
+				* res.KeyData - Name of the property to be edited
+				*/
+
 				// Get only the base64 part by removing the first part (image type information)
 				string base64File = fileData.Substring(fileData.IndexOf(";base64,") + 8);
 				byte[] fileByte = Convert.FromBase64String(base64File);
 
 				// Grabbing the type that has the static generic method
-				Type type = Type.GetType("GenioMVC.Models." + modelname);
+				Type type = Type.GetType("GenioMVC.Models." + res.Table);
 
 				object row = null;
 				// Grabbing the specific static method
 				MethodInfo methodInfo = type.GetMethod("Find", new Type[] { typeof(string), typeof(string), typeof(string[]), typeof(string[]) });
-				row = methodInfo.Invoke(null, new object[] { id, formIdentifier, null, null });
+				row = methodInfo.Invoke(null, new object[] { res.KeyValue, formIdentifier, null, null });
 
 				// Sets the property with the new value
-				PropertyInfo prop = type.GetProperty(fldname);
+				PropertyInfo prop = type.GetProperty(res.KeyData);
 				prop.SetValue(row, fileByte, null);
 
 				// Saves the updated model (ideally only save the specific property)
@@ -1222,24 +1245,32 @@ namespace GenioMVC.Controllers
 		/// <summary>
 		/// Sets the byte[] image from the corresponding model
 		/// </summary>
-		/// <param name="id">The id of the model being used</param>
-		/// <param name="modelname">The name of the model</param>
-		/// <param name="fldname">Name of the property being saved</param>
+		/// <param name="ticket">Ticket for resource with table name, field name and record Id.</param>
 		/// <param name="formIdentifier">Form Identifier</param>
 		/// <returns>Returns a JSON with the result of the operation (either success or failure)</returns>
-		public ActionResult ImageHandlerPut(string id, string modelname, string fldname, string formIdentifier)
+		public ActionResult ImageHandlerPut(string ticket, string formIdentifier)
 		{
-			// Grabbing the type that has the static generic method
-			Type type = Type.GetType("GenioMVC.Models." + modelname);
-
-			object row = null;
-
 			CSGenio.persistence.PersistentSupport sp = UserContext.Current.PersistentSupport;
 			try
 			{
+				ResourceQuery res = GetResourceQueryFromTicket(ticket);
+				if (res == null)
+					return Json(new { success = false, message = Resources.Resources.PEDIMOS_DESCULPA__OC63848 }, "application/json");
+
+				/*
+				* res.KeyValue - The id of the model being used
+				* res.Table - The name of the model
+				* res.KeyData - Name of the property being saved
+				*/
+
+				// Grabbing the type that has the static generic method
+				Type type = Type.GetType("GenioMVC.Models." + res.Table);
+
+				object row = null;
+
 				// Grabbing the specific static method
 				MethodInfo methodInfo = type.GetMethod("Find", new Type[] { typeof(string), typeof(string), typeof(string[]), typeof(string[]) });
-				row = methodInfo.Invoke(null, new object[] { id, formIdentifier, null, null });
+				row = methodInfo.Invoke(null, new object[] { res.KeyValue, formIdentifier, null, null });
 
 				var stream = Request.InputStream;
 				if (string.IsNullOrEmpty(Request["qqfile"]))
@@ -1253,7 +1284,7 @@ namespace GenioMVC.Controllers
 				stream.Read(buffer, 0, buffer.Length);
 
 				// Sets the property with the new value
-				PropertyInfo prop = type.GetProperty(fldname);
+				PropertyInfo prop = type.GetProperty(res.KeyData);
 				prop.SetValue(row, buffer, null);
 
 				// Saves the updated model (ideally only save the specific property)
@@ -1273,51 +1304,39 @@ namespace GenioMVC.Controllers
 				sp.closeTransaction();
 			}
 
-			// Obtains the Key from the Model
-			PropertyInfo[] props = type.GetProperties();
-			PropertyInfo keyProp = null;
-			foreach (PropertyInfo p in props)
-			{
-				object[] attribute = p.GetCustomAttributes(typeof(System.ComponentModel.DataAnnotations.KeyAttribute), true);
-				if (attribute.Length > 0)
-				{
-					keyProp = p;
-					break;
-				}
-			}
-
-			if (keyProp != null)
-			{
-				// Sets the key to be sent back to the View
-				var key = keyProp.GetValue(row, null);
-				return Json(new { success = true, id = key }, "application/json");
-			}
-			else
-				return Json(new { success = false, message = Resources.Resources.PEDIMOS_DESCULPA__OC63848 }, "application/json");
+			return Json(new { success = true }, "application/json");
 		}
 
 		/// <summary>
 		/// Deletes the image from the given field
 		/// </summary>
-		/// <param name="id">The id of the model being used</param>
-		/// <param name="modelname">The name of the model</param>
-		/// <param name="fldname">Name of the property being saved</param>
+		/// <param name="ticket">Ticket for resource with table name, field name and record Id.</param>
 		/// <returns>Returns a JSON with the result of the operation (either success or failure)</returns>
-		public ActionResult ImageDelete(string id, string modelname, string fldname)
+		public ActionResult ImageDelete(string ticket)
 		{
 			try
 			{
+				var res = GetResourceQueryFromTicket(ticket);
+				if (res == null)
+					return Json(new { success = false, Message = Resources.Resources.PEDIMOS_DESCULPA__OC63848 }, "application/json");
+
+				/*
+				* res.KeyValue - The id of the model being used
+				* res.Table - The name of the model
+				* res.KeyData - Name of the property being deleted
+				*/
+
 				// Grabbing the type that has the static generic method
-				Type type = Type.GetType("GenioMVC.Models." + modelname);
+				Type type = Type.GetType("GenioMVC.Models." + res.Table);
 
 				object row = null;
 
 				// Grabbing the specific static method
 				MethodInfo methodInfo = type.GetMethod("Find", new Type[] { typeof(string), typeof(string), typeof(string[]), typeof(string[]) });
-				row = methodInfo.Invoke(null, new object[] { id, null, null, null });
+				row = methodInfo.Invoke(null, new object[] { res.KeyValue, null, null, null });
 
 				// Sets the property with the null value
-				PropertyInfo prop = type.GetProperty(fldname);
+				PropertyInfo prop = type.GetProperty(res.KeyData);
 				prop.SetValue(row, null, null);
 
 				// Saves the updated model (ideally only save the specific property)
@@ -1398,25 +1417,36 @@ namespace GenioMVC.Controllers
 		/// <summary>
 		/// Obtains the byte[] image from the corresponding model
 		/// </summary>
-		/// <param name="id">The id of the row</param>
-		/// <param name="modelname">The model we are on</param>
-		/// <param name="fldname">The name of the property where the image is at</param>
+		/// <param name="ticket">The Resource Query ticket</param>
 		/// <param name="formIdentifier">Form Identifier</param>
 		/// <returns>The image data</returns>
 		[ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
-		public ActionResult ImageHandlerGet(string id, string modelname, string fldname, string formIdentifier)
+		public ActionResult ImageHandlerGet(string ticket, string formIdentifier)
 		{
 			try
 			{
+				// NOTE: Error messages will not be returned to the user to prevent brute force attacks, as the action is open to the unauthenticated user.
+				if(string.IsNullOrWhiteSpace(ticket))
+					throw new ArgumentException($"Invalid ticket argument: {ticket}", nameof(ticket));
+
+				ResourceQuery resource = GetResourceQueryFromTicket(ticket);
+
+				if(string.IsNullOrEmpty(ticket))
+					throw new ArgumentException($"Invalid image field value: {resource.KeyData}", nameof(resource.KeyData));
+				if (string.IsNullOrEmpty(ticket))
+					throw new ArgumentException($"Invalid image table value: {resource.Table}", nameof(resource.Table));
+				if (string.IsNullOrEmpty(ticket))
+					throw new ArgumentException($"Invalid primary key value: {resource.KeyValue}", nameof(resource.KeyValue));
+
 				// Grabbing the type that has the static generic method
-				Type type = Type.GetType("GenioMVC.Models." + modelname);
+				Type type = Type.GetType("GenioMVC.Models." + resource.Table);
 
 				// Grabbing the specific static method
 				MethodInfo methodInfo = type.GetMethod("Find", new Type[] { typeof(string), typeof(string), typeof(string[]), typeof(string[]) });
 
-				object row = methodInfo.Invoke(null, new object[] { id, formIdentifier, null, null });
+				object row = methodInfo.Invoke(null, new object[] { resource.KeyValue, formIdentifier, null, null });
 
-				PropertyInfo prop = type.GetProperty(fldname);
+				PropertyInfo prop = type.GetProperty(resource.KeyData);
 
 				// Skipping any validation etc - to read no-photo image [if data is not present] - for simplicity
 				byte[] image = row == null ? null : prop.GetValue(row, null) as byte[];
@@ -1444,9 +1474,47 @@ namespace GenioMVC.Controllers
 				else
 					return EmptyImageHandlerGet();
 			}
-			catch
+			catch (Exception ex)
 			{
+				Log.Error("Error on ImageHandlerGet - " + ex.Message);
 				return EmptyImageHandlerGet();
+			}
+		}
+
+		/// <summary>
+		/// Refresh the primary key of image ticket.
+		/// </summary>
+		/// <param name="ticket">The Resource Query ticket</param>
+		/// <returns>The image data</returns>
+		[ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
+		[HttpGet]
+		public JsonResult RefreshImageTicket(string ticket)
+		{
+			try
+			{
+				// NOTE: Error messages will not be returned to the user to prevent brute force attacks, as the action is open to the unauthenticated user.
+				if (string.IsNullOrWhiteSpace(ticket))
+					throw new ArgumentException($"Invalid ticket argument: {ticket}", nameof(ticket));
+
+				ResourceQuery resource = GetResourceQueryFromTicket(ticket);
+
+				if (string.IsNullOrEmpty(ticket))
+					throw new ArgumentException($"Invalid image field value: {resource.KeyData}", nameof(resource.KeyData));
+				if (string.IsNullOrEmpty(ticket))
+					throw new ArgumentException($"Invalid image table value: {resource.Table}", nameof(resource.Table));
+
+				var currentRecordPrimaryKey = Navigation.GetStrValue(resource.Table.ToLower());
+
+				if(string.IsNullOrEmpty(currentRecordPrimaryKey))
+					return Json(new { success = false  }, JsonRequestBehavior.AllowGet);
+
+				var newTicket = Helpers.Helpers.GetFileTicket(UserContext.Current.User, resource.Table, resource.KeyData, resource.KeyField, currentRecordPrimaryKey, resource.Name);
+				return Json(new { success = true, ticket = newTicket }, JsonRequestBehavior.AllowGet);
+			}
+			catch (Exception ex)
+			{
+				Log.Error("Error on RefreshImageTicket - " + ex.Message);
+				return Json(new { success = false }, JsonRequestBehavior.AllowGet);
 			}
 		}
 
@@ -3120,6 +3188,58 @@ namespace GenioMVC.Controllers
 				qs.Add(elem.Key.ToString(), (elem.Value != null) ? elem.Value.ToString() : null);
 
 			return qs;
+		}
+
+		/// <summary>
+		/// Gets the resource associated to the specified ticket
+		/// </summary>
+		/// <param name="ticket">The ticket</param>
+		/// <returns>The resource, or null if the user doesn't have permission to access it</returns>
+		private Resource GetResourceFromTicket(string ticket)
+		{
+			if(string.IsNullOrEmpty(ticket))
+				return null;
+
+			object[] objs = QResources.DecryptTicketBase64(ticket);
+
+			string username = objs[0] as string;
+			string ip = objs[1] as string;
+
+			if (username != m_userContext.User.Name)
+				return null;
+			
+			Resource rec = objs[2] as Resource;
+			return rec;
+		}
+
+		/// <summary>
+		/// Gets the resource query associated to the specified ticket
+		/// </summary>
+		/// <param name="ticket">The ticket</param>
+		/// <returns>The resource, or null if the user doesn't have permission to access it</returns>
+		protected ResourceQuery GetResourceQueryFromTicket(string ticket)
+		{
+			Resource rec = GetResourceFromTicket(ticket);
+
+			if (rec is ResourceQuery)
+				return rec as ResourceQuery;
+
+			throw new BusinessException(Resources.Resources.OCORREU_UM_ERRO_AO_P53091, "GetResourceQueryFromTicket", "Resource wasn't of type ResourceQuery.");
+		}
+
+		/// <summary>
+		/// Gets the resource file associated to the specified ticket
+		/// </summary>
+		/// <param name="ticket">The ticket</param>
+		/// <returns>The resource, or null if the user doesn't have permission to access it</returns>
+		protected ResourceFile GetResourceFileFromTicket(string ticket)
+		{
+			Resource rec = GetResourceFromTicket(ticket);
+
+			if (rec is ResourceFile)
+				return rec as ResourceFile;
+
+			throw new BusinessException(Resources.Resources.OCORREU_UM_ERRO_AO_P53091, "GetResourceFileFromTicket", "Resource wasn't of type ResourceFile.");
 		}
 	}
 }

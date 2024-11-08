@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Year
 	/// </summary>
-	public class CSGenioAyear : DbArea	{
+	public class CSGenioAyear : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -90,6 +91,9 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "YEAR__NUMBERS_29394";
 
 			Qfield.Dupmsg = "";
+//Actualiza as seguintes réplicas:
+			Qfield.ReplicaDestinationList = new List<ReplicaDestination>();
+			Qfield.ReplicaDestinationList.Add( new ReplicaDestination("GQT", "gqtagreg", "codyear", "yearnumb"));
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -146,7 +150,7 @@ namespace CSGenio.business
 
 
 			info.FieldsParametersReplicas = new string[] {
-			 "year"
+			 "yearnum","year"
 			};
 
 			//Write conditions
@@ -344,23 +348,6 @@ namespace CSGenio.business
 		}
 
 
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAyear> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAyear> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAyear>(where, user, fields);
-        }
-
-
         /// <summary>
         /// Search for all records of this area that comply with a condition
         /// </summary>
@@ -407,7 +394,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX YEAR]/

@@ -31,6 +31,12 @@ export function setupRouter(i18n) {
       props: true
     },
     {
+      path: '/:culture/:system/NoConfiguration',
+      name: 'no_configuration',
+      component: () => import(/* webpackChunkName: "no_configuration" */ './views/NoConfigSystem.vue'),
+      props: true
+    },
+    {
       path: '/:culture/:system/Dashboard',
       name: 'dashboard',
       component: () => import(/* webpackChunkName: "dashboard" */ './views/Dashboard.vue'),

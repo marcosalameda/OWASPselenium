@@ -1,81 +1,68 @@
 ﻿<template>
     <div id="role_container">
-        <card>
-            <template #header>
-              <h2>{{Model.ModuleDescription}} - <strong v-if="Model.Description">{{$t(Model.Designation)}}</strong></h2>
-            </template>
-            <template #body>
-              <row id="row-description" v-if="Model.Description">
+        <div class="q-stack--column">
+			<h1 class="f-header__title">
+			{{Model.ModuleDescription}} - <strong v-if="Model.Description">{{$t(Model.Designation)}}</strong>
+			</h1>
+		</div>
+		<hr>
+        <QGroupBoxContainer :label="Resources.UTILIZADORES39761">
+			<q-row-container id="row-description" v-if="Model.Description">
                 <p id="title-parag">{{Resources.DESCRICAO07528}}:</p>
-                  <p>{{$t(Model.Description)}}</p>
-               </row>
-               <row>
-                    <card>
-                        <template #header>
-                          <h2>{{Resources.UTILIZADORES39761}}</h2>
-                        </template>
-                        <template #body>
-                            <qtable
-                                :rows="Model.UserAboveList"
-                                :columns="userListColumns">
-                                <template #role="props">
-                                    <span class="role-tag">
-                                        {{$t(props.row.Designation)}}
-                                    </span>
-                                </template>
-                            </qtable>
-                        </template>
-                    </card>
-                </row>
-                <row>
-                    <card>
-                        <template #header>
-                            {{Resources.HIERARQUIA22557}}
-                        </template>
-                        <template #body>
-                            <div class="row">
-                                <div class="col-sm">
-                                    <svg class="graph" ref="svg">
-                                      <g ref="graph"/>
-                                    </svg>
-                                </div>
-                            </div>
-                        </template>
-                    </card>
-                  <br>
-                    <q-button
-                        :label='Resources.VOLTAR01353'
-                        @click="goBack" />
-                </row>
-            </template>
-        </card>
+                <p>{{$t(Model.Description)}}</p>
+            </q-row-container>
+            <q-row-container>
+				<qtable
+                    :rows="Model.UserAboveList"
+                    :columns="userListColumns">
+                    <template #role="props">
+                        <span class="role-tag">
+                            {{$t(props.row.Designation)}}
+                        </span>
+                    </template>
+                </qtable>
+			</q-row-container>
+		</QGroupBoxContainer>
+        <QGroupBoxContainer :label="Resources.HIERARQUIA22557">
+            <q-row-container>
+                <div class="col-sm">
+                    <svg class="graph" ref="svg">
+                        <g ref="graph"/>
+                    </svg>
+                </div>
+                <br>
+                <q-button
+                    :label='Resources.VOLTAR01353'
+                    @click="goBack" />
+			</q-row-container>
+		</QGroupBoxContainer>
     </div>
 </template>
 
 <script>
-  // @ is an alias to /src
-  import { reusableMixin } from '@/mixins/mainMixin';
-  import { QUtils } from '@/utils/mainUtils';
-  import { PathUtils } from '@/utils/PathFinder';
-  import dagreD3 from "dagre-d3";
-  import * as d3 from "d3";
+    // @ is an alias to /src
+    import { reusableMixin } from '@/mixins/mainMixin';
+    import { QUtils } from '@/utils/mainUtils';
+    import { PathUtils } from '@/utils/PathFinder';
+    import dagreD3 from "dagre-d3";
+    import * as d3 from "d3";
 
-  export default {
-        name: 'role-view',
-        mixins: [reusableMixin],
-        mounted() {
-            this.$nextTick(() =>
-            {
-                // access our input using template refs, then focus
-                this.$refs.svg.focus()
-                this.redrawGraph(); // <= It gives an error because the fetchRole may not have completed the load yet. The await in 'created' does not stop the process..
-            })
-        },
-        created: function () {
-            // Ler dados
-            this.fetchRole();
-        },
-        data: function () {
+	export default {
+		name: 'role-view',
+		mixins: [reusableMixin],
+		mounted() {
+			this.$nextTick(() =>
+			{
+				// access our input using template refs, then focus
+				this.$refs.svg.focus()
+				this.redrawGraph(); // <= It gives an error because the fetchRole may not have completed the load yet. The await in 'created' does not stop the process..
+			})
+		},
+		created() {
+			// Ler dados
+			this.fetchRole();
+		},
+        data() {
             var vm = this;
             return {
                 Model: {

@@ -144,8 +144,10 @@
 		}
 
 		SearchFilters.value = '@Html.Raw(advFil)';
-		if (typeof SearchFilters.value === 'string' && SearchFilters.value.length > 0)
-			UpdateSearchFilterStatus("GQT_Menu_6111311", JSON.parse(SearchFilters.value))
+		if (typeof SearchFilters.value === 'string' && SearchFilters.value.length > 0) {
+			searchFilterGroups = JSON.parse(SearchFilters.value);
+			UpdateSearchFilterStatus("GQT_Menu_6111311", searchFilterGroups)
+		}
 	});
 </script>
 

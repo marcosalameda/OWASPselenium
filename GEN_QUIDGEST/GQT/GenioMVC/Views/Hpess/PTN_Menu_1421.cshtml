@@ -1,0 +1,160 @@
+﻿@model GenioMVC.ViewModels.Hpess.PTN_Menu_1421_ViewModel
+@using GenioMVC.Resources
+@using System.Web.Script.Serialization
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Title = Model.DBEditTitle;
+	//Layout = "~/Views/Shared/Layouts/TopMenu_BT4/_Layout.cshtml";
+}
+
+@{
+	GenioMVC.ViewModels.Hpess.PTN_Menu_1421_ViewModel modelPTN_Menu_1421 = new GenioMVC.ViewModels.Hpess.PTN_Menu_1421_ViewModel(Navigation);
+	var columns = modelPTN_Menu_1421.GetSearchColumns();
+
+	Dictionary<string, TableFilterField> fields = new Dictionary<string, TableFilterField>();
+
+
+	foreach (var col in columns)
+	{
+		var areaField = col.AreaField;
+		if (areaField.Area == "hpess" && areaField.Field == "name")
+		{
+			fields.Add("HPESS.NAME", new TableFilterField("HPESS", "NAME", Resources.NAME31974, "text", defaultSearch : true));
+		}
+		if (areaField.Area == "hpess" && areaField.Field == "author")
+		{
+			fields.Add("HPESS.AUTHOR", new TableFilterField("HPESS", "AUTHOR", Resources.AUTHOR21241, "text"));
+		}
+		if (areaField.Area == "hpess" && areaField.Field == "date")
+		{
+			fields.Add("HPESS.DATE", new TableFilterField("HPESS", "DATE", Resources.DATE18475, "date"));
+		}
+		if (areaField.Area == "cmpny" && areaField.Field == "designat")
+		{
+			fields.Add("CMPNY.DESIGNAT", new TableFilterField("CMPNY", "DESIGNAT", Resources.DESIGNATION35876, "text"));
+		}
+		if (areaField.Area == "pesso" && areaField.Field == "name")
+		{
+			fields.Add("PESSO.NAME", new TableFilterField("PESSO", "NAME", Resources.NAME31974, "text"));
+		}
+	}
+
+	JavaScriptSerializer serializer = new JavaScriptSerializer();
+	string fieldsStr = serializer.Serialize(fields);
+}
+
+<script>
+	//Fields with information for search filters
+	var fields = @Html.Raw(fieldsStr);
+	//Table List Search Filters
+	var searchFilterGroups = [];
+</script>
+
+
+@using (Ajax.BeginForm("PTN_Menu_1421", "Hpess", new AjaxOptions
+{
+	HttpMethod= "POST",
+	InsertionMode = InsertionMode.Replace,
+	UpdateTargetId = "Menu",
+	OnSuccess = "InitMenuSpecialControls"
+}, new { @class = "form-horizontal", area="Hpess", data_form="PTN_Menu_1421" }))
+{
+		<input id="SearchFilters" type="hidden" value="" />
+
+		<div class="page-header row" style="align-items:center">
+		   <div class="col">
+<div class="table-title c-table__title">
+					<h1>@ViewBag.Title</h1>
+				</div>
+
+		   </div>
+		   <div class="col-auto search">
+				<div class="i-input-group input-xxlarge" id="PTN_Menu_1421_simple_filter">
+					<div data-search-filter-menu-elem="filter-box-list"></div>
+					@Html.TextBox("qPTN_Menu_1421", Navigation.GetStrValue("qPTN_Menu_1421"), new { @class="i-input-group__field input-xxlarge dropdown-toggle", @title=@Resources.CAIXA_DE_PESQUISA53870, @onfocus="ToggleSearchFilterBox('PTN_Menu_1421');" ,@onkeydown = "ListSearchEnter(event)", @autocomplete = "off" ,@data_toggle = "dropdown",@data_search_field_menu_elem = "show", @onblur = "HideSearchFieldMenuOnUnfocus('PTN_Menu_1421');",@placeholder = Resources.PESQUISAR34506 + " " + Resources.NAME31974})
+					<button id="qPTN_Menu_1421-clearBtn" class="clear-search d-none" type="button">
+						<i class="glyphicons glyphicons-remove mr-1"></i>
+					</button>
+					@Html.SearchFieldMenu("PTN_Menu_1421", fields, "HPESS")
+					<div class="b-btn-group i-input-group--right">
+						<button type="button" elem-identifier="ListSearchButton" class="btn b-icon b-icon--secondary i-input-group__button--secondary  listSearchButton" title="@Resources.PESQUISAR34506" onclick="AddSearchFieldFilter('PTN_Menu_1421', 'HPESS', 'HPESS.NAME');"><i class="glyphicons glyphicons-search i-input-group__tag-icon i-input-group__button-icon"></i></button>
+						@{
+						var advancedSearchIcon = @Model.Menu.Filters.ShowTableFilters ? "glyphicons-zoom-out" : "glyphicons-zoom-in";
+						<button id="PTN_Menu_1421_extra" class="btn b-icon b-icon--secondary i-input-group__button--secondary" type="button" onclick="changeFilters('#PTN_Menu_1421_complex_filter', 'PTN_Menu_1421_tableFilters');applyComplexFilterIDs();" title="@Resources.PESQUISA_AVANCADA06198"><span class="glyphicons @advancedSearchIcon i-input-group__tag-icon i-input-group__button-icon"></span></button>
+						}
+						@Html.SearchFilterMenu("PTN_Menu_1421")
+					</div>
+				</div>
+			</div>
+            @if(!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest() && !Model.IsViewModeHidden("LIST"))
+            {
+			<div class="col-auto float-right" style="padding: 0; padding-right: 15px">
+				<div class="b-btn-group float-right" style="height: 32.625px">
+					@*List properties LISTS*@
+					@if(!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest())
+					{
+						<button class="b-btn b-icon b-icon--secondary" type="button" data-modal-form="Lstusr" data-modal-id="lstusr-edit-modal" data-table="PTN_Menu_1421" data-modal-url="@Url.Action("ChangeListProperties", "Lstusr", new { idlist = "PTN_Menu_1421", idlistController = "Hpess", idlistArea = "Hpess", codlista ="ab8a36df-0588-4ad3-8ca3-f6f500ab1f55" })" title="@Resources.ALTERAR_A_APRESENTAC58401"><i class="glyphicons glyphicons-list e-icon"></i></button>
+					}
+				</div>
+			</div>
+            }
+		</div>
+ 	<div id="Menu" element-identifier="List">
+		@{ Html.RenderPartial("PTN_Menu_1421_Partial"); }
+	</div>
+	@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "PTN_Menu_1421" })
+	@Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId)
+	@Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock())
+	@Html.AntiForgeryToken()
+}
+
+
+
+<script>
+	$(document).ready(function () {
+		window.Form_PTN_Menu_1421 = new QMenuForm($('[data-form="PTN_Menu_1421"]'), "Form_PTN_Menu_1421");
+		window.Form_PTN_Menu_1421.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_PTN_Menu_1421.Init();
+
+		//Initialize search field menu for search bar
+		InitSearchFieldMenu("qPTN_Menu_1421");
+		RegisterClearEvents("PTN_Menu_1421")
+
+		// TVC - added code to load advanced filters after returning from a form
+		@{
+			string advFil = "";
+			if (!String.IsNullOrEmpty(Navigation.GetStrValue("AdvancedFilters")))
+			{
+				advFil = Navigation.GetStrValue("AdvancedFilters");
+			}
+		}
+
+		SearchFilters.value = '@Html.Raw(advFil)';
+		if (typeof SearchFilters.value === 'string' && SearchFilters.value.length > 0) {
+			searchFilterGroups = JSON.parse(SearchFilters.value);
+			UpdateSearchFilterStatus("PTN_Menu_1421", searchFilterGroups)
+		}
+	});
+</script>
+
+@helper codeJavascript()
+{
+<script>
+	QLocalStorage.remLocalStorage("savedInfo");
+	$(document).ready(function (e) {
+		InitSpecialControls($('[data-form="PTN_Menu_1421"]'));
+
+
+ 	});
+
+	function InitMenuSpecialControls() {
+		InitSpecialControls($('[data-form="PTN_Menu_1421"]'));
+	}
+
+</script>
+}
+
+@section code_javascript {
+	@codeJavascript()
+}

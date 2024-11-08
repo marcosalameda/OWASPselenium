@@ -348,9 +348,6 @@ namespace CSGenio.framework
         {
             if (ALL_ROLES.TryGetValue(roleId?.Trim(), out Role result))
                 return result;
-
-            if(!String.IsNullOrEmpty(roleId))
-                Log.Error($"Trying to get an unexisting role:{roleId}");
             return INVALID;
         }
 

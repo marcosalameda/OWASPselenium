@@ -35,7 +35,7 @@
 // USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_IMGBACKGROUND_WAREH_WAREHDES]/
 		column.Expression(p => p.Wareh.ValWarehdes).Title(@Resources.WAREHOUSE51864).Field("Wareh.ValWarehdes").Size(30);
 // USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_IMGBACKGROUND_WPESS_FTBACKGR]/
-		column.Expression(p => Html.ImageMagnifierZoom(p.ValFtbackgr, new {alt=@Resources.PROFILE_PICTURE42911,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCodpess, modelname = "Wpess", fldname = "ValFtbackgr" }))).Title(@Resources.PROFILE_PICTURE42911).Field("ValFtbackgr").Size(3);
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValFtbackgr, new {alt=@Resources.PROFILE_PICTURE42911,}, Url.Action("ImageHandlerGet", "Home", new { ticket = Helpers.GetFileTicket(UserContext.Current.User, "Wpess", "ValFtbackgr", "", p.ValCodpess, null) }))).Title(@Resources.PROFILE_PICTURE42911).Field("ValFtbackgr").Size(3);
             column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
         })
         .SetLimits(this.Model.tableLimits)

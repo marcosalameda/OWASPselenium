@@ -16,14 +16,21 @@ import image_input from '@/components/Image_input.vue';
 import select_simple from '@/components/Select_simple.vue';
 import textarea_input from '@/components/Textarea_input.vue';
 import GroupBoxContainer from '@/components/GroupBoxContainer.vue';
+import QGroupCollapsible from '@/components/QGroupCollapsible.vue';
+import TabContainer from '@/components/TabContainer.vue';
+import BaseInputStructure from '@/components/BaseInputStructure.vue';
+import QControlWrapper from '@/components/ControlWrapper.vue';
+import QRowContainer from '@/components/RowContainer.vue';
+import QAlert from '@/components/QAlert.vue';
 
 // Quidgest UI
 import {
     QButton,
 	QButtonGroup,
 	QIcon,
-	QSelect,
-	QTooltip
+    QSelect,
+    QSpinnerLoader,
+    QTooltip
 } from '@quidgest/ui/components'
 
 export default function ComponentsInit(app) {
@@ -45,10 +52,17 @@ export default function ComponentsInit(app) {
     app.component('select-simple', select_simple);
     app.component('textarea-input', textarea_input);
     app.component('QGroupBoxContainer', GroupBoxContainer);
+    app.component('QCollapsibleContainer', QGroupCollapsible);
+    app.component('QTabContainer', TabContainer);
+    app.component('BaseInputStructure', BaseInputStructure);
+    app.component('QControlWrapper', QControlWrapper);
+    app.component('QRowContainer', QRowContainer);
+    app.component('QAlert', QAlert);
 
     app.component('QButton', QButton)
     app.component('QButtonGroup', QButtonGroup)
     app.component('QIcon', QIcon)
     app.component('QSelect', QSelect)
+    app.component('QSpinnerLoader', QSpinnerLoader)
     app.component('QTooltip', QTooltip)
 }

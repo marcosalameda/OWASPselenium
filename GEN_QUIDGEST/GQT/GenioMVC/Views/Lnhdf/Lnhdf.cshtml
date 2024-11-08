@@ -1,0 +1,149 @@
+﻿@model GenioMVC.ViewModels.Lnhdf.Lnhdf_ViewModel
+@using GenioMVC.Models.Navigation;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Title = @Resources.DISAGGREGATION_LINES45819;
+	ViewBag.formmode = Model.GetFormMode;
+}
+
+<div class="c-modal__dialog c-modal--lg">
+	@using (Ajax.BeginForm("Action", "Lnhdf", null, new AjaxOptions { UpdateTargetId = "form-modal" }, new { @class = "c-modal__content", area = "Lnhdf", data_form = "Lnhdf" }))
+	{
+		<div class="c-modal__content">
+			<div class="c-modal__header" elem-identifier="modal-header">
+				@form_header()
+			</div>
+			<div elem-identifier="ModalBody" class="c-modal__body">
+				<div class="form-flow">
+					@form_body()
+				</div>
+			</div>
+			<div class="c-modal__footer">
+				<div elem-identifier="Actions" class="actions" data-form-actions="Lnhdf">
+					@form_footer()
+				</div>
+			</div>
+		</div>
+	}
+</div>
+
+@helper form_header() {
+	@* BEGIN MVC Flash messages *@
+	@Html.Action("Index", "Messages")
+	@* END MVC Flash messages *@
+		<div class="c-modal__header-title">
+			<div class="d-flex">
+				<div class="c-action-bar d-flex">
+					<i class="form-popup-header-legend icon-@ViewBag.formmode ViewMode-@ViewBag.formmode"></i><h2>@ViewBag.Title</h2>
+					<div data-parent-form="Lnhdf" data-q-ref="form-btns-main_container"></div>
+				</div>
+			</div>
+		</div>
+}
+
+@helper form_body() {
+	@form_content_alert()
+	@Html.QValidationSummary()
+	<fieldset>
+		<legend class="hidden-elem">@ViewBag.Title</legend>
+		<div class="form-flow">
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_LNHDF___LNHDFNAME____">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValName, new { label_id="LED_LNHDF___LNHDFNAME____", @class = " i-text__label", id="LABEL_LED_LNHDF___LNHDFNAME____"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_LNHDF___LNHDFNAME____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextBoxFor(model => model.ValName, new {help_id = "LED_LNHDF___LNHDFNAME____", @class = "i-text__field i-text input-xlarge", data_identifier = "LED_LNHDF___LNHDFNAME____", @pers_cs_area = "Lnhdf", @pers_cs_field = "ValName", @db_field = "ValName", title = @Resources.NAME31974, maxlength = "50", rows = "50" })
+								@Html.ValidationMessageFor(model => model.ValName)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+			@Html.HiddenFor(model => model.ValCodlnhde, new { @pers_cs_field="ValCodlnhde", @pers_cs_area="Lnhdf", @data_value = Model.ValCodlnhde, @db_field="ValCodlnhde", @trelate="Lnhde", @tfrelate="Codlnhde", @data_identifier="LED_LNHDF___LNHDECODLNHDE" })
+
+			@Html.HiddenFor(model => model.ValCodlnhdf, new { @pers_cs_field="ValCodlnhdf", @pers_cs_area="Lnhdf", @form_area="true", @data_value = Model.ValCodlnhdf, @data_identifier = "LED_LNHDF___LNHDFCODLNHDF" })
+
+			@Html.Hidden("IgnoreWarnings", "false", new { id = "IgnoreWarnings" })
+
+			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Lnhdf" })
+			@Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Lnhdf" })
+			@Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Lnhdf" })
+			@Html.AntiForgeryToken()
+		</div>
+	</fieldset>
+}
+
+@helper form_content_alert(){
+	if(Model.FormMode == FormMode.Delete) {
+		<div class="c-alert c-alert--warning">
+			<i class="glyphicons glyphicons-alert c-alert__icon" aria-hidden="true"></i>
+			<div class="c-alert__text">
+				&ensp;@Resources.DESEJA_ELIMINAR_ESTA24564
+			</div>
+		<!--Ao confirmar esta ficha irá ser eliminada da base de dados. Cancele caso não tenha a certeza.-->
+		</div>
+	}
+}
+
+@helper form_footer() {
+
+
+
+			if (Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+			{
+
+				if(Model.FormMode == FormMode.New && Convert.ToBoolean(Request.QueryString.Get("repeatInsertion")))
+				{
+				<button type="button" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" data-end-pers="true" data-modal-close="true" data-modal-form="true" data-modal-repeat-insertion="true" name="@(Helpers.FormModeActionName("Lnhdf", Model.FormMode))" data-modal-url='@Url.Action(Helpers.FormModeActionName("Lnhdf", Model.FormMode).ToString())' qbutton="ok_new"><i class="SaveIcon e-icon" aria-hidden="true"></i>@Resources.GRAVAR_E_CRIAR_NOVA17771</button>
+				}
+				<button type="button" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" data-end-pers="true" data-modal-close="true" data-modal-form="true" name="@(Helpers.FormModeActionName("Lnhdf", Model.FormMode))" data-modal-url='@Url.Action(Helpers.FormModeActionName("Lnhdf", Model.FormMode).ToString(), "Lnhdf")' qbutton="ok">
+				@if(Model.FormMode == FormMode.Delete)
+				{
+					<i class="glyphicons glyphicons-glyphicons-check e-icon" aria-hidden="true"></i>
+					@Resources.CONFIRMAR09808
+				}
+				else
+				{
+					<i class="SaveIcon e-icon" aria-hidden="true"></i>
+					@Resources.GRAVAR45301
+				}
+				</button>
+			}
+		   <button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-modal-close="true" data-modal-form="true" data-modal-cancel="true" data-modal-url='@Url.Action("Lnhdf_Cancel")' qbutton="cancel"><i class="glyphicons glyphicons-ban-circle e-icon" aria-hidden="true"></i>@Resources.CANCELAR49513</button>
+}
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT LNHDF]/ *@
+
+@if (Request.IsAjaxRequest())
+{
+	@codeJavascript()
+	@includeStylesheets()
+}
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_LNHDF" data-form-javascript="true">
+@Html.Partial("Lnhdf_JavaScript", Model, ViewData)
+</div>
+}
+
+@section code_javascript {
+	@codeJavascript()
+}
+
+@helper includeStylesheets()
+{
+
+ }
+
+@section include_stylesheets {
+	@includeStylesheets()
+}

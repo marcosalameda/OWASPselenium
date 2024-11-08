@@ -106,7 +106,7 @@
 
 			this.Controls.LED_INSTA___EQUIPDESIGNAT = new QTextControl($('[data-identifier="LED_INSTA___EQUIPDESIGNAT"]', this.element), window.Form_Insta);
 
-			this.Controls.LED_INSTA___EQUIPPHOTOGRA = new QImageControl($('[data-identifier="LED_INSTA___EQUIPPHOTOGRA"]', this.element), window.Form_Insta, '@Html.Raw(Url.Action("ImageDelete", "Equip", new { id=Model.ValCodinsta, modelname="Equip", fldname="EquipValPhotogra" }))', '@Html.Raw(Url.Action("ImageCropper", "Equip", new { key=Model.ValCodinsta, modelname= "Equip", fldname= "EquipValPhotogra", identifier= "FINSTA", FormName= "Insta", FieldId= "LED_INSTA___EQUIPPHOTOGRA" }))',@Html.IsImageEmpty(Model.EquipValPhotogra));
+			this.Controls.LED_INSTA___EQUIPPHOTOGRA = new QImageControl($('[data-identifier="LED_INSTA___EQUIPPHOTOGRA"]', this.element), window.Form_Insta, '@Html.Raw(Url.Action("ImageDelete", "Equip", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Equip", "EquipValPhotogra", "", Model.ValCodinsta, null) }))', '@Html.Raw(Url.Action("ImageCropper", "Equip", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Equip", "EquipValPhotogra", "", Model.ValCodinsta, null), identifier= "FINSTA", FormName= "Insta", FieldId= "LED_INSTA___EQUIPPHOTOGRA" }))',@Html.IsImageEmpty(Model.EquipValPhotogra));
 
 			this.Controls.IFF_INSTA___PSEUDNOVOGR02 = new QGenericControl($('[data-identifier="IFF_INSTA___PSEUDNOVOGR02"]', this.element), window.Form_Insta);
 

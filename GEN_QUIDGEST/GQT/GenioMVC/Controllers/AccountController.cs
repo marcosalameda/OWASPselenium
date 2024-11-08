@@ -37,18 +37,17 @@ namespace GenioMVC.Controllers
 			model.Load();
 
 			//check if configuracoes.xml have OpenID Connect configured
-            OpenIdConnectIdentityProvider oIdIP = new OpenIdConnectIdentityProvider();
-            if (oIdIP.Options != null)
-                model.OpenIdConnAuthMethods.Add(oIdIP.Options.Description);
-			//check if configuracoes.xml have CAS configured
-            CASIdentityProvider casIP = new CASIdentityProvider();
-            if (casIP.Options != null)
-                model.CASAuthMethods.Add(casIP.Options.Description);
+            foreach(var ip in SecurityFactory.IdentityProviderList)
+            {
+                if(ip is OpenIdConnectIdentityProvider)
+                    model.OpenIdConnAuthMethods.Add(ip.Id);
 
-			//check if configuracoes.xml have CMD configured
-            CMDIdentityProvider cmdIP = new CMDIdentityProvider();
-            if (cmdIP.Options != null)
-                model.CMDAuthMethods.Add(cmdIP.Options.Description);
+                if(ip is CASIdentityProvider)
+                    model.CASAuthMethods.Add(ip.Id);
+
+                if (ip is CMDIdentityProvider)
+                    model.CMDAuthMethods.Add(ip.Id);
+            }
 
             if (string.IsNullOrEmpty(view))
 			    return PartialView("LogOn", model);
@@ -66,21 +65,20 @@ namespace GenioMVC.Controllers
 			//TSX (2020.06.01) - If authentication cookie timeout and the user are on one form the breadcrumbs aren't remove because level are > 0
             Navigation.ClearHistoryLevels();
 
-			//check if configuracoes.xml have OpenID Connect configured
-            OpenIdConnectIdentityProvider oIdIP = new OpenIdConnectIdentityProvider();
-            if (oIdIP.Options != null)
-                model.OpenIdConnAuthMethods.Add(oIdIP.Options.Description);
-			//check if configuracoes.xml have CAS configured
-            CASIdentityProvider casIP = new CASIdentityProvider();
-            if (casIP.Options != null)
-                model.CASAuthMethods.Add(casIP.Options.Description);
+            //check if configuracoes.xml have OpenID Connect configured
+            foreach (var ip in SecurityFactory.IdentityProviderList)
+            {
+                if (ip is OpenIdConnectIdentityProvider)
+                    model.OpenIdConnAuthMethods.Add(ip.Id);
 
-			//check if configuracoes.xml have CMD configured
-            CMDIdentityProvider cmdIP = new CMDIdentityProvider();
-            if (cmdIP.Options != null)
-                model.CMDAuthMethods.Add(cmdIP.Options.Description);
+                if (ip is CASIdentityProvider)
+                    model.CASAuthMethods.Add(ip.Id);
 
-			//if only have one identity provider redirect directly to the webpage for login
+                if (ip is CMDIdentityProvider)
+                    model.CMDAuthMethods.Add(ip.Id);
+            }
+
+            //if only have one identity provider redirect directly to the webpage for login
             if (Configuration.Security.IdentityProviders.Count == 1)
             {
                 if (model.OpenIdConnAuthMethods.Any())
@@ -392,10 +390,9 @@ namespace GenioMVC.Controllers
         [HttpGet]
         public ActionResult OpenIdLoginRedirect(string id)
         {
-            string urlRedirectAuth = (new OpenIdConnectIdentityProvider()).GetUrlToAuthenticate(
-                Url.RouteUrl("OIdAuth", null, Request.Url.Scheme) //Get absolute path with scheme + domain + "/OpenIdLogin" to provider known were to send the callback
-                );
-
+            //Get absolute path with scheme + domain + "/OIdAuth" to provider known were to send the callback
+            var ip = SecurityFactory.IdentityProviderList.First(x => x.Id == id);
+            string urlRedirectAuth = ip.GetRedirectLoginUrl(GetOidLoginUrl());
             return Redirect(urlRedirectAuth);
         }
 
@@ -407,11 +404,20 @@ namespace GenioMVC.Controllers
         [HttpGet]
         public ActionResult CMDLoginRedirect(string id)
         {
-            string urlRedirectAuth = (new CMDIdentityProvider()).GetUrlToAuthenticate(
-                Url.RouteUrl("OIdAuth", null, Request.Url.Scheme) //Get absolute path with scheme + domain + "/OpenIdLogin" to provider known were to send the callback
-                );
-
+            var ip = SecurityFactory.IdentityProviderList.First(x => x.Id == id);
+            string urlRedirectAuth = ip.GetRedirectLoginUrl(GetOidLoginUrl());
             return Redirect(urlRedirectAuth);
+        }
+
+        private string GetOidLoginUrl()
+        {
+            var uri = new UriBuilder(Url.RouteUrl("OIdAuth", null, Request.Url.Scheme));
+#if (!DEBUG)
+            //TODO: implement a proxy configuration
+            uri.Port = -1;
+            uri.Scheme = Uri.UriSchemeHttps;
+#endif
+            return uri.ToString();
         }
 
         /// <summary>
@@ -424,24 +430,22 @@ namespace GenioMVC.Controllers
         public ActionResult OpenIdLogin (string id_token, string code)
         {
             try {
-                //decode JWT received, more information at https://openid.net/specs/openid-connect-core-1_0.html#IDToken
-                var token = new JwtSecurityToken(id_token);
-
-                OpenIdConnectIdentityProvider ip = new OpenIdConnectIdentityProvider();
-                ip.Options.CallbackPath = Url.RouteUrl("OIdAuth", null, Request.Url.Scheme); //Get absolute path with scheme + domain + "/OpenIdLogin" to provider known were to send the callback
+                var ip = SecurityFactory.IdentityProviderList.First(x => x is OpenIdConnectIdentityProvider);
                 TokenCredential qToken = new TokenCredential();
-                qToken.Token = token.ToString();
+                qToken.Token = id_token;
+                qToken.Auth = code;
+                qToken.OriginUrl = GetOidLoginUrl();
 
-                var id = ip.Authenticate(qToken, code);
+                var id = ip.Authenticate(qToken);
 
                 if (id != null) //When user authenticated successfull return to Home page
-                {
-                    User user = new User(id.Name, "id", Configuration.DefaultYear, Request.UserHostName);
-                    user.Auth2FA = false; //This authentication method doesn't allow 2FA because the provider have this responsibility
+        {
+            User user = new User(id.Name, "id", Configuration.DefaultYear, Request.UserHostName);
+            user.Auth2FA = false; //This authentication method doesn't allow 2FA because the provider have this responsibility
                     user.Status = 0; //At this moment if "id" isn't null than this user have status = 0
 
                     finalizeAuthentication(user, "", false);
-                    return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Home");
                 }
             }
             catch { }
@@ -472,32 +476,18 @@ namespace GenioMVC.Controllers
         {
             try
             {
-                CMDIdentityProvider ip = new CMDIdentityProvider();
-                var httpWebRequest = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(ip.Options.DataAPI+"?token=" + access_token);
-                httpWebRequest.ContentType = "application/json";
-                httpWebRequest.Method = "GET";
-
-                var httpResponse = (System.Net.HttpWebResponse)httpWebRequest.GetResponse();
-
-                using (var streamReader = new System.IO.StreamReader(httpResponse.GetResponseStream()))
+                var ip = SecurityFactory.IdentityProviderList.First(x => x is CMDIdentityProvider);
+                var token = new TokenCredential();
+                token.Token = access_token;
+                var id = ip.Authenticate(token);
+                if (id != null) //When user authenticated successfull return to Home page
                 {
-                    string jsonResult = streamReader.ReadToEnd();
-                    DomainCredential credencial = ip.ValidateCredencial(jsonResult);
+                    User user = new User(id.Name, "id", Configuration.DefaultYear, Request.UserHostName);
+                    user.Auth2FA = false; //This authentication method doesn't allow 2FA because the provider have this responsibility
+                    user.Status = 0; //At this moment if "id" isn't null than this user have status = 0
 
-                    if(credencial != null)
-                    {
-                        var id = ip.Authenticate(credencial);
-
-                        if (id != null) //When user authenticated successfull return to Home page
-                        {
-                            User user = new User(id.Name, "id", Configuration.DefaultYear, Request.UserHostName);
-                            user.Auth2FA = false; //This authentication method doesn't allow 2FA because the provider have this responsibility
-                            user.Status = 0; //At this moment if "id" isn't null than this user have status = 0
-
-                            finalizeAuthentication(user, "", false);
-                            return RedirectToAction("Index", "Home");
-                        }
-                    }
+                    finalizeAuthentication(user, "", false);
+                    return RedirectToAction("Index", "Home");
                 }
             }
             catch(Exception ex)
@@ -509,15 +499,25 @@ namespace GenioMVC.Controllers
             return RedirectToAction("LogOn", new { nav = Navigation.NavigationId }); //When user authentication error then return again to Logon page
         }
 
-		[HttpGet]
+        //Get absolute path with scheme + domain + "/OIdAuth" to provider known were to send the callback
+        private string GetCasLoginUrl()
+        {
+            var uri = new UriBuilder(Url.RouteUrl("CASAuth", null, Request.Url.Scheme));
+#if (!DEBUG)
+            //TODO: implement a proxy configuration
+            uri.Port = -1;
+            uri.Scheme = Uri.UriSchemeHttps;
+#endif
+            return uri.ToString();
+        }
+
+        [HttpGet]
         public ActionResult CASLoginRedirect(string id)
         {
             string ticket = "";
 
-            string urlRedirectAuth = (new CASIdentityProvider()).GetUrlToAuthenticate(
-                Url.RouteUrl("CASAuth", null, Request.Url.Scheme), //Get absolute path with scheme + domain + "/CASLogin" to provider known were to send the callback
-                "login" //path to contact
-                );
+            var ip = SecurityFactory.IdentityProviderList.First(x => x.Id == id);
+            string urlRedirectAuth = ip.GetRedirectLoginUrl(GetCasLoginUrl());
 
             if (Request.QueryString["SAMLArt"] != null)
                 ticket = Request.QueryString["SAMLArt"].ToString();
@@ -533,9 +533,9 @@ namespace GenioMVC.Controllers
             {
                 try
                 {
-                    CASIdentityProvider ip = new CASIdentityProvider();
-                    ip.Options.CallbackPath = Url.RouteUrl("CASAuth", null, Request.Url.Scheme); //Get absolute path with scheme + domain + "/OpenIdLogin" to provider known were to send the callback
-                    TokenCASCredential qToken = new TokenCASCredential();
+                    var ip = SecurityFactory.IdentityProviderList.First(x => x is CASIdentityProvider);
+                    TokenCredential qToken = new TokenCredential();
+
                     qToken.Token = SAMLart;
 					qToken.OriginUrl = Request.Url.AbsoluteUri;
 

@@ -19,7 +19,8 @@ namespace DbAdmin.IntegrationTest
             config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
                 .Build();
-            PersistenceFactoryExtension.Use();
+            CSGenio.GenioDIDefault.UseLog();
+            CSGenio.GenioDIDefault.UseDatabase();
         }
 
         [Test]

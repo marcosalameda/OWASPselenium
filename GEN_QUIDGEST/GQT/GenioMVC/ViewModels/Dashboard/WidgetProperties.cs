@@ -90,6 +90,11 @@
 		public CSGenio.framework.Role Role;
 
 		/// <summary>
+		/// The destination module of the widget that could not be the current one
+		/// </summary>
+		public string Module { get; set; }
+		
+		/// <summary>
 		/// The title of the widget
 		/// </summary>
 		public string Title { get; set; }
@@ -98,6 +103,11 @@
 		/// The group that contains this widget
 		/// </summary>
 		public string Group { get; set; }
+		
+		/// <summary>
+		/// The style of the widget
+		/// </summary>
+		public string Style { get; set; }
 
 		/// <summary>
 		/// The refresh mode of the widget

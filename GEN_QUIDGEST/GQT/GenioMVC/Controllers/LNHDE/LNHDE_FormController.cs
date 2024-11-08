@@ -665,7 +665,8 @@ namespace GenioMVC.Controllers
 					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
 
 				ErrorMessage(exceptionUserMessage);
-				return RedirectToLocation(Navigation.PreviousLevel.Location);
+				Navigation.RemoveHistoryLevel();
+				return RedirectToLocation(Navigation.CurrentLevel.Location);
 			}
 
 			if (!Request.IsAjaxRequest())
@@ -1061,7 +1062,37 @@ namespace GenioMVC.Controllers
 			return PartialView(partialView, model);
 		}
 
-    
+      
+		//
+		// GET: /Lnhde/Lnhde_ValLnprops
+		// POST: /Lnhde/Lnhde_ValLnprops
+		[AuthorizeForUsers]
+		[ActionName("Lnhde_ValLnprops")]
+		[ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
+		public ActionResult Lnhde_ValLnprops(string id, string partialView)
+		{
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+
+			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_lnhdf")))
+				UserContext.Current.SetPersistenceReadOnly(true);
+			else
+			{
+				Navigation.DestroyEntry("ForcePrimaryRead_lnhdf");
+				UserContext.Current.SetPersistenceReadOnly(false);
+			}
+
+			NameValueCollection requestValues = Request.Unvalidated.Form.Count > 0 ? Request.Unvalidated.Form : Request.QueryString; //TSX (01.07.2020) Can not access directly to the FormCollection or made Request.Form otherwise the tags on viewmodel will be ignored
+			var navigation = Navigation;
+			Lnhde_ValLnprops_ViewModel model = new Lnhde_ValLnprops_ViewModel(navigation);
+			model.setModes(Request.QueryString["m"]);
+
+			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+
+			return PartialView(partialView, model);
+		}
+
+
 		// POST: /Lnhde/Lnhde_SaveEdit
 		[AuthorizeForUsers]
 		[HttpPost]

@@ -14,6 +14,7 @@ using CSGenio.persistence;
 using System.Data;
 using Quidgest.Persistence.GenericQuery;
 using CSGenio.core.messaging;
+using Administration.Models;
 
 namespace Administration.Controllers
 {
@@ -27,17 +28,18 @@ namespace Administration.Controllers
             return Index(null, appId);
         }
 
-        private IActionResult Index(string resultMsg, string appId)
+        private IActionResult Index(string resultMsg, string appId, string alertType = null)
         {
-            //If configuration file doesn't exist, redirect to dashboard to be created
+            //If configuration file doesn't exist, redirect to no config to be created
             if(!configManager.Exists())
-                return Json(new { redirect = "dashboard" });
+                return Json(new { redirect = "no_configuration" });
 
             if (!AuxFunctions.CheckXMLIsValid(configManager))
                 return Json(new { redirect = "config_migration" });
 
             var model = new Models.ConfigModel();
             model.Applications = ClientApplication.Applications;
+            model.AlertType = alertType ?? "";
             model.ResultMsg = resultMsg ?? "";
 
             try
@@ -99,15 +101,17 @@ namespace Administration.Controllers
                     //decode the username and remove the password before sending to client side
                     model.Messaging.Host.Username = model.Messaging.Host.UsernameDecode();
                     model.Messaging.Host.Password = "";
-                    model.MessagingMetadata = MessagingService.Metadata;
+                    model.MessagingMetadata = CSGenio.core.di.GenioDI.Messaging.Metadata;
                 }
+                else
+                {
+                    model.Messaging = new MessagingXml();
+                }
+
                 //----------------
                 // Scheduler
                 //----------------
-                if(conf.Scheduler != null)
-                {
-                    model.Scheduler = conf.Scheduler;
-                }
+                model.Scheduler = conf.Scheduler ?? new SchedulerXml();
 
                 //----------------
                 // Others [PATHS , FORMATS , Elasticsearch]
@@ -185,7 +189,7 @@ namespace Administration.Controllers
 				// Convert dictionary to list
                 foreach (var mp in conf.maisPropriedades)
                 {
-                    model.MoreProperties.Add(new Models.MorePropertyCfg(mp.Key, mp.Value));
+                    model.AdvancedProperties.Add(new Models.MorePropertyCfg(mp.Key, mp.Value));
                 }
 
                 // Elasticsearch List/table
@@ -232,6 +236,7 @@ namespace Administration.Controllers
                 model.MQueues.Queues = new List<Models.QueueCfg>();
 
                 model.ResultMsg = Translations.Get(e.Message, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper());
+                model.AlertType = "error";
             }
 
             return Ok(model);
@@ -395,6 +400,28 @@ namespace Administration.Controllers
         }
 
         [HttpPost]
+        public IActionResult TestDBConnection([FromBody] Models.ConfigModel model)
+        {
+            try
+            {
+                bool connectionSuccess = PersistentSupport.TestServerConnection(model.GetDataSystemXml());
+
+                if (connectionSuccess)
+                {
+                    return Json(new { Success = true, Message = "Connection success", AlertType = "success" });
+                }
+                else
+                {
+                    return Json(new { Success = false, Message = "Connection failed", AlertType = "danger" });
+                }
+            }
+            catch (Exception)
+            {
+                return Json(new { Success = false });
+            }
+        }
+
+        [HttpPost]
         public IActionResult SaveConfigDatabase([FromBody]Models.ConfigModel model)
         {
             var appId = FromQuery("appId");
@@ -413,25 +440,33 @@ namespace Administration.Controllers
                 }
 
                 if (string.IsNullOrEmpty(model.DbPsw) || (model.DbPsw != model.DbCheckPsw))
+                {
                     model.ResultMsg += Resources.Resources.A_PASSWORD_NAO_COINC35287;
-
+                    model.AlertType = "danger";
+                }
                 //Check log database user input
                 if(!string.IsNullOrEmpty(model.Log_Server) || !string.IsNullOrEmpty(model.Log_Schema) || 
                     !string.IsNullOrEmpty(model.Log_DbPsw) || !string.IsNullOrEmpty(model.Log_DbCheckPsw) || !string.IsNullOrEmpty(model.Log_DbUser))
                 {                    
                     if (string.IsNullOrEmpty(model.Log_Server) || string.IsNullOrEmpty(model.Log_Schema) ||
                     string.IsNullOrEmpty(model.Log_DbPsw) || string.IsNullOrEmpty(model.Log_DbCheckPsw) || string.IsNullOrEmpty(model.Log_DbUser))
+                    {
+                        model.AlertType = "danger";
                         throw new BusinessException(Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860, "ConfigController.reindex", Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860);
-
+                    }
                     if (model.Log_DbPsw != model.Log_DbCheckPsw)
+                    {
+                        model.AlertType = "danger";
                         model.ResultMsg += Resources.Resources.A_PASSWORD_NAO_COINC35287;
-					
+                    }
 					hasLogDB = true;
                 }   
 
                 if(hasLogDB && model.Schema.ToLower() == model.Log_Schema.ToLower())
+                {
+                    model.AlertType = "danger";
                     throw new BusinessException(Resources.Resources.THE_LOG_DATABASE_CAN31596, "ConfigController.reindex", Resources.Resources.THE_LOG_DATABASE_CAN31596);
-
+                }
                 if (string.IsNullOrEmpty(model.ResultMsg))
                 {
                     //Configure main database
@@ -443,12 +478,13 @@ namespace Administration.Controllers
                         sysConfiguration.SaveLogDatabaseConfig(model.Log_DbUser, model.Log_DbPsw, model.Log_Server, model.ServerType.ToString(), 
                             model.Log_Schema, model.Log_Port, model.ConnEncrypt, model.ConnWithDomainUser, year);                    
                     }
-                    model.ResultMsg = Resources.Resources.FICHEIRO_DE_CONFIGUR18806;
+                    model.AlertType = "success";
+                    model.ResultMsg = Resources.Resources.FICHEIRO_DE_CONFIGUR18806 + " " + Resources.Resources.SERA_REDIRECIONADO_E06592;
                 }
             }
             catch (Exception e)
             {
-                return Index(Translations.Get(e.Message, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper()), appId);
+                return Index(Translations.Get(e.Message, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper()), appId, "danger");
             }
 
 			return Index(model.ResultMsg, appId);
@@ -887,7 +923,7 @@ namespace Administration.Controllers
 				model.MQueues.Maxsendnumber = conf.MessageQueueing.Maxsendnumber.ToString();
 
                 configManager.StoreConfig(conf);
-                model.ResultMsg = Resources.Resources.FICHEIRO_DE_CONFIGUR18806;
+                model.ResultMsg = Resources.Resources.FICHEIRO_DE_CONFIGUR18806 + " " + Resources.Resources.SERA_REDIRECIONADO_E06592;
 
 				// Reload Configuration static instance in server with the new Configuracoes.xml data
                 CSGenio.framework.Configuration.ReadConfiguration(conf);
@@ -895,10 +931,10 @@ namespace Administration.Controllers
             catch (Exception e)
             {
                 var resultMsg = Translations.Get(e.Message, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper());
-                return Json(new { Status = "ERROR", Message = resultMsg });
+                return Json(new { Status = "ERROR", Message = resultMsg, AlertType = "danger" });
             }
 
-            return Json(new { Status = "OK", Message = model.ResultMsg });
+            return Json(new { Status = "OK", Message = model.ResultMsg, AlertType = "success" });
         }
 
         [HttpPost]
@@ -1004,7 +1040,7 @@ namespace Administration.Controllers
             catch (Exception e)
             {
                 var resultMsg = Translations.Get(e.Message, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper());
-                return Json(new { Success = false, Message = resultMsg });
+                return Json(new { Success = false, Message = resultMsg, AlertType = "danger" });
             }
 
             return Json(new { Success = true });

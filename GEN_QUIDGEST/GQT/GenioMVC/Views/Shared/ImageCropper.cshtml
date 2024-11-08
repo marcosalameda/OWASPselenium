@@ -36,7 +36,7 @@
             <div class="row">
                 <div class="docs-demo">
                     <div class="img-container">
-                        <img id="inputImage" class="container" src="@Url.Action("ImageHandlerGet", new { id = Model.Key, modelname = Model.modelname, fldname = Model.fldname })" alt="Picture">
+                        <img id="inputImage" class="container" src="@Url.Action("ImageHandlerGet", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, Model.modelname, Model.fldname, "", Model.Key, null) })" alt="Picture">
                     </div>
                 </div>
             </div>
@@ -123,12 +123,12 @@
 
             $.ajax('@Url.Action("UploadImageCropper", "Home")', {
                 method: 'POST',
-                data: { FileData: cropper.getCroppedCanvas().toDataURL(), id: '@Model.Key', modelname: '@Model.modelname', fldname: '@Model.fldname', formIdentifier: '@Model.Identifier' },
+                data: { FileData: cropper.getCroppedCanvas().toDataURL(), ticket: '@HttpUtility.JavaScriptStringEncode(Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, Model.modelname, Model.fldname, "", Model.Key, null))', formIdentifier: '@HttpUtility.JavaScriptStringEncode(Model.Identifier)' },
                 //processData: false,
                 //contentType: false,
                 success() {
                     CloseImageCropper();
-                    window.Form_@{@Model.FormName}.Controls.@{@Model.FieldIdentifier}.UpdateSrc();
+                    window.Form_@{@HttpUtility.JavaScriptStringEncode(Model.FormName)}.Controls.@{@HttpUtility.JavaScriptStringEncode(Model.FieldIdentifier)}.UpdateSrc();
                 },
                 error() {
                     console.log('Upload error');

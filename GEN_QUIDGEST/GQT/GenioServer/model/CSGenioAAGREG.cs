@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Aggregated per year
 	/// </summary>
-	public class CSGenioAagreg : DbArea	{
+	public class CSGenioAagreg : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -106,9 +107,10 @@ namespace CSGenio.business
 			Qfield.FieldSize =  4;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
-			Qfield.CavDesignation = "YEAR_NUMBER12856";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
+			Qfield.Formula = new ReplicaFormula("_replicRel_codyear", "yearnum");
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -164,12 +166,12 @@ namespace CSGenio.business
 
 
 			info.ReplicaFields = new string[] {
-			 "year"
+			 "year","yearnumb"
 			};
 
 
 			info.RelatedSumFields = new string[] {
-			 "value","yearnumb"
+			 "value"
 			};
 
 
@@ -340,11 +342,11 @@ namespace CSGenio.business
 		}
 
 
-		/// <summary>Field : "Year NUMBER" Tipo: "N" Formula: SR "[YEAR->YEARNUM]"</summary>
+		/// <summary>Field : "Year NUMBER" Tipo: "N" Formula: ++ "[YEAR->YEARNUM]"</summary>
 		public static FieldRef FldYearnumb { get { return m_fldYearnumb; } }
 		private static FieldRef m_fldYearnumb = new FieldRef("agreg", "yearnumb");
 
-		/// <summary>Field : "Year NUMBER" Tipo: "N" Formula: SR "[YEAR->YEARNUM]"</summary>
+		/// <summary>Field : "Year NUMBER" Tipo: "N" Formula: ++ "[YEAR->YEARNUM]"</summary>
 		public decimal ValYearnumb
 		{
 			get { return (decimal)returnValueField(FldYearnumb); }
@@ -395,23 +397,6 @@ namespace CSGenio.business
 		}
 
 
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAagreg> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAagreg> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAagreg>(where, user, fields);
-        }
-
-
         /// <summary>
         /// Search for all records of this area that comply with a condition
         /// </summary>
@@ -458,7 +443,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX AGREG]/

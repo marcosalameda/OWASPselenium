@@ -703,6 +703,8 @@ html, body {
     }
 
     a:not([href]):not([tabindex]){
+        color: var(--q-theme-neutral-dark);
+
         &.selected {
             box-shadow: inset 5px 0px 0px 0px $primary;
             color: $primary;
@@ -731,11 +733,9 @@ html, body {
                 width: .25rem;
                 font-size: 1.5em;
                 position: absolute;
-                left: 89%;
+                left: 87%;
             }
         }
-    
-        color: $gray;
     }
 
     .nav-item .level-0.selected:has(+ ul .nav-item.selected) {

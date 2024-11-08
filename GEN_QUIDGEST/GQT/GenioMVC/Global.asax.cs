@@ -34,14 +34,9 @@ namespace GenioMVC
             MvcHandler.DisableMvcResponseHeader = true;
 
             log4net.Config.XmlConfigurator.Configure();
-            PersistenceFactoryExtension.Use();
-            PersistentSupport.SetControlQueries(
-                GenioServer.persistence.PersistentSupportExtra.ControlQueries,
-                GenioServer.persistence.PersistentSupportExtra.ControlQueriesOverride);
-            GenioServer.framework.OverrideQueryDeclaring.Use();
+            //GenioServer services
+            CSGenio.GenioDIDefault.Use();
 
-            //Dependency injection
-            UserFactory.BusinessManager = new UserBusinessService();
 
             WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
@@ -84,7 +79,7 @@ namespace GenioMVC
             // Messaging
             if(Configuration.Messaging.Enabled)
             {
-                _messagingService = MessagingService.Instance;
+                _messagingService = CSGenio.core.di.GenioDI.Messaging;
                 _messagingService.Start(
                     metadata: MessageMetadataFactory.GeneratedMetadata(),
                     providerType: Configuration.Messaging.Host.Provider,

@@ -210,14 +210,14 @@ namespace CSGenio.business
                 if (areaBase.Fields[areaBase.Alias + "." + nomeChave] == null)//If the value is not in memory go read to BD
                 {
                     // TODO: The code should never have to come through here, if it passes we may have a problem of efficiency. You Must always read all the fields at once to the head. Review this if block.
-                    string codIntValue = (string)areaBase.returnValueField(areaBase.Alias + "." + areaBase.PrimaryKeyName, FieldFormatting.CARACTERES);
+                    string codIntValue = areaBase.QPrimaryKey;
                     if (codIntValue == "")
                         codIntValue = null;
                     valorChaveEst = DBConversion.ToKey(sp.returnField(areaBase, nomeChave, codIntValue));
                     areaBase.insertNameValueField(areaBase.Alias + "." + nomeChave, valorChaveEst);
                 }
                 else
-                    valorChaveEst = (string)areaBase.returnValueField(areaBase.Alias + "." + nomeChave, FieldFormatting.CARACTERES);
+                    valorChaveEst = (string)areaBase.returnValueField(areaBase.Alias + "." + nomeChave);
             }
 
             return valorChaveEst;

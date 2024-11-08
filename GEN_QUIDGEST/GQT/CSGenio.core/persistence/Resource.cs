@@ -1,6 +1,7 @@
 ﻿using CSGenio.persistence;
 using Quidgest.Persistence.GenericQuery;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -210,9 +211,15 @@ namespace CSGenio.framework
             this.KeyValue = keyValue;
         }
 
+        /// <summary>
+        /// Create a resource name with a random sufix to avoid overriding the same files
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="Qfield"></param>
+        /// <returns></returns>
         public static string GenerateResourceName(string table, string Qfield)
         {
-            int suf = new Random().Next();
+            string suf = Guid.NewGuid().ToString();
             // a forma de nomear os ficheiros pode ser alterada, visto que já não são gravados na pasta temp
             string file = "imagem" + "_" + table + "_" + Qfield + suf + ".jpg";
             return file;
@@ -354,7 +361,7 @@ namespace CSGenio.framework
     /// </summary>
     public static class QResources
     {
-		private static Dictionary<string, Type> ResourceTypes { get; set; } = new Dictionary<string, Type>();
+		private static ConcurrentDictionary<string, Type> ResourceTypes { get; set; } = new ConcurrentDictionary<string, Type>();
 		
         // a key e o vector de inicialização que são re-gerados sempre que o application pool arranca
         // o que implica que os tickets gerados anteriormente ficam inválidos to leitura
@@ -443,15 +450,16 @@ namespace CSGenio.framework
                 string assemblyName = reader.ReadString();
                 string searchTypeName = $"{typeName}, {assemblyName}";
 
-                Type type = null;
-                if(!ResourceTypes.TryGetValue(searchTypeName, out type))
+                if (!ResourceTypes.TryGetValue(searchTypeName, out Type type))
                 {
-                    type = Type.GetType(searchTypeName, false, true);
-
-                    if (type != null && type.IsSubclassOf(typeof(Resource)))
-                        ResourceTypes.Add(searchTypeName, type);
-                    else
-                        throw new Exception("Unknown type for Resource deserialization");
+                    ResourceTypes.GetOrAdd(searchTypeName, key =>
+                    {
+                        type = Type.GetType(searchTypeName, false, true);
+                        if (type != null && type.IsSubclassOf(typeof(Resource)))
+                            return type;
+                        else
+                            throw new Exception("Unknown type for Resource deserialization");
+                    });
                 }
 
                 //Invoke the constructor using the BinaryReader parameter

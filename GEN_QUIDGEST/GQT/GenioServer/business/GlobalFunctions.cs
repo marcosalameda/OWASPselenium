@@ -665,7 +665,7 @@ namespace CSGenio.business
         public static int emptyL(object Qvalue)
         {
             string type = Qvalue?.GetType().Name;
-            if (Qvalue == null || type == null || Qvalue.Equals(0) || Qvalue.Equals(0.0) || (type.Contains("Bool") && !((bool)Qvalue)) || (type.Contains("Logical") && !((Logical)Qvalue)))
+            if (Qvalue == null || type == null || Qvalue.Equals(0) || Qvalue.Equals(0.0) || Qvalue.Equals(0m) || Qvalue.Equals(0d) || (type.Contains("Bool") && !((bool)Qvalue)) || (type.Contains("Logical") && !((Logical)Qvalue)))
                 return 1;
             else
                 return 0;
@@ -1667,22 +1667,25 @@ namespace CSGenio.business
         /// <returns>Devolve um array com o codigo do hash usado no momento e o Qvalue dos fields to assinar</returns>
         public string validateSignature(string QtableName, string internalCode)
         {
-            String nomeTabelaBD = Configuration.Program + QtableName.ToUpper();
-            String nomeChavePrimaria = Area.GetInfoArea(QtableName).PrimaryKeyName;
+            string nomeTabelaBD = Configuration.Program + QtableName.ToUpper();
+            string HashRegis = "";
 
-            String HashRegis = "";
-            String query = @"select campos as camposAssinatura, " + nomeTabelaBD + @".*
-                from " + nomeTabelaBD + " inner join " + Configuration.Program + "hashcd on " + nomeTabelaBD + @".codhashcd = " + Configuration.Program + @"hashcd.codhashcd
-                where " + nomeTabelaBD + "." + nomeChavePrimaria + " = '" + internalCode + "'";
-
-            //Vai buscar a linha
-            DataMatrix dataSet = sp.executeQuery(query);
-            //Se não houver dados o Qfield não foi assinado...
-            if (dataSet.NumRows == 0)
+            Area a = Area.createArea(QtableName, user, user.CurrentModule);            
+            sp.getRecord(a, internalCode);
+            string codhashcd = a.returnValueField(QtableName + ".codhashcd") as string;
+            if (string.IsNullOrEmpty(a.QPrimaryKey) || string.IsNullOrEmpty(codhashcd))
                 throw new BusinessException("Erro na validação da assinatura.", "GlobalFunctions.validarAssinatura", "The record with code " + internalCode + " wasn't found.");
+            if (!a.AccessRightsToConsult())
+                throw new BusinessException("Erro na validação da assinatura.", "GlobalFunctions.validarAssinatura", "User has no read access rights to this record.");
 
-            //Verifica se existem fields to assinar
-            string[] camposArray = dataSet.GetString(0,"camposAssinatura").Split(',');
+            string hashTablename = "hashcd";
+            SelectQuery query = new SelectQuery()
+                .Select(hashTablename, "campos")
+                .From(hashTablename)
+                .Where(CriteriaSet.And().Equal(hashTablename, "codhashcd", codhashcd));
+            string camposAssinatura = sp.executeScalar(query) as string ?? "";
+            string[] camposArray = camposAssinatura.Split(',');
+
             if (!(camposArray.Length > 0))
                 throw new BusinessException("Não existem campos para assinar.", "GlobalFunctions.validarAssinatura", "The record with code " + internalCode + " has no fields to sign.");
             else
@@ -1691,29 +1694,30 @@ namespace CSGenio.business
                 //To todos os fields definidos no array
                 foreach (string fieldName in camposArray)
                 {
-                    framework.Field Qfield;
-                    fields.TryGetValue(fieldName, out Qfield);
+                    //framework.Field Qfield;
+                    fields.TryGetValue(fieldName, out var Qfield);
                     //Se for uma data é preciso ter em atençao a formatting
                     if (Qfield.FieldType.Equals(CSGenio.framework.FieldType.DATA))
                     {
-                        String l = dataSet.GetDirect(0,fieldName).ToString();
-                        if (l.Equals(""))
+                        DateTime d = (DateTime)a.returnValueField(QtableName + "." + fieldName);
+                        if(d == DateTime.MinValue)
                             HashRegis += "__/__/____";
                         else
-                            HashRegis += l.Replace("-", "/").Substring(0,10);
+                            HashRegis += d.ToString("dd/MM/yyyy");
                     }
                     else
                     {
-                        HashRegis += dataSet.GetDirect(0, fieldName).ToString();
+                        HashRegis += a.returnValueField(QtableName + "." + fieldName).ToString();
                     }
                 }
 
+                string assinatura = "";
                 try
                 {
                     String pTxt = HashRegis.Trim();
                     byte[] plainText = Encoding.Unicode.GetBytes(pTxt);
 
-                    String assinatura = System.Text.Encoding.ASCII.GetString((byte[])dataSet.GetDirect(0, "hashcode"));
+                    assinatura = System.Text.Encoding.ASCII.GetString((byte[])a.returnValueField(QtableName + ".hashcode"));
                     byte[] encodedMessage = Convert.FromBase64String(assinatura);
                     ContentInfo contentInfo = new ContentInfo(plainText);
                     SignedCms signedCms = new SignedCms(contentInfo, true);
@@ -1725,17 +1729,17 @@ namespace CSGenio.business
                 catch (System.Security.Cryptography.CryptographicException e)
                 {
                     // So efecuta um update se houver alteração
-                    if (!dataSet.GetDirect(0,"hashcode").Equals(""))
+                    if (!string.IsNullOrEmpty(assinatura))
                     {
-                        query = @"UPDATE " + nomeTabelaBD + @" SET
-                            hashcode= ''
-                            WHERE " + nomeTabelaBD + "." + nomeChavePrimaria + "='" + internalCode + "'";
-
+                        UpdateQuery update = new UpdateQuery()
+                            .Update(nomeTabelaBD)
+                            .Set("hashcode", null)
+                            .Where(CriteriaSet.And().Equal(nomeTabelaBD, a.PrimaryKeyName, internalCode));
                         sp.openConnection();
-                        sp.executeNonQuery(query);
+                        sp.Execute(update);
                         sp.closeConnection();
-
                     }
+
                     //lanca erro
                     throw new BusinessException("Erro na validação da assinatura.", "GlobalFunctions.validarAssinatura", "Error validating signature: " + e.Message, e);
                 }
@@ -1863,13 +1867,13 @@ namespace CSGenio.business
         public string writeSignature(string QtableName, string internalCode, string signatureInfo)
         {
             // O name da table na base de dados é o name do module concatenado com a table
-            String nomeTabelaBD = Configuration.Program + QtableName.ToUpper();
-            String nomeChavePrimaria = Area.GetInfoArea(QtableName).PrimaryKeyName;
+            string nomeTabelaBD = Configuration.Program + QtableName.ToUpper();
+            string nomeChavePrimaria = Area.GetInfoArea(QtableName).PrimaryKeyName;
 
             string[] assinaturaCampos = signatureInfo.Split(';');
-            String codhashcd = assinaturaCampos[0];
-            String text = assinaturaCampos[1];
-            String assinatura = assinaturaCampos[2];
+            string codhashcd = assinaturaCampos[0];
+            string text = assinaturaCampos[1];
+            string assinatura = assinaturaCampos[2];
 
             try
             {
@@ -1881,15 +1885,16 @@ namespace CSGenio.business
                 signedCms.Decode(encodedMessage);
                 signedCms.CheckSignature(true);
 
-                //Se a assinatura for validate entao escreve na BD
-                String query = @"UPDATE " + nomeTabelaBD + @" SET
-                            hashcode = '" + assinatura + @"' ,
-                            codhashcd= '" + codhashcd + @"'
-                            WHERE " + nomeTabelaBD + "." + nomeChavePrimaria + "='" + internalCode + "'";
+                UpdateQuery update = new UpdateQuery()
+                    .Update(nomeTabelaBD)
+                    .Set("hashcode", assinatura)
+                    .Set("codhashcd", codhashcd)
+                    .Where(CriteriaSet.And().Equal(nomeTabelaBD, nomeChavePrimaria, internalCode));
 
                 sp.openConnection();
 // USE /[MANUAL GQT VALIDAASSINA]/
-                int linhas = sp.executeNonQuery(query);
+                //int linhas = sp.executeNonQuery(query);
+                int linhas = sp.Execute(update);
                 if (linhas != 1)
                     throw new BusinessException("Ocorreu um erro ao assinar.", "GlobalFunctions.escreverAssinatura", "There were " + linhas + " records updated.");
 // USE /[MANUAL GQT ONASSINA]/

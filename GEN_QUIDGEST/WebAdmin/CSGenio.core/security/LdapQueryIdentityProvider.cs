@@ -12,7 +12,7 @@ namespace GenioServer.security
     [CredentialProvider(typeof(DomainCredential))]
     [Description("Performs a LDAP Query to validate user credentials")]
     [DisplayName("LDAP Query")]
-    class LdapQueryIdentityProvider : IIdentityProvider
+    public class LdapQueryIdentityProvider : BaseIdentityProvider
     {
         [SecurityProviderOption()]
         [Description("Query to perform against ldap. In the form of 'cn=username,ou=domain users,dc=example,dc=com'")]
@@ -22,7 +22,7 @@ namespace GenioServer.security
         [Description("Port number of the LDAP service. Leave blank for default. LDAPS usually 636.")]
 		public string Port { get; set; }
 
-        public IIdentity Authenticate(Credential credential)
+        public override IIdentity Authenticate(Credential credential)
         {
             Type classname = credential.GetType();
             IIdentity id = null;
@@ -107,15 +107,5 @@ namespace GenioServer.security
             //return null;
         }
 
-        /// <summary>
-        /// Determines whether username and password authentication is enabled.
-        /// </summary>
-        /// <remarks>
-        /// This is used to determine if username and password authentication is enabled.
-        /// </remarks>
-        public bool HasUsernameAuth()
-        {
-            return true;
-        }
 	}
 }

@@ -375,7 +375,7 @@ namespace GenioMVC.Controllers.Lstusr
 
             string uuid = vm.Uuid;
             var listColumns = vm.GetColumnsToExport();
-            List<CSGenioAlstcol> userColumns = UserUiSettings.Load(sp, uuid, user).userColumns;
+            List<CSGenioAlstcol> userColumns = UserUiSettings.Load(sp, uuid, user).UserColumns;
 
             //inserts new columns that are not present in the user list configuration
             int pos = 0;
@@ -417,7 +417,7 @@ namespace GenioMVC.Controllers.Lstusr
                 if (different) //reloads user columns
                 {
                     UserUiSettings.Invalidate(uuid, user);
-                    userColumns = UserUiSettings.Load(sp, uuid, user).userColumns;
+                    userColumns = UserUiSettings.Load(sp, uuid, user).UserColumns;
                 }
             }
             //in case it doesnt have any list loaded (BD) yet, loads the list defaults

@@ -100,7 +100,7 @@
 			@*Form controls*@
 			this.Controls.IFF_EMPRE___PSEUDNOVOGR02 = new QGenericControl($('[data-identifier="IFF_EMPRE___PSEUDNOVOGR02"]', this.element), window.Form_Empre);
 
-			this.Controls.LED_EMPRE___CMPNYLOGO____ = new QImageControl($('[data-identifier="LED_EMPRE___CMPNYLOGO____"]', this.element), window.Form_Empre, '@Html.Raw(Url.Action("ImageDelete", "Cmpny", new { id=Model.ValCodempre, modelname="Cmpny", fldname="ValLogo" }))', '@Html.Raw(Url.Action("ImageCropper", "Cmpny", new { key=Model.ValCodempre, modelname= "Cmpny", fldname= "ValLogo", identifier= "FEMPRE", FormName= "Empre", FieldId= "LED_EMPRE___CMPNYLOGO____" }))',@Html.IsImageEmpty(Model.ValLogo));
+			this.Controls.LED_EMPRE___CMPNYLOGO____ = new QImageControl($('[data-identifier="LED_EMPRE___CMPNYLOGO____"]', this.element), window.Form_Empre, '@Html.Raw(Url.Action("ImageDelete", "Cmpny", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Cmpny", "ValLogo", "", Model.ValCodempre, null) }))', '@Html.Raw(Url.Action("ImageCropper", "Cmpny", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Cmpny", "ValLogo", "", Model.ValCodempre, null), identifier= "FEMPRE", FormName= "Empre", FieldId= "LED_EMPRE___CMPNYLOGO____" }))',@Html.IsImageEmpty(Model.ValLogo));
 
 			this.Controls.IFF_EMPRE___PSEUDNOVOGR01 = new QGenericControl($('[data-identifier="IFF_EMPRE___PSEUDNOVOGR01"]', this.element), window.Form_Empre);
 

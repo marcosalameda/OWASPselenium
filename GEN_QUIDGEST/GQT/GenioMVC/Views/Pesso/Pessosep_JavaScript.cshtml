@@ -134,7 +134,7 @@
 
 			this.Controls.IFF_PESSOS01PSEUDNOVOGR04 = new QGenericControl($('[data-identifier="IFF_PESSOS01PSEUDNOVOGR04"]', this.element), window.Form_Pessosep);
 
-			this.Controls.LED_PESSOS01PESSOPHOTOGRA = new QImageControl($('[data-identifier="LED_PESSOS01PESSOPHOTOGRA"]', this.element), window.Form_Pessosep, '@Html.Raw(Url.Action("ImageDelete", "Pesso", new { id=Model.ValCodpesso, modelname="Pesso", fldname="ValPhotogra" }))', '@Html.Raw(Url.Action("ImageCropper", "Pesso", new { key=Model.ValCodpesso, modelname= "Pesso", fldname= "ValPhotogra", identifier= "FPESSOSEP", FormName= "Pessosep", FieldId= "LED_PESSOS01PESSOPHOTOGRA" }))',@Html.IsImageEmpty(Model.ValPhotogra));
+			this.Controls.LED_PESSOS01PESSOPHOTOGRA = new QImageControl($('[data-identifier="LED_PESSOS01PESSOPHOTOGRA"]', this.element), window.Form_Pessosep, '@Html.Raw(Url.Action("ImageDelete", "Pesso", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Pesso", "ValPhotogra", "", Model.ValCodpesso, null) }))', '@Html.Raw(Url.Action("ImageCropper", "Pesso", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Pesso", "ValPhotogra", "", Model.ValCodpesso, null), identifier= "FPESSOSEP", FormName= "Pessosep", FieldId= "LED_PESSOS01PESSOPHOTOGRA" }))',@Html.IsImageEmpty(Model.ValPhotogra));
 
 			this.Controls.IFF_PESSOS01PSEUDNOVOGR05 = new QGenericControl($('[data-identifier="IFF_PESSOS01PSEUDNOVOGR05"]', this.element), window.Form_Pessosep);
 

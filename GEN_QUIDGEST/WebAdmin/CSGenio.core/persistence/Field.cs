@@ -214,6 +214,12 @@ namespace CSGenio.framework
         public bool IsVirtual { get; set; }
 
         /// <summary>
+        /// A client side field does not even exist in the database for reading
+        ///  and is only calculated on demand by the client side.
+        /// </summary>
+        public bool IsClientSide { get; set; }
+
+        /// <summary>
         /// Created log
         /// </summary>
         public bool CriaLog { get; set; }

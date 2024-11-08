@@ -73,6 +73,7 @@
 
 	function GQT_Menu_2D21_MenuR_TEST(jsonRouteValues)
 	{
+		if (typeof jsonRouteValues === 'undefined') jsonRouteValues = {};		
 		jsonRouteValues.action = '@Url.Action("GQT_Menu_2D21_MenuR_TEST", "Tpequ")'
 		this.GQT_MenuR_TEST(jsonRouteValues)
 	}

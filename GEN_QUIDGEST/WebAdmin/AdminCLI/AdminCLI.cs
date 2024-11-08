@@ -40,16 +40,8 @@ namespace AdminCLI
 
         private static void Init()
         {
-            // Inject SP data 
-            PersistenceFactoryExtension.Use();
-            PersistentSupport.SetControlQueries(
-                GenioServer.persistence.PersistentSupportExtra.ControlQueries,
-                GenioServer.persistence.PersistentSupportExtra.ControlQueriesOverride);
-            
-            GenioServer.framework.OverrideQueryDeclaring.Use();
-            
-            //Dependency injection
-            UserFactory.BusinessManager = new UserBusinessService();
+            //GenioServer services
+            CSGenio.GenioDIDefault.Use();
 
             //Initialize library classes
             dBMaintenance = new DBMaintenance(AppDomain.CurrentDomain.BaseDirectory);

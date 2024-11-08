@@ -52,7 +52,7 @@ else {
 								@Html.LabelFor(model => model.TableLnhpdLine, new { label_id="IFF_LNHDE___LNHPDLINE____", @class = " i-text__label", id="LABEL_IFF_LNHDE___LNHPDLINE____"}, true, false)
 								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
 								<a href="javascript:OpenSuggestion('IFF_LNHDE___LNHPDLINE____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-								@Html.DropDownListFor(model => model.ValCodlnhpd, Model.TableLnhpdLine.List , "", new {help_id = "IFF_LNHDE___LNHPDLINE____", @class = "i-select chosen-dropdown input-medium", data_sequencial = "M1", data_identifier = "IFF_LNHDE___LNHPDLINE____", @pers_cs_area = "Lnhpd", @pers_cs_field = "ValCodlnhpd", @db_field = "ValCodlnhpd", @db_full_field_name = "lnhde.codlnhpd", dependant_area = "Pedid", dependant = "ValCodpedid", key_field = "ValCodlnhpd", data_has_more = Model.TableLnhpdLine.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableLnhpdLine.Selected, data_dbedit_value = Model.TableLnhpdLine.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodlnhde, @data_see_more = "Lnhde_LnhpdValLine", title = @Resources.ORDER_LINE_13692, data_see_more_url = @Url.Action("Lnhde_LnhpdValLine","Lnhde"), data_is_dbedit = "true", data_support_form = @Url.Action("LNHPD_New", "LNHPD"), data_fields = "lnhpd.codlnhpd,lnhpd.line", data_main_field = "Lnhpd.ValLine", data_elements = 0, data_filled_by_history = Model.TableLnhpdLine.FilledByHistory, @dependant_fields = "lnhpd.codlnhpd,lnhpd.line" })
+								@Html.DropDownListFor(model => model.ValCodlnhpd, Model.TableLnhpdLine.List , "", new {help_id = "IFF_LNHDE___LNHPDLINE____", @class = "i-select chosen-dropdown input-small", data_sequencial = "M1", data_identifier = "IFF_LNHDE___LNHPDLINE____", @pers_cs_area = "Lnhpd", @pers_cs_field = "ValCodlnhpd", @db_field = "ValCodlnhpd", @db_full_field_name = "lnhde.codlnhpd", dependant_area = "Pedid", dependant = "ValCodpedid", key_field = "ValCodlnhpd", data_has_more = Model.TableLnhpdLine.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableLnhpdLine.Selected, data_dbedit_value = Model.TableLnhpdLine.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodlnhde, @data_see_more = "Lnhde_LnhpdValLine", title = @Resources.ORDER_LINE_13692, data_see_more_url = @Url.Action("Lnhde_LnhpdValLine","Lnhde"), data_is_dbedit = "true", data_support_form = @Url.Action("LNHPD_New", "LNHPD"), data_fields = "lnhpd.codlnhpd,lnhpd.line", data_main_field = "Lnhpd.ValLine", data_elements = 0, data_filled_by_history = Model.TableLnhpdLine.FilledByHistory, @dependant_fields = "lnhpd.codlnhpd,lnhpd.line,lnhpd.quantdec" })
 								@Html.ValidationMessageFor(model => model.TableLnhpdLine)
 							</div>
 						</div>
@@ -62,7 +62,7 @@ else {
 								@Html.LabelFor(model => model.ValOrdem, new { label_id="LED_LNHDE___LNHDEORDEM___", @class = " i-text__label", id="LABEL_LED_LNHDE___LNHDEORDEM___"}, true, true)
 								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
 								<a href="javascript:OpenSuggestion('LED_LNHDE___LNHDEORDEM___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-								@Html.NumberFor(model => model.ValOrdem, new {help_id = "LED_LNHDE___LNHDEORDEM___", @class = "Number text-right i-text__field i-text input-small", data_sequencial = "M1", data_identifier = "LED_LNHDE___LNHDEORDEM___", @pers_cs_area = "Lnhde", @pers_cs_field = "ValOrdem", @db_field = "ValOrdem", title = @Resources.ORDER39632, data_number_integer = "3", data_number_decimals = "0", data_number_format = "999" })
+								@Html.NumberFor(model => model.ValOrdem, new {help_id = "LED_LNHDE___LNHDEORDEM___", @class = "Number text-right i-text__field i-text input-mini", data_sequencial = "M1", data_identifier = "LED_LNHDE___LNHDEORDEM___", @pers_cs_area = "Lnhde", @pers_cs_field = "ValOrdem", @db_field = "ValOrdem", title = @Resources.ORDER39632, data_number_integer = "3", data_number_decimals = "0", data_number_format = "999" })
 								@Html.ValidationMessageFor(model => model.ValOrdem)
 							</div>
 						<div class="i-dbedit draggable " id="CONTAINER_IFF_LNHDE___TPEQ1TIPOEQUI">
@@ -78,17 +78,31 @@ else {
 								@Html.LabelFor(model => model.ValQuantida, new { label_id="LED_LNHDE___LNHDEQUANTIDA", @class = " i-text__label", id="LABEL_LED_LNHDE___LNHDEQUANTIDA"}, true, false)
 								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
 								<a href="javascript:OpenSuggestion('LED_LNHDE___LNHDEQUANTIDA','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-								@Html.NumberFor(model => model.ValQuantida, new {help_id = "LED_LNHDE___LNHDEQUANTIDA", @class = "Number text-right i-text__field i-text input-small", data_identifier = "LED_LNHDE___LNHDEQUANTIDA", @pers_cs_area = "Lnhde", @pers_cs_field = "ValQuantida", @db_field = "ValQuantida", title = @Resources.QUANTITY_08002, data_number_integer = "3", data_number_decimals = "0", data_number_format = "999" })
+								@Html.NumberFor(model => model.ValQuantida, new {help_id = "LED_LNHDE___LNHDEQUANTIDA", @class = "Number text-right i-text__field i-text input-mini", data_identifier = "LED_LNHDE___LNHDEQUANTIDA", @pers_cs_area = "Lnhde", @pers_cs_field = "ValQuantida", @db_field = "ValQuantida", title = @Resources.QUANTITY_08002, data_number_integer = "3", data_number_decimals = "0", data_number_format = "999" })
 								@Html.ValidationMessageFor(model => model.ValQuantida)
 							</div>
+						<div class="i-text draggable " id="CONTAINER_LED_LNHDE___LNHDEQUANTDEC">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValQuantdec, new { label_id="LED_LNHDE___LNHDEQUANTDEC", @class = " i-text__label", id="LABEL_LED_LNHDE___LNHDEQUANTDEC"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_LNHDE___LNHDEQUANTDEC','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValQuantdec, new {help_id = "LED_LNHDE___LNHDEQUANTDEC", @class = "Number text-right i-text__field i-text input-small", data_refresh = "true", data_tipoform = "DF", data_identifier = "LED_LNHDE___LNHDEQUANTDEC", @pers_cs_area = "Lnhde", @pers_cs_field = "ValQuantdec", @db_field = "ValQuantdec", title = @Resources.AMOUNT46885, data_number_integer = "7", data_number_decimals = "2", data_number_format = "9999999.99" })
+								@Html.ValidationMessageFor(model => model.ValQuantdec)
+							</div>
 						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
 						<div class="control-join-group">
 						<div class="i-text draggable " id="CONTAINER_LED_LNHDE___LNHDECODE____">
 								<div class="d-flex">
 								@Html.LabelFor(model => model.ValCode, new { label_id="LED_LNHDE___LNHDECODE____", @class = " i-text__label", id="LABEL_LED_LNHDE___LNHDECODE____"}, true, false)
 								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
 								<a href="javascript:OpenSuggestion('LED_LNHDE___LNHDECODE____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-								@Html.TextBoxFor(model => model.ValCode, new {help_id = "LED_LNHDE___LNHDECODE____", @class = "i-text__field i-text input-small", data_identifier = "LED_LNHDE___LNHDECODE____", @pers_cs_area = "Lnhde", @pers_cs_field = "ValCode", @db_field = "ValCode", title = @Resources.CODE49225, maxlength = "10", rows = "10" })
+								@Html.TextBoxFor(model => model.ValCode, new {help_id = "LED_LNHDE___LNHDECODE____", @class = "i-text__field i-text input-small", data_identifier = "LED_LNHDE___LNHDECODE____", @pers_cs_area = "Lnhde", @pers_cs_field = "ValCode", @db_field = "ValCode", title = @Resources.CODIGO20695, maxlength = "10", rows = "10" })
 								@Html.ValidationMessageFor(model => model.ValCode)
 							</div>
 						</div>
@@ -127,8 +141,20 @@ else {
 					</div>
 				</div>
 			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="row-large-control">
+						<div class="row-line-group" id="CONTAINER_IFF_LNHDE___PSEUDLNPROPS_">
+								<div id="Lnhde_ValLnprops" data-identifier="IFF_LNHDE___PSEUDLNPROPS_"  data-extra-options="" > 
+									@{ Html.RenderAction("Lnhde_ValLnprops", "Lnhde", new { id = Model.ValCodlnhde, partialView = "Lnhde_ValLnprops"}); }
+								</div>
+						</div>
+					</div>
+				</div>
+			</div>
 
 
+		@Html.HiddenFor(model=> model.LnhpdValQuantdec, new { @pers_cs_area = "Lnhpd", @pers_cs_field = "ValQuantdec", @data_identifier = "LED_LNHDE___LNHPDQUANTDEC" })
 
 			@Html.HiddenFor(model => model.ValCodlnhag, new { @pers_cs_field="ValCodlnhag", @pers_cs_area="Lnhde", @data_value = Model.ValCodlnhag, @db_field="ValCodlnhag", @trelate="Lnhag", @tfrelate="Codlnhag", @data_identifier="LED_LNHDE___LNHAGCODLNHAG" })
 

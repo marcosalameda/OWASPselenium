@@ -102,6 +102,12 @@ namespace GenioMVC.Models
 		public string ValUrl { get { return klass.ValUrl; } set { klass.ValUrl = value; } }
 		public bool ShouldSerializeValUrl() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Lnhde.ValUrl");
 
+		[DisplayName("Amount")]
+		/// <summary>Field : "Amount" Tipo: "ND" Formula: DF "[LNHPD->QUANTDEC]"</summary>
+		[NumericAttribute(2)]
+		public decimal? ValQuantdec { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQuantdec, 2)); } set { klass.ValQuantdec = Convert.ToDecimal(value); } }
+		public bool ShouldSerializeValQuantdec() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Lnhde.ValQuantdec");
+
 		[DisplayName("ZZSTATE")]
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }

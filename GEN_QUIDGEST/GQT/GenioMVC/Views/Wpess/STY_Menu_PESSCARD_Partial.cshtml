@@ -33,7 +33,7 @@
 // USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_PESSCARD_WPESS_NACIONAL]/
 		column.Expression(p => p.ValNacional).Title(@Resources.NACIONALIDADE23735).Field("ValNacional").Size(30);
 // USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_PESSCARD_WPESS_PFOTO]/
-		column.Expression(p => Html.ImageMagnifierZoom(p.ValPfoto, new {alt=@Resources.FOTO_DE_PERFIL03502,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCodpess, modelname = "Wpess", fldname = "ValPfoto" }))).Title(@Resources.FOTO_DE_PERFIL03502).Field("ValPfoto").Size(3);
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValPfoto, new {alt=@Resources.FOTO_DE_PERFIL03502,}, Url.Action("ImageHandlerGet", "Home", new { ticket = Helpers.GetFileTicket(UserContext.Current.User, "Wpess", "ValPfoto", "", p.ValCodpess, null) }))).Title(@Resources.FOTO_DE_PERFIL03502).Field("ValPfoto").Size(3);
 // USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_PESSCARD_WAREH_WAREHDES]/
 		column.Expression(p => p.Wareh.ValWarehdes).Title(@Resources.WAREHOUSE51864).Field("Wareh.ValWarehdes").Size(30);
             column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();

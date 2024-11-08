@@ -100,7 +100,7 @@
 			@*Form controls*@
 			this.Controls.IFF_FOTOS___EQUIPREGISTNR = new QDbeditControl($('[data-identifier="IFF_FOTOS___EQUIPREGISTNR"]', this.element), window.Form_Fotos);
 
-			this.Controls.LED_FOTOS___PHOTOPHOTOGRA = new QImageControl($('[data-identifier="LED_FOTOS___PHOTOPHOTOGRA"]', this.element), window.Form_Fotos, '@Html.Raw(Url.Action("ImageDelete", "Photo", new { id=Model.ValCodphoto, modelname="Photo", fldname="ValPhotogra" }))', '@Html.Raw(Url.Action("ImageCropper", "Photo", new { key=Model.ValCodphoto, modelname= "Photo", fldname= "ValPhotogra", identifier= "FFOTOS", FormName= "Fotos", FieldId= "LED_FOTOS___PHOTOPHOTOGRA" }))',@Html.IsImageEmpty(Model.ValPhotogra));
+			this.Controls.LED_FOTOS___PHOTOPHOTOGRA = new QImageControl($('[data-identifier="LED_FOTOS___PHOTOPHOTOGRA"]', this.element), window.Form_Fotos, '@Html.Raw(Url.Action("ImageDelete", "Photo", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Photo", "ValPhotogra", "", Model.ValCodphoto, null) }))', '@Html.Raw(Url.Action("ImageCropper", "Photo", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Photo", "ValPhotogra", "", Model.ValCodphoto, null), identifier= "FFOTOS", FormName= "Fotos", FieldId= "LED_FOTOS___PHOTOPHOTOGRA" }))',@Html.IsImageEmpty(Model.ValPhotogra));
 
 			this.Controls.LED_FOTOS___PHOTOTITLE___ = new QTextControl($('[data-identifier="LED_FOTOS___PHOTOTITLE___"]', this.element), window.Form_Fotos);
 

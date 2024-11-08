@@ -587,36 +587,6 @@ namespace GenioServer.business
         /// <param name="sqlCheck"></param>
         /// <param name="codRel"></param>
         /// <param name="msgType"></param>
-        [Obsolete("Use mqImportMQRecord(DbArea pTab, SelectQuery sqlCheck, out string codRel, string msgType) instead")]
-        public void mqImportMQRecord(DbArea pTab, string sqlCheck, out string codRel, string msgType)
-        {
-            pTab.QueueMode = true;
-            bool haRegisto = false;
-            codRel = "";
-            //Verifica se deve procurar o registo com o código interno da table *pTab
-            if (!string.IsNullOrEmpty(sqlCheck))
-            {
-                //Verifica se o registo exists na base de dados
-                ArrayList resArr = this.sp.executeReaderOneRow(sqlCheck);
-                if (resArr.Count > 0)
-                    codRel = resArr[0].ToString();
-
-                haRegisto = (string.IsNullOrEmpty(codRel)) ? false : true;
-
-                //Posiciona o registo encontrado
-                if (haRegisto && msgType != "N") pTab.QPrimaryKey = codRel;
-            }
-
-            mqImportMQRecordInternal(pTab, ref codRel, msgType, haRegisto);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="pTab"></param>
-        /// <param name="sqlCheck"></param>
-        /// <param name="codRel"></param>
-        /// <param name="msgType"></param>
         public void mqImportMQRecord(DbArea pTab, SelectQuery sqlCheck, out string codRel, string msgType)
         {
             pTab.QueueMode = true;

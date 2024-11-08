@@ -41,14 +41,14 @@ else {
 						<div class="control-join-group">
 						<div class="i-image draggable " id="CONTAINER_LED_IMGMAGN_WPESSFTBACKGR">
 								<div class="d-flex">
-								@Html.LabelFor(model => model.ValFtbackgr, new { label_id="LED_IMGMAGN_WPESSFTBACKGR", @class = " i-text__label hidden-label", id="LABEL_LED_IMGMAGN_WPESSFTBACKGR"}, true, false)
+								@Html.LabelFor(model => model.ValFtbackgr, new { label_id="LED_IMGMAGN_WPESSFTBACKGR", @class = " i-text__label", id="LABEL_LED_IMGMAGN_WPESSFTBACKGR"}, true, false)
 								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
 								<a href="javascript:OpenSuggestion('LED_IMGMAGN_WPESSFTBACKGR','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
 								<div data-identifier="LED_IMGMAGN_WPESSFTBACKGR" pers-cs-area="Wpess" pers-cs-field="ValFtbackgr" class="image-control-wrapper" >
 								@if(Model.IsEditableMode) {
-									@Html.EditorFor(m => m.ValFtbackgr, new {help_id = "LED_IMGMAGN_WPESSFTBACKGR", @class = "col-auto ", data_identifier = "LED_IMGMAGN_WPESSFTBACKGR", title = "Ftbackgr", guid = @Model.ValCodpess, controller = "Wpess", fldname = "ValFtbackgr", identifier = "FIMGMAGN", style = "height: 47pt; display: inline-block;" })
+									@Html.EditorFor(m => m.ValFtbackgr, new {help_id = "LED_IMGMAGN_WPESSFTBACKGR", @class = "col-auto ", data_identifier = "LED_IMGMAGN_WPESSFTBACKGR", title = @Resources.IMAGE_BACKGROUND07216, guid = @Model.ValCodpess, controller = "Wpess", fldname = "ValFtbackgr", identifier = "FIMGMAGN", style = "height: 47pt; display: inline-block;" })
 								} else {
-									@Html.DisplayFor(m => m.ValFtbackgr, new {help_id = "LED_IMGMAGN_WPESSFTBACKGR", @class = "col-auto ", data_identifier = "LED_IMGMAGN_WPESSFTBACKGR", title = "Ftbackgr", guid = @Model.ValCodpess, controller = "Wpess", fldname = "ValFtbackgr", identifier = "FIMGMAGN", style = "height: 47pt; display: inline-block;" })
+									@Html.DisplayFor(m => m.ValFtbackgr, new {help_id = "LED_IMGMAGN_WPESSFTBACKGR", @class = "col-auto ", data_identifier = "LED_IMGMAGN_WPESSFTBACKGR", title = @Resources.IMAGE_BACKGROUND07216, guid = @Model.ValCodpess, controller = "Wpess", fldname = "ValFtbackgr", identifier = "FIMGMAGN", style = "height: 47pt; display: inline-block;" })
 								}
 								</div>
 								@Html.ValidationMessageFor(model => model.ValFtbackgr)

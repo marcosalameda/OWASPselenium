@@ -46,8 +46,8 @@ namespace GenioMVC.Controllers
 		private static readonly NavigationLocation ACTION_PTN_MENU_331 = new NavigationLocation("EQUIPMENT03632", "PTN_Menu_331", "Equip") { vueRouteName = "menu-PTN_331" };
 		private static readonly NavigationLocation ACTION_PTN_MENU_341 = new NavigationLocation("EQUIPMENT03632", "PTN_Menu_341", "Equip") { vueRouteName = "menu-PTN_341" };
 		private static readonly NavigationLocation ACTION_PTN_MENU_351 = new NavigationLocation("EQUIPMENT03632", "PTN_Menu_351", "Equip") { vueRouteName = "menu-PTN_351" };
-		private static readonly NavigationLocation ACTION_PTN_MENUSE_3C1 = new NavigationLocation("SELECAO_ENTRE_LIMITE34362", "PTN_MenuSE_3C1", "Equip") { vueRouteName = "menu-PTN_3C1" };
-		private static readonly NavigationLocation ACTION_PTN_MENU_3C11 = new NavigationLocation("EQUIPMENT03632", "PTN_Menu_3C11", "Equip") { vueRouteName = "menu-PTN_3C11" };
+		private static readonly NavigationLocation ACTION_PTN_MENUSE_3G1 = new NavigationLocation("SELECAO_ENTRE_LIMITE34362", "PTN_MenuSE_3G1", "Equip") { vueRouteName = "menu-PTN_3G1" };
+		private static readonly NavigationLocation ACTION_PTN_MENU_3G11 = new NavigationLocation("EQUIPMENT03632", "PTN_Menu_3G11", "Equip") { vueRouteName = "menu-PTN_3G11" };
 		private static readonly NavigationLocation ACTION_PTN_MENU_621 = new NavigationLocation("EQUIPMENT03632", "PTN_Menu_621", "Equip") { vueRouteName = "menu-PTN_621" };
 		private static readonly NavigationLocation ACTION_STY_MENU_ACCORD = new NavigationLocation("EQUIPMENT03632", "STY_Menu_ACCORD", "Equip") { vueRouteName = "menu-STY_ACCORD" };
 		private static readonly NavigationLocation ACTION_STY_MENU_GROUPBOX = new NavigationLocation("GROUPBOX00384", "STY_Menu_GROUPBOX", "Equip") { vueRouteName = "menu-STY_GROUPBOX" };
@@ -565,9 +565,10 @@ namespace GenioMVC.Controllers
                         //Show error
                         CSGenio.framework.ErrorHandling error = new CSGenio.framework.ErrorHandling();
                         if (e is GenioException && (e as GenioException).UserMessage != null)
-                            error.ErrorResponse = (e as GenioException).UserMessage;
+                            Log.Error((e as GenioException).UserMessage);
                         else
-                            error.ErrorResponse = e.Message;
+                            Log.Error(e.Message);
+						error.ErrorResponse = Resources.Resources.OCORREU_UM_ERRO_34773;
                         progress.Report("GQT_Menu_231", -1, true, null, null, error, null);
                         progress.Finished = true;
                     }
@@ -577,7 +578,8 @@ namespace GenioMVC.Controllers
             {
                 //Show error
                 CSGenio.framework.ErrorHandling error = new CSGenio.framework.ErrorHandling();
-                error.ErrorResponse = e.Message;
+                error.ErrorResponse = Resources.Resources.OCORREU_UM_ERRO_34773;
+				Log.Error(e.Message);
                 progress.Report("GQT_Menu_231", -1, true, null, null, error, null);
                 progress.Finished = true;
 
@@ -587,7 +589,8 @@ namespace GenioMVC.Controllers
             {
                 //Show error
                 CSGenio.framework.ErrorHandling error = new CSGenio.framework.ErrorHandling();
-                error.ErrorResponse = e.Message;
+				error.ErrorResponse = Resources.Resources.OCORREU_UM_ERRO_34773;
+				Log.Error(e.Message);
                 progress.Report("GQT_Menu_231", -1, true, null, null, error, null);
                 progress.Finished = true;
 
@@ -1014,9 +1017,10 @@ namespace GenioMVC.Controllers
                         //Show error
                         CSGenio.framework.ErrorHandling error = new CSGenio.framework.ErrorHandling();
                         if (e is GenioException && (e as GenioException).UserMessage != null)
-                            error.ErrorResponse = (e as GenioException).UserMessage;
+                            Log.Error((e as GenioException).UserMessage);
                         else
-                            error.ErrorResponse = e.Message;
+                            Log.Error(e.Message);
+						error.ErrorResponse = Resources.Resources.OCORREU_UM_ERRO_34773;
                         progress.Report("GQT_Menu_2C11", -1, true, null, null, error, null);
                         progress.Finished = true;
                     }
@@ -1026,8 +1030,9 @@ namespace GenioMVC.Controllers
             {
                 //Show error
                 CSGenio.framework.ErrorHandling error = new CSGenio.framework.ErrorHandling();
-                error.ErrorResponse = e.Message;
-                progress.Report("GQT_Menu_231", -1, true, null, null, error, null);
+                error.ErrorResponse = Resources.Resources.OCORREU_UM_ERRO_34773;
+				Log.Error(e.Message);
+                progress.Report("GQT_Menu_2C11", -1, true, null, null, error, null);
                 progress.Finished = true;
 
                 return Json(new { Success = false, Message = Resources.Resources.O_REGISTO_PEDIDO_NAO63869 });
@@ -1036,8 +1041,9 @@ namespace GenioMVC.Controllers
             {
                 //Show error
                 CSGenio.framework.ErrorHandling error = new CSGenio.framework.ErrorHandling();
-                error.ErrorResponse = e.Message;
-                progress.Report("GQT_Menu_231", -1, true, null, null, error, null);
+				error.ErrorResponse = Resources.Resources.OCORREU_UM_ERRO_34773;
+				Log.Error(e.Message);
+                progress.Report("GQT_Menu_2C11", -1, true, null, null, error, null);
                 progress.Finished = true;
 
                 return Json(new { Success = false, Message = CSGenio.framework.Translations.Get(e.Message, UserContext.Current.User.Language) });
@@ -1898,9 +1904,10 @@ namespace GenioMVC.Controllers
                         //Show error
                         CSGenio.framework.ErrorHandling error = new CSGenio.framework.ErrorHandling();
                         if (e is GenioException && (e as GenioException).UserMessage != null)
-                            error.ErrorResponse = (e as GenioException).UserMessage;
+                            Log.Error((e as GenioException).UserMessage);
                         else
-                            error.ErrorResponse = e.Message;
+                            Log.Error(e.Message);
+						error.ErrorResponse = Resources.Resources.OCORREU_UM_ERRO_34773;
                         progress.Report("PTN_Menu_341", -1, true, null, null, error, null);
                         progress.Finished = true;
                     }
@@ -1910,8 +1917,9 @@ namespace GenioMVC.Controllers
             {
                 //Show error
                 CSGenio.framework.ErrorHandling error = new CSGenio.framework.ErrorHandling();
-                error.ErrorResponse = e.Message;
-                progress.Report("GQT_Menu_231", -1, true, null, null, error, null);
+                error.ErrorResponse = Resources.Resources.OCORREU_UM_ERRO_34773;
+				Log.Error(e.Message);
+                progress.Report("PTN_Menu_341", -1, true, null, null, error, null);
                 progress.Finished = true;
 
                 return Json(new { Success = false, Message = Resources.Resources.O_REGISTO_PEDIDO_NAO63869 });
@@ -1920,8 +1928,9 @@ namespace GenioMVC.Controllers
             {
                 //Show error
                 CSGenio.framework.ErrorHandling error = new CSGenio.framework.ErrorHandling();
-                error.ErrorResponse = e.Message;
-                progress.Report("GQT_Menu_231", -1, true, null, null, error, null);
+				error.ErrorResponse = Resources.Resources.OCORREU_UM_ERRO_34773;
+				Log.Error(e.Message);
+                progress.Report("PTN_Menu_341", -1, true, null, null, error, null);
                 progress.Finished = true;
 
                 return Json(new { Success = false, Message = CSGenio.framework.Translations.Get(e.Message, UserContext.Current.User.Language) });
@@ -2030,11 +2039,11 @@ namespace GenioMVC.Controllers
 
 
         //
-        // GET: /Equip/PTN_Menu_3C11
+        // GET: /Equip/PTN_Menu_3G11
         [AuthorizeForUsers]
 		[AuthorizeForUsers]
-        [ActionName("PTN_Menu_3C11")]
-        public ActionResult PTN_Menu_3C11(DateTime? minEquipValDtaquisi = null, DateTime? maxEquipValDtaquisi = null, bool allSelected = false)
+        [ActionName("PTN_Menu_3G11")]
+        public ActionResult PTN_Menu_3G11(DateTime? minEquipValDtaquisi = null, DateTime? maxEquipValDtaquisi = null, bool allSelected = false)
         {
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
 
@@ -2046,10 +2055,10 @@ namespace GenioMVC.Controllers
             // MH - Compatibilidade com antiga versão dos menus SE / SU
             var ValMinvalue = minEquipValDtaquisi;
             var ValMaxvalue = maxEquipValDtaquisi;
-            PTN_Menu_3C11_ViewModel model = new PTN_Menu_3C11_ViewModel(Navigation);
+            PTN_Menu_3G11_ViewModel model = new PTN_Menu_3G11_ViewModel(Navigation);
             bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
             if (isHomePage)
-                Navigation.SetValue("HomePage", "PTN_Menu_3C11");
+                Navigation.SetValue("HomePage", "PTN_Menu_3G11");
             ViewBag.isHomePage = isHomePage;
             //If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
             if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_equip")))
@@ -2071,21 +2080,21 @@ namespace GenioMVC.Controllers
             NameValueCollection querystring = Request.Form.Count > 0 ? Request.Form : Request.QueryString;
 			if (!isHomePage && !Request.IsAjaxRequest())
             {
-                if (Navigation.CurrentLevel == null || !ACTION_PTN_MENU_3C11.IsSameAction(Navigation.CurrentLevel.Location))
+                if (Navigation.CurrentLevel == null || !ACTION_PTN_MENU_3G11.IsSameAction(Navigation.CurrentLevel.Location))
                 {
                     // reset the selections for this new navigation flow
                     // TODO: This change still requires more testing
-                    Navigation.RemoveHistoryLevel(ACTION_PTN_MENU_3C11);
-                    if (Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_3C11.Action)
+                    Navigation.RemoveHistoryLevel(ACTION_PTN_MENU_3G11);
+                    if (Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_3G11.Action)
                     {
-                        Navigation.AddHistoryLevel(ACTION_PTN_MENU_3C11, FormMode.List);
+                        Navigation.AddHistoryLevel(ACTION_PTN_MENU_3G11, FormMode.List);
                         CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
                     }
 				}
             }
             else if (isHomePage)
             {
-                CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_3C11.ShortDescription());
+                CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_3G11.ShortDescription());
                 Navigation.SetValue("HomePageContainsList", true);
             }
 
@@ -2099,7 +2108,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-// USE /[MANUAL PTN MENU_GET 3C11]/
+// USE /[MANUAL PTN MENU_GET 3G11]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -2109,11 +2118,11 @@ namespace GenioMVC.Controllers
 
  
             if(isHomePage)
-                return PartialView("PTN_Menu_3C11", model);
+                return PartialView("PTN_Menu_3G11", model);
             else if (!Request.IsAjaxRequest())
                 return View(model);
             else
-                return PartialView("PTN_Menu_3C11_Partial", model);
+                return PartialView("PTN_Menu_3G11_Partial", model);
         }
 
 
@@ -2785,19 +2794,19 @@ namespace GenioMVC.Controllers
 		#region Limit Seletions (SE // SU)
 
         //
-        // GET: /Equip/PTN_MenuSE_3C1
+        // GET: /Equip/PTN_MenuSE_3G1
         [AuthorizeForUsers]
-        public ActionResult PTN_MenuSE_3C1()
+        public ActionResult PTN_MenuSE_3G1()
         {
             if (Navigation.CurrentLevel != null)
             {
 				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
             }
 
-            PTN_MenuSE_3C1_ViewModel model = new PTN_MenuSE_3C1_ViewModel(Navigation);
+            PTN_MenuSE_3G1_ViewModel model = new PTN_MenuSE_3G1_ViewModel(Navigation);
 
 
-            return PartialView("PTN_MenuSE_3C1", model);
+            return PartialView("PTN_MenuSE_3G1", model);
         }
 
 		#endregion

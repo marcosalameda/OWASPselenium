@@ -20,6 +20,7 @@
       </div>
       <template v-else>
         <row>
+        <!-- TODO: Input group aqui-->
             <div class="input-group i-input-group">
                 <input type="text" v-model="searchError" ref="searchError" class="form-control i-input-group__field" placeholder="Search for..." v-on:keyup="searchErro">
                 <div class="input-group-append i-input-group--right">

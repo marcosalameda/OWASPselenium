@@ -108,7 +108,7 @@ namespace GenioMVC.Helpers
         /// <summary>
         /// Render the SSRS report
         /// </summary>
-        /// <param name="exportType">PDF | EXCEL | WORD | EXCELOPENXML | ...</param>
+        /// <param name="exportType">PDF | EXCEL | WORDOPENXML | EXCELOPENXML | ...</param>
         /// <returns></returns>
         public SSRS_Render_Result Render(string exportType)
         {

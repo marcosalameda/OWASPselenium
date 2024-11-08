@@ -336,6 +336,22 @@ namespace GenioMVC.Controllers
         }
 
         /// <summary>
+        /// Recalculate formulas of the "Pessohis" form. (++, CT, SR, CL and U1)
+        /// </summary>
+        /// <param name="form_data">Current form data</param>
+        /// <returns></returns>
+        [HttpPost]
+		[AuthorizeForUsers]
+        [ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
+        public JsonResult RecalculateFormulas_Pessohis(Pessohis_ViewModel form_data)
+        {
+            return GenericRecalculateFormulas(form_data, "pesso",
+                (primaryKey) => Models.Pesso.Find(primaryKey, "FPESSOHIS"),
+                (model) => form_data.MapToModel(model as Models.Pesso)
+            );
+        }
+
+        /// <summary>
         /// Recalculate formulas of the "Pessosep" form. (++, CT, SR, CL and U1)
         /// </summary>
         /// <param name="form_data">Current form data</param>

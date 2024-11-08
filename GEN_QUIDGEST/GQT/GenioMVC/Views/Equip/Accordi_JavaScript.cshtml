@@ -108,7 +108,7 @@
 
 			this.Controls.IFF_ACCORDI_PSEUDNOVOGR06 = new QGenericControl($('[data-identifier="IFF_ACCORDI_PSEUDNOVOGR06"]', this.element), window.Form_Accordi);
 
-			this.Controls.LED_ACCORDI_EQUIPPHOTOGRA = new QImageControl($('[data-identifier="LED_ACCORDI_EQUIPPHOTOGRA"]', this.element), window.Form_Accordi, '@Html.Raw(Url.Action("ImageDelete", "Equip", new { id=Model.ValCodequip, modelname="Equip", fldname="ValPhotogra" }))', '@Html.Raw(Url.Action("ImageCropper", "Equip", new { key=Model.ValCodequip, modelname= "Equip", fldname= "ValPhotogra", identifier= "FACCORDI", FormName= "Accordi", FieldId= "LED_ACCORDI_EQUIPPHOTOGRA" }))',@Html.IsImageEmpty(Model.ValPhotogra));
+			this.Controls.LED_ACCORDI_EQUIPPHOTOGRA = new QImageControl($('[data-identifier="LED_ACCORDI_EQUIPPHOTOGRA"]', this.element), window.Form_Accordi, '@Html.Raw(Url.Action("ImageDelete", "Equip", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Equip", "ValPhotogra", "", Model.ValCodequip, null) }))', '@Html.Raw(Url.Action("ImageCropper", "Equip", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Equip", "ValPhotogra", "", Model.ValCodequip, null), identifier= "FACCORDI", FormName= "Accordi", FieldId= "LED_ACCORDI_EQUIPPHOTOGRA" }))',@Html.IsImageEmpty(Model.ValPhotogra));
 
 			this.Controls.IFF_ACCORDI_PSEUDNOVOGR05 = new QGenericControl($('[data-identifier="IFF_ACCORDI_PSEUDNOVOGR05"]', this.element), window.Form_Accordi);
 

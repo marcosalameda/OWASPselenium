@@ -174,7 +174,7 @@
 
 			this.Controls.LED_FIELDHLPFLDS_LOGOEXTE = new QTextControl($('[data-identifier="LED_FIELDHLPFLDS_LOGOEXTE"]', this.element), window.Form_Fieldhlp);
 
-			this.Controls.LED_FIELDHLPFLDS_LOGO____ = new QImageControl($('[data-identifier="LED_FIELDHLPFLDS_LOGO____"]', this.element), window.Form_Fieldhlp, '@Html.Raw(Url.Action("ImageDelete", "Flds", new { id=Model.ValCodflds, modelname="Flds", fldname="ValLogo" }))', '@Html.Raw(Url.Action("ImageCropper", "Flds", new { key=Model.ValCodflds, modelname= "Flds", fldname= "ValLogo", identifier= "FFIELDHLP", FormName= "Fieldhlp", FieldId= "LED_FIELDHLPFLDS_LOGO____" }))',@Html.IsImageEmpty(Model.ValLogo));
+			this.Controls.LED_FIELDHLPFLDS_LOGO____ = new QImageControl($('[data-identifier="LED_FIELDHLPFLDS_LOGO____"]', this.element), window.Form_Fieldhlp, '@Html.Raw(Url.Action("ImageDelete", "Flds", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Flds", "ValLogo", "", Model.ValCodflds, null) }))', '@Html.Raw(Url.Action("ImageCropper", "Flds", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Flds", "ValLogo", "", Model.ValCodflds, null), identifier= "FFIELDHLP", FormName= "Fieldhlp", FieldId= "LED_FIELDHLPFLDS_LOGO____" }))',@Html.IsImageEmpty(Model.ValLogo));
 
 			this.Controls.LED_FIELDHLPFLDS_ATTACH__ = new QTextControl($('[data-identifier="LED_FIELDHLPFLDS_ATTACH__"]', this.element), window.Form_Fieldhlp);
 

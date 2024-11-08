@@ -1,0 +1,165 @@
+﻿@model GenioMVC.ViewModels.Expen.PTN_Menu_LIST_DB_MB_TR_ViewModel
+@using Newtonsoft.Json;
+@using GenioMVC.Models.Navigation;@* MH - Allows use the UserContext. *@
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
+@using GenioMVC.ViewModels.Expen;    
+@{
+    var data = Html.newTableFor<GenioMVC.Models.Expen>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
+        .Columns(column =>
+        {
+            column.Expression(p => p.ValCoddespe, true).Hidden();
+
+// USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_LIST_DB_MB_TR_YEAR_YEAR]/
+		column.Expression(p => p.Year.ValYear).Title(@Resources.ANO33022).Field("Year.ValYear").Size(4);
+// USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_LIST_DB_MB_TR_EXPEN_YEARNUMB]/
+		column.Expression(p => p.ValYearnumb).Title(@Resources.ANO_NUMERICO_51058).Field("ValYearnumb").Size(4);
+// USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_LIST_DB_MB_TR_AGREG_VALUE]/
+		column.Expression(p => p.Agreg.ValValue).Title(@Resources.VALUE10285).Field("Agreg.ValValue").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_LIST_DB_MB_TR_EXPEN_DESCRIPT]/
+		column.Expression(p => p.ValDescript).Title(@Resources.DESCRIPTION07383).Field("ValDescript").Size(30);
+// USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_LIST_DB_MB_TR_EXPEN_VALUE]/
+		column.Expression(p => p.ValValue).Title(@Resources.VALUE10285).Field("ValValue").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_LIST_DB_MB_TR_EXPEN_PREVVAL]/
+		column.Expression(p => p.ValPrevval).Title(@Resources.VALOR_ANTERIOR54849).Field("ValPrevval").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN PTN_MENU_LIST_DB_MB_TR_PROJE_PROJECTO]/
+		column.Expression(p => p.Proje.ValProjecto).Title(@Resources.PROJECTO50142).Field("Proje.ValProjecto").Size(30);
+            column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
+        })
+        .SetLimits(this.Model.tableLimits)
+        .SetUserColumns(this.Model.UserColumns, "Expen")
+        .Id("PTN_Menu_LIST_DB_MB_TR")
+        .AjaxRequest("Menu")
+        .DataSource(this.Model.Menu.Elements)
+        .Sort(this.Model.Menu.Sort)
+        .Pager(this.Model.Menu.Pagination)
+        .Focus(this.Model.Menu.FocusOnRecord);
+
+    var tbl = data
+        .DBEdit()
+        .Filters(this.Model.Menu.Filters)
+        .Form("Despe", false, false)
+        .AddTableAction("PTN_MenuTR_TRIGGER_MENU1", "Expen" , (Func<GenioMVC.Models.Expen, object>)(item => new { id = item.ValCoddespe }), "", @Resources.BUTTON_TO_TRIGGER30903, isRoutine: true, isAjaxAction: false, htmlAttributes: new { }, accesslevel: GenioMVC.Models.Navigation.UserContext.Current.User.VerifyAccess(CSGenio.framework.Role.ROLE_1), openInPopup: false, isBootStrapIcon: false)
+        .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
+		;
+        
+}
+
+@tbl.ToHtml()
+
+
+<script>
+
+	/// <summary>
+	/// Execute the triggers of the trigger button TRIGGER_MENU1.
+	/// Event triggered by a click on the trigger button TRIGGER_MENU1.
+	/// <param name="row">The row that triggered the action.</param>
+	/// </summary>
+	function PTN_MenuTR_TRIGGER_MENU1(row)
+	{
+
+		const run = () => { PTN_MenuTR_TRIGGER_MENU1_MENUTRIGER_1(row); }
+
+		run()
+	}
+
+	/// <summary>
+	/// Client-side component of action #1 (FLDUPDT) of trigger MENUTRIGER.
+	/// <param name="row">The row that triggered the action.</param>
+	/// </summary>
+	function PTN_MenuTR_TRIGGER_MENU1_MENUTRIGER_1(row)
+	{
+
+		$.ajax({
+			url: '@Url.Action("PTN_MenuTR_TRIGGER_MENU1_MENUTRIGER_1")',
+			type: "POST",
+			data: { key: row.id }
+		}).done(function(data) {
+			if (data.success == "OK") {
+				PTN_MenuTR_TRIGGER_MENU1_MENUTRIGER_2(row)
+			} else {
+				bootbox.alert(data.message);
+			}
+		}).fail(function(data) {
+			bootbox.alert(data.message);
+		});
+	}
+
+	/// <summary>
+	/// Client-side component of action #2 (PREFRESH) of trigger MENUTRIGER.
+	/// <param name="row">The row that triggered the action.</param>
+	/// </summary>
+	function PTN_MenuTR_TRIGGER_MENU1_MENUTRIGER_2(row)
+	{
+		QUtils.WindowReload();
+
+	}
+
+
+$(document).ready(function() {
+
+    try {
+        if (jQuery) {
+            try {
+                $("#qPTN_Menu_LIST_DB_MB_TR, #PTN_Menu_LIST_DB_MB_TR_complex_filter th input, #PTN_Menu_LIST_DB_MB_TR_filters input").change(function() {
+                    $("#pPTN_Menu_LIST_DB_MB_TR").val("1");
+                });
+                @{ var disable = (Model.IsEditableMode && Model.Menu.Elements.Count() == 0 && Model.Menu.Filters.FiltersValues.Count == 0); }
+
+
+                @if(@disable && Model.Menu.Filters.ShowTableFilters) {
+                    @Html.Raw("$('#PTN_Menu_LIST_DB_MB_TR_tableFilters').val(false);")
+                    @Html.Raw("$('#PTN_Menu_LIST_DB_MB_TR_simple_filter').show();")
+                }
+                @if (!disable) {
+                    @:$('#PTN_Menu_LIST_DB_MB_TR_complex_filter input').keypress(function (event) {
+                    @:  var keycode = (event.keyCode ? event.keyCode : event.which);
+                    @:  if(keycode == '13' || keycode == '10'){
+                    @:      $("[data-form='PTN_Menu_LIST_DB_MB_TR']").submit();
+                    @:      event.preventDefault();
+                    @:      ClearSearchBox('qPTN_Menu_LIST_DB_MB_TR');
+                    @:  }
+                    @:});
+                }
+                @Html.Raw("$('#PTN_Menu_LIST_DB_MB_TR_extra').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                @Html.Raw("$('#exportBtn_PTN_Menu_LIST_DB_MB_TR').prop(\"disabled\", " + @disable.ToString().ToLower() + ");")
+                //Hide 2nd date fields
+                $("[hiddable]").hide();
+                $(".filter-date-cell *").focus(function () {
+                    $("[hiddable]").show();
+                });
+                 @if (this.Model.Menu.Filters.FiltersValues.Count >= 1) {
+                    var activeFields = Newtonsoft.Json.JsonConvert.SerializeObject(this.Model.Menu.Filters.FiltersValues);
+                    @: SetActiveFilters('PTN_Menu_LIST_DB_MB_TR', 'EXPEN', @Html.Raw(activeFields))
+                  }
+
+
+                setupHistoryClicks()
+                // TODO: FIX THIS!!!
+                @* $(document).ready(function () { loaded(); });*@
+                $(document).ready(function () {
+                    loaded($("[id='Menu']"));
+                    InitSpecialControls($('#Menu'));
+                    $('#Menu').trigger('SET_QCONTROL_LOADED', [true]);
+                    HideTableEmptyFooter();
+                    StickAdvancedSearch();
+
+                });
+
+
+
+
+
+// USE /[MANUAL GQT LISTING_JS PTN_MENU_LIST_DB_MB_TR]/
+ 
+            } catch (err) {
+                //function still not defined, proceed
+            }
+        }
+    } catch (err) {
+        //ajax request loaded from cache, so jquery is not loaded yet
+        window.location.pathname = location.pathname;
+    }
+})
+// USE /[MANUAL GQT LISTING_CODEJS PTN_MENU_LIST_DB_MB_TR]/
+</script>

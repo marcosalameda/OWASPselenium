@@ -108,11 +108,15 @@
 
 			this.Controls.LED_LNHDE___LNHDEQUANTIDA = new QNumericControl($('[data-identifier="LED_LNHDE___LNHDEQUANTIDA"]', this.element), window.Form_Lnhde);
 
+			this.Controls.LED_LNHDE___LNHDEQUANTDEC = new QNumericControl($('[data-identifier="LED_LNHDE___LNHDEQUANTDEC"]', this.element), window.Form_Lnhde);
+
 			this.Controls.LED_LNHDE___LNHDECODE____ = new QTextControl($('[data-identifier="LED_LNHDE___LNHDECODE____"]', this.element), window.Form_Lnhde);
 
 			this.Controls.LED_LNHDE___LNHDEDESCRIPT = new QGenericControl($('[data-identifier="LED_LNHDE___LNHDEDESCRIPT"]', this.element), window.Form_Lnhde);
 
 			this.Controls.LED_LNHDE___LNHDEURL_____ = new QTextControl($('[data-identifier="LED_LNHDE___LNHDEURL_____"]', this.element), window.Form_Lnhde);
+
+			this.Controls.IFF_LNHDE___PSEUDLNPROPS_ = new QTableListControl($('[data-identifier="IFF_LNHDE___PSEUDLNPROPS_"]', this.element), window.Form_Lnhde);
 
 
 
@@ -127,6 +131,8 @@
 			this.Controls.LED_LNHDE___LNHDECODLNHDE = new QHiddenControl($('[data-identifier="LED_LNHDE___LNHDECODLNHDE"]', this.element), window.Form_Lnhde);
 
 	@* Hidden Required Form Fields Controls for Formulas *@
+			this.Controls.LED_LNHDE___LNHPDQUANTDEC = new QSpecialControl($('[data-identifier="LED_LNHDE___LNHPDQUANTDEC"]', this.element), window.Form_Lnhde);
+			this.Controls.LED_LNHDE___LNHPDQUANTDEC.InitData(@JavaScriptConversion.ToNumeric(@Model.LnhpdValQuantdec));
 
 @if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
 {
@@ -225,6 +231,11 @@
 		@*Edit mode Fields Formulas*@
 	<text>
 
+		@* Default of the 'ValQuantdec' field *@
+		window.Form_Lnhde.SetFormulaDefault('LED_LNHDE___LNHDEQUANTDEC', function() {
+						return ( getFieldValue($(':not([elem-identifier="Multiform"]) > #LnhpdValQuantdec', $('[data-form="Lnhde"]'))));
+		}, 'LNHPDVALQUANTDEC_CHANGE');
+		
 		@* Recalculate formulas (server side) *@
 		$(qForm).bind('VALCODLNHPD_CHANGE', function(event, eTarget) {
 				window.Form_Lnhde.RecalculateFormulas();

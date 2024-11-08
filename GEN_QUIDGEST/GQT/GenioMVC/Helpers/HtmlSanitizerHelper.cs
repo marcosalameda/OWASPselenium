@@ -1,6 +1,10 @@
 ﻿using System;
 using System.IO;
+using System.Xml;
+using System.Text;
 using System.Drawing;
+using System.Collections.Generic;
+using System.Linq;
 using Ganss.Xss;
 using AngleSharp.Html.Dom;
 using CSGenio.framework;
@@ -16,6 +20,7 @@ namespace GenioMVC.Helpers
         static HtmlSanitizerHelper()
         {
             // Add allowed schemes and attributes during initialization
+            // https://github.com/mganss/HtmlSanitizer/wiki
             /*
             * sanitizer.AllowedSchemes.Add("mailto");
             * 
@@ -77,10 +82,19 @@ namespace GenioMVC.Helpers
             {
                 string base64Data = dataUrl.Substring(dataUrl.IndexOf(",") + 1);
                 byte[] imageData = Convert.FromBase64String(base64Data);
+                string fileContent = Encoding.UTF8.GetString(imageData);
+
+                /* 
+                 * Even though they are not the safest, we cannot prohibit SVG images. In any case,
+                 *  what is truly necessary is some form of sanitization for the SVG content (including during image upload).
+                 */
+                if (IsValidSvg(fileContent))
+                    return true;
 
                 using (var ms = new MemoryStream(imageData))
                 {
                     Image img = Image.FromStream(ms);
+                    img.Dispose();
                     return true; // Successfully loaded the image
                 }
             }
@@ -100,6 +114,73 @@ namespace GenioMVC.Helpers
             return Configuration.ExistsProperty("PUBLIC_BASE_URL")
                 ? Configuration.GetProperty("PUBLIC_BASE_URL")
                 : string.Empty;
+        }
+
+        // Define a set of dangerous elements and attributes in SVG content for fast lookups.
+        private static readonly HashSet<string> SvgDangerousElements = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "script", "foreignObject", "iframe", "object", "embed", "image", "audio", "video", "animation", "set", "animate", "link"
+        };
+
+        private static readonly HashSet<string> SvgDangerousAttributes = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "onload", "onclick", "onmouseover", "href", "xlink:href"
+        };
+
+        /// <summary>
+        /// Validates whether the provided SVG content is safe by checking for dangerous elements and attributes.
+        /// </summary>
+        /// <param name="svgContent">The SVG content to be validated.</param>
+        /// <returns>Returns true is the SVG content is valid and safe, otherwise false.</returns>
+        public static bool IsValidSvg(string svgContent)
+        {
+            // Performe a basic check for SVG root element and namespace before proceeding to XML parsing.
+            if (string.IsNullOrEmpty(svgContent) || svgContent.IndexOf("<svg", StringComparison.OrdinalIgnoreCase) == -1 || svgContent.IndexOf("http://www.w3.org/2000/svg", StringComparison.OrdinalIgnoreCase) == -1)
+                return false;
+
+            // Load the SVG content into an XML parser.
+            var xmlDoc = new XmlDocument();
+            try
+            {
+                // Parse the XML content.
+                xmlDoc.LoadXml(svgContent);
+            }
+            catch (Exception ex)
+            {
+                // Log error if XML parsing fails, indicates invalid or corrupt SVG content.
+                Log.Error($"SVG validation failed. Invalid XML content: {ex.Message}");
+                return false;
+            }
+
+            // Check for dangerous elements in the SVG.
+            foreach (var element in SvgDangerousElements)
+            {
+                var nodes = xmlDoc.GetElementsByTagName(element);
+                if (nodes.Count > 0)
+                {
+                    // Log and return false immediately if a dangerous element is found.
+                    Log.Error($"Dangerouse SVG content detected. Element: <{element}>");
+                    return false;
+                }
+            }
+
+            // Check for dangerous attributes in all elements.
+            var allElements = xmlDoc.GetElementsByTagName("*");
+            foreach(XmlElement elem in allElements)
+            {
+                foreach(var attr in SvgDangerousAttributes)
+                {
+                    if(elem.HasAttribute(attr))
+                    {
+                        // Log and return immediately if a dangerous attribute is found.
+                        Log.Error($"Dangerous SVG content detected. Attribute: {attr} in element <{elem.Name}>");
+                        return false;
+                    }
+                }
+            }
+
+            // Return true if no dangerous elements or attributes are found.
+            return true;
         }
     }
 }

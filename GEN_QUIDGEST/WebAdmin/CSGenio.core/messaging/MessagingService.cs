@@ -23,29 +23,7 @@ namespace CSGenio.core.messaging
         /// <summary>
         /// Current metadata in use. The value is set during service start method.
         /// </summary>
-        public static MessageMetadata Metadata { get; private set; } = new MessageMetadata();
-
-        public static MessagingService m_instance;
-        public static MessagingService Instance {
-            get {
-                if(m_instance == null)
-                    m_instance = new MessagingService();
-                return m_instance;
-            }
-        }
-
-        /// <summary>
-        /// Singleton constructor
-        /// </summary>
-        /// <remarks>
-        /// This service needs to be available at all layers of the framework.
-        /// Relying on a unknown Dependency Injector would require each layer 
-        ///  to have to register the global singleton.
-        /// Having a singleton instance makes things much easier.
-        /// </remarks>
-        private MessagingService()
-        {
-        }
+        public MessageMetadata Metadata { get; private set; } = new MessageMetadata();
 
         /// <summary>
         /// Starts the connection to the message provider, making messaging methods available

@@ -217,11 +217,12 @@ namespace CSGenio
 
 
         [XmlElement("Scheduler")]
-        public SchedulerXml Scheduler { get; set; }
+        public SchedulerXml Scheduler { get; set; } = new SchedulerXml();
 
         /*
             Functions
         */
+        [Obsolete("Use IConfigurationManager.StoreConfig instead")]
         public void writeXML(string filename)
         {
             using(System.IO.StreamWriter output = new System.IO.StreamWriter(filename))
@@ -231,7 +232,7 @@ namespace CSGenio
             }
         }
 
-               public void FillMissingConfigs()
+        public void FillMissingConfigs()
         {
             //inicializamos também as secções que tenham ficado vazias
             if (DataSystems == null)
@@ -284,6 +285,7 @@ namespace CSGenio
             Messaging = new MessagingXml();
         }
 
+        [Obsolete("Use IConfigurationManager.GetExistingConfig instead")]
         public static ConfigurationXML readXML(string filename)
         {
             ConfigurationXML conf;
@@ -1020,40 +1022,30 @@ namespace CSGenio
     [XmlRoot("identityProvider")]
     public class IdentityProviderCfgEl: ICloneable
     {
-        private string m_name;
-        private string m_type;
-        private string m_config;
-
         public object Clone()
         {
-            IdentityProviderCfgEl identity = new IdentityProviderCfgEl();
-            identity.m_name = m_name;
-            identity.m_type = m_type;
-            identity.m_config = m_config;
+            IdentityProviderCfgEl identity = new IdentityProviderCfgEl
+            {
+                Name = Name,
+                Description = Description,
+                Type = Type,
+                Config = Config
+            };
 
             return identity;
         }
 
         [XmlAttribute("name")]
-        public string Name
-        {
-            get { return m_name; }
-            set { m_name = value; }
-        }
+        public string Name { get; set; }
+
+        [XmlAttribute("description")]
+        public string Description { get; set; }
 
         [XmlAttribute("type")]
-        public string Type
-        {
-            get { return m_type; }
-            set { m_type = value; }
-        }
+        public string Type { get; set; }
 
         [XmlAttribute("config")]
-        public string Config
-        {
-            get { return m_config; }
-            set { m_config = value; }
-        }
+        public string Config { get; set; }
     }
 
 	[Serializable]

@@ -156,7 +156,7 @@
 
 			this.Controls.LED_CAMENUM_FLDS_LOGICENU = new QArrayLogicalControl($('[data-identifier="LED_CAMENUM_FLDS_LOGICENU"]', this.element), window.Form_Listacam);
 
-			this.Controls.LED_CAMDOCS_FLDS_LOGO____ = new QImageControl($('[data-identifier="LED_CAMDOCS_FLDS_LOGO____"]', this.element), window.Form_Listacam, '@Html.Raw(Url.Action("ImageDelete", "Flds", new { id=Model.ValCodflds, modelname="Flds", fldname="ValLogo" }))', '@Html.Raw(Url.Action("ImageCropper", "Flds", new { key=Model.ValCodflds, modelname= "Flds", fldname= "ValLogo", identifier= "FLISTACAM", FormName= "Listacam", FieldId= "LED_CAMDOCS_FLDS_LOGO____" }))',@Html.IsImageEmpty(Model.ValLogo));
+			this.Controls.LED_CAMDOCS_FLDS_LOGO____ = new QImageControl($('[data-identifier="LED_CAMDOCS_FLDS_LOGO____"]', this.element), window.Form_Listacam, '@Html.Raw(Url.Action("ImageDelete", "Flds", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Flds", "ValLogo", "", Model.ValCodflds, null) }))', '@Html.Raw(Url.Action("ImageCropper", "Flds", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Flds", "ValLogo", "", Model.ValCodflds, null), identifier= "FLISTACAM", FormName= "Listacam", FieldId= "LED_CAMDOCS_FLDS_LOGO____" }))',@Html.IsImageEmpty(Model.ValLogo));
 
 			this.Controls.LED_CAMDOCS_FLDS_ATTACH__ = new QTextControl($('[data-identifier="LED_CAMDOCS_FLDS_ATTACH__"]', this.element), window.Form_Listacam);
 

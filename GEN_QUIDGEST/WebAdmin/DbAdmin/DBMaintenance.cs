@@ -4,12 +4,6 @@ using ExecuteQueryCore;
 using System.Globalization;
 using CSGenio.persistence;
 using CSGenio.business;
-using System.IO;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Linq;
-using System;
 using CSGenio.core.persistence;
 
 namespace DbAdmin
@@ -245,10 +239,7 @@ namespace DbAdmin
             if (string.IsNullOrEmpty(year)) 
                 year = Configuration.DefaultYear;
             
-            // TODO: acrescentar controlo de text to associar um file de text a cada file de backup
-            ConfigurationXML conf = ConfigurationXML.readXML(Path.Combine(Configuration.GetConfigPath(), "Configuracoes.xml"));
-
-            if (conf.DataSystems.Count == 0)
+            if (Configuration.DataSystems.Count == 0)
                 throw new BusinessException("There are no DataSystems configured!", "DBMaintenance.BackupDatabase", "There are no DataSystems configured!");
 
             return PersistentSupport.Backup(year, username, password, saveLocation);

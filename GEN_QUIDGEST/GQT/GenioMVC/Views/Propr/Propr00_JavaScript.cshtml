@@ -112,7 +112,7 @@
 
 			this.Controls.IFF_PROPR00_PESSONAME____ = new QDbeditControl($('[data-identifier="IFF_PROPR00_PESSONAME____"]', this.element), window.Form_Propr00);
 
-			this.Controls.LED_PROPR00_PROPRPHOTOGRA = new QImageControl($('[data-identifier="LED_PROPR00_PROPRPHOTOGRA"]', this.element), window.Form_Propr00, '@Html.Raw(Url.Action("ImageDelete", "Propr", new { id=Model.ValCodpropr, modelname="Propr", fldname="ValPhotogra" }))', '@Html.Raw(Url.Action("ImageCropper", "Propr", new { key=Model.ValCodpropr, modelname= "Propr", fldname= "ValPhotogra", identifier= "FPROPR00", FormName= "Propr00", FieldId= "LED_PROPR00_PROPRPHOTOGRA" }))',@Html.IsImageEmpty(Model.ValPhotogra));
+			this.Controls.LED_PROPR00_PROPRPHOTOGRA = new QImageControl($('[data-identifier="LED_PROPR00_PROPRPHOTOGRA"]', this.element), window.Form_Propr00, '@Html.Raw(Url.Action("ImageDelete", "Propr", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Propr", "ValPhotogra", "", Model.ValCodpropr, null) }))', '@Html.Raw(Url.Action("ImageCropper", "Propr", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Propr", "ValPhotogra", "", Model.ValCodpropr, null), identifier= "FPROPR00", FormName= "Propr00", FieldId= "LED_PROPR00_PROPRPHOTOGRA" }))',@Html.IsImageEmpty(Model.ValPhotogra));
 
 			this.Controls.IFF_PROPR00_PSEUDNOVOGR01 = new QGenericControl($('[data-identifier="IFF_PROPR00_PSEUDNOVOGR01"]', this.element), window.Form_Propr00);
 

@@ -315,7 +315,7 @@ namespace GenioMVC.Controllers.SpecialRendering
             string uuid = GetViewModelUUID(idlist, idlistController);
 			
             // User preferences (might not exist yet)
-            List<CSGenioAlstren> userRenderings = UserUiSettings.Load(sp, uuid, user).userRenderings;
+            List<CSGenioAlstren> userRenderings = UserUiSettings.Load(sp, uuid, user).UserRenderings;
 
             // Inserts new view modes that are not present in the current user configuration
             int pos = 1;
@@ -354,7 +354,7 @@ namespace GenioMVC.Controllers.SpecialRendering
                 if (different)
                 {
                     UserUiSettings.Invalidate(uuid, user);
-                    userRenderings = UserUiSettings.Load(sp, uuid, user).userRenderings;
+                    userRenderings = UserUiSettings.Load(sp, uuid, user).UserRenderings;
                 }
             }
             else

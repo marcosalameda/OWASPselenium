@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using CSGenio.framework;
 using CSGenio.business;
+using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
 using System.Linq;
 using System.Text;
@@ -45,19 +46,142 @@ namespace CSGenio.persistence
             }
         }
 
+        /// <summary>
+        /// Adds fields of an area to be fetched from the database by the select query.
+        /// Client side fields are removed.
+        /// </summary>
+        /// <param name="qs">The SelectQuery to be modified</param>
+        /// <param name="area">The area to fetch fields from</param>
+        /// <param name="fields">Optionally a list of specific fields you want. Default fetches all available fields</param>
+        /// <returns>The modified SelectQuery. Its the same object it was passed in, just for chaining purposes.</returns>
+        public static SelectQuery SelectDatabaseFields(this SelectQuery qs, IArea area, string[] fields = null)
+        {
+            if (fields != null && fields.Length > 0)
+            {
+                foreach (string field in fields)
+                {
+                    int ix = field.IndexOf('.');
+                    if (ix == -1)
+                    {
+                        if (!area.DBFields[field].IsClientSide)
+                            qs.Select(area.Alias, field);
+                    }
+                    else
+                    {
+                        string fieldarea = field.Substring(0, ix);
+                        string fieldname = field.Substring(ix + 1);
+                        Field cp;
+                        if (fieldarea != area.Alias)
+                            cp = Area.GetInfoArea(fieldarea).DBFields[fieldname];
+                        else
+                            cp = area.DBFields[fieldname];
+                        if (!cp.IsClientSide)
+                            qs.Select(cp.Alias, cp.Name);
+                    }
+                }
+            }
+            else
+            {
+                foreach (Field field in area.DBFields.Values)
+                    if (!field.IsClientSide)
+                    {
+                        qs.Select(area.Alias, field.Name);
+                    }
+            }
+            return qs;
+        }
+
+        /// <summary>
+        /// Adds fields of an list to be fetched from the database by the select query.
+        /// Client side fields are removed.
+        /// This method supports requesting fields of different base areas.
+        /// </summary>
+        /// <param name="qs">The SelectQuery to be modified</param>
+        /// <param name="area">The base area to fetch fields from</param>
+        /// <param name="fields">A list of specific fields you want. Passing null fetched all fields of the base area.</param>
+        /// <returns>The modified SelectQuery. Its the same object it was passed in, just for chaining purposes.</returns>
+        public static SelectQuery SelectDatabaseFields(this SelectQuery qs, IArea area, FieldRef[] fields)
+        {
+            if (fields != null && fields.Length > 0)
+            {
+                foreach (var field in fields)
+                {
+                    Field cp;
+                    if (field.Area != area.Alias)
+                        cp = Area.GetInfoArea(field.Area).DBFields[field.Field];
+                    else
+                        cp = area.DBFields[field.Field];
+                    if (!cp.IsClientSide)
+                        qs.Select(cp.Alias, cp.Name);
+                }
+            }
+            else
+            {
+                SelectDatabaseFields(qs, area);
+            }
+            return qs;
+        }
+
         public static SelectQuery buildQueryCount(SelectQuery query)
         {
             SelectQuery newQuery = (SelectQuery)query.Clone();
-
             newQuery.SelectFields.Clear();
             newQuery.OrderByFields.Clear();
 
+            // Base count query
             newQuery.Select(SqlFunctions.Count(1), "count")
-                .Offset(0)
-                .Page(1)
-                .PageSize(null);
+                    .Offset(0)
+                    .Page(1)
+                    .PageSize(null);
 
-			newQuery.noLock = query.noLock;
+            newQuery.noLock = query.noLock;
+
+            return newQuery;
+        }
+
+        public static SelectQuery buildQueryTotalizers(SelectQuery query, List<FieldRef> fieldsWithTotalizer = null, List<string> selectedRecords = null, IArea areaBase = null)
+        {
+            // In order to improve efficiency, the totalizer query is integrated within the record count query.
+            // This way, when loading a list(multiple selection) with totalizers and record count, only 2(3) queries are executed, instead of 3(4)
+            // 1 - Record query
+            // 2 - Count + totalizers
+            // 3 - Selected records totalizers (multiple selection)
+            SelectQuery newQuery = buildQueryCount(query);
+
+            // Totalizer query
+            if (fieldsWithTotalizer?.Any() == true)
+            {
+                newQuery.Select(new SqlValue("Total"), "RowId");
+                foreach (FieldRef field in fieldsWithTotalizer)
+                {
+                    newQuery.Select(SqlFunctions.Sum(field), $"{field.FullName}");
+                }
+            }
+
+            // Selected records totalizer query
+            if (fieldsWithTotalizer?.Any() == true && selectedRecords?.Any() == true)
+            {
+                SelectQuery selectedQuery = (SelectQuery)query.Clone();
+                selectedQuery.SelectFields.Clear();
+                selectedQuery.OrderByFields.Clear();
+
+                selectedQuery
+                    .Select(new SqlValue(-1), "count") // Union needs the rows to have the same columns
+                    .Select(new SqlValue("Selected"), "RowId")
+                    .Offset(0)
+                    .Page(1)
+                    .PageSize(null)
+                    .Where(CriteriaSet.And().In(areaBase.Alias, areaBase.PrimaryKeyName, selectedRecords));
+
+                foreach (FieldRef field in fieldsWithTotalizer)
+                {
+                    selectedQuery.Select(SqlFunctions.Sum(field), $"{field.FullName}");
+                }
+
+                newQuery.Union(selectedQuery);
+            }
+
+            newQuery.noLock = query.noLock;
 
             return newQuery;
         }
@@ -158,12 +282,6 @@ namespace CSGenio.persistence
             query.Value("operacao", "D")
                 .Value("operdel", user)
                 .Value("datadel", DateTime.Now);
-        }
-
-        [Obsolete("Use fillQueryUpdate(UpdateQuery, IArea) instead.")]
-        public static void fillQueryUpdate(UpdateQuery query, IArea area, string userName)
-        {
-            fillQueryUpdate(query, area);
         }
 
         public static void fillQueryUpdate(UpdateQuery query, IArea area)

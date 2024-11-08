@@ -236,7 +236,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAinsta.FldCodinsta, CSGenioAinsta.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).userColumns;
+			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)
@@ -433,18 +433,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAinsta.FldCodinsta, CSGenioAinsta.Fl
             {
                 new SpecialRendering
                 {
-                    Id = "LIST",
-                    Ordem = 1,
-                    Subtipo = "",
-                    MappingVariables = new List<SpecialRenderingVariable>()
-                    {
-                    },
-                    StyleVariables = new List<SpecialRenderingVariable>()
-                    {
-                    },
-                },
-                new SpecialRendering
-                {
                     Id = "MAP",
                     Ordem = 2,
                     Subtipo = "leaflet-map",
@@ -489,6 +477,18 @@ FieldRef[] fields = new FieldRef[] { CSGenioAinsta.FldCodinsta, CSGenioAinsta.Fl
                         new SpecialRenderingVariable { Variable = "allow-exporting", Value = "true" },
                         new SpecialRenderingVariable { Variable = "background-overlay", Value = "OpenStreetMap" },
                         new SpecialRenderingVariable { Variable = "open-popup-on-hover", Value = "false" },
+                    },
+                },
+                new SpecialRendering
+                {
+                    Id = "LIST",
+                    Ordem = 1,
+                    Subtipo = "",
+                    MappingVariables = new List<SpecialRenderingVariable>()
+                    {
+                    },
+                    StyleVariables = new List<SpecialRenderingVariable>()
+                    {
                     },
                 },
             }

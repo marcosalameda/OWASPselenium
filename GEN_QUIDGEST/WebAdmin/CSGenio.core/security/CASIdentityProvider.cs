@@ -1,22 +1,22 @@
-﻿using System;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using Newtonsoft.Json.Linq;
+using Quidgest.Persistence.GenericQuery;
+using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
 using System.Net;
 using System.Security.Principal;
 using System.Text;
 using System.Web;
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using Newtonsoft.Json;
-using Quidgest.Persistence.GenericQuery;
-using Newtonsoft.Json.Linq;
 using System.Xml;
-using System.IO;
-using System.ComponentModel;
 
 namespace GenioServer.security
 {
+
     public class CASIdentityProviderOptions
     {
         public CASIdentityProviderOptions(string description, string jsonOptions)
@@ -58,13 +58,78 @@ namespace GenioServer.security
         public string CallbackPath { get; set; }
     }
 
+    /// <summary>
+    /// CAS protocol provider
+    /// </summary>
+    /// <remarks>
+    /// https://jasigcas.readthedocs.io/en/latest/cas-server-documentation/protocol/CAS-Protocol-Specification.html
+    /// https://apereo.github.io/cas/7.0.x/protocol/CAS-Protocol.html
+    /// 
+    /// For test machines use docker compose for fast setup:
+    /// docker-compose.yml
+    /// -------------------------------------------------------
+    /// services:
+    /// cas:
+    /// image: apereo/cas:7.1.1
+    /// container_name: casserver
+    /// ports:
+    ///   - "18080:18080"
+    /// environment:
+    ///   - SERVER_SSL_ENABLED=false
+    ///   - SERVER_PORT=18080
+    /// volumes:
+    ///   - ./cas_config:/etc/cas
+    /// -------------------------------------------------------
+    /// cas_config/config/cas.properties
+    /// -------------------------------------------------------
+    /// cas.authn.accept.users=username::password
+    /// cas.service-registry.core.init-from-json=true
+    /// cas.service-registry.json.location=file:/etc/cas/services
+    /// -------------------------------------------------------
+    /// cas_config/services/localTest-1001.json
+    /// -------------------------------------------------------
+    /// {
+    ///   "@class" : "org.apereo.cas.services.CasRegisteredService",
+    ///   "serviceId" : "^https://localhost:5173/auth/CASLogin/Cas",
+    ///   "name" : "localTest",
+    ///   "id" : 1001,
+    ///   "serviceTicketExpirationPolicy": {
+    ///       "@class": "org.apereo.cas.services.DefaultRegisteredServiceServiceTicketExpirationPolicy",
+    ///       "numberOfUses": 1,
+    ///       "timeToLive": "100"
+    ///     }
+    /// }
+    /// </remarks>
+
     [CredentialProvider(typeof(TokenCredential))]
     [Description("Establishes identity using Central Authentication Service protocol.")]
     [DisplayName("Central Authentication Service (CAS)")]
-    public class CASIdentityProvider : IIdentityProvider
+    public class CASIdentityProvider : BaseIdentityProvider
     {
         [SecurityProviderOption(isJson: true)]
         public CASIdentityProviderOptions Options { get; set; }
+
+        /// <inheritdoc/>
+        public override bool HasRedirectLogin() => true;
+
+        /// <inheritdoc/>
+        public override string GetRedirectLoginUrl(string callback, string state = null)
+        {
+            if (String.IsNullOrEmpty(Options.Authority) || String.IsNullOrEmpty(callback))
+                throw new Exception("It's mandatory to configure Authority, and callbackPath options");
+
+            var uriBuilder = new UriBuilder(Options.Authority);
+            uriBuilder.Path += "/login";
+            var parameters = HttpUtility.ParseQueryString(string.Empty);
+            parameters["service"] = callback;
+            if (!String.IsNullOrEmpty(state))
+                parameters["state"] = state;
+
+            uriBuilder.Query = parameters.ToString();
+
+            return uriBuilder.Uri.ToString();
+        }
+
 
         public CASIdentityProvider()
         {
@@ -74,64 +139,40 @@ namespace GenioServer.security
 
             Options = new CASIdentityProviderOptions(allCASAuth[0].Name, allCASAuth[0].Config);
         }
-        public CASIdentityProvider(CASIdentityProviderOptions op)
+
+        //Legacy mechanism so we can initialize the json options without doing it in the constructor
+        //TODO: The complex options configuration format needs to be refactored!
+        public void InitJsonOptions()
         {
-            Options = op;
+            var ip = Configuration.Security.IdentityProviders.FirstOrDefault(x => x.Name == this.Id);
+            Options = new CASIdentityProviderOptions(ip.Description, ip.Config);
         }
 
-        /// <summary>
-        /// Generate URL with all options from the provider to can be redirect to the provider authentication page
-        /// </summary>
-        /// <returns>callbackPath are Mandatory, so that function will return error</returns>
-        public string GetUrlToAuthenticate ()
+        /// <inheritdoc/>
+        public override IIdentity Authenticate(Credential credential)
         {
-            return GetUrlToAuthenticate(String.Empty, String.Empty);
+            if (credential is TokenCredential token)
+                return Authenticate(token);
+
+            return null;
         }
 
-        /// <summary>
-        /// Generate URL with all options from the provider to can be redirect to the provider authentication page
-        /// </summary>
-        /// <param name="callbackPath">Url on our application to receive the request after login on external provider</param>
-        /// <returns>Url to redirect our application to provider authentication page</returns>
-        public string GetUrlToAuthenticate(string callbackPath, string path)
-        {
-            if (!String.IsNullOrEmpty(callbackPath))
-                Options.CallbackPath = callbackPath;
-
-            var uriBuilder = new UriBuilder(Options.Authority);
-            if (!String.IsNullOrEmpty(path))
-                uriBuilder.Path = path;
-            var parameters = HttpUtility.ParseQueryString(string.Empty);
-            if (!String.IsNullOrEmpty(Options.CallbackPath))
-                parameters["TARGET"] = Options.CallbackPath;
-            uriBuilder.Query = parameters.ToString();
-
-            return uriBuilder.Uri.ToString();
-        }
-
-        /// <summary>
-        /// Will check credentials and will find the "authenticated" user are on our application
-        /// </summary>
-        /// <param name="credential">Token identification to user on external provider</param>
-        /// <returns>Internal Identity when user are found and success login on external provider</returns>
-        public IIdentity Authenticate(Credential credential)
+        private IIdentity Authenticate(TokenCredential credential)
         {
             string usernameCred = "";
 
-            if (!(credential is TokenCASCredential) || String.IsNullOrEmpty(((TokenCASCredential)credential).Token))
+            if (string.IsNullOrEmpty(credential.Token))
                 return null;
 
             //Find on response from CAS server the username
-            XmlDocument xmlReturn = getResponseCAS(((TokenCASCredential)credential).Token, ((TokenCASCredential)credential).OriginUrl);
-            XmlNodeList userAttrib = xmlReturn.GetElementsByTagName("saml1:Attribute");
-            foreach (XmlNode xmlNode in userAttrib)
-            {
-                if (xmlNode.Attributes["AttributeName"].Value.Equals(Options.AttribValidation))
-                { 
-                    usernameCred = xmlNode.InnerText;
-                    break;
-                }
-            }
+            XmlDocument xmlReturn = getResponseCAS(credential.Token, credential.OriginUrl);
+
+            string tagname = string.IsNullOrEmpty(Options.AttribValidation) ? "user" : Options.AttribValidation;
+            XmlNodeList userAttrib = xmlReturn.GetElementsByTagName("cas:" + tagname);
+            if (userAttrib.Count > 0)
+                usernameCred = userAttrib[0].InnerText;
+            else
+                return null;
 
             //At this moment the user is authenticated and we have to check if that user exist on database
             IList<string> anos = new List<string>(Configuration.Years);
@@ -161,16 +202,6 @@ namespace GenioServer.security
             return id;
         }
 
-        /// <summary>
-        /// Determines whether username and password authentication is enabled.
-        /// </summary>
-        /// <remarks>
-        /// This is used to determine if username and password authentication is enabled.
-        /// </remarks>
-        public bool HasUsernameAuth()
-        {
-            return false;
-        }
 
         /// <summary>
         /// Method that validates the authentication of a user and returns all data related to the same
@@ -181,19 +212,19 @@ namespace GenioServer.security
         /// <returns>The validation response xml with all authenticated user data</returns>
         private XmlDocument getResponseCAS(string ticket, string originUrl)
         {
-            XmlDocument soapEnvelopeXml = createSoapEnvelope(ticket);
-            HttpWebRequest request = createWebRequest((new CASIdentityProvider()).GetUrlToAuthenticate(
-                originUrl,
-                "samlValidate" //path to contact
-                ));
-			request.ContentLength = Encoding.UTF8.GetByteCount(soapEnvelopeXml.OuterXml);
-            insertSoapEnvelopeIntoWebRequest(soapEnvelopeXml, request);
+            var uriVal = new UriBuilder(Options.Authority);
+            uriVal.Path += "/serviceValidate";
 
-            //Log.Error("Request CAS:" + Environment.NewLine + soapEnvelopeXml.OuterXml);
+            var param = HttpUtility.ParseQueryString(string.Empty);
+            param.Add("service", originUrl);
+            param.Add("ticket", ticket);
+            uriVal.Query = param.ToString();
 
-            // get the response from the completed web request
+            HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(uriVal.ToString());
+            webRequest.Method = "GET";
+
             string soapResult = "";
-            using (WebResponse webResponse = request.GetResponse())
+            using (WebResponse webResponse = webRequest.GetResponse())
             {
                 using (StreamReader rd = new StreamReader(webResponse.GetResponseStream()))
                 {
@@ -201,11 +232,9 @@ namespace GenioServer.security
                 }
             }
 
-            //Log.Error("Result CAS:" + Environment.NewLine + soapResult);
-
             //convert response from server to xmldocument
             XmlDocument xmlCASResult = null;
-            if (!String.IsNullOrEmpty(soapResult))
+            if (!string.IsNullOrEmpty(soapResult))
             {
                 try
                 {
@@ -213,52 +242,14 @@ namespace GenioServer.security
                     xmlCASResult.LoadXml(soapResult);
                 }
                 catch
-                { 
-                    xmlCASResult = null; 
+                {
+                    xmlCASResult = null;
                 }
             }
 
             return xmlCASResult;
         }
 
-        private static HttpWebRequest createWebRequest(string url)
-        {
-            HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(url);
-            webRequest.Method = "POST";
-            webRequest.ContentType = "text/xml;charset=\"utf-8\"";
-            webRequest.CookieContainer = new CookieContainer();
-            webRequest.Headers.Add("SOAPAction", "http://www.oasis-open.org/committees/security");
-            webRequest.CachePolicy = new System.Net.Cache.RequestCachePolicy(System.Net.Cache.RequestCacheLevel.NoCacheNoStore);
-            return webRequest;
-        }
-
-        private XmlDocument createSoapEnvelope(string ticket)
-        {
-            XmlDocument soapEnvelopeDocument = new XmlDocument();
-            soapEnvelopeDocument.LoadXml(
-                    @"<SOAP-ENV:Envelope xmlns:SOAP-ENV=""http://schemas.xmlsoap.org/soap/envelope/"" 
-                       xmlns:xsi=""http://www.w3.org/1999/XMLSchema-instance"" 
-                       xmlns:xsd=""http://www.w3.org/1999/XMLSchema"">
-                        <SOAP-ENV:Body>
-                            <samlp:Request xmlns:samlp=""urn:oasis:names:tc:SAML:1.0:protocol"" 
-                                MajorVersion=""1"" 
-                                MinorVersion=""1"" 
-                                RequestID=""" + Guid.NewGuid() + @""" 
-                                IssueInstant=""" + DateTime.Now.ToString() + @""">
-									<samlp:AssertionArtifact>" + ticket + @"</samlp:AssertionArtifact>
-							</samlp:Request>
-                        </SOAP-ENV:Body>
-                      </SOAP-ENV:Envelope>");
-            return soapEnvelopeDocument;
-        }
-
-        private static void insertSoapEnvelopeIntoWebRequest(XmlDocument soapEnvelopeXml, HttpWebRequest webRequest)
-        {
-            using (Stream stream = webRequest.GetRequestStream())
-            {
-                stream.Write(Encoding.UTF8.GetBytes(soapEnvelopeXml.OuterXml), 0, soapEnvelopeXml.OuterXml.Length);
-            }
-        }
 
         private IIdentity Authenticate(string username, PersistentSupport sp)
         {
@@ -271,8 +262,9 @@ namespace GenioServer.security
                     .Where(CriteriaSet.And().Equal("psw", "nome", username));
 
                 var results = sp.executeReaderOneRow(select);
-                if (results.Count == 0)
+                if (results.Count < 2)
                     return null;
+
                 int status = DBConversion.ToInteger(results[0]);
                 string name = DBConversion.ToString(results[1]);
 

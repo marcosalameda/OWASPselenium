@@ -12,7 +12,7 @@
           <div class="row" v-if="getTableTitle || showToolsRow">
             <div class="col" v-if="getTableTitle">
               <legend class="form-header">
-                {{getTableTitle()}}
+                {{getTableTitle()}}	
               </legend>
             </div>
             <template v-if="showToolsRow">
@@ -323,9 +323,7 @@ export default {
     props: {
         rows: {
             type: Array,
-            default: function () {
-              return [];
-            }
+            default: []
         },
         columns: {
             type: Array,
@@ -337,27 +335,19 @@ export default {
         },
         config: {
             type: Object,
-            default: function () {
-                return {};
-            }
+            default: []
         },
         classes: {
             type: Object,
-            default: function () {
-                return {};
-            }
+            default: []
         },
         actions: {
             type: Array,
-            default: function () {
-                return [];
-            }
+            default: []
         },
         customFilters: {
             type: Array,
-            default: function () {
-                return [];
-            }
+            default: []
         },
         enableExport: {
             type: Boolean,
@@ -368,7 +358,7 @@ export default {
             default: ''
         }
     },
-    data: function () {
+    data() {
         return {
             vbt_rows: [],
             vbt_columns: [],
@@ -529,7 +519,6 @@ export default {
             this.selected_rows_info = (has(this.config, 'card_mode')) ? (this.config.selected_rows_info) : false;
 
             this.preservePageOnDataChange = (has(this.config, 'preservePageOnDataChange')) ? (this.config.preservePageOnDataChange) : false;
-
         },
 
         initialSort() {

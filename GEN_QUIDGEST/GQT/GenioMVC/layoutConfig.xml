@@ -22,6 +22,7 @@
 	<HelpInputDetail>Popover</HelpInputDetail> <!-- Popover -->
 	<HelpGroupShort>Tooltip</HelpGroupShort> <!-- Tooltip, Popover, Subtitle -->
 	<HelpGroupDetail>Popover</HelpGroupDetail> <!-- Popover, Subtitle -->
+	<CheckboxLabelAlignment>right</CheckboxLabelAlignment> <!-- right, left -->
 	<MenuStyle>simple_navbar</MenuStyle> <!-- simple_navbar, ribbon, double_navbar -->
 	<LogonPlacement>in_header</LogonPlacement> <!-- in_header, in_navmenu -->
 	<HeaderEnable>true</HeaderEnable> <!-- true, false -->

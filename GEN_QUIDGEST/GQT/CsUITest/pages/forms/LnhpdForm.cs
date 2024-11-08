@@ -16,6 +16,7 @@ public class LnhpdForm: PageObject {
 	public LookupControl IFF_LNHPD___TPEQUTIPOEQUI => new LookupControl(driver, "CONTAINER_IFF_LNHPD___TPEQUTIPOEQUI", "ValCodtpequ_chzn");
 	public IWebElement IFF_LNHPD___PSEUDDESCONJU => throw new NotImplementedException();
 	public BaseInputControl LED_LNHPD___LNHPDQUANTIDA => new BaseInputControl(driver, "[data-identifier='LED_LNHPD___LNHPDQUANTIDA']");
+	public BaseInputControl LED_LNHPD___LNHPDQUANTDEC => new BaseInputControl(driver, "[data-identifier='LED_LNHPD___LNHPDQUANTDEC']");
 	public ListControl IFF_LNHPD___PSEUDDESAGREG => new ListControl(driver, "ValDesagreg", "#Lnhpd_ValDesagreg");
 
 	private IWebElement saveBtn => form.FindElement(By.CssSelector(".form-actions [qbutton='ok']"));

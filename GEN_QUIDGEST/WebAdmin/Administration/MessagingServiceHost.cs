@@ -1,4 +1,5 @@
-﻿using CSGenio.core.messaging;
+﻿using CSGenio.core.di;
+using CSGenio.core.messaging;
 using CSGenio.framework;
 using CSGenio.messaging;
 
@@ -12,7 +13,7 @@ public class MessagingServiceHost : IHostedService
     {
         if(Configuration.Messaging.Enabled)
         {
-            _messagingService = MessagingService.Instance;
+            _messagingService = GenioDI.Messaging;
             _messagingService.Start(
                 metadata: MessageMetadataFactory.GeneratedMetadata(),
                 providerType: Configuration.Messaging.Host.Provider,

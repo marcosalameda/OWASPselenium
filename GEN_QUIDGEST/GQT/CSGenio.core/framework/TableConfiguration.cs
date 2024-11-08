@@ -115,6 +115,9 @@ namespace CSGenio.framework.TableConfiguration
 
         [JsonPropertyName("visibility")]
 		public int Visibility { get; set; }
+
+        [JsonPropertyName("exportability")]
+		public int Exportability { get; set; }
     }
 
     public class ColumnSizing
@@ -151,6 +154,12 @@ namespace CSGenio.framework.TableConfiguration
 
         [JsonPropertyName("columnOrderBy")]
 		public ColumnOrderBy ColumnOrderBy { get; set; }
+
+        [JsonPropertyName("totalizerColumns")]
+		public List<string> TotalizerColumns { get; set; } = new List<string>();
+
+        [JsonPropertyName("selectedRows")]
+        public List<string> SelectedRows { get; set; }
 
         [JsonPropertyName("defaultSearchColumn")]
 		public string DefaultSearchColumn { get; set; }

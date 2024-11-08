@@ -96,8 +96,6 @@ namespace GenioMVC.ViewModels.Dashboard
 
 	public class MenuWidget : Widget
 	{
-		public string Module { get; set; }
-
 		public string Path { get; set; }
 
 		public GenioMVC.Helpers.Menus.MenuEntry MenuEntry { get; set; }

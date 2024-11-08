@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Disaggregation line
 	/// </summary>
-	public class CSGenioAlnhde : DbArea	{
+	public class CSGenioAlnhde : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -156,6 +157,24 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field("quantdec", FieldType.NUMERO);
+			Qfield.FieldDescription = "Amount";
+			Qfield.FieldSize =  10;
+			Qfield.Alias = info.Alias;
+			Qfield.MQueue = false;
+			Qfield.Decimals = 2;
+			Qfield.CavDesignation = "AMOUNT46885";
+
+			Qfield.Dupmsg = "";
+			argumentsListByArea= new List<ByAreaArguments>();
+			argumentsListByArea.Add(new ByAreaArguments(new string[] {"quantdec"},new int[] {0},"lnhpd","codlnhpd"));
+			Qfield.DefaultValue = new DefaultValue(new InternalOperationFormula(argumentsListByArea, 1, delegate(object []args,User user,string module,PersistentSupport sp) {
+				return (object)(((decimal)args[0]));
+			}));
+
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field("zzstate", FieldType.INTEIRO);
 			Qfield.FieldDescription = "Estado da ficha";
 			Qfield.Alias = info.Alias;
@@ -170,6 +189,8 @@ namespace CSGenio.business
 		{
 			// Daughters Relations
 			//------------------------------
+			info.ChildTable = new ChildRelation[1];
+			info.ChildTable[0]= new ChildRelation("lnhdf", new String[] {"codlnhde"}, DeleteProc.NA);
 
 			// Mother Relations
 			//------------------------------
@@ -221,7 +242,7 @@ namespace CSGenio.business
 			};
 
 			info.DefaultValues = new string[] {
-			 "quantida"
+			 "quantida","quantdec"
 			};
 
 			info.SequentialDefaultValues = new string[] {
@@ -456,6 +477,18 @@ namespace CSGenio.business
 		}
 
 
+		/// <summary>Field : "Amount" Tipo: "ND" Formula: DF "[LNHPD->QUANTDEC]"</summary>
+		public static FieldRef FldQuantdec { get { return m_fldQuantdec; } }
+		private static FieldRef m_fldQuantdec = new FieldRef("lnhde", "quantdec");
+
+		/// <summary>Field : "Amount" Tipo: "ND" Formula: DF "[LNHPD->QUANTDEC]"</summary>
+		public decimal ValQuantdec
+		{
+			get { return (decimal)returnValueField(FldQuantdec); }
+			set { insertNameValueField(FldQuantdec, value); }
+		}
+
+
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
 		private static FieldRef m_fldZzstate = new FieldRef("lnhde", "zzstate");
@@ -497,23 +530,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAlnhde> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAlnhde> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAlnhde>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -562,14 +578,14 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX LNHDE]/
 
      
 
-           
+            
 
 	}
 }

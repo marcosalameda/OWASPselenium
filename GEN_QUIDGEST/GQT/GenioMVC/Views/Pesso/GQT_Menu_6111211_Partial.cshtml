@@ -21,7 +21,7 @@
 // USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_6111211_PESSO_EMAIL]/
 		column.Expression(p => p.ValEmail).Title(@Resources.EMAIL25170).Field("ValEmail").Size(30);
 // USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_6111211_PESSO_PHOTOGRA]/
-		column.Expression(p => Html.ImageMagnifierZoom(p.ValPhotogra, new {alt=@Resources.PHOTO51874,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCodpesso, modelname = "Pesso", fldname = "ValPhotogra" }))).Title(@Resources.PHOTO51874).Field("ValPhotogra").Size(3);
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValPhotogra, new {alt=@Resources.PHOTO51874,}, Url.Action("ImageHandlerGet", "Home", new { ticket = Helpers.GetFileTicket(UserContext.Current.User, "Pesso", "ValPhotogra", "", p.ValCodpesso, null) }))).Title(@Resources.PHOTO51874).Field("ValPhotogra").Size(3);
 // USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_6111211_PESSO_IDFUNCIO]/
 		column.Expression(p => p.ValIdfuncio).Title(@Resources.OFFICIAL_NO_34819).Field("ValIdfuncio").Size(6);
 // USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_6111211_CMPNY_DESIGNAT]/

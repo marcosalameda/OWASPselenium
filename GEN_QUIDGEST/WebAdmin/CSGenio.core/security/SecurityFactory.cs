@@ -30,38 +30,6 @@ namespace GenioServer.security
 			public const string IDENTITY__PROVIDER_NAME = "identity.providerName";
 		}
 
-		private class IdentityProviderConfig
-		{
-			/// <summary>
-			/// The provider
-			/// </summary>
-			public IIdentityProvider Provider
-			{
-				get;
-				private set;
-			}
-
-			/// <summary>
-			/// The name for this provider
-			/// </summary>
-			public string Name
-			{
-				get;
-				private set;
-			}
-
-			/// <summary>
-			/// ctor
-			/// </summary>
-			/// <param name="provider">the provider</param>
-			/// <param name="name">the name for this provider</param>
-			public IdentityProviderConfig(IIdentityProvider provider, string name)
-			{
-				Provider = provider;
-				Name = name;
-			}
-		}
-
 		private class RoleProviderConfig
 		{
 			/// <summary>
@@ -107,13 +75,13 @@ namespace GenioServer.security
 
 		private class AuthenticationContext
 		{
-			public IdentityProviderConfig IdentityProviderCfg
+			public IIdentityProvider IdentityProviderCfg
 			{
 				get;
 				private set;
 			}
 
-			public AuthenticationContext(IdentityProviderConfig identityProviderCfg)
+			public AuthenticationContext(IIdentityProvider identityProviderCfg)
 			{
 				IdentityProviderCfg = identityProviderCfg;
 			}
@@ -132,7 +100,7 @@ namespace GenioServer.security
         /// <summary>
         /// The list of identity providers
         /// </summary>
-		private static List<IdentityProviderConfig> m_idProviders = new List<IdentityProviderConfig>();
+		private static List<IIdentityProvider> m_idProviders = new List<IIdentityProvider>();
         /// <summary>
         /// The role provider
         /// </summary>
@@ -142,6 +110,9 @@ namespace GenioServer.security
         ///// Mapping between providers and credential types
         ///// </summary>      
         //private List<IdentityProviderRegistry> m_identityRegistry = new List<IdentityProviderRegistry>();
+
+		public static IEnumerable<IIdentityProvider> IdentityProviderList => m_idProviders;
+        public static IEnumerable<IRoleProvider> RoleProviderList => m_roleProviders.Select(i => i.Provider);
 
         /// <summary>
         /// Static constructor
@@ -154,11 +125,11 @@ namespace GenioServer.security
 				AllowAuthenticationRecovery = Configuration.LoginType == Configuration.LoginTypes.AD;
 				if (Configuration.LoginType == Configuration.LoginTypes.PUREAD)
 				{
-					AddIdentityProvider("ldap", typeof(LdapIdentityProvider).FullName, "Dominio=" + Configuration.Domain);
+					AddIdentityProvider("ldap", "Ldap", typeof(LdapIdentityProvider).FullName, "Dominio=" + Configuration.Domain);
 				}
 				else
 				{
-					AddIdentityProvider("quidgest", typeof(QuidgestIdentityProvider).FullName, null);
+					AddIdentityProvider("quidgest", "Quidgest", typeof(QuidgestIdentityProvider).FullName, null);
 				}
 				AddRoleProvider("quidgest", typeof(QuidgestRoleProvider).FullName, null, null);
 			}
@@ -170,7 +141,7 @@ namespace GenioServer.security
 				//aqui deve ir ler das configurações e inicializar a cadeia de providers
 				foreach (IdentityProviderCfgEl provider in Configuration.Security.IdentityProviders)
 				{
-					AddIdentityProvider(provider.Name, provider.Type, provider.Config);
+					AddIdentityProvider(provider.Name, provider.Description, provider.Type, provider.Config);
 				}
 				foreach (RoleProviderCfgEl provider in Configuration.Security.RoleProviders)
 				{
@@ -184,7 +155,7 @@ namespace GenioServer.security
         /// </summary>
         /// <param name="type">the type of provider</param>
         /// <param name="descriptor">the provider configuration string</param>
-        private static void AddIdentityProvider(string name, string type, string descriptor)
+        private static void AddIdentityProvider(string name, string description, string type, string descriptor)
         {
             Type providerType = Type.GetType(type);
 
@@ -195,8 +166,12 @@ namespace GenioServer.security
                 throw new NotImplementedException(type + " does not implement interface GenioServer.security.IIdentityProvider");
             }
 
+			provider.Id = name;
+			provider.Description = description ?? "";
+
 			if (descriptor != null)
 			{
+				bool needsJsonInit = false;
 				string[] keyValues = descriptor.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
 				foreach (string keyValue in keyValues)
 				{
@@ -206,12 +181,28 @@ namespace GenioServer.security
 					PropertyInfo pi = providerType.GetProperty(key);
 					if (pi != null)
 					{
-						pi.SetValue(provider, Convert.ChangeType(value, pi.PropertyType, CultureInfo.InvariantCulture), null);
+						try
+						{
+							pi.SetValue(provider, Convert.ChangeType(value, pi.PropertyType, CultureInfo.InvariantCulture), null);
+						}
+						catch(InvalidCastException)
+						{
+							//json options are not convertible
+							needsJsonInit = true;
+						}
 					}
+				}
+
+				//Legacy mechanism so we can initialize the json options without doing it in the constructor
+				//TODO: The complex options configuration format needs to be refactored!
+				if(needsJsonInit)
+				{
+					MethodInfo mi = providerType.GetMethod("InitJsonOptions");
+					mi?.Invoke(provider, null);
 				}
 			}
 
-            m_idProviders.Add(new IdentityProviderConfig(provider, name));
+            m_idProviders.Add(provider);
         }
 
         /// <summary>
@@ -260,11 +251,11 @@ namespace GenioServer.security
             IIdentity id = null;
             string error = "";
             AuthenticationContext authCtx = null;
-            foreach (IdentityProviderConfig cfg in m_idProviders)
+            foreach (IIdentityProvider provider in m_idProviders)
             {
                 try
                 {
-                    id = cfg.Provider.Authenticate(credential);
+                    id = provider.Authenticate(credential);
                 }
                 catch (FrameworkException ex)
                 {
@@ -275,7 +266,7 @@ namespace GenioServer.security
 					error = ex.Message;
                 }
 
-                authCtx = new AuthenticationContext(cfg);
+                authCtx = new AuthenticationContext(provider);
                 if (AuthenticationMode == AuthenticationMode.RejectOnFirstFail && id == null)
                     break;
                 if (AuthenticationMode == AuthenticationMode.AcceptOnFirstSucess && id != null)
@@ -363,7 +354,7 @@ namespace GenioServer.security
         public static bool HasPasswordManagement()
         {
             //For now only systems with Quidgest identity provider manage passwords
-            return m_idProviders.Any(x => x.Provider is QuidgestIdentityProvider);
+            return m_idProviders.Any(x => x is QuidgestIdentityProvider);
         }
 
         /// <summary>
@@ -378,7 +369,7 @@ namespace GenioServer.security
         /// </remarks>
         public static bool HasUsernameAuth()
         {
-            return m_idProviders.Any(x => x.Provider.HasUsernameAuth());
+            return m_idProviders.Any(x => x.HasUsernameAuth());
         }
 
 		/// <summary>
@@ -401,7 +392,7 @@ namespace GenioServer.security
 				switch (cond.Key)
 				{
 					case PrecondKeys.IDENTITY__PROVIDER_NAME :
-						satisfy &= cond.Value.Equals(context == null ? String.Empty : context.IdentityProviderCfg.Name);
+						satisfy &= cond.Value.Equals(context == null ? String.Empty : context.IdentityProviderCfg.Id);
 						break;
 					default:
 						// ignore unknown keys

@@ -15,6 +15,9 @@
               <text-input v-model="Model.Name" :label="Resources.NOME47814" :isReadOnly="blockInputs" :size="'xlarge'" :isRequired="true"></text-input>
             </row>
             <row>
+              <text-input v-model="Model.Description" :label="Resources.DESCRICAO07528" :isReadOnly="blockInputs" :size="'xlarge'" :isRequired="false"></text-input>
+            </row>
+            <row>
               <select-input v-model="Model.Type" :options="identityProviderSelect" :label="Resources.TIPO55111" :isReadOnly="blockInputs" :size="'xlarge'" :helpText="providerHelp"/>
             </row>
             <row v-for="c in tempConfig" :key="c.PropertyName">
@@ -22,10 +25,7 @@
             </row>
           </div>
           <div class="modal-footer">
-            <q-button
-              :label="Resources.CANCELAR49513"
-              @click="close" />
-            <q-button
+          <q-button
               v-if="Model.FormMode === 'delete'"
               b-style="danger"
               :label="Resources.APAGAR04097"
@@ -35,6 +35,9 @@
               b-style="primary"
               :label="Resources.GRAVAR45301"
               @click="SaveIdentityProvider" />
+            <q-button
+              :label="Resources.CANCELAR49513"
+              @click="close" />
           </div>
         </div>
       </div>
@@ -59,14 +62,14 @@
       }
     },
     mixins: [reusableMixin],
-    data: function () {
+    data() {
       return {
         tempConfig: []
       };
     },
     watch: {
         "Model": {
-            handler: function () {
+            handler() {
                 //we want to react to any change to the model
                 this.tempConfig = ReadProviderConfig(this.Model, this.SelectLists.IdentityProviderTypeList);
             },
@@ -74,7 +77,7 @@
         }
     },
     methods: {
-      SaveIdentityProvider: function () {
+      SaveIdentityProvider() {
           let vm = this;
           WriteProviderConfig(this.tempConfig, this.Model, this.SelectLists.IdentityProviderTypeList);
         QUtils.postData('Config', 'SaveIdentityProvider', vm.Model, { appId: vm.$store.state.currentApp }, function (data) {
@@ -99,20 +102,23 @@
       }
     },
     computed: {
-      blockInputs: function () {
+      blockInputs() {
         return this.Model.FormMode === 'delete';
       },
-      identityProviderSelect: function () {
-        return this.SelectLists.IdentityProviderTypeList.map(x => ({
-          Text: x.DisplayName,
-          Value: x.TypeFullName
-        }));
+      identityProviderSelect() {
+        if (this.SelectLists) {
+          return this.SelectLists.IdentityProviderTypeList.map(x => ({
+            Text: x.DisplayName,
+            Value: x.TypeFullName
+          }));
+        }
       },
-      providerHelp: function () {
-        let vm = this;
-        let p = vm.SelectLists.IdentityProviderTypeList.find(x => x.TypeFullName == vm.Model.Type);
-        if (p) p = p.Description;
-        return p;
+      providerHelp() {
+        if (this.SelectLists) {
+          let p = this.SelectLists.IdentityProviderTypeList.find(x => x.TypeFullName == this.Model.Type);
+          if (p) p = p.Description;
+          return p;
+        }
       }
     }
   };

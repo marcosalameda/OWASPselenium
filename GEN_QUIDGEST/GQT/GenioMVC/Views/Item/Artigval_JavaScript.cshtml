@@ -98,7 +98,7 @@
 }
 		window.Form_Artigval.DeclareControls = function () {
 			@*Form controls*@
-			this.Controls.LED_ARTIGVALITEM_IMAGE___ = new QImageControl($('[data-identifier="LED_ARTIGVALITEM_IMAGE___"]', this.element), window.Form_Artigval, '@Html.Raw(Url.Action("ImageDelete", "Item", new { id=Model.ValCoditem, modelname="Item", fldname="ValImage" }))', '@Html.Raw(Url.Action("ImageCropper", "Item", new { key=Model.ValCoditem, modelname= "Item", fldname= "ValImage", identifier= "FARTIGVAL", FormName= "Artigval", FieldId= "LED_ARTIGVALITEM_IMAGE___" }))',@Html.IsImageEmpty(Model.ValImage));
+			this.Controls.LED_ARTIGVALITEM_IMAGE___ = new QImageControl($('[data-identifier="LED_ARTIGVALITEM_IMAGE___"]', this.element), window.Form_Artigval, '@Html.Raw(Url.Action("ImageDelete", "Item", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Item", "ValImage", "", Model.ValCoditem, null) }))', '@Html.Raw(Url.Action("ImageCropper", "Item", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Item", "ValImage", "", Model.ValCoditem, null), identifier= "FARTIGVAL", FormName= "Artigval", FieldId= "LED_ARTIGVALITEM_IMAGE___" }))',@Html.IsImageEmpty(Model.ValImage));
 
 			this.Controls.IFF_ARTIGVALGITEMITEMDES_ = new QDbeditControl($('[data-identifier="IFF_ARTIGVALGITEMITEMDES_"]', this.element), window.Form_Artigval);
 

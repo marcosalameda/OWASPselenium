@@ -129,8 +129,10 @@
 		}
 
 		SearchFilters.value = '@Html.Raw(advFil)';
-		if (typeof SearchFilters.value === 'string' && SearchFilters.value.length > 0)
-			UpdateSearchFilterStatus("TBS_Menu_111", JSON.parse(SearchFilters.value))
+		if (typeof SearchFilters.value === 'string' && SearchFilters.value.length > 0) {
+			searchFilterGroups = JSON.parse(SearchFilters.value);
+			UpdateSearchFilterStatus("TBS_Menu_111", searchFilterGroups)
+		}
 	});
 </script>
 

@@ -39,7 +39,7 @@ namespace GenioMVC.Controllers
 		private static readonly NavigationLocation ACTION_GQT_MENU_1711 = new NavigationLocation("LENDINGS_OF__EQUIP__22198", "GQT_Menu_1711", "Lendi") { vueRouteName = "menu-GQT_1711" };
 		private static readonly NavigationLocation ACTION_PTN_MENU_3111 = new NavigationLocation("LENDING18782", "PTN_Menu_3111", "Lendi") { vueRouteName = "menu-PTN_3111" };
 		private static readonly NavigationLocation ACTION_PTN_MENU_3121 = new NavigationLocation("LENDING18782", "PTN_Menu_3121", "Lendi") { vueRouteName = "menu-PTN_3121" };
-		private static readonly NavigationLocation ACTION_PTN_MENU_3E1 = new NavigationLocation("LENDING18782", "PTN_Menu_3E1", "Lendi") { vueRouteName = "menu-PTN_3E1" };
+		private static readonly NavigationLocation ACTION_PTN_MENU_LIST_DM_MB_R = new NavigationLocation("LENDING18782", "PTN_Menu_LIST_DM_MB_R", "Lendi") { vueRouteName = "menu-PTN_LIST_DM_MB_R" };
         #endregion
 
         #region Menus
@@ -846,11 +846,11 @@ namespace GenioMVC.Controllers
 
 
         //
-        // GET: /Lendi/PTN_Menu_3E1
+        // GET: /Lendi/PTN_Menu_LIST_DM_MB_R
         [AuthorizeForUsers]
-        [ActionName("PTN_Menu_3E1_Selections")]
+        [ActionName("PTN_Menu_LIST_DM_MB_R_Selections")]
         [HttpPost]
-        public ActionResult PTN_Menu_3E1_Selections(string[] ids)
+        public ActionResult PTN_Menu_LIST_DM_MB_R_Selections(string[] ids)
         {
             Navigation.ClearValue("lendi_Selections");
             if(ids != null && ids.Length != 0)
@@ -859,15 +859,15 @@ namespace GenioMVC.Controllers
         }
 
 		[AuthorizeForUsers]
-        [ActionName("PTN_Menu_3E1")]
-        public ActionResult PTN_Menu_3E1(bool allSelected = false)
+        [ActionName("PTN_Menu_LIST_DM_MB_R")]
+        public ActionResult PTN_Menu_LIST_DM_MB_R(bool allSelected = false)
         {
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
 
-            PTN_Menu_3E1_ViewModel model = new PTN_Menu_3E1_ViewModel(Navigation);
+            PTN_Menu_LIST_DM_MB_R_ViewModel model = new PTN_Menu_LIST_DM_MB_R_ViewModel(Navigation);
             bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
             if (isHomePage)
-                Navigation.SetValue("HomePage", "PTN_Menu_3E1");
+                Navigation.SetValue("HomePage", "PTN_Menu_LIST_DM_MB_R");
             ViewBag.isHomePage = isHomePage;
             //If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
             if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_lendi")))
@@ -889,21 +889,21 @@ namespace GenioMVC.Controllers
             NameValueCollection querystring = Request.Form.Count > 0 ? Request.Form : Request.QueryString;
 			if (!isHomePage && !Request.IsAjaxRequest())
             {
-                if (Navigation.CurrentLevel == null || !ACTION_PTN_MENU_3E1.IsSameAction(Navigation.CurrentLevel.Location))
+                if (Navigation.CurrentLevel == null || !ACTION_PTN_MENU_LIST_DM_MB_R.IsSameAction(Navigation.CurrentLevel.Location))
                 {
                     // reset the selections for this new navigation flow
                     // TODO: This change still requires more testing
-                    Navigation.RemoveHistoryLevel(ACTION_PTN_MENU_3E1);
-                    if (Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_3E1.Action)
+                    Navigation.RemoveHistoryLevel(ACTION_PTN_MENU_LIST_DM_MB_R);
+                    if (Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_LIST_DM_MB_R.Action)
                     {
-                        Navigation.AddHistoryLevel(ACTION_PTN_MENU_3E1, FormMode.List);
+                        Navigation.AddHistoryLevel(ACTION_PTN_MENU_LIST_DM_MB_R, FormMode.List);
                         CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
                     }
 				}
             }
             else if (isHomePage)
             {
-                CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_3E1.ShortDescription());
+                CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_LIST_DM_MB_R.ShortDescription());
                 Navigation.SetValue("HomePageContainsList", true);
             }
 
@@ -911,7 +911,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-// USE /[MANUAL PTN MENU_GET 3E1]/
+// USE /[MANUAL PTN MENU_GET LIST_DM_MB_R]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -921,11 +921,11 @@ namespace GenioMVC.Controllers
 
  
             if(isHomePage)
-                return PartialView("PTN_Menu_3E1", model);
+                return PartialView("PTN_Menu_LIST_DM_MB_R", model);
             else if (!Request.IsAjaxRequest())
                 return View(model);
             else
-                return PartialView("PTN_Menu_3E1_Partial", model);
+                return PartialView("PTN_Menu_LIST_DM_MB_R_Partial", model);
         }
 
 

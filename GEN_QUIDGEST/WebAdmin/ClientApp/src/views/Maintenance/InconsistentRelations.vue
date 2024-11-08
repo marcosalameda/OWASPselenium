@@ -1,35 +1,44 @@
 ﻿<template>
   <div id="maintenance_data_quality_inconsistent_relations_container">
-    <row>
-      <card>
-        <template #header>
-          {{ Resources[Model.IncoherenceTitle] }}
-        </template>
-        <template #body>
-          <template v-if="Model.IncoherenceType == 'IncoherentRelation'">
-            <row>
+    <q-group-box-container :label="Resources[Model.IncoherenceTitle]">
+      <div v-if="Model.IncoherenceType == 'IncoherentRelation'">
+        <q-row-container>
+          <q-control-wrapper class="row-line-group">
+            <base-input-structure
+              class="i-text">
               <select-input v-model="Model.RelationMode" v-if="Model.SelectLists" :options="Model.SelectLists.RelationsMode" :label="Resources.TIPO_DE_PESQUISA13226"></select-input>
-            </row>
-            <row>
+            </base-input-structure>
+          </q-control-wrapper>
+          <q-control-wrapper class="row-line-group">
+            <base-input-structure
+              class="i-text">
               <checkbox-input v-model="Model.NullsIsChecked" :label="Resources.CONSIDERAR_AS_CHAVES25518"></checkbox-input>
-            </row>
-          </template>
-          <row>
+            </base-input-structure>
+          </q-control-wrapper>
+        </q-row-container>
+      </div>
+      <q-row-container>
+        <q-control-wrapper class="row-line-group">
+          <base-input-structure
+            class="i-text">
             <checkbox-input v-model="Model.ViewsIsChecked" :label="Resources.CONSIDERAR_AS_VIEWS07942"></checkbox-input>
-          </row>
-          <row>
+          </base-input-structure>
+        </q-control-wrapper>
+        <q-control-wrapper class="row-line-group">
+          <base-input-structure
+            class="i-text">
             <label class="i-text__label">{{ Resources.ULTIMA_VERIFICACAO35305 }}</label>
-            {{ formatDate(Model.LastUpdate) }}
-          </row>
-          <row>
-            <q-button
-              b-style="primary"
-              :label="Resources.ATUALIZAR22496"
-              @click="DataQualityStart" />
-          </row>
-        </template>
-      </card>
-    </row>
+              {{ formatDate(Model.LastUpdate) }}
+          </base-input-structure>
+        </q-control-wrapper>
+      </q-row-container>
+      <row class="footer-btn">
+        <q-button
+          b-style="primary"
+          :label="Resources.ATUALIZAR22496"
+          @click="DataQualityStart" />
+      </row>
+    </q-group-box-container>
     <row v-if="Model.Active">
       <label :for="'progressbarVw_' + Model.Num">{{ Resources.PROGRESSO52692 }}</label>
       <div class="progress" :id="'progressbarVw_' + Model.Num">
@@ -40,38 +49,23 @@
       <div>{{ dataPB.message }}</div>
     </row>
     <row v-if="!isEmptyObject(Model.IncoherentRelations)">
-      <card>
-        <template #header>
-          {{ Resources.TIPO_DE_PESQUISA13226 }}: {{ Model.IncoherentRelations.length }} {{ Resources.CASOS25883 }} / {{ sumIR }} {{ Resources.TOTAL49307 }}
-        </template>
-        <template #body>
-          <row>
-              <qtable :rows="tIncoherentRelations.rows"
-                      :columns="tIncoherentRelations.columns"
-                      :config="tIncoherentRelations.config"
-                      :totalRows="tIncoherentRelations.total_rows">
-              </qtable>
-          </row>
-        </template>
-      </card>
+      <q-group-box-container :label="getIncoherentTitle()">
+        <qtable :rows="tIncoherentRelations.rows"
+          :columns="tIncoherentRelations.columns"
+          :config="tIncoherentRelations.config"
+          :totalRows="tIncoherentRelations.total_rows">
+        </qtable> 
+      </q-group-box-container>
     </row>
     <row v-else-if="!isEmptyObject(Model.OrphanRelations)">
-      <card>
-        <template #header>
-          {{ Resources.REGISTOS_ORFAOS43228 }}: {{ Model.OrphanRelations.length }} {{ Resources.CASOS25883 }} / {{ sumOR }} {{ Resources.TOTAL49307 }}
-        </template>
-        <template #body>
-          <row>
-              <qtable :rows="tOrphanRelations.rows"
-                      :columns="tOrphanRelations.columns"
-                      :config="tOrphanRelations.config"
-                      :totalRows="tOrphanRelations.total_rows">
-              </qtable>
-          </row>
-        </template>
-      </card>
+      <q-group-box-container :label="getOrphanTitle()">
+        <qtable :rows="tOrphanRelations.rows"
+          :columns="tOrphanRelations.columns"
+          :config="tOrphanRelations.config"
+          :totalRows="tOrphanRelations.total_rows">
+        </qtable>
+      </q-group-box-container>
     </row>
-
   </div>
 </template>
 
@@ -235,6 +229,12 @@
       fillTOrphanRelations: function() {
           this.tOrphanRelations.rows = this.Model.OrphanRelations || [];
           this.tOrphanRelations.total_rows = (this.Model.OrphanRelations || []).length;
+      },
+      getIncoherentTitle() {
+        return `${this.Resources.TIPO_DE_PESQUISA13226} : ${this.Model.IncoherentRelations.length} ${this.Resources.CASOS25883} / ${this.sumIR} ${this.Resources.TOTAL49307}`
+      },
+      getOrphanTitle() {
+        return `${this.Resources.REGISTOS_ORFAOS43228} :  ${this.Model.OrphanRelations.length} ${this.Resources.CASOS25883} / ${this.sumOR} ${this.Resources.TOTAL49307}`
       }
     },
     created: function () {

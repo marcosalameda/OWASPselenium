@@ -102,7 +102,7 @@
 
 			this.Controls.IFF_PWCOM___PESS1NAME____ = new QDbeditControl($('[data-identifier="IFF_PWCOM___PESS1NAME____"]', this.element), window.Form_Pwcom);
 
-			this.Controls.LED_PWCOM___PWCOMFOTO____ = new QImageControl($('[data-identifier="LED_PWCOM___PWCOMFOTO____"]', this.element), window.Form_Pwcom, '@Html.Raw(Url.Action("ImageDelete", "Pwcom", new { id=Model.ValCodpwcom, modelname="Pwcom", fldname="ValFoto" }))', '@Html.Raw(Url.Action("ImageCropper", "Pwcom", new { key=Model.ValCodpwcom, modelname= "Pwcom", fldname= "ValFoto", identifier= "FPWCOM", FormName= "Pwcom", FieldId= "LED_PWCOM___PWCOMFOTO____" }))',@Html.IsImageEmpty(Model.ValFoto));
+			this.Controls.LED_PWCOM___PWCOMFOTO____ = new QImageControl($('[data-identifier="LED_PWCOM___PWCOMFOTO____"]', this.element), window.Form_Pwcom, '@Html.Raw(Url.Action("ImageDelete", "Pwcom", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Pwcom", "ValFoto", "", Model.ValCodpwcom, null) }))', '@Html.Raw(Url.Action("ImageCropper", "Pwcom", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Pwcom", "ValFoto", "", Model.ValCodpwcom, null), identifier= "FPWCOM", FormName= "Pwcom", FieldId= "LED_PWCOM___PWCOMFOTO____" }))',@Html.IsImageEmpty(Model.ValFoto));
 
 
 

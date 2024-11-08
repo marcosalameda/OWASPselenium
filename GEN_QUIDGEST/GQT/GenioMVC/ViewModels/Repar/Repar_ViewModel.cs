@@ -129,6 +129,14 @@ namespace GenioMVC.ViewModels.Repar
 		#endregion
 
 		#region Fields for formulas
+		// Field to formula
+		/// <summary>Used only for lazy loading of the SpeciValAreatecn field</summary>
+		[Newtonsoft.Json.JsonIgnore]
+		public Func<string> funcSpeciValAreatecn { get; set; }
+		private string _auxSpeciValAreatecn { get; set; }
+		/// <summary>Field : "Technical area" Tipo: "AC"</summary>
+		[AllowHtml]
+		public string SpeciValAreatecn { get { return funcSpeciValAreatecn != null ? funcSpeciValAreatecn() : _auxSpeciValAreatecn; } set { funcSpeciValAreatecn = () => value;} }
 		#endregion
 
 		public string ValCodrepar { get; set; }
@@ -247,6 +255,7 @@ namespace GenioMVC.ViewModels.Repar
  				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
  				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
  				ValCodespec = ViewModelConversion.ToString(m.ValCodespec);
+ 				funcSpeciValAreatecn = () => ViewModelConversion.ToString(m.Speci.ValAreatecn);
  				ValCodrepar = ViewModelConversion.ToString(m.ValCodrepar);
 			}
 			catch (Exception)
@@ -746,8 +755,8 @@ namespace GenioMVC.ViewModels.Repar
         /// <param name="Navigation">Navigation context</param>
         public static ConcurrentDictionary<string, object> GetDependant_ReparTableSpeciEspecial(string PKey, NavigationContext Navigation)
         {
-            string[] DependantFields = new string[] { "speci.codespec", "speci.especial" };
-            FieldRef[] refDependantFields = new FieldRef[] { CSGenioAspeci.FldCodespec, CSGenioAspeci.FldEspecial };
+            string[] DependantFields = new string[] { "speci.codespec", "speci.especial", "speci.areatecn" };
+            FieldRef[] refDependantFields = new FieldRef[] { CSGenioAspeci.FldCodespec, CSGenioAspeci.FldEspecial, CSGenioAspeci.FldAreatecn };
             var returnEmptyDependants = false;
             CriteriaSet wherecodition = CriteriaSet.And();
 
@@ -801,6 +810,10 @@ namespace GenioMVC.ViewModels.Repar
             try
             {
                 // That code doesn't include fields of the own control and can be empty if no one dependant field present on the form.
+                {
+                    var tempValue = ViewModelConversion.ToString(row["speci.areatecn"]);
+                    this.funcSpeciValAreatecn = () => tempValue;
+                }
 
                 // Fill List fields
                 this.ValCodespec = ViewModelConversion.ToString(row["speci.codespec"]);

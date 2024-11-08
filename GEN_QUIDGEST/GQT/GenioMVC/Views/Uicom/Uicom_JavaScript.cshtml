@@ -98,7 +98,7 @@
 }
 		window.Form_Uicom.DeclareControls = function () {
 			@*Form controls*@
-			this.Controls.LED_UICOM___UICOMTHUMBNAI = new QImageControl($('[data-identifier="LED_UICOM___UICOMTHUMBNAI"]', this.element), window.Form_Uicom, '@Html.Raw(Url.Action("ImageDelete", "Uicom", new { id=Model.ValCoduicom, modelname="Uicom", fldname="ValThumbnai" }))', '@Html.Raw(Url.Action("ImageCropper", "Uicom", new { key=Model.ValCoduicom, modelname= "Uicom", fldname= "ValThumbnai", identifier= "FUICOM", FormName= "Uicom", FieldId= "LED_UICOM___UICOMTHUMBNAI" }))',@Html.IsImageEmpty(Model.ValThumbnai));
+			this.Controls.LED_UICOM___UICOMTHUMBNAI = new QImageControl($('[data-identifier="LED_UICOM___UICOMTHUMBNAI"]', this.element), window.Form_Uicom, '@Html.Raw(Url.Action("ImageDelete", "Uicom", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Uicom", "ValThumbnai", "", Model.ValCoduicom, null) }))', '@Html.Raw(Url.Action("ImageCropper", "Uicom", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Uicom", "ValThumbnai", "", Model.ValCoduicom, null), identifier= "FUICOM", FormName= "Uicom", FieldId= "LED_UICOM___UICOMTHUMBNAI" }))',@Html.IsImageEmpty(Model.ValThumbnai));
 
 			this.Controls.LED_UICOM___UICOMNAME____ = new QTextControl($('[data-identifier="LED_UICOM___UICOMNAME____"]', this.element), window.Form_Uicom);
 

@@ -14,10 +14,11 @@ using Quidgest.Persistence.GenericQuery;
 using CSGenio.persistence;
 using DbAdmin;
 using SortOrder = Quidgest.Persistence.GenericQuery.SortOrder;
+using IConfigurationManager = CSGenio.config.IConfigurationManager;
 
 namespace Administration.Controllers
 {
-    public class ManageReportsController : ControllerBase
+    public class ManageReportsController(IConfigurationManager configManager) : ControllerBase
     {	
 	    private PersistentSupport _sp;
         private PersistentSupport sp
@@ -48,8 +49,7 @@ namespace Administration.Controllers
         {
             var model = new ManageReportsModel();
 
-            string pathConfig = CSGenio.framework.Configuration.GetConfigPath();
-            ConfigurationXML conf = ConfigurationXML.readXML(pathConfig + Path.DirectorySeparatorChar + "Configuracoes.xml");
+            var conf = configManager.GetExistingConfig();
             if (Directory.Exists(conf.pathReports))
             {
                 model.ReportList = CheckReportStatus(conf);
@@ -157,8 +157,7 @@ namespace Administration.Controllers
                 try
                 {
                     //read app configuration
-                    string pathConfig = CSGenio.framework.Configuration.GetConfigPath();
-                    ConfigurationXML conf = ConfigurationXML.readXML(Path.Combine(pathConfig, "Configuracoes.xml"));
+                    var conf = configManager.GetExistingConfig();
 
                     var dataSystem = conf.DataSystems.FirstOrDefault(ds => ds.Name == currentYear);
 
@@ -328,7 +327,7 @@ namespace Administration.Controllers
             var sp = PersistentSupport.getPersistentSupport(CSGenio.framework.Configuration.DefaultYear);
 
             System.Data.SqlClient.SqlConnectionStringBuilder builder = new System.Data.SqlClient.SqlConnectionStringBuilder(sp.Connection.ConnectionString);
-            builder.DataSource = server + (port == "" ? "" : ", " + port);
+            builder.DataSource = server + (String.IsNullOrEmpty(port) ? "" : ", " + port);
             if(database == null)
                 builder.InitialCatalog = "<toReplace>";
             builder.ApplicationIntent = System.Data.SqlClient.ApplicationIntent.ReadOnly;
@@ -350,7 +349,7 @@ namespace Administration.Controllers
 
             if (isDynamic)
             {
-				string conn = "=\"" + getConn(server, port) + "\"";
+				string conn = "=\"" + getConn(server, port).Replace("\"","\"\"") + "\"";
                 conn = conn.Replace("<toReplace>", "\"+Parameters!Database.Value+\"");
                 //Replace only if "Parameters!Database.Value" are the last value
                 conn = conn.Replace("+\"\"", "");

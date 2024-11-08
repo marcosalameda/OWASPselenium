@@ -32,15 +32,15 @@
 // USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_IMAGEMAGNIFIER_WPESS_NACIONAL]/
 		column.Expression(p => p.ValNacional).Title(@Resources.NACIONALIDADE23735).Field("ValNacional").Size(30);
 // USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_IMAGEMAGNIFIER_WPESS_PFOTO]/
-		column.Expression(p => Html.ImageMagnifierZoom(p.ValPfoto, new {alt=@Resources.FOTO_DE_PERFIL03502,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCodpess, modelname = "Wpess", fldname = "ValPfoto" }))).Title(@Resources.FOTO_DE_PERFIL03502).Field("ValPfoto").Size(3);
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValPfoto, new {alt=@Resources.FOTO_DE_PERFIL03502,}, Url.Action("ImageHandlerGet", "Home", new { ticket = Helpers.GetFileTicket(UserContext.Current.User, "Wpess", "ValPfoto", "", p.ValCodpess, null) }))).Title(@Resources.FOTO_DE_PERFIL03502).Field("ValPfoto").Size(3);
 // USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_IMAGEMAGNIFIER_WAREH_WAREHDES]/
 		column.Expression(p => p.Wareh.ValWarehdes).Title(@Resources.WAREHOUSE51864).Field("Wareh.ValWarehdes").Size(30);
 // USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_IMAGEMAGNIFIER_WPESS_FTIMGTOP]/
-		column.Expression(p => Html.ImageMagnifierZoom(p.ValFtimgtop, new {alt=@Resources.IMAGE_TOP34930,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCodpess, modelname = "Wpess", fldname = "ValFtimgtop" }))).Title(@Resources.IMAGE_TOP34930).Field("ValFtimgtop").Size(3);
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValFtimgtop, new {alt=@Resources.IMAGE_TOP34930,}, Url.Action("ImageHandlerGet", "Home", new { ticket = Helpers.GetFileTicket(UserContext.Current.User, "Wpess", "ValFtimgtop", "", p.ValCodpess, null) }))).Title(@Resources.IMAGE_TOP34930).Field("ValFtimgtop").Size(3);
 // USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_IMAGEMAGNIFIER_WPESS_FTTHUMB]/
-		column.Expression(p => Html.ImageMagnifierZoom(p.ValFtthumb, new {alt=@Resources.IMAGE_THUMBNAIL01682,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCodpess, modelname = "Wpess", fldname = "ValFtthumb" }))).Title(@Resources.IMAGE_THUMBNAIL01682).Field("ValFtthumb").Size(3);
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValFtthumb, new {alt=@Resources.IMAGE_THUMBNAIL01682,}, Url.Action("ImageHandlerGet", "Home", new { ticket = Helpers.GetFileTicket(UserContext.Current.User, "Wpess", "ValFtthumb", "", p.ValCodpess, null) }))).Title(@Resources.IMAGE_THUMBNAIL01682).Field("ValFtthumb").Size(3);
 // USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_IMAGEMAGNIFIER_WPESS_FTBACKGR]/
-		column.Expression(p => Html.ImageMagnifierZoom(p.ValFtbackgr, new {alt=@Resources.IMAGE_BACKGROUND07216,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCodpess, modelname = "Wpess", fldname = "ValFtbackgr" }))).Title(@Resources.IMAGE_BACKGROUND07216).Field("ValFtbackgr").Size(3);
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValFtbackgr, new {alt=@Resources.IMAGE_BACKGROUND07216,}, Url.Action("ImageHandlerGet", "Home", new { ticket = Helpers.GetFileTicket(UserContext.Current.User, "Wpess", "ValFtbackgr", "", p.ValCodpess, null) }))).Title(@Resources.IMAGE_BACKGROUND07216).Field("ValFtbackgr").Size(3);
             column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
         })
         .SetLimits(this.Model.tableLimits)

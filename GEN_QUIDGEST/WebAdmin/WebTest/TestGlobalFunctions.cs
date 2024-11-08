@@ -193,6 +193,14 @@ namespace WebTest
             Assert.AreEqual(0, res);
             res = GlobalFunctions.emptyL(null);
             Assert.AreEqual(1, res);
+			res = GlobalFunctions.emptyL(0m); 
+			Assert.AreEqual(1, res);
+			res = GlobalFunctions.emptyL(1m);
+			Assert.AreEqual(0, res);
+			res = GlobalFunctions.emptyL(0d);
+			Assert.AreEqual(1, res);
+			res = GlobalFunctions.emptyL(1d);
+			Assert.AreEqual(0, res);
         }
 
         [Test]

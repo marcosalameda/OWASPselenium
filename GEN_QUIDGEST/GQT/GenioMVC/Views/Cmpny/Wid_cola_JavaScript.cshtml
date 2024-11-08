@@ -98,7 +98,7 @@
 }
 		window.Form_Wid_cola.DeclareControls = function () {
 			@*Form controls*@
-			this.Controls.LED_WID_COLACMPNYLOGO____ = new QImageControl($('[data-identifier="LED_WID_COLACMPNYLOGO____"]', this.element), window.Form_Wid_cola, '@Html.Raw(Url.Action("ImageDelete", "Cmpny", new { id=Model.ValCodempre, modelname="Cmpny", fldname="ValLogo" }))', '@Html.Raw(Url.Action("ImageCropper", "Cmpny", new { key=Model.ValCodempre, modelname= "Cmpny", fldname= "ValLogo", identifier= "FWID_COLA", FormName= "Wid_cola", FieldId= "LED_WID_COLACMPNYLOGO____" }))',@Html.IsImageEmpty(Model.ValLogo));
+			this.Controls.LED_WID_COLACMPNYLOGO____ = new QImageControl($('[data-identifier="LED_WID_COLACMPNYLOGO____"]', this.element), window.Form_Wid_cola, '@Html.Raw(Url.Action("ImageDelete", "Cmpny", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Cmpny", "ValLogo", "", Model.ValCodempre, null) }))', '@Html.Raw(Url.Action("ImageCropper", "Cmpny", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Cmpny", "ValLogo", "", Model.ValCodempre, null), identifier= "FWID_COLA", FormName= "Wid_cola", FieldId= "LED_WID_COLACMPNYLOGO____" }))',@Html.IsImageEmpty(Model.ValLogo));
 
 			this.Controls.LED_WID_COLACMPNYDESIGNAT = new QTextControl($('[data-identifier="LED_WID_COLACMPNYDESIGNAT"]', this.element), window.Form_Wid_cola);
 

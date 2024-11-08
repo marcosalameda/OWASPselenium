@@ -41,7 +41,7 @@ namespace GenioMVC.Controllers
 		[AuthorizeForUsers]
         [ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
         [AddHeader("X-Frame-Options", "SAMEORIGIN")]
-        public ActionResult PTN_Report_3D11(bool allSelected = false)
+        public ActionResult PTN_Report_3H11(bool allSelected = false)
         {
             bool preview = false;
             try
@@ -59,7 +59,7 @@ namespace GenioMVC.Controllers
                 string id = Navigation.GetStrValue("pess1");
                 var record = Models.Pess1.Find(id, fieldsToSerialize: new string[] { "zzstate" });
                 if (record == null || record.ValZzstate != 0)
-                    throw new FrameworkException(Resources.Resources.NAO_E_POSSIVEL_ACEDE59423, "PTN_Report_3D11", "Cannot access the specified record");
+                    throw new FrameworkException(Resources.Resources.NAO_E_POSSIVEL_ACEDE59423, "PTN_Report_3H11", "Cannot access the specified record");
 
 
                 string[] historicFieldNames = new string[1]{"pess1"};
@@ -72,7 +72,7 @@ namespace GenioMVC.Controllers
                 string[] areasReport = new string[0]{};
 
 
-// USE /[MANUAL GQT BEFORE_EXECUTE_REPORT 3D11]/
+// USE /[MANUAL GQT BEFORE_EXECUTE_REPORT 3H11]/
                 Microsoft.Reporting.WebForms.ReportViewer reportViewer = new Microsoft.Reporting.WebForms.ReportViewer();
                 reportViewer.ProcessingMode = isServerReports ? Microsoft.Reporting.WebForms.ProcessingMode.Remote : Microsoft.Reporting.WebForms.ProcessingMode.Local;
                 reportViewer.SizeToReportContent = true;
@@ -84,7 +84,7 @@ namespace GenioMVC.Controllers
                 {
                     renderer.ConstructReport(UserContext.Current.User, area, historicFieldNames, historicFieldValues, globFields, areasReport, limitation.ToArray(), specialFormulasFields);
                     var vres = PartialView("SSRSReport", reportViewer);
-// USE /[MANUAL GQT OVERRIDE_REPORT 3D11]/
+// USE /[MANUAL GQT OVERRIDE_REPORT 3H11]/
                     return vres;
                 }
             }
@@ -337,7 +337,7 @@ namespace GenioMVC.Controllers
                         renderer.ServerReportInstance.ReportServerCredentials = new ReportServerCredentials(Configuration.SSRSServer.UsernameDecode, Configuration.SSRSServer.PasswordDecode, Configuration.SSRSServer.Domain);
                     }
                     renderer.ConstructReport(UserContext.Current.User, area, historicFieldNames, historicFieldValues, globFields, areasReport, limitation.ToArray(), specialFormulasFields);
-                    result = renderer.Render("WORD");
+                    result = renderer.Render("WORDOPENXML");
                 }
 
 // USE /[MANUAL GQT OVERRIDE_REPORT 52311]/

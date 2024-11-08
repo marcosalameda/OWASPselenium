@@ -9,6 +9,7 @@ using CSGenio.persistence;
 using ExecuteQueryCore;
 using DbAdmin;
 using CSGenio.core.persistence;
+using IConfigurationManager = CSGenio.config.IConfigurationManager;
 
 namespace Administration
 {
@@ -31,7 +32,7 @@ namespace Administration
 		public static readonly string FILESTREAM = "FILESTREAM";
     }
 
-    public class WebAPI : IAdminService
+    public class WebAPI(IConfigurationManager configManager) : IAdminService
     {
 
         private readonly string DEFAULTLANGUAGE = "en-US";
@@ -294,8 +295,7 @@ namespace Administration
             Models.DbAdminModel model = new Models.DbAdminModel();
             model.DbUser = username;
             model.DbPsw  = password;
-            string pathConfig = Configuration.GetConfigPath();
-            ConfigurationXML conf = ConfigurationXML.readXML(System.IO.Path.Combine(pathConfig, "Configuracoes.xml"));
+            var conf = configManager.GetExistingConfig();
 
             if (conf.DataSystems.Count == 0)
             {
@@ -326,9 +326,7 @@ namespace Administration
 
                 model.reindexMenu.CalculateOrder();
                 List<RdxScript> order2exec = model.reindexMenu.GetOrderToExecute();
-
-                pathConfig += Path.DirectorySeparatorChar;
-
+                
                 User user = SysConfiguration.CreateWebAdminUser(yearApp);
                 GlobalFunctions gblFunctions = new GlobalFunctions(user, user.CurrentModule);
                 PersistentSupport sp = PersistentSupport.getPersistentSupport(yearApp);

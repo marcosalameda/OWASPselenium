@@ -1,0 +1,60 @@
+﻿@model GenioMVC.ViewModels.Equip.PTN_MenuSE_3G1_ViewModel
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+<!-- Modal -->
+<div id="modal_PTN_MenuSE_3G1" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="c-modal__dialog modal-sm" role="document">        
+        <div class="c-modal__content">
+                <div class="c-modal__header">                            
+                        <h2 id="myModalLabel" class="c-modal__header-title">@Resources.EQUIPMENT___1_MONTH_48623</h2>
+                </div>
+                <div elem-identifier="ModalBody" class="c-modal__body">
+                        @Html.DateFor(m => m.ValMinvalue, new { id = "startLimit", @class = "i-input-group__field" }, true)
+                        <div>&nbsp;</div>
+                        @Html.DateFor(m => m.ValMaxvalue, new { id = "endLimit" , @class = "i-input-group__field"}, true)
+                </div>
+                <div class="c-modal__footer">
+					<div class="actions">
+                        <button type="button" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" data-link="@Url.Action("PTN_Menu_3g11", "Equip" ,new { minEquipValDtaquisi = "rplStartLimit", maxEquipValDtaquisi = "rplEndLimit", nav = Model.Navigation.NavigationId, ValMinvalue = "rplStartLimit", ValMaxvalue = "rplEndLimit" })" qbutton="ok" data-menu-db="true">
+                                <i class="glyphicons glyphicons-ok e-icon"></i>
+                                @Resources.OK15819
+                         </button>
+                        <button type="button" class="b-icon-text b-icon-text--secondary" data-dismiss="modal" aria-hidden="true" qbutton="cancel"><i class="glyphicons glyphicons-remove e-icon"></i>@Resources.FECHAR32496</button>
+					</div>	
+                </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#modal_PTN_MenuSE_3G1').modal({
+          keyboard: false,
+          backdrop: 'static',
+          show: true
+        })
+        .on('hidden', function () {
+            $('#modal_PTN_MenuSE_3G1').parent().remove();
+            $("#LimitsModal").data('open', false);
+        });
+
+		var alertMessages = {
+			minValueEmpty: '@Html.Raw(@Resources.O_VALOR_MINIMO_DO_LI46903)',
+			maxValueEmpty: '@Html.Raw(@Resources.O_VALOR_MAXIMO_DO_LI38832)',
+		};
+		SetSubmitLimitMenu('PTN_MenuSE_3G1', 'SE', alertMessages);
+        var minControl = new QDateControl($('#startLimit', '#modal_PTN_MenuSE_3G1'));
+        minControl.Init();
+        var maxControl = new QDateControl($('#endLimit', '#modal_PTN_MenuSE_3G1'));
+        maxControl.Init();
+    });
+    @* Auxiliary methods for obtaining the Min and Max values in the correct format *@
+    function getSE_MinValue() {
+        $minValElem = $('#startLimit', '#modal_PTN_MenuSE_3G1');
+        return QUtils.DateCtl2ISOString($minValElem);
+    }
+    function getSE_MaxValue() {
+        $maxValElem = $('#endLimit', '#modal_PTN_MenuSE_3G1');
+        return QUtils.DateCtl2ISOString($maxValElem);
+    }
+</script>

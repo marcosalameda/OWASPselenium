@@ -7,24 +7,19 @@
 		</div>
 		<hr />
 		<div>
-			<ul class="nav nav-tabs c-tab c-tab__divider" id="system_setup_tabs" role="tablist">
-				<li class="nav-item c-tab__item">
-					<a class="nav-link c-tab__item-header active" id="security-tab" data-toggle="tab" data-target="#security" role="tab" aria-controls="security" aria-selected="true">{{ Resources.SEGURANCA53664 }}</a>
-				</li>
-				<li class="nav-item c-tab__item">
-					<a class="nav-link c-tab__item-header" id="paths-tab" data-toggle="tab" data-target="#paths" role="tab" aria-controls="paths" aria-selected="false">{{ Resources.CAMINHOS41141 }}</a>
-				</li>
-			</ul>
-			<div class="tab-content c-tab__item-container">
-				<!--Security-->
-				<div class="tab-pane c-tab__item-content active" id="security" ref="security" role="tabpanel" aria-labelledby="security-tab">
-					<security v-if="Model.Security && isActiveTab('security')" :Model="Model.Security" :SelectLists="Model.SelectLists" @updateModal="fetchData" @updateUsers="updateUsers"></security>
-				</div>
-				<!--Path-->
-				<div class="tab-pane c-tab__item-content" id="paths" ref="paths" role="tabpanel" aria-labelledby="paths-tab">
-					<paths v-if="Paths && isActiveTab('paths')" :Model="Paths"></paths>
-				</div>
-			</div>
+			<QTabContainer
+				v-bind="tabGroup"
+				@tab-changed="changeTab('tabGroup', 'selectedTab', $event)">
+				<template #tab-panel>
+					<template
+						v-for="tab in tabGroup.tabsList"
+						:key="tab.id">
+							<div v-if="tabGroup.selectedTab === tab.id" class="tab-pane c-tab__item-content" :id="tab.componentId">
+								<component :is="tab.componentId" v-if="tab.props.model"  v-bind="tab.props" v-on="tab.events || {}"></component>
+							</div>
+					</template>
+				</template>
+			</QTabContainer>
 		</div>
 	</div>
 </template>
@@ -33,18 +28,48 @@
 // @ is an alias to /src
 import { reusableMixin } from '@/mixins/mainMixin';
 import { QUtils } from '@/utils/mainUtils';
-import { reactive } from 'vue';
-import security from './System_setup/Security.vue';
-import paths from './System_setup/Paths.vue';
+import { reactive, computed } from 'vue';
+import security from './App_configuration/Security.vue';
+import paths from './App_configuration/Paths.vue';
 
 export default {
-	name: 'system_setup',
+	name: 'app_config',
 	mixins: [reusableMixin],
+	emits: ['updateModal', 'updateUsers'],
 	components: { security, paths },
 	data() {
+		var vm = this;
 		return {
 			Model: {},
-			activeTab: 'security'
+			tabGroup: {
+				selectedTab: 'security-tab',
+				alignTabs: 'left',
+				iconAlignment: 'left',
+				isVisible: true,
+				alertClass: 'alert alert-danger',
+				tabsList: [
+					{
+						id: 'security-tab',
+						componentId: 'security',
+						name: 'security',
+						label: vm.$t('SEGURANCA53664'),
+						disabled: false,
+						isVisible: true,
+						props: { model: computed(() => vm.Model?.Security), SelectLists: computed(() => vm.Model?.SelectLists) },
+						events: { 'updateModal': vm.fetchData, 'updateUsers': vm.updateUsers }
+					},
+					{
+						id: 'paths-tab',
+						componentId: 'paths',
+						name: 'paths',
+						label: vm.$t('CAMINHOS41141'), 
+						disabled: false,
+						isVisible: true,
+						props: { model: computed(() => vm.Paths) },
+						events: { 'updateModal': vm.setModel }
+					}
+				]
+			}
 		};
 	},
 	computed: {
@@ -61,9 +86,6 @@ export default {
 		}
 	},
 	methods: {
-		isActiveTab(tabName) {
-			return this.activeTab === tabName;
-		},
 		fetchData() {
 			var vm = this;
 			QUtils.log("Fetch data - Config", QUtils.apiActionURL('Config', 'Index'));
@@ -93,6 +115,13 @@ export default {
 			window.scrollTo(0,0);
 			}
 		},
+		getTab(tab, selectedTab) {
+			return _find(this[tab]['tabsList'], (x) => x.id === selectedTab)
+		},
+
+		changeTab(tab, tabProp, selectedTab) {
+			this[tab][tabProp] = selectedTab
+		},
 		reloadMQueues() {
 			var vm = this;
 			QUtils.FetchData(QUtils.apiActionURL('Config', 'ReloadMQueues')).done(function (data) {
@@ -117,12 +146,12 @@ export default {
 		var vm = this;
 		vm.observer = new MutationObserver(mutations => {
 			for (const m of mutations) {
-			const newValue = m.target.getAttribute(m.attributeName);
-			vm.$nextTick(() => {
-				if (~newValue.indexOf('active')) {
-				vm.activeTab = m.target.id;
-				}
-			});
+				const newValue = m.target.getAttribute(m.attributeName);
+				vm.$nextTick(() => {
+					if (~newValue.indexOf('active')) {
+					vm.selectedTab = m.target.id;
+					}
+				});
 			}
 		});
 

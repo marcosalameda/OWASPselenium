@@ -1,42 +1,43 @@
-using System;
+Ôªøusing System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
-using System.Net.Mail;
+using MimeKit;
+using MailKit.Net.Smtp;
 using System.Text.RegularExpressions;
+using MimeKit.Utils;
 
 namespace CSGenio.framework
 {
     /// <summary>
     /// Classe que representa um email
-    /// exists a posiblidade de enviar v·rios ficheros em attachment, basta passar um array de string com os nomes dos ficheiros a anexar. atenÁ„o que os nomes dos ficheiros tem que ser caminhos completos.    
-    /// tambÈm e possÌvel enviar um mail to v·rios destinat·rios, basta criar uma string com os mail separados por vÌrgula (,)ex:"quidgest@quidgest.pt,jpedro@quidgest.pt"    
+    /// exists a posiblidade de enviar v√°rios ficheros em attachment, basta passar um array de string com os nomes dos ficheiros a anexar. aten√ß√£o que os nomes dos ficheiros tem que ser caminhos completos.    
+    /// tamb√©m e poss√≠vel enviar um mail to v√°rios destinat√°rios, basta criar uma string com os mail separados por v√≠rgula (,)ex:"quidgest@quidgest.pt,jpedro@quidgest.pt"    
     /// </summary>
     public class CSmail
     {
         private string de;//e-mail do remetente
-        private string to;//e-mail(s) do destinat·rio(s)
+        private string to;//e-mail(s) do destinat√°rio(s)
         private string subject;//subject do e-mail
         private string body;//body do e_email
         private bool bodyhtml;//indica se o body do e-mail vai em html //(FFS 2014.10.16)
         private string[] attachment;//lista com os nomes dos ficheiros anexos
         private string smtpServer; // GenioServer de mail 
-        private bool ssl = false; // LigaÁ„o ssl (MA 2009.10.07)
+        private bool ssl = false; // Liga√ß√£o ssl (MA 2009.10.07)
         private int port = 25; // porta smtp (MA 2009.10.07)
         private bool auth = false;
         private string user;
         private string pass;
-        private string cc; //endereÁos em CC (JMT 2011.04.04)
-        private string bcc; //endereÁos em Bcc (PR 2014.10.16)
-        private string textass; //text apÛs imagem da assinatura (SF 2016.02.10)
+        private string cc; //endere√ßos em CC (JMT 2011.04.04)
+        private string bcc; //endere√ßos em Bcc (PR 2014.10.16)
+        private string textass; //text ap√≥s imagem da assinatura (SF 2016.02.10)
         private string pathimg; //imagem da assinatura (SF 2016.02.10)
         private string nomeremetente; //nome a apresentar no remetente
-        private Dictionary<string, Stream> dictionaryanexos; //Anexos por stream (ao invÈs de path)
-        private List<Stream> streamimagens; //Imagens no corpo do email, por stream (ao invÈs de path)
-        public string ReplyTo { get; set; } // Propriedade para o endereÁo "Reply-To"
+        private Dictionary<string, Stream> dictionaryanexos; //Anexos por stream (ao inv√©s de path)
+        private List<Stream> streamimagens; //Imagens no corpo do email, por stream (ao inv√©s de path)
+        public string ReplyTo { get; set; } // Propriedade para o endere√ßo "Reply-To"
 
         /// <summary>
-        /// Constructor dum Qfield que nao È formula, nem array,  nem tem Qvalue default
+        /// Constructor dum Qfield que nao √© formula, nem array,  nem tem Qvalue default
         /// </summary>
         /// <param name="de"></param>
         /// <param name="para"></param>
@@ -160,7 +161,7 @@ namespace CSGenio.framework
         }
 
         /// <summary>
-        /// Constructor dum Qfield que nao È formula, nem array,  nem tem Qvalue default
+        /// Constructor dum Qfield que nao √© formula, nem array,  nem tem Qvalue default
         /// </summary>
         public CSmail()
         {
@@ -182,143 +183,99 @@ namespace CSGenio.framework
 
 			
         /// <summary>
-        /// MÈtodo que envia o email
+        /// M√©todo que envia o email
         /// </summary>        
         public bool Send()
         {
-
             if (validate())
             {
                 // To turn on 1.2 without affecting other protocols. It is preferred that it be configured at application startup.
-                System.Net.ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
+                System.Net.ServicePointManager.SecurityProtocol |= System.Net.SecurityProtocolType.Tls12;
 				
-                string host = smtpServer;
-                System.Net.Mail.SmtpClient cliente = new System.Net.Mail.SmtpClient(host, port);
+                using MimeMessage msg = new();
+                msg.From.Add(new MailboxAddress(nomeremetente, de));
 
-                System.Net.Mail.MailAddress from = new System.Net.Mail.MailAddress(de, nomeremetente, System.Text.Encoding.Default);
-                using (System.Net.Mail.MailMessage msg = new System.Net.Mail.MailMessage())
+                AddValidEmails(to, msg.To);
+                AddValidEmails(ReplyTo, msg.ReplyTo);
+                AddValidEmails(cc, msg.Cc);
+                AddValidEmails(bcc, msg.Bcc);
+
+                msg.Subject = subject;
+
+                var bodyBuilder = new BodyBuilder
                 {
-                    msg.From = from;
+                    HtmlBody = bodyhtml ? body : null,
+                    TextBody = bodyhtml ? null : body
+                };
 
-                    string[] listaMail = to.Split(new char[] { (';'), (',') });
-                    for (int j = 0; j < listaMail.Length; j++)
-                    {
-                        if (validateMail(listaMail[j]))
-                        {
-                            System.Net.Mail.MailAddress endereco = new System.Net.Mail.MailAddress(listaMail[j], null, System.Text.Encoding.Default);
-                            msg.To.Add(endereco);
-                        }
-                    }
-
-                    //(CH 2024.01.26) - 
-                    if (!string.IsNullOrEmpty(this.ReplyTo)) // Verifica se o campo 'Reply-To' foi definido
-                    {
-                        msg.ReplyToList.Add(new MailAddress(this.ReplyTo)); // Adiciona o endereÁo ao campo 'Reply-To'
-                    }
-
-                    //(SF 2016.02.10) - Acrecentar imagem da assinatura no body do email
-                    if (!string.IsNullOrEmpty(pathimg) || streamimagens != null) //extens„o para uma lista com stream de imagens
-                    {
-                        // body = body + "<img src=\"cid:image1\">" + textass;
-                        System.Net.Mail.AlternateView av = null;
-                        System.Net.Mail.LinkedResource lr = null;
-                        if (!string.IsNullOrEmpty(pathimg))
-                        {
-                            body = body + "<img src=\"cid:image1\">" + textass;
-                            lr = new System.Net.Mail.LinkedResource(pathimg, System.Net.Mime.MediaTypeNames.Image.Jpeg);
-                            av = System.Net.Mail.AlternateView.CreateAlternateViewFromString(body, null, System.Net.Mime.MediaTypeNames.Text.Html);
-                            lr.ContentId = "image1";
-                            av.LinkedResources.Add(lr);
-                            msg.AlternateViews.Add(av);
-                        }
-                        else
-                        {
-                            bodyhtml = true;
-                            foreach (var imagem in streamimagens)
-                            {
-                                if (imagem != null)
-                                {
-                                    var image = new LinkedResource(imagem);
-                                    image.ContentId = Guid.NewGuid().ToString();
-
-                                    body += string.Format(@"<br/><img src=""cid:{0}"" />", image.ContentId);
-                                    body += "<br/>" + textass;
-                                    body = body.Replace("\r\n", "<br/>");
-
-                                    AlternateView view = AlternateView.CreateAlternateViewFromString(body, null, "text/html");
-                                    view.LinkedResources.Add(image);
-                                    msg.AlternateViews.Add(view);
-
-                                }
-                            }
-                        }
-                        msg.Body = body;
-                    }
-                    else
-                        msg.Body = body + textass;
-
-                    msg.Subject = subject;
-                    msg.SubjectEncoding = System.Text.Encoding.Default;
-
-                    for (int i = 0; i < attachment.Length; i++)
-                    {
-                        if (!attachment[i].Equals("") && File.Exists(attachment[i]))
-                        {
-                            System.Net.Mail.Attachment fanexo = new System.Net.Mail.Attachment(attachment[i]);
-                            msg.Attachments.Add(fanexo);
-                        }
-                    }
-
-                    //extens„o para anexos em dictionary <string,stream>
-                    if (dictionaryanexos != null)
-                        foreach (var anexo in dictionaryanexos)
-                        {
-                            System.Net.Mail.Attachment attach = new System.Net.Mail.Attachment(anexo.Value, anexo.Key);
-                            msg.Attachments.Add(attach);
-                        }
-
-                    msg.BodyEncoding = System.Text.Encoding.Default;
-
-                    //(FFS 2014.10.16)
-                    if (bodyhtml)
-                        msg.IsBodyHtml = true;
-                    cliente.Port = port;      // (MA 2009.10.07)
-                    cliente.EnableSsl = ssl;  // (MA 2009.10.07)
-
-                    //(JMT 2011.04.04) - Acrescentado to tratar os endereÁos
-                    string[] listaMailCC = cc.Split(new char[] { (';'), (',') });
-                    foreach (string mailCC in listaMailCC)
-                    {
-                        if (validateMail(mailCC))
-                        {
-                            System.Net.Mail.MailAddress enderecoCC = new System.Net.Mail.MailAddress(mailCC, null, System.Text.Encoding.Default);
-                            msg.CC.Add(enderecoCC);
-                        }
-                    }
-                    //
-
-                    //(PR 2012.10.16) - Acrescentado to tratar os endereÁos em Bcc
-                    string[] listaMailBcc = bcc.Split(new char[] { (';'), (',') });
-                    foreach (string mailBcc in listaMailBcc)
-                    {
-                        if (validateMail(mailBcc))
-                        {
-                            System.Net.Mail.MailAddress enderecoBcc = new System.Net.Mail.MailAddress(mailBcc, null, System.Text.Encoding.Default);
-                            msg.Bcc.Add(enderecoBcc);
-                        }
-                    }
-
-                    if (auth)
-                    {
-                        cliente.DeliveryMethod = SmtpDeliveryMethod.Network;
-                        cliente.Credentials = new NetworkCredential(user, pass);
-                    }
-
-                    cliente.Send(msg);
+                // Acrecentar imagem da assinatura no body do email
+                if (!string.IsNullOrEmpty(pathimg) && File.Exists(pathimg))
+                {
+                    var image = bodyBuilder.LinkedResources.Add(pathimg);
+                    image.ContentId = MimeUtils.GenerateMessageId();
+                    bodyBuilder.HtmlBody ??= string.Empty;
+                    bodyBuilder.HtmlBody += $"<img src=\"cid:{image.ContentId}\">{textass}";
                 }
+                else if(streamimagens?.Count > 0)
+                {
+                    bodyBuilder.HtmlBody ??= string.Empty;
+                    foreach (var imageStream in streamimagens)
+                    {
+                        var linkedResource = new MimePart(new ContentType("application", "octet-stream"))
+                        {
+                            ContentId = MimeUtils.GenerateMessageId(),
+                            ContentTransferEncoding = ContentEncoding.Base64,
+                            Content = new MimeContent(imageStream),
+                            ContentDisposition = new ContentDisposition(ContentDisposition.Inline)
+                        };
+                        bodyBuilder.LinkedResources.Add(linkedResource);
+                        bodyBuilder.HtmlBody += $"<br/><img src=\"cid:{linkedResource.ContentId}\"/>";
+                    }
+                    bodyBuilder.HtmlBody += $"<br/>{textass}";
+                    bodyBuilder.HtmlBody = bodyBuilder.HtmlBody.Replace(Environment.NewLine, "<br/>");
+                }
+                else
+                    bodyBuilder.TextBody += textass;
+
+                // Linked resources
+                LinkedResources?.ForEach(linkedResource => bodyBuilder.LinkedResources.Add(linkedResource.Resource));
+
+
+                // Attachments (string[])
+                if (attachment != null)
+                {
+                    foreach (var attachmentFile in attachment)
+                    {
+                        if (!string.IsNullOrEmpty(attachmentFile) && File.Exists(attachmentFile))
+                        {
+                            bodyBuilder.Attachments.Add(attachmentFile);
+                        }
+                    }
+                }
+
+                // Attachments (Dictionary<string, stream>)
+                if(dictionaryanexos != null)
+                {
+                    foreach (var attachmentFile in dictionaryanexos)
+                    {
+                        bodyBuilder.Attachments.Add(attachmentFile.Key, attachmentFile.Value);
+                    }
+                }
+
+                msg.Body = bodyBuilder.ToMessageBody();
+
+                using SmtpClient client = new();
+                client.Connect(smtpServer, port); // SSL or Auto ?
+
+                if (auth)
+                {
+                    client.Authenticate(user, pass);
+                }
+
+                client.Send(msg);
+                client.Disconnect(true);
 				
                 return true;
-
             }
             else
             {
@@ -326,9 +283,22 @@ namespace CSGenio.framework
             }
         }
 
+        private void AddValidEmails(string addresses, InternetAddressList mailAddressList)
+        {
+            if (string.IsNullOrEmpty(addresses))
+                return;
+
+            foreach (string address in addresses.Split(new char[] { ';', ',' }))
+            {
+                if (validateMail(address))
+                {
+                    mailAddressList.Add(new MailboxAddress(null, address));
+                }
+            }
+        }
 
         /// <summary>
-        /// MÈtodo que dado um array de strings preenche os destinatario ( DQ - 14072006)
+        /// M√©todo que dado um array de strings preenche os destinatario ( DQ - 14072006)
         /// </summary>
         /// <param name="destin"></param>
         public void fillRecipient(object[] destin)
@@ -352,7 +322,7 @@ namespace CSGenio.framework
         }
 
         /// <summary>
-        /// MÈtodo que verifica se o email È v·lido.
+        /// M√©todo que verifica se o email √© v√°lido.
         /// </summary>
         /// <param name="inputEmail"></param>
         public static bool validateMail(string inputEmail)
@@ -366,7 +336,7 @@ namespace CSGenio.framework
         }
 
         /// <summary>
-        /// MÈtodo que faz as validaÁıes dos par‚metros do email s„o v·lidos.
+        /// M√©todo que faz as valida√ß√µes dos par√¢metros do email s√£o v√°lidos.
         /// </summary>
         public bool validate()
         {
@@ -383,9 +353,75 @@ namespace CSGenio.framework
             return true;
         }
 
+        /// <summary>
+        /// Adds the provided linked resource to the email's linked resources collection.
+        /// This method is used when you already have an instance of a linked resource and want to add 
+        /// it to the collection of resources that will be referenced in the HTML body of the email.
+        /// </summary>
+        /// <param name="linkedResource">The linked resource to be added, which contains an image or other media to be embedded in the email.</param>
+        /// <returns>Returns the same linked resource that was added to the collection.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the provided linked resource is null.</exception>
+        public CSMail.EmailLinkedResource AddHtmlImgLink(CSMail.EmailLinkedResource linkedResource)
+        {
+            // Validate that the linked resource is not null
+            if (linkedResource == null)
+                throw new ArgumentNullException(nameof(linkedResource), "Linked resource cannot be null.");
+
+            LinkedResources.Add(linkedResource);
+
+            // Return the linked resource for potential chaining or reference
+            return linkedResource;
+        }
 
         /// <summary>
-        /// MÈtodo que devolve ou coloca o remetente da mensagem
+        /// Adds an HTML image link (a linked resource) using the image file at the specified path.
+        /// This method creates a linked resource from a file path and associates it with a Content ID, 
+        /// allowing the image to be referenced in the HTML body of the email.
+        /// </summary>
+        /// <param name="contentId">The Content ID for referencing the image in the email body.</param>
+        /// <param name="filePath">The full path to the image file to be embedded.</param>
+        /// <returns>Returns the created linked resource associated with the image.</returns>
+        public CSMail.EmailLinkedResource AddHtmlImgLink(string contentId, string filePath)
+        {
+            // Create a new EmailLinkedResource object using the file path and content ID
+            var linkedResource = new CSMail.EmailLinkedResource(filePath, contentId);
+            return AddHtmlImgLink(linkedResource);
+        }
+
+        /// <summary>
+        /// Adds an HTML image link (a linked resource) using the provided byte array representing the image data.
+        /// This method creates a linked resource from a byte array and associates it with a Content ID, 
+        /// allowing the image to be referenced in the HTML body of the email.
+        /// </summary>
+        /// <param name="contentId">The Content ID for referencing the image in the email body.</param>
+        /// <param name="fileData">The byte array containing the image data to be embedded.</param>
+        /// <param name="mimeType">The MIME type of the image (e.g., "image/jpeg", "image/png").</param>
+        /// <returns>Returns the created linked resource associated with the image.</returns>
+        public CSMail.EmailLinkedResource AddHtmlImgLink(string contentId, byte[] fileData, ContentType mimeType)
+        {
+            // Create a new EmailLinkedResource object using the byte array, content ID, and MIME type
+            var linkedResource = new CSMail.EmailLinkedResource(fileData, contentId, mimeType);
+            return AddHtmlImgLink(linkedResource);
+        }
+
+        /// <summary>
+        /// Adds an HTML image link (a linked resource) using the provided stream containing the image data.
+        /// This method creates a linked resource from a stream and associates it with a Content ID, 
+        /// allowing the image to be referenced in the HTML body of the email.
+        /// </summary>
+        /// <param name="contentId">The Content ID for referencing the image in the email body.</param>
+        /// <param name="fileStream">The stream containing the image data to be embedded.</param>
+        /// <param name="mimeType">The MIME type of the image (e.g., "image/jpeg", "image/png").</param>
+        /// <returns>Returns the created linked resource associated with the image.</returns>
+        public CSMail.EmailLinkedResource AddHtmlImgLink(string contentId, Stream fileStream, ContentType mimeType)
+        {
+            // Create a new EmailLinkedResource object using the stream, content ID, and MIME type
+            var linkedResource = new CSMail.EmailLinkedResource(fileStream, contentId, mimeType);
+            return AddHtmlImgLink(linkedResource);
+        }
+
+        /// <summary>
+        /// M√©todo que devolve ou coloca o remetente da mensagem
         /// </summary>
         public string From
         {
@@ -395,7 +431,7 @@ namespace CSGenio.framework
 
 
         /// <summary>
-        /// MÈtodo que devolve ou coloca o(s) destinat·rios da mensagem
+        /// M√©todo que devolve ou coloca o(s) destinat√°rios da mensagem
         /// </summary>
         public string To
         {
@@ -405,7 +441,7 @@ namespace CSGenio.framework
 
 
         /// <summary>
-        /// MÈtodo que devolve ou coloca o subject da mensagem
+        /// M√©todo que devolve ou coloca o subject da mensagem
         /// </summary>          
         public string Subject
         {
@@ -415,7 +451,7 @@ namespace CSGenio.framework
 
 
         /// <summary>
-        /// MÈtodo que devolve ou coloca o body da mensagem
+        /// M√©todo que devolve ou coloca o body da mensagem
         /// </summary>
         public string Body
         {
@@ -425,7 +461,7 @@ namespace CSGenio.framework
 
 
         /// <summary>
-        /// MÈtodo que devolve e coloca a lista de ficheiros anexos
+        /// M√©todo que devolve e coloca a lista de ficheiros anexos
         /// </summary>
         public string[] Attachment
         {
@@ -434,7 +470,7 @@ namespace CSGenio.framework
         }
 
         /// <summary>
-        /// MÈtodo que devolve e coloca o servidor smtp
+        /// M√©todo que devolve e coloca o servidor smtp
         /// </summary>
         public string SmtpServer
         {
@@ -443,7 +479,7 @@ namespace CSGenio.framework
         }
 
         /// <summary>
-        /// MÈtodo que define se a ligaÁ„o È ssl - (MA 2009.10.07)
+        /// M√©todo que define se a liga√ß√£o √© ssl - (MA 2009.10.07)
         /// </summary>
         public bool SSL
         {
@@ -452,7 +488,7 @@ namespace CSGenio.framework
         }
 
         /// <summary>
-        /// MÈtodo que define a porta smtp - (MA 2009.10.07)
+        /// M√©todo que define a porta smtp - (MA 2009.10.07)
         /// </summary>
         public int Port
         {
@@ -461,7 +497,7 @@ namespace CSGenio.framework
         }
 
         /// <summary>
-        /// MÈtodo que define se a ligaÁ„o deve ser autenticada - (MA 2009.10.07)
+        /// M√©todo que define se a liga√ß√£o deve ser autenticada - (MA 2009.10.07)
         /// </summary>
         public bool Auth
         {
@@ -469,7 +505,7 @@ namespace CSGenio.framework
             set { auth = value; }
         }
         /// <summary>
-        /// MÈtodo que devolve e coloca o servidor smtp
+        /// M√©todo que devolve e coloca o servidor smtp
         /// </summary>
         public string User
         {
@@ -477,7 +513,7 @@ namespace CSGenio.framework
             set { user = value; }
         }
         /// <summary>
-        /// MÈtodo que devolve e coloca o servidor smtp
+        /// M√©todo que devolve e coloca o servidor smtp
         /// </summary>
         public string Pass
         {
@@ -486,7 +522,7 @@ namespace CSGenio.framework
         }
 
         /// <summary>
-        /// MÈtodo que devolve e coloca os endereÁos em CC - (JMT 2011.04.04)
+        /// M√©todo que devolve e coloca os endere√ßos em CC - (JMT 2011.04.04)
         /// </summary>
         public string CC
         {
@@ -495,7 +531,7 @@ namespace CSGenio.framework
         }
 
         /// <summary>
-        /// MÈtodo que devolve e coloca o body do e-mail em html - (FFS 2014.10.16)
+        /// M√©todo que devolve e coloca o body do e-mail em html - (FFS 2014.10.16)
         /// </summary>
         public bool BodyHtml
         {
@@ -504,7 +540,7 @@ namespace CSGenio.framework
         }
 
         /// <summary>
-        /// MÈtodo que devolve e coloca os endereÁos em Bcc - (PR 2012.10.16)
+        /// M√©todo que devolve e coloca os endere√ßos em Bcc - (PR 2012.10.16)
         /// </summary>
         public string Bcc
         {
@@ -513,7 +549,7 @@ namespace CSGenio.framework
         }
 
         /// <summary>
-        /// MÈtodo que devolve e coloca a pasta da imagem to a assinatura - (SF 2016.02.10)
+        /// M√©todo que devolve e coloca a pasta da imagem to a assinatura - (SF 2016.02.10)
         /// </summary>
         public string Pathimg
         {
@@ -522,7 +558,7 @@ namespace CSGenio.framework
         }
         
         /// <summary>
-        /// MÈtodo que devolve e coloca o text apÛs a imagem da assinatura - (SF 2016.02.10)
+        /// M√©todo que devolve e coloca o text ap√≥s a imagem da assinatura - (SF 2016.02.10)
         /// </summary>
         public string Textass
         {
@@ -531,7 +567,7 @@ namespace CSGenio.framework
         }
 
         /// <summary>
-        /// MÈtodo que devolve e coloca o nome do remetente a apresentar no email
+        /// M√©todo que devolve e coloca o nome do remetente a apresentar no email
         /// </summary>
         public string NomeRemetente
         {
@@ -540,7 +576,7 @@ namespace CSGenio.framework
         }
 
         /// <summary>
-        /// MÈtodo que devolve e preenche a lista de imagens a adicionar ao corpo do email
+        /// M√©todo que devolve e preenche a lista de imagens a adicionar ao corpo do email
         /// </summary>
         public List<Stream> StreamImagens
         {
@@ -549,12 +585,157 @@ namespace CSGenio.framework
         }
 
         /// <summary>
-        /// MÈtodo que devolve e preenche o dicion·rio de dados com os anexos a adicionar ao email
+        /// M√©todo que devolve e preenche o dicion√°rio de dados com os anexos a adicionar ao email
         /// </summary>
         public Dictionary<string, Stream> DictionaryAnexos
         {
             get { return dictionaryanexos; }
             set { dictionaryanexos = value; }
+        }
+
+
+        /// <summary>
+        /// A collection of linked resources, such as embedded images, used in the HTML body of the email.
+        /// Each linked resource is represented by an instance of the EmailLinkedResource class, 
+        /// and can be referenced in the email content via a Content ID.
+        /// </summary>
+        public List<CSMail.EmailLinkedResource> LinkedResources { get; private set; } = [];
+    }
+
+    namespace CSMail
+    {
+        /// <summary>
+        /// This class is responsible for managing linked resources (such as embedded images) 
+        /// that are used in email bodies. It supports loading images from file paths, streams, 
+        /// or byte arrays and associates them with a Content ID, allowing reference in the email content.
+        /// </summary>
+        public class EmailLinkedResource
+        {
+            /// <summary>
+            /// The Content ID used to reference the resource in the email body. 
+            /// If the resource is null, it returns null.
+            /// </summary>
+            public string ContentId { get { return Resource?.ContentId; } }
+
+            /// <summary>
+            /// The linked resource representing the image.
+            /// This is a MimePart object that encapsulates the content of the resource.
+            /// </summary>
+            public MimePart Resource { get; private set; }
+
+            /// <summary>
+            /// Creates a linked resource from a file path.
+            /// This constructor loads the file, determines its MIME type based on the file extension,
+            /// and sets up the linked resource to be embedded in the email body.
+            /// </summary>
+            /// <param name="filePath">The full path to the image file.</param>
+            /// <param name="contentId">The Content ID for referencing this image in the email body.</param>
+            /// <exception cref="ArgumentNullException">Thrown when the file path is null or empty.</exception>
+            /// <exception cref="FileNotFoundException">Thrown when the specified file is not found.</exception>
+            public EmailLinkedResource(string filePath, string contentId)
+            {
+                if (string.IsNullOrEmpty(filePath))
+                    throw new ArgumentNullException(nameof(filePath), "File path cannot be null or empty.");
+
+                if (!File.Exists(filePath))
+                    throw new FileNotFoundException("File not found.", filePath);
+
+                var fileName = Path.GetFileName(filePath);
+                // Determines the MIME type of the image based on its file extension.
+                var mimeType = GetMimeType(filePath);
+                // Load the file content as a byte array and convert it to a memory stream.
+                var fileData = File.ReadAllBytes(filePath);
+                var fileStream = new MemoryStream(fileData);
+
+                // Set the linked resource using the file stream, content ID, MIME type, and file name.
+                SetResource(fileStream, contentId, mimeType, fileName);
+            }
+
+            /// <summary>
+            /// Creates a linked resource from a byte array.
+            /// This constructor is useful when you already have the image data in memory 
+            /// as a byte array and want to embed it in an email.
+            /// </summary>
+            /// <param name="imageBytes">The byte array representing the file data.</param>
+            /// <param name="contentId">The Content ID for referencing this image in the email body.</param>
+            /// <param name="mimeType">The MIME type of the linked resource (e.g., "image/jpeg").</param>
+            /// <exception cref="ArgumentNullException">Thrown when the byte array is null or empty.</exception>
+            public EmailLinkedResource(byte[] imageBytes, string contentId, ContentType mimeType)
+            {
+                if (imageBytes == null || imageBytes.Length == 0)
+                    throw new ArgumentNullException(nameof(imageBytes), "Image data cannot be null or empty.");
+
+                var fileStream = new MemoryStream(imageBytes);
+
+                // Set the linked resource using the byte stream, content ID, and MIME type.
+                SetResource(fileStream, contentId, mimeType);
+            }
+
+            /// <summary>
+            /// Creates a linked resource from a stream.
+            /// This constructor is useful when you want to stream the image data directly 
+            /// from a source without fully loading it into memory.
+            /// </summary>
+            /// <param name="imageStream">The stream containing the image data.</param>
+            /// <param name="contentId">The Content ID for referencing this image in the email body.</param>
+            /// <param name="mimeType">The MIME type of the linked resource (e.g., "image/png").</param>
+            /// <exception cref="ArgumentNullException">Thrown when the image stream is null.</exception>
+            public EmailLinkedResource(Stream imageStream, string contentId, ContentType mimeType)
+            {
+                if (imageStream == null)
+                    throw new ArgumentNullException(nameof(imageStream), "Image stream cannot be null.");
+
+                // Set the linked resource using the provided stream, content ID, and MIME type.
+                SetResource(imageStream, contentId, mimeType);
+            }
+
+            /// <summary>
+            /// Helper method to set the linked resource properties, which includes 
+            /// creating a MimePart object with appropriate content, content type, 
+            /// content disposition, and content transfer encoding.
+            /// </summary>
+            /// <param name="fileStream">The stream containing the image data.</param>
+            /// <param name="contentId">The content identifier used to reference the image in the email body.</param>
+            /// <param name="mimeType">The MIME type of the image (defaults to "application/octet-stream" if not provided).</param>
+            /// <param name="fileName">The file name of the image (defaults to an empty string if not provided).</param>
+            /// <returns>Returns the created MimePart representing the linked resource.</returns>
+            public MimePart SetResource(Stream fileStream, string contentId = null, ContentType mimeType = null, string fileName = null)
+            {
+                // If no MIME type is provided, default to "application/octet-stream".
+                mimeType ??= new ContentType("application", "octet-stream");
+                fileName ??= string.Empty;
+
+                // Create a new MimePart for the resource with the appropriate properties.
+                Resource = new MimePart(mimeType)
+                {
+                    ContentId = contentId ?? MimeUtils.GenerateMessageId(), // Generate a content ID if not provided.
+                    ContentTransferEncoding = ContentEncoding.Base64, // Use base64 encoding for the resource.
+                    Content = new MimeContent(fileStream), // Attach the file stream as the resource content.
+                    ContentDisposition = new ContentDisposition(ContentDisposition.Inline), // Set content disposition as inline.
+                    FileName = fileName, // Set the file name for the resource.
+                    ContentLocation = new Uri(fileName, UriKind.Relative) // Set content location for reference.
+                };
+
+                // Ensure that the content type includes the file name.
+                Resource.ContentType.Name = fileName;
+
+                return Resource;
+            }
+
+            /// <summary>
+            /// Helper method to determine the MIME type based on the file extension.
+            /// Uses the MimeKit library's GetMimeType method to map file extensions to MIME types.
+            /// </summary>
+            /// <param name="fileName">The file name or path to determine the MIME type for.</param>
+            /// <returns>Returns the corresponding MIME type as a ContentType object.</returns>
+            public static ContentType GetMimeType(string fileName)
+            {
+                // Use MimeTypes class from MimeKit to determine the correct MIME type.
+                var mimeType = MimeTypes.GetMimeType(fileName);
+
+                // Parse the MIME type into a ContentType object.
+                return ContentType.Parse(mimeType);
+            }
         }
     }
 }

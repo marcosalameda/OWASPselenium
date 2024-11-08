@@ -1558,6 +1558,139 @@ namespace CSGenio.framework
             return value;
         }
 
+		/// <summary>
+		/// Convert the Excel datetime format string to a standard format string
+		/// </summary>
+		/// <param name="format">Excel-specific format string</param>
+		/// <returns>Standard datetime format string</returns>
+		private string GetNormalizedExcelDateTimeFormatString(string format)
+		{
+			if (string.IsNullOrEmpty(format))
+				return "";
+
+			// Remove non-standard format info (specific to Excel)
+			// Replace with standard format info
+			// Start string after any prefix characters and brackets (ex: [$f-800])
+			return format.Substring(format.IndexOf(']') + 1)
+				// Remove suffix characters
+				.Replace(";@", "")
+				// Remove extra backslashes
+				.Replace("\\", "")
+				// Change AM/PM to standard tt
+				.Replace("AM/PM", "tt")
+				// Excel uses lower case m for both months and minutes
+				// Change the minute characters to i so the other 
+				// lowercase m characters that are for months can be changed to uppercase
+				// and then the i characters can be changed back to m
+				.Replace(":mm", ":ii")
+				.Replace("mm:", "ii:")
+				.Replace("m", "M")
+				.Replace("i", "m")
+				// Replace tenths of a second with standard f
+				.Replace(".0", ".f")
+				// Always replace / with - since Excel is inconsistent in using these characters 
+				// for format strings and formatted date text
+				.Replace("/", "-");
+		}
+
+		/// <summary>
+		/// Get the parsed Excel cell value using the cell's formatting 
+		/// or the default formatting if the cell does not have specific formatting
+		/// </summary>
+		/// <param name="cell">Cell object</param>
+		/// <param name="defaultFormatting">Default format string, used for cells that don't have specific formatting</param>
+		/// <returns>Datetime object</returns>
+		private DateTime GetParsedExcelCellDateTimeValue(ExcelRange cell, string defaultFormatting)
+		{
+			if (cell.Value is double)
+			{
+				// Some date formatting options cause the cells to have the date stored as a number
+				// which is the number of days since 1900-01-01 or 1904-01-01
+				// depending on whether the 1904 date system option is set
+				// --------------------------------------------------------------------------------
+				// When using the 1900 date system, (default for Excel for Windows, Excel 2011 & 2016 for Mac),
+				// this number is always at least 1 more than the actual number of days since 1900-01-01 and
+				// in most cases this number will be 2 more than the actual number of days since 1900-01-01
+				// because Excel allows the date 1900-02-29 which doesn't exist
+
+				// Get starting year for numeric date values
+				int startYear = cell.Worksheet.Workbook.Date1904 ? 1904 : 1900;
+
+				// Get number of days since date system starting date (1900-01-01 or 1904-01-01)
+				double daysSinceStart = (double)cell.Value;
+
+				// If using 1900 date system (default)
+				if (startYear == 1900)
+				{
+					// Account for 1900-01-01 being counted as 1
+					daysSinceStart--;
+
+					// If the date is 1900-2-29, it's invalid
+					if (daysSinceStart == 59)
+						throw new System.FormatException();
+					// For dates after 1900-02-29 subtract 1
+					// so this invalid date is not counted in the number of days since 1900-01-01
+					else if (daysSinceStart > 59)
+						daysSinceStart--;
+				}
+
+				// Return the date that is the elapsed time since the system starting date
+				// (1900-01-01 or 1904-01-01)
+				return new DateTime(startYear, 1, 1).AddDays(daysSinceStart);
+			}
+			else if (cell.Value is string)
+			{
+				string formatting;
+
+				// If the cell has specific formatting, use it, otherwise use the default formatting.
+				// There isn't really a way to just check if the formatting given is a datetime type format
+				// and the cells don't have data types either.
+				if (cell.Style.Numberformat.NumFmtID > 0)
+					formatting = GetNormalizedExcelDateTimeFormatString(cell.Style.Numberformat.Format);
+				else
+					formatting = defaultFormatting;
+
+				DateTimeFieldFormatter formatter = new DateTimeFieldFormatter(formatting);
+
+				// Always replace / with - since Excel is inconsistent in using these characters 
+				// for format strings and formatted date text
+				string cellValue = cell.Value == null ? "" : cell.Value.ToString().Replace("/", "-");
+
+				// Try to parse using the cell's formatted text and format string
+				return formatter.parseStringValue(cellValue);
+			}
+
+			return DateTime.MinValue;
+		}
+
+		/// <summary>
+		/// Get the parsed Excel cell value, accounting for the field type
+		/// </summary>
+		/// <param name="column">Table column object</param>
+		/// <param name="cell">Cell object</param>
+		/// <returns>Cell value, parsed if necessary</returns>
+		private object GetParsedExcelCellValue(QColumn column, ExcelRange cell)
+		{
+			switch (column.Formatting)
+			{
+				case FieldFormatting.DATA:
+					return GetParsedExcelCellDateTimeValue(cell, Configuration.DateFormat.Date);
+				case FieldFormatting.DATAHORA:
+					return GetParsedExcelCellDateTimeValue(cell, Configuration.DateFormat.DateTime);
+				case FieldFormatting.DATASEGUNDO:
+					return GetParsedExcelCellDateTimeValue(cell, Configuration.DateFormat.DateTimeSeconds);
+				default:
+					return cell.Value;
+			}
+		}
+
+		/// <summary>
+		/// Import Excel sheet data
+		/// </summary>
+		/// <param name="columns">Table column objects</param>
+		/// <param name="file">Raw file data</param>
+		/// <param name="rowCount">Output number of rows</param>
+		/// <returns>Rows with object values for each cell</returns>
         private List<object[]> ImportExcel(List<Exports.QColumn> columns, byte[] file, ref int rowCount)
         {
             int columnCount = columns.Count;
@@ -1576,8 +1709,17 @@ namespace CSGenio.framework
                 {
                     object[] row = new object[columnCount];
                     for(int colIterator = 0; colIterator < columnCount; colIterator++){
-                        //TODO: Parse by Type
-                        row[colIterator] = currentSheet.Cells[rowIterator + 1, colIterator + 1].Value;
+                        // Current cell object
+						var cell = currentSheet.Cells[rowIterator + 1, colIterator + 1];
+
+						// Corresponding table column object
+						QColumn column = columns[colIterator];
+
+						// For the first row (header row) use the raw value (column title).
+						// For data rows, get the value and parse if necessary,
+						// accounting for the formatting defined in the Excel cell
+						// and the application configuration.
+						row[colIterator] = (rowIterator == 0) ? cell.Value : GetParsedExcelCellValue(column, cell);
                     }
                     results.Add(row);
                 }

@@ -413,7 +413,7 @@ namespace GenioMVC.ViewModels
             //JGF 2021.09.01 Moved this line nearer the usage, it was going to the server a lot needlessly
             var userColumns = UserUiSettings
                 .Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User)
-                .userColumns;
+                .UserColumns;
 
             return SearchableColumns.Where(tsc => IsColumnVisible(tsc, userColumns)).ToList();
         }
@@ -429,7 +429,7 @@ namespace GenioMVC.ViewModels
                     UserContext.Current.PersistentSupport,
                     Uuid,
                     UserContext.Current.User
-                ).userRenderings;
+                ).UserRenderings;
             }
         }
 

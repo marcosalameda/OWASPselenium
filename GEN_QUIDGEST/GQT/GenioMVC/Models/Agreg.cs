@@ -67,7 +67,7 @@ namespace GenioMVC.Models
 		public bool ShouldSerializeValValue() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Agreg.ValValue");
 
 		[DisplayName("Year NUMBER")]
-		/// <summary>Field : "Year NUMBER" Tipo: "N" Formula: SR "[YEAR->YEARNUM]"</summary>
+		/// <summary>Field : "Year NUMBER" Tipo: "N" Formula: ++ "[YEAR->YEARNUM]"</summary>
 		[NumericAttribute(0)]
 		public decimal? ValYearnumb { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValYearnumb, 0)); } set { klass.ValYearnumb = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValYearnumb() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Agreg.ValYearnumb");

@@ -104,7 +104,7 @@ namespace CSGenio.business.Triggers
 					// Execute the actions
 					foreach (IAction action in actions)
 						action.Execute();
-					
+
 					// Apply the changes
 					foreach (var area in _context.DirtyRows.Keys)
 					{
@@ -113,7 +113,7 @@ namespace CSGenio.business.Triggers
 							(1)	the affected area is different from the one
 								that triggered the action
 							(2)	the affected area is the one that triggered the action
-								and the action is executed after the main event 
+								and the action is executed after the main event
 						*/
 						if (!IsRedundantUpdate(area))
 						{
@@ -306,6 +306,141 @@ namespace CSGenio.business.Triggers
 		public TriggerTrigmenu2(TriggerContext context) : base(context)
 		{
 			_id = "TRIGMENU2";
+
+			// Actions
+			List<ByAreaArguments> argumentsListByArea;
+			InternalOperationFormula formula;
+
+			argumentsListByArea = new List<ByAreaArguments>();
+			formula = new InternalOperationFormula(argumentsListByArea, 0, delegate(object[] args, User user, string module, PersistentSupport sp) {
+				return "Teste do trigger";
+			});
+
+			AddAction(1, new UpdateFieldValueAction(context, "expen", "descript", formula, false));
+		}
+	}
+
+	/// <summary>
+	/// Trigger EMPTYDESCRIPTION
+	/// </summary>
+	/// <seealso cref="CSGenio.business.Trigger" />
+	public class TriggerEmptydescription : Trigger
+	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="TriggerEmptydescription" /> class.
+		/// </summary>
+		/// <param name="context">The context.</param>
+		public TriggerEmptydescription(TriggerContext context) : base(context)
+		{
+			_id = "EMPTYDESCRIPTION";
+
+			// Actions
+			List<ByAreaArguments> argumentsListByArea;
+			InternalOperationFormula formula;
+
+			argumentsListByArea = new List<ByAreaArguments>();
+			formula = new InternalOperationFormula(argumentsListByArea, 0, delegate(object[] args, User user, string module, PersistentSupport sp) {
+				return "";
+			});
+
+			AddAction(1, new UpdateFieldValueAction(context, "expen", "descript", formula, false));
+		}
+	}
+
+	/// <summary>
+	/// Trigger FILLDESCRIPTION
+	/// </summary>
+	/// <seealso cref="CSGenio.business.Trigger" />
+	public class TriggerFilldescription : Trigger
+	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="TriggerFilldescription" /> class.
+		/// </summary>
+		/// <param name="context">The context.</param>
+		public TriggerFilldescription(TriggerContext context) : base(context)
+		{
+			_id = "FILLDESCRIPTION";
+
+			// Actions
+			List<ByAreaArguments> argumentsListByArea;
+			InternalOperationFormula formula;
+
+			argumentsListByArea = new List<ByAreaArguments>();
+			formula = new InternalOperationFormula(argumentsListByArea, 0, delegate(object[] args, User user, string module, PersistentSupport sp) {
+				return "Teste do trigger";
+			});
+
+			AddAction(1, new UpdateFieldValueAction(context, "expen", "descript", formula, false));
+		}
+	}
+
+	/// <summary>
+	/// Trigger MENUTRIGER
+	/// </summary>
+	/// <seealso cref="CSGenio.business.Trigger" />
+	public class TriggerMenutriger : Trigger
+	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="TriggerMenutriger" /> class.
+		/// </summary>
+		/// <param name="context">The context.</param>
+		public TriggerMenutriger(TriggerContext context) : base(context)
+		{
+			_id = "MENUTRIGER";
+
+			// Actions
+			List<ByAreaArguments> argumentsListByArea;
+			InternalOperationFormula formula;
+
+			argumentsListByArea = new List<ByAreaArguments>();
+			formula = new InternalOperationFormula(argumentsListByArea, 0, delegate(object[] args, User user, string module, PersistentSupport sp) {
+				return "Teste do trigger";
+			});
+
+			AddAction(1, new UpdateFieldValueAction(context, "expen", "descript", formula, false));
+		}
+	}
+
+	/// <summary>
+	/// Trigger EMPTYDESCRIPTIO2
+	/// </summary>
+	/// <seealso cref="CSGenio.business.Trigger" />
+	public class TriggerEmptydescriptio2 : Trigger
+	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="TriggerEmptydescriptio2" /> class.
+		/// </summary>
+		/// <param name="context">The context.</param>
+		public TriggerEmptydescriptio2(TriggerContext context) : base(context)
+		{
+			_id = "EMPTYDESCRIPTIO2";
+
+			// Actions
+			List<ByAreaArguments> argumentsListByArea;
+			InternalOperationFormula formula;
+
+			argumentsListByArea = new List<ByAreaArguments>();
+			formula = new InternalOperationFormula(argumentsListByArea, 0, delegate(object[] args, User user, string module, PersistentSupport sp) {
+				return "";
+			});
+
+			AddAction(1, new UpdateFieldValueAction(context, "expen", "descript", formula, false));
+		}
+	}
+
+	/// <summary>
+	/// Trigger FILLDESCRIPTION2
+	/// </summary>
+	/// <seealso cref="CSGenio.business.Trigger" />
+	public class TriggerFilldescription2 : Trigger
+	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="TriggerFilldescription2" /> class.
+		/// </summary>
+		/// <param name="context">The context.</param>
+		public TriggerFilldescription2(TriggerContext context) : base(context)
+		{
+			_id = "FILLDESCRIPTION2";
 
 			// Actions
 			List<ByAreaArguments> argumentsListByArea;

@@ -67,6 +67,12 @@ namespace GenioMVC.Models
 		public decimal? ValQuantida { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQuantida, 0)); } set { klass.ValQuantida = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValQuantida() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Lnhpd.ValQuantida");
 
+		[DisplayName("Amount")]
+		/// <summary>Field : "Amount" Tipo: "ND" Formula:  ""</summary>
+		[NumericAttribute(2)]
+		public decimal? ValQuantdec { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQuantdec, 2)); } set { klass.ValQuantdec = Convert.ToDecimal(value); } }
+		public bool ShouldSerializeValQuantdec() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Lnhpd.ValQuantdec");
+
 		[DisplayName("ZZSTATE")]
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }

@@ -248,7 +248,7 @@ namespace CSGenio.reporting
         /// <summary>
         /// Render the SSRS report
         /// </summary>
-        /// <param name="exportType">PDF | EXCEL | WORD | EXCELOPENXML | ...</param>
+        /// <param name="exportType">PDF | EXCEL | WORDOPENXML | EXCELOPENXML | ...</param>
         /// <returns></returns>
         public ReportSSRS_Result Render(string exportType)
         {

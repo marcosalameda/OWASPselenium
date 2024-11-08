@@ -93,6 +93,43 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL PTN MENU_GET 3131]/
 
+            // Table List Export - check if user is exporting the Qlisting
+            if (querystring["ExportList"] != null && Convert.ToBoolean(querystring["ExportList"]) && querystring["ExportType"] != null)
+            {
+				string exportType = querystring["ExportType"];
+                string file = "PTN_Menu_3131_" + DateTime.Now.ToString("ddMMyyyyhhmmss") + "." + exportType;
+                ListingMVC<CSGenioAtblb> listing = null;
+                CriteriaSet conditions = null;
+                List<CSGenio.framework.Exports.QColumn> columns = null;
+                model.LoadToExport(out listing, out conditions, out columns, querystring, Request.IsAjaxRequest());
+
+                // Validate export format
+                if (querystring["ExportValidate"] == "true")
+                {
+                    bool isValidExport = new CSGenio.framework.Exports(UserContext.Current.User).ExportListValidation(listing, conditions, columns, exportType);
+                    return Json(new { ValidFormat = isValidExport }, JsonRequestBehavior.AllowGet);
+                }
+
+				byte[] fileBytes = null;
+// USE /[MANUAL PTN OVERRQEXPORT 3131]/
+                fileBytes = new CSGenio.framework.Exports(UserContext.Current.User).ExportList(listing, conditions, columns, exportType, file,ACTION_PTN_MENU_3131.Name);
+
+                QCache.Instance.ExportFiles.Put(file, fileBytes);
+                return Json(getJsonForDownloadExportFile(file, querystring["ExportType"]), JsonRequestBehavior.AllowGet);
+            }
+            if (querystring["ImportList"] != null && Convert.ToBoolean(querystring["ImportList"]) && querystring["ImportType"] != null)
+            {
+				string importType =  querystring["ImportType"];
+				string file = "PTN_Menu_3131_Template" + "." + importType;
+				List<CSGenio.framework.Exports.QColumn> columns = null;
+				model.LoadToExportTemplate(out columns);
+				byte[] fileBytes = null;
+
+				fileBytes = new CSGenio.framework.Exports(UserContext.Current.User).ExportTemplate(columns, importType, file,ACTION_PTN_MENU_3131.Name);
+
+				QCache.Instance.ExportFiles.Put(file, fileBytes);
+				return Json(getJsonForDownloadExportFile(file, importType), JsonRequestBehavior.AllowGet);
+			}
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
 
@@ -108,6 +145,69 @@ namespace GenioMVC.Controllers
                 return PartialView("PTN_Menu_3131_Partial", model);
         }
 
+        //
+        // POST: /Tblb/PTN_Menu_3131_UploadFile
+        [AuthorizeForUsers]
+        [HttpPost]
+        public ActionResult PTN_Menu_3131_UploadFile(string importType, string qqfile) {
+            PTN_Menu_3131_ViewModel model = new PTN_Menu_3131_ViewModel(Navigation);
+
+            PersistentSupport sp = UserContext.Current.PersistentSupport;
+            List<CSGenioAtblb> rows = new List<CSGenioAtblb>();
+            List<String> results = new List<String>();
+
+            try
+            {
+                var stream = Request.InputStream;
+                if (String.IsNullOrEmpty(Request["qqfile"]))
+                {
+                    // IE
+                    System.Web.HttpPostedFileBase postedFile = Request.Files[0];
+                    stream = postedFile.InputStream;
+                }
+
+                byte[] fileBytes = new byte[Request.ContentLength];
+                var data = Request.InputStream.Read(fileBytes, 0, Convert.ToInt32(Request.ContentLength));
+
+                List<CSGenio.framework.Exports.QColumn> columns = null;
+                model.LoadToExportTemplate(out columns);
+
+                rows = new CSGenio.framework.Exports( UserContext.Current.User).ImportList<CSGenioAtblb>(columns, importType, fileBytes);
+
+                sp.openTransaction();
+                int lineNumber = 0;
+                foreach (CSGenioAtblb importRow in rows)
+                {
+                    try
+                    {
+                        lineNumber++;
+                        importRow.ValidateIfIsNull = true;
+                        importRow.insertPseud(UserContext.Current.PersistentSupport);
+                        importRow.change(UserContext.Current.PersistentSupport, (CriteriaSet)null);
+                    }
+                    catch (GenioException ex)
+                    {
+                        string lineNumberMsg = String.Format(Resources.Resources.ERROR_IN_LINE__0__45377 + " ", lineNumber);
+                        ex.UserMessage = lineNumberMsg + ex.UserMessage;
+                        throw ex;
+                    }
+                }
+                sp.closeTransaction();
+
+                results.Add(string.Format(Resources.Resources._0__LINHAS_IMPORTADA15937, rows.Count));
+
+                return Json(new { success = true, lines = results, msg = Resources.Resources.FICHEIRO_IMPORTADO_C51013 }, "application/json");
+            }
+            catch (GenioException e)
+            {
+                sp.rollbackTransaction();
+                sp.closeConnection();
+                CSGenio.framework.Log.Error(e.Message);
+                results.Add(e.UserMessage);
+
+                return Json(new { success = false, errors = results, msg = Resources.Resources.ERROR_IMPORTING_FILE09339 }, "application/json");
+            }
+        }
 
 
 

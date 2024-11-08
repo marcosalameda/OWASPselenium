@@ -98,7 +98,7 @@
 }
 		window.Form_Cfaqs.DeclareControls = function () {
 			@*Form controls*@
-			this.Controls.LED_CFAQS___CFAQSICON____ = new QImageControl($('[data-identifier="LED_CFAQS___CFAQSICON____"]', this.element), window.Form_Cfaqs, '@Html.Raw(Url.Action("ImageDelete", "Cfaqs", new { id=Model.ValCodcfaqs, modelname="Cfaqs", fldname="ValIcon" }))', '@Html.Raw(Url.Action("ImageCropper", "Cfaqs", new { key=Model.ValCodcfaqs, modelname= "Cfaqs", fldname= "ValIcon", identifier= "FCFAQS", FormName= "Cfaqs", FieldId= "LED_CFAQS___CFAQSICON____" }))',@Html.IsImageEmpty(Model.ValIcon));
+			this.Controls.LED_CFAQS___CFAQSICON____ = new QImageControl($('[data-identifier="LED_CFAQS___CFAQSICON____"]', this.element), window.Form_Cfaqs, '@Html.Raw(Url.Action("ImageDelete", "Cfaqs", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Cfaqs", "ValIcon", "", Model.ValCodcfaqs, null) }))', '@Html.Raw(Url.Action("ImageCropper", "Cfaqs", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Cfaqs", "ValIcon", "", Model.ValCodcfaqs, null), identifier= "FCFAQS", FormName= "Cfaqs", FieldId= "LED_CFAQS___CFAQSICON____" }))',@Html.IsImageEmpty(Model.ValIcon));
 
 			this.Controls.LED_CFAQS___CFAQSCATEGORY = new QGenericControl($('[data-identifier="LED_CFAQS___CFAQSCATEGORY"]', this.element), window.Form_Cfaqs);
 

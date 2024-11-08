@@ -102,7 +102,7 @@
 
 			this.Controls.LED_GLOB____GLOB_APIURL__ = new QTextControl($('[data-identifier="LED_GLOB____GLOB_APIURL__"]', this.element), window.Form_Glob);
 
-			this.Controls.LED_GLOB____GLOB_LEGEND__ = new QImageControl($('[data-identifier="LED_GLOB____GLOB_LEGEND__"]', this.element), window.Form_Glob, '@Html.Raw(Url.Action("ImageDelete", "Glob", new { id=Model.ValCodglob, modelname="Glob", fldname="ValLegend" }))', '@Html.Raw(Url.Action("ImageCropper", "Glob", new { key=Model.ValCodglob, modelname= "Glob", fldname= "ValLegend", identifier= "FGLOB", FormName= "Glob", FieldId= "LED_GLOB____GLOB_LEGEND__" }))',@Html.IsImageEmpty(Model.ValLegend));
+			this.Controls.LED_GLOB____GLOB_LEGEND__ = new QImageControl($('[data-identifier="LED_GLOB____GLOB_LEGEND__"]', this.element), window.Form_Glob, '@Html.Raw(Url.Action("ImageDelete", "Glob", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Glob", "ValLegend", "", Model.ValCodglob, null) }))', '@Html.Raw(Url.Action("ImageCropper", "Glob", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Glob", "ValLegend", "", Model.ValCodglob, null), identifier= "FGLOB", FormName= "Glob", FieldId= "LED_GLOB____GLOB_LEGEND__" }))',@Html.IsImageEmpty(Model.ValLegend));
 
 
 

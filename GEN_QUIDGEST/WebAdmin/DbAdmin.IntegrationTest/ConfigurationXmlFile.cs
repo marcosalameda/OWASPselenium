@@ -13,6 +13,7 @@ namespace DbAdmin.IntegrationTest
         [SetUp]
         public void Setup()
         {
+            CSGenio.GenioDIDefault.UseLog();
             if (Directory.Exists(workspace))
             {
                 Directory.Delete(workspace, recursive: true);

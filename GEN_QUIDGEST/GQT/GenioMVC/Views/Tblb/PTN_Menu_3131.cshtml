@@ -129,10 +129,24 @@
 					</div>
 				</div>
 			</div>
-            @if(!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest() && !Model.IsViewModeHidden("LIST"))
-            {
 			<div class="col-auto float-right" style="padding: 0; padding-right: 15px">
 				<div class="b-btn-group float-right" style="height: 32.625px">
+					@Html.ExportListMenu("PTN_Menu_3131")
+					@Html.ImportListMenu("PTN_Menu_3131")
+					<div id="modal-importList" class="modal hide container-fluid" tabindex="-1" role="dialog" aria-labelledby="importList" aria-hidden="true">
+						<div class="c-modal__dialog">
+							<div class = "c-modal__content">
+								<div elem-identifier="ModalBody" class="c-modal__body">
+									<div id="importListinput" data-action="@Url.Action("PTN_Menu_3131_UploadFile", "Tblb")"></div>
+								</div>
+								<div class="c-modal__footer">
+									<div elem-identifier="Actions" class="actions">
+										<button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-modal-close="true" onclick="window.PTN_Menu_3131.CloseImportList()">@Resources.FECHAR32496</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 					@*List properties LISTS*@
 					@if(!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest())
 					{
@@ -140,7 +154,6 @@
 					}
 				</div>
 			</div>
-            }
 		</div>
  	<div id="Menu" element-identifier="List">
 		@{ Html.RenderPartial("PTN_Menu_3131_Partial"); }
@@ -173,8 +186,10 @@
 		}
 
 		SearchFilters.value = '@Html.Raw(advFil)';
-		if (typeof SearchFilters.value === 'string' && SearchFilters.value.length > 0)
-			UpdateSearchFilterStatus("PTN_Menu_3131", JSON.parse(SearchFilters.value))
+		if (typeof SearchFilters.value === 'string' && SearchFilters.value.length > 0) {
+			searchFilterGroups = JSON.parse(SearchFilters.value);
+			UpdateSearchFilterStatus("PTN_Menu_3131", searchFilterGroups)
+		}
 	});
 </script>
 

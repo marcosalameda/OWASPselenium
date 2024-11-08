@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Net;
-using System.Security.Principal;
-using System.Text;
-using System.Web;
-using CSGenio.business;
+﻿using CSGenio.business;
 using CSGenio.framework;
 using CSGenio.persistence;
 using Newtonsoft.Json;
-using Quidgest.Persistence.GenericQuery;
 using Newtonsoft.Json.Linq;
+using Quidgest.Persistence.GenericQuery;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Net.Http;
+using System.Security.Principal;
+using System.Threading.Tasks;
+using System.Web;
 
 namespace GenioServer.security
 {
@@ -82,11 +82,6 @@ namespace GenioServer.security
         [JsonIgnore]
         public string ResponseMode { get; set; }
         /// <summary>
-        /// The request path within the application's base path where the user-agent will be returned. 
-        /// </summary>
-        [JsonIgnore]
-        public string CallbackPath { get; set; }
-        /// <summary>
         /// Gets the list of permissions to request.
         /// </summary>
         [JsonIgnore]
@@ -112,10 +107,72 @@ namespace GenioServer.security
     [CredentialProvider(typeof(DomainCredential))]
     [Description("Establishes identity using citizen Digital Mobile Key.")]
     [DisplayName("Digital Mobile Key")]
-    public class CMDIdentityProvider : IIdentityProvider
+    public class CMDIdentityProvider : BaseIdentityProvider
     {
+        /// <inheritdoc/>
+        public override bool HasRedirectLogin() => true;
+
+        /// <inheritdoc/>
+        public override string GetRedirectLoginUrl(string callback = null, string state = null)
+        {
+            if (String.IsNullOrEmpty(Options.Authority) || String.IsNullOrEmpty(Options.ClientId) || String.IsNullOrEmpty(callback))
+                throw new Exception("It's mandatory to configure Authority, ClientId and CallbackPath options");
+
+            var uriBuilder = new UriBuilder(Options.Authority);
+            var parameters = HttpUtility.ParseQueryString(string.Empty);
+            parameters["response_type"] = string.Join("+", Options.ResponseType);
+            parameters["response_mode"] = Options.ResponseMode;
+            if (Options.Scope.Contains("openid")) //this parameter is mandatory when we have scope to made authentication using openid connect
+                parameters["nonce"] = Guid.NewGuid().ToString("N").ToUpper(); //String value used to associate a Client session with an ID Token, and to mitigate replay attacks. 
+            parameters["client_id"] = Options.ClientId;
+            parameters["redirect_uri"] = callback;
+            parameters["scope"] = string.Join(" ", Options.Scope);
+
+            if (!string.IsNullOrEmpty(state))
+                parameters["state"] = state;
+
+            uriBuilder.Query = System.Web.HttpUtility.UrlDecode(parameters.ToString());
+
+            if (Log.IsDebugEnabled)
+                Log.Debug(string.Format("GetRedirectLoginUrl: {0}", uriBuilder.Uri.ToString()));
+
+            return uriBuilder.Uri.ToString();
+        }
+
+        /// <inheritdoc/>
+        public override bool RegisterExternalId(Credential credential, User user)
+        {
+            if (!(credential is TokenCredential tokenCredential))
+                return false;
+
+            try
+            {
+                string username = Validate(tokenCredential).Result;
+                if (string.IsNullOrEmpty(username))
+                    return false;
+
+                var sp = PersistentSupport.getPersistentSupport(user.Year);
+
+                //save data to PSW
+                sp.openConnection();
+                var userPsw = CSGenioApsw.search(sp, user.Codpsw, user);
+                userPsw.ValUserid = username;
+                userPsw.updateDirect(sp);
+                sp.closeConnection();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+                return false;
+            }
+
+            return true;
+        }
+
+
         [SecurityProviderOption(isJson: true)]
         public CMDIdentityProviderOptions Options { get; set; }
+
 
         public CMDIdentityProvider()
         {
@@ -125,110 +182,28 @@ namespace GenioServer.security
 
             Options = new CMDIdentityProviderOptions(allOpenIdAuth[0].Name, allOpenIdAuth[0].Config);
         }
-        public CMDIdentityProvider(CMDIdentityProviderOptions op)
+
+        //Legacy mechanism so we can initialize the json options without doing it in the constructor
+        //TODO: The complex options configuration format needs to be refactored!
+        public void InitJsonOptions()
         {
-            Options = op;
+            var ip = Configuration.Security.IdentityProviders.FirstOrDefault(x => x.Name == this.Id);
+            Options = new CMDIdentityProviderOptions(ip.Description, ip.Config);
         }
 
-        /// <summary>
-        /// Generate URL with all options from the provider to can be redirect to the provider authentication page
-        /// </summary>
-        /// <returns>callbackPath are Mandatory, so that function will return error</returns>
-        public string GetUrlToAuthenticate ()
+
+
+        private async Task<string> Validate(TokenCredential credential)
         {
-            return GetUrlToAuthenticate(String.Empty);
-        }
-
-        /// <summary>
-        /// Generate URL with all options from the provider to can be redirect to the provider authentication page
-        /// </summary>
-        /// <param name="callbackPath">Url on our application to receive the request after login on external provider</param>
-        /// <returns>Url to redirect our application to provider authentication page</returns>
-        public string GetUrlToAuthenticate(string callbackPath)
-        {
-            if (!String.IsNullOrEmpty(callbackPath))
-                Options.CallbackPath = callbackPath;
-
-            if (String.IsNullOrEmpty(Options.Authority) || String.IsNullOrEmpty(Options.ClientId) || String.IsNullOrEmpty(Options.CallbackPath) || String.IsNullOrEmpty(Options.DataAPI) || String.IsNullOrEmpty(Options.UserIdField))
-                throw new Exception("It's mandatory to configure Authority, ClientId, DataAPI, UserIdField and CallbackPath options");
-
-            var uriBuilder = new UriBuilder(Options.Authority);
-            var parameters = HttpUtility.ParseQueryString(string.Empty);
-            parameters["response_type"] = string.Join("+", Options.ResponseType);
-            parameters["response_mode"] = Options.ResponseMode;
-            if (Options.Scope.Contains("openid")) //this parameter is mandatory when we have scope to made authentication using openid connect
-                parameters["nonce"] = Guid.NewGuid().ToString("N").ToUpper(); //String value used to associate a Client session with an ID Token, and to mitigate replay attacks.                        
-            
-            parameters["client_id"] = Options.ClientId;
-            var callbackUri = new UriBuilder (Options.CallbackPath)
+            using (var http = new HttpClient()) //TODO: reuse HttpClient
             {
-                Port = -1,
-                Scheme = Uri.UriSchemeHttps
-            };
-            parameters["redirect_uri"] = callbackUri.ToString();
-            parameters["scope"] = string.Join(" ", Options.Scope);
-            uriBuilder.Query = parameters.ToString();
-          
-            return uriBuilder.Uri.ToString();
-        }   
-        
-        /// <summary>
-        /// Will check credentials and will find the "authenticated" user are on our application
-        /// </summary>
-        /// <param name="userData">Token identification to user on external provider</param>        
-        /// <returns>Internal Identity when user are found and success login on external provider</returns>
-        public IIdentity Authenticate(Credential credencial)
-        {
-            //At this moment the user is authenticated and we have to check if that user exist on database
-            IList<string> anos = new List<string>(Configuration.Years);
-            if (Configuration.Years.Count == 0)
-                anos.Add(Configuration.DefaultYear);
+                http.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                var resp = await http.GetAsync(Options.DataAPI + "?token=" + credential.Token);
+                resp.EnsureSuccessStatusCode();
+                string jsonResult = await resp.Content.ReadAsStringAsync();
 
-            IIdentity id = null;
-            foreach (string Qyear in anos)
-            {
-                PersistentSupport sp = PersistentSupport.getPersistentSupport(Qyear);
-                try
-                {
-                    sp.openConnection();
-                    id = Authenticate(credencial as DomainCredential, sp);
-                }
-                catch { }
-                finally
-                {
-                    if (!sp.TransactionIsClosed)
-                        sp.closeConnection();
-                }
-
-                if (id != null)
-                    break;
-            }
-
-            return id;
-        }
-
-        /// <summary>
-        /// Determines whether username and password authentication is enabled.
-        /// </summary>
-        /// <remarks>
-        /// This is used to determine if username and password authentication is enabled.
-        /// </remarks>
-        public bool HasUsernameAuth()
-        {
-            return false;
-        }
-
-        /// <summary>
-        /// Decode returned da from data API to a valid credential
-        /// </summary>
-        /// <param name="userData">Data returned from API</param>
-        /// <returns></returns>
-        public DomainCredential ValidateCredencial(string userData)
-        {
-            try
-            {
                 string userName = "";
-                JArray jsonPayload = JArray.Parse(userData);
+                JArray jsonPayload = JArray.Parse(jsonResult);
                 if (jsonPayload.Count == 0)
                     return null;
 
@@ -246,31 +221,37 @@ namespace GenioServer.security
                 if (string.IsNullOrEmpty(userName))
                     return null;
 
-                DomainCredential credential = new DomainCredential { DomainUser = userName };                
-                return credential;
+                return userName;
             }
-            catch (Exception ex)
-            {
-                Log.Error(ex.Message);
-                return null;
-            }            
         }
 
-        private IIdentity Authenticate(DomainCredential credential, PersistentSupport sp)
+        /// <inheritdoc/>
+        public override IIdentity Authenticate(Credential credential)
+        {
+            if (credential is TokenCredential token)
+                return Authenticate(token);
+
+            return null;
+        }
+
+        private IIdentity Authenticate(string ext_username, PersistentSupport sp)
         {
             try
             {
-                Log.Error("Credencial: " + credential.DomainUser);
+                //if the options specify an email jwt id field, then match with psw email field
+                //else match with userid field
+                string psw_id_field = string.IsNullOrEmpty(Options.UserIdField) ? "userid" : "email";
 
                 SelectQuery select = new SelectQuery()
                     .Select("psw", "status")
                     .Select("psw", "nome")
                     .From(Area.AreaPSW)
-                    .Where(CriteriaSet.And().Equal("psw", "userid", credential.DomainUser));
+                    .Where(CriteriaSet.And().Equal("psw", psw_id_field, ext_username));
 
                 var results = sp.executeReaderOneRow(select);
-                if (results.Count == 0)
+                if (results.Count < 2)
                     return null;
+
                 int status = DBConversion.ToInteger(results[0]);
                 string name = DBConversion.ToString(results[1]);
 
@@ -279,11 +260,50 @@ namespace GenioServer.security
 
                 return new GenericIdentity(name);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                Log.Error(ex.Message);
+                Log.Error(String.Format("Authenticate: {0}", ex.Message));
                 return null;
             }
+        }
+
+
+        private IIdentity Authenticate(TokenCredential credential) 
+        {
+            string ext_username = Validate(credential).Result;
+            if (string.IsNullOrEmpty(ext_username))
+                return null;
+
+            //At this moment the user is authenticated and we have to check if that user exist on database
+            IList<string> anos = new List<string>(Configuration.Years);
+            if (Configuration.Years.Count == 0)
+                anos.Add(Configuration.DefaultYear);
+
+            IIdentity id = null;
+            foreach (string Qyear in anos)
+            {
+                PersistentSupport sp = PersistentSupport.getPersistentSupport(Qyear);
+                try
+                {
+                    sp.openConnection();
+                    id = Authenticate(ext_username, sp);
+                }
+                catch (Exception ex)
+                {
+                    if (Log.IsDebugEnabled)
+                        Log.Debug(string.Format("OpenIdConnectProvider authentication partial fail: {0}", ex.Message));
+                }
+                finally
+                {
+                    sp.closeConnection();
+                }
+
+                if (id != null)
+                    break;
+            }
+
+            return id;
+
         }
     }    
 }

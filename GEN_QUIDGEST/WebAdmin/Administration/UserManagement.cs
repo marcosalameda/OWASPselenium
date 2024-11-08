@@ -8,6 +8,7 @@ using CSGenio.business;
 using CSGenio.persistence;
 using Quidgest.Persistence.GenericQuery;
 using DbAdmin;
+using IConfigurationManager = CSGenio.config.IConfigurationManager;
 
 namespace Administration
 {
@@ -16,6 +17,13 @@ namespace Administration
     /// </summary>
     public class UserManagement : IUserManagementService
     {
+        private readonly IConfigurationManager _configManager;
+
+        public UserManagement(IConfigurationManager configManager)
+        {
+            _configManager = configManager;
+        }
+        
 		/// <summary>
         /// Return a list of all Permitions accept for each user and for each module on application
         /// </summary>
@@ -66,16 +74,15 @@ namespace Administration
             return perm;
         }
 
-        private CSGenio.persistence.PersistentSupport getSP()
+        private PersistentSupport getSP()
         {
-            string pathConfig = Configuration.GetConfigPath();
-            ConfigurationXML conf = ConfigurationXML.readXML(pathConfig + Path.DirectorySeparatorChar + "Configuracoes.xml");
+            var conf = _configManager.GetExistingConfig();
             var dataSystem = conf.DataSystems.FirstOrDefault(ds => ds.Name == Configuration.DefaultYear); // Default == null
 
             if (dataSystem == null)
                 return null;
 
-            return CSGenio.persistence.PersistentSupport.getPersistentSupport(dataSystem.Name);
+            return PersistentSupport.getPersistentSupport(dataSystem.Name);
         }
 
         /// <summary>

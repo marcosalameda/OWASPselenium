@@ -38,7 +38,8 @@ namespace GenioMVC.ViewModels.Wpess
 		[Newtonsoft.Json.JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
-		/// <summary>Campo : "" Tipo:"IJ"</summary>
+		/// <summary>Campo : "Image Background" Tipo:"IJ"</summary>
+		[Display(Name = "IMAGE_BACKGROUND07216", ResourceType = typeof(Resources.Resources))]
 		[UIHint("ImageMagnifier")]
 		public byte[] ValFtbackgr { get; set; }
 

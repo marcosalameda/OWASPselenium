@@ -1,0 +1,33 @@
+﻿@model GenioMVC.ViewModels.Dashboard.PTN_Menu_3L1_ViewModel
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@{ ViewBag.Title = Model.DashboardTitle; }
+    
+@using (Ajax.BeginForm("PTN_Menu_3L1", "Dashboard", new AjaxOptions
+{
+    HttpMethod = "POST",
+    InsertionMode = InsertionMode.Replace,
+    UpdateTargetId = "Menu"
+}, new { @class = "form-horizontal", area = "Dashboard", data_form = "PTN_Menu_3L1" }))
+{
+    <div id="Menu">
+        @{ Html.RenderPartial("Template/Dashboard"); }
+    </div>
+    @Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "PTN_Menu_3L1" })
+    @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "PTN_Menu_3L1" })
+    @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "PTN_Menu_3L1" })
+    @Html.AntiForgeryToken()
+}
+
+@helper codeJavascript()
+{
+    <script>
+        QLocalStorage.remLocalStorage("savedInfo");
+    </script>
+}
+
+
+@section code_javascript {
+    @codeJavascript()
+}
+
+

@@ -530,18 +530,6 @@ namespace CSGenio.business
             return null;
         }
 
-        /// <summary>
-        /// Procura todos os registos desta area que obedecem a uma condição
-        /// </summary>
-        /// <param name="sp">O suporte persistente de onde obter a lista</param>
-        /// <param name="User">O contexto do User</param>
-        /// <param name="where">A condição de procura dos registos. Usar null para obter todos os registos</param>
-        /// <returns>Uma lista de registos da areas com todos os campos preenchidos</returns>
-        [Obsolete("Use List<CSGenioAnotificationmessage> searchList(PersistentSupport sp, User User, CriteriaSet where) instead")]
-        public static List<CSGenioAnotificationmessage> searchList(PersistentSupport sp, User User, string where)
-        {
-            return sp.searchListWhere<CSGenioAnotificationmessage>(where, User, null);
-        }
 
         /// <summary>
         /// Procura todos os registos desta area que obedecem a uma condição
@@ -555,20 +543,6 @@ namespace CSGenio.business
             return searchList(sp, User, where, null);
         }
 
-        /// <summary>
-        /// Procura todos os registos desta area que obedecem a uma condição
-        /// </summary>
-        /// <param name="sp">O suporte persistente de onde obter a lista</param>
-        /// <param name="User">O contexto do User</param>
-        /// <param name="where">A condição de procura dos registos. Usar null para obter todos os registos</param>
-        /// <param name="campos">Os campos a serem preenchidos na area</param>
-        /// <returns>Uma lista de registos da areas com todos os campos preenchidos</returns>
-        /// <remarks>Não devem ser utilizadas operações de persistence sobre um registo parcialmente posicionado</remarks>
-        [Obsolete("Use List<CSGenioAnotificationmessage> searchList(PersistentSupport sp, User User, CriteriaSet where, string []campos) instead")]
-        public static List<CSGenioAnotificationmessage> searchList(PersistentSupport sp, User User, string where, string[] campos)
-        {
-            return sp.searchListWhere<CSGenioAnotificationmessage>(where, User, campos);
-        }
 
         /// <summary>
         /// Procura todos os registos desta area que obedecem a uma condição

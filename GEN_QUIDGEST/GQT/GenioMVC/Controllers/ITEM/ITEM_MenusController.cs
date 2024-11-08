@@ -33,8 +33,10 @@ namespace GenioMVC.Controllers
 		private static readonly NavigationLocation ACTION_GQT_MENU_4611 = new NavigationLocation("ARTICLES__WAREH__WAR35760", "GQT_Menu_4611", "Item") { vueRouteName = "menu-GQT_4611" };
 		private static readonly NavigationLocation ACTION_GQT_MENU_4A1 = new NavigationLocation("ARTICLES59822", "GQT_Menu_4A1", "Item") { vueRouteName = "menu-GQT_4A1" };
 		private static readonly NavigationLocation ACTION_PTN_MENU_121 = new NavigationLocation("ARTICLES59822", "PTN_Menu_121", "Item") { vueRouteName = "menu-PTN_121" };
-		private static readonly NavigationLocation ACTION_PTN_MENU_371 = new NavigationLocation("ARTICLES59822", "PTN_Menu_371", "Item") { vueRouteName = "menu-PTN_371" };
-		private static readonly NavigationLocation ACTION_PTN_MENU_381 = new NavigationLocation("ARTICLES59822", "PTN_Menu_381", "Item") { vueRouteName = "menu-PTN_381" };
+		private static readonly NavigationLocation ACTION_PTN_MENU_LIST_DB_MC_F = new NavigationLocation("ARTICLES59822", "PTN_Menu_LIST_DB_MC_F", "Item") { vueRouteName = "menu-PTN_LIST_DB_MC_F" };
+		private static readonly NavigationLocation ACTION_PTN_MENU_LIST_DB_MB_MC_F = new NavigationLocation("ARTICLES59822", "PTN_Menu_LIST_DB_MB_MC_F", "Item") { vueRouteName = "menu-PTN_LIST_DB_MB_MC_F" };
+		private static readonly NavigationLocation ACTION_PTN_MENU_LIST_DB_MC_R = new NavigationLocation("ARTICLES59822", "PTN_Menu_LIST_DB_MC_R", "Item") { vueRouteName = "menu-PTN_LIST_DB_MC_R" };
+		private static readonly NavigationLocation ACTION_PTN_MENU_LIST_DB_MB_MC_R = new NavigationLocation("ARTICLES59822", "PTN_Menu_LIST_DB_MB_MC_R", "Item") { vueRouteName = "menu-PTN_LIST_DB_MB_MC_R" };
         #endregion
 
         #region Menus
@@ -439,18 +441,18 @@ namespace GenioMVC.Controllers
 
 
         //
-        // GET: /Item/PTN_Menu_371
+        // GET: /Item/PTN_Menu_LIST_DB_MC_F
         [AuthorizeForUsers]
 		[AuthorizeForUsers]
-        [ActionName("PTN_Menu_371")]
-        public ActionResult PTN_Menu_371(bool allSelected = false)
+        [ActionName("PTN_Menu_LIST_DB_MC_F")]
+        public ActionResult PTN_Menu_LIST_DB_MC_F(bool allSelected = false)
         {
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
 
-            PTN_Menu_371_ViewModel model = new PTN_Menu_371_ViewModel(Navigation);
+            PTN_Menu_LIST_DB_MC_F_ViewModel model = new PTN_Menu_LIST_DB_MC_F_ViewModel(Navigation);
             bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
             if (isHomePage)
-                Navigation.SetValue("HomePage", "PTN_Menu_371");
+                Navigation.SetValue("HomePage", "PTN_Menu_LIST_DB_MC_F");
             ViewBag.isHomePage = isHomePage;
             //If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
             if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_item")))
@@ -472,21 +474,21 @@ namespace GenioMVC.Controllers
             NameValueCollection querystring = Request.Form.Count > 0 ? Request.Form : Request.QueryString;
 			if (!isHomePage && !Request.IsAjaxRequest())
             {
-                if (Navigation.CurrentLevel == null || !ACTION_PTN_MENU_371.IsSameAction(Navigation.CurrentLevel.Location))
+                if (Navigation.CurrentLevel == null || !ACTION_PTN_MENU_LIST_DB_MC_F.IsSameAction(Navigation.CurrentLevel.Location))
                 {
                     // reset the selections for this new navigation flow
                     // TODO: This change still requires more testing
-                    Navigation.RemoveHistoryLevel(ACTION_PTN_MENU_371);
-                    if (Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_371.Action)
+                    Navigation.RemoveHistoryLevel(ACTION_PTN_MENU_LIST_DB_MC_F);
+                    if (Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_LIST_DB_MC_F.Action)
                     {
-                        Navigation.AddHistoryLevel(ACTION_PTN_MENU_371, FormMode.List);
+                        Navigation.AddHistoryLevel(ACTION_PTN_MENU_LIST_DB_MC_F, FormMode.List);
                         CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
                     }
 				}
             }
             else if (isHomePage)
             {
-                CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_371.ShortDescription());
+                CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_LIST_DB_MC_F.ShortDescription());
                 Navigation.SetValue("HomePageContainsList", true);
             }
 
@@ -494,7 +496,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-// USE /[MANUAL PTN MENU_GET 371]/
+// USE /[MANUAL PTN MENU_GET LIST_DB_MC_F]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -504,23 +506,23 @@ namespace GenioMVC.Controllers
 
  
             if(isHomePage)
-                return PartialView("PTN_Menu_371", model);
+                return PartialView("PTN_Menu_LIST_DB_MC_F", model);
             else if (!Request.IsAjaxRequest())
                 return View(model);
             else
-                return PartialView("PTN_Menu_371_Partial", model);
+                return PartialView("PTN_Menu_LIST_DB_MC_F_Partial", model);
         }
 
         //
-        // GET: /Item/PTN_MenuMC_371
+        // GET: /Item/PTN_MenuMC_LIST_DB_MC_F
         [AuthorizeForUsers]
-        public ActionResult PTN_MenuMC_371(string id, string formMode)
+        public ActionResult PTN_MenuMC_LIST_DB_MC_F(string id, string formMode)
         {
 			if (Navigation.CurrentLevel != null)
 			{
 				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
 			}
-            Models.Item item = Models.Item.Find(id, "ML371");
+            Models.Item item = Models.Item.Find(id, "MLLIST_DB_MC_F");
             Navigation.SetValue("item", id);
             if(item != null && ((item.ValValid ? 1 : 0)==0))
             {
@@ -543,18 +545,18 @@ namespace GenioMVC.Controllers
 
 
         //
-        // GET: /Item/PTN_Menu_381
+        // GET: /Item/PTN_Menu_LIST_DB_MB_MC_F
         [AuthorizeForUsers]
 		[AuthorizeForUsers]
-        [ActionName("PTN_Menu_381")]
-        public ActionResult PTN_Menu_381(bool allSelected = false)
+        [ActionName("PTN_Menu_LIST_DB_MB_MC_F")]
+        public ActionResult PTN_Menu_LIST_DB_MB_MC_F(bool allSelected = false)
         {
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
 
-            PTN_Menu_381_ViewModel model = new PTN_Menu_381_ViewModel(Navigation);
+            PTN_Menu_LIST_DB_MB_MC_F_ViewModel model = new PTN_Menu_LIST_DB_MB_MC_F_ViewModel(Navigation);
             bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
             if (isHomePage)
-                Navigation.SetValue("HomePage", "PTN_Menu_381");
+                Navigation.SetValue("HomePage", "PTN_Menu_LIST_DB_MB_MC_F");
             ViewBag.isHomePage = isHomePage;
             //If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
             if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_item")))
@@ -576,21 +578,21 @@ namespace GenioMVC.Controllers
             NameValueCollection querystring = Request.Form.Count > 0 ? Request.Form : Request.QueryString;
 			if (!isHomePage && !Request.IsAjaxRequest())
             {
-                if (Navigation.CurrentLevel == null || !ACTION_PTN_MENU_381.IsSameAction(Navigation.CurrentLevel.Location))
+                if (Navigation.CurrentLevel == null || !ACTION_PTN_MENU_LIST_DB_MB_MC_F.IsSameAction(Navigation.CurrentLevel.Location))
                 {
                     // reset the selections for this new navigation flow
                     // TODO: This change still requires more testing
-                    Navigation.RemoveHistoryLevel(ACTION_PTN_MENU_381);
-                    if (Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_381.Action)
+                    Navigation.RemoveHistoryLevel(ACTION_PTN_MENU_LIST_DB_MB_MC_F);
+                    if (Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_LIST_DB_MB_MC_F.Action)
                     {
-                        Navigation.AddHistoryLevel(ACTION_PTN_MENU_381, FormMode.List);
+                        Navigation.AddHistoryLevel(ACTION_PTN_MENU_LIST_DB_MB_MC_F, FormMode.List);
                         CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
                     }
 				}
             }
             else if (isHomePage)
             {
-                CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_381.ShortDescription());
+                CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_LIST_DB_MB_MC_F.ShortDescription());
                 Navigation.SetValue("HomePageContainsList", true);
             }
 
@@ -598,7 +600,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-// USE /[MANUAL PTN MENU_GET 381]/
+// USE /[MANUAL PTN MENU_GET LIST_DB_MB_MC_F]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -608,11 +610,11 @@ namespace GenioMVC.Controllers
 
  
             if(isHomePage)
-                return PartialView("PTN_Menu_381", model);
+                return PartialView("PTN_Menu_LIST_DB_MB_MC_F", model);
             else if (!Request.IsAjaxRequest())
                 return View(model);
             else
-                return PartialView("PTN_Menu_381_Partial", model);
+                return PartialView("PTN_Menu_LIST_DB_MB_MC_F_Partial", model);
         }
 
         //
@@ -624,7 +626,7 @@ namespace GenioMVC.Controllers
 			{
 				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
 			}
-            Models.Item item = Models.Item.Find(id, "ML381");
+            Models.Item item = Models.Item.Find(id, "MLLIST_DB_MB_MC_F");
             Navigation.SetValue("item", id);
             if(item != null && ((item.ValValid ? 1 : 0)==0))
             {
@@ -637,6 +639,206 @@ namespace GenioMVC.Controllers
                 if(String.IsNullOrEmpty(formMode))
                     formMode = "Edit";
                 return RedirectToAction("Artiginv_" + formMode, "Item", formMode.Equals("New") ? (object)new { nav = Navigation.NavigationId, niv = (Request.Params["niv"] == null) ? Navigation.CurrentLevel.Level.ToString() : Request.Params["niv"] } : new { id = item.ValCoditem, nav = Navigation.NavigationId, niv = (Request.Params["niv"] == null) ? Navigation.CurrentLevel.Level.ToString() : Request.Params["niv"] });
+            }
+            else
+            {
+                return new EmptyResult();
+            }
+        }
+
+
+
+        //
+        // GET: /Item/PTN_Menu_LIST_DB_MC_R
+        [AuthorizeForUsers]
+		[AuthorizeForUsers]
+        [ActionName("PTN_Menu_LIST_DB_MC_R")]
+        public ActionResult PTN_Menu_LIST_DB_MC_R(bool allSelected = false)
+        {
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+
+            PTN_Menu_LIST_DB_MC_R_ViewModel model = new PTN_Menu_LIST_DB_MC_R_ViewModel(Navigation);
+            bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
+            if (isHomePage)
+                Navigation.SetValue("HomePage", "PTN_Menu_LIST_DB_MC_R");
+            ViewBag.isHomePage = isHomePage;
+            //If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+            if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_item")))
+                UserContext.Current.SetPersistenceReadOnly(true);
+            else
+			{
+                Navigation.DestroyEntry("ForcePrimaryRead_item");
+				UserContext.Current.SetPersistenceReadOnly(false);
+			}
+            CSGenio.framework.StatusMessage result = model.CheckPermissions(FormMode.List);
+            if (result.Status.Equals(CSGenio.framework.Status.E))
+            {
+                if (!Request.IsAjaxRequest() && !isHomePage)
+                    return View("_PermissionError", model: result.Message);
+                else
+                    return PartialView("_PermissionError", model: result.Message);
+            }
+
+            NameValueCollection querystring = Request.Form.Count > 0 ? Request.Form : Request.QueryString;
+			if (!isHomePage && !Request.IsAjaxRequest())
+            {
+                if (Navigation.CurrentLevel == null || !ACTION_PTN_MENU_LIST_DB_MC_R.IsSameAction(Navigation.CurrentLevel.Location))
+                {
+                    // reset the selections for this new navigation flow
+                    // TODO: This change still requires more testing
+                    Navigation.RemoveHistoryLevel(ACTION_PTN_MENU_LIST_DB_MC_R);
+                    if (Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_LIST_DB_MC_R.Action)
+                    {
+                        Navigation.AddHistoryLevel(ACTION_PTN_MENU_LIST_DB_MC_R, FormMode.List);
+                        CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
+                    }
+				}
+            }
+            else if (isHomePage)
+            {
+                CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_LIST_DB_MC_R.ShortDescription());
+                Navigation.SetValue("HomePageContainsList", true);
+            }
+
+
+
+			model.Navigation = Navigation;
+
+// USE /[MANUAL PTN MENU_GET LIST_DB_MC_R]/
+
+
+			model.Load(perPage, querystring, Request.IsAjaxRequest());
+
+            if(model.CheckForZzstate())
+                WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
+
+ 
+            if(isHomePage)
+                return PartialView("PTN_Menu_LIST_DB_MC_R", model);
+            else if (!Request.IsAjaxRequest())
+                return View(model);
+            else
+                return PartialView("PTN_Menu_LIST_DB_MC_R_Partial", model);
+        }
+
+        //
+        // GET: /Item/PTN_MenuMC_LIST_DB_MC_R
+        [AuthorizeForUsers]
+        public ActionResult PTN_MenuMC_LIST_DB_MC_R(string id, string formMode)
+        {
+			if (Navigation.CurrentLevel != null)
+			{
+				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
+			}
+            Models.Item item = Models.Item.Find(id, "MLLIST_DB_MC_R");
+            Navigation.SetValue("item", id);
+            if(item != null && ((item.ValValid ? 1 : 0)==0))
+            {
+                return RedirectToAction("PTN_Menu_LIST_DB_MC_R_MenuR_OPENARTIGVAL", "Item", new { id = item.ValCoditem, nav = Navigation.NavigationId, niv = (Request.Params["niv"] == null) ? Navigation.CurrentLevel.Level.ToString() : Request.Params["niv"] });
+            }
+            if(item != null && ((item.ValValid ? 1 : 0)==1))
+            {
+                return RedirectToAction("PTN_Menu_LIST_DB_MC_R_MenuR_OPENARTIGINV", "Item", new { id = item.ValCoditem, nav = Navigation.NavigationId, niv = (Request.Params["niv"] == null) ? Navigation.CurrentLevel.Level.ToString() : Request.Params["niv"] });
+            }
+            else
+            {
+                return new EmptyResult();
+            }
+        }
+
+
+
+        //
+        // GET: /Item/PTN_Menu_LIST_DB_MB_MC_R
+        [AuthorizeForUsers]
+		[AuthorizeForUsers]
+        [ActionName("PTN_Menu_LIST_DB_MB_MC_R")]
+        public ActionResult PTN_Menu_LIST_DB_MB_MC_R(bool allSelected = false)
+        {
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+
+            PTN_Menu_LIST_DB_MB_MC_R_ViewModel model = new PTN_Menu_LIST_DB_MB_MC_R_ViewModel(Navigation);
+            bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
+            if (isHomePage)
+                Navigation.SetValue("HomePage", "PTN_Menu_LIST_DB_MB_MC_R");
+            ViewBag.isHomePage = isHomePage;
+            //If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+            if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_item")))
+                UserContext.Current.SetPersistenceReadOnly(true);
+            else
+			{
+                Navigation.DestroyEntry("ForcePrimaryRead_item");
+				UserContext.Current.SetPersistenceReadOnly(false);
+			}
+            CSGenio.framework.StatusMessage result = model.CheckPermissions(FormMode.List);
+            if (result.Status.Equals(CSGenio.framework.Status.E))
+            {
+                if (!Request.IsAjaxRequest() && !isHomePage)
+                    return View("_PermissionError", model: result.Message);
+                else
+                    return PartialView("_PermissionError", model: result.Message);
+            }
+
+            NameValueCollection querystring = Request.Form.Count > 0 ? Request.Form : Request.QueryString;
+			if (!isHomePage && !Request.IsAjaxRequest())
+            {
+                if (Navigation.CurrentLevel == null || !ACTION_PTN_MENU_LIST_DB_MB_MC_R.IsSameAction(Navigation.CurrentLevel.Location))
+                {
+                    // reset the selections for this new navigation flow
+                    // TODO: This change still requires more testing
+                    Navigation.RemoveHistoryLevel(ACTION_PTN_MENU_LIST_DB_MB_MC_R);
+                    if (Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_LIST_DB_MB_MC_R.Action)
+                    {
+                        Navigation.AddHistoryLevel(ACTION_PTN_MENU_LIST_DB_MB_MC_R, FormMode.List);
+                        CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
+                    }
+				}
+            }
+            else if (isHomePage)
+            {
+                CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_LIST_DB_MB_MC_R.ShortDescription());
+                Navigation.SetValue("HomePageContainsList", true);
+            }
+
+
+
+			model.Navigation = Navigation;
+
+// USE /[MANUAL PTN MENU_GET LIST_DB_MB_MC_R]/
+
+
+			model.Load(perPage, querystring, Request.IsAjaxRequest());
+
+            if(model.CheckForZzstate())
+                WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
+
+ 
+            if(isHomePage)
+                return PartialView("PTN_Menu_LIST_DB_MB_MC_R", model);
+            else if (!Request.IsAjaxRequest())
+                return View(model);
+            else
+                return PartialView("PTN_Menu_LIST_DB_MB_MC_R_Partial", model);
+        }
+
+        //
+        // GET: /Item/PTN_MenuMC_3A11
+        [AuthorizeForUsers]
+        public ActionResult PTN_MenuMC_3A11(string id, string formMode)
+        {
+			if (Navigation.CurrentLevel != null)
+			{
+				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
+			}
+            Models.Item item = Models.Item.Find(id, "MLLIST_DB_MB_MC_R");
+            Navigation.SetValue("item", id);
+            if(item != null && ((item.ValValid ? 1 : 0)==0))
+            {
+                return RedirectToAction("PTN_Menu_LIST_DB_MB_MC_R_MenuR_OPENARTIGVAL", "Item", new { id = item.ValCoditem, nav = Navigation.NavigationId, niv = (Request.Params["niv"] == null) ? Navigation.CurrentLevel.Level.ToString() : Request.Params["niv"] });
+            }
+            if(item != null && ((item.ValValid ? 1 : 0)==1))
+            {
+                return RedirectToAction("PTN_Menu_LIST_DB_MB_MC_R_MenuR_OPENARTIGINV", "Item", new { id = item.ValCoditem, nav = Navigation.NavigationId, niv = (Request.Params["niv"] == null) ? Navigation.CurrentLevel.Level.ToString() : Request.Params["niv"] });
             }
             else
             {

@@ -87,8 +87,24 @@ else {
 								@Html.LabelFor(model => model.ValQuantida, new { label_id="LED_LNHPD___LNHPDQUANTIDA", @class = " i-text__label", id="LABEL_LED_LNHPD___LNHPDQUANTIDA"}, true, false)
 								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
 								<a href="javascript:OpenSuggestion('LED_LNHPD___LNHPDQUANTIDA','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-								@Html.NumberFor(model => model.ValQuantida, new {help_id = "LED_LNHPD___LNHPDQUANTIDA", @class = "Number text-right i-text__field i-text input-small", data_identifier = "LED_LNHPD___LNHPDQUANTIDA", @pers_cs_area = "Lnhpd", @pers_cs_field = "ValQuantida", @db_field = "ValQuantida", title = @Resources.QUANTITY06415, data_number_integer = "3", data_number_decimals = "0", data_number_format = "999" })
+								@Html.NumberFor(model => model.ValQuantida, new {help_id = "LED_LNHPD___LNHPDQUANTIDA", @class = "Number text-right i-text__field i-text input-mini", data_identifier = "LED_LNHPD___LNHPDQUANTIDA", @pers_cs_area = "Lnhpd", @pers_cs_field = "ValQuantida", @db_field = "ValQuantida", title = @Resources.QUANTITY06415, data_number_integer = "3", data_number_decimals = "0", data_number_format = "999" })
 								@Html.ValidationMessageFor(model => model.ValQuantida)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_LNHPD___LNHPDQUANTDEC">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValQuantdec, new { label_id="LED_LNHPD___LNHPDQUANTDEC", @class = " i-text__label", id="LABEL_LED_LNHPD___LNHPDQUANTDEC"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_LNHPD___LNHPDQUANTDEC','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValQuantdec, new {help_id = "LED_LNHPD___LNHPDQUANTDEC", @class = "Number text-right i-text__field i-text input-small", data_identifier = "LED_LNHPD___LNHPDQUANTDEC", @pers_cs_area = "Lnhpd", @pers_cs_field = "ValQuantdec", @db_field = "ValQuantdec", title = @Resources.AMOUNT46885, data_number_integer = "7", data_number_decimals = "2", data_number_format = "9999999.99" })
+								@Html.ValidationMessageFor(model => model.ValQuantdec)
 							</div>
 						</div>
 					</div>

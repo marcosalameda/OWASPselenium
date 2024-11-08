@@ -148,9 +148,9 @@ namespace GenioMVC.Controllers
 			}
 		}
 
-		// GET: /Lendi/PTN_Menu_3E1_MenuR_DELETEONEROW
+		// GET: /Lendi/PTN_Menu_LIST_DM_MB_R_MenuR_DELETEONEROW
 		// <returns>Json(new { success = "OK", message = "" }, JsonRequestBehavior.AllowGet)</returns>
-		public JsonResult PTN_Menu_3E1_MenuR_DELETEONEROW(string id, Dictionary<string, object> customParameters = null)
+		public JsonResult PTN_Menu_LIST_DM_MB_R_MenuR_DELETEONEROW(string id, Dictionary<string, object> customParameters = null)
 		{
 			return PTN_MenuR_DELETEONEROW(id, customParameters);
 		}
@@ -186,19 +186,19 @@ namespace GenioMVC.Controllers
 			}
 		}
 
-		// GET: /Lendi/PTN_Menu_3E1_MenuR_DELETEROWS
+		// GET: /Lendi/PTN_Menu_LIST_DM_MB_R_MenuR_DELETEROWS
 		// <returns>Json(new { success = "OK", message = "" }, JsonRequestBehavior.AllowGet)</returns>
-		public JsonResult PTN_Menu_3E1_MenuR_DELETEROWS(List<string> ids, Dictionary<string, string> queryParams, bool allSelected = false, Dictionary<string, object> customParameters = null)
+		public JsonResult PTN_Menu_LIST_DM_MB_R_MenuR_DELETEROWS(List<string> ids, Dictionary<string, string> queryParams, bool allSelected = false, Dictionary<string, object> customParameters = null)
 		{
 			CSGenio.business.Area area = CSGenio.business.Area.createArea("lendi", UserContext.Current.User, UserContext.Current.User.CurrentModule);
-			ListViewModel model = new PTN_Menu_3E1_ViewModel(Navigation);
+			ListViewModel model = new PTN_Menu_LIST_DM_MB_R_ViewModel(Navigation);
 			NameValueCollection parameters;
 
 			//Fetch and format the parameters
 			if (queryParams != null && queryParams.Count() > 0)
 				parameters = FormatQueryString(queryParams);
 			else
-				parameters = this.Navigation.GetValue<NameValueCollection>("requestValuesPTN_Menu_3E1");
+				parameters = this.Navigation.GetValue<NameValueCollection>("requestValuesPTN_Menu_LIST_DM_MB_R");
 
 			//Get CriteriaSet
 			CriteriaSet crs = model.BuildCriteriaSet(parameters, out bool hasAllRequiredLimits);

@@ -29,7 +29,7 @@ namespace GenioMVC.Controllers
     public partial class Pess1Controller : ControllerBase
     {
         #region NavigationLocation Names
-		private static readonly NavigationLocation ACTION_PTN_MENU_3D1 = new NavigationLocation("COMODANTES42347", "PTN_Menu_3D1", "Pess1") { vueRouteName = "menu-PTN_3D1" };
+		private static readonly NavigationLocation ACTION_PTN_MENU_3H1 = new NavigationLocation("COMODANTES42347", "PTN_Menu_3H1", "Pess1") { vueRouteName = "menu-PTN_3H1" };
 		private static readonly NavigationLocation ACTION_PTN_MENU_511 = new NavigationLocation("COMODANTES42347", "PTN_Menu_511", "Pess1") { vueRouteName = "menu-PTN_511" };
 		private static readonly NavigationLocation ACTION_PTN_MENU_5211 = new NavigationLocation("COMODANTES42347", "PTN_Menu_5211", "Pess1") { vueRouteName = "menu-PTN_5211" };
 		private static readonly NavigationLocation ACTION_PTN_MENU_5221 = new NavigationLocation("COMODANTES42347", "PTN_Menu_5221", "Pess1") { vueRouteName = "menu-PTN_5221" };
@@ -40,18 +40,18 @@ namespace GenioMVC.Controllers
 
 
         //
-        // GET: /Pess1/PTN_Menu_3D1
+        // GET: /Pess1/PTN_Menu_3H1
         [AuthorizeForUsers]
 		[AuthorizeForUsers]
-        [ActionName("PTN_Menu_3D1")]
-        public ActionResult PTN_Menu_3D1(bool allSelected = false)
+        [ActionName("PTN_Menu_3H1")]
+        public ActionResult PTN_Menu_3H1(bool allSelected = false)
         {
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
 
-            PTN_Menu_3D1_ViewModel model = new PTN_Menu_3D1_ViewModel(Navigation);
+            PTN_Menu_3H1_ViewModel model = new PTN_Menu_3H1_ViewModel(Navigation);
             bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
             if (isHomePage)
-                Navigation.SetValue("HomePage", "PTN_Menu_3D1");
+                Navigation.SetValue("HomePage", "PTN_Menu_3H1");
             ViewBag.isHomePage = isHomePage;
             //If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
             if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_pess1")))
@@ -73,21 +73,21 @@ namespace GenioMVC.Controllers
             NameValueCollection querystring = Request.Form.Count > 0 ? Request.Form : Request.QueryString;
 			if (!isHomePage && !Request.IsAjaxRequest())
             {
-                if (Navigation.CurrentLevel == null || !ACTION_PTN_MENU_3D1.IsSameAction(Navigation.CurrentLevel.Location))
+                if (Navigation.CurrentLevel == null || !ACTION_PTN_MENU_3H1.IsSameAction(Navigation.CurrentLevel.Location))
                 {
                     // reset the selections for this new navigation flow
                     // TODO: This change still requires more testing
-                    Navigation.RemoveHistoryLevel(ACTION_PTN_MENU_3D1);
-                    if (Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_3D1.Action)
+                    Navigation.RemoveHistoryLevel(ACTION_PTN_MENU_3H1);
+                    if (Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_3H1.Action)
                     {
-                        Navigation.AddHistoryLevel(ACTION_PTN_MENU_3D1, FormMode.List);
+                        Navigation.AddHistoryLevel(ACTION_PTN_MENU_3H1, FormMode.List);
                         CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
                     }
 				}
             }
             else if (isHomePage)
             {
-                CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_3D1.ShortDescription());
+                CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_3H1.ShortDescription());
                 Navigation.SetValue("HomePageContainsList", true);
             }
 
@@ -95,7 +95,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-// USE /[MANUAL PTN MENU_GET 3D1]/
+// USE /[MANUAL PTN MENU_GET 3H1]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -105,11 +105,11 @@ namespace GenioMVC.Controllers
 
  
             if(isHomePage)
-                return PartialView("PTN_Menu_3D1", model);
+                return PartialView("PTN_Menu_3H1", model);
             else if (!Request.IsAjaxRequest())
                 return View(model);
             else
-                return PartialView("PTN_Menu_3D1_Partial", model);
+                return PartialView("PTN_Menu_3H1_Partial", model);
         }
 
 

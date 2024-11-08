@@ -10,7 +10,7 @@ namespace GenioServer.security
     [CredentialProvider(typeof(DomainCredential))]
     [Description("Performs a local LDAP connection to validate user credentials")]
     [DisplayName("LDAP Simple")]
-    public class LdapIdentityProvider : IIdentityProvider
+    public class LdapIdentityProvider : BaseIdentityProvider
     {
         [SecurityProviderOption()]
         [Description("Local domain. In the form of 'example.org'")]
@@ -20,7 +20,10 @@ namespace GenioServer.security
         [Description("Port number of the LDAP service. Leave blank for default. LDAPS usually 636.")]
 		public string Port { get; set; }
 
-        public IIdentity Authenticate(Credential credential)
+        /// <inheritdoc/>
+        public override bool HasUsernameAuth() => true;
+
+        public override IIdentity Authenticate(Credential credential)
         {
             Type classname = credential.GetType();
             IIdentity id = null;
@@ -62,17 +65,6 @@ namespace GenioServer.security
 				return new GenericIdentity(credential.DomainUser);
 
             //return null;
-        }
-
-        /// <summary>
-        /// Determines whether username and password authentication is enabled.
-        /// </summary>
-        /// <remarks>
-        /// This is used to determine if username and password authentication is enabled.
-        /// </remarks>
-        public bool HasUsernameAuth()
-        {
-            return true;
         }
 	}
 }

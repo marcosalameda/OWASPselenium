@@ -15,7 +15,7 @@
 // USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_711_PESS1_NAME]/
 		column.Expression(p => p.Pess1.ValName).Title(@Resources.NAME31974).Field("Pess1.ValName").Size(30);
 // USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_711_PWCOM_FOTO]/
-		column.Expression(p => Html.ImageMagnifierZoom(p.ValFoto, new {alt=@Resources.FOTO19492,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCodpwcom, modelname = "Pwcom", fldname = "ValFoto" }))).Title(@Resources.FOTO19492).Field("ValFoto").Size(3);
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValFoto, new {alt=@Resources.FOTO19492,}, Url.Action("ImageHandlerGet", "Home", new { ticket = Helpers.GetFileTicket(UserContext.Current.User, "Pwcom", "ValFoto", "", p.ValCodpwcom, null) }))).Title(@Resources.FOTO19492).Field("ValFoto").Size(3);
 // USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_711_PWCOM_NRIDENTI]/
 		column.Expression(p => p.ValNridenti).Title(@Resources.IDENTIFICATION37731).Field("ValNridenti").Size(6);
             column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();

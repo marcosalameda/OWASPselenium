@@ -52,7 +52,12 @@
 					<nav class="mt-2">
 						<div class="n-sidebar__section">
 							<ul class="nav nav-pills nav-sidebar flex-column n-sidebar__nav" data-widget="treeview" role="menu" data-accordion="true">
-
+								<li class="nav-item n-sidebar__nav-item">
+									<a class="nav-link n-sidebar__nav-link d-none" @click.stop="navigateTo($event, 'no_configuration')">
+										<span class="mdi mdi-gauge"></span>
+										<p>&nbsp;{{ Resources.CONFIGURACOES19326 }}</p>
+									</a>
+								</li>
 								<li class="nav-item n-sidebar__nav-item">
 									<a class="nav-link n-sidebar__nav-link" @click.stop="navigateTo($event, 'dashboard')">
 										<span class="mdi mdi-gauge"></span>
@@ -61,14 +66,14 @@
 								</li>
 
 								<li class="nav-item n-sidebar__nav-item">
-									<a :class="getMenuClasses()" @click.stop="tryNavigate($event, 'system_setup')">
+									<a class="nav-link n-sidebar__nav-link" @click.stop="tryNavigate($event, 'system_setup')">
 										<span class="mdi mdi-tools"></span>
 										<p>&nbsp;{{ Resources.CONFIGURACAO_DO_SIST39343 }}</p>
 									</a>
 								</li>
 
 								<li class="nav-item n-sidebar__nav-item">
-									<a :class="[getMenuClasses(), {'level-0': true, 'selected': isSelected}]"
+									<a :class="['nav-link', 'n-sidebar__nav-link', {'level-0': true, 'selected': isSelected}]"
 										@click.stop="tryNavigate($event, 'app_configuration', true)">
 										<span class="mdi mdi-application-cog-outline"></span>
 										<p>
@@ -88,39 +93,33 @@
 								</li>
 
 								<li class="nav-item n-sidebar__nav-item">
-									<a :class="getMenuClasses()" @click.stop="tryNavigate($event, 'maintenance')" style="white-space: nowrap !important;">
+									<a class="nav-link n-sidebar__nav-link" @click.stop="tryNavigate($event, 'maintenance')" style="white-space: nowrap !important;">
 										<span class="mdi mdi-database-cog"></span>
 										<p>&nbsp;{{ Resources.MANUTENCAO_DA_BASE_D10092 }}</p>
 									</a>
 								</li>
 
 								<li class="nav-item n-sidebar__nav-item">
-									<a :class="getMenuClasses()" @click.stop="tryNavigate($event, 'users')">
+									<a class="nav-link n-sidebar__nav-link" @click.stop="tryNavigate($event, 'users')">
 										<span class="mdi mdi-account-cog"></span>
 										<p>&nbsp;{{ Resources.GESTAO_DE_UTILIZADOR20428 }}</p>
 									</a>
 								</li>
 								<hr>
 								<li class="nav-item n-sidebar__nav-item">
-									<a :class="getMenuClasses()" @click.stop="tryNavigate($event, 'email')">
+									<a class="nav-link n-sidebar__nav-link" @click.stop="tryNavigate($event, 'email')">
 										<span class="mdi mdi-email"></span>
 										<p>&nbsp;{{ Resources.SERVIDOR_DE_EMAIL19063 }}</p>
 									</a>
 								</li>
 								<li class="nav-item n-sidebar__nav-item">
-									<a :class="getMenuClasses()" @click.stop="tryNavigate($event, 'system_reports')">
-										<span class="mdi mdi-alert-outline"></span>
-										<p>&nbsp;{{ Resources.RELATORIO_DO_SISTEMA49744 }}</p>
-									</a>
-								</li>
-								<li class="nav-item n-sidebar__nav-item">
-									<a :class="getMenuClasses()" @click.stop="tryNavigate($event, 'report_management')">
+									<a class="nav-link n-sidebar__nav-link" @click.stop="tryNavigate($event, 'report_management')">
 										<span class="mdi mdi-file-chart"></span>
 										<p>&nbsp;{{ Resources.GESTAO_DE_RELATORIOS37970 }}</p>
 									</a>
 								</li>
 								<li class="nav-item n-sidebar__nav-item">
-									<a :class="getMenuClasses()" @click.stop="tryNavigate($event, 'notifications')">
+									<a class="nav-link n-sidebar__nav-link" @click.stop="tryNavigate($event, 'notifications')">
 										<span class="mdi mdi-bell-cog"></span>
 										<p>&nbsp;{{ Resources.GESTAO_DE_NOTIFICACO14803 }}</p>
 									</a>
@@ -143,7 +142,6 @@
 
 <script>
 import '@/assets/styles/style.scss';
-
 import '@/utils/globalUtils.js';
 import { reusableMixin } from '@/mixins/mainMixin';
 import { QUtils } from '@/utils/mainUtils';
@@ -204,10 +202,10 @@ export default {
 				vm.loaded = true;
 			});
 		},
-		getMenuClasses() {
+		/*getMenuClasses() {
 			var vm = this;
 			return vm.Model.HasConfig ? 'nav-link n-sidebar__nav-link' : 'nav-link n-sidebar__nav-link disabled';
-		},
+		}, */
 		tryNavigate(event, route, hasSubmenu = false) {
 			var vm = this;
 			return vm.Model.HasConfig ? this.navigateTo(event, route, hasSubmenu) : null

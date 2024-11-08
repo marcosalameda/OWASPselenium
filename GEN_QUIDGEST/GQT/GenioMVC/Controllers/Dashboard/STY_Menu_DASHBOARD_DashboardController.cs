@@ -69,7 +69,7 @@ namespace GenioMVC.Controllers
             // and the position and visibility information of the user configuration is used
             List<CSGenioAusrwid> userWidgets = UserUiSettings
                 .Load(sp, lstusr.ValDescric, user)
-                .userWidgets;
+                .UserWidgets;
 
             // Only override the definition if the user saved a configuration
             if (userWidgets != null && userWidgets.Count > 0)

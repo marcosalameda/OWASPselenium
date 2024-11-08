@@ -41,7 +41,7 @@
 // USE /[MANUAL GQT CUSTOM_COLUMN PESSOS00_DESIGNAT_CMPNY_EMAIL]/
 		column.Expression(p => p.ValEmail).Title(@Resources.EMAIL25170).Field("ValEmail").Size(30);
 // USE /[MANUAL GQT CUSTOM_COLUMN PESSOS00_DESIGNAT_CMPNY_LOGO]/
-		column.Expression(p => Html.ImageMagnifierZoom(p.ValLogo, new {alt=@Resources.LOGO62483,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCodempre, modelname = "Cmpny", fldname = "ValLogo" }))).Title(@Resources.LOGO62483).Field("ValLogo").Size(3);
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValLogo, new {alt=@Resources.LOGO62483,}, Url.Action("ImageHandlerGet", "Home", new { ticket = Helpers.GetFileTicket(UserContext.Current.User, "Cmpny", "ValLogo", "", p.ValCodempre, null) }))).Title(@Resources.LOGO62483).Field("ValLogo").Size(3);
             column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
 			//Hidden field used in JavaScript for return selected row text value
 			column.Expression(p => p.ValDesignat).Field("ValDesignat").AddInlineStyle("display", "none", true).UsedForFilter(false);

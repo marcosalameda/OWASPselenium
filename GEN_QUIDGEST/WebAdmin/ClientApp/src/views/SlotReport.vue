@@ -21,9 +21,6 @@
                 </div>
                 <div class="modal-footer">
                     <q-button
-                        :label="Resources.CANCELAR49513"
-                        @click="close" />
-                    <q-button
                         v-if="Model.FormMode == 'delete'"
                         b-style="danger"
                         :label="Resources.APAGAR04097"
@@ -33,6 +30,9 @@
                         b-style="primary"
                         :label="Resources.GRAVAR45301"
                         @click="fnSubmit" />
+                    <q-button
+                        :label="Resources.CANCELAR49513"
+                        @click="close" />
                 </div>
             </div>
         </div>

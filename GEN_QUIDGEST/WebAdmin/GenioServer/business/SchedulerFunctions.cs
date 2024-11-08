@@ -59,13 +59,6 @@ namespace GenioServer.business
                     if (!argsDict.ContainsKey("SCRIPTS"))
                         throw new BusinessException(null, "SchedulerCallFunctions.CallFunction", "Invalid reindex function call: SCRIPTS information is missing.");
                 
-                    string pathConfig = Configuration.GetConfigPath();
-                    ConfigurationXML conf = ConfigurationXML.readXML(pathConfig + Path.DirectorySeparatorChar + "Configuracoes.xml");
-
-                    if (conf.DataSystems.Count == 0)
-                        throw new BusinessException("Por favor configure o sistema primeiro.", "SchedulerCallFunctions.Reindex", "No data system configured.");
-
-
                     // ZERORTRUE parameter is optional (defaults to false)
                     bool zero = false;
                     if (argsDict.ContainsKey("ZEROTRUE"))
@@ -414,12 +407,6 @@ namespace GenioServer.business
             QueueResponse response = new QueueResponse();
             try
             {               
-                //string pathConfig = Configuration.GetConfigPath();
-                //ConfigurationXML conf = ConfigurationXML.readXML(pathConfig + Path.DirectorySeparatorChar + "Configuracoes.xml");
-
-                //if (conf.DataSystems.Count == 0)
-				//	throw new BusinessException("Por favor configure o sistema primeiro.", "SchedulerCallFunctions.Reindex", "No data system configured.");
-
                 string pathReindex = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Scripts", Configuration.Program + "_ReIdx", "Reindex");
                 string pathReindexMenu = pathReindex + Path.DirectorySeparatorChar + "order2exec.xml";
 

@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Output
 	/// </summary>
-	public class CSGenioAoutpu : DbArea	{
+	public class CSGenioAoutpu : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -453,23 +454,6 @@ namespace CSGenio.business
 		}
 
 
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAoutpu> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAoutpu> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAoutpu>(where, user, fields);
-        }
-
-
         /// <summary>
         /// Search for all records of this area that comply with a condition
         /// </summary>
@@ -516,7 +500,20 @@ namespace CSGenio.business
 
 
 
+ 		//To usar routine manual no pedido eliminate
+		public override StatusMessage eliminate(PersistentSupport sp)
+		{
+			StatusMessage msg = base.eliminate(sp);
 
+			// ROW_REORDERING
+			CriteriaSet criteria = CriteriaSet.And();
+			criteria.Equal(CSGenioAoutpu.FldCodoutpt, ValCodoutpt);
+			sp.ReorderSequence(Area.AreaOUTPU, CSGenioAoutpu.FldLine, criteria);
+
+            return msg;
+		}
+
+ 
 
 
 		// USE /[MANUAL GQT TABAUX OUTPU]/

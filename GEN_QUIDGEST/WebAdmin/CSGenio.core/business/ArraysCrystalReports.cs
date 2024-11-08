@@ -340,6 +340,18 @@ namespace CSGenio.business
 			Qresult.AppendLine("if {{{0}}} = 7 then \"Anual\" else");
             Qresult.Append("\"                                              \"");
             todasArrays.Add("avisperi", Qresult.ToString());
+			// baggage
+            Qresult = new StringBuilder();
+			            Qresult.AppendLine("if {{{0}}} = \"0\" then \"Cabin + Checkin Luggage\" else");
+			            Qresult.AppendLine("if {{{0}}} = \"1\" then \"Cabin Luggage only\" else");
+            Qresult.Append("\"                                              \"");
+            todasArrays.Add("baggage", Qresult.ToString());
+			// bagtype
+            Qresult = new StringBuilder();
+			            Qresult.AppendLine("if {{{0}}} = \"0\" then \"Cabin + Checkin Luggage\" else");
+			            Qresult.AppendLine("if {{{0}}} = \"1\" then \"Cabin Luggage Only\" else");
+            Qresult.Append("\"                                              \"");
+            todasArrays.Add("bagtype", Qresult.ToString());
 			// bankcomp
             Qresult = new StringBuilder();
 			            Qresult.AppendLine("if {{{0}}} = \"ST\" then \"Santander\" else");

@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Country
 	/// </summary>
-	public class CSGenioApais1 : DbArea	{
+	public class CSGenioApais1 : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -130,12 +131,13 @@ namespace CSGenio.business
 		{
 			// Daughters Relations
 			//------------------------------
-			info.ChildTable = new ChildRelation[5];
+			info.ChildTable = new ChildRelation[6];
 			info.ChildTable[0]= new ChildRelation("regio", new String[] {"codcntry","codpais1"}, DeleteProc.NA);
-			info.ChildTable[1]= new ChildRelation("cmpny", new String[] {"codcntry"}, DeleteProc.NA);
-			info.ChildTable[2]= new ChildRelation("indoc", new String[] {"codcntry"}, DeleteProc.NA);
-			info.ChildTable[3]= new ChildRelation("propr", new String[] {"codcntry","codpais1"}, DeleteProc.NA);
-			info.ChildTable[4]= new ChildRelation("pesso", new String[] {"codpaise","codcntry"}, DeleteProc.NA);
+			info.ChildTable[1]= new ChildRelation("airpt", new String[] {"codcntry"}, DeleteProc.NA);
+			info.ChildTable[2]= new ChildRelation("cmpny", new String[] {"codcntry"}, DeleteProc.NA);
+			info.ChildTable[3]= new ChildRelation("indoc", new String[] {"codcntry"}, DeleteProc.NA);
+			info.ChildTable[4]= new ChildRelation("propr", new String[] {"codcntry","codpais1"}, DeleteProc.NA);
+			info.ChildTable[5]= new ChildRelation("pesso", new String[] {"codpaise","codcntry"}, DeleteProc.NA);
 
 			// Mother Relations
 			//------------------------------
@@ -398,23 +400,6 @@ namespace CSGenio.business
 		}
 
 
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioApais1> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioApais1> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioApais1>(where, user, fields);
-        }
-
-
         /// <summary>
         /// Search for all records of this area that comply with a condition
         /// </summary>
@@ -461,7 +446,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX PAIS1]/

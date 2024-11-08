@@ -1941,7 +1941,7 @@ function _getRecursiveFormsKeys(targetForm) {
 		keys.concat(_getRecursiveFormsKeys(parentForm));
 
 	var qForm = $(targetForm).getQForm();
-	if (qForm instanceof QForm ) {
+	if (qForm instanceof QForm) {
 		var formKeys = {
 			level: qForm.NavigationLevel,
 			navId: qForm.NavigationId,
@@ -3741,7 +3741,7 @@ function UpdateSearchFilterMenu(listId, searchFilterGroups) {
 
 	//Set to display only when there are active filters
 	if (CountActiveConditions(searchFilterGroups) > 0) {
-		if (filterBoxList.children.length == 0){
+		if (filterButton.children.length == 1) {
 			const span = document.createElement("span")
 			span.setAttribute("aria-hidden", true)
 			badge.appendChild(span);
@@ -3749,7 +3749,8 @@ function UpdateSearchFilterMenu(listId, searchFilterGroups) {
 		}
 	}
 	else if (filterButton.lastChild) {
-		filterButton.removeChild(filterButton.lastChild)
+		if (filterButton.children.length > 1)
+			filterButton.removeChild(filterButton.lastChild)
 	}
 }
 

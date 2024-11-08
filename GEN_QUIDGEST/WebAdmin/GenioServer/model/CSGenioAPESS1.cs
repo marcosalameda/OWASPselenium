@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Comforter
 	/// </summary>
-	public class CSGenioApess1 : DbArea	{
+	public class CSGenioApess1 : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -454,19 +455,20 @@ namespace CSGenio.business
 		{
 			// Daughters Relations
 			//------------------------------
-			info.ChildTable = new ChildRelation[12];
+			info.ChildTable = new ChildRelation[13];
 			info.ChildTable[0]= new ChildRelation("repar", new String[] {"codpesso"}, DeleteProc.NA);
 			info.ChildTable[1]= new ChildRelation("esppe", new String[] {"codpesso"}, DeleteProc.NA);
 			info.ChildTable[2]= new ChildRelation("indoc", new String[] {"codpesso"}, DeleteProc.NA);
 			info.ChildTable[3]= new ChildRelation("propr", new String[] {"codpesso"}, DeleteProc.NA);
-			info.ChildTable[4]= new ChildRelation("conta", new String[] {"codpesso"}, DeleteProc.NA);
-			info.ChildTable[5]= new ChildRelation("grid", new String[] {"codpesso"}, DeleteProc.NA);
-			info.ChildTable[6]= new ChildRelation("evcat", new String[] {"codpesso"}, DeleteProc.NA);
-			info.ChildTable[7]= new ChildRelation("notif", new String[] {"codpesso"}, DeleteProc.NA);
-			info.ChildTable[8]= new ChildRelation("lendi", new String[] {"codpess2","codpess1"}, DeleteProc.NA);
-			info.ChildTable[9]= new ChildRelation("afini", new String[] {"codpess2","codpess1"}, DeleteProc.NA);
-			info.ChildTable[10]= new ChildRelation("pwcom", new String[] {"codpess1"}, DeleteProc.NA);
-			info.ChildTable[11]= new ChildRelation("equip", new String[] {"codpess1"}, DeleteProc.NA);
+			info.ChildTable[4]= new ChildRelation("hpess", new String[] {"codpesso"}, DeleteProc.DM);
+			info.ChildTable[5]= new ChildRelation("conta", new String[] {"codpesso"}, DeleteProc.NA);
+			info.ChildTable[6]= new ChildRelation("grid", new String[] {"codpesso"}, DeleteProc.NA);
+			info.ChildTable[7]= new ChildRelation("evcat", new String[] {"codpesso"}, DeleteProc.NA);
+			info.ChildTable[8]= new ChildRelation("notif", new String[] {"codpesso"}, DeleteProc.NA);
+			info.ChildTable[9]= new ChildRelation("lendi", new String[] {"codpess2","codpess1"}, DeleteProc.NA);
+			info.ChildTable[10]= new ChildRelation("afini", new String[] {"codpess2","codpess1"}, DeleteProc.NA);
+			info.ChildTable[11]= new ChildRelation("pwcom", new String[] {"codpess1"}, DeleteProc.NA);
+			info.ChildTable[12]= new ChildRelation("equip", new String[] {"codpess1"}, DeleteProc.NA);
 
 			// Mother Relations
 			//------------------------------
@@ -599,6 +601,10 @@ namespace CSGenio.business
 
             // Historics
             //------------------------------
+			info.HistoryList = new List<History>();
+			info.DBFields["codempre"].CreateHist = "hpess";
+			info.DBFields["name"].CreateHist = "hpess";
+			info.HistoryList.Add(new History( "hpess", new string[] {"codempre","name"}));
 
 			// Duplication
 			//------------------------------
@@ -1148,23 +1154,6 @@ namespace CSGenio.business
 		}
 
 
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioApess1> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioApess1> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioApess1>(where, user, fields);
-        }
-
-
         /// <summary>
         /// Search for all records of this area that comply with a condition
         /// </summary>
@@ -1211,7 +1200,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX PESS1]/

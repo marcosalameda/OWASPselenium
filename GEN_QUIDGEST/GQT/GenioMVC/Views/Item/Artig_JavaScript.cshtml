@@ -120,7 +120,7 @@
 
 			this.Controls.LED_ARTIG___ITEM_EXITS___ = new QNumericControl($('[data-identifier="LED_ARTIG___ITEM_EXITS___"]', this.element), window.Form_Artig);
 
-			this.Controls.LED_ARTIG___ITEM_IMAGE___ = new QImageControl($('[data-identifier="LED_ARTIG___ITEM_IMAGE___"]', this.element), window.Form_Artig, '@Html.Raw(Url.Action("ImageDelete", "Item", new { id=Model.ValCoditem, modelname="Item", fldname="ValImage" }))', '@Html.Raw(Url.Action("ImageCropper", "Item", new { key=Model.ValCoditem, modelname= "Item", fldname= "ValImage", identifier= "FARTIG", FormName= "Artig", FieldId= "LED_ARTIG___ITEM_IMAGE___" }))',@Html.IsImageEmpty(Model.ValImage));
+			this.Controls.LED_ARTIG___ITEM_IMAGE___ = new QImageControl($('[data-identifier="LED_ARTIG___ITEM_IMAGE___"]', this.element), window.Form_Artig, '@Html.Raw(Url.Action("ImageDelete", "Item", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Item", "ValImage", "", Model.ValCoditem, null) }))', '@Html.Raw(Url.Action("ImageCropper", "Item", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Item", "ValImage", "", Model.ValCoditem, null), identifier= "FARTIG", FormName= "Artig", FieldId= "LED_ARTIG___ITEM_IMAGE___" }))',@Html.IsImageEmpty(Model.ValImage));
 
 			this.Controls.IFF_ARTIG___PSEUDNOVOGR07 = new QGenericControl($('[data-identifier="IFF_ARTIG___PSEUDNOVOGR07"]', this.element), window.Form_Artig);
 

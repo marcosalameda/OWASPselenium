@@ -102,7 +102,7 @@
 
 			this.Controls.LED_REPAR___EQUIPDESIGNAT = new QTextControl($('[data-identifier="LED_REPAR___EQUIPDESIGNAT"]', this.element), window.Form_Repar);
 
-			this.Controls.LED_REPAR___EQUIPPHOTOGRA = new QImageControl($('[data-identifier="LED_REPAR___EQUIPPHOTOGRA"]', this.element), window.Form_Repar, '@Html.Raw(Url.Action("ImageDelete", "Equip", new { id=Model.ValCodrepar, modelname="Equip", fldname="EquipValPhotogra" }))', '@Html.Raw(Url.Action("ImageCropper", "Equip", new { key=Model.ValCodrepar, modelname= "Equip", fldname= "EquipValPhotogra", identifier= "FREPAR", FormName= "Repar", FieldId= "LED_REPAR___EQUIPPHOTOGRA" }))',@Html.IsImageEmpty(Model.EquipValPhotogra));
+			this.Controls.LED_REPAR___EQUIPPHOTOGRA = new QImageControl($('[data-identifier="LED_REPAR___EQUIPPHOTOGRA"]', this.element), window.Form_Repar, '@Html.Raw(Url.Action("ImageDelete", "Equip", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Equip", "EquipValPhotogra", "", Model.ValCodrepar, null) }))', '@Html.Raw(Url.Action("ImageCropper", "Equip", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Equip", "EquipValPhotogra", "", Model.ValCodrepar, null), identifier= "FREPAR", FormName= "Repar", FieldId= "LED_REPAR___EQUIPPHOTOGRA" }))',@Html.IsImageEmpty(Model.EquipValPhotogra));
 
 			this.Controls.LED_REPAR___REPARDTREPARA = new QDateControl($('[data-identifier="LED_REPAR___REPARDTREPARA"]', this.element), window.Form_Repar);
 
@@ -132,6 +132,8 @@
 			this.Controls.LED_REPAR___REPARCODREPAR = new QHiddenControl($('[data-identifier="LED_REPAR___REPARCODREPAR"]', this.element), window.Form_Repar);
 
 	@* Hidden Required Form Fields Controls for Formulas *@
+			this.Controls.LED_REPAR___SPECIAREATECN = new QSpecialControl($('[data-identifier="LED_REPAR___SPECIAREATECN"]', this.element), window.Form_Repar);
+			this.Controls.LED_REPAR___SPECIAREATECN.InitData(@JavaScriptConversion.ToString(@Model.SpeciValAreatecn));
 
 @if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
 {

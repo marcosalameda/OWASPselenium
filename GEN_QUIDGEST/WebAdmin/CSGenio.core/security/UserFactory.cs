@@ -9,6 +9,7 @@ using CSGenio.persistence;
 using Quidgest.Persistence.GenericQuery;
 using System.Threading;
 using CSGenio;
+using CSGenio.core.di;
 using System.Net.Mail;
 
 namespace GenioServer.security
@@ -127,8 +128,6 @@ namespace GenioServer.security
             return anos;
         }
 
-
-        public static IUserBusinessManager BusinessManager { get; set; }
 
 
         /// <summary>

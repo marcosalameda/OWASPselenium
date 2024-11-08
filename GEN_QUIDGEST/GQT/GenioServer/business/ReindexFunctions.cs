@@ -133,6 +133,32 @@ namespace CSGenio.business
             }
                 
 
+            /* --- GQTAIRLN --- */
+            dm = sp.Execute(
+                new SelectQuery()
+                .Select(CSGenioAairln.FldCodairln)
+                .From(CSGenioAairln.AreaAIRLN)
+                .Where(CriteriaSet.And().In(CSGenioAairln.FldZzstate, zzstateToRemove))
+                );
+
+            for (int i = 0; i < dm.NumRows; i++)
+            {
+                CSGenioAairln model = new CSGenioAairln(user);
+                model.ValCodairln = dm.GetKey(i, 0);
+
+                try
+                {
+                    model.delete(sp);
+                }
+                //Not every exception should be allowed to continue record deletion, only business exceptions need to be caught and allow to deletion continue.
+                //If there are other types of exceptions, such as database connection problems, for example, execution should be stopped immediately
+                catch(BusinessException ex)
+                {
+                    Log.Error((ex.UserMessage != null) ? ex.UserMessage : ex.Message);
+                }
+            }
+                
+
             /* --- GQTAUDIT --- */
             dm = sp.Execute(
                 new SelectQuery()
@@ -783,6 +809,32 @@ namespace CSGenio.business
             }
                 
 
+            /* --- GQTPSNGR --- */
+            dm = sp.Execute(
+                new SelectQuery()
+                .Select(CSGenioApsngr.FldCodpsngr)
+                .From(CSGenioApsngr.AreaPSNGR)
+                .Where(CriteriaSet.And().In(CSGenioApsngr.FldZzstate, zzstateToRemove))
+                );
+
+            for (int i = 0; i < dm.NumRows; i++)
+            {
+                CSGenioApsngr model = new CSGenioApsngr(user);
+                model.ValCodpsngr = dm.GetKey(i, 0);
+
+                try
+                {
+                    model.delete(sp);
+                }
+                //Not every exception should be allowed to continue record deletion, only business exceptions need to be caught and allow to deletion continue.
+                //If there are other types of exceptions, such as database connection problems, for example, execution should be stopped immediately
+                catch(BusinessException ex)
+                {
+                    Log.Error((ex.UserMessage != null) ? ex.UserMessage : ex.Message);
+                }
+            }
+                
+
             /* --- UserLogin --- */
             dm = sp.Execute(
                 new SelectQuery()
@@ -1381,6 +1433,58 @@ namespace CSGenio.business
             }
                 
 
+            /* --- GQTAIRPL --- */
+            dm = sp.Execute(
+                new SelectQuery()
+                .Select(CSGenioAairpl.FldCodairpl)
+                .From(CSGenioAairpl.AreaAIRPL)
+                .Where(CriteriaSet.And().In(CSGenioAairpl.FldZzstate, zzstateToRemove))
+                );
+
+            for (int i = 0; i < dm.NumRows; i++)
+            {
+                CSGenioAairpl model = new CSGenioAairpl(user);
+                model.ValCodairpl = dm.GetKey(i, 0);
+
+                try
+                {
+                    model.delete(sp);
+                }
+                //Not every exception should be allowed to continue record deletion, only business exceptions need to be caught and allow to deletion continue.
+                //If there are other types of exceptions, such as database connection problems, for example, execution should be stopped immediately
+                catch(BusinessException ex)
+                {
+                    Log.Error((ex.UserMessage != null) ? ex.UserMessage : ex.Message);
+                }
+            }
+                
+
+            /* --- GQTAIRPT --- */
+            dm = sp.Execute(
+                new SelectQuery()
+                .Select(CSGenioAairpt.FldCodairpt)
+                .From(CSGenioAairpt.AreaAIRPT)
+                .Where(CriteriaSet.And().In(CSGenioAairpt.FldZzstate, zzstateToRemove))
+                );
+
+            for (int i = 0; i < dm.NumRows; i++)
+            {
+                CSGenioAairpt model = new CSGenioAairpt(user);
+                model.ValCodairpt = dm.GetKey(i, 0);
+
+                try
+                {
+                    model.delete(sp);
+                }
+                //Not every exception should be allowed to continue record deletion, only business exceptions need to be caught and allow to deletion continue.
+                //If there are other types of exceptions, such as database connection problems, for example, execution should be stopped immediately
+                catch(BusinessException ex)
+                {
+                    Log.Error((ex.UserMessage != null) ? ex.UserMessage : ex.Message);
+                }
+            }
+                
+
             /* --- GQTCATTP --- */
             dm = sp.Execute(
                 new SelectQuery()
@@ -1901,6 +2005,32 @@ namespace CSGenio.business
             }
                 
 
+            /* --- GQTTICKT --- */
+            dm = sp.Execute(
+                new SelectQuery()
+                .Select(CSGenioAtickt.FldCodtickt)
+                .From(CSGenioAtickt.AreaTICKT)
+                .Where(CriteriaSet.And().In(CSGenioAtickt.FldZzstate, zzstateToRemove))
+                );
+
+            for (int i = 0; i < dm.NumRows; i++)
+            {
+                CSGenioAtickt model = new CSGenioAtickt(user);
+                model.ValCodtickt = dm.GetKey(i, 0);
+
+                try
+                {
+                    model.delete(sp);
+                }
+                //Not every exception should be allowed to continue record deletion, only business exceptions need to be caught and allow to deletion continue.
+                //If there are other types of exceptions, such as database connection problems, for example, execution should be stopped immediately
+                catch(BusinessException ex)
+                {
+                    Log.Error((ex.UserMessage != null) ? ex.UserMessage : ex.Message);
+                }
+            }
+                
+
             /* --- GQTTPCON --- */
             dm = sp.Execute(
                 new SelectQuery()
@@ -2317,6 +2447,32 @@ namespace CSGenio.business
             }
                 
 
+            /* --- GQTFLIGH --- */
+            dm = sp.Execute(
+                new SelectQuery()
+                .Select(CSGenioAfligh.FldCodfligh)
+                .From(CSGenioAfligh.AreaFLIGH)
+                .Where(CriteriaSet.And().In(CSGenioAfligh.FldZzstate, zzstateToRemove))
+                );
+
+            for (int i = 0; i < dm.NumRows; i++)
+            {
+                CSGenioAfligh model = new CSGenioAfligh(user);
+                model.ValCodfligh = dm.GetKey(i, 0);
+
+                try
+                {
+                    model.delete(sp);
+                }
+                //Not every exception should be allowed to continue record deletion, only business exceptions need to be caught and allow to deletion continue.
+                //If there are other types of exceptions, such as database connection problems, for example, execution should be stopped immediately
+                catch(BusinessException ex)
+                {
+                    Log.Error((ex.UserMessage != null) ? ex.UserMessage : ex.Message);
+                }
+            }
+                
+
             /* --- GQTLNHAG --- */
             dm = sp.Execute(
                 new SelectQuery()
@@ -2499,6 +2655,32 @@ namespace CSGenio.business
             }
                 
 
+            /* --- GQTFLTSC --- */
+            dm = sp.Execute(
+                new SelectQuery()
+                .Select(CSGenioAfltsc.FldCodfltsc)
+                .From(CSGenioAfltsc.AreaFLTSC)
+                .Where(CriteriaSet.And().In(CSGenioAfltsc.FldZzstate, zzstateToRemove))
+                );
+
+            for (int i = 0; i < dm.NumRows; i++)
+            {
+                CSGenioAfltsc model = new CSGenioAfltsc(user);
+                model.ValCodfltsc = dm.GetKey(i, 0);
+
+                try
+                {
+                    model.delete(sp);
+                }
+                //Not every exception should be allowed to continue record deletion, only business exceptions need to be caught and allow to deletion continue.
+                //If there are other types of exceptions, such as database connection problems, for example, execution should be stopped immediately
+                catch(BusinessException ex)
+                {
+                    Log.Error((ex.UserMessage != null) ? ex.UserMessage : ex.Message);
+                }
+            }
+                
+
             /* --- GQTLNHDE --- */
             dm = sp.Execute(
                 new SelectQuery()
@@ -2655,6 +2837,32 @@ namespace CSGenio.business
             }
                 
 
+            /* --- GQTBRDPS --- */
+            dm = sp.Execute(
+                new SelectQuery()
+                .Select(CSGenioAbrdps.FldCodbrdps)
+                .From(CSGenioAbrdps.AreaBRDPS)
+                .Where(CriteriaSet.And().In(CSGenioAbrdps.FldZzstate, zzstateToRemove))
+                );
+
+            for (int i = 0; i < dm.NumRows; i++)
+            {
+                CSGenioAbrdps model = new CSGenioAbrdps(user);
+                model.ValCodbrdps = dm.GetKey(i, 0);
+
+                try
+                {
+                    model.delete(sp);
+                }
+                //Not every exception should be allowed to continue record deletion, only business exceptions need to be caught and allow to deletion continue.
+                //If there are other types of exceptions, such as database connection problems, for example, execution should be stopped immediately
+                catch(BusinessException ex)
+                {
+                    Log.Error((ex.UserMessage != null) ? ex.UserMessage : ex.Message);
+                }
+            }
+                
+
             /* --- GQTCONTA --- */
             dm = sp.Execute(
                 new SelectQuery()
@@ -2759,6 +2967,32 @@ namespace CSGenio.business
             }
                 
 
+            /* --- GQTHPESS --- */
+            dm = sp.Execute(
+                new SelectQuery()
+                .Select(CSGenioAhpess.FldCodhpess)
+                .From(CSGenioAhpess.AreaHPESS)
+                .Where(CriteriaSet.And().In(CSGenioAhpess.FldZzstate, zzstateToRemove))
+                );
+
+            for (int i = 0; i < dm.NumRows; i++)
+            {
+                CSGenioAhpess model = new CSGenioAhpess(user);
+                model.ValCodhpess = dm.GetKey(i, 0);
+
+                try
+                {
+                    model.delete(sp);
+                }
+                //Not every exception should be allowed to continue record deletion, only business exceptions need to be caught and allow to deletion continue.
+                //If there are other types of exceptions, such as database connection problems, for example, execution should be stopped immediately
+                catch(BusinessException ex)
+                {
+                    Log.Error((ex.UserMessage != null) ? ex.UserMessage : ex.Message);
+                }
+            }
+                
+
             /* --- GQTINDOC --- */
             dm = sp.Execute(
                 new SelectQuery()
@@ -2797,6 +3031,32 @@ namespace CSGenio.business
             {
                 CSGenioAlcext model = new CSGenioAlcext(user);
                 model.ValCodlcext = dm.GetKey(i, 0);
+
+                try
+                {
+                    model.delete(sp);
+                }
+                //Not every exception should be allowed to continue record deletion, only business exceptions need to be caught and allow to deletion continue.
+                //If there are other types of exceptions, such as database connection problems, for example, execution should be stopped immediately
+                catch(BusinessException ex)
+                {
+                    Log.Error((ex.UserMessage != null) ? ex.UserMessage : ex.Message);
+                }
+            }
+                
+
+            /* --- GQTLNHDF --- */
+            dm = sp.Execute(
+                new SelectQuery()
+                .Select(CSGenioAlnhdf.FldCodlnhdf)
+                .From(CSGenioAlnhdf.AreaLNHDF)
+                .Where(CriteriaSet.And().In(CSGenioAlnhdf.FldZzstate, zzstateToRemove))
+                );
+
+            for (int i = 0; i < dm.NumRows; i++)
+            {
+                CSGenioAlnhdf model = new CSGenioAlnhdf(user);
+                model.ValCodlnhdf = dm.GetKey(i, 0);
 
                 try
                 {

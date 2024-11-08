@@ -15,7 +15,7 @@ namespace Administration.Models
     {
 		public ConfigModel()
         {
-            MoreProperties = new List<MorePropertyCfg>();
+            AdvancedProperties = new List<MorePropertyCfg>();
         }
 
         [Display(Name = "NOME_DO_SERVIDOR_DE_38232", ResourceType = typeof(Resources.Resources))]
@@ -103,6 +103,8 @@ namespace Administration.Models
         [Display(Name = "ESTADO_DA_OPERACAO38065", ResourceType = typeof(Resources.Resources))]
         public string ResultMsg { get; set; }
 
+        public string AlertType { get; set; }
+
         [Display(Name = "MESSAGE_QUEUEING34227", ResourceType = typeof(Resources.Resources))]
         public MessageQueue MQueues { get; set; }
 
@@ -151,7 +153,7 @@ namespace Administration.Models
         public bool AuditInterface { get; set; }
 
 		[Display(Name = "FORNECEDORES_DE_IDEN35608", ResourceType = typeof(Resources.Resources))]
-        public List<MorePropertyCfg> MoreProperties { get; set; }
+        public List<MorePropertyCfg> AdvancedProperties { get; set; }
 
         [BindNever]
         public List<ClientApplication> Applications { get; set; }
@@ -198,6 +200,20 @@ namespace Administration.Models
                     SchedulerTaskList = ScheduleTaskFactory.GetTaskOptions(),
                 };
             }
+        }
+
+        public DataSystemXml GetDataSystemXml()
+        {
+            return new DataSystemXml
+            {
+                Server = this.Server,
+                Password = this.DbPsw,
+                Login = this.DbUser,
+                Schemas = new List<DataXml>
+                {
+                    new DataXml { Schema = this.Schema }
+                }
+            };
         }
     }
 
@@ -358,6 +374,13 @@ namespace Administration.Models
         {
             get { return obj.Name; }
             set { obj.Name = value; }
+        }
+
+        [Display(Name = "DESCRICAO07528", ResourceType = typeof(Resources.Resources))]
+        public string Description
+        {
+            get { return obj.Description; }
+            set { obj.Description = value; }
         }
 
         [Display(Name = "TIPO55111", ResourceType = typeof(Resources.Resources))]

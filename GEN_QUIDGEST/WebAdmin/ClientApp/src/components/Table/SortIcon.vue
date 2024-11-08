@@ -1,5 +1,5 @@
 ﻿<template>
-<div class="float-right">
+<div>
     <template v-if="order == 'asc'">
         <slot name="vbt-sort-asc-icon">
 

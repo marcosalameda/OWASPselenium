@@ -102,7 +102,7 @@
 
 			this.Controls.IFF_EQUIGROUPSEUDNEWGRP13 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP13"]', this.element), window.Form_Equigrou);
 
-			this.Controls.LED_EQUIGROUPESS1PHOTOGRA = new QImageControl($('[data-identifier="LED_EQUIGROUPESS1PHOTOGRA"]', this.element), window.Form_Equigrou, '@Html.Raw(Url.Action("ImageDelete", "Pess1", new { id=Model.ValCodequip, modelname="Pess1", fldname="Pess1ValPhotogra" }))', '@Html.Raw(Url.Action("ImageCropper", "Pess1", new { key=Model.ValCodequip, modelname= "Pess1", fldname= "Pess1ValPhotogra", identifier= "FEQUIGROU", FormName= "Equigrou", FieldId= "LED_EQUIGROUPESS1PHOTOGRA" }))',@Html.IsImageEmpty(Model.Pess1ValPhotogra));
+			this.Controls.LED_EQUIGROUPESS1PHOTOGRA = new QImageControl($('[data-identifier="LED_EQUIGROUPESS1PHOTOGRA"]', this.element), window.Form_Equigrou, '@Html.Raw(Url.Action("ImageDelete", "Pess1", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Pess1", "Pess1ValPhotogra", "", Model.ValCodequip, null) }))', '@Html.Raw(Url.Action("ImageCropper", "Pess1", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Pess1", "Pess1ValPhotogra", "", Model.ValCodequip, null), identifier= "FEQUIGROU", FormName= "Equigrou", FieldId= "LED_EQUIGROUPESS1PHOTOGRA" }))',@Html.IsImageEmpty(Model.Pess1ValPhotogra));
 
 			this.Controls.IFF_EQUIGROUPESS1NAME____ = new QDbeditControl($('[data-identifier="IFF_EQUIGROUPESS1NAME____"]', this.element), window.Form_Equigrou);
 
@@ -136,7 +136,7 @@
 
 			this.Controls.IFF_EQUIGROUPSEUDNEWGRP02 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP02"]', this.element), window.Form_Equigrou);
 
-			this.Controls.LED_EQUIGROUCMPNYLOGO____ = new QImageControl($('[data-identifier="LED_EQUIGROUCMPNYLOGO____"]', this.element), window.Form_Equigrou, '@Html.Raw(Url.Action("ImageDelete", "Cmpny", new { id=Model.ValCodequip, modelname="Cmpny", fldname="CmpnyValLogo" }))', '@Html.Raw(Url.Action("ImageCropper", "Cmpny", new { key=Model.ValCodequip, modelname= "Cmpny", fldname= "CmpnyValLogo", identifier= "FEQUIGROU", FormName= "Equigrou", FieldId= "LED_EQUIGROUCMPNYLOGO____" }))',@Html.IsImageEmpty(Model.CmpnyValLogo));
+			this.Controls.LED_EQUIGROUCMPNYLOGO____ = new QImageControl($('[data-identifier="LED_EQUIGROUCMPNYLOGO____"]', this.element), window.Form_Equigrou, '@Html.Raw(Url.Action("ImageDelete", "Cmpny", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Cmpny", "CmpnyValLogo", "", Model.ValCodequip, null) }))', '@Html.Raw(Url.Action("ImageCropper", "Cmpny", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Cmpny", "CmpnyValLogo", "", Model.ValCodequip, null), identifier= "FEQUIGROU", FormName= "Equigrou", FieldId= "LED_EQUIGROUCMPNYLOGO____" }))',@Html.IsImageEmpty(Model.CmpnyValLogo));
 
 			this.Controls.LED_EQUIGROUCMPNYDESIGNAT = new QTextControl($('[data-identifier="LED_EQUIGROUCMPNYDESIGNAT"]', this.element), window.Form_Equigrou);
 
@@ -202,7 +202,7 @@
 
 			this.Controls.IFF_EQUIGROUPSEUDNEWGRP04 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP04"]', this.element), window.Form_Equigrou);
 
-			this.Controls.LED_EQUIGROUEQUIPPHOTOGRA = new QImageControl($('[data-identifier="LED_EQUIGROUEQUIPPHOTOGRA"]', this.element), window.Form_Equigrou, '@Html.Raw(Url.Action("ImageDelete", "Equip", new { id=Model.ValCodequip, modelname="Equip", fldname="ValPhotogra" }))', '@Html.Raw(Url.Action("ImageCropper", "Equip", new { key=Model.ValCodequip, modelname= "Equip", fldname= "ValPhotogra", identifier= "FEQUIGROU", FormName= "Equigrou", FieldId= "LED_EQUIGROUEQUIPPHOTOGRA" }))',@Html.IsImageEmpty(Model.ValPhotogra));
+			this.Controls.LED_EQUIGROUEQUIPPHOTOGRA = new QImageControl($('[data-identifier="LED_EQUIGROUEQUIPPHOTOGRA"]', this.element), window.Form_Equigrou, '@Html.Raw(Url.Action("ImageDelete", "Equip", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Equip", "ValPhotogra", "", Model.ValCodequip, null) }))', '@Html.Raw(Url.Action("ImageCropper", "Equip", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Equip", "ValPhotogra", "", Model.ValCodequip, null), identifier= "FEQUIGROU", FormName= "Equigrou", FieldId= "LED_EQUIGROUEQUIPPHOTOGRA" }))',@Html.IsImageEmpty(Model.ValPhotogra));
 
 			this.Controls.IFF_EQUIGROUPSEUDNEWGRP06 = new QGenericControl($('[data-identifier="IFF_EQUIGROUPSEUDNEWGRP06"]', this.element), window.Form_Equigrou);
 

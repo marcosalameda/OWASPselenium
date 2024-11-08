@@ -15,7 +15,8 @@ namespace DbAdmin.IntegrationTest
         [SetUp]
         public void SetUp()
         {
-            PersistenceFactoryExtension.Use();
+            CSGenio.GenioDIDefault.UseLog();
+            CSGenio.GenioDIDefault.UseDatabase();
             sp = PersistentSupport.getPersistentSupport(Configuration.DefaultYear);
         }
 

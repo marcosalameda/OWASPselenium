@@ -505,10 +505,10 @@ namespace GenioMVC.Controllers
 			if (status == 1)
 				ModelState.AddModelError(Resources.Resources.PALAVRA_CHAVE_EXPIRA05120, Resources.Resources.PALAVRA_CHAVE_EXPIRA05120);
 
-			// check if configuracoes.xml have OpenID Connect configured
-			OpenIdConnectIdentityProvider oIdIP = new OpenIdConnectIdentityProvider();
-			if (oIdIP.Options != null)
-				profile.OpenIdConnAuthMethods.Add(oIdIP.Options.Description);
+            // check if configuracoes.xml have OpenID Connect configured
+            var ip = SecurityFactory.IdentityProviderList.FirstOrDefault(x => x is OpenIdConnectIdentityProvider);
+			if (ip != null)
+				profile.OpenIdConnAuthMethods.Add(ip.Id);
 
 			return View(profile);
 		}
@@ -741,12 +741,23 @@ namespace GenioMVC.Controllers
 			}
 		}
 
+		private string GetOidRegistUrl()
+		{
+			//Get absolute path with scheme + domain + "/OpenIdRegister" to provider known were to send the callback
+			var uri = new UriBuilder(Url.RouteUrl("OIdRegist", null, Request.Url.Scheme));
+#if (!DEBUG)
+			//TODO: implement a proxy configuration
+            uri.Port = -1;
+            uri.Scheme = Uri.UriSchemeHttps;
+#endif
+            return uri.ToString();
+        }
+
 		[HttpPost]
 		public ActionResult CreateOpenIdLoginRedirect()
 		{
-			string urlRedirectAuth = (new OpenIdConnectIdentityProvider()).GetUrlToAuthenticate(
-				Url.RouteUrl("OIdRegist", null, Request.Url.Scheme) //Get absolute path with scheme + domain + "/OpenIdRegister" to provider known were to send the callback
-			);
+            var ip = SecurityFactory.IdentityProviderList.First(x => x is OpenIdConnectIdentityProvider);
+            string urlRedirectAuth = ip.GetRedirectLoginUrl(GetOidRegistUrl());
 
 			return Json(new
 			{
@@ -760,33 +771,17 @@ namespace GenioMVC.Controllers
 			var sp = UserContext.Current.PersistentSupport;
 			try
 			{
-				//decode JWT received, more information at https://openid.net/specs/openid-connect-core-1_0.html#IDToken
-				var token = new JwtSecurityToken(id_token);
+                var ip = SecurityFactory.IdentityProviderList.First(x => x is OpenIdConnectIdentityProvider);
 
-				OpenIdConnectIdentityProvider ip = new OpenIdConnectIdentityProvider();
-				ip.Options.CallbackPath = Url.RouteUrl("OIdRegist", null, Request.Url.Scheme); //Get absolute path with scheme + domain + "/OIdRegist" to provider known were to send the callback
 				TokenCredential qToken = new TokenCredential();
-				qToken.Token = token.ToString();
+				qToken.Auth = code;
+				qToken.OriginUrl = GetOidRegistUrl();
+                qToken.Token = id_token;
 
-				bool validToken = ip.ValidateToken(qToken, code);
+                bool validToken = ip.RegisterExternalId(qToken, UserContext.Current.User);
 
 				if (validToken) //When user authenticated successfull we will save user info
-				{
-					// the token it's composed by two JSON. The first one are header and the second one are payload. Here we will use the payload
-					dynamic jsonPayload = JObject.Parse(qToken.Token.Substring(qToken.Token.IndexOf("}.{") + 2));
-
-					string username = jsonPayload.sub.Value + //Subject
-									"@" + jsonPayload.iss.Value; //Issuer
-
-					//save data to PSW
-					sp.openConnection();
-					var userPsw = Models.Psw.Find(UserContext.Current.User.Codpsw);
-					userPsw.ValUserid = username;
-					userPsw.Save(sp);
-					sp.closeConnection();
-
 					SuccessMessage(Resources.Resources.CONTA_FOI_CRIADA_COM31537);
-				}
 			}
 			catch (Exception ex)
 			{
@@ -853,14 +848,30 @@ namespace GenioMVC.Controllers
 		/// <returns></returns>
 		public ActionResult RemoveFileTemp()
 		{
-			if (!string.IsNullOrEmpty(Navigation.GetStrValue("filename")))
+			var ticket = Navigation.GetStrValue("filename");
+			if (!string.IsNullOrEmpty(ticket))
 			{
-				if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + "temp\\" + Navigation.GetStrValue("filename")))
-				{
-					System.IO.File.Delete(AppDomain.CurrentDomain.BaseDirectory + "temp\\" + Navigation.GetStrValue("filename"));
-					Navigation.ClearValue("filename");
-				}
+				var resource = GetResourceFileFromTicket(ticket);
+
+				if (string.IsNullOrEmpty(resource?.Name))
+					// Invalid user or ticket
+					return new JsonResult() { Data = new { success = false } };
+
+				string tempFolder = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "temp");
+				string filePath = System.IO.Path.Combine(tempFolder, resource.Name);
+				string fullFilePath = System.IO.Path.GetFullPath(filePath);
+
+				// Absolute Path Check (Path Traversal)
+				if (!fullFilePath.StartsWith(tempFolder, StringComparison.OrdinalIgnoreCase))
+					// Invalid path
+					return JsonOK(new { success = false });
+
+				if (System.IO.File.Exists(fullFilePath))
+					System.IO.File.Delete(fullFilePath);
+
+				Navigation.ClearValue("filename");
 			}
+
 			return new JsonResult() { Data = new { success = true } };
 		}
 
@@ -935,8 +946,11 @@ namespace GenioMVC.Controllers
 					}
 					tempFile = Request.Url.GetLeftPart(UriPartial.Authority) + Request.ApplicationPath + "\\temp\\" + documsPrimaryKey + "-" + fileName;
 
+					ResourceFile resource = new ResourceFile(documsPrimaryKey + "-" + fileName, "");
+					string ticket = QResources.CreateTicketEncryptedBase64(UserContext.Current.User.Name, UserContext.Current.User.Location, resource);
+					Navigation.SetValue("filename", ticket);
+
 					string protocol = "addin:";
-					Navigation.SetValue("filename", documsPrimaryKey + "-" + fileName);
 					bool openTaskPane = false;
 					if (!string.IsNullOrEmpty(Request.QueryString["openPane"]))
 						openTaskPane = bool.Parse(Request.QueryString["openPane"]);

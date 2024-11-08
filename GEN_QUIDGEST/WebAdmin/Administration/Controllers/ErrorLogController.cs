@@ -9,10 +9,11 @@ using System.Text;
 using System.Net;
 using System.Net.Http;
 using Microsoft.AspNetCore.Mvc;
+using IConfigurationManager = CSGenio.config.IConfigurationManager;
 
 namespace Administration.Controllers
 {
-    public class ErrorLogController : ControllerBase
+    public class ErrorLogController(IConfigurationManager configManager) : ControllerBase
     {
         [HttpGet]
         public IActionResult Index()
@@ -27,26 +28,20 @@ namespace Administration.Controllers
             model.Applications.Insert(0, new ClientApplication("Admin", Resources.Resources.WEBADMIN59136));
 
             string path = "";
-            string pathConfig = "";
 
             //tentar ler do configuracoes.xml a localização do errlog
             try
             {
-                pathConfig = CSGenio.framework.Configuration.GetConfigPath();
-                ConfigurationXML conf = ConfigurationXML.readXML(pathConfig + Path.DirectorySeparatorChar + "Configuracoes.xml");
+                var conf = configManager.GetExistingConfig();
 
-                if (appId == "Admin")
-                    path = Path.Combine(Directory.GetParent(pathConfig).FullName, "temp", "errlog.txt");
-                else
+                string pathApp = conf.GetPath(appId).pathApp;
+                if (String.IsNullOrEmpty(pathApp))
                 {
-                    string pathApp = conf.GetPath(appId).pathApp;
-                    if (String.IsNullOrEmpty(pathApp))
-                    {
-                        model.ResultMsg = Resources.Resources.O_CAMINHO_PARA_A_APL47115;
-                        return Json(model);
-                    }
-                    path = Path.Combine(pathApp, @"temp\errlog.txt");                    
+                    model.ResultMsg = Resources.Resources.O_CAMINHO_PARA_A_APL47115;
+                    return Json(model);
                 }
+                path = Path.Combine(pathApp, @"temp\errlog.txt");                    
+
             }
             catch (Exception)
             {

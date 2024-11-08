@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 
+using CSGenio.core.di;
 using CSGenio.core.messaging;
 using CSGenio.framework;
 using CSGenio.persistence;
@@ -722,19 +723,6 @@ namespace CSGenio.business
             Area target = fdc.GetRelation(formula.Alias, sp, User);
             object replica = target.returnValueField(target.Alias + "." + formula.Field);
             insertNameValueField(Alias + "." + Qfield.Name, replica);
-
-            /*
-            Relation relacao = (Relation)this.ParentTables[formula.Alias];
-            object fieldValue = returnValueField(Alias + "." + relacao.SourceRelField, FieldFormatting.CARACTERES);
-            if (!Field.isEmptyValue(fieldValue, FieldFormatting.CARACTERES))
-            {
-                //DQ 01/09/2006 -> usar campoRelDestino em vez de source: a source é a table que aponta, o target a table que é apontada.
-                object replica = formula.getReplicaValue(relacao.DestinationSystem, relacao.TargetTable, relacao.TargetRelField, (string)fieldValue, sp);
-                insertNameValueField(Alias + "." + Qfield.Name, replica);
-            }
-            else //se o Qfield é nulo então atribuir o Qvalue de vazio
-                insertNameValueField(Alias + "." + Qfield.Name, Qfield.GetValorEmpty());
-            */
         }
 
         /// <summary>
@@ -2000,126 +1988,6 @@ namespace CSGenio.business
 
         }
 
-		/// <summary>
-		/// Método que permite change um registo
-		/// pressupoe uma ligação à BD
-		/// </summary>
-		/// <param name="sp">Suporte Persistente</param>
-		/// <param name="condition">Condição de alteração</param>
-		/// <returns></returns>
-		[Obsolete("Use StatusMessage change(PersistentSupport sp, CriteriaSet condition) instead")]
-		public virtual StatusMessage change(PersistentSupport sp, string condition)
-		{
-			StatusMessage Qresult = StatusMessage.GetAggregator();
-
-            try
-            {
-				if (Log.IsDebugEnabled) Log.Debug(string.Format("Area.alterar [area] {0}", Alias));
-
-                //ler a key primária
-                string codIntValue = QPrimaryKey;
-                //não podemos change o registo sem uma key primária
-                if (string.IsNullOrEmpty(codIntValue))
-                    throw new BusinessException(null, "DbArea.alterar", "ChavePrimaria is null.");
-
-                //ler os Qvalues da ficha antiga
-                Area oldvalues = Area.createArea(this.Alias, user, module);
-                sp.getRecord(oldvalues, codIntValue);
-
-                //garantir que todos os fields estão preenchidos, se o interface não forneceu um Qvalue então usamos o antigo
-                //isto permite ás rotinas seguintes não ter de sistematicamente tentar fazer queries à BD
-                foreach (string key in oldvalues.Fields.Keys)
-                    if (!Fields.ContainsKey(key))
-                        Fields[key] = new RequestedField(oldvalues.Fields[key] as RequestedField);
-
-                //Acontece nos pedidos GET1 com em dbedits com fields dependentes
-                removeFieldsOtherAreas(); //TODO: Não devia ser possivel a área chegar a este estado
-
-                if (UserRecord)
-                {
-					//carimbar a ficha caso tenham existido mudanças
-					if (Zzstate == 0)
-						fillStampChange();
-
-					//mudar o estado do zzstate
-					Zzstate = 0;
-
-					//verificar permissões de escrita
-					if (!accessRightsToChange())
-						throw new BusinessException("Não tem permissões para alterar o registo.", "DbArea.alterar", "No permissions to change records.");
-                }
-
-                //calcular formulas internas (+, +H, ++, CT, FP)
-                //os numeros sequenciais são recalculados sempre que se detecta que estão a vazio ou que não são únicos
-                fillInternalOperations(sp, oldvalues);
-
-                // validar o registo
-                // (RS 2011.06.30) Quando não é o user a gravar a ficha não devemos validar as outras fichas porque podem ainda estar incompletas
-                // No entanto isto pode deixar gravar fichas num estado invalido. Tem de se avaliar se devemos só evitar esta validação no caso de fichas
-                // pseudo-novas, ou seja, onde o oldzzstate != 0
-                if (UserRecord)
-                {
-                    var validationResults = Validation.validateFieldsChange(this, sp, user);
-                    CheckErrorMessages(Qresult, validationResults, "DbArea.alterar");
-                }
-
-                // Os registos ST são propagados imediatamente antes de gravar o registo
-                // caso contrário obrigava a re-gravar esta ficha depois do change to
-                // actualizar os Qvalues das chaves estrangeiras to a area da ST
-                criarRegistosST(sp);
-
-                Dictionary<string, RequestedField> tempValoresSequenciais = new Dictionary<string, RequestedField>();
-
-                if (Zzstate != 0)
-                {
-                    // antes de change um registo que não é gravado por um user, tem de se
-                    // remover os números sequênciais to continuarem com o Qvalue negativo na BD
-                    if (SequentialDefaultValues != null)
-                    {
-                        foreach (string camposeq in SequentialDefaultValues)
-                        {
-                            tempValoresSequenciais.Add(Alias + "." + camposeq, (RequestedField)fields[Alias + "." + camposeq]);
-                            removeFieldValue(Alias + "." + camposeq);
-                        }
-                    }
-                }
-
-                //persistir o registo, optimizando to só gravar as mudanças
-                sp.change(this);
-
-                foreach (KeyValuePair<string, RequestedField> Qfield in tempValoresSequenciais)
-                    fields[Qfield.Key] = Qfield.Value;
-
-                //propagar alterações to outros registos
-                propagateReplicas(sp, oldvalues);
-                propagarUltimosValores(sp, oldvalues, false);
-                propagateLinkedSum(sp, oldvalues, false);
-                propagarFimPeriodo(sp, oldvalues, false);
-                propagateListAggregate(sp, oldvalues, false); //concatena linhas
-
-                //criar fichas de shadow e de history
-                createHistory(sp, oldvalues);
-
-                //enviar mensagem de message queueing
-				if (Zzstate == 0)
-                {
-					insertQueue(sp, oldvalues.Zzstate == 0 ? "U" : "C", oldvalues, null);
-                    MessageQueue(sp, oldvalues.Zzstate == 0 ? "U" : "C", oldvalues);
-                }
-			}
-			catch (GenioException ex)
-			{
-				if (ex.ExceptionSite == "DbArea.alterar")
-					throw;
-				throw new BusinessException(ex.UserMessage, "DbArea.alterar " + Alias, "Error changing record in DbArea: " + ex.Message, ex);
-			}
-            catch (Exception ex)
-            {
-                throw new BusinessException(null, "DbArea.alterar " + Alias, "Error changing record in DbArea: " + ex.Message, ex);
-            }
-
-            return Qresult.MergeStatusMessage(StatusMessage.OK("Alteração bem sucedida."));
-		}
 
 		public override StatusMessage change(PersistentSupport sp, CriteriaSet condition)
 		{
@@ -2284,11 +2152,6 @@ namespace CSGenio.business
             return User.GetModuleRoles(module).Any(role => QLevel.CanCreate(role));
         }
 
-        [Obsolete("Please use inserir(sp) instead")]
-        public StatusMessage insertPseud(PersistentSupport sp, bool shadow)
-        {
-            return inserir_WS(sp);
-        }
 
 		/// <summary>
 		/// Método que permite introduce um registo na base de dados,
@@ -2472,11 +2335,6 @@ namespace CSGenio.business
             sp.deleteRecord(this, valchave);
         }
 
-		[Obsolete("Please use inserir_WS(sp) instead")]
-        public StatusMessage inserir_WS(string module, bool shadow, PersistentSupport sp)
-        {
-            return inserir_WS(sp);
-        }
 
 		/// <summary>
 		/// Método to introduce um registo que fica imediatamente disponivel (zztate=0)
@@ -2619,70 +2477,6 @@ namespace CSGenio.business
             }
             return Qresult;
         }
-
-		/// <summary>
-		/// Função que permite duplicate um registo
-		/// pressupoe a existência de uma ligação à BD
-		/// </summary>
-		/// <param name="sp">Suporte Persistente</param>
-		/// <param name="condition">Condição de seleção</param>
-		/// <returns></returns>
-        [Obsolete("Use Area duplicate(PersistentSupport sp, CriteriaSet condition) instead")]
-		public virtual Area duplicate(PersistentSupport sp, string condition)
-		{
-			string[] split = condition.Split('=');
-            if (split.Length < 2)
-                throw new BusinessException(null, "Area.duplicar", "Invalid condition: " + condition);
-            string codeValue = split[1].Trim('\'');
-
-			try
-			{
-				if (Log.IsDebugEnabled) Log.Debug(string.Format("Area.duplicar [area] {0}", Alias));
-
-                //ir buscar o registo to duplicate
-                sp.getRecord(this, codeValue);
-                string codInt = sp.codIntInsertion(this, false);
-                zeroDuplicar();
-                QPrimaryKey = codInt;
-                Zzstate = 1;
-
-                //1 - preencher carimbo
-                if (UserRecord)
-                {
-                    //TODO: validar direitos de acesso
-                    fillStampInsert();
-                }
-
-                //2 - prencher fields sequenciais
-                calculateTemporarySequentials();
-
-                //4 - fill defaults on empty fields
-                fillValuesDefault(sp, FunctionType.DUP);
-
-                //5 - operações internas que dependem de números sequenciais
-                fillInternalOperations(sp, null);
-
-                //6 - duplicate os documentos na db
-                sp.duplicateFilesDB(this, codInt, false);
-                sp.insertPseud(this);
-
-                //duplicate as fichas relacionadas
-                List<FieldRef> fieldsToUpdate = tambemDuplica(sp, codeValue.ToString());
-
-                // Reload formula fields (SR and UV) when cascade duplicate
-                reloadFormulaModelFields(sp, fieldsToUpdate);
-            }
-            catch (GenioException ex)
-			{
-                throw new BusinessException(ex.UserMessage, "DbArea.duplicar " + Alias, "Error duplicating record in DbArea: " + ex.Message, ex);
-			}
-            catch (Exception ex)
-            {
-                throw new BusinessException(null, "DbArea.duplicar " + Alias, "Error duplicating record in DbArea: " + ex.Message, ex);
-			}
-
-			return this;
-		}
 
         public override Area duplicate(PersistentSupport sp, CriteriaSet condition)
         {
@@ -3343,101 +3137,17 @@ namespace CSGenio.business
             return sp.returnValuesDocums(this, docField, isForeignKey, Qvalues, condition, order);
         }
 
-		/// <summary>
-		/// Método que permite eliminate e introduce vários registos
-		/// </summary>
-		/// <param name="sp">Suporte persistente</param>
-		/// <param name="fields">fields</param>
-		/// <param name="Qvalues">Qvalues</param>
-		/// <param name="condition">condition</param>
-		/// <returns>mensagem de Qresult</returns>
-        [Obsolete("Use StatusMessage eliminar_inserir_Varios(PersistentSupport sp, string[] fields, List<string[]> Qvalues, CriteriaSet condition) instead")]
-		public virtual StatusMessage eliminar_inserir_Varios(PersistentSupport sp, string[] fields, List<string[]> Qvalues, string condition)
-		{
-            try
-            {
-                if (Log.IsDebugEnabled) Log.Debug(string.Format("Area.eliminar_inserir_varios [area] {0}", Alias));
 
-                //ir obter todos os registos que existiam na table
-                QuerySelect qs = new QuerySelect(sp.DatabaseType);
-                qs.Select = new StringBuilder(PrimaryKeyName);
-                qs.setFromWithAlias(TableName, Alias);
-                qs.Where = new StringBuilder(condition);
-                qs.buildQuery();
-                ArrayList chavesPrimarias = sp.executeReaderOneColumn(qs.Query);
-                for (int i = 0; i < chavesPrimarias.Count; i++)
-                {
-                    chavesPrimarias[i] = DBConversion.ToKey(chavesPrimarias[i]);
-                }
-                StatusMessage Qresult = StatusMessage.GetAggregator();
-                string primaryKeyValue = "";
-                foreach (string[] valoresRegisto in Qvalues)
-                {
-
-                    insertNamesValuesFields(fields, valoresRegisto);
-                    primaryKeyValue = QPrimaryKey;
-                    if (!primaryKeyValue.Equals(""))//se não é vazio é porque já estava seleccionado
-                    {
-                        //remover da lista porque os que vão ficar na lista são os que
-                        //irão ser apagados
-                        chavesPrimarias.Remove(primaryKeyValue);
-                    }
-                    else
-                    {
-                        //key primária
-                        string codInt = sp.codIntInsertion(this, false);
-
-                        //AV(2010/09/20) As fichas novas deixam de ter registos com fields NULL e passam a ter com os Qvalues vazios apropriados
-                        createEmptyFields();
-
-                        sp.fillAreaInsert(this, user.Name, codInt, "", 1);
-
-                        //antes de introduce
-                        //1 - preencher carimbo
-                        fillStampInsert();
-
-                        //3 - preencher operações internas
-                        fillInternalOperations(sp, null);
-
-                        sp.insertPseud(this);
-
-                        // verificar os direitos de acesso
-                        if (accessRightsToChange())
-                        {
-                            var validationResults = Validation.validateFieldsChange(this, sp, user);
-                            CheckErrorMessages(Qresult, validationResults, "DbArea.eliminar_inserir_Varios");
-
-                            sp.change(this);
-                        }
-                        else
-                            throw new PersistenceException("Não tem permissões para alterar os registos.", "DbArea.eliminar_inserir_Varios", "The user has no permissions to change the records.");
-                    }
-                }
-                //verificar se sobraram chaves na lista to serem apagadas
-                if (chavesPrimarias.Count > 0)
-                {
-                    foreach (object keyValue in chavesPrimarias)
-                    {
-                        Fields = new Hashtable();
-                        QPrimaryKey = keyValue as string;
-                        eliminate(sp);
-                    }
-                }
-                Qresult.MergeStatusMessage(StatusMessage.OK("Eliminação e inserção múltipla bem sucedida."));
-                return Qresult;
-            }
-            catch (GenioException ex)
-            {
-				if (ex.ExceptionSite == "DbArea.eliminar_inserir_Varios")
-					throw;
-                throw new PersistenceException(ex.UserMessage, "DbArea.eliminar_inserir_Varios", "Error in multiple deletion and insertion in DbArea: " + ex.Message, ex);
-            }
-            catch (Exception ex)
-            {
-                throw new PersistenceException(null, "DbArea.eliminar_inserir_Varios", "Error in multiple deletion and insertion in DbArea: " + ex.Message, ex);
-            }
-		}
-
+        /// <summary>
+        /// Given a set of rows, adds news rows that are not in the database, and deletes any row not present in the set
+        /// </summary>
+        /// <param name="sp">Persistent support</param>
+        /// <param name="fields">The names of the fields in each row received</param>
+        /// <param name="Qvalues">The values of the rows received</param>
+        /// <param name="condition">A condition to filter the expected database set</param>
+        /// <returns></returns>
+        /// <exception cref="BusinessException"></exception>
+        /// <exception cref="PersistenceException"></exception>
         public virtual StatusMessage eliminar_inserir_Varios(PersistentSupport sp, string[] fields, List<string[]> Qvalues, CriteriaSet condition)
         {
             try
@@ -3547,7 +3257,7 @@ namespace CSGenio.business
             if(!Configuration.Messaging.Enabled)
                 return;
 
-            var meta = MessagingService.Metadata;
+            var meta = GenioDI.Messaging.Metadata;
             foreach(var pub in meta.Publishers)
             {
                 //check if the publication is enabled
@@ -3819,30 +3529,27 @@ namespace CSGenio.business
                         string key = QPrimaryKey;
                         if (!string.IsNullOrEmpty(key))
                         {
-                            string sql = "";
                             List<string> cp_list = new List<string>();
-                            int x = 0;
-                            foreach (Field Qfield in mq_area_1N.DBFields.Values) // Create dinamicamente query com todos os fields necessarios
+                    
+                            SelectQuery sqTables1N = new SelectQuery()
+                                .From(mq_area_1N.TableName)
+                                .Where(CriteriaSet.And()
+                                    .Equal(mq_area_1N.TableName, area_1N.Field, key)
+                                    .Equal(mq_area_1N.TableName, "zzstate", 0));
+                    
+                            foreach (Field Qfield in mq_area_1N.DBFields.Values.Where(x => x.MQueue)) // Create dinamicamente query com todos os fields necessarios
                             {
-                                if (Qfield.MQueue)
-                                {
-                                    cp_list.Add(Qfield.Name);
-                                    if (sql.Length > 0) sql += ", ";
-                                    sql += Qfield.Name;
-                                    x++;
-                                }
+                                cp_list.Add(Qfield.Name);
+                                sqTables1N.Select(mq_area_1N.TableName, Qfield.Name);
                             }
-                            //if (sql.EndsWith(", ")) sql = sql.Remove(sql.LastIndexOf(", ")); // deverá ser mais performante que a solução acima... TODO: testar
-
-                            sql = "SELECT " + sql + " FROM " + Configuration.Program + mq_area_1N.Alias + " WHERE " + area_1N.Field + " = '" + key + "' AND zzstate = 0";
-
-                            DataMatrix list_mq_area_1N = sp.executeQuery(sql);
+                    
+                            DataMatrix list_mq_area_1N = sp.Execute(sqTables1N);
                             for (int i = 0; i < list_mq_area_1N.NumRows; i++)
-	                        {
+                            {
                                 xmlNTableField = xml.CreateElement("mqrec");
                                 xmlNTableField.SetAttribute("table", area_1N.DomainTable);
                                 for (int n = 0; n < list_mq_area_1N.NumCols; n++)
-			                    {
+                                {
                                     xmlNTableField.AppendChild(MQXml.FieldAdd(xml,
                                                                               cp_list[n],
                                                                               mq_area_1N.DBFields[cp_list[n]],

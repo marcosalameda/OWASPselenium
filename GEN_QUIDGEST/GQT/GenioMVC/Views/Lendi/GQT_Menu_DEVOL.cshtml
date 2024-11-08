@@ -170,8 +170,10 @@
 		}
 
 		SearchFilters.value = '@Html.Raw(advFil)';
-		if (typeof SearchFilters.value === 'string' && SearchFilters.value.length > 0)
-			UpdateSearchFilterStatus("GQT_Menu_DEVOL", JSON.parse(SearchFilters.value))
+		if (typeof SearchFilters.value === 'string' && SearchFilters.value.length > 0) {
+			searchFilterGroups = JSON.parse(SearchFilters.value);
+			UpdateSearchFilterStatus("GQT_Menu_DEVOL", searchFilterGroups)
+		}
 	});
 </script>
 

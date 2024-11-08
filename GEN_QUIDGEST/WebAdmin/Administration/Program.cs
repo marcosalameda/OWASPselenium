@@ -7,19 +7,12 @@ using GenioServer.security;
 using log4net;
 using log4net.Config;
 using SoapCore;
+using Administration.AuxClass;
 
 //---------------------------------
 // Setup the GenioServer services
 //---------------------------------
-PersistenceFactoryExtension.Use();
-PersistentSupport.SetControlQueries(
-    GenioServer.persistence.PersistentSupportExtra.ControlQueries, 
-    GenioServer.persistence.PersistentSupportExtra.ControlQueriesOverride);
-GenioServer.framework.OverrideQueryDeclaring.Use();
-
-
-//Dependency injection
-UserFactory.BusinessManager = new UserBusinessService();
+CSGenio.GenioDIDefault.Use();
 
 //---------------------------------
 // Setup 3rd party services
@@ -85,10 +78,33 @@ builder.Services.AddHostedService<SchedulerServiceHost>(p => p.GetRequiredServic
 
 // USE /[MANUAL GQT APP_INIT]/
 
+// Add Swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{    
+    c.DocInclusionPredicate((_, apiDesc) =>
+    {        
+        return apiDesc.ActionDescriptor.RouteValues["controller"] == "RestAdmin";
+    });
+});
+
+//Add Cors
+var corsSettings = builder.Configuration.GetSection("Cors").Get<CorsConfig>() ?? new CorsConfig { AllowedHeaders = ["Content-Type"], AllowedMethods = ["GET", "POST" ], AllowedOrigins = [] };
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("WebAdminCorsPolicy", policy =>
+    {
+        policy.WithOrigins(corsSettings.AllowedOrigins)
+              .WithMethods(corsSettings.AllowedMethods)
+              .WithHeaders(corsSettings.AllowedHeaders);
+    });
+});
+
 var app = builder.Build();
 
-
 app.UseRouting();
+app.UseCors("WebAdminCorsPolicy");
 
 //Map SOAP endpoint
 ((IEndpointRouteBuilder) app).UseSoapEndpoint<IAdminService>("/WebAPI.asmx", new SoapEncoderOptions(), SoapSerializer.XmlSerializer, true); //cast needed to solve ambiguity
@@ -111,8 +127,8 @@ if (https_redirect == "hsts")
 
 if (app.Environment.IsDevelopment())
 {
-    //app.UseSwagger();
-    //app.UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 else
 {

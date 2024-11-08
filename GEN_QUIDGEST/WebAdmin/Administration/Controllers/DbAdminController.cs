@@ -578,9 +578,6 @@ namespace Administration.Controllers
         {
             List<UnusedIndexItem> res = new List<UnusedIndexItem>();
 
-            string pathConfig = CSGenio.framework.Configuration.GetConfigPath();
-            ConfigurationXML conf = ConfigurationXML.readXML(pathConfig + Path.DirectorySeparatorChar + "Configuracoes.xml");
-
             try
             {
                 var sp = CSGenio.persistence.PersistentSupport.getPersistentSupport(year);
@@ -665,9 +662,6 @@ namespace Administration.Controllers
         private static List<RecommendedIndexItem> FindRecommendedIndexes(Action<string, int> OnProgress, string year)
         {
             List<RecommendedIndexItem> res = new List<RecommendedIndexItem>();
-
-            string pathConfig = CSGenio.framework.Configuration.GetConfigPath();
-            ConfigurationXML conf = ConfigurationXML.readXML(pathConfig + Path.DirectorySeparatorChar + "Configuracoes.xml");
 
             try
                     {
@@ -1290,8 +1284,7 @@ namespace Administration.Controllers
             #region Innicialização das variaveis
             var model = new ChangeYearModel();
 
-            var pathConfig = CSGenio.framework.Configuration.GetConfigPath();
-            var conf = ConfigurationXML.readXML(pathConfig + Path.DirectorySeparatorChar + "Configuracoes.xml");
+            var conf = configManager.GetExistingConfig();
 
             model.Year = (DateTime.Now.Year + 1).ToString();
             model.Years = CSGenio.framework.Configuration.Years.Select(y => new SelectListItem() { Text = y, Value = y, Selected = (y == conf.anoDefault) });
@@ -1338,9 +1331,7 @@ namespace Administration.Controllers
         [HttpPost]
         public IActionResult ChangeYear([FromBody] ChangeYearModel model)
         {
-            var pathConfig = CSGenio.framework.Configuration.GetConfigPath();
-            var pathConfigFile = Path.Combine(pathConfig, "Configuracoes.xml");
-            var conf = ConfigurationXML.readXML(pathConfigFile);
+            var conf = configManager.GetExistingConfig();
 
             model.Years = CSGenio.framework.Configuration.Years.Select(y => new SelectListItem() { Text = y, Value = y, Selected = (y == conf.anoDefault) });// Voltar inicializar o array to não ter erros de renderização.
             if (!ModelState.IsValid || ChangeYearProgressBar.InProcess)
@@ -1401,10 +1392,10 @@ namespace Administration.Controllers
 
                 // Adicionar o novo DataSystems
                 conf.DataSystems.Add(dataSystem);
-                conf.writeXML(pathConfigFile);
+                configManager.StoreConfig(conf);
             }
 
-            // Reload Configuration static instance in server with the new Configuracoes.xml data
+            // Reload Configuration static instance in server with the new configuration data
             CSGenio.framework.Configuration.ReadConfiguration(conf);
             var dbMaintenance = new DBMaintenance(AppDomain.CurrentDomain.BaseDirectory);
             var reindexOrder = new DBMaintenance(AppDomain.CurrentDomain.BaseDirectory).GetReindexScripts();
@@ -1599,8 +1590,7 @@ namespace Administration.Controllers
                 return Json(model);
             }
 
-            string pathConfig = CSGenio.framework.Configuration.GetConfigPath();
-            ConfigurationXML conf = ConfigurationXML.readXML(pathConfig + Path.DirectorySeparatorChar + "Configuracoes.xml");
+            var conf = configManager.GetExistingConfig();
 
             try
             {

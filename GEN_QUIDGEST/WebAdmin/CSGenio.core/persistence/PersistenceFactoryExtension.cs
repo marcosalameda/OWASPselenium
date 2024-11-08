@@ -5,19 +5,11 @@ namespace CSGenio.persistence
     public static class PersistenceFactoryExtension
     {
         /// <summary>
-        /// Use this class as the factory method for persistent support allocation
-        /// </summary>
-        public static void Use()
-        {
-            PersistentSupport.RegisterSpFactory(PersistenceFactoryExtension.getPersistentSupport);
-        }
-
-        /// <summary>
         /// Last updated by [CJP] at [2016.07.06]
         /// Método to retornar a subclasse de suporte persistente
         /// </summary>
         /// <returns>Devolve uma instancia de PersistentSupport</returns>
-        private static PersistentSupport getPersistentSupport(DatabaseType dbType)
+        public static PersistentSupport getPersistentSupport(DatabaseType dbType)
         {
             try
             {

@@ -154,12 +154,12 @@ namespace CSGenio.business
                         //AV(2010/06/04) Os fields que eram apagados nos forms estavam a ser sobrepostos com o Qvalue na db por isso temos que testar se o Qfield está em memória
                         if (areaField.Fields[areaField.Alias + "." + argumentosPorArea.KeyName] == null)//se o Qvalue não está em memória ir ler à BD
                         {
-                            string codIntValue = (string)areaField.returnValueField(areaField.Alias + "." + areaField.PrimaryKeyName, FieldFormatting.CARACTERES);
+                            string codIntValue = areaField.QPrimaryKey;
                             valorChaveEst = DBConversion.ToKey(sp.returnField(areaField, argumentosPorArea.KeyName, codIntValue));
                             areaField.insertNameValueField(areaField.Alias + "." + argumentosPorArea.KeyName, valorChaveEst);
                         }
                         else
-                            valorChaveEst = (string)areaField.returnValueField(areaField.Alias + "." + argumentosPorArea.KeyName, FieldFormatting.CARACTERES);
+                            valorChaveEst = (string)areaField.returnValueField(areaField.Alias + "." + argumentosPorArea.KeyName);
                         if (valorChaveEst != "")//se a key estrangeira está em memória ou na BD (já está em memória)
                         {
                             //query to ir buscar os Qvalues dos fields

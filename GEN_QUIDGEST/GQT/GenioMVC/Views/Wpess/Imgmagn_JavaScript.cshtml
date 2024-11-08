@@ -98,7 +98,7 @@
 }
 		window.Form_Imgmagn.DeclareControls = function () {
 			@*Form controls*@
-			this.Controls.LED_IMGMAGN_WPESSFTBACKGR = new QImageControl($('[data-identifier="LED_IMGMAGN_WPESSFTBACKGR"]', this.element), window.Form_Imgmagn, '@Html.Raw(Url.Action("ImageDelete", "Wpess", new { id=Model.ValCodpess, modelname="Wpess", fldname="ValFtbackgr" }))', '@Html.Raw(Url.Action("ImageCropper", "Wpess", new { key=Model.ValCodpess, modelname= "Wpess", fldname= "ValFtbackgr", identifier= "FIMGMAGN", FormName= "Imgmagn", FieldId= "LED_IMGMAGN_WPESSFTBACKGR" }))',@Html.IsImageEmpty(Model.ValFtbackgr));
+			this.Controls.LED_IMGMAGN_WPESSFTBACKGR = new QImageControl($('[data-identifier="LED_IMGMAGN_WPESSFTBACKGR"]', this.element), window.Form_Imgmagn, '@Html.Raw(Url.Action("ImageDelete", "Wpess", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Wpess", "ValFtbackgr", "", Model.ValCodpess, null) }))', '@Html.Raw(Url.Action("ImageCropper", "Wpess", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Wpess", "ValFtbackgr", "", Model.ValCodpess, null), identifier= "FIMGMAGN", FormName= "Imgmagn", FieldId= "LED_IMGMAGN_WPESSFTBACKGR" }))',@Html.IsImageEmpty(Model.ValFtbackgr));
 
 
 

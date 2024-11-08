@@ -220,7 +220,7 @@
 
 
 			@Html.HiddenFor(model => model.ValCodpess, new { @pers_cs_field="ValCodpess", @pers_cs_area="Wareh", @form_area="true", @data_value = Model.ValCodpess, @data_identifier = "LED_ARMAPESSWPESSCODPESS_" })
-			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Armapess_@multiformfId" })
+			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Armapess_" + @multiformfId })
 		</div>
 	</div>
 	@if(Model.IsEditableMode)
@@ -344,7 +344,7 @@
 			@*Form controls*@
 			this.Controls.LED_ARMAPESSWPESSNFUNC___ = new QNumericControl($('[data-identifier="LED_ARMAPESSWPESSNFUNC___"]', this.element), window.Form_Armapess_@{@multiformfId});
 
-			this.Controls.LED_ARMAPESSWPESSPFOTO___ = new QImageControl($('[data-identifier="LED_ARMAPESSWPESSPFOTO___"]', this.element), window.Form_Armapess_@{@multiformfId}, '@Html.Raw(Url.Action("ImageDelete", "Wpess", new { id=Model.ValCodpess, modelname="Wpess", fldname="ValPfoto" }))', '@Html.Raw(Url.Action("ImageCropper", "Wpess", new { key=Model.ValCodpess, modelname= "Wpess", fldname= "ValPfoto", identifier= "FARMAPESS", FormName= "Armapess", FieldId= "LED_ARMAPESSWPESSPFOTO___" }))',@Html.IsImageEmpty(Model.ValPfoto));
+			this.Controls.LED_ARMAPESSWPESSPFOTO___ = new QImageControl($('[data-identifier="LED_ARMAPESSWPESSPFOTO___"]', this.element), window.Form_Armapess_@{@multiformfId}, '@Html.Raw(Url.Action("ImageDelete", "Wpess", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Wpess", "ValPfoto", "", Model.ValCodpess, null) }))', '@Html.Raw(Url.Action("ImageCropper", "Wpess", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Wpess", "ValPfoto", "", Model.ValCodpess, null), identifier= "FARMAPESS", FormName= "Armapess_" + @multiformfId, FieldId= "LED_ARMAPESSWPESSPFOTO___" }))',@Html.IsImageEmpty(Model.ValPfoto));
 
 			this.Controls.LED_ARMAPESSWPESSNAME____ = new QTextControl($('[data-identifier="LED_ARMAPESSWPESSNAME____"]', this.element), window.Form_Armapess_@{@multiformfId});
 
@@ -528,8 +528,6 @@
 		@* --- --- --- --- --- *@
 	</text>
 }
-
-
 // USE /[MANUAL GQT MULTIFORM_CODEJS ARMAPESS]/
 
     modal_QuidgestGlobals = {

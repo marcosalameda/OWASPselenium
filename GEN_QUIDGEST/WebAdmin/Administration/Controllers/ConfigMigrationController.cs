@@ -34,7 +34,8 @@ namespace Administration.Controllers
         [HttpPost]
         public IActionResult MigrateConfig([FromBody] Models.ConfigMigrationModel model)
         {
-            ConfigXMLMigration.Migration(AuxFunctions.GetConfigVersion(configManager));
+            var configVersion = AuxFunctions.GetConfigVersion(configManager);
+            ConfigXMLMigration.Migration(configManager, configVersion);
 
             //reload configuration file         
             Configuration.Reload();

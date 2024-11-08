@@ -35,7 +35,7 @@
 // USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_CARDIMGTHUMB_WAREH_WAREHDES]/
 		column.Expression(p => p.Wareh.ValWarehdes).Title(@Resources.WAREHOUSE51864).Field("Wareh.ValWarehdes").Size(30);
 // USE /[MANUAL GQT CUSTOM_COLUMN STY_MENU_CARDIMGTHUMB_WPESS_FTTHUMB]/
-		column.Expression(p => Html.ImageMagnifierZoom(p.ValFtthumb, new {alt=@Resources.IMAGE_THUMBNAIL01682,}, Url.Action("ImageHandlerGet", "Home", new { id = p.ValCodpess, modelname = "Wpess", fldname = "ValFtthumb" }))).Title(@Resources.IMAGE_THUMBNAIL01682).Field("ValFtthumb").Size(3);
+		column.Expression(p => Html.ImageMagnifierZoom(p.ValFtthumb, new {alt=@Resources.IMAGE_THUMBNAIL01682,}, Url.Action("ImageHandlerGet", "Home", new { ticket = Helpers.GetFileTicket(UserContext.Current.User, "Wpess", "ValFtthumb", "", p.ValCodpess, null) }))).Title(@Resources.IMAGE_THUMBNAIL01682).Field("ValFtthumb").Size(3);
             column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
         })
         .SetLimits(this.Model.tableLimits)

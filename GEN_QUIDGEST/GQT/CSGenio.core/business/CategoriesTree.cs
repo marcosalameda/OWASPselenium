@@ -64,13 +64,6 @@ namespace CSGenio.business
             get;
         }
 
-        [Obsolete("Use SelectQuery GenericQueryNivel0 instead")]
-        public abstract QuerySelect QueryLevel0
-        {
-            get;
-            set;
-        }
-
         public abstract SelectQuery GenericQueryLevel0
         {
             get;
@@ -190,43 +183,6 @@ namespace CSGenio.business
 
             }
             return primeiroNivel;
-        }
-
-        /// <summary>
-        /// Metodo to por condições EPH e outras.
-        /// </summary>
-        /// <returns>void</returns>
-        [Obsolete("Use void poeCondicao(User utilizador, CriteriaSet condicao) instead")]
-        public void putCondition(User user, string condition)
-        {
-            Area area = (Area)this.LevelsAreas[0];
-
-            string module = this.Module;
-            //So 2007.05.31 alterei to passar a usar a classe LevelAccess
-            string level = user.LevelModules[module].ToString();
-            if (area.Ephs != null)//adicionar as condições das ephs se existirem
-            {
-                object ephsAreaObj = area.Ephs[new Par(module, level)];
-                if (ephsAreaObj != null)
-                {
-                    string[] ephsArea = (string[])ephsAreaObj;
-                    Hashtable ephsUtilizador = user.Ephs;
-                    for (int i = 0; i < ephsArea.Length; i++)
-                        if (ephsUtilizador.ContainsKey(module + "_" + ephsArea[i]))
-                        {
-                            if (condition.Equals(""))
-                            {
-                                condition = ephsUtilizador[module + "_" + ephsArea[i]].ToString();
-                            }
-                            else
-                            {
-                                condition += " AND " + ephsUtilizador[module + "_" + ephsArea[i]].ToString();
-                            }
-                        }
-                }
-            }
-
-            this.QueryLevel0.addWhere(condition, "");
         }
 
         public void putCondition(User user, CriteriaSet condition)

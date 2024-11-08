@@ -211,9 +211,15 @@ namespace CSGenio.framework
             this.KeyValue = keyValue;
         }
 
+        /// <summary>
+        /// Create a resource name with a random sufix to avoid overriding the same files
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="Qfield"></param>
+        /// <returns></returns>
         public static string GenerateResourceName(string table, string Qfield)
         {
-            int suf = new Random().Next();
+            string suf = Guid.NewGuid().ToString();
             // a forma de nomear os ficheiros pode ser alterada, visto que já não são gravados na pasta temp
             string file = "imagem" + "_" + table + "_" + Qfield + suf + ".jpg";
             return file;

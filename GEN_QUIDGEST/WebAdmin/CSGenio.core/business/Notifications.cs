@@ -467,22 +467,24 @@ namespace CSGenio.business
         /// </summary>
         public void WriteMessagesToBD(PersistentSupport sp, User user)
         {
-		        String system = CSGenio.framework.Configuration.Program;
-				String dest_table = DatabaseFieldMapping.MessagesTable;
-				var area = CSGenio.business.Area.createArea(dest_table.ToLowerInvariant(), user, user.CurrentModule) as DbArea;
+            String system = CSGenio.framework.Configuration.Program;
+            String dest_table = DatabaseFieldMapping.MessagesTable;
+            var area = CSGenio.business.Area.createArea(dest_table.ToLowerInvariant(), user, user.CurrentModule) as DbArea;
+			List<string> recordPKs = new List<string>();
 
-				foreach (CSGenioAnotificationmessage msg in this.MessagesConfig)
+            foreach (CSGenioAnotificationmessage msg in this.MessagesConfig)
+            {
+                if (msg.ValAtivo == 1 && msg.ValGravabd == 1)
                 {
-                    if (msg.ValAtivo == 1 && msg.ValGravabd == 1)
-                    {
                     foreach (CSGenioAnotificationmessage.FinalMsg finalmsg in msg.FinalMsgs)
                     {
                         //gets the final row belonging to this configuration (same IDMSG) that has all the fields set according to SGBD:
-                        List<DataRow> final_rows = QueryData.DbDataSet.Tables[0].Select("IDMSG = '" + finalmsg.ID + "'").ToList();
+                        DataRow final_row = QueryData.DbDataSet.Tables[0].Select("IDMSG = '" + finalmsg.ID + "'").FirstOrDefault();
 
+                        if (final_row == null)
+                            continue;
 
                         InsertQuery insertSql = new InsertQuery();
-
 
                         string recordPK = Guid.NewGuid().ToString();
                         insertSql.Into(area.TableName);
@@ -495,9 +497,9 @@ namespace CSGenio.business
                             String BDfield = fieldmap.FieldnameApp;
                             object fieldvalue = null;
 
-                            fieldvalue = final_rows[0][queryfield];
-							if(!insertSql.Values.Contains(new ColumnAttribution(insertSql.IntoTable.TableAlias, BDfield, fieldvalue)))
-								insertSql.Value(BDfield, fieldvalue);
+                            fieldvalue = final_row[queryfield];
+                            if (!insertSql.Values.Contains(new ColumnAttribution(insertSql.IntoTable.TableAlias, BDfield, fieldvalue)))
+                                insertSql.Value(BDfield, fieldvalue);
 
                         }
                         sp.Execute(insertSql);
@@ -505,19 +507,25 @@ namespace CSGenio.business
                         sp.getRecord(area, recordPK);
                         area.UserRecord = false;
                         area.update(sp);
+
+                        recordPKs.Add(recordPK);
                     }
                 }
             }
 
-			//--ATUALIZA AS FORMULAS DAS NOTIFICACOES
-                        string update_formulas = "" +
-                        " DECLARE @CODNOTIF KEYLISTTYPE \r\n " +
-                        " INSERT INTO @CODNOTIF(ITEM) \r\n " +
-						" SELECT "+ area.PrimaryKeyName + " FROM "+ CSGenio.framework.Configuration.Program + DatabaseFieldMapping.MessagesTable + " WHERE IDNOTIF ='" + IDNotif + "' "+
-                        "\r\n" +
-                        " EXEC GENIO_DEFAULT_" + DatabaseFieldMapping.MessagesTable + " @CODNOTIF \r\n " +
-                        " EXEC GENIO_CALCBLOCK_" + DatabaseFieldMapping.MessagesTable + " @CODNOTIF \r\n ";
-                        sp.executeQuery(update_formulas);
+            //--ATUALIZA AS FORMULAS DAS NOTIFICACOES
+            if (recordPKs.Count > 0)
+            {
+                string update_formulas = "" +
+                " DECLARE @CODNOTIF KEYLISTTYPE \r\n " +
+                " INSERT INTO @CODNOTIF(ITEM) \r\n " +
+                " SELECT " + area.PrimaryKeyName + " FROM " + CSGenio.framework.Configuration.Program + DatabaseFieldMapping.MessagesTable + " WHERE " +
+                DatabaseFieldMapping.MessagesTablePKName + " IN ('" + string.Join("','", recordPKs) + "')" +
+                "\r\n" +
+                " EXEC GENIO_DEFAULT_" + DatabaseFieldMapping.MessagesTable + " @CODNOTIF \r\n " +
+                " EXEC GENIO_CALCBLOCK_" + DatabaseFieldMapping.MessagesTable + " @CODNOTIF \r\n ";
+                sp.executeQuery(update_formulas);
+            }
         }
     }
 

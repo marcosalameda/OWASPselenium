@@ -1,24 +1,24 @@
 ﻿<template>
   <div id="maintenance_dbindexes_container">
-    <row>
-      <card>
-        <template #header>
-          {{ Resources[Model.IndexTitle] }}
-        </template>
-        <template #body>
-          <row>
-            <label class="i-text__label">{{ Resources.ULTIMA_VERIFICACAO35305 }}</label>
-            {{ formatDate(Model.LastUpdate) }}
-          </row>
-          <row>
-            <q-button
+    <q-group-box-container :label="Resources[Model.IndexTitle]">
+        <div class="container-fluid">
+          <q-row-container>
+            <q-control-wrapper class="row-line-group">
+              <base-input-structure
+                class="i-text">
+                <label class="i-text__label">{{ Resources.ULTIMA_VERIFICACAO35305 }}</label>
+                  {{ formatDate(Model.LastUpdate) }}
+              </base-input-structure>
+            </q-control-wrapper>
+          </q-row-container>
+        </div>
+        <row class="footer-btn">
+          <q-button
               b-style="primary"
               :label="Resources.ATUALIZAR22496"
               @click="DBIndexesStart" />
-          </row>
-        </template>
-      </card>
-    </row>
+        </row>
+    </q-group-box-container>
     <row v-if="Model.Active">
       <label :for="'progressbarVw_' + Model.Num">{{ Resources.PROGRESSO52692 }}</label>
       <div class="progress" :id="'progressbarVw_' + Model.Num">
@@ -29,38 +29,23 @@
       <div>{{ dataPB.message }}</div>
     </row>
     <row v-if="!isEmptyObject(Model.UnusedIndexesList)">
-      <card>
-        <template #header>
-          {{ Resources[Model.IndexTitle] }}: {{ Model.UnusedIndexesList.length }} {{ Resources.CASOS25883 }}
-        </template>
-        <template #body>
-          <row>
-              <qtable :rows="tUnusedIndexes.rows"
-                      :columns="tUnusedIndexes.columns"
-                      :config="tUnusedIndexes.config"
-                      :totalRows="tUnusedIndexes.total_rows">
-              </qtable>
-          </row>
-        </template>
-      </card>
+      <q-group-box-container :label="getUnusedTitle()">
+        <qtable :rows="tUnusedIndexes.rows"
+          :columns="tUnusedIndexes.columns"
+          :config="tUnusedIndexes.config"
+          :totalRows="tUnusedIndexes.total_rows">
+        </qtable> 
+      </q-group-box-container>
     </row>
     <row v-else-if="!isEmptyObject(Model.RecommendedIndexesList)">
-      <card>
-        <template #header>
-          {{ Resources[Model.IndexTitle] }}: {{ Model.RecommendedIndexesList.length }} {{ Resources.CASOS25883 }}
-        </template>
-        <template #body>
-          <row>
-              <qtable :rows="tRecommendedIndexes.rows"
-                      :columns="tRecommendedIndexes.columns"
-                      :config="tRecommendedIndexes.config"
-                      :totalRows="tRecommendedIndexes.total_rows">
-              </qtable>
-          </row>
-        </template>
-      </card>
+      <q-group-box-container :label="getRecommendedTitle">
+        <qtable :rows="tRecommendedIndexes.rows"
+          :columns="tRecommendedIndexes.columns"
+          :config="tRecommendedIndexes.config"
+          :totalRows="tRecommendedIndexes.total_rows">
+        </qtable>
+      </q-group-box-container>
     </row>
-
   </div>
 </template>
 
@@ -250,6 +235,12 @@
       fillTRecommendedIndexes: function() {
           this.tRecommendedIndexes.rows = this.Model.RecommendedIndexesList || [];
           this.tRecommendedIndexes.total_rows = (this.Model.RecommendedIndexesList || []).length;
+      },
+      getUnusedTitle() {
+        return `${this.Resources[this.Model.IndexTitle]} : ${this.Model.UnusedIndexesList.length} ${this.Resources.CASOS25883}`
+      },
+      getRecommendedTitle() {
+        return `${this.Resources[this.Model.IndexTitle]} : ${this.Model.RecommendedIndexesList.length} ${this.ResourcesCASOS25883}`
       }
     },
     created: function () {

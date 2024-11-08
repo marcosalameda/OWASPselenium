@@ -112,7 +112,7 @@
 
 			this.Controls.LED_PAIS____CNTRYALFA3___ = new QTextControl($('[data-identifier="LED_PAIS____CNTRYALFA3___"]', this.element), window.Form_Pais);
 
-			this.Controls.LED_PAIS____CNTRYFLAG____ = new QImageControl($('[data-identifier="LED_PAIS____CNTRYFLAG____"]', this.element), window.Form_Pais, '@Html.Raw(Url.Action("ImageDelete", "Cntry", new { id=Model.ValCodcntry, modelname="Cntry", fldname="ValFlag" }))', '@Html.Raw(Url.Action("ImageCropper", "Cntry", new { key=Model.ValCodcntry, modelname= "Cntry", fldname= "ValFlag", identifier= "FPAIS", FormName= "Pais", FieldId= "LED_PAIS____CNTRYFLAG____" }))',@Html.IsImageEmpty(Model.ValFlag));
+			this.Controls.LED_PAIS____CNTRYFLAG____ = new QImageControl($('[data-identifier="LED_PAIS____CNTRYFLAG____"]', this.element), window.Form_Pais, '@Html.Raw(Url.Action("ImageDelete", "Cntry", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Cntry", "ValFlag", "", Model.ValCodcntry, null) }))', '@Html.Raw(Url.Action("ImageCropper", "Cntry", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Cntry", "ValFlag", "", Model.ValCodcntry, null), identifier= "FPAIS", FormName= "Pais", FieldId= "LED_PAIS____CNTRYFLAG____" }))',@Html.IsImageEmpty(Model.ValFlag));
 
 			this.Controls.IFF_PAIS____PSEUDIMOVEL__ = new QDateControl($('[data-identifier="IFF_PAIS____PSEUDIMOVEL__"]', this.element), window.Form_Pais);
 

@@ -2,30 +2,19 @@
 	<div id="dashboard_container">
 		<div class="q-stack--column">
 			<h1 class="f-header__title">
-			{{ Resources.DASHBOARD51597 }}
-				<!-- <q-button v-if="Model.HasConfig"
-					b-style="primary"
-					class="ml-auto"
-					:label="maintenanceBtnText"
-					@click="ScheduleMaintenance" /> -->
+				{{ Resources.DASHBOARD51597 }}
 			</h1>
 		</div>
 		<hr />
 		<div v-if="!loaded" class="card text-center">
 			<div class="card-body">
-				<span class="feature-icon glyphicons glyphicons-hourglass"></span>
-				<h4>{{ Resources.A_CARREGAR___34906 }}</h4>
+				<q-spinner-loader id="dashboard-loader"></q-spinner-loader>
 			</div>
+			<h4>{{ Resources.A_CARREGAR___34906 }}</h4>
 		</div>
 		<div v-else>
-			<div v-if="!Model.HasConfig" class="alert alert-danger">
-				<h4>{{ Resources.NO_CONFIGURATION_FIL40493 }}</h4>
-				<p><span v-html="Model.ResultErrors"></span></p>
-				<q-button
-					:label="Resources.CRIAR_CONFIGURACAO_D17273"
-					@click.stop="createNewConfig" />
-			</div>
-			<div v-if="Model.ResultErrors && Model.HasConfig" class="alert alert-danger">
+			<!-- Errors banner -->
+			<div v-if="Model.ResultErrors" class="alert alert--danger">
 				<h4>{{ Resources.ERRO_35877 }}</h4>
 				<p><span v-html="Model.ResultErrors"></span></p>
 				<q-button
@@ -33,72 +22,27 @@
 					:label="Resources.REINDEXAR_BASE_DE_DA52902"
 					@click.stop="navigateTo($event, 'maintenance')" />
 			</div>
-			<br>
-
-			<div v-if="Model.IsBetaTestig" class="alert alert-warning">
+			<br v-if="Model.ResultErrors">
+			<!-- Maintenance banner -->
+			<div v-if="CurentMaintenance.IsActive || CurentMaintenance.IsScheduled" class="alert alert--info">
+				<h4>{{ Resources.INFORMACAO46082 }}</h4>
+				<div>
+					<span class="mdi mdi-alert alert-icon"></span>
+					<span> {{ maintenanceText }} </span>
+				</div>
+				<q-button
+					:label="maintenanceBtnText"
+					@click.stop="navigateTo($event, 'maintenance')" />
+			</div>
+			<br v-if="CurentMaintenance.IsActive || CurentMaintenance.IsScheduled" >
+			<!-- Is Beta Test -->
+			<div v-if="Model.IsBetaTestig" class="alert alert--warning">
 				<p></p>
 				<p><b>{{ Resources.AMBIENTE_DE_QUALIDAD42119 }}</b></p>
 			</div>
 
-			<div v-if="needsBasicConfig()">
-				<h4>{{ Resources.CONFIGURAR_O_SEU_PRO44930 }}</h4>
-				<div class="row">
-					<div class="col-auto" >
-						<div id="card-system"
-							:class="getCardClass('card-system')"
-							@click.stop="Model.HasConfig ? navigateTo($event, 'system_setup') : null">
-							<span class="mdi mdi-tools"></span>
-							<div class="c-card__title">{{ Resources.CONFIGURACAO_DO_SIST39343 }}</div>
-						</div>
-						<q-tooltip
-							v-if="!Model.HasConfig"
-							anchor="#card-system"
-							:text="Resources.ESTA_ACAO_ESTA_BLOQU25038" />
-						<h4 class="q-type__subtitle">
-							<span>1&#46;</span>
-							{{ Resources.CONFIGURAR_O_SEU_PRO44930 }}
-							<span class="mdi mdi-check-bold"></span>
-						</h4>
-					</div>
-					<div class="col-auto">
-						<div id="card-database"
-							:class="getCardClass('card-database')"
-							@click.stop="Model.HasConfig ? navigateTo($event, 'maintenance') : null">
-							<span class="mdi mdi-database-cog"></span>
-							<div class="c-card__title">{{ Resources.MANUTENCAO_DA_BASE_D10092 }}</div>
-						</div>
-						<q-tooltip
-							v-if="!Model.HasConfig"
-							anchor="#card-database"
-							:text="Resources.ESTA_ACAO_ESTA_BLOQU25038" />
-						<h4 class="q-type__subtitle">
-							<span>2&#46;</span>
-							{{ Resources.ATUALIZAR_A_BASE_DE_60308 }}
-							<span class="mdi mdi-check-bold"></span>
-						</h4>
-					</div>
-					<div class="col-auto">
-						<div id="card-user"
-							:class="getCardClass('card-user')"
-							@click.stop="Model.HasConfig ? navigateTo($event, 'users') : null">
-							<span class="mdi mdi-account-cog"></span>
-							<div class="c-card__title">{{ Resources.GESTAO_DE_UTILIZADOR20428 }}</div>
-						</div>
-						<q-tooltip
-							v-if="!Model.HasConfig"
-							anchor="#card-user"
-							:text="Resources.ESTA_ACAO_ESTA_BLOQU25038" />
-						<h4 class="q-type__subtitle">
-							<span>3&#46;</span>
-							{{ Resources.CRIAR_PERFIL_DE_UTIL50057 }}
-							<span class="mdi mdi-check-bold"></span>
-						</h4>
-					</div>
-				</div>
-			</div>
-
 			<!-- INFORMATION -->
-			<div v-else>
+			<div>
 				<div class="row">
 					<div class="col-12">
 						<div class="control-row-group">
@@ -114,7 +58,7 @@
 									</dl>
 									<dl class="row">
 										<dt>{{ Resources.VERSAO_DE_SISTEMA07287 }}</dt>
-										<dd>2784</dd>
+										<dd>2827</dd>
 										<dt>{{ Resources.VERSAO_DE_BASE_DE_DA46937 }}</dt>
 										<dd>{{ Model.VersionDbGen }}</dd>
 										<dt>{{ Resources.APP_MIGRATION_VERSIO41495 }}</dt>
@@ -122,9 +66,9 @@
 										<dt>{{ Resources.VERSAO_DOS_INDICES49454 }}</dt>
 										<dd>{{ Model.VersionIdxDbGen }}</dd>
 										<dt>{{ Resources.VERSAO_DE_GENIO44840 }}</dt>
-										<dd>349.90</dd>
+										<dd>354.08</dd>
 										<dt>{{ Resources.GERADO_EM27272 }}</dt>
-										<dd>09/13/2024</dd>
+										<dd>10/30/2024</dd>
 									</dl>
 									<dl class="row">
 										<span class="app-brand">
@@ -224,8 +168,6 @@ export default {
 				dtClass: 'col-sm-2 textRight',
 				ddClass: 'col-sm-10'
 			},
-			showScheduleDT: true,
-			scheduleDT: moment(),
 			UsersCount: 0,
 			queryParams: {
 				sort: [],
@@ -275,9 +217,17 @@ export default {
 	computed: {
 		maintenanceBtnText() {
 			var vm = this;
-			return vm.CurentMaintenance.IsActive ? vm.Resources.DESACTIVAR_MANUTENCA45568 :
-				(vm.CurentMaintenance.IsScheduled ? vm.Resources.MUDAR_AGENDAMENTO_DE08195 : vm.Resources.AGENDAR_MANUTENCAO19112);
-		}
+			return vm.CurentMaintenance.IsActive 
+				? vm.Resources.DESACTIVAR_MANUTENCA45568 
+				: vm.Resources.MUDAR_AGENDAMENTO_DE08195;
+		},
+
+		maintenanceText() {
+			var vm = this;
+			return vm.CurentMaintenance.IsActive 
+				? vm.Resources.O_SISTEMA_ENCONTRA_S37912 
+				: vm.Resources.O_SISTEMA_IRA_ENTRAR46754.replace('{0}', vm.formatDate(vm.CurentMaintenance.Schedule));
+		},
 	},
 	methods: {
 		fetchData() {
@@ -286,6 +236,9 @@ export default {
 			QUtils.FetchData(QUtils.apiActionURL('Dashboard', 'Index')).done(function (data) {
 				QUtils.log("Fetch data - OK (Dashboard)", data);
 				$.each(data.model, function (propName, value) { vm.Model[propName] = value; });
+				if (!vm.Model.HasConfig) {
+					vm.navigateTo(event, 'no_configuration', vm.hasSubmenu);
+				}
 				$.each(data.CurentMaintenance, function (propName, value) { vm.CurentMaintenance[propName] = value; });
 				QUtils.FetchData(QUtils.apiActionURL('Users', 'GetUserList', vm.queryParams)).done(function (data) {
 					vm.UsersCount = data.recordsTotal;
@@ -293,80 +246,8 @@ export default {
 				});
 			});
 		},
-		needsBasicConfig() {
-			return !this.Model.HasConfig || (this.Model.DBSize === 0 && this.Model.VersionDb === 0) || this.UsersCount === 0
-		},
 		showDBButton() {
 			return this.Model.HasDiffVersion || this.Model.VersionDb != -1
-		},
-		getCardClass(cardId) {
-			switch (cardId) {
-				case 'card-system':
-					return this.Model.HasConfig ? 'c-card-dashboard done' : 'c-card-dashboard disabled';
-				
-				case 'card-database':
-					return this.Model.DBSize > 0 ? 'c-card-dashboard done' : 'c-card-dashboard disabled';
-
-				case 'card-user':
-					return this.UsersCount > 0 ? 'c-card-dashboard done' : 'c-card-dashboard disabled';
-
-				default:
-					return this.Model.HasConfig ? 'c-card-dashboard' : 'c-card-dashboard disabled';
-			}
-		},
-		createNewConfig() {
-			var vm = this;
-			//Call method that creates a configuration file
-			QUtils.postData('Dashboard', 'CreateConfiguration', null, null, function (data) {
-					if (data.Success) {
-						bootbox.alert(vm.Resources.NEW_CONFIGURATION_CR61652);
-						vm.navigateTo(null, 'system_setup');
-					}
-					else {
-						bootbox.alert(vm.Resources.THERE_WAS_AN_ERROR_C44163 + "<br>" + data.Message);
-					}
-					vm.fetchData();
-			});               
-		},
-		ScheduleMaintenance() {
-			var vm = this;
-			if (vm.CurentMaintenance.IsActive) {
-					QUtils.postData('Dashboard', 'DisableMaintenance', null, null, function (data) {
-						QUtils.log("DisableMaintenance - Response", data);
-						$.each(data.CurentMaintenance, function (propName, value) { vm.CurentMaintenance[propName] = value; });
-					});
-			}
-			else {
-				var dialog = bootbox.dialog({
-					size: "small",
-					title: vm.maintenanceBtnText,
-					message: '<div id="xpto"></div><div><small>*' + vm.Resources.DEIXAR_VAZIO_PARA_LI30681 + '<small></div>',
-					buttons: {
-						confirm: {
-							label: vm.Resources.CONFIRMAR09808,
-							className: 'btn-success',
-							callback: function () {
-							QUtils.postData('Dashboard', 'ScheduleMaintenance', { date: vm.scheduleDT }, null, function (data) {
-									QUtils.log("ScheduleMaintenance - Response", data);
-									$.each(data.CurentMaintenance, function (propName, value) { vm.CurentMaintenance[propName] = value; });
-								});
-							}
-						},
-						cancel: {
-							label: vm.Resources.CANCELAR49513,
-							className: 'btn-danger'
-						}
-					},
-				});
-				dialog.init(function () {
-					vm.scheduleDT = moment().add(5, 'minutes');
-					$('#xpto').append(vm.$refs.scheduleDT.$el);
-				});
-				dialog.on('hide.bs.modal', function () {
-					vm.showScheduleDT = false;
-					setTimeout(function () { vm.showScheduleDT = true; }, 200);
-				});
-			}
 		}
 	},
 	created() {

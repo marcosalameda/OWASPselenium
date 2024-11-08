@@ -1,0 +1,265 @@
+﻿@model GenioMVC.ViewModels.Pesso.Pessohis_ViewModel
+@using GenioMVC.Models.Navigation;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	ViewBag.Form = "Pessohis";
+	ViewBag.Title = @Resources.PERSON10446;
+    ViewBag.formmode = Model.GetFormMode;
+	ViewBag.ClassForFormLayout = "form-flow";
+}
+
+
+@if (!Model.NestedForm) {
+    if(Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+    {
+        using (Html.BeginForm("Action", "Pesso", FormMethod.Post, new { @class = "form-horizontal", area="Pesso", data_form="Pessohis" }))
+        {
+            @form_content_alert()
+            @Html.QValidationSummary()
+	        @LoadDefault()
+        }
+    }
+    else
+    {
+        <div class="form-horizontal" id="Pessohis" area="Pesso" data-form="Pessohis">
+	        @LoadDefault()
+        </div>
+    }
+}
+else {
+    <div class="c-card nested-form" id="Pessohis_well" area="Pesso" data-form="Pessohis">
+        @Html.QValidationSummary()
+		@LoadDefault()
+    </div>
+}
+
+@helper form_content_body() {
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-static-text draggable " id="CONTAINER_IFF_PESSOHISPSEUDFIELD002">
+									@Html.StaticText(@Resources.HIST_PATTERN_DESCRIP64421, "ValField002", new {help_id = "IFF_PESSOHISPSEUDFIELD002", @class = "input-medium list-static-text" })
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_PESSOHISPESSOIDFUNCIO">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValIdfuncio, new { label_id="LED_PESSOHISPESSOIDFUNCIO", @class = " i-text__label", id="LABEL_LED_PESSOHISPESSOIDFUNCIO"}, true, true)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_PESSOHISPESSOIDFUNCIO','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValIdfuncio, new {help_id = "LED_PESSOHISPESSOIDFUNCIO", @class = "Number text-right i-text__field i-text input-mini", data_sequencial = "M1", data_identifier = "LED_PESSOHISPESSOIDFUNCIO", @pers_cs_area = "Pesso", @pers_cs_field = "ValIdfuncio", @db_field = "ValIdfuncio", title = @Resources.OFFICIAL_NO_34819, data_number_integer = "6", data_number_decimals = "0", data_number_format = "999999" })
+								@Html.ValidationMessageFor(model => model.ValIdfuncio)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_PESSOHISPESSONAME____">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValName, new { label_id="LED_PESSOHISPESSONAME____", @class = " i-text__label", id="LABEL_LED_PESSOHISPESSONAME____"}, true, true)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_PESSOHISPESSONAME____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextBoxFor(model => model.ValName, new {help_id = "LED_PESSOHISPESSONAME____", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_PESSOHISPESSONAME____", @pers_cs_area = "Pesso", @pers_cs_field = "ValName", @db_field = "ValName", title = @Resources.NAME31974, maxlength = "85", rows = "85" })
+								@Html.ValidationMessageFor(model => model.ValName)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="row-large-control">
+						<div class="row-line-group" id="CONTAINER_IFF_PESSOHISPSEUDFIELD001">
+								<div id="Pessohis_ValField001" data-identifier="IFF_PESSOHISPSEUDFIELD001"  data-extra-options="" > 
+									@{ Html.RenderAction("Pessohis_ValField001", "Pesso", new { id = Model.ValCodpesso, partialView = "Pessohis_ValField001"}); }
+								</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+		@Html.HiddenFor(model=> model.ValEmail, new { @pers_cs_area = "Pesso", @pers_cs_field = "ValEmail", @data_identifier = "LED_PESSOHISPESSOEMAIL___" })
+		@Html.HiddenFor(model=> model.ValEmail2, new { @pers_cs_area = "Pesso", @pers_cs_field = "ValEmail2", @data_identifier = "LED_PESSOHISPESSOEMAIL2__" })
+
+			@Html.HiddenFor(model => model.ValCodcateg, new { @pers_cs_field="ValCodcateg", @pers_cs_area="Pesso", @data_value = Model.ValCodcateg, @db_field="ValCodcateg", @trelate="Categ", @tfrelate="Codcateg", @data_identifier="LED_PESSOHISCATEGCODCATEG" })
+			@Html.HiddenFor(model => model.ValCodregia, new { @pers_cs_field="ValCodregia", @pers_cs_area="Pesso", @data_value = Model.ValCodregia, @db_field="ValCodregia", @trelate="Regi1", @tfrelate="Codregia", @data_identifier="LED_PESSOHISREGI1CODREGIA" })
+			@Html.HiddenFor(model => model.ValCodpaise, new { @pers_cs_field="ValCodpaise", @pers_cs_area="Pesso", @data_value = Model.ValCodpaise, @db_field="ValCodpaise", @trelate="Cntry", @tfrelate="Codcntry", @data_identifier="LED_PESSOHISCNTRYCODCNTRY" })
+			@Html.HiddenFor(model => model.ValCodempre, new { @pers_cs_field="ValCodempre", @pers_cs_area="Pesso", @data_value = Model.ValCodempre, @db_field="ValCodempre", @trelate="Cmpny", @tfrelate="Codempre", @data_identifier="LED_PESSOHISCMPNYCODEMPRE" })
+			@Html.HiddenFor(model => model.ValCodcntry, new { @pers_cs_field="ValCodcntry", @pers_cs_area="Pesso", @data_value = Model.ValCodcntry, @db_field="ValCodcntry", @trelate="Pais1", @tfrelate="Codcntry", @data_identifier="LED_PESSOHISPAIS1CODCNTRY" })
+
+			@Html.HiddenFor(model => model.ValCodpesso, new { @pers_cs_field="ValCodpesso", @pers_cs_area="Pesso", data_refresh = "true", @form_area="true", @data_value = Model.ValCodpesso, @data_identifier = "LED_PESSOHISPESSOCODPESSO" })
+
+            @Html.Hidden("IgnoreWarnings", "false", new { id = "IgnoreWarnings" })
+
+			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Pessohis" })
+            @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Pessohis" })
+            @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Pessohis" })
+			if (!Model.NestedForm)
+            {
+                @Html.AntiForgeryToken()
+            }
+}
+
+@helper form_content_alert() {
+	if(Model.FormMode == FormMode.Delete) {
+		<div class="c-alert c-alert--warning">
+			<i class="glyphicons glyphicons-alert c-alert__icon" aria-hidden="true"></i>
+			<div class="c-alert__text">
+				&ensp;@Resources.DESEJA_ELIMINAR_ESTA24564
+			</div>
+		<!--Ao confirmar esta ficha irá ser eliminada da base de dados. Cancele caso não tenha a certeza.-->
+		</div>
+	}
+}
+
+@helper form_content_buttons() {
+
+
+
+
+    @* Extended support form *@
+    if (Model.NestedForm)
+    {
+        if (Model.IsEditableMode)
+        {
+            <button type="button" data-end-pers="true" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick='javascript:submitNestedForm("@HttpUtility.JavaScriptStringEncode(Url.Action(Helpers.FormModeActionName("Pessohis", Model.FormMode).ToString(), "Pesso"))", "Pessohis_well")' qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>
+                    @Resources.GRAVAR45301
+            </button>
+            <button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Pessohis_Delete", "Pesso", new {id = @Model.ValCodpesso} )", "Pessohis_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+
+            <script type="application/javascript">
+                $(document).ready(function () { loaded($("#Pessohis_well")); });
+            </script>
+        }
+		else if (Model.FormMode == FormMode.Delete)
+		{
+			<button type="button" data-end-pers="true" class="b-icon-text b-icon-text--secondary" onclick='javascript:submitNestedForm("@Url.Action("Pessohis_Delete", "Pesso", new {id = @Model.ValCodpesso} )", "Pessohis_well")' qbutton="delete">
+                <i class="glyphicons glyphicons-bin e-icon"></i>
+                @Resources.APAGAR04097
+            </button>
+		}
+
+        @* javascript code_javascript *@
+        @*@codeJavascript()*@
+    }
+    @* Normal mode *@
+    else
+    {
+        if (Model.IsEditableMode || Model.FormMode == FormMode.Delete)
+        {
+            if (Model.FormMode == FormMode.New && Convert.ToBoolean(Model.Navigation.CurrentLevel.GetEntry("repeatInsertion")))
+            {
+            <button type="button" data-end-pers="true" name="Pessohis_repete_insertion" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitPessohis(event, true)" qbutton="ok_new">@Resources.GRAVAR_E_CRIAR_NOVA17771</button>
+            }
+            if(Model.FormMode == FormMode.Delete)
+            {
+				<button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Pessohis", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitDeletePessohis(event)" qbutton="delete">
+                    <i class="glyphicons glyphicons-check e-icon" aria-hidden="true"></i>@Resources.CONFIRMAR09808
+                </button>
+            }
+            else
+            {
+                <button type="submit" data-end-pers="true" name="@(Helpers.FormModeActionName("Pessohis", Model.FormMode))" elem-identifier="ButtonPrimary" class="b-icon-text b-icon-text--primary" onclick="javascript:submitPessohis(event)" title="@Resources.GRAVAR45301" data-selector="true" qbutton="ok">
+                    <i class="SaveIcon e-icon" aria-hidden="true"></i>@Resources.GRAVAR45301
+                </button>
+            }
+
+            <button type="button" class="b-icon-text b-icon-text--secondary" data-end-pers="true" data-href="@Url.Action("Pessohis_Cancel", "Pesso", new { niv = Model.Navigation.CurrentLevel.Level })" onclick="javascript:window.Form_Pessohis.Cancel()" title="@Resources.CANCELAR49513" data-selector="true" qbutton="cancel">
+                <i class="glyphicons glyphicons-ban-circle e-icon" aria-hidden="true"></i>@Resources.CANCELAR49513
+            </button>
+        }
+        else if (!(ViewBag.isHomePage ?? false))
+        {
+            @Html.ActionLinkWithIcon(@Resources.RETROCEDER16633, "Pessohis_Cancel","Pesso","glyphicons glyphicons-arrow-left e-icon", null, new { @class = "b-icon-text b-icon-text--secondary", @data_end_pers = "true", @title = @Resources.RETROCEDER16633, qbutton = "cancel" })
+        }
+    }
+}
+
+@helper LoadDefault() {
+    if (Model.NestedForm)
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div class="c-card__header">
+                    <div class="c-card__header-tag">
+						<span class="form-header" style="padding:0;">
+							<i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+						</span>
+                    </div>
+                </div>
+                <div class="c-card__body">
+                    @form_content_body()
+                    <div elem-identifier="FormActions" class="form-actions" data-form-actions="Pessohis">
+                        @form_content_buttons()
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    }
+    else
+    {
+        <fieldset>
+			<legend class="hidden-elem">@ViewBag.Title</legend>
+            <div class="@ViewBag.ClassForFormLayout">
+                <div id="c-stickyHeader">
+                    <div class="c-action-bar d-flex">
+                        <span class="form-header">
+                            <i class="icon- ViewMode-@ViewBag.formmode"></i><h1>@ViewBag.Title</h1>
+                        </span>
+                        <div data-parent-form="Pessohis" data-q-ref="form-btns-main_container"></div>
+                    </div>
+                </div>
+
+                @form_content_body()
+                <div elem-identifier="FormActions" class="form-actions" data-form-actions="Pessohis">
+                @form_content_buttons()
+                </div>
+            </div>
+        </fieldset>
+    }
+}
+
+@helper LoadFromLayout()
+{
+}
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT PESSOHIS]/ *@
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_PESSOHIS" data-form-javascript="true">
+@Html.Partial("Pessohis_JavaScript", Model, ViewData)
+</div>
+}
+
+@section code_javascript
+{
+	@codeJavascript()
+}
+
+@if (Request.IsAjaxRequest())
+{
+    @codeJavascript()
+    @includeStylesheets()
+}
+
+@helper includeStylesheets()
+{
+
+ }
+
+@section include_stylesheets {
+    @includeStylesheets()
+}

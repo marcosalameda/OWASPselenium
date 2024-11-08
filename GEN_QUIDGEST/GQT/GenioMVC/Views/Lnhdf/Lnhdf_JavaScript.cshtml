@@ -1,0 +1,316 @@
+﻿@model GenioMVC.ViewModels.Lnhdf.Lnhdf_ViewModel
+@using GenioMVC.Models.Navigation;
+@using JavaScriptConversion = GenioMVC.ViewModels.JavaScriptConversion;
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@Scripts.Render("~/Scripts/validateJs")
+ 
+@* USE /[MANUAL GQT FORM_INCLUDEJS LNHDF]/ *@
+<script  type="text/javascript">
+	@formDataScript()
+	$(document).ready(function () {
+		var alreadyInitializedForm = false;
+		if (window.Form_Lnhdf !== undefined) {
+			alreadyInitializedForm = true;
+		}
+		else {
+			window.Form_Lnhdf = new QForm($('[data-form="Lnhdf"]'), "Form_Lnhdf");
+		}
+		window.Form_Lnhdf.baseArea = "lnhdf";
+		window.Form_Lnhdf.FormMode = '@Model.GetFormMode';
+		window.Form_Lnhdf.HelpStyle = '@GenioMVC.LayoutConfig.config.helpStyle';
+		window.Form_Lnhdf.UrlAction = {
+			ReloadDBEdit:		'@Url.Action("ReloadDBEdit", "Lnhdf")',
+			GetDependants:		'@Url.Action("GetDependants", "Lnhdf")',
+			RecalculateFormulas:'@Url.Action("RecalculateFormulas_Lnhdf", "Lnhdf")',
+			ChangeFormMode:		'@Url.Action("ChangeFormMode_Lnhdf", new { m = Model.GetQSModes() })',
+			ReloadControl:		'@Url.Action("Lnhdf", "Lnhdf")',
+		};
+		window.Form_Lnhdf.FormButtons = {
+			Modes: [
+@if(Model.CanView)
+{
+	<text>
+				QFormMode.show,
+	</text>
+}
+@if(Model.CanEdit)
+{
+	<text>
+				QFormMode.edit,
+	</text>
+}
+@if(Model.CanDelete)
+{
+	<text>
+				QFormMode.delete,
+	</text>
+}
+@if(Model.CanDuplicate)
+{
+	<text>
+				QFormMode.duplicate,
+	</text>
+}
+@if(Model.CanInsert)
+{
+	<text>
+				QFormMode.new
+	</text>
+}
+			],
+		};
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Lnhdf.formSaveEdit = '@Url.Action("Lnhdf_SaveEdit", "Lnhdf")';
+	</text>
+}
+@if(Model.FormMode == FormMode.New)
+{
+	<text>
+		window.Form_Lnhdf.formAction = 'Lnhdf_New';
+		window.Form_Lnhdf.formRedirectURL = '@Url.Action("Lnhdf_New_Redirect", "Lnhdf")';
+		window.Form_Lnhdf.formSubmitURL = '@Url.Action("Lnhdf_New", "Lnhdf")';
+		window.Form_Lnhdf.formRedirectURL_repeatInsertion = '@Url.Action("Lnhdf_New_Redirect", "Lnhdf", new { repeatInsertion = true})';
+		window.Form_Lnhdf.formSubmitURL_repeatInsertion = '@Url.Action("Lnhdf_New", "Lnhdf", new { repeatInsertion = true })';
+	</text>
+} else if(Model.FormMode == FormMode.Edit)
+{
+	<text>
+		window.Form_Lnhdf.formAction = 'Lnhdf_Edit';
+		window.Form_Lnhdf.formRedirectURL = '@Url.Action("Lnhdf_Edit_Redirect", "Lnhdf")';
+		window.Form_Lnhdf.formSubmitURL = '@Url.Action("Lnhdf_Edit", "Lnhdf")';
+	</text>
+} else if(Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Lnhdf.formAction = 'Lnhdf_Duplicate';
+		window.Form_Lnhdf.formRedirectURL = '@Url.Action("Lnhdf_Duplicate_Redirect", "Lnhdf")';
+		window.Form_Lnhdf.formSubmitURL = '@Url.Action("Lnhdf_Duplicate", "Lnhdf")';
+	</text>
+} else if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		window.Form_Lnhdf.formAction = 'Lnhdf_Delete';
+		window.Form_Lnhdf.formRedirectURL = '@Url.Action("Lnhdf_Delete_Redirect", "Lnhdf")';
+		window.Form_Lnhdf.formSubmitURL = '@Url.Action("Lnhdf_Delete", "Lnhdf")';
+	</text>
+}
+		window.Form_Lnhdf.DeclareControls = function () {
+			@*Form controls*@
+			this.Controls.LED_LNHDF___LNHDFNAME____ = new QTextControl($('[data-identifier="LED_LNHDF___LNHDFNAME____"]', this.element), window.Form_Lnhdf);
+
+
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	@*Hidden Foreign Keys Controls*@
+			this.Controls.LED_LNHDF___LNHDECODLNHDE = new QHiddenControl($('[data-identifier="LED_LNHDF___LNHDECODLNHDE"]', this.element), window.Form_Lnhdf);
+	</text>
+}
+			this.Controls.LED_LNHDF___LNHDFCODLNHDF = new QHiddenControl($('[data-identifier="LED_LNHDF___LNHDFCODLNHDF"]', this.element), window.Form_Lnhdf);
+
+	@* Hidden Required Form Fields Controls for Formulas *@
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+	</text>
+}
+
+		window.Form_Lnhdf.Glob = {};
+
+
+		};
+		@* In case the form is already initialized, we only need to reinitialize the controls. (Just because of the "InitData" method) *@
+		if (alreadyInitializedForm) {
+			return true;
+		}
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		window.Form_Lnhdf.OnPreValida = function (mode, target) {
+			var deferred = $.Deferred();
+			var onPreValidaCode = function () {
+				var deferred = $.Deferred();
+				var stopReturn = false;
+
+// USE /[MANUAL GQT PREVALI LNHDF]/
+
+				@*Return é obrigatorio to execução sincrona do código*@
+				if (!stopReturn) deferred.resolve(true);
+				return deferred.promise();
+			};
+
+			$.when(onPreValidaCode(), { deferred: deferred, mode: mode }).done(function (resManual, rData) {
+				if (resManual) {
+						rData.deferred.resolve(true);
+				}
+				else rData.deferred.resolve(false);
+			});
+
+			return deferred.promise();
+		};
+
+		window.Form_Lnhdf.OnBeforeSave = function () {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT BEFORE_SAVE_JS LNHDF]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+
+		window.Form_Lnhdf.OnAfterSave = function (data) {
+			var stopReturn = false;
+			var deferred = $.Deferred();
+// USE /[MANUAL GQT AFTER_SAVE_JS LNHDF]/
+			@*Return é obrigatorio to execução sincrona do código*@
+			if(!stopReturn) deferred.resolve(true);
+			return deferred.promise();
+		};
+	</text>
+}
+@{
+	<text>
+		window.Form_Lnhdf.Data.RelationKeysSelector = {
+				get lnhde() { return $(':not([elem-identifier="Multiform"]) > #ValCodlnhde', $('[data-form="Lnhdf"]')); /* Hidden */ },
+		};
+
+		window.Form_Lnhdf.getAllForeignKeySelectors = function () {
+			@* Get all selectors of foreign keys present on the form *@
+			return this.Data.RelationKeysSelector;
+		};
+
+		window.Form_Lnhdf.Data.RelationKeys = {
+			get formContext() { return window.Form_Lnhdf; },
+			get lnhde() { return (this.formContext.Data.RelationKeysSelector.lnhde.getQControl() || {}).Value; /* Hidden FK */ },
+			set lnhde(newValue) { (this.formContext.Data.RelationKeysSelector.lnhde.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+		};
+	</text>
+}
+
+	window.Form_Lnhdf.QFormulas = function () {
+		var qForm = $(this.element);
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+		@*Edit mode Fields Formulas*@
+	<text>
+
+
+
+
+
+
+	</text>
+}
+
+@if(!Model.IsEditableMode)
+{
+	@*Generate blockWhen on Show mode only for buttons*@
+	<text>
+
+
+	</text>
+}
+
+
+
+
+
+	};@* End of the "QFormulas" *@
+
+
+		window.Form_Lnhdf.Init();
+
+
+		// Element we want to become "sticky"
+		var header = $('#c-stickyHeader');
+		var threshold_el = $('.c-header').length ? $('.c-header') : $('nav').first();
+		var breadcrumbs = $('#breadcrumbs').length ? $('#breadcrumbs') : null;
+
+		window.onscroll = function() {
+			ToggleStickyHeader(header, threshold_el, breadcrumbs);
+		};
+	});
+
+
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+	<text>
+		function submitLnhdf(event, repeatInsertion) {
+			event.preventDefault();
+			window.Form_Lnhdf.Submit(repeatInsertion);
+		};
+	</text>
+}
+
+@if(Model.FormMode == FormMode.Delete)
+{
+	<text>
+		function submitDeleteLnhdf(event) {
+			event.preventDefault();
+			window.Form_Lnhdf.DeleteSubmit();
+		};
+	</text>
+}
+
+@helper formDataScript()
+{
+	<text>
+		window.QData = window.QData || { Arrays: { GetArray: function (arrayName) { return this[arrayName] || []; } }, GetArray: function(arrayName) { return this.Arrays.GetArray(arrayName); } };
+		@* Declare form Arrays *@
+		@* --- --- --- --- --- *@
+	</text>
+}
+    modal_QuidgestGlobals = {
+        UrlAction: {
+            newWindow: '@Url.Action("newWindow")',
+            ReloadDBEdit: '@Url.Action("ReloadDBEdit")',
+            formArea: '	@Url.Action("form", "area")',
+            UpdateValues: '@Url.Action("UpdateValues")',
+            LogJavaScriptError: '@Url.Action("LogJavaScriptError", "ApplicationErrors")',
+            syncFormKeys: '@Url.Action("syncFormKeys")',
+            GetDependants: 		'@Url.Action("GetDependants")',
+            ImageHandlerPut:		'@Url.Action("ImageHandlerPut")',
+            ImageHandlerGet:		'@Url.Action("ImageHandlerGet")'
+        }
+    };
+$(document).ready(function () {
+	loaded($("#form-modal"));
+@if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
+{
+    <text>
+	var ajaxCallsRemaining = $("#form-modal .flash object embed").length;
+	$('#form-modal form [elem-identifier="ButtonPrimary"]').click(function() {
+		var flashObjects = $("#form-modal .flash object embed");
+		ajaxCallsRemaining = flashObjects.length;
+		if(flashObjects.length == 0)
+			return true;
+		else {
+			flashObjects.each(function() {
+			   var flashObj = GetFlash($(this).attr('id'))
+			   flashObj.UsedFlash.TriggerSave(flashObj);
+			});
+			return false;
+		}
+	});
+    </text>
+}
+});
+// USE /[MANUAL GQT FORM_CODEJS LNHDF]/
+
+
+
+ 
+
+    $($('[elem-identifier="Actions"]'), $('[data-form="Lnhdf"]')).click(function(event){
+        var form = $(this).closest('[data-form]').data('form');
+        var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
+        delete curLocalStorage[form];
+        QLocalStorage.setLocalStorage('lastActiveElement', curLocalStorage);
+    });
+</script>

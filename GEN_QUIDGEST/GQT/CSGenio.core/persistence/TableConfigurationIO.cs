@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System;
 using System.Linq;
+using Quidgest.Persistence;
 
 namespace CSGenio.core.persistence
 {
@@ -46,28 +47,14 @@ namespace CSGenio.core.persistence
         /*
 		 * Get a table configuration record from the database.
 		 */
-        public static CSGenioAtblcfg GetTableConfigPKRecord(PersistentSupport sp, User user, string uuid, string configPK)
-        {
-            //Get saved configuration
-            return CSGenioAtblcfg.searchList(sp, user, CriteriaSet.And()
-                .Equal(CSGenioAtblcfg.FldCodpsw, user.Codpsw)
-                .Equal(CSGenioAtblcfg.FldUuid, uuid)
-                .Equal(CSGenioAtblcfg.FldCodtblcfg, configPK)
-                .Equal(CSGenioAtblcfg.FldZzstate, 0))
-                .FirstOrDefault();
-        }
-
-        /*
-		 * Get a table configuration record from the database.
-		 */
         public static CSGenioAtblcfg GetTableConfigNameRecord(PersistentSupport sp, User user, string uuid, string configName)
         {
             //Get saved configuration
             return CSGenioAtblcfg.searchList(sp, user, CriteriaSet.And()
                 .Equal(CSGenioAtblcfg.FldCodpsw, user.Codpsw)
                 .Equal(CSGenioAtblcfg.FldUuid, uuid)
-                .Equal(CSGenioAtblcfg.FldName, configName)
-                .Equal(CSGenioAtblcfg.FldZzstate, 0))
+                .Equal(CSGenioAtblcfg.FldName, configName),
+                new string[] { CSGenioAtblcfg.FldName.Field, CSGenioAtblcfg.FldConfig.Field })
                 .FirstOrDefault();
         }
 
@@ -97,29 +84,42 @@ namespace CSGenio.core.persistence
 		 */
         public static TableConfiguration GetTableDefaultConfig(PersistentSupport sp, User user, string uuid)
         {
-            //Get record of what view is the default
-            CSGenioAtblcfgsel userTableConfigSelectedInfo = CSGenioAtblcfgsel.searchList(sp, user, CriteriaSet.And()
-                .Equal(CSGenioAtblcfgsel.FldCodpsw, user.Codpsw)
-                .Equal(CSGenioAtblcfgsel.FldUuid, uuid)
-                .Equal(CSGenioAtblcfgsel.FldZzstate, 0))
-                .FirstOrDefault();
+            string tableConfigJson;
+            string tableConfigName;
 
-            //If record doesn't exist
-            if (userTableConfigSelectedInfo == null)
-                return null;
+            // Get table configuration and name fields from the default configuration record
+            // tblcfg has the table configurations
+            // tblcfgsel has the records that specify which record in tblcfg, if any, is the default
+            SelectQuery query = new SelectQuery()
+                .Select(CSGenioAtblcfg.FldName)
+                .Select(CSGenioAtblcfg.FldConfig)
+                .From(Area.AreaTBLCFG)
+                .Join(Area.AreaTBLCFGSEL)
+                    .On(CriteriaSet.And().Equal(CSGenioAtblcfg.FldCodtblcfg, CSGenioAtblcfgsel.FldCodtblcfg)
+                )
+                .Where(CriteriaSet.And()
+                    .Equal(CSGenioAtblcfg.FldCodpsw, user.Codpsw)
+                    .Equal(CSGenioAtblcfg.FldUuid, uuid)
+                );
 
-            // Get record from the database
-            CSGenioAtblcfg configRecord = GetTableConfigPKRecord(sp, user, uuid, userTableConfigSelectedInfo.ValCodtblcfg);
+            var result = sp.Execute(query);
 
             // If configuration does not exist
-            if (configRecord == null)
+            if (result.NumRows == 0 || result.NumCols != 2)
+                return null;
+
+            tableConfigName = DBConversion.ToString(result.GetDirect(0, 0));
+            tableConfigJson = DBConversion.ToString(result.GetDirect(0, 1));
+
+            // If configuration is empty
+            if (string.IsNullOrEmpty(tableConfigJson))
                 return null;
 
             // Parse to object
-            TableConfiguration tableConfig = ParseTableConfigData(configRecord.ValConfig);
+            TableConfiguration tableConfig = ParseTableConfigData(tableConfigJson);
 
             // Add configuration name
-            tableConfig.Name = configRecord.ValName;
+            tableConfig.Name = tableConfigName;
 
             return tableConfig;
         }

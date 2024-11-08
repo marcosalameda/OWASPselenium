@@ -72,7 +72,7 @@ namespace GenioMVC.Controllers
 			CSGenioAlstusr lstusr = GetOrInitLstusr(uuid);
 
 			// Gets the current list of user widgets for this viewmodel
-			List<CSGenioAusrwid> userWidgets = UserUiSettings.Load(sp, lstusr.ValDescric, user).userWidgets;
+			List<CSGenioAusrwid> userWidgets = UserUiSettings.Load(sp, lstusr.ValDescric, user).UserWidgets;
 
 			foreach (CSGenioAusrwid userWidget in userWidgets)
 			{

@@ -59,6 +59,12 @@ namespace GenioMVC.ViewModels.Lnhpd
 		[NumericAttribute(0)]
 		public decimal? ValQuantida { get; set; }
 
+		/// <summary>Campo : "Amount" Tipo:"ND"</summary>
+		[Display(Name = "AMOUNT46885", ResourceType = typeof(Resources.Resources))]
+		[DisplayFormat( ApplyFormatInEditMode=true, DataFormatString="{0:N2}" )]
+		[NumericAttribute(2)]
+		public decimal? ValQuantdec { get; set; }
+
 		/// <summary>Campo : "Breakdown:" Tipo:"DP"</summary>
 		[Display(Name = "BREAKDOWN_60448", ResourceType = typeof(Resources.Resources))]
 		public TablePartial<GenioMVC.Models.Lnhde> ValDesagreg { get; set; }
@@ -194,6 +200,7 @@ namespace GenioMVC.ViewModels.Lnhpd
 			{
  				ValLine = ViewModelConversion.ToNumeric(m.ValLine);
  				ValQuantida = ViewModelConversion.ToNumeric(m.ValQuantida);
+ 				ValQuantdec = ViewModelConversion.ToNumeric(m.ValQuantdec);
  				ValCodpedid = ViewModelConversion.ToString(m.ValCodpedid);
  				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
  				ValCodlnhpd = ViewModelConversion.ToString(m.ValCodlnhpd);
@@ -216,6 +223,7 @@ namespace GenioMVC.ViewModels.Lnhpd
 			{
 				m.ValLine = ViewModelConversion.ToNumeric(ValLine);
 				m.ValQuantida = ViewModelConversion.ToNumeric(ValQuantida);
+				m.ValQuantdec = ViewModelConversion.ToNumeric(ValQuantdec);
 				m.ValCodpedid = ViewModelConversion.ToString(ValCodpedid);
 				m.ValCodtpequ = ViewModelConversion.ToString(ValCodtpequ);
 				m.ValCodlnhpd = ViewModelConversion.ToString(ValCodlnhpd);

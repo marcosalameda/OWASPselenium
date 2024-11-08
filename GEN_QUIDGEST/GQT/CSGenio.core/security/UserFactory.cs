@@ -9,6 +9,7 @@ using CSGenio.persistence;
 using Quidgest.Persistence.GenericQuery;
 using System.Threading;
 using CSGenio;
+using CSGenio.core.di;
 using System.Net.Mail;
 
 namespace GenioServer.security
@@ -146,8 +147,6 @@ namespace GenioServer.security
 			ua.insert(sp);
 		}
 
-        public static IUserBusinessManager BusinessManager { get; set; }
-
 
         /// <summary>
         /// Creates the necessary association for COMODANTE EPH
@@ -156,8 +155,8 @@ namespace GenioServer.security
         /// <param name="valEph">The value of the link field of the EPH (CODPESS1)</param>
         public void CreateEph_COMODANTE(CSGenioApsw psw, string valEph)
         {
-            BusinessManager.SetLocalProperties(sp, user);
-            BusinessManager.CreateEph_COMODANTE(psw, valEph);
+            GenioDI.EphManager.SetLocalProperties(sp, user);
+            GenioDI.EphManager.CreateEph_COMODANTE(psw, valEph);
         }
         /// <summary>
         /// Returns a user with the given userName from the login table. Returns null if the userid doesn't exist

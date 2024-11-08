@@ -55,6 +55,7 @@ else {
 				<div class="col-12">
 					<div class="control-row-group">
 						<div class="control-join-group control-wrap">
+						<div class="i-textarea draggable " id="CONTAINER_IFF_FAQS____FAQS_ANSWER__">
 								<div class="d-flex">
 								@Html.LabelFor(model => model.ValAnswer, new { label_id="IFF_FAQS____FAQS_ANSWER__", @class = " i-text__label", id="LABEL_IFF_FAQS____FAQS_ANSWER__"}, true, false)
 								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
@@ -67,6 +68,7 @@ else {
 								}
 								</div>
 								@Html.ValidationMessageFor(model => model.ValAnswer)
+							</div>
 						</div>
 					</div>
 				</div>

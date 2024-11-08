@@ -16,12 +16,12 @@ using System.Net;
 using System.Net.Http;
 using Microsoft.AspNetCore.Mvc;
 using DbAdmin;
+using IConfigurationManager = CSGenio.config.IConfigurationManager;
 
 namespace Administration.Controllers
 {
-    public class MessageQueueController : ControllerBase
+    public class MessageQueueController(IConfigurationManager configManager) : ControllerBase
     {
-        private string pathConfig = Path.Combine(CSGenio.framework.Configuration.GetConfigPath(), "Configuracoes.xml");
         private static Dictionary<string, QueueProgressStatus> exportProgressList = new Dictionary<string, QueueProgressStatus>();
         //
         // GET: /MessageQueue/
@@ -33,7 +33,7 @@ namespace Administration.Controllers
 
             try
             {
-                ConfigurationXML conf = ConfigurationXML.readXML(pathConfig);
+                var conf = configManager.GetExistingConfig();
 
                 model.MQueues = new Models.MessageQueue();
                 model.MQueues.Queues = new List<Models.QueueCfg>();

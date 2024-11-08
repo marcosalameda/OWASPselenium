@@ -108,8 +108,10 @@
 		}
 
 		SearchFilters.value = '@Html.Raw(advFil)';
-		if (typeof SearchFilters.value === 'string' && SearchFilters.value.length > 0)
-			UpdateSearchFilterStatus("PTN_Menu_351", JSON.parse(SearchFilters.value))
+		if (typeof SearchFilters.value === 'string' && SearchFilters.value.length > 0) {
+			searchFilterGroups = JSON.parse(SearchFilters.value);
+			UpdateSearchFilterStatus("PTN_Menu_351", searchFilterGroups)
+		}
 	});
 </script>
 

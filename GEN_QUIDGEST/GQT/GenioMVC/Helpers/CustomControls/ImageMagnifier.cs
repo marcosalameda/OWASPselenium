@@ -48,7 +48,8 @@ namespace GenioMVC.Helpers
         {
             RouteValueDictionary htmlAttributes = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlProperties);
             var urlHelper = new UrlHelper(html.ViewContext.RequestContext);
-            string absUrl = urlHelper.Action("ImageHandlerGet", model, new { id = guid, modelname = model, fldname = field });
+            var ticket = Helpers.GetFileTicket(Models.Navigation.UserContext.Current.User, model, field, "", guid);
+            string absUrl = urlHelper.Action("ImageHandlerGet", model, new { ticket });
 
             TagBuilder ul = new TagBuilder("ul");
             ul.AddCssClass("thumbnails");

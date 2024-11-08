@@ -288,8 +288,7 @@ namespace Administration.Controllers
             /* ------------------- */
 
             /* Fetch configs and initiate sp */
-            string pathConfig = CSGenio.framework.Configuration.GetConfigPath();
-            ConfigurationXML conf = ConfigurationXML.readXML(pathConfig + Path.DirectorySeparatorChar + "Configuracoes.xml");
+            var conf = configManager.GetExistingConfig();
 
             var dataSystem = conf.DataSystems.FirstOrDefault(ds => ds.Name == CurrentYear); // Default == null
             if (dataSystem == null)

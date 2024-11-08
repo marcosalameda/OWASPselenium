@@ -12,17 +12,20 @@ using Quidgest.Persistence.GenericQuery;
 using Quidgest.Persistence;
 using System.Xml.Serialization;
 using System.Xml.Linq;
+using CSGenio.config;
 
 namespace GenioServer.framework
 {
     public class ConfigXMLMigration
     {
+
         public static int CurConfigurationVerion = 10;
 
-        public static void Migration(int fileConfigVersion)
-        {
-            string pathConfig = Configuration.GetConfigPath();
-            pathConfig = Path.Combine(pathConfig, "Configuracoes.xml");
+        public static void Migration(IConfigurationManager configManager, int fileConfigVersion)
+        {            
+            //Migration routine is expecting direct access to the file
+            var fileConfigManager = (FileConfigurationManager)configManager;
+            string pathConfig = fileConfigManager.GetFileLocation();
 
             //will make a copy of the old file before migrating to the new one
             makeCopyConfig(pathConfig);
@@ -438,7 +441,7 @@ namespace GenioServer.framework
          *
          * [APM]
          * This migration is meant to encrypt (as base64) the username and
-         * password of SQL Server Reporting Services in Configuracoes.xml.
+         * password of SQL Server Reporting Services in the configuration file.
          *
          ****************************************************************/
         private static string migrateConfigToVersion5(int fileVersion, string configFileTxt)
@@ -476,7 +479,7 @@ namespace GenioServer.framework
          *
          * [APM]
          * This migration is meant to fix the incoherences in nomenclature
-         * of the "Paths" tag in Configuracoes.xml.
+         * of the "Paths" tag in the configuration file.
          *
          ****************************************************************/
         private static string migrateConfigToVersion6(int fileVersion, string configFileTxt)

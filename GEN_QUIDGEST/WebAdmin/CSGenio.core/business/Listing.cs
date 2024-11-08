@@ -5,9 +5,10 @@ using System.Data;
 using System.Text;
 using CSGenio.framework;
 using CSGenio.persistence;
+using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
 using System.Reflection;
-using Quidgest.Persistence;
+using System.Linq;
 
 namespace CSGenio.business
 {
@@ -31,8 +32,6 @@ namespace CSGenio.business
         /// <summary>
         /// sorting
         /// </summary>
-        [Obsolete("Use IList<ColumnSort> ordenacaoQuery instead")]
-        private string sorting;
         private IList<ColumnSort> ordenacaoQuery;
 
         /// <summary>
@@ -87,58 +86,6 @@ namespace CSGenio.business
         /// </summary>
         protected string module;
 
-        /// <summary>
-        /// Construtor
-        /// </summary>
-        [Obsolete("Use Listing(Area area, object condEphObj, IList<ColumnSort> ordenacao, string modulo, LevelAccess nivelAcesso, string identificador, User utilizador, PersistentSupport sp) instead")]
-        public Listing(Area area, object condEphObj, string sorting, string module, LevelAccess accessLevel, string identifier, User user, PersistentSupport sp)
-        {
-            this.user = user;
-            this.module = module;
-            this.sorting = sorting;
-            this.sp = sp;
-            this.area = area;
-            condicoesEphQuery = CalculateConditionsEphGeneric(area, identifier);
-			//NH(2016.07.21) - The NoLock command is only applied to SQL SERVER connections
-			if (sp.DatabaseType == DatabaseType.SQLSERVER2000 || sp.DatabaseType == DatabaseType.SQLSERVER2005 || sp.DatabaseType == DatabaseType.SQLSERVER2008)
-                this.m_noLock = true;
-            else
-                this.m_noLock = false;
-        }
-
-        /// <summary>
-        /// Construtor
-        /// </summary>
-        [Obsolete("Use Listing(Area area, IList<ColumnSort> sorting, string module, string identifier, User user, PersistentSupport sp)")]
-        public Listing(Area area, object condEphObj, IList<ColumnSort> sorting, string module, LevelAccess accessLevel, string identifier, User user, PersistentSupport sp)
-        {
-            this.user = user;
-            this.module = module;
-            this.ordenacaoQuery = sorting;
-            bool addPrimaryKeySort = true;
-            if (ordenacaoQuery.Count > 0 && ordenacaoQuery[0].Expression is ColumnReference)
-            {
-                ColumnReference cref = (ColumnReference)ordenacaoQuery[0].Expression;
-                if (cref.TableAlias == area.Alias && cref.ColumnName == area.PrimaryKeyName)
-                {
-                    addPrimaryKeySort = false;
-                }
-            }
-
-            if (addPrimaryKeySort)
-            {
-                this.ordenacaoQuery.Add(new ColumnSort(new ColumnReference(area.Alias, area.PrimaryKeyName), SortOrder.Ascending));
-            }
-            this.sp = sp;
-            this.area = area;
-            condicoesEphQuery = CalculateConditionsEphGeneric(area, identifier);
-
-			//NH(2016.07.21) - The NoLock command is only applied to SQL SERVER connections
-			if (sp.DatabaseType == DatabaseType.SQLSERVER2000 || sp.DatabaseType == DatabaseType.SQLSERVER2005 || sp.DatabaseType == DatabaseType.SQLSERVER2008)
-                this.m_noLock = true;
-            else
-                this.m_noLock = false;
-        }
 
         /// <summary>
         /// Construtor
@@ -786,13 +733,6 @@ namespace CSGenio.business
                 return null;
         }
 
-        [Obsolete("Use IList<ColumnSort> OrdenacaoQuery instead")]
-        public string Sort
-        {
-            get { return sorting; }
-            set { sorting = value; }
-        }
-
         public IList<ColumnSort> QuerySort
         {
             get { return ordenacaoQuery; }
@@ -836,18 +776,11 @@ namespace CSGenio.business
             get { return module; }
         }
 
-        /// <summary>
-        /// RS(29.05.2007) Modifica o size da matriz subjacente da lista
-        /// </summary>
-        /// <param name="numLinhas"></param>
-        /*public void ResetNrRegistos(int numLinhas)
-        {
-            if (this.nrLinhas >= numLinhas)
-                return; //a matriz ja tem o size q precisamos
+//---------------------------------------
+// WS LEGACY CODE PLACEHOLDER
+// (do not delete or change this comment)
+//---------------------------------------
 
-            this.nrLinhas = numLinhas;
-            matrizDados = new object[numLinhas, nrColunas];
-        }*/
     }
 
     public class ListingMVC<A>
@@ -925,7 +858,7 @@ namespace CSGenio.business
             set { pagingposEPHs = value; }
         }
 
-        public ListingMVC(FieldRef[] fields, IList<ColumnSort> sorts, int offset, int numRegs, bool distinct, User user, bool noLock, string identifier = "", bool getTotal = false, string selectrow ="", CriteriaSet pagingPosEPHs = null)
+        public ListingMVC(FieldRef[] fields, IList<ColumnSort> sorts, int offset, int numRegs, bool distinct, User user, bool noLock, string identifier = "", bool getTotal = false, string selectrow = "", CriteriaSet pagingPosEPHs = null, List<FieldRef> fieldsWithTotalizer = null, List<string> selectedRecords = null)
         {
             this.fields = fields;
             this.sorts = sorts;
@@ -939,6 +872,8 @@ namespace CSGenio.business
             this.noLock = noLock;
             this.identifier = identifier;
             this.getTotal = getTotal;
+            this.FieldsWithTotalizer = fieldsWithTotalizer ?? new List<FieldRef>();
+            this.SelectedRecords = selectedRecords ?? new List<string>();
             this.rowselect = selectrow;
             this.pagingposEPHs = pagingPosEPHs;
         }
@@ -989,6 +924,21 @@ namespace CSGenio.business
         }
 
         /// <summary>
+        /// Fields whose columns will have totalizers.
+        /// </summary>
+        public List<FieldRef> FieldsWithTotalizer { get; set; }
+
+        /// <summary>
+        /// The list of records that are currently selected - used in totalizers for multiple selection lists.
+        /// </summary>
+        public List<string> SelectedRecords { get; set; }
+
+        /// <summary>
+        /// The list of totalizers for the listing columns that have them enabled.
+        /// </summary>
+        public List<Totalizer> Totalizers { get; set; }
+
+        /// <summary>
         /// Indicates if exist more pages
         /// One more record is always selected to check if exist more pages
         /// </summary>
@@ -996,6 +946,49 @@ namespace CSGenio.business
             get {
 				return (Rows != null && numRegs != -1) ? Rows.Count > NumRegs : false;
             }
+        }
+
+        /// <summary>
+        /// Based on the buildQueryCount function (QueryUtils), sets the listing's totalizers and record count values.
+        /// For this method to work, the DataMatrix must have a set shape:
+        /// Row 0 - Cell 0 is the record count, the remaining are the Total values of the totalizers.
+        /// Row 1, Cell 0 is discardable, the remaining are the Selected values of the totalizers.
+        /// <param name="data"> The result of the buildQueryCount query.<param/>
+        /// </summary>
+        public void SetCountAndTotalizers(DataMatrix data)
+        {
+
+            List<Totalizer> totalizers = FieldsWithTotalizer
+                .Select(field => new Totalizer(field.FullName, 0.0, 0.0))
+                .ToList();
+
+            if (data.NumRows == 0)
+            {
+                Totalizers = totalizers;
+                return;
+            }
+
+            DataRow totalRow = data.DbDataSet.Tables[0].Select("RowId = 'Total'").FirstOrDefault();
+            DataRow selectedRow = data.DbDataSet.Tables[0].Select("RowId = 'Selected'").FirstOrDefault();
+
+            if (totalRow == null) 
+            {
+                Totalizers = totalizers;
+                return;
+            }
+
+            foreach (Totalizer tot in totalizers)
+            {
+                if (totalRow[tot.Column] != DBNull.Value)
+                    tot.Total = Convert.ToDouble(totalRow[tot.Column]); // Get total value from row with RowId "Total"
+                if (selectedRow != null && selectedRow[tot.Column] != DBNull.Value)
+                    tot.Selected = Convert.ToDouble(selectedRow[tot.Column]); // get selected value from row with RowId "Selected"
+            }
+
+            // The count and totalizer queries are merged into one, so we can set both the totalizers and the total records value
+            Totalizers = totalizers;
+            if (GetTotal)
+                TotalRecords = DBConversion.ToInteger(totalRow["count"]);
         }
 
         public List<T> RowsForViewModel<T>() where T : new()
@@ -1038,6 +1031,35 @@ namespace CSGenio.business
                 list.Add(constructor(elements[i]));
 
             return list;
+        }
+    }
+
+    /// <summary>
+    /// Class used to store aggregator values of specific listing columns.
+    /// Must be outside of the ListingMVC class, to ensure it can be used in the table and menu list ViewModels.
+    /// </summary>
+    public class Totalizer
+    {
+        /// <summary>
+        /// The column name, represented as "area.field".
+        /// </summary>
+        public string Column { get; set; }
+
+        /// <summary>
+        /// The sum of all records of a given listing.
+        /// </summary>
+        public double Total { get; set; }
+
+        /// <summary>
+        /// The sum of all selected records of a given listing - only for multiple selection lists.
+        /// </summary>
+        public double Selected { get; set; }
+
+        public Totalizer(string columnName, double totalValue, double selectedValue)
+        {
+            Column = columnName;
+            Total = totalValue;
+            Selected = selectedValue;
         }
     }
 }

@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Order line
 	/// </summary>
-	public class CSGenioAlnhpd : DbArea	{
+	public class CSGenioAlnhpd : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -97,6 +98,18 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Amount";
 			Qfield.FieldSize =  3;
 			Qfield.Alias = info.Alias;
+			Qfield.CavDesignation = "AMOUNT46885";
+
+			Qfield.Dupmsg = "";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field("quantdec", FieldType.NUMERO);
+			Qfield.FieldDescription = "Amount";
+			Qfield.FieldSize =  10;
+			Qfield.Alias = info.Alias;
+			Qfield.MQueue = false;
+			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "AMOUNT46885";
 
 			Qfield.Dupmsg = "";
@@ -325,6 +338,18 @@ namespace CSGenio.business
 		}
 
 
+		/// <summary>Field : "Amount" Tipo: "ND" Formula:  ""</summary>
+		public static FieldRef FldQuantdec { get { return m_fldQuantdec; } }
+		private static FieldRef m_fldQuantdec = new FieldRef("lnhpd", "quantdec");
+
+		/// <summary>Field : "Amount" Tipo: "ND" Formula:  ""</summary>
+		public decimal ValQuantdec
+		{
+			get { return (decimal)returnValueField(FldQuantdec); }
+			set { insertNameValueField(FldQuantdec, value); }
+		}
+
+
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
 		private static FieldRef m_fldZzstate = new FieldRef("lnhpd", "zzstate");
@@ -366,23 +391,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAlnhpd> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAlnhpd> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAlnhpd>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -431,7 +439,20 @@ namespace CSGenio.business
 
 
 
+ 		//To usar routine manual no pedido eliminate
+		public override StatusMessage eliminate(PersistentSupport sp)
+		{
+			StatusMessage msg = base.eliminate(sp);
 
+			// ROW_REORDERING
+			CriteriaSet criteria = CriteriaSet.And();
+			criteria.Equal(CSGenioAlnhpd.FldCodpedid, ValCodpedid);
+			sp.ReorderSequence(Area.AreaLNHPD, CSGenioAlnhpd.FldLine, criteria);
+
+            return msg;
+		}
+
+ 
 
 
 		// USE /[MANUAL GQT TABAUX LNHPD]/
@@ -577,7 +598,7 @@ namespace CSGenio.business
 // USE /[MANUAL GQT ONREORDER LNHPD.LINE]/
         }
 
-    
+     
 
 	}
 }

@@ -108,7 +108,7 @@
 
 			this.Controls.LED_ARTIGEXTITEM_ITEMCOD_ = new QTextControl($('[data-identifier="LED_ARTIGEXTITEM_ITEMCOD_"]', this.element), window.Form_Artigext);
 
-			this.Controls.LED_ARTIGEXTITEM_IMAGE___ = new QImageControl($('[data-identifier="LED_ARTIGEXTITEM_IMAGE___"]', this.element), window.Form_Artigext, '@Html.Raw(Url.Action("ImageDelete", "Item", new { id=Model.ValCoditem, modelname="Item", fldname="ValImage" }))', '@Html.Raw(Url.Action("ImageCropper", "Item", new { key=Model.ValCoditem, modelname= "Item", fldname= "ValImage", identifier= "FARTIGEXT", FormName= "Artigext", FieldId= "LED_ARTIGEXTITEM_IMAGE___" }))',@Html.IsImageEmpty(Model.ValImage));
+			this.Controls.LED_ARTIGEXTITEM_IMAGE___ = new QImageControl($('[data-identifier="LED_ARTIGEXTITEM_IMAGE___"]', this.element), window.Form_Artigext, '@Html.Raw(Url.Action("ImageDelete", "Item", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Item", "ValImage", "", Model.ValCoditem, null) }))', '@Html.Raw(Url.Action("ImageCropper", "Item", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Item", "ValImage", "", Model.ValCoditem, null), identifier= "FARTIGEXT", FormName= "Artigext", FieldId= "LED_ARTIGEXTITEM_IMAGE___" }))',@Html.IsImageEmpty(Model.ValImage));
 
 
 

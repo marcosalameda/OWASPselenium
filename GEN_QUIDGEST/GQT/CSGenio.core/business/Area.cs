@@ -24,6 +24,8 @@ namespace CSGenio.business
         private static AreaRef m_AreaPWCOM = new AreaRef("GQT", "gqtpwcom", "pwcom");
         public static AreaRef AreaADDRL { get { return m_AreaADDRL; } }
         private static AreaRef m_AreaADDRL = new AreaRef("GQT", "gqtaddrl", "addrl");
+        public static AreaRef AreaLNHDF { get { return m_AreaLNHDF; } }
+        private static AreaRef m_AreaLNHDF = new AreaRef("GQT", "gqtlnhdf", "lnhdf");
         public static AreaRef AreaGENRE { get { return m_AreaGENRE; } }
         private static AreaRef m_AreaGENRE = new AreaRef("GQT", "gqtgenre", "genre");
         public static AreaRef AreaFEECA { get { return m_AreaFEECA; } }
@@ -96,6 +98,8 @@ namespace CSGenio.business
         private static AreaRef m_AreaTPCON = new AreaRef("GQT", "gqttpcon", "tpcon");
         public static AreaRef AreaS_APR { get { return m_AreaS_APR; } }
         private static AreaRef m_AreaS_APR = new AreaRef("GQT", "asyncprocess", "s_apr");
+        public static AreaRef AreaAIRFR { get { return m_AreaAIRFR; } }
+        private static AreaRef m_AreaAIRFR = new AreaRef("GQT", "gqtairpt", "airfr");
         public static AreaRef AreaCTRY { get { return m_AreaCTRY; } }
         private static AreaRef m_AreaCTRY = new AreaRef("GQT", "gqtctry", "ctry");
         public static AreaRef AreaFAMI1 { get { return m_AreaFAMI1; } }
@@ -120,6 +124,8 @@ namespace CSGenio.business
         private static AreaRef m_AreaREGIS = new AreaRef("GQT", "gqtregis", "regis");
         public static AreaRef AreaFACTY { get { return m_AreaFACTY; } }
         private static AreaRef m_AreaFACTY = new AreaRef("GQT", "gqtfacilitytype", "facty");
+        public static AreaRef AreaAIRPL { get { return m_AreaAIRPL; } }
+        private static AreaRef m_AreaAIRPL = new AreaRef("GQT", "gqtairpl", "airpl");
         public static AreaRef AreaRORDI { get { return m_AreaRORDI; } }
         private static AreaRef m_AreaRORDI = new AreaRef("GQT", "gqtrordi", "rordi");
         public static AreaRef AreaDILIN { get { return m_AreaDILIN; } }
@@ -160,6 +166,10 @@ namespace CSGenio.business
         private static AreaRef m_AreaWAREH = new AreaRef("GQT", "gqtwareh", "wareh");
         public static AreaRef AreaGLOB { get { return m_AreaGLOB; } }
         private static AreaRef m_AreaGLOB = new AreaRef("GQT", "gqtglob", "glob");
+        public static AreaRef AreaAIRTO { get { return m_AreaAIRTO; } }
+        private static AreaRef m_AreaAIRTO = new AreaRef("GQT", "gqtairpt", "airto");
+        public static AreaRef AreaPSNGR { get { return m_AreaPSNGR; } }
+        private static AreaRef m_AreaPSNGR = new AreaRef("GQT", "gqtpsngr", "psngr");
         public static AreaRef AreaTBLK { get { return m_AreaTBLK; } }
         private static AreaRef m_AreaTBLK = new AreaRef("GQT", "gqttblk", "tblk");
         public static AreaRef AreaCMPNY { get { return m_AreaCMPNY; } }
@@ -232,16 +242,24 @@ namespace CSGenio.business
         private static AreaRef m_AreaPROCN = new AreaRef("GQT", "gqtprocn", "procn");
         public static AreaRef AreaPSW { get { return m_AreaPSW; } }
         private static AreaRef m_AreaPSW = new AreaRef("GQT", "userlogin", "psw");
+        public static AreaRef AreaHPESS { get { return m_AreaHPESS; } }
+        private static AreaRef m_AreaHPESS = new AreaRef("GQT", "gqthpess", "hpess");
         public static AreaRef AreaMESSA { get { return m_AreaMESSA; } }
         private static AreaRef m_AreaMESSA = new AreaRef("GQT", "gqtmessages", "messa");
         public static AreaRef AreaOUTPT { get { return m_AreaOUTPT; } }
         private static AreaRef m_AreaOUTPT = new AreaRef("GQT", "gqtoutpt", "outpt");
+        public static AreaRef AreaBRDPS { get { return m_AreaBRDPS; } }
+        private static AreaRef m_AreaBRDPS = new AreaRef("GQT", "gqtbrdps", "brdps");
         public static AreaRef AreaITEM { get { return m_AreaITEM; } }
         private static AreaRef m_AreaITEM = new AreaRef("GQT", "gqtitem", "item");
+        public static AreaRef AreaFLTSC { get { return m_AreaFLTSC; } }
+        private static AreaRef m_AreaFLTSC = new AreaRef("GQT", "gqtfltsc", "fltsc");
         public static AreaRef AreaEXPE1 { get { return m_AreaEXPE1; } }
         private static AreaRef m_AreaEXPE1 = new AreaRef("GQT", "gqtexpen", "expe1");
         public static AreaRef AreaNOTI1 { get { return m_AreaNOTI1; } }
         private static AreaRef m_AreaNOTI1 = new AreaRef("GQT", "gqtnotif", "noti1");
+        public static AreaRef AreaAIRLN { get { return m_AreaAIRLN; } }
+        private static AreaRef m_AreaAIRLN = new AreaRef("GQT", "gqtairln", "airln");
         public static AreaRef AreaROIGF { get { return m_AreaROIGF; } }
         private static AreaRef m_AreaROIGF = new AreaRef("GQT", "gqtroigf", "roigf");
         public static AreaRef AreaVISIT { get { return m_AreaVISIT; } }
@@ -270,6 +288,8 @@ namespace CSGenio.business
         private static AreaRef m_AreaITEMC = new AreaRef("GQT", "gqtitemc", "itemc");
         public static AreaRef AreaDESAM { get { return m_AreaDESAM; } }
         private static AreaRef m_AreaDESAM = new AreaRef("GQT", "gqtdesam", "desam");
+        public static AreaRef AreaTICKT { get { return m_AreaTICKT; } }
+        private static AreaRef m_AreaTICKT = new AreaRef("GQT", "gqttickt", "tickt");
         public static AreaRef AreaPATIE { get { return m_AreaPATIE; } }
         private static AreaRef m_AreaPATIE = new AreaRef("GQT", "gqtpatient", "patie");
         public static AreaRef AreaTRSB { get { return m_AreaTRSB; } }
@@ -318,6 +338,8 @@ namespace CSGenio.business
         private static AreaRef m_AreaFACI1 = new AreaRef("GQT", "gqtfacility", "faci1");
         public static AreaRef AreaSALES { get { return m_AreaSALES; } }
         private static AreaRef m_AreaSALES = new AreaRef("GQT", "gqtsales", "sales");
+        public static AreaRef AreaFLIGH { get { return m_AreaFLIGH; } }
+        private static AreaRef m_AreaFLIGH = new AreaRef("GQT", "gqtfligh", "fligh");
         public static AreaRef AreaFACI2 { get { return m_AreaFACI2; } }
         private static AreaRef m_AreaFACI2 = new AreaRef("GQT", "gqtfacility", "faci2");
         public static AreaRef AreaAGREG { get { return m_AreaAGREG; } }
@@ -326,6 +348,8 @@ namespace CSGenio.business
         private static AreaRef m_AreaEVCAT = new AreaRef("GQT", "gqtevcat", "evcat");
         public static AreaRef AreaLNHAG { get { return m_AreaLNHAG; } }
         private static AreaRef m_AreaLNHAG = new AreaRef("GQT", "gqtlnhag", "lnhag");
+        public static AreaRef AreaAIRPT { get { return m_AreaAIRPT; } }
+        private static AreaRef m_AreaAIRPT = new AreaRef("GQT", "gqtairpt", "airpt");
         public static AreaRef AreaPROPE { get { return m_AreaPROPE; } }
         private static AreaRef m_AreaPROPE = new AreaRef("GQT", "gqtprope", "prope");
         //areas hardcoded
@@ -366,6 +390,7 @@ namespace CSGenio.business
             new List<string>() {
             "pwcom",
             "addrl",
+            "lnhdf",
             "genre",
             "feeca",
             "notif",
@@ -402,6 +427,7 @@ namespace CSGenio.business
             "faqs",
             "tpcon",
             "s_apr",
+            "airfr",
             "ctry",
             "fami1",
             "movim",
@@ -414,6 +440,7 @@ namespace CSGenio.business
             "cattp",
             "regis",
             "facty",
+            "airpl",
             "rordi",
             "dilin",
             "organ",
@@ -434,6 +461,8 @@ namespace CSGenio.business
             "manua",
             "wareh",
             "glob",
+            "airto",
+            "psngr",
             "tblk",
             "cmpny",
             "ldent",
@@ -470,11 +499,15 @@ namespace CSGenio.business
             "lang1",
             "procn",
             "psw",
+            "hpess",
             "messa",
             "outpt",
+            "brdps",
             "item",
+            "fltsc",
             "expe1",
             "noti1",
+            "airln",
             "roigf",
             "visit",
             "conta",
@@ -489,6 +522,7 @@ namespace CSGenio.business
             "roigi",
             "itemc",
             "desam",
+            "tickt",
             "patie",
             "trsb",
             "attac",
@@ -513,10 +547,12 @@ namespace CSGenio.business
             "flds",
             "faci1",
             "sales",
+            "fligh",
             "faci2",
             "agreg",
             "evcat",
             "lnhag",
+            "airpt",
             "prope",
         });
 
@@ -1009,7 +1045,7 @@ namespace CSGenio.business
             if(field.FieldType.Formatting == FieldFormatting.FLOAT)
             {
                 var dec = DBFields[field.Name].Decimals;
-                field.Value = Math.Round((decimal)field.Value, dec);
+                field.Value = Math.Round((decimal)field.Value, dec, MidpointRounding.AwayFromZero);
             }
         }
 
@@ -1022,8 +1058,18 @@ namespace CSGenio.business
         {
             try
             {
-                if (fields[fieldName] == null)
-                    return DBFields[fieldName.Split('.')[1]].GetValorEmpty();
+                string name = fieldName.Split('.')[1];
+                var fieldInfo = DBFields[name];
+
+                if (fieldInfo.IsClientSide)
+                {
+                    //queries inside these calculations are not supported
+                    //using fields from other tables inside these calculations is not supported
+                    var formula = fieldInfo.Formula as InternalOperationFormula;
+                    return formula.calculateInternalFormula(this, null, null, FunctionType.ALT);
+                }
+                else if (fields[fieldName] == null)
+                    return fieldInfo.GetValorEmpty();
                 else
                     return ((RequestedField)fields[fieldName]).Value;
             }
@@ -1038,28 +1084,6 @@ namespace CSGenio.business
 
         }
 
-        /// <summary>
-        /// Devolve o Qvalue do Qfield através do name do Qfield e formatação do Qfield
-        /// </summary>
-        /// <param name="nomeCampo">Name do Qfield</param>
-        /// <param name="formatacao">Formatação do Qfield</param>
-        /// <returns>Qvalue do Qfield</returns>
-        public object returnValueField(string fieldName, FieldFormatting formatting)
-        {
-            try
-            {
-                if (fields[fieldName] == null)
-                    return Field.GetValorEmpty(formatting);
-                else
-                {
-                    return ((RequestedField)fields[fieldName]).Value;
-                }
-            }
-            catch (GenioException ex)
-            {
-                throw new BusinessException(ex.UserMessage, "Area.devolverValorCampo", "Error returning the value of the field " + fieldName + ": " + ex.Message, ex);
-            }
-        }
 
         /// <summary>
         /// Returns the decrypted value of the field by name.
@@ -1712,53 +1736,6 @@ namespace CSGenio.business
             }
         }
 
-        [Obsolete("Use void seleccionarUm(CriteriaSet condicao, IList<ColumnSort> ordenacao, string identificador) instead")]
-        public void selectOne(string condition, string sorting, string identifier)
-        {
-            try
-            {
-                PersistentSupport sp = PersistentSupport.getPersistentSupport(User.Year, User.Name);
-                sp.selectOne(condition, sorting, this, identifier);
-            }
-            catch (GenioException ex)
-            {
-                throw new BusinessException(ex.UserMessage, "Area.seleccionarUm", "Error selecting first query result: " + ex.Message, ex);
-            }
-        }
-
-        [Obsolete("Use void seleccionarUm(CriteriaSet condicao, IList<ColumnSort> ordenacao, string identificador, PersistentSupport sp) instead")]
-        public void selectOne(CriteriaSet condition, IList<ColumnSort> sorting, string identifier)
-        {
-            try
-            {
-                PersistentSupport sp = PersistentSupport.getPersistentSupport(User.Year);
-                sp.selectOne(condition, sorting, this, identifier);
-            }
-            catch (GenioException ex)
-            {
-                throw new BusinessException(ex.UserMessage, "Area.seleccionarUm", "Error selecting first query result: " + ex.Message, ex);
-            }
-        }
-
-        /// <summary>
-        /// Selecciona o primeiro Qresult da query
-        /// </summary>
-        /// <param name="condicao">Condição WHERE</param>
-        /// <param name="ordenacao">Ordenação do Qresult</param>
-        /// <param name="identificador">Identificado do controlo</param>
-        /// <returns></returns>
-        [Obsolete("Use void seleccionarUm(CriteriaSet condicao, IList<ColumnSort> ordenacao, string identificador, PersistentSupport sp) instead")]
-        public void selectOne(string condition, string sorting, string identifier, PersistentSupport sp)
-        {
-            try
-            {
-                sp.selectOne(condition, sorting, this, identifier);
-            }
-            catch (GenioException ex)
-            {
-                throw new BusinessException(ex.UserMessage, "Area.seleccionarUm", "Error selecting first query result: " + ex.Message, ex);
-            }
-        }
 
         public void selectOne(CriteriaSet condition, IList<ColumnSort> sorting, string identifier, PersistentSupport sp, int pageSize = 1)
         {
@@ -1814,14 +1791,6 @@ namespace CSGenio.business
             catch (TargetInvocationException ex)
             {
                 throw new BusinessException(null, "Area.seleccionarUm", "Error selecting first query result: " + ex.Message, ex);
-                /*if (ex.InnerException is FrameworkException)
-                    throw (FrameworkException)ex.InnerException;
-                else if (ex.InnerException is BusinessException)
-                    throw (BusinessException)ex.InnerException;
-                else if (ex.InnerException is PersistenceException)
-                    throw (PersistenceException)ex.InnerException;
-                else
-                    throw ex.InnerException;*/
             }
         }
 

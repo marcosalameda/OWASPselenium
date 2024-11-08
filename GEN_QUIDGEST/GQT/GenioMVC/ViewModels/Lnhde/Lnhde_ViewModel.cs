@@ -62,8 +62,14 @@ namespace GenioMVC.ViewModels.Lnhde
 		[NumericAttribute(0)]
 		public decimal? ValQuantida { get; set; }
 
-		/// <summary>Campo : "Code" Tipo:"C"</summary>
-		[Display(Name = "CODE49225", ResourceType = typeof(Resources.Resources))]
+		/// <summary>Campo : "Amount" Tipo:"ND"</summary>
+		[Display(Name = "AMOUNT46885", ResourceType = typeof(Resources.Resources))]
+		[DisplayFormat( ApplyFormatInEditMode=true, DataFormatString="{0:N2}" )]
+		[NumericAttribute(2)]
+		public decimal? ValQuantdec { get; set; }
+
+		/// <summary>Campo : "Código" Tipo:"C"</summary>
+		[Display(Name = "CODIGO20695", ResourceType = typeof(Resources.Resources))]
 		[AllowHtml]
 		[StringLength(10, ErrorMessageResourceName = "O_COMPRIMENTO_MAXIMO21747", ErrorMessageResourceType = typeof(Resources.Resources))]
 		public string ValCode { get; set; }
@@ -81,6 +87,10 @@ namespace GenioMVC.ViewModels.Lnhde
 		[AllowHtml]
 		[StringLength(250, ErrorMessageResourceName = "O_COMPRIMENTO_MAXIMO21747", ErrorMessageResourceType = typeof(Resources.Resources))]
 		public string ValUrl { get; set; }
+
+		/// <summary>Campo : "Equipment groupings" Tipo:"DP"</summary>
+		[Display(Name = "EQUIPMENT_GROUPINGS20350", ResourceType = typeof(Resources.Resources))]
+		public TablePartial<GenioMVC.Models.Lnhdf> ValLnprops { get; set; }
 
 
 		#region Navigations
@@ -110,6 +120,13 @@ namespace GenioMVC.ViewModels.Lnhde
 		#endregion
 
 		#region Fields for formulas
+		// Field to formula
+		/// <summary>Used only for lazy loading of the LnhpdValQuantdec field</summary>
+		[Newtonsoft.Json.JsonIgnore]
+		public Func<decimal?> funcLnhpdValQuantdec { get; set; }
+		private decimal? _auxLnhpdValQuantdec { get; set; }
+		/// <summary>Field : "Amount" Tipo: "ND"</summary>
+		public decimal? LnhpdValQuantdec { get { return funcLnhpdValQuantdec != null ? funcLnhpdValQuantdec() : _auxLnhpdValQuantdec; } set { funcLnhpdValQuantdec = () => value;} }
 		#endregion
 
 		public string ValCodlnhde { get; set; }
@@ -218,6 +235,7 @@ namespace GenioMVC.ViewModels.Lnhde
 			{
  				ValOrdem = ViewModelConversion.ToNumeric(m.ValOrdem);
  				ValQuantida = ViewModelConversion.ToNumeric(m.ValQuantida);
+ 				ValQuantdec = ViewModelConversion.ToNumeric(m.ValQuantdec);
  				ValCode = ViewModelConversion.ToString(m.ValCode);
  				ValDescript = ViewModelConversion.ToString(m.ValDescript);
  				ValUrl = ViewModelConversion.ToString(m.ValUrl);
@@ -225,6 +243,7 @@ namespace GenioMVC.ViewModels.Lnhde
  				ValCodlnhpd = ViewModelConversion.ToString(m.ValCodlnhpd);
  				ValCodpedid = ViewModelConversion.ToString(m.ValCodpedid);
  				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
+ 				funcLnhpdValQuantdec = () => ViewModelConversion.ToNumeric(m.Lnhpd.ValQuantdec);
  				ValCodlnhde = ViewModelConversion.ToString(m.ValCodlnhde);
 			}
 			catch (Exception)
@@ -245,6 +264,7 @@ namespace GenioMVC.ViewModels.Lnhde
 			{
 				m.ValOrdem = ViewModelConversion.ToNumeric(ValOrdem);
 				m.ValQuantida = ViewModelConversion.ToNumeric(ValQuantida);
+				m.ValQuantdec = ViewModelConversion.ToNumeric(ValQuantdec);
 				m.ValCode = ViewModelConversion.ToString(ValCode);
 				m.ValDescript = ViewModelConversion.ToString(ValDescript);
 				m.ValUrl = ViewModelConversion.ToString(ValUrl);
@@ -714,8 +734,8 @@ namespace GenioMVC.ViewModels.Lnhde
         /// <param name="Navigation">Navigation context</param>
         public static ConcurrentDictionary<string, object> GetDependant_LnhdeTableLnhpdLine(string PKey, NavigationContext Navigation)
         {
-            string[] DependantFields = new string[] { "lnhpd.codlnhpd", "lnhpd.line" };
-            FieldRef[] refDependantFields = new FieldRef[] { CSGenioAlnhpd.FldCodlnhpd, CSGenioAlnhpd.FldLine };
+            string[] DependantFields = new string[] { "lnhpd.codlnhpd", "lnhpd.line", "lnhpd.quantdec" };
+            FieldRef[] refDependantFields = new FieldRef[] { CSGenioAlnhpd.FldCodlnhpd, CSGenioAlnhpd.FldLine, CSGenioAlnhpd.FldQuantdec };
             var returnEmptyDependants = false;
             CriteriaSet wherecodition = CriteriaSet.And();
 
@@ -779,6 +799,10 @@ namespace GenioMVC.ViewModels.Lnhde
             try
             {
                 // That code doesn't include fields of the own control and can be empty if no one dependant field present on the form.
+                {
+                    var tempValue = ViewModelConversion.ToNumeric(row["lnhpd.quantdec"]);
+                    this.funcLnhpdValQuantdec = () => tempValue;
+                }
 
                 // Fill List fields
                 this.ValCodlnhpd = ViewModelConversion.ToString(row["lnhpd.codlnhpd"]);

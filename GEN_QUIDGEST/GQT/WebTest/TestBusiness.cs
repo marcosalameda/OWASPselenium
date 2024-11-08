@@ -19,13 +19,7 @@ namespace WebTest
         public static void AssemblyInit()
         {
             // Initalization code goes here
-            PersistenceFactoryExtension.Use();
-            CSGenio.persistence.PersistentSupport.SetControlQueries(
-                GenioServer.persistence.PersistentSupportExtra.ControlQueries, 
-                GenioServer.persistence.PersistentSupportExtra.ControlQueriesOverride);
-            GenioServer.framework.OverrideQueryDeclaring.Use();
-            //Dependency injection
-            UserFactory.BusinessManager = new UserBusinessService();
+            CSGenio.GenioDIDefault.Use();
 
         }
 

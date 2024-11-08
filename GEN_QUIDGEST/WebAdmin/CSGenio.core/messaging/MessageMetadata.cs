@@ -1,5 +1,6 @@
 ﻿using CSGenio.business;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace CSGenio.core.messaging
 {
@@ -21,6 +22,7 @@ namespace CSGenio.core.messaging
         public string Description { get; set; }
         public int Version { get; set; }
         public bool NoReexport { get; set; }
+        [JsonIgnore]
         public IAckProcessor Ack {  get; set; }
 
         public string Id => Group + "." + Name;
@@ -41,6 +43,7 @@ namespace CSGenio.core.messaging
         /// <summary>
         /// Optionally filter out rows before adding them to the message
         /// </summary>
+        [JsonIgnore]
         public InternalOperationFormula Filter {  get; set; } 
         /// <summary>
         /// This table is not sent when its saved, its sent in anex to other (non-anex) published tables
@@ -57,6 +60,7 @@ namespace CSGenio.core.messaging
         public string Description { get; set; }
         public int Version { get; set; }
         public bool UseAck { get; set; }
+        [JsonIgnore]
         public IMessageProcessor Processor { get; set; }
 
         public string Id => Group + "." + Name;
@@ -78,6 +82,7 @@ namespace CSGenio.core.messaging
         /// Optionally automatically ignore rows
         /// Condition is true for rows that must be processed, false to filter them.
         /// </summary>
+        [JsonIgnore]
         public InternalOperationFormula Filter { get; set; }
     }
 

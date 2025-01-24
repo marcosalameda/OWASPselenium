@@ -3,21 +3,25 @@ using NUnit.Framework;
 using System;
 using CSGenio.framework;
 using System.Diagnostics;
+using ExecuteQueryCore;
 
 namespace DbAdmin.IntegrationTest
 {
     public class CreateDatabase
     {
-        
+
+        private IConfiguration config;
 
 
         [SetUp]
         public void Setup()
         {
-            PersistenceFactoryExtension.Use();
+            config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build();
+            CSGenio.GenioDIDefault.UseLog();
+            CSGenio.GenioDIDefault.UseDatabase();
         }
-
-        
 
         [Test]
         public void AccessToServer()
@@ -40,80 +44,88 @@ namespace DbAdmin.IntegrationTest
             var currentDataSystem = CSGenio.framework.Configuration.DataSystems[0];
 
             var dataSystem = currentDataSystem.ShallowCopy();
-            var databaseName = 
             dataSystem.Name = database;
             dataSystem.Schemas[0].Schema = database;
-
             CSGenio.framework.Configuration.DataSystems.Add(dataSystem);                
         }
 
-
+        private RdxParamUpgradeSchema GetNewDatabaseParameters(string newDB)
+        {
+            var rdxParam = new RdxParamUpgradeSchema();
+            var datasystem = CSGenio.framework.Configuration.ResolveDataSystem(newDB, CSGenio.framework.Configuration.DbTypes.NORMAL);
+            rdxParam.Username = datasystem.LoginDecode();
+            rdxParam.Password = datasystem.PasswordDecode();
+            rdxParam.Year = newDB;
+            rdxParam.DirFilestream = config.GetValue<string>("NewDB:FileStreamLocation");
+            rdxParam.Origin = "Integration Test";
+            return rdxParam;
+        }
 
         [Test]
         public void CreateDatabaseOnly()
         {
-            string NEW_DB = $"{Configuration.Program}{Configuration.DataSystems[0].Name}_NewDB";
-            AddDummySystem(NEW_DB);
-            PersistentSupport sp = PersistentSupport.getPersistentSupport(NEW_DB);
-            //Arrange: Delete existing databases if any
-            if (sp.CheckIfDatabaseExists(NEW_DB))
+            //Arrange
+            string newDB = config["NewDB:DatabaseName"];
+            AddDummySystem(newDB);
+            PersistentSupport sp = PersistentSupport.getPersistentSupport(newDB);
+            //Delete existing databases if any
+            if (sp.CheckIfDatabaseExists(newDB))
             {
-                sp.Drop(NEW_DB);
+                sp.Drop(newDB);
             }
-            var datasystem = CSGenio.framework.Configuration.ResolveDataSystem(NEW_DB, CSGenio.framework.Configuration.DbTypes.NORMAL);
-            var user = datasystem.LoginDecode();
-            var password = datasystem.PasswordDecode();
+            var rdxParams = GetNewDatabaseParameters(newDB);
             var dbMaintenance = new DBMaintenance(AppDomain.CurrentDomain.BaseDirectory);
 
             //Act: Reindex
-            var result = dbMaintenance.StartReindexation(user, password, "CREATEDB", null, "", false, year: NEW_DB);
+            dbMaintenance.StartReindexation(rdxParams, "CREATEDB", null, "");
             
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-            while (!result.Progress.IsFinished() && stopWatch.Elapsed.TotalSeconds < 15)
+            
+            int timeout = config.GetValue<int?>("NewDB:Timeout") ?? 60;
+            while (!rdxParams.Progress.IsFinished() && stopWatch.Elapsed.TotalSeconds < timeout)
                 Thread.Sleep(50);
 
             //Assert: Check if database exists
-            Assert.IsTrue(sp.CheckIfDatabaseExists(NEW_DB));
-            Assert.AreEqual(result.Progress.State, ExecuteQueryCore.RdxProgressStatus.SUCCESS, result.Progress.Message);
+            Assert.IsTrue(sp.CheckIfDatabaseExists(newDB));
+            Assert.AreEqual(ExecuteQueryCore.RdxProgressStatus.SUCCESS, rdxParams.Progress.State, rdxParams.Progress.Message);
 
             //Teardown
-            sp.Drop(NEW_DB);
+            sp.Drop(newDB);
         }
 
 
         [Test]
         public void CreateDatabaseDefaultScripts()
         {
-            string NEW_DB = $"{Configuration.Program}{Configuration.DataSystems[0].Name}_NewSchema";
-            AddDummySystem(NEW_DB);
-            PersistentSupport sp = PersistentSupport.getPersistentSupport(NEW_DB);
+            string newDb = config["NewDB:DatabaseName"];
+            AddDummySystem(newDb);
+            PersistentSupport sp = PersistentSupport.getPersistentSupport(newDb);
             //Arrange: Delete existing databases if any
-            if (sp.CheckIfDatabaseExists(NEW_DB))
+            if (sp.CheckIfDatabaseExists(newDb))
             {
-                sp.Drop(NEW_DB);
+                sp.Drop(newDb);
             }
-            var datasystem = CSGenio.framework.Configuration.ResolveDataSystem(NEW_DB, CSGenio.framework.Configuration.DbTypes.NORMAL);
-            var user = datasystem.LoginDecode();
-            var password = datasystem.PasswordDecode();
+            var rdxParams = GetNewDatabaseParameters(newDb);
             var dbMaintenance = new DBMaintenance(AppDomain.CurrentDomain.BaseDirectory);
 
             //Act: Reindex
-            var result = dbMaintenance.StartReindexation(user, password, "", new System.Collections.Generic.List<string>(), "", false, year: NEW_DB);
+            dbMaintenance.StartReindexation(rdxParams, "", new List<string>(), "");
             
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-            while (!result.Progress.IsFinished() && stopWatch.Elapsed.TotalSeconds < 60)
+            var timeout = config.GetValue<int?>("NewDB:Timeout") ?? 60;
+            while (!rdxParams.Progress.IsFinished() && stopWatch.Elapsed.TotalSeconds < timeout)
                 Thread.Sleep(50);
 
             
             //Assert: Check if database exists
-            Assert.IsTrue(sp.CheckIfDatabaseExists(NEW_DB));
-            Assert.AreEqual(result.Progress.State, ExecuteQueryCore.RdxProgressStatus.SUCCESS, result.Progress.Message);
-            Assert.AreEqual(Configuration.VersionDbGen, Configuration.GetDbVersion(NEW_DB));
+            Assert.IsTrue(sp.CheckIfDatabaseExists(newDb));
+            Assert.AreEqual(ExecuteQueryCore.RdxProgressStatus.SUCCESS, rdxParams.Progress.State, rdxParams.Progress.Message);
+            Assert.AreEqual(Configuration.VersionDbGen, Configuration.GetDbVersion(newDb));
             
             //Teardown
-            sp.Drop(NEW_DB);
+            sp.Drop(newDb);
         }
     }
 }

@@ -8,12 +8,18 @@ using System.Net;
 using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.Mvc;
 using DbAdmin;
+using CSGenio.config;
+using System.Data.SqlClient;
+using CSGenio.persistence;
+using System.Data;
+using Quidgest.Persistence.GenericQuery;
+using CSGenio.core.messaging;
+using Administration.Models;
 
 namespace Administration.Controllers
 {
-    public class ConfigController : ControllerBase
+    public class ConfigController(CSGenio.config.IConfigurationManager configManager) : ControllerBase
     {
-        private readonly string pathConfig = Path.Combine(CSGenio.framework.Configuration.GetConfigPath(), "Configuracoes.xml");
 
         [HttpGet]
         public IActionResult Index()
@@ -22,64 +28,37 @@ namespace Administration.Controllers
             return Index(null, appId);
         }
 
-        private IActionResult Index(string resultMsg, string appId)
+        private IActionResult Index(string resultMsg, string appId, string alertType = null)
         {
-            if (!AuxFunctions.CheckXMLIsValid())
+            //If configuration file doesn't exist, redirect to no config to be created
+            if(!configManager.Exists())
+                return Json(new { redirect = "no_configuration" });
+
+            if (!AuxFunctions.CheckXMLIsValid(configManager))
                 return Json(new { redirect = "config_migration" });
 
             var model = new Models.ConfigModel();
             model.Applications = ClientApplication.Applications;
+            model.AlertType = alertType ?? "";
             model.ResultMsg = resultMsg ?? "";
 
             try
             {
-                var conf = ConfigurationXML.readXML(pathConfig);
+                var conf = configManager.GetExistingConfig();
 
                 //----------------
                 // Database
                 //----------------
-                if (!conf.DataSystems.Any(ds => ds.Name == CurrentYear))
-                {
-                    if (!conf.DataSystems.Any()) // Se não houver nenhum DataSystem, cria um default.
-                        createDataSystem(CSGenio.framework.Configuration.DefaultYear, string.Format("{0}{1}", CSGenio.framework.Configuration.Acronym, CSGenio.framework.Configuration.DefaultYear), conf);
-                    return Json(new { reload = true, system = CSGenio.framework.Configuration.DefaultYear });
-                }
+                DataSystemXml dataSystem;
+                if (!conf.DataSystems.Any()) // Se não houver nenhum DataSystem, cria um default.
+                    dataSystem = createDataSystem(Configuration.DefaultYear, $"{Configuration.Program}{Configuration.DefaultYear}", conf);
+                else 
+                    dataSystem = Configuration.ResolveDataSystem(CurrentYear, Configuration.DbTypes.NORMAL);
 
-                var dataSystem = CSGenio.framework.Configuration.ResolveDataSystem(CurrentYear, CSGenio.framework.Configuration.DbTypes.NORMAL);
-                if (dataSystem != null)
-                {
-                    model.Schema = dataSystem.Schemas[0].Schema; //<-- TODO: Suportar configurações datasystems com BDs partilhadas
-					model.ConnEncrypt = dataSystem.Schemas[0].ConnEncrypt;
-					model.ConnWithDomainUser = dataSystem.Schemas[0].ConnWithDomainUser;
-
-                    model.HideYears = conf.omiteAnos.ToUpper() == "S";  //<-- So este é que vai ao conf? faz sentido?
-                    model.DbUser = Encoding.Unicode.GetString(Convert.FromBase64String(dataSystem.Login ?? string.Empty));
-                    model.DbPsw = Encoding.Unicode.GetString(Convert.FromBase64String(dataSystem.Password ?? string.Empty));
-                    model.Server = dataSystem.Server;
-                    model.Service = dataSystem.Service;
-					model.ServiceName = dataSystem.ServiceName;
-                    model.Port = dataSystem.Port;
-
-                    Enum.TryParse(dataSystem.Type, out HardCodedLists.DBMS serverType);// Default: SQLSERVER2008
-                    model.ServerType = serverType;
-
-                    /*
-                     *  Read Log Database config
-                     */
-                    if (dataSystem.DataSystemLog != null && dataSystem.DataSystemLog.Schemas.Count > 0)
-                    {
-                        model.Log_Schema = dataSystem.DataSystemLog.Schemas[0].Schema;
-                        model.Log_ConnEncrypt = dataSystem.DataSystemLog.Schemas[0].ConnEncrypt;
-                        model.Log_ConnWithDomainUser = dataSystem.DataSystemLog.Schemas[0].ConnWithDomainUser;
-                        model.Log_DbUser = Encoding.Unicode.GetString(Convert.FromBase64String(dataSystem.DataSystemLog.Login ?? string.Empty));
-                        model.Log_DbPsw = Encoding.Unicode.GetString(Convert.FromBase64String(dataSystem.DataSystemLog.Password ?? string.Empty));
-                        model.Log_Server = dataSystem.DataSystemLog.Server ?? string.Empty;
-                        model.Log_Port = dataSystem.DataSystemLog.Port ?? string.Empty;
-                        model.Log_Service = dataSystem.DataSystemLog.Service ?? string.Empty;
-                        model.Log_ServiceName = dataSystem.DataSystemLog.ServiceName ?? string.Empty;
-                    }
-
-                }
+                //----------------
+                // Read System and Log Database Configurations
+                //----------------
+                ReadDataBaseConfig(model, dataSystem, conf);
 
                 model.DefaultYear = CSGenio.framework.Configuration.DefaultYear;
 
@@ -95,33 +74,16 @@ namespace Administration.Controllers
                 }
 
                 //----------------
-                // Queues list
+                // Message Queues list
                 //----------------
-                model.MQueues = new Models.MessageQueue();
-                model.MQueues.Queues = new List<Models.QueueCfg>();
-
-                int rownum = 0;
-                if (conf.MessageQueueing != null)
-                {
-                    conf.MessageQueueing.Journaltimeout = GlobalFunctions.atoi(model.MQueues.Journaltimeout);
-                    conf.MessageQueueing.Maxsendnumber = GlobalFunctions.atoi(model.MQueues.Maxsendnumber);
-
-                    foreach (var q in conf.MessageQueueing.Queues)
-                    {
-                        model.MQueues.Queues.Add(new Models.QueueCfg(q) { Rownum = rownum ++ });
-                    }
-                }
-                else
-                {
-                    conf.MessageQueueing = new messagequeueing();
-                }
-
+                ReadMessageQueuesList(model, conf);
+                
                 //----------------
                 // ACK list
                 //----------------
                 model.MQueues.Acks = new List<Models.QueueACK>();
 
-                rownum = 0;
+                int rownum = 0;
                 if (conf.MessageQueueing != null)
                 {
                     foreach (var q in conf.MessageQueueing.ACKS)
@@ -129,6 +91,27 @@ namespace Administration.Controllers
                         model.MQueues.Acks.Add(new Models.QueueACK(q) { Rownum = rownum ++ });
                     }
                 }
+
+                //----------------
+                //Messaging (will replace MSMQ)
+                //----------------
+                if (conf.Messaging != null)
+                {
+                    model.Messaging = conf.Messaging;
+                    //decode the username and remove the password before sending to client side
+                    model.Messaging.Host.Username = model.Messaging.Host.UsernameDecode();
+                    model.Messaging.Host.Password = "";
+                    model.MessagingMetadata = CSGenio.core.di.GenioDI.Messaging.Metadata;
+                }
+                else
+                {
+                    model.Messaging = new MessagingXml();
+                }
+
+                //----------------
+                // Scheduler
+                //----------------
+                model.Scheduler = conf.Scheduler ?? new SchedulerXml();
 
                 //----------------
                 // Others [PATHS , FORMATS , Elasticsearch]
@@ -146,8 +129,10 @@ namespace Administration.Controllers
                 model.ssrsServerPath = conf.ssrsServer.path;
                 model.isLocalReports = conf.ssrsServer.isLocalReports;
                 model.ssrsServerDomain = conf.ssrsServer.Domain;
-                model.ssrsServerUsername = Encoding.Unicode.GetString(Convert.FromBase64String(conf.ssrsServer.Username ?? string.Empty));
-                model.ssrsServerPassword = Encoding.Unicode.GetString(Convert.FromBase64String(conf.ssrsServer.Password ?? string.Empty));
+                model.ssrsServerUsername = conf.ssrsServer.UsernameDecode ?? string.Empty;
+                
+                if (string.IsNullOrEmpty(conf.ssrsServer.Password)) model.hasSsrsServerPassword = false;
+                else model.hasSsrsServerPassword = true;
 
                 model.DateFormat = new Models.DateFormatCfg();
                 if (conf.DateFormat != null)
@@ -204,7 +189,7 @@ namespace Administration.Controllers
 				// Convert dictionary to list
                 foreach (var mp in conf.maisPropriedades)
                 {
-                    model.MoreProperties.Add(new Models.MorePropertyCfg(mp.Key, mp.Value));
+                    model.AdvancedProperties.Add(new Models.MorePropertyCfg(mp.Key, mp.Value));
                 }
 
                 // Elasticsearch List/table
@@ -243,7 +228,6 @@ namespace Administration.Controllers
                 model.EventTracking = conf.EventTracking;
 
                 model.UrlAPIBackend = conf.ChatBotConfig?.apiURL;
-                model.UrlSocketBackend = conf.ChatBotConfig?.websocketURL;
             }
             catch (Exception e)
             {
@@ -252,10 +236,96 @@ namespace Administration.Controllers
                 model.MQueues.Queues = new List<Models.QueueCfg>();
 
                 model.ResultMsg = Translations.Get(e.Message, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper());
+                model.AlertType = "danger";
             }
 
             return Ok(model);
         }
+
+        /// <summary>
+        /// Populates the message queues list within the configuration model based on the XML.
+        /// </summary>
+        /// <param name="model">Config Model</param>
+        /// <param name="conf">XML system configuration</param>
+        private void ReadMessageQueuesList(Models.ConfigModel model, ConfigurationXML conf)
+        {
+            int rownum = 0;
+            model.MQueues = new Models.MessageQueue();
+            model.MQueues.Queues = new List<Models.QueueCfg>();
+            if (conf.MessageQueueing != null)
+            {
+                conf.MessageQueueing.Journaltimeout = GlobalFunctions.atoi(model.MQueues.Journaltimeout);
+                conf.MessageQueueing.Maxsendnumber = GlobalFunctions.atoi(model.MQueues.Maxsendnumber);
+
+                foreach (var q in conf.MessageQueueing.Queues)
+                {
+                    model.MQueues.Queues.Add(new Models.QueueCfg(q) { Rownum = rownum ++ });
+                }
+            }
+            else
+            {
+                conf.MessageQueueing = new messagequeueing();
+            }
+        }
+
+        /// <summary>
+        /// Extracts database configuration details from the XML and integrates them into the configuration model.
+        /// </summary>
+        /// <param name="model">Configuration Model</param>
+        /// <param name="dataSystem">XML representation of database system config</param>
+        /// <param name="conf">XML system configuration</param>
+        private void ReadDataBaseConfig(Models.ConfigModel model, DataSystemXml dataSystem, ConfigurationXML conf)
+        {
+            if (dataSystem != null)
+            {
+                model.Schema = dataSystem.Schemas[0].Schema; //<-- TODO: Support datasystem configurations with shared DBs
+                model.ConnEncrypt = dataSystem.Schemas[0].ConnEncrypt;
+                model.ConnWithDomainUser = dataSystem.Schemas[0].ConnWithDomainUser;
+
+                //Add GQP shared system
+                var GQPSchema = dataSystem.Schemas.Find(s => s.Id == "GQP");
+                if (GQPSchema != null)
+                {
+                    model.GQP_Schema = GQPSchema.Schema;
+                    model.GQP_ConnEncrypt = GQPSchema.ConnEncrypt;
+                    model.GQP_ConnWithDomainUser = GQPSchema.ConnWithDomainUser;
+                }
+                model.HideYears = conf.omiteAnos.ToUpper() == "S";  //<-- Only this one goes to the conf? does that make sense?
+                model.DbUser = Encoding.Unicode.GetString(Convert.FromBase64String(dataSystem.Login ?? string.Empty));
+                
+                if (string.IsNullOrEmpty(dataSystem.Password)) model.HasDbPsw = false;
+                else model.HasDbPsw = true;
+
+                model.Server = dataSystem.Server;
+                model.Service = dataSystem.Service;
+                model.ServiceName = dataSystem.ServiceName;
+                model.Port = dataSystem.Port;
+
+                Enum.TryParse(dataSystem.GetDatabaseType().ToString(), out HardCodedLists.DBMS serverType);// Default: SQLSERVER
+                model.ServerType = serverType;
+
+                /*
+                *  Read Log Database config
+                */
+                if (dataSystem.DataSystemLog != null && dataSystem.DataSystemLog.Schemas.Count > 0)
+                {
+                    model.Log_Schema = dataSystem.DataSystemLog.Schemas[0].Schema;
+                    model.Log_ConnEncrypt = dataSystem.DataSystemLog.Schemas[0].ConnEncrypt;
+                    model.Log_ConnWithDomainUser = dataSystem.DataSystemLog.Schemas[0].ConnWithDomainUser;
+                    model.Log_DbUser = Encoding.Unicode.GetString(Convert.FromBase64String(dataSystem.DataSystemLog.Login ?? string.Empty));
+                    
+                    if (string.IsNullOrEmpty(dataSystem.DataSystemLog.Password)) model.Log_HasDbPsw = false;
+                    else model.Log_HasDbPsw = true;
+
+                    model.Log_Server = dataSystem.DataSystemLog.Server ?? string.Empty;
+                    model.Log_Port = dataSystem.DataSystemLog.Port ?? string.Empty;
+                    model.Log_Service = dataSystem.DataSystemLog.Service ?? string.Empty;
+                    model.Log_ServiceName = dataSystem.DataSystemLog.ServiceName ?? string.Empty;
+                }
+
+            }
+        }
+
 
         private Models.SecurityCfg ReadSecurityConfig(String appId, ConfigurationXML conf)
         {
@@ -274,6 +344,8 @@ namespace Administration.Controllers
             model.PasswordStrength = security.PasswordStrength;
             model.PasswordAlgorithms = security.PasswordAlgorithms;
             model.SessionTimeOut = security.SessionTimeOut;
+            model.UsePasswordBlacklist = security.UsePasswordBlacklist;
+            model.MaxAttempts = security.MaxAttempts;
 
             model.IdentityProviders = new List<Models.IdentityProviderCfg>();
             int rownum = 0;
@@ -286,7 +358,7 @@ namespace Administration.Controllers
                 model.RoleProviders.Add(new Models.RoleProviderCfg(rp) { Rownum = rownum++ });
 
             model.Users = new List<Models.UserCfg>();
-
+            rownum = 0;
             foreach (var u in security.Users)
                 model.Users.Add(new Models.UserCfg(u) { Rownum = rownum++ });
 
@@ -308,19 +380,24 @@ namespace Administration.Controllers
         [HttpPost]
         public IActionResult CreateDataSystem([FromBody] JsonObject data)
         {
-            ConfigurationXML conf = ConfigurationXML.readXML(pathConfig);
+            ConfigurationXML conf = configManager.GetExistingConfig();
             string year = (string)data["year"];
             string schema = (string)data["schema"];
-            createDataSystem(year, schema, conf);
+            string type = (string)data["type"] ?? "";
+            string server = (string)data["server"] ?? "";
+            createDataSystem(year, schema, conf, type, server);
+            configManager.StoreConfig(conf);
+            Configuration.ReadConfiguration(conf);
             return Json(new { system = year });
         }
 
-        private void createDataSystem(string year, string schemaName, ConfigurationXML conf)
+        private DataSystemXml createDataSystem(string year, string schemaName, ConfigurationXML conf, string dsType = "", string dsServer = "")
         {
-            if (conf.DataSystems.Any(ds => ds.Name == year))
-                return;// Não cria DataSystem com mesmo Id
-
-            var dataSystem = new DataSystemXml() { Name = year };
+            var dataSystem = conf.DataSystems.FirstOrDefault(ds => ds.Name == year);
+            if (dataSystem != null)
+                return dataSystem;
+            else
+                dataSystem = new DataSystemXml() { Name = year, Type = dsType, Server = dsServer }; // Type and server are set when duplicating a data system
 
             var schema = new DataXml();
             schema.Id = CSGenio.framework.Configuration.Program;
@@ -330,10 +407,53 @@ namespace Administration.Controllers
             dataSystem.Schemas = new List<DataXml>() { schema };
 
             conf.DataSystems.Add(dataSystem);
-            conf.writeXML(pathConfig);
+            return dataSystem;
+        }
 
+        [HttpPost]
+        public IActionResult SaveConfigDataSystems([FromBody] Models.ConfigModel model)
+        {
+            var conf = configManager.GetExistingConfig();
+
+            conf.anoDefault = model.DefaultYear ?? "0";
+
+            // In case the default data system changes, reorder databases
+            if (conf.anoDefault != Configuration.DefaultYear)
+            {
+                DataSystemXml tempDefDS = conf.DataSystems.FirstOrDefault(ds => ds.Name == conf.anoDefault);
+                conf.DataSystems.Remove(tempDefDS);
+                conf.DataSystems.Insert(0, tempDefDS);
+            }
+
+            conf.omiteAnos = model.HideYears ? "S" : "";
+
+            configManager.StoreConfig(conf);
             // Reload Configuration static instance in server with the new Configuracoes.xml data
             CSGenio.framework.Configuration.ReadConfiguration(conf);
+
+            return Json(new { Success = true });
+        }
+
+        [HttpPost]
+        public IActionResult TestDBConnection([FromBody] Models.ConfigModel model)
+        {
+            try
+            {
+                bool connectionSuccess = PersistentSupport.TestServerConnection(model.GetDataSystemXml());
+
+                if (connectionSuccess)
+                {
+                    return Json(new { Success = true, Message = "Connection success", AlertType = "success" });
+                }
+                else
+                {
+                    return Json(new { Success = false, Message = "Connection failed", AlertType = "danger" });
+                }
+            }
+            catch (Exception)
+            {
+                return Json(new { Success = false });
+            }
         }
 
         [HttpPost]
@@ -345,35 +465,44 @@ namespace Administration.Controllers
 
             try
             {
-                SysConfiguration sysConfiguration = new SysConfiguration();
+                SysConfiguration sysConfiguration = new SysConfiguration(configManager);
 
                 model.ResultMsg = string.Empty;
 				if (!ModelState.IsValid)
                 {
+                    model.AlertType = "danger";
                     string err = Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860 + Environment.NewLine + string.Join(Environment.NewLine, ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
                     throw new BusinessException(err, "ConfigController.reindex", err);
                 }
 
                 if (string.IsNullOrEmpty(model.DbPsw) || (model.DbPsw != model.DbCheckPsw))
+                {
                     model.ResultMsg += Resources.Resources.A_PASSWORD_NAO_COINC35287;
-
+                    model.AlertType = "danger";
+                }
                 //Check log database user input
                 if(!string.IsNullOrEmpty(model.Log_Server) || !string.IsNullOrEmpty(model.Log_Schema) || 
                     !string.IsNullOrEmpty(model.Log_DbPsw) || !string.IsNullOrEmpty(model.Log_DbCheckPsw) || !string.IsNullOrEmpty(model.Log_DbUser))
                 {                    
                     if (string.IsNullOrEmpty(model.Log_Server) || string.IsNullOrEmpty(model.Log_Schema) ||
                     string.IsNullOrEmpty(model.Log_DbPsw) || string.IsNullOrEmpty(model.Log_DbCheckPsw) || string.IsNullOrEmpty(model.Log_DbUser))
+                    {
+                        model.AlertType = "danger";
                         throw new BusinessException(Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860, "ConfigController.reindex", Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860);
-
+                    }
                     if (model.Log_DbPsw != model.Log_DbCheckPsw)
+                    {
+                        model.AlertType = "danger";
                         model.ResultMsg += Resources.Resources.A_PASSWORD_NAO_COINC35287;
-					
+                    }
 					hasLogDB = true;
                 }   
 
                 if(hasLogDB && model.Schema.ToLower() == model.Log_Schema.ToLower())
+                {
+                    model.AlertType = "danger";
                     throw new BusinessException(Resources.Resources.THE_LOG_DATABASE_CAN31596, "ConfigController.reindex", Resources.Resources.THE_LOG_DATABASE_CAN31596);
-
+                }
                 if (string.IsNullOrEmpty(model.ResultMsg))
                 {
                     //Configure main database
@@ -385,23 +514,61 @@ namespace Administration.Controllers
                         sysConfiguration.SaveLogDatabaseConfig(model.Log_DbUser, model.Log_DbPsw, model.Log_Server, model.ServerType.ToString(), 
                             model.Log_Schema, model.Log_Port, model.ConnEncrypt, model.ConnWithDomainUser, year);                    
                     }
-                    model.ResultMsg = Resources.Resources.FICHEIRO_DE_CONFIGUR18806;
+                    //Configure Shared Tables
+                    SaveSharedTables(model, sysConfiguration.ReadDatabaseConfig(year));
+                    model.AlertType = "success";
+                    model.ResultMsg = Resources.Resources.FICHEIRO_DE_CONFIGUR18806 + " " + Resources.Resources.SERA_REDIRECIONADO_E06592;
                 }
             }
             catch (Exception e)
             {
-                return Index(Translations.Get(e.Message, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper()), appId);
+                return Index(Translations.Get(e.Message, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper()), appId, "danger");
             }
 
-			return Index(model.ResultMsg, appId);
+			return Index(model.ResultMsg, appId, model.AlertType);
         }
 
+        private void SaveSharedTables(Models.ConfigModel model, DataSystemXml db)
+        {
+            ConfigurationXML conf = configManager.GetExistingConfig();
+            DataXml res = null;
+
+            res = db.Schemas.Find(x => x.Id == "GQP");
+            if(res != null)
+            {
+                res.Schema = model.Schema;
+                res.ConnEncrypt = model.ConnEncrypt;
+                res.ConnWithDomainUser = model.ConnWithDomainUser;
+            }
+            else
+            {
+                db.Schemas.Add(new DataXml
+                {
+                    Id = "GQP",
+                    Schema = model.GQP_Schema,
+                    ConnEncrypt = model.GQP_ConnEncrypt,
+                    ConnWithDomainUser = model.GQP_ConnWithDomainUser
+                });
+            }
+
+            int indexDS = conf.DataSystems.FindIndex(confDS => confDS.Name == db.Name);
+            if (indexDS != -1)
+                conf.DataSystems[indexDS] = db;
+            else
+                conf.DataSystems.Add(db);
+
+            //Save configuration
+            configManager.StoreConfig(conf);
+
+            // Reload configuration
+            CSGenio.framework.Configuration.ReadConfiguration(conf);
+        }
 
         [HttpPost]
         public IActionResult SaveIdentityProvider([FromBody]Models.IdentityProviderCfg model)
         {
             var appId = FromQuery("appId");
-            var conf = ConfigurationXML.readXML(pathConfig);
+            var conf = configManager.GetExistingConfig();
             SecurityCfgEl security = conf.GetSecurity(appId);
             if (model.FormMode == "delete")
             {
@@ -416,13 +583,14 @@ namespace Administration.Controllers
                 security.IdentityProviders.Add(model.obj);
             }
 
-            conf.writeXML(pathConfig);
+            configManager.StoreConfig(conf);
             // Reload Configuration static instance in server with the new Configuracoes.xml data
             CSGenio.framework.Configuration.ReadConfiguration(conf);
 
             security = conf.GetSecurity(appId);
             var rownum = security.IdentityProviders.FindIndex(u => u.Name == model.Name);
             Models.IdentityProviderCfg identityProvider = model.FormMode != "delete" ? new Models.IdentityProviderCfg(security.IdentityProviders[rownum]) { Rownum = rownum } : null;
+            
 
             return Json(new { success = true, identityProvider });
         }
@@ -431,7 +599,7 @@ namespace Administration.Controllers
         public IActionResult SaveRoleProvider([FromBody]Models.RoleProviderCfg model)
         {
             var appId = FromQuery("appId");
-            var conf = ConfigurationXML.readXML(pathConfig);
+            var conf = configManager.GetExistingConfig();
             SecurityCfgEl security = conf.GetSecurity(appId);
             if (model.FormMode == "delete")
             {
@@ -446,7 +614,7 @@ namespace Administration.Controllers
                 security.RoleProviders.Add(model.obj);
             }
 
-            conf.writeXML(pathConfig);
+            configManager.StoreConfig(conf);
             // Reload Configuration static instance in server with the new Configuracoes.xml data
             CSGenio.framework.Configuration.ReadConfiguration(conf);
 
@@ -461,7 +629,7 @@ namespace Administration.Controllers
         public IActionResult SaveUserCfg([FromBody]Models.UserCfg model)
         {
             var appId = FromQuery("appId");
-            var conf = ConfigurationXML.readXML(pathConfig);
+            var conf = configManager.GetExistingConfig();
             SecurityCfgEl security = conf.GetSecurity(appId);
             var index = security.Users.FindIndex(u => u.Name == model.Name);
             if (model.FormMode == "delete")
@@ -477,7 +645,7 @@ namespace Administration.Controllers
                 security.Users.Add(model.obj);
             }
 
-            conf.writeXML(pathConfig);
+            configManager.StoreConfig(conf);
             // Reload Configuration static instance in server with the new Configuracoes.xml data
             CSGenio.framework.Configuration.ReadConfiguration(conf);
             security = conf.GetSecurity(appId);
@@ -493,7 +661,7 @@ namespace Administration.Controllers
         [HttpPost]
         public IActionResult SaveQueue([FromBody] Models.QueueCfg model)
         {
-            var conf = ConfigurationXML.readXML(pathConfig);
+            var conf = configManager.GetExistingConfig();
             if (conf.MessageQueueing == null)
             {
                 conf.MessageQueueing = new messagequeueing();
@@ -512,7 +680,7 @@ namespace Administration.Controllers
                 conf.MessageQueueing.Queues.Add(model.obj);
             }
 
-            conf.writeXML(pathConfig);
+            configManager.StoreConfig(conf);
             // Reload Configuration static instance in server with the new Configuracoes.xml data
             CSGenio.framework.Configuration.ReadConfiguration(conf);
 
@@ -522,7 +690,7 @@ namespace Administration.Controllers
         [HttpPost]
         public IActionResult SaveQueueACK([FromBody] Models.QueueACK model)
         {
-            var conf = ConfigurationXML.readXML(pathConfig);
+            var conf = configManager.GetExistingConfig();
             if (conf.MessageQueueing == null)
             {
                 conf.MessageQueueing = new messagequeueing();
@@ -541,7 +709,7 @@ namespace Administration.Controllers
                 conf.MessageQueueing.ACKS.Add(model.obj);
             }
 
-            conf.writeXML(pathConfig);
+            configManager.StoreConfig(conf);
             // Reload Configuration static instance in server with the new Configuracoes.xml data
             CSGenio.framework.Configuration.ReadConfiguration(conf);
 
@@ -551,7 +719,7 @@ namespace Administration.Controllers
         [HttpGet]
         public IActionResult ReloadMQueues()
         {
-            var conf = ConfigurationXML.readXML(pathConfig);
+            var conf = configManager.GetExistingConfig();
             //----------------
             // Queues list
             //----------------
@@ -593,7 +761,7 @@ namespace Administration.Controllers
         [HttpPost]
         public IActionResult SaveCoreCfg([FromBody]Models.CoreCfg model)
         {
-            var conf = ConfigurationXML.readXML(pathConfig);
+            var conf = configManager.GetExistingConfig();
             if (conf.Elasticsearch == null)
             {
                 conf.Elasticsearch = new ElasticsearchXml
@@ -623,12 +791,111 @@ namespace Administration.Controllers
                 }
             }
 
-            conf.writeXML(pathConfig);
+            configManager.StoreConfig(conf);
             // Reload Configuration static instance in server with the new Configuracoes.xml data
             CSGenio.framework.Configuration.ReadConfiguration(conf);
 
             return Json(new { Success = true });
         }
+
+        [HttpPost]
+        public IActionResult SaveConfigMessaging([FromBody]MessagingXml model)
+        {
+            var conf = configManager.GetExistingConfig();
+
+            model.Host.Username = Convert.ToBase64String(Encoding.Unicode.GetBytes(model.Host.Username));
+            if(!string.IsNullOrEmpty(model.Host.Password))
+                model.Host.Password = Convert.ToBase64String(Encoding.Unicode.GetBytes(model.Host.Password));
+            else
+                model.Host.Password = conf.Messaging.Host.Password;
+
+            conf.Messaging = model;
+            configManager.StoreConfig(conf);
+
+            // Reload Configuration static instance in server with the new Configuracoes.xml data
+            CSGenio.framework.Configuration.ReadConfiguration(conf);
+
+            return Json(new { Success = true });
+        }
+
+
+        public IActionResult SaveSchedulerConfig([FromBody]SchedulerXml model)
+        {
+            var conf = configManager.GetExistingConfig();
+            conf.Scheduler.Enabled = model.Enabled;
+            configManager.StoreConfig(conf);
+
+            // Reload Configuration static instance in server with the new Configuracoes.xml data
+            CSGenio.framework.Configuration.ReadConfiguration(conf);
+
+            // Dynamically update the scheduler service with the new configuration
+            var service = this.HttpContext.RequestServices.GetRequiredService<SchedulerServiceHost>();
+            service.UpdateEnable();
+
+            return Json(new { Success = true });
+        }
+
+        public class FormRecordOperation<T>
+        {
+            public T Data { get; set; }
+            public string FormMode { get; set; }
+        }
+
+        public IActionResult SaveScheduledJob([FromBody]FormRecordOperation<SchedulerJobXml> model)
+        {
+            var row = model.Data;
+
+            var conf = configManager.GetExistingConfig();
+            var existing = conf.Scheduler.Jobs.Find(x => x.Id == row.Id);
+
+            switch(model.FormMode)
+            {
+                case "delete":
+                    if(existing is not null)
+                        conf.Scheduler.Jobs.Remove(existing);
+                    break;
+                case "new":
+                case "edit":
+                    //verify Cron is not empty
+                    if (row.Cron == "")
+                        return Json(new { Success = false, Message = Resources.Resources.CRON_E_NECESSARIO07773 });
+                    //validate Cron
+                    if(!Cronos.CronExpression.TryParse(row.Cron, Cronos.CronFormat.IncludeSeconds, out var _))
+                        return Json(new { Success = false, Message = Resources.Resources.EXPRESSAO_CRON_INVAL33136  });
+
+                    //trim unused/empty options
+                    if(row.Options != null)
+                    {
+                        foreach(var kvp in row.Options)
+                            if(string.IsNullOrEmpty(kvp.Value))
+                                row.Options.Remove(kvp.Key);
+                        if(row.Options.Count == 0)
+                            row.Options = null;
+                    }
+
+                    //update the job list
+                    if(existing is not null)
+                        conf.Scheduler.Jobs.Remove(existing);
+                    conf.Scheduler.Jobs.Add(row);
+                    break;
+                default:
+                    Log.Error("Unknown form operation in SaveScheduledJob.");
+                    break;
+            }
+
+            configManager.StoreConfig(conf);
+
+            // Reload Configuration static instance in server with the new Configuracoes.xml data
+            CSGenio.framework.Configuration.ReadConfiguration(conf);
+
+            // Dynamically update the scheduler service with the new configuration
+            var service = this.HttpContext.RequestServices.GetRequiredService<SchedulerServiceHost>();
+            service.UpdateJobs();
+
+
+            return Json(new { Success = true });
+        }
+
 
 		[HttpGet]
         public IActionResult GetNewMorePropertyCfg()
@@ -678,7 +945,7 @@ namespace Administration.Controllers
         public IActionResult SaveConfigSecurity([FromBody]Models.SecurityCfg model)
         {
             var appId = FromQuery("appId");
-            var conf = ConfigurationXML.readXML(pathConfig);
+            var conf = configManager.GetExistingConfig();
 
             foreach (var security in ClientApplication.Applications.Select(x=> conf.GetSecurity(x.Id)))
             {
@@ -700,8 +967,9 @@ namespace Administration.Controllers
 					security.PasswordStrength = model.PasswordStrength;
 					security.PasswordAlgorithms = model.PasswordAlgorithms;
 					security.MaxAttempts = model.MaxAttempts;
+                    security.UsePasswordBlacklist = model.UsePasswordBlacklist;
 
-					conf.writeXML(pathConfig);
+					configManager.StoreConfig(conf);
 				}
 				catch (Exception e)
 				{
@@ -719,7 +987,7 @@ namespace Administration.Controllers
         [HttpPost]
         public IActionResult SaveConfigMessageQueue([FromBody] Models.ConfigModel model)
         {
-            var conf = ConfigurationXML.readXML(pathConfig);
+            var conf = configManager.GetExistingConfig();
             try
             {
                 if ((!string.IsNullOrEmpty(model.MQueues.Journaltimeout) && string.IsNullOrEmpty(model.MQueues.Maxsendnumber)) || (string.IsNullOrEmpty(model.MQueues.Journaltimeout) && !string.IsNullOrEmpty(model.MQueues.Maxsendnumber)))
@@ -731,8 +999,8 @@ namespace Administration.Controllers
 				model.MQueues.Journaltimeout = conf.MessageQueueing.Journaltimeout.ToString();
 				model.MQueues.Maxsendnumber = conf.MessageQueueing.Maxsendnumber.ToString();
 
-                conf.writeXML(pathConfig);
-                model.ResultMsg = Resources.Resources.FICHEIRO_DE_CONFIGUR18806;
+                configManager.StoreConfig(conf);
+                model.ResultMsg = Resources.Resources.FICHEIRO_DE_CONFIGUR18806 + " " + Resources.Resources.SERA_REDIRECIONADO_E06592;
 
 				// Reload Configuration static instance in server with the new Configuracoes.xml data
                 CSGenio.framework.Configuration.ReadConfiguration(conf);
@@ -740,16 +1008,16 @@ namespace Administration.Controllers
             catch (Exception e)
             {
                 var resultMsg = Translations.Get(e.Message, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper());
-                return Json(new { Status = "ERROR", Message = resultMsg });
+                return Json(new { Status = "ERROR", Message = resultMsg, AlertType = "danger" });
             }
 
-            return Json(new { Status = "OK", Message = model.ResultMsg });
+            return Json(new { Status = "OK", Message = model.ResultMsg, AlertType = "success" });
         }
 
         [HttpPost]
         public IActionResult SaveConfigAudit([FromBody]Models.ConfigModel model)
         {
-            var conf = ConfigurationXML.readXML(pathConfig);
+            var conf = configManager.GetExistingConfig();
             conf.Audit = new AuditCfgEl();
             try
             {
@@ -760,7 +1028,7 @@ namespace Administration.Controllers
                 // Event tracing feature
                 conf.EventTracking = model.EventTracking;
 
-                conf.writeXML(pathConfig);
+                configManager.StoreConfig(conf);
 
 				// Reload Configuration static instance in server with the new Configuracoes.xml data
                 CSGenio.framework.Configuration.ReadConfiguration(conf);
@@ -776,7 +1044,7 @@ namespace Administration.Controllers
         [HttpPost]
         public IActionResult SaveConfigOthers([FromBody]Models.ConfigModel model)
         {
-            var conf = ConfigurationXML.readXML(pathConfig);
+            var conf = configManager.GetExistingConfig();
             conf.DateFormat = new DateFormatXml();
             conf.NumberFormat = new NumberFormatXml();
             conf.ChatBotConfig = new ChatBotCfg();
@@ -787,8 +1055,16 @@ namespace Administration.Controllers
                 conf.ssrsServer.path = model.ssrsServerPath;
                 conf.ssrsServer.isLocalReports = model.isLocalReports;
                 conf.ssrsServer.Domain = model.ssrsServerDomain;
-                conf.ssrsServer.Username = Convert.ToBase64String(Encoding.Unicode.GetBytes(model.ssrsServerUsername));
-                conf.ssrsServer.Password = Convert.ToBase64String(Encoding.Unicode.GetBytes(model.ssrsServerPassword));
+                conf.ssrsServer.UsernameDecode = model.ssrsServerUsername;
+                
+                if (!string.IsNullOrEmpty(model.ssrsServerUsername) && string.IsNullOrEmpty(model.ssrsServerPassword))
+                    throw new BusinessException("SSR Password field is empty.", "EmailPropertiesModel.MapToModel", "SSR Password field is empty.");
+
+                if (string.IsNullOrEmpty(model.ssrsServerUsername) && !string.IsNullOrEmpty(model.ssrsServerPassword))
+                    throw new BusinessException("SSR Username field is empty.", "EmailPropertiesModel.MapToModel", "SSR Username field is empty.");
+
+                // Convert new password to base64
+                conf.ssrsServer.PasswordDecode = model.ssrsServerPassword ?? "";
 
                 conf.DateFormat.Date = model.DateFormat.date;
                 conf.DateFormat.DateTime = model.DateFormat.dateTime;
@@ -796,7 +1072,6 @@ namespace Administration.Controllers
                 conf.DateFormat.Time = model.DateFormat.time;
 
                 conf.ChatBotConfig.apiURL = model.UrlAPIBackend;
-                conf.ChatBotConfig.websocketURL = model.UrlSocketBackend;
 
                 conf.QAEnvironment = Convert.ToInt32(model.QAEnvironment);
 
@@ -834,7 +1109,7 @@ namespace Administration.Controllers
                 if (model.DecimalSeparator.ToString() == model.GroupSeparator.ToString())
                     throw new BusinessException(Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860, "ConfigController.reindex", Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860);
 
-                conf.writeXML(pathConfig);
+                configManager.StoreConfig(conf);
 
 				// Reload Configuration static instance in server with the new Configuracoes.xml data
                 CSGenio.framework.Configuration.ReadConfiguration(conf);
@@ -842,7 +1117,7 @@ namespace Administration.Controllers
             catch (Exception e)
             {
                 var resultMsg = Translations.Get(e.Message, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper());
-                return Json(new { Success = false, Message = resultMsg });
+                return Json(new { Success = false, Message = resultMsg, AlertType = "danger" });
             }
 
             return Json(new { Success = true });
@@ -852,11 +1127,11 @@ namespace Administration.Controllers
         public IActionResult SavePathCfg([FromBody] Models.PathCfg model)
         {
             var appId = FromQuery("appId");
-            ConfigurationXML conf = ConfigurationXML.readXML(pathConfig);
+            ConfigurationXML conf = configManager.GetExistingConfig();
             PathCfgEl path = conf.GetPath(appId);
             path.pathApp = model.pathApp;
             path.pathDocuments = model.pathDocuments;
-            conf.writeXML(pathConfig);
+            configManager.StoreConfig(conf);
 
             // Reload Configuration static instance in server with the new Configuracoes.xml data
             CSGenio.framework.Configuration.ReadConfiguration(conf);
@@ -866,7 +1141,7 @@ namespace Administration.Controllers
 		[HttpPost]
         public IActionResult SaveMoreProperty([FromBody]Models.MorePropertyCfg model)
         {
-            var conf = ConfigurationXML.readXML(pathConfig);
+            var conf = configManager.GetExistingConfig();
             var initProp = false;
 
 			if (String.IsNullOrEmpty(model.Key)) { return Json(new { emptyKey = true }); }
@@ -875,7 +1150,7 @@ namespace Administration.Controllers
 
             if (model.FormMode == "delete")
             {
-                initProp = CSGenio.framework.Configuration.isInitPropInitialized(model.Key);
+                initProp = ExtraProperties.HasDefaultValue(model.Key);
                 
                 conf.maisPropriedades.Remove(model.Key);
             }
@@ -889,7 +1164,7 @@ namespace Administration.Controllers
                 conf.maisPropriedades.Add(model.Key, model.Val);
             }
 
-            conf.writeXML(pathConfig);
+            configManager.StoreConfig(conf);
             // Reload Configuration static instance in server with the new Configuracoes.xml data
             CSGenio.framework.Configuration.ReadConfiguration(conf);
 
@@ -931,7 +1206,7 @@ namespace Administration.Controllers
         [HttpPost]
         public IActionResult VerifyDocPathConfig([FromBody] Models.PathCfg model)
         {
-            ConfigurationXML conf = ConfigurationXML.readXML(pathConfig);
+            ConfigurationXML conf = configManager.GetExistingConfig();
 
             for(int i = 0; i < conf.Paths.Count; i++){
                 if(conf.Paths[i].pathDocuments != model.pathDocuments){
@@ -940,6 +1215,183 @@ namespace Administration.Controllers
             }
 
             return Json(new { Success = true });            
+        }
+
+
+        private int CountBlacklistedPasswords(PersistentSupport sp)
+        {
+            SelectQuery select = new SelectQuery()
+                .Select(SqlFunctions.Count(1), "COUNT")
+                .From("PswBlacklist");
+            return DBConversion.ToInteger(sp.executeScalar(select));
+        }
+
+        [HttpGet]
+        public IActionResult ManagePasswordBlacklist()
+        {
+            PersistentSupport sp = PersistentSupport.getPersistentSupport(CurrentYear);
+            sp.openConnection();
+            var numPasswords = CountBlacklistedPasswords(sp);
+            sp.closeConnection();
+
+            return Json(new { Success = true, numPasswords});
+        }
+
+        [HttpPost]
+        public IActionResult BlacklistUpload(IFormFile file)
+        {
+            PersistentSupport sp = PersistentSupport.getPersistentSupport(CurrentYear);
+            sp.openConnection();
+
+            using var stream = new StreamReader(file.OpenReadStream());
+
+            if(sp.DatabaseType == DatabaseType.SQLSERVER || sp.DatabaseType == DatabaseType.SQLSERVERCOMPAT)
+            {
+                string ?line;
+                DataTable dt = new DataTable();
+                var col0 = new DataColumn("pass");
+                dt.Columns.Add(col0);
+                while((line = stream.ReadLine()) != null) 
+                {
+                    var row = dt.NewRow();
+                    row.SetField(col0, line.ToLowerInvariant());
+                    dt.Rows.Add(row);
+                }
+
+                using var copy = new SqlBulkCopy(sp.Connection as SqlConnection);
+                copy.DestinationTableName = "PswBlacklist";
+                copy.WriteToServer(dt);
+            }
+            else
+            {
+                string ?line;
+                while((line = stream.ReadLine()) != null) 
+                {
+                    InsertQuery ins = new InsertQuery()
+                        .Into("PswBlacklist")
+                        .Value("pass", line.ToLowerInvariant());
+                    sp.Execute(ins);
+                }
+            }
+
+            var numPasswords = CountBlacklistedPasswords(sp);
+            sp.closeConnection();
+            return Json(new { Success = true, numPasswords });
+        }
+
+        [HttpGet]
+        public IResult BlacklistDownload()
+        {
+            PersistentSupport sp = PersistentSupport.getPersistentSupport(CurrentYear);
+            sp.openConnection();
+
+            SelectQuery select = new SelectQuery()
+                .Select("PswBlacklist", "pass")
+                .From("PswBlacklist");
+
+            var rows = sp.executeReaderOneColumn(select);
+            var memory = new MemoryStream();
+            using var stream = new StreamWriter(memory, Encoding.UTF8);
+            foreach(var row in rows)
+                stream.WriteLine(row.ToString());
+            stream.Close();
+
+            var memout = new MemoryStream(memory.GetBuffer(), false);
+            return Results.File(memout, "text/plain", "blacklist.txt");
+        }
+
+        public record PasswordReq(string password);
+
+        [HttpPost]
+        public IActionResult BlacklistPasswordCheck([FromBody] PasswordReq req)
+        {
+            PersistentSupport sp = PersistentSupport.getPersistentSupport(CurrentYear);
+            sp.openConnection();
+            User user = SysConfiguration.CreateWebAdminUser();
+            var factory = new GenioServer.security.UserFactory(sp, user);
+            var error = factory.CheckBlacklisted(req.password);
+            sp.closeConnection();
+
+            return Json(new { Success = true, found = !string.IsNullOrEmpty(error) });
+        }
+
+        [HttpPost]
+        public IActionResult BlacklistPasswordAdd([FromBody] PasswordReq req)
+        {
+            PersistentSupport sp = PersistentSupport.getPersistentSupport(CurrentYear);
+            sp.openConnection();
+            InsertQuery ins = new InsertQuery()
+                .Into("PswBlacklist")
+                .Value("pass", req.password);
+            sp.Execute(ins);
+            var numPasswords = CountBlacklistedPasswords(sp);
+            sp.closeConnection();
+            return Json(new { Success = true, numPasswords });
+        }
+
+        [HttpPost]
+        public IActionResult BlacklistPasswordClear()
+        {
+            PersistentSupport sp = PersistentSupport.getPersistentSupport(CurrentYear);
+            sp.openConnection();
+            DeleteQuery del = new DeleteQuery().Delete("PswBlacklist");
+            sp.Execute(del);
+            var numPasswords = CountBlacklistedPasswords(sp);
+            sp.closeConnection();
+            return Json(new { Success = true, numPasswords });
+        }
+
+        [HttpPost]
+        public IActionResult ServicePasswordCheck()
+        {
+            List<string> errors = [];
+            var conf = configManager.GetExistingConfig();
+            string pass;
+
+            PersistentSupport sp = PersistentSupport.getPersistentSupport(CurrentYear);
+            sp.openConnection();
+            User user = SysConfiguration.CreateWebAdminUser();
+            var factory = new GenioServer.security.UserFactory(sp, user);
+
+            void CheckOnePassword(string label, string pass)
+            {
+                if(!string.IsNullOrEmpty(pass))
+                {
+                    string error = factory.CheckPasswordRules(pass);
+                    if(!string.IsNullOrEmpty(error))
+                        errors.Add(label + " : " + error);
+                }
+            }
+
+            DataSystemXml dataSystem = Configuration.ResolveDataSystem(CurrentYear, Configuration.DbTypes.NORMAL);
+            if(dataSystem != null)
+            {
+                pass = Encoding.Unicode.GetString(Convert.FromBase64String(dataSystem.Password ?? string.Empty));
+                CheckOnePassword("Current Data System", pass);
+
+                if(dataSystem.DataSystemLog != null)
+                {
+                    pass = Encoding.Unicode.GetString(Convert.FromBase64String(dataSystem.DataSystemLog.Password ?? string.Empty));
+                    CheckOnePassword("Log Data System", pass);
+                }
+            }
+
+            if(conf.ssrsServer != null)
+            {
+                pass = Encoding.Unicode.GetString(Convert.FromBase64String(conf.ssrsServer.Password ?? string.Empty));
+                CheckOnePassword("Reporting services", pass);
+            }
+
+            if(conf.EmailProperties != null)
+                foreach(var server in conf.EmailProperties)
+                {
+                    pass = Encoding.UTF8.GetString(Convert.FromBase64String(server.Password ?? string.Empty));
+                    CheckOnePassword("Email Server" + " " + server.Name, pass);
+                }
+
+            sp.closeConnection();
+
+            return Json(new { Success = true, resultList = errors });
         }
     }
 }

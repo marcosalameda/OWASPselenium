@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ReindexOrder xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 	<ReIndexItems>
-    <Function Id="CREATEDB" Name="Create Database" Help="" Connection="Admin" Selected="true" Selectable="true">
-	  <Scripts>
-		<Script>CreateDatabase.sql</Script>
-	  </Scripts>
-	</Function>
     <Function Id="CREATESP" Name="Create Base StoredProcedures" Help="" Connection="Normal" Selected="true" Selectable="true">
-	  <Dependencies>
-		<Dependencie>CREATESCHEMA</Dependencie><!--TESTE APAGAR-->
-	  </Dependencies>
 	  <Scripts>
 		<Script>FuncoesAuxCheckTable.sql</Script>
 	  </Scripts>
@@ -30,16 +22,39 @@
 		<Script>tblHardcode.sql</Script>
 	  </Scripts>
 	</Function>
-
+	<!-- Used to select both the before and after schema upgrade scripts -->
+	<Function Id="UPGRADECLIENTS" Name="Upgrade Version Routines" Help="" Connection="Normal" Selected="true" Selectable="true">
+	  <Scripts>
+	  </Scripts>
+	</Function>
 	<Function Id="UPGRADECLIENT1" Name="Upgrade Client" Help="" Connection="Normal" Selected="true" TimeoutMult="10" Selectable="false">
 	  <Scripts>
-   </Scripts>
+ 		<Script Type="SQL" Version="1" MinDbVersion="0" MaxDbVersion="0">UpgradeClient.sql</Script>
+     </Scripts>
+	</Function>
+
+    <Function Id="DELETELOGTRIGGERS" Name="Delete Log Triggers" Help="" Connection="Normal" Selected="true" Selectable="true">
+	  <Scripts>
+		<Script>DeleteLogTriggers.sql</Script>
+	  </Scripts>
+	</Function>
+	<Function Id="DISABLECT" Name="Disable Change Tracking" Help="" Connection="Normal" Selected="false" Selectable="true">
+	  <Scripts>
+		<Script>DisableChangeTracking.sql</Script>
+	  </Scripts>
+	</Function>
+
+    <Function Id="UPDATEFUNCTIONS" Name="Update Functions" Help="" Connection="Normal" Selected="true" Selectable="true">
+	  <Scripts>
+		<Script>UpdateFunctions.sql</Script>
+	  </Scripts>
 	</Function>
 
     <Function Id="CREATESCHEMA" Name="Create Schema" Help="" Connection="Normal" Selected="true" Selectable="true">
 	  <Dependencies>
 		<Dependencie>CREATESP</Dependencie>
 		<Dependencie>UPDATECFG</Dependencie>
+		<Dependencie>DELETELOGTRIGGERS</Dependencie>
 	  </Dependencies>
 	  <Scripts>
 		<Script>CheckTable.sql</Script>
@@ -82,11 +97,6 @@
 		<Script>ActStoredProcFIM.sql</Script>
 	  </Scripts>
 	</Function>
-    <Function Id="DELETETMPDB" Name="Delete Temporary Databases" Help="" Connection="Normal" Selected="true" Selectable="true">
-	  <Scripts>
-		<Script>EliminacaoBDTemp.sql</Script>
-	  </Scripts>
-	</Function>
     <Function Id="ADDINDEX" Name="Rebuild Table Indexes" Help="" Connection="Normal" Selected="true" Selectable="true">
 	  <Scripts>
 		<Script>AddIndex.sql</Script>
@@ -116,7 +126,8 @@
 
 	<Function Id="UPGRADECLIENT2" Name="Upgrade Client" Type="SQL" Help="" Connection="Normal" Selected="true" TimeoutMult="10" Selectable="false">
 	  <Scripts>
- 		<!-- User defined ReIndexItems -->
+		<Script Type="SQL" Version="2" MinDbVersion="0" MaxDbVersion="0">UpgradeClient.sql</Script>
+    		<!-- User defined ReIndexItems -->
      </Scripts>
 	</Function>
 	
@@ -138,6 +149,37 @@
 		<Script>ReconstrucaoCodInt.sql</Script>
 	  </Scripts>
 	</Function>
+    <Function Id="CREATELOGTRIGGERS" Name="Create Log Triggers" Help="" Connection="Normal" Selected="true" Selectable="true">
+	  <Scripts>
+		<Script>CreateLogTriggers.sql</Script>
+	  </Scripts>
+	</Function>
+    <Function Id="CREATELOGVIEWS" Name="Create Log Views" Help="" Connection="Normal" Selected="true" Selectable="true">
+	  <Scripts>
+		<Script>CreateLogViews.sql</Script>
+	  </Scripts>
+	</Function>
+	<Function Id="CREATEDBLOG" Name="Create Audit Database" Help="" Connection="Admin" Selected="false" Selectable="true">
+      <Scripts>
+        <Script>CreateLogDatabase.sql</Script>
+      </Scripts>
+    </Function>
+	<Function Id="CREATESCHEMALOG" Name="Create Audit Database Schema" Help="" Connection="Log" Selected="false" Selectable="true">
+      <Scripts>
+		<Script>FuncoesAuxCheckTable.sql</Script>
+        <Script>ChecktableLog.sql</Script>
+      </Scripts>
+    </Function>
+	<Function Id="CREATELOGVIEWSLOG" Name="Create Audit Database Log Views" Help="" Connection="Log" Selected="false" Selectable="true">
+      <Scripts>
+        <Script>CreateLogViews.sql</Script>
+      </Scripts>
+    </Function>
+	<Function Id="ENABLECT" Name="Enable Change Tracking" Help="" Connection="Normal" Selected="false" Selectable="true">
+	  <Scripts>
+		<Script>EnableChangeTracking.sql</Script>
+	  </Scripts>
+	</Function>
     <Function Id="CREATEDEFAULTUSER" Name="Create default user" Help="" Connection="Normal" Selected="false" Selectable="true">
 	  <Scripts>
 		<Script>DatabaseSeed.sql</Script>
@@ -146,6 +188,11 @@
     <Function Id="GRANTACCESSSP" Name="Grant Access StoredProcedures" Help="" Connection="Normal" Selected="false" Selectable="true">
 	  <Scripts>
 		<Script>GrantAccessStoredProcedures.sql</Script>
+	  </Scripts>
+	</Function>
+    <Function Id="ADDGROUP_CONCAT" Name="Add GROUP_CONCAT" Help="" Connection="Normal" Selected="false" Selectable="true">
+	  <Scripts>
+		<Script>GroupConcat.sql</Script>
 	  </Scripts>
 	</Function>
     <Function Id="CREATEFK" Name="Create foreign keys" Help="" Connection="Normal" Selected="false" Selectable="true">
@@ -192,8 +239,10 @@
 		<GroupItems>
 			<ReIndexItem>CREATEDB</ReIndexItem>
 			<ReIndexItem>CREATESP</ReIndexItem>
+			<ReIndexItem>UPDATEFUNCTIONS</ReIndexItem>
 			<ReIndexItem>CREATESCHEMA</ReIndexItem>
 			<ReIndexItem>CREATEHRDSCHEMA</ReIndexItem>
+			<ReIndexItem>UPGRADECLIENTS</ReIndexItem>
 
 			<ReIndexItem>UPGRADECLIENT1</ReIndexItem>
 
@@ -234,6 +283,8 @@
 			<ReIndexItem>DELETELOGTRIGGERS</ReIndexItem>
 			<ReIndexItem>CREATELOGTRIGGERS</ReIndexItem>
 			<ReIndexItem>CREATELOGVIEWS</ReIndexItem>
+			<ReIndexItem>DISABLECT</ReIndexItem>
+			<ReIndexItem>ENABLECT</ReIndexItem>
 		</GroupItems>
     </ReIndexGroup>
     <ReIndexGroup Name="Extra Options">

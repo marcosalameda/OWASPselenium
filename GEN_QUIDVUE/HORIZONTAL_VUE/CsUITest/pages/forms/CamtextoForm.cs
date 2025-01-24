@@ -1,0 +1,22 @@
+﻿using quidgest.uitests.pages.forms.core;
+
+#nullable enable
+
+namespace quidgest.uitests.pages.forms;
+
+[System.CodeDom.Compiler.GeneratedCode("Genio", "")]
+public class CamtextoForm : Subform
+{
+	/// <summary>
+	/// Text Field
+	/// </summary>
+	public BaseInputControl FldsTxtfield => new BaseInputControl(driver, ContainerLocator, "#CAMTEXTOFLDS_TXTFIELD");
+
+	/// <summary>
+	/// Description
+	/// </summary>
+	public BaseInputControl FldsDescrip => new BaseInputControl(driver, ContainerLocator, "#CAMTEXTOFLDS_DESCRIP_");
+
+	public CamtextoForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "CAMTEXTO", "LISTACAM", containerLocator: containerLocator) { }
+}

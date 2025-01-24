@@ -8,6 +8,7 @@ using System.Linq;
 using System.IO;
 using CSGenio.business;
 using System.Globalization;
+using CSGenio.config;
 
 namespace DbAdmin
 {
@@ -15,12 +16,14 @@ namespace DbAdmin
     *   SysConfiguration holds all the library methods related to the database configuration management.
     *   Operations like reading and writing configs from configuracoes.xml
     */
-    public class SysConfiguration
+    public class SysConfiguration(IConfigurationManager configManager)
     {
         public void SaveDatabaseConfig(string username, string password, string server, string serverType, string schema, string port = "", bool encryptConn = false, bool withDomainUser = false, string year = "")
         {
-            var configPath = Path.Combine(Configuration.GetConfigPath(), "Configuracoes.xml");
-            ConfigurationXML conf = ConfigurationXML.readXML(configPath);
+            if (!configManager.Exists())
+                configManager.CreateNewConfig();
+
+            var conf = configManager.GetExistingConfig();
             
             if(string.IsNullOrEmpty(year))
                 year = Configuration.DefaultYear;
@@ -58,27 +61,6 @@ namespace DbAdmin
                 conf.DataSystems[indexDS] = db;
             else
                 conf.DataSystems.Add(db);
-            
-
-            // In case the default Qyear changes, reorder databases
-            if (conf.anoDefault != Configuration.DefaultYear)
-            {
-                List<DataSystemXml> tempDataSystems = new List<DataSystemXml>();
-                DataSystemXml tempDefDS = conf.DataSystems.FirstOrDefault(ds => ds.Name == Configuration.DefaultYear);
-                if (tempDefDS != null)
-                    tempDataSystems.Add(tempDefDS);
-                tempDataSystems.AddRange(conf.DataSystems.Where(ds => ds.Name != Configuration.DefaultYear));
-                conf.DataSystems = tempDataSystems;
-            }
-
-            conf.anoDefault = Configuration.DefaultYear;
-
-            conf.Admin = new AdminCfgEl
-            {
-                Name = "quidgest",
-                Password = "D8A9D88BAA1789C14B5467975AE999770F6991CE",
-                PasswordFormat = "SHA1"
-            };
 
             UserCfgEl user = new UserCfgEl();
             user.Name = "guest";
@@ -122,7 +104,7 @@ namespace DbAdmin
                 conf.ConfigVersion = ConfigXMLMigration.CurConfigurationVerion.ToString();
 
             //Save configuration
-            conf.writeXML(Path.Combine(Configuration.GetConfigPath(), "Configuracoes.xml"));
+            configManager.StoreConfig(conf);
 
             // Reload Configuration static instance in server with the new Configuracoes.xml data
             Configuration.ReadConfiguration(conf);
@@ -130,8 +112,10 @@ namespace DbAdmin
 
         public void SaveLogDatabaseConfig(string username, string password, string server, string serverType, string schema, string port = "", bool encryptConn = false, bool withDomainUser = false, string year = "")
         {
-            var configPath = Path.Combine(Configuration.GetConfigPath(), "Configuracoes.xml");
-            ConfigurationXML conf = ConfigurationXML.readXML(configPath);
+            if (!configManager.Exists())
+                configManager.CreateNewConfig();
+
+            var conf = configManager.GetExistingConfig();
 
             if (string.IsNullOrEmpty(year))
                 year = Configuration.DefaultYear;
@@ -172,7 +156,7 @@ namespace DbAdmin
                 conf.ConfigVersion = ConfigXMLMigration.CurConfigurationVerion.ToString();
 
             //Save configuration
-            conf.writeXML(Path.Combine(Configuration.GetConfigPath(), "Configuracoes.xml"));
+            configManager.StoreConfig(conf);
 
             // Reload configuration
             Configuration.ReadConfiguration(conf);
@@ -180,7 +164,7 @@ namespace DbAdmin
 
         public DataSystemXml ReadDatabaseConfig(string year = "", string schema = "")
         {
-            ConfigurationXML conf = ConfigurationXML.readXML(Path.Combine(Configuration.GetConfigPath(), "configuracoes.xml"));
+            ConfigurationXML conf = configManager.GetExistingConfig();            
 
             foreach(DataSystemXml dataSystem in conf.DataSystems)
             {

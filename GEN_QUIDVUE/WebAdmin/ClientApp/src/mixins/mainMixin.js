@@ -3,29 +3,60 @@ import moment from 'moment';
 import { QUtils } from '@/utils/mainUtils';
 
 export const reusableMixin = {
-  methods: {
-    isEmptyArray: function (arr) {
-      return !(arr && arr.length > 0);
-    },
-    isEmptyObject: function (obj) {
-      return $.isEmptyObject(obj);
-    },
-    formatDate: function (date) {
-        if ($.isEmptyObject(date)) return '';
-        else if ($.type(date) === 'string') {
-            date = QUtils.tryParseDate(date);
-        }
-        if ($.type(date) === 'date' || moment.isMoment(date)) {
-            if (date._isAMomentObject) { date = date.toDate(); }
-            var text = date.toLocaleDateString('pt-PT') + ' ' + date.toLocaleTimeString('pt-PT');
-            if (text === 'Invalid Date Invalid Date' || date.getFullYear() <= 0) { // IE11 and Null date
-                text = '-';
+    methods: {
+        navigateTo(event, name, hasSubmenu = false, tabId = undefined) { 
+            var vm = this;
+            vm.isSelected = false;
+            vm.isMenuOpen = hasSubmenu ? !vm.isMenuOpen : false;
+
+            // Navigate to the specified route with the tabId as a dynamic route parameter
+            vm.$router.push({ 
+                name: name, 
+                params: { 
+                    culture: vm.currentLang, 
+                    system: vm.currentYear,
+                    tabId // If tabId is provided, add it as a route param, otherwise omit it
+                }
+            });
+
+            if (vm.currentSelected) {
+                vm.currentSelected.classList.remove('selected');
             }
-            return text;
+
+            if (!hasSubmenu) {
+                event.currentTarget.classList.add('selected');
+                vm.currentSelected = event.currentTarget;
+            } else {
+                event.currentTarget.classList.add('selected');
+                vm.currentSelected = event.currentTarget;
+                if (vm.Model.Applications.length > 0) {
+                    const firstSubItem = vm.Model.Applications[0];
+                    vm.currentApp = firstSubItem.Id;
+                }
+            }
+        },
+        isEmptyArray(arr) {
+            return !(arr && arr.length > 0);
+        },
+        isEmptyObject(obj) {
+            return $.isEmptyObject(obj);
+        },
+        formatDate(date) {
+            if ($.isEmptyObject(date)) return '';
+            else if ($.type(date) === 'string') {
+                date = QUtils.tryParseDate(date);
+            }
+            if ($.type(date) === 'date' || moment.isMoment(date)) {
+                if (date._isAMomentObject) { date = date.toDate(); }
+                var text = date.toLocaleDateString('pt-PT') + ' ' + date.toLocaleTimeString('pt-PT');
+                if (text === 'Invalid Date Invalid Date' || date.getFullYear() <= 0) { // IE11 and Null date
+                    text = '-';
+                }
+                return text;
+            }
+            else return '';
         }
-        else return '';
-    }
-  },
+    },
 	data()
 	{
 		var vm = this;
@@ -51,13 +82,13 @@ export const reusableMixin = {
 
 function ParseQueryString(query) {
     let res = {};
-    if (!query)
+    if (!query || typeof query !== 'string')
         return res;
     let vars = query.split('&');
     for (var i = 0; i < vars.length; i++) {
         let pair = vars[i].split('=');
         let d0 = decodeURIComponent(pair[0]);
-        let d1 = decodeURIComponent(pair[1]);
+        let d1 = decodeURIComponent(pair[1] || '');
         res[d0] = d1;
     }
     return res;
@@ -72,31 +103,45 @@ function EncodeQueryString(obj) {
         .map(([key, value]) => miniUriEncode(key) + '=' + miniUriEncode(value))
         .join('&');
 }
-function NormalizeValue(option, config) {
+export function NormalizeValue(option, config) {
+    let parsedConfig;
+    if (typeof config === 'string') {
+        try {
+            parsedConfig = JSON.parse(config);
+        } catch (error) {
+            parsedConfig = {};
+        }
+    } else {
+        parsedConfig = config;
+    }
     let res;
-    if (option.Parent.length > 0 && config[option.Parent])
-        res = config[option.Parent][option.PropertyName];
-    else
-        res = config[option.PropertyName];
+    res = parsedConfig[option.PropertyName];
 
     //json lists are going to be objects, so we need to transform them to strings
     if (option.Type.startsWith('List') && res)
-        res = res.join(',');
+        res = Array.isArray(res) ? res.join(',') : res;
 
     if (!res) res = "";
     return res;
 }
 
 
-export function ReadProviderConfig(Model, ProviderTypeList) {
+export function ReadProviderConfig(type, config, ProviderTypeList) {
     let tempConfig = [];
-    if (!Model.Type)
+    if (!type)
         return tempConfig;
 
-    let provider = ProviderTypeList.find(x => x.TypeFullName == Model.Type);
+    let provider = ProviderTypeList.find(x => x.TypeFullName == type);
     if (!provider)
         return tempConfig;
-    let c = Model.Config ? ParseQueryString(Model.Config) : {};
+
+    let c = {};
+    if (type === 'GenioServer.security.LdapQueryIdentityProvider' ||
+        type === 'GenioServer.security.LdapIdentityProvider') {
+        c = ParseQueryString(config);
+    } else {
+        c = config ? ParseQueryString(config) : {};
+    }
 
     //expand json string objects if they belong the the parent of an option
     for (const o of provider.Options) {
@@ -113,10 +158,10 @@ export function ReadProviderConfig(Model, ProviderTypeList) {
     return tempConfig;
 }
 
-export function WriteProviderConfig(tempConfig, Model, ProviderTypeList) {
-    if (!Model.Type) return;
+export function WriteProviderConfig(tempConfig, type, ProviderTypeList) {
+    if (!type) return;
 
-    let provider = ProviderTypeList.find(x => x.TypeFullName == Model.Type);
+    let provider = ProviderTypeList.find(x => x.TypeFullName == type);
     if (!provider) return;
     let obj = {};
 
@@ -145,6 +190,14 @@ export function WriteProviderConfig(tempConfig, Model, ProviderTypeList) {
         }
     }
 
-    //query string encode all the values
-    Model.Config = EncodeQueryString(obj);
+    //Format as `property=value&property=value` if LdapQuery or LdapIdentity
+    if (type === 'GenioServer.security.LdapQueryIdentityProvider' ||
+	type === 'GenioServer.security.LdapIdentityProvider') {
+        return Object.entries(obj)
+		.map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+		.join('&');
+    } else {
+        //query string encode all the values
+        return EncodeQueryString(obj);
+    }
 }

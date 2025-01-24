@@ -1,0 +1,27 @@
+﻿using quidgest.uitests.pages.forms.core;
+
+#nullable enable
+
+namespace quidgest.uitests.pages.forms;
+
+[System.CodeDom.Compiler.GeneratedCode("Genio", "")]
+public class MltformForm : Form
+{
+	/// <summary>
+	/// Warehouse
+	/// </summary>
+	public BaseInputControl WarehWarehdes => new BaseInputControl(driver, ContainerLocator, "#MLTFORM_WAREHWAREHDES");
+
+	/// <summary>
+	/// Acronym
+	/// </summary>
+	public BaseInputControl WarehWarehcod => new BaseInputControl(driver, ContainerLocator, "#MLTFORM_WAREHWAREHCOD");
+
+	/// <summary>
+	/// Warehouse employees
+	/// </summary>
+	public IWebElement PseudMltform1 => throw new NotImplementedException();
+
+	public MltformForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "MLTFORM", containerLocator: containerLocator) { }
+}

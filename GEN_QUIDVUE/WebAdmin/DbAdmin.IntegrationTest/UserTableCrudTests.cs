@@ -1,14 +1,15 @@
 using CSGenio.business;
+using CSGenio.framework;
 using NUnit.Framework;
-using System;
+using Quidgest.Persistence.GenericQuery;
 
 namespace DbAdmin.IntegrationTest
 {
     public class UserTableCrudTests : DatabaseTransactionFixture
     {
         [Test]
-        public void InsertUser() {
-
+        public void InsertUser()
+        {
             var codpsw = InsertTestUser();
 
             Assert.AreEqual(0, emptyKey(codpsw));
@@ -20,6 +21,19 @@ namespace DbAdmin.IntegrationTest
             newUser.ValNome = "IntegrationTester";
             newUser.insert(sp);
             return newUser.ValCodpsw;
+        }
+
+        private void AssignRoleToUser(CSGenioApsw user, string module, Role role)
+        {
+            CSGenioAs_ua userAuthorization = new CSGenioAs_ua(_user)
+            {
+                ValSistema = "TST",
+                ValModulo = module,
+                ValRole = role.Id,
+                ValCodpsw = user.ValCodpsw
+            };
+
+            userAuthorization.insert(sp);
         }
 
         [Test]
@@ -40,7 +54,7 @@ namespace DbAdmin.IntegrationTest
             //Arrange
             var codpsw = InsertTestUser();
             CSGenioApsw returnedUser = CSGenioApsw.search(sp, codpsw, _user);
-            
+
             //Act
             returnedUser.ValNome = "IntegrationTester2";
             returnedUser.update(sp);
@@ -49,7 +63,6 @@ namespace DbAdmin.IntegrationTest
             Assert.AreEqual(codpsw, returnedUser.ValCodpsw);
             Assert.AreEqual("IntegrationTester2", returnedUser.ValNome);
         }
-
 
         [Test]
         public void DeleteUser()
@@ -66,13 +79,47 @@ namespace DbAdmin.IntegrationTest
             Assert.IsNull(searchedUser);
         }
 
+        [Test]
+        public void InsertUserAuthorization()
+        {
+            //Arrange
+            var codpsw = InsertTestUser();
+            CSGenioApsw user = CSGenioApsw.search(sp, codpsw, _user);
+            Role role = Role.ADMINISTRATION;
+
+            //Act
+            AssignRoleToUser(user, "TBL", role);
+
+            //Assert
+            var roles = CSGenioAs_ua.searchList(sp, _user, CriteriaSet.And().Equal(CSGenioAs_ua.FldCodpsw, user.ValCodpsw));
+            Assert.AreEqual(roles.Count, 1);
+        }
+
+        [Test]
+        public void InsertDuplicateUserAuthorizationFails()
+        {
+            //Arrange
+            var codpsw = InsertTestUser();
+            CSGenioApsw user = CSGenioApsw.search(sp, codpsw, _user);
+            Role role = Role.ADMINISTRATION;
+            AssignRoleToUser(user, "TBL", role);
+
+            //Act & Assert
+            Assert.Throws<BusinessException>(() => AssignRoleToUser(user, "TBL", role));
+        }
+
         public static int emptyKey(object characters)
         {
-            if (characters == null || characters.Equals("") || characters.Equals(Guid.Empty.ToString()) || characters.Equals(Guid.Empty.ToString("B")) || characters.Equals("0"))
+            if (
+                characters == null
+                || characters.Equals("")
+                || characters.Equals(Guid.Empty.ToString())
+                || characters.Equals(Guid.Empty.ToString("B"))
+                || characters.Equals("0")
+            )
                 return 1;
             else
                 return 0;
         }
-
     }
 }

@@ -1,9 +1,7 @@
-@import './plugins/adminlte.min.css';
 @import './quidgest.scss';
 
-body {
-    background-color: white !important;
-}
+// Controls
+@import './controls/q-list-editor.scss';
 
 .textRight {
     text-align: right;
@@ -15,11 +13,12 @@ body {
 }
 
 /*******HOME PAGE********/
-#content-wrapper.content-wrapper-dashboard {
+#content-wrapper.content-wrapper {
     padding: 30px;
     height: 100%;
     vertical-align: middle;
-    margin: 0px;
+    margin-left: 240px;
+    margin-top: -75px;
     transition: none;
 }
 
@@ -56,11 +55,16 @@ body {
 .i-text,
 .i-image,
 .i-dbedit,
-.i-select,
 .i-checkbox,
 .i-date-picker,
 .i-radio__control {
     margin-right: 0.25rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+hr{
+    margin: .75rem 0 1rem 0;
 }
 
 table tbody td:first-child .b-icon {

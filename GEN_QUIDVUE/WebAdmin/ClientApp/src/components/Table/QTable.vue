@@ -12,7 +12,7 @@
           <div class="row" v-if="getTableTitle || showToolsRow">
             <div class="col" v-if="getTableTitle">
               <legend class="form-header">
-                {{getTableTitle()}}
+                {{getTableTitle()}}	
               </legend>
             </div>
             <template v-if="showToolsRow">
@@ -35,8 +35,8 @@
               <!-- global search text ends here -->
               
               <!-- export to excel button -->
-              <div v-if="enableExport" class="col-md-auto my-auto">
-                <button class="form-group b-icon-text b-icon-text--primary" @click="exportExcel">
+              <div v-if="enableExport" class="export-btn">
+                <button class="form-group b-icon-text b-icon-text--secondary" @click="exportExcel">
                     {{ exportLabel }}
                 </button>
               </div>
@@ -184,9 +184,9 @@
                         <div class="text-right justify-content-center">
                           <template v-if="pagination_info">
                             <slot name="pagination-info" :currentPageRowsLength="currentPageRowsLength" :filteredRowsLength="filteredRowsLength" :originalRowsLength="originalRowsLength">
-                              <template v-if="currentPageRowsLength != 0">
-                                From 1 to {{currentPageRowsLength}} of {{filteredRowsLength}} entries
-                              </template>
+                                <template v-if="currentPageRowsLength != 0">
+                                    From {{currentPageFirstRow}} to {{currentPageRowsLength}} of {{filteredRowsLength}} entries
+                                </template>
                               <template v-else>
                                 No results found
                               </template>
@@ -323,9 +323,7 @@ export default {
     props: {
         rows: {
             type: Array,
-            default: function () {
-              return [];
-            }
+            default: []
         },
         columns: {
             type: Array,
@@ -337,27 +335,19 @@ export default {
         },
         config: {
             type: Object,
-            default: function () {
-                return {};
-            }
+            default: []
         },
         classes: {
             type: Object,
-            default: function () {
-                return {};
-            }
+            default: []
         },
         actions: {
             type: Array,
-            default: function () {
-                return [];
-            }
+            default: []
         },
         customFilters: {
             type: Array,
-            default: function () {
-                return [];
-            }
+            default: []
         },
         enableExport: {
             type: Boolean,
@@ -368,7 +358,7 @@ export default {
             default: ''
         }
     },
-    data: function () {
+    data() {
         return {
             vbt_rows: [],
             vbt_columns: [],
@@ -529,7 +519,6 @@ export default {
             this.selected_rows_info = (has(this.config, 'card_mode')) ? (this.config.selected_rows_info) : false;
 
             this.preservePageOnDataChange = (has(this.config, 'preservePageOnDataChange')) ? (this.config.preservePageOnDataChange) : false;
-
         },
 
         initialSort() {
@@ -1062,7 +1051,6 @@ export default {
 
         },
         emitSearch(search_value) {
-            //this.query.global_search = this.$refs.global_search.value;
             this.query.global_search = search_value;
         },  
 
@@ -1158,9 +1146,29 @@ export default {
             return (column.visibility == undefined || column.visibility) ? true : false;
         },
 
-        exportExcel() {                        
-            //Download file
-            window.location.href = QUtils.apiActionURL('Users', 'ExportToExcel');
+        exportExcel() {
+            fetch(QUtils.apiActionURL('Users', 'ExportToExcel'), {
+                method: 'GET'
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.blob();
+                } else {
+                    const messageError = `Resources.${Genio.GetSymbolFromString("Erro ao exportar o ficheiro")}`
+                    throw new Error(messageError);
+                }
+            })
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'user-list.xlsx';
+                a.click();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
         }
     },
     computed: {
@@ -1207,9 +1215,12 @@ export default {
         },
 
         // pagination info computed properties - start
+        currentPageFirstRow() {
+			return ((this.page - 1) * this.per_page) + 1
+        },
 
         currentPageRowsLength() {
-            return this.vbt_rows.length;
+			return (this.currentPageFirstRow - 1) + this.vbt_rows.length
         },
 
         filteredRowsLength() {
@@ -1506,10 +1517,6 @@ export default {
     }
     input[type="search"] {
     -webkit-appearance: searchfield;
-    }
-
-    input[type="search"]::-webkit-search-cancel-button {
-    -webkit-appearance: searchfield-cancel-button;
     }
 
     /* Bootstrap 4 text input with clear icon on the right */

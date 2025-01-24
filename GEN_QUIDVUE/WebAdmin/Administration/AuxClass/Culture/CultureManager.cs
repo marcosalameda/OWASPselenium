@@ -12,6 +12,7 @@ namespace Administration.AuxClass.Culture
     {
 
         const string EngCultureName = "en-us";
+        const string PorCultureName = "pt-pt";
 
         public static CultureInfo DefaultCulture
         {
@@ -36,6 +37,7 @@ namespace Administration.AuxClass.Culture
         {
             SupportedCultures = new Dictionary<string, CultureInfo>();
             AddSupportedCulture(EngCultureName);
+            AddSupportedCulture(PorCultureName);
         }
 
         public CultureManager()

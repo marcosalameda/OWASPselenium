@@ -86,7 +86,7 @@ namespace Administration.Models
 
         public string Errors { get; set; }
 
-        public double Total { get; set; }
+        public int Total { get; set; }
     }
 
 
@@ -95,13 +95,13 @@ namespace Administration.Models
     {
         public string QueueId { get; set; }
 
-        public double ToSend { get; set; }
+        public int ToSend { get; set; }
 
-        public double Sended { get; set; }
+        public int Sended { get; set; }
 
-        public double Errors { get; set; }
+        public int Errors { get; set; }
 
-        public double Total { get; set; }
+        public int Total { get; set; }
 
 
         public double ToSendPercentage 
@@ -110,7 +110,7 @@ namespace Administration.Models
             {
                 if(Total > 0)
                 {
-                    return (ToSend / Total) * 100;
+                    return (ToSend * 100.0) / Total;
                 }
                 return 0.0;
             }
@@ -122,7 +122,7 @@ namespace Administration.Models
             {
                 if (Total > 0)
                 {
-                    return (Sended / Total) * 100;
+                    return Sended * 100.0 / Total;
                 }
                 return 0.0;
             }
@@ -134,7 +134,7 @@ namespace Administration.Models
             {
                 if (Total > 0)
                 {
-                    return (Errors / Total) * 100;
+                    return Errors * 100.0 / Total;
                 }
                 return 0.0;
             }

@@ -1,5 +1,5 @@
 <template>
-	<div :id="id" :style="style" :class="['c-groupbox', { 'zone-no-border': noBorder }]" v-show="isVisible">
+	<div :id="id" :style="style" :class="['c-groupbox', { 'zone-no-border': noBorder },  $attrs.class]" v-show="isVisible">
 		<div class="c-groupbox__title" :help-id="id" :label-id="id" v-if="label">
 			<div v-if="labelAlign === 'center'" style="text-align: center;">
                 {{ label }}

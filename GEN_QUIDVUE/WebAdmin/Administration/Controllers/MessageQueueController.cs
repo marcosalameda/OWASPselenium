@@ -16,12 +16,12 @@ using System.Net;
 using System.Net.Http;
 using Microsoft.AspNetCore.Mvc;
 using DbAdmin;
+using IConfigurationManager = CSGenio.config.IConfigurationManager;
 
 namespace Administration.Controllers
 {
-    public class MessageQueueController : ControllerBase
+    public class MessageQueueController(IConfigurationManager configManager) : ControllerBase
     {
-        private string pathConfig = Path.Combine(CSGenio.framework.Configuration.GetConfigPath(), "Configuracoes.xml");
         private static Dictionary<string, QueueProgressStatus> exportProgressList = new Dictionary<string, QueueProgressStatus>();
         //
         // GET: /MessageQueue/
@@ -33,7 +33,7 @@ namespace Administration.Controllers
 
             try
             {
-                ConfigurationXML conf = ConfigurationXML.readXML(pathConfig);
+                var conf = configManager.GetExistingConfig();
 
                 model.MQueues = new Models.MessageQueue();
                 model.MQueues.Queues = new List<Models.QueueCfg>();
@@ -367,7 +367,13 @@ namespace Administration.Controllers
                 {
                     for (int i = 0; i < dataStat.NumRows; i++)
                     {
-                        qStat.StatLines.Add(new Models.ItemQueueStats { QueueId = dataStat.GetString(i, 0), Total = dataStat.GetNumeric(i, 1), Errors = dataStat.GetNumeric(i, 2), Sended = dataStat.GetNumeric(i, 3), ToSend = dataStat.GetNumeric(i, 4) });
+                        qStat.StatLines.Add(new Models.ItemQueueStats { 
+                            QueueId = dataStat.GetString(i, 0), 
+                            Total = dataStat.GetInteger(i, 1), 
+                            Errors = dataStat.GetInteger(i, 2), 
+                            Sended = dataStat.GetInteger(i, 3), 
+                            ToSend = dataStat.GetInteger(i, 4) 
+                        });
                     }
                 }
                 
@@ -382,7 +388,12 @@ namespace Administration.Controllers
                 {
                     for (int i = 0; i < dataStat.NumRows; i++)
                     {
-                        qStat.ErroStatLines.Add(new Models.ItemQueueErrorStats { QueueId = dataStat.GetString(i, 0), mqstatus = dataStat.GetString(i, 1), Errors = dataStat.GetString(i, 2), Total = dataStat.GetNumeric(i, 3) });
+                        qStat.ErroStatLines.Add(new Models.ItemQueueErrorStats { 
+                            QueueId = dataStat.GetString(i, 0), 
+                            mqstatus = dataStat.GetString(i, 1), 
+                            Errors = dataStat.GetString(i, 2), 
+                            Total = dataStat.GetInteger(i, 3) 
+                        });
                     }
                 }
 

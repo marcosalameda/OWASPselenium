@@ -31,6 +31,12 @@ export function setupRouter(i18n) {
       props: true
     },
     {
+      path: '/:culture/:system/NoConfiguration',
+      name: 'no_configuration',
+      component: () => import(/* webpackChunkName: "no_configuration" */ './views/NoConfigSystem.vue'),
+      props: true
+    },
+    {
       path: '/:culture/:system/Dashboard',
       name: 'dashboard',
       component: () => import(/* webpackChunkName: "dashboard" */ './views/Dashboard.vue'),
@@ -43,13 +49,19 @@ export function setupRouter(i18n) {
       props: true
     },
     {
+      path: '/:culture/:system/AppConfig',
+      name: 'app_configuration',
+      component: () => import(/* webpackChunkName: "app_configuration" */ './views/App_configuration.vue'),
+      props: true
+    },
+    {
       path: '/:culture/:system/ConfigMigration',
       name: 'config_migration',
       component: () => import(/* webpackChunkName: "config_migration" */ './views/Config_migration.vue'),
       props: true
     },
     {
-      path: '/:culture/:system/DbAdmin',
+      path: '/:culture/:system/DbAdmin/:tabId?', // The tabId is now a dynamic parameter (optional)
       name: 'maintenance',
       component: () => import(/* webpackChunkName: "maintenance" */ './views/Maintenance.vue'),
       props: true
@@ -125,6 +137,18 @@ export function setupRouter(i18n) {
         name: 'manage_message',
         component: () => import(/* webpackChunkName: "manage_message" */ './views/Notifications/ManageMessage.vue'),
         props: true
+    },
+    {
+      path: '/:culture/:system/AuditViewer',
+      name: 'audit_viewer',
+      component: () => import(/* webpackChunkName: "audit_viewer" */ './views/Audit_viewer.vue'),
+      props: true
+    },
+    {
+      path: '/:culture/:system/MessageQueue',
+      name: 'message_queue',
+      component: () => import(/* webpackChunkName: "message_queue" */ './views/Message_queue.vue'),
+      props: true
     },
   ];
 

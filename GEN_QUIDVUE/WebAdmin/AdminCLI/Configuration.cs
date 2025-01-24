@@ -58,13 +58,7 @@ namespace AdminCLI
         /// <returns></returns>
         public static List<string> FetchDatabaseTypes()
         {
-            List<string> types = new List<string>();            
-            types.Add("SQLSERVER2008");
-            types.Add("ACCESS");
-            types.Add("ORACLE");
-            types.Add("MYSQL");
-            types.Add("SQLITE");
-            return types;
+            return new List<string>(Enum.GetNames(typeof(CSGenio.framework.DatabaseType)));
         }
 
         /// <summary>

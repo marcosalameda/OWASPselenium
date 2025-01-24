@@ -4,6 +4,6 @@
   defaultSystem: '0',
   Years: [],
   Applications: [],
-  supportLocales: ['en-US',]
+  supportLocales: ['en-US','pt-PT',]
 }, window.QGlobal);
 export default _globalSettings;

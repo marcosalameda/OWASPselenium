@@ -7,22 +7,31 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Administration.Models
 {
+    [JsonConverter(typeof(JsonStringEnumConverter<AlertTypeEnum>))]
+    public enum AlertTypeEnum
+    {
+        info,
+        success,
+        danger,
+        warning
+    }
+
     public class DbAdminModel : ModelBase
     {
         [Display(Name = "BASE_DE_DADOS58234", ResourceType = typeof(Resources.Resources))]
         public string DBSchema { get; set; }
         
         [Display(Name = "TAMANHO_DA_BD56664", ResourceType = typeof(Resources.Resources))]
-        public double DBSize { get; set; }       
+        public decimal DBSize { get; set; }       
 
         [Display(Name = "VERSAO_DO_SCHEMA11580", ResourceType = typeof(Resources.Resources))]
-        public double VersionDb { get; set; }
+        public decimal VersionDb { get; set; }
 
         [Display(Name = "VERSAO_DA_APLICACAO45955", ResourceType = typeof(Resources.Resources))]
-        public double VersionApp { get; set; }
+        public decimal VersionApp { get; set; }
 
         [Display(Name = "VERSAO_DOS_SCRIPTS52566", ResourceType = typeof(Resources.Resources))]
-        public double VersionReIdx { get; set; }
+        public decimal VersionReIdx { get; set; }
 
         [Display(Name = "DATABASE_VERSION15344", ResourceType = typeof(Resources.Resources))]
         public int VersionUpgrIndx { get; set; }
@@ -36,6 +45,8 @@ namespace Administration.Models
         [Display(Name = "NOME_DE_UTILIZADOR58858", ResourceType = typeof(Resources.Resources))]
         [Required]
         public string DbUser { get; set; }
+
+        public AlertTypeEnum AlertType { get; set; }
 
         [Display(Name = "PALAVRA_PASSE44126", ResourceType = typeof(Resources.Resources))]
         [Required]
@@ -61,6 +72,10 @@ namespace Administration.Models
         public string AppSystem { get; set; }
 
         public string BaseLang { get; set; }
+
+        public string DSName { get; set; }
+
+        public RdxOperationInfo LastLogInfo { get; set; }
     }
 
 
@@ -92,10 +107,9 @@ namespace Administration.Models
         [Required]
         public string DbPsw { get; set; }
 
-        //public string BackupItem { get; set; }
-        //public Dictionary<string, string> BackupItems { get; set; }
-
         public string BackupItem { get; set; }
+
+        public AlertTypeEnum AlertType { get; set; }
 
         [Display(Name = "ESTADO07788", ResourceType = typeof(Resources.Resources))]
         public string ResultMsg { get; set; }
@@ -105,29 +119,24 @@ namespace Administration.Models
 
         public void Load(string basePath)
         {
-            BackupFiles = new List<BackupFileItem>();
-            //BackupItems = new Dictionary<string, string>();
-            //BackupItems.Add("", "");
             if (Directory.Exists(basePath))
             {
-            DirectoryInfo directory = new DirectoryInfo(basePath);
-            foreach (FileInfo bakFile in directory.GetFiles().OrderByDescending(a => a.Name).ToList())
-                if (bakFile.Extension == ".bak")
-                {
-                    //BackupItems.Add(bakFile.Name, bakFile.Name);
+                DirectoryInfo directory = new(basePath);
 
-                    var bi = new BackupFileItem()
-                    {
-                        Filename = bakFile.Name,
-                        Date = bakFile.CreationTime,
-                        Size = Math.Round((decimal)bakFile.Length / 1000000M, 2)
-                    };
-                    BackupFiles.Add(bi);
-                }
+                BackupFiles = directory.EnumerateFiles("*.bak")
+                                       .OrderByDescending(f => f.CreationTime)
+                                       .Select(bakFile => new BackupFileItem
+                                       {
+                                           Filename = bakFile.Name,
+                                           Date = bakFile.CreationTime,
+                                           Size = Math.Round(bakFile.Length / 1_000_000M, 2)
+                                       })
+                                       .ToList();
             }
-            
-
-            BackupFiles.Sort((x, y) => y.Date.CompareTo(x.Date));
+            else
+            {
+                BackupFiles = [];
+            }
         }
     }
 
@@ -147,6 +156,7 @@ namespace Administration.Models
     {
         [Display(Name = "ESTADO07788", ResourceType = typeof(Resources.Resources))]
         public string ResultMsg { get; set; }
+        public AlertTypeEnum AlertType { get; set; }
         public List<IncoherencyModel> Incoherencies { get; set; }
     }
 
@@ -154,6 +164,7 @@ namespace Administration.Models
     {
         [Display(Name = "ESTADO07788", ResourceType = typeof(Resources.Resources))]
         public string ResultMsg { get; set; }
+        public AlertTypeEnum AlertType { get; set; }
         public List<IndexModel> Indexes { get; set; }
     }
     public class IndexModel
@@ -176,6 +187,8 @@ namespace Administration.Models
         public string Year { get; set; }
 
         public string IndexType { get; set; }
+
+        public AlertTypeEnum AlertType { get; set; }
 
         public string IndexTitle { get; set; }
 
@@ -207,6 +220,8 @@ namespace Administration.Models
 
         public string IncoherenceTitle { get; set; }
 
+        public AlertTypeEnum AlertType { get; set; }
+
         //description of checkbox 
         [Display(Name = "ULTIMA_VERIFICACAO35305", ResourceType = typeof(Resources.Resources))]
         public DateTime LastUpdate { get; set; }
@@ -234,7 +249,7 @@ namespace Administration.Models
     public class UnusedIndexItem
     {
         //ordem n tem display, será omitida
-        public double OrderCol { get; set; }
+        public decimal OrderCol { get; set; }
 
         [Display(Name = "Tabela")]
         public string ObjectName { get; set; }
@@ -364,6 +379,8 @@ namespace Administration.Models
         [Display(Name = "PALAVRA_PASSE44126", ResourceType = typeof(Resources.Resources))]
         [Required]
         public string DbPsw { get; set; }
+        
+        public AlertTypeEnum AlertType { get; set; }
 
         [Display(Name = "BASES_DE_DADOS_DISPO02109", ResourceType = typeof(Resources.Resources))]
         public IEnumerable<SelectListItem> Years { get; set; }
@@ -416,6 +433,8 @@ namespace Administration.Models
         [Display(Name = "CRIACAO_DA_CHAVE_MES19380", ResourceType = typeof(Resources.Resources))]
         public bool MasterKey { get; set; }
 
+        public AlertTypeEnum AlertType { get; set; }
+
         public object SelectLists
         {
             get
@@ -436,6 +455,8 @@ namespace Administration.Models
         public List<MigrateFileItem> MigrateFiles { get; set; }
 
         public int FileCount { get; set; }
+
+        public AlertTypeEnum AlertType { get; set; }
 
         public void Load(string year)
         {

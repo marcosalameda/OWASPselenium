@@ -16,7 +16,7 @@ msbuild AdminCLI.csproj /p:Configuration=Release
 )
 
 ::Move into the release folder
-cd .\bin\Release\
+cd .\bin\Release\net8.0
 
 ::Reindex the database with default credentials
 .\AdminCLI.exe reindex -u %username% -p %password%

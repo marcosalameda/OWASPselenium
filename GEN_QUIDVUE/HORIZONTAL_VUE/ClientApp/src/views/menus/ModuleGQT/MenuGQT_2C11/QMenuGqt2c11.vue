@@ -1,0 +1,677 @@
+﻿<template>
+	<q-row-container
+		v-if="componentOnLoadProc.loaded"
+		is-large>
+		<q-control-wrapper class="row-line-group">
+			<q-tab-container
+				id="tabs-QMenuGQT_2C11"
+				align-tabs="left"
+				:tabs-list="controls.tabGroup.tabsList"
+				:selected-tab="controls.tabGroup.selectedTab"
+				:is-visible="controls.tabGroup.isVisible"
+				@tab-changed="controls.tabGroup.selectTab($event)">
+				<template #tab-panel>
+					<section v-show="controls.tabGroup.selectedTab === 'firstTab'">
+						<q-row-container is-large>
+							<q-control-wrapper class="row-line-group">
+								<q-table
+									v-bind="controls.firstTable"
+									v-on="controls.firstTable.handlers" />
+
+								<q-table-extra-extension
+									:list-ctrl="controls.firstTable"
+									v-on="controls.firstTable.handlers" />
+							</q-control-wrapper>
+						</q-row-container>
+					</section>
+
+					<section v-show="controls.tabGroup.selectedTab === 'secondTab'">
+						<q-row-container is-large>
+							<q-control-wrapper class="row-line-group">
+								<q-table
+									v-bind="controls.secondTable"
+									v-on="controls.secondTable.handlers" />
+
+								<q-table-extra-extension
+									:list-ctrl="controls.secondTable"
+									v-on="controls.secondTable.handlers" />
+							</q-control-wrapper>
+						</q-row-container>
+
+						<q-row-container is-large>
+							<q-control-wrapper class="row-line-group">
+								<q-button
+									b-style="secondary"									
+									:label="Resources.APLICAR33981"
+									:title="Resources.APLICAR33981"
+									@click="applyChanges">
+									<q-icon icon="bring-forward" />
+								</q-button>
+							</q-control-wrapper>
+						</q-row-container>
+
+						<q-row-container is-large>
+							<q-control-wrapper class="row-line-group">
+								<q-table
+									:rows="selectedItems"
+									:columns="mainTable.columns"
+									:config="controls.thirdTable.config"
+									:total-rows="controls.thirdTable.totalRows"
+									:has-more-pages="controls.thirdTable.hasMorePages"
+									readonly
+									v-on="controls.thirdTable.handlers" />
+							</q-control-wrapper>
+						</q-row-container>
+					</section>
+				</template>
+			</q-tab-container>
+		</q-control-wrapper>
+	</q-row-container>
+</template>
+
+<script>
+	/* eslint-disable no-unused-vars */
+	import { computed } from 'vue'
+
+	import { loadResources } from '@/plugins/i18n.js'
+	import { QEventEmitter } from '@/api/global/eventBus.js'
+	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
+
+	import MarkItemsMenuHandlers from '@/mixins/markItemsMenuHandlers.js'
+	import listFunctions from '@/mixins/listFunctions.js'
+	import formFunctions from '@/mixins/formFunctions.js'
+	import genericFunctions from '@/mixins/genericFunctions.js'
+	import controlClass from '@/mixins/fieldControl.js'
+	import listColumnTypes from '@/mixins/listColumnTypes.js'
+
+	import netAPI from '@/api/network'
+	import qApi from '@/api/genio/quidgestFunctions.js'
+	import qFunctions from '@/api/genio/projectFunctions.js'
+	import qProjArrays from '@/api/genio/projectArrays.js'
+	import qEnums from '@/mixins/quidgest.mainEnums.js'
+	/* eslint-enable no-unused-vars */
+
+	import MenuViewModel from './QMenuGQT_2C11ViewModel.js'
+
+	const requiredTextResources = ['QMenuGQT_2C11', 'hardcoded', 'messages']
+
+	export default {
+		name: 'QMenuGqt2c11',
+
+		mixins: [
+			MarkItemsMenuHandlers
+		],
+
+		inheritAttrs: false,
+
+		props: {
+			/**
+			 * Whether or not the form is used as a homepage.
+			 */
+			isHomePage: {
+				type: Boolean,
+				default: false
+			}
+		},
+
+		expose: [
+			'navigationId',
+			'updateMenuNavigation'
+		],
+
+		data()
+		{
+			// eslint-disable-next-line
+			const vm = this
+			return {
+				componentOnLoadProc: asyncProcM.getProcListMonitor('GQT_Menu_2C11', false),
+
+				internalEvents: new QEventEmitter(),
+
+				interfaceMetadata: {
+					id: 'QMenuGQT_2C11', // Used for resources
+					requiredTextResources
+				},
+
+				menuInfo: {
+					name: 'GQT_2C11',
+					area: 'EQUIP_DECOM',
+					route: 'menu-GQT_2C11',
+					order: '2C11'
+				},
+
+				model: new MenuViewModel(this),
+
+				controls: {
+					firstTab: new controlClass.BaseControl({
+						id: 'firstTab',
+						name: 'firstTabForm',
+						type: 'Tab',
+						label: computed(() => this.Resources.EQUIPMENT03632),
+						icon: {
+							icon: 'list'
+						}
+					}, this),
+
+					secondTab: new controlClass.BaseControl({
+						id: 'secondTab',
+						name: 'secondTabForm',
+						type: 'Tab',
+						label: computed(() => this.Resources.EQUIPMENT_DECOMISSIO62648),
+						icon: {
+							icon: 'download'
+						}
+					}, this),
+
+					tabGroup: new controlClass.TabsControl({
+						tabControlsIds: ['firstTab', 'secondTab'],
+						selectedTab: 'firstTab'
+					}, this),
+
+					firstTable: new controlClass.TableListControl({
+						id: 'GQT_Menu_2C11',
+						controller: 'EQUIP',
+						action: 'GQT_Menu_2C11',
+						hasDependencies: false,
+						isInCollapsible: false,
+						columnsOriginal: [
+							new listColumnTypes.TextColumn({
+								order: 1,
+								name: 'ValRegistnr',
+								area: 'EQUIP',
+								field: 'REGISTNR',
+								label: computed(() => this.Resources.NO__REGISTER04207),
+								dataLength: 6,
+								scrollData: 6,
+							}),
+							new listColumnTypes.TextColumn({
+								order: 2,
+								name: 'ValDesignat',
+								area: 'EQUIP',
+								field: 'DESIGNAT',
+								label: computed(() => this.Resources.EQUIPMENT03632),
+								dataLength: 85,
+								scrollData: 30,
+							}),
+							new listColumnTypes.DateColumn({
+								order: 3,
+								name: 'ValDtaquisi',
+								area: 'EQUIP',
+								field: 'DTAQUISI',
+								label: computed(() => this.Resources.ACQUISITION44180),
+								scrollData: 8,
+								dateTimeType: 'date',
+							}),
+							new listColumnTypes.NumericColumn({
+								order: 4,
+								name: 'Decom.ValDecomnr',
+								area: 'DECOM',
+								field: 'DECOMNR',
+								label: computed(() => this.Resources.NO_BATE21045),
+								scrollData: 10,
+								maxDigits: 10,
+								decimalPlaces: 0,
+								pkColumn: 'ValCoddeco',
+							}),
+							new listColumnTypes.DateColumn({
+								order: 5,
+								name: 'ValDtdeco',
+								area: 'EQUIP',
+								field: 'DTDECO',
+								label: computed(() => this.Resources.DECOMISSION14486),
+								scrollData: 8,
+								dateTimeType: 'date',
+							}),
+							new listColumnTypes.BooleanColumn({
+								order: 6,
+								name: 'ValIfabatif',
+								area: 'EQUIP',
+								field: 'IFABATIF',
+								label: computed(() => this.Resources.DOWNED_EQUIPMENT43331),
+								scrollData: 1,
+							}),
+							new listColumnTypes.ImageColumn({
+								order: 7,
+								name: 'ValPhotogra',
+								area: 'EQUIP',
+								field: 'PHOTOGRA',
+								label: computed(() => this.Resources.PHOTO51874),
+								dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR58591, vm.Resources.PHOTO51874)),
+								scrollData: 3,
+								sortable: false,
+								searchable: false,
+							}),
+							new listColumnTypes.TextColumn({
+								order: 8,
+								name: 'Room1.ValRoomnr',
+								area: 'ROOM1',
+								field: 'ROOMNR',
+								label: computed(() => this.Resources.N_R__ROOM43805),
+								dataLength: 10,
+								scrollData: 10,
+								pkColumn: 'ValCodrooms',
+							}),
+						],
+						config: {
+							name: 'GQT_Menu_2C11',
+							serverMode: true,
+							pkColumn: 'ValCodequip',
+							tableAlias: 'EQUIP',
+							tableNamePlural: computed(() => this.Resources.EQUIPMENT03632),
+							viewManagement: 'U',
+							showLimitsInfo: true,
+							tableTitle: computed(() => this.Resources.EQUIPMENT03632),
+							showAlternatePagination: true,
+							permissions: {
+							},
+							searchBarConfig: {
+								visibility: true,
+								searchOnPressEnter: true
+							},
+							filtersVisible: true,
+							allowColumnFilters: true,
+							allowColumnSort: true,
+							crudActions: [
+								{
+									id: 'show',
+									name: 'show',
+									title: computed(() => this.Resources.CONSULTAR57388),
+									icon: {
+										icon: 'view'
+									},
+									isInReadOnly: true,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'EQUIP',
+										mode: 'SHOW',
+										isControlled: true
+									}
+								},
+								{
+									id: 'edit',
+									name: 'edit',
+									title: computed(() => this.Resources.EDITAR11616),
+									icon: {
+										icon: 'pencil'
+									},
+									isInReadOnly: true,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'EQUIP',
+										mode: 'EDIT',
+										isControlled: true
+									}
+								},
+								{
+									id: 'duplicate',
+									name: 'duplicate',
+									title: computed(() => this.Resources.DUPLICAR09748),
+									icon: {
+										icon: 'duplicate'
+									},
+									isInReadOnly: true,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'EQUIP',
+										mode: 'DUPLICATE',
+										isControlled: true
+									}
+								},
+								{
+									id: 'delete',
+									name: 'delete',
+									title: computed(() => this.Resources.ELIMINAR21155),
+									icon: {
+										icon: 'delete'
+									},
+									isInReadOnly: true,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'EQUIP',
+										mode: 'DELETE',
+										isControlled: true
+									}
+								}
+							],
+							generalActions: [
+								{
+									id: 'insert',
+									name: 'insert',
+									title: computed(() => this.Resources.INSERIR43365),
+									icon: {
+										icon: 'add'
+									},
+									isInReadOnly: true,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'EQUIP',
+										mode: 'NEW',
+										repeatInsertion: false,
+										isControlled: true
+									}
+								},
+							],
+							generalCustomActions: [
+							],
+							groupActions: [
+							],
+							customActions: [
+							],
+							MCActions: [
+							],
+							rowClickAction: {
+							},
+							formsDefinition: {
+								'EQUIP': {
+									fnKeySelector: (row) => row.Fields.ValCodequip,
+									isPopup: false
+								},
+							},
+							defaultSearchColumnName: 'ValRegistnr',
+							defaultSearchColumnNameOriginal: 'ValRegistnr',
+							defaultColumnSorting: {
+								columnName: 'ValRegistnr',
+								sortOrder: 'asc'
+							}
+						},
+						changeEvents: ['changed-TPEQU', 'changed-ROOM1', 'changed-DECOM', 'changed-PESS1', 'changed-EQUIP', 'changed-CMPNY', 'changed-WAREH', 'changed-ITEM'],
+						uuid: '1ac74500-24cd-4979-9f76-49d2b8b45ea2',
+						allSelectedRows: 'false',
+						headerLevel: 1,
+						handlers: {
+							// Handles the row click.
+							selectRow: (eventData) => {
+								this.handleSelectedRow(this.controls.firstTable, eventData)
+							},
+							unselectRow: (eventData) => {
+								this.handleUnSelectedRow(this.controls.firstTable, eventData)
+							},
+							// Handles the checkbox click.
+							selectRows: (eventData) => {
+								this.handleSelectedRows(this.controls.firstTable, eventData)
+							},
+							unselectAllRows: () => {
+								this.handleUnselectAllRows(this.controls.firstTable)
+							}
+						}
+					}, this),
+
+					secondTable: new controlClass.TableListControl({
+						id: 'GQT_Menu_2C111',
+						controller: 'DECOM',
+						action: 'GQT_Menu_2C111',
+						hasDependencies: false,
+						isInCollapsible: false,
+						columnsOriginal: [
+							new listColumnTypes.NumericColumn({
+								order: 1,
+								name: 'ValDecomnr',
+								area: 'DECOM',
+								field: 'DECOMNR',
+								label: computed(() => this.Resources.NO_BATE21045),
+								scrollData: 10,
+								maxDigits: 10,
+								decimalPlaces: 0,
+							}),
+							new listColumnTypes.DateColumn({
+								order: 2,
+								name: 'ValDtdeco',
+								area: 'DECOM',
+								field: 'DTDECO',
+								label: computed(() => this.Resources.DECOMISSION14486),
+								scrollData: 8,
+								dateTimeType: 'dateTime',
+							}),
+							new listColumnTypes.TextColumn({
+								order: 3,
+								name: 'ValNote',
+								area: 'DECOM',
+								field: 'NOTE',
+								label: computed(() => this.Resources.NOTES05274),
+								scrollData: 30,
+							}),
+						],
+						config: {
+							name: 'GQT_Menu_2C111',
+							serverMode: true,
+							pkColumn: 'ValCoddeco',
+							tableAlias: 'DECOM',
+							tableNamePlural: computed(() => this.Resources.EQUIPMENT_DECOMISSIO62648),
+							viewManagement: 'U',
+							showLimitsInfo: true,
+							tableTitle: computed(() => this.Resources.EQUIPMENT_DECOMISSIO62648),
+							showAlternatePagination: true,
+							permissions: {
+							},
+							searchBarConfig: {
+								visibility: true,
+								searchOnPressEnter: true
+							},
+							filtersVisible: true,
+							allowColumnFilters: true,
+							allowColumnSort: true,
+							crudActions: [
+								{
+									id: 'show',
+									name: 'show',
+									title: computed(() => this.Resources.CONSULTAR57388),
+									icon: {
+										icon: 'view'
+									},
+									isInReadOnly: true,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'ABATE',
+										mode: 'SHOW',
+										isControlled: true
+									}
+								},
+								{
+									id: 'edit',
+									name: 'edit',
+									title: computed(() => this.Resources.EDITAR11616),
+									icon: {
+										icon: 'pencil'
+									},
+									isInReadOnly: true,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'ABATE',
+										mode: 'EDIT',
+										isControlled: true
+									}
+								},
+								{
+									id: 'duplicate',
+									name: 'duplicate',
+									title: computed(() => this.Resources.DUPLICAR09748),
+									icon: {
+										icon: 'duplicate'
+									},
+									isInReadOnly: true,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'ABATE',
+										mode: 'DUPLICATE',
+										isControlled: true
+									}
+								},
+								{
+									id: 'delete',
+									name: 'delete',
+									title: computed(() => this.Resources.ELIMINAR21155),
+									icon: {
+										icon: 'delete'
+									},
+									isInReadOnly: true,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'ABATE',
+										mode: 'DELETE',
+										isControlled: true
+									}
+								}
+							],
+							generalActions: [
+								{
+									id: 'insert',
+									name: 'insert',
+									title: computed(() => this.Resources.INSERIR43365),
+									icon: {
+										icon: 'add'
+									},
+									isInReadOnly: true,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'ABATE',
+										mode: 'NEW',
+										repeatInsertion: false,
+										isControlled: true
+									}
+								},
+							],
+							generalCustomActions: [
+							],
+							groupActions: [
+							],
+							customActions: [
+							],
+							MCActions: [
+							],
+							rowClickAction: {
+							},
+							formsDefinition: {
+								'ABATE': {
+									fnKeySelector: (row) => row.Fields.ValCoddeco,
+									isPopup: false
+								},
+							},
+							defaultSearchColumnName: 'ValDecomnr',
+							defaultSearchColumnNameOriginal: 'ValDecomnr',
+							defaultColumnSorting: {
+								columnName: 'ValDtdeco',
+								sortOrder: 'asc'
+							}
+						},
+						changeEvents: ['changed-DECOM'],
+						uuid: 'e6356714-1875-490b-820c-71ac269df34f',
+						allSelectedRows: 'false',
+						headerLevel: 1,
+						handlers: {
+							selectRow: (eventData) => {
+								this.onSelectRow(this.controls.secondTable, eventData)
+							},
+							unselectRow: (eventData) => {
+								this.onUnselectRow(this.controls.secondTable, eventData)
+							},
+							unselectAllRows: () => {
+								this.onUnselectAllRows(this.controls.secondTable)
+							}
+						}
+					}, this),
+
+					thirdTable: new controlClass.TableListControl({
+						controller: '',
+						action: '',
+						hasDependencies: false,
+						isInCollapsible: false,
+						columnsOriginal: [
+						],
+						config: {
+							name: '',
+							serverMode: false,
+							viewManagement: 'N',
+							tableTitle: computed(() => this.Resources.SELECIONADOS52011),
+							showAlternatePagination: true,
+							permissions: {
+							},
+							generalCustomActions: [
+							],
+							groupActions: [
+							],
+							customActions: [
+							],
+							MCActions: [
+							],
+							rowClickAction: {
+							},
+							formsDefinition: {
+							},
+							defaultSearchColumnName: '',
+							defaultSearchColumnNameOriginal: '',
+							defaultColumnSorting: {
+								columnName: '',
+								sortOrder: 'asc'
+							}
+						},
+						changeEvents: [],
+						uuid: '',
+						allSelectedRows: 'false',
+						headerLevel: 1,
+						handlers: {
+							removeRow: (eventData) => {
+								this.onUnselectRow(this.mainTable, eventData)
+								this.unselectRowData(eventData)
+							},
+							unselectAllRows: (eventData) => {
+								this.onUnselectAllRows(this.mainTable, eventData)
+								this.unselectAllRowsData()
+							}
+						}
+					}, this)
+				}
+			}
+		},
+
+		beforeRouteEnter(to, _, next)
+		{
+			// called before the route that renders this component is confirmed.
+			// does NOT have access to `this` component instance,
+			// because it has not been created yet when this guard is called!
+
+			next((vm) => vm.updateMenuNavigation(to))
+		},
+
+		computed: {
+			/**
+			 * The main table.
+			 */
+			mainTable()
+			{
+				return this.controls.firstTable
+			},
+
+			/**
+			 * The secondary table.
+			 */
+			secondaryTable()
+			{
+				return this.controls.secondTable
+			}
+		},
+
+		methods: {
+			/**
+			 * Saves the changes.
+			 */
+			applyChanges()
+			{
+				const action = 'GQT_Menu_2C11_Execute'
+				const reloadTable = false
+				const baseArea = 'equip'
+
+				this.apply(action, reloadTable, baseArea)
+			}
+		}
+	}
+</script>

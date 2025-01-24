@@ -348,6 +348,6 @@
 
     .graph {
         width: 100%;
-        border: 1px solid #EEE;
+		border: none;
     }
 </style>

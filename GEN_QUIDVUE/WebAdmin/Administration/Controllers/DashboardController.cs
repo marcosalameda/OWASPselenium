@@ -9,14 +9,12 @@ using System.Linq;
 using System.Diagnostics;
 using System.Text;
 using Newtonsoft.Json.Linq;
-using System.Net;
-using System.Net.Http;
 using Microsoft.AspNetCore.Mvc;
 using Administration.Models;
 
 namespace Administration.Controllers
 {
-    public class DashboardController : ControllerBase
+    public class DashboardController(CSGenio.config.IConfigurationManager configManager) : ControllerBase
     {
         // GET: api/Dashboard
         [HttpGet]
@@ -30,23 +28,24 @@ namespace Administration.Controllers
                 HasEnvironment = false,
                 HasDiffVersion = false,
                 HasSGBDVersion = false,
+				HasDiffUserSettingsVersion = false,
                 VersionDb = 0,
                 VersionIdxDb = 0,
                 VersionDbGen = CSGenio.framework.Configuration.VersionDbGen,
                 VersionIdxDbGen = CSGenio.framework.Configuration.VersionIdxDbGen,
-                VersionUpgrIndxGen = CSGenio.framework.Configuration.VersionUpgrIndxGen
+                VersionUpgrIndxGen = CSGenio.framework.Configuration.VersionUpgrIndxGen,
+				UserSettingsVersion = CSGenio.framework.Configuration.UserSettingsVersion
             };
 
-            //ver primeiro se o file exists
-            string pathConfig = CSGenio.framework.Configuration.GetConfigPath();
-            if (!System.IO.File.Exists(pathConfig + Path.DirectorySeparatorChar + "Configuracoes.xml"))
+            //Check if configuration exists
+            if (!configManager.Exists())
             {
                 return Json(new { Success = false, CurentMaintenance = Maintenance.Current, model = new { ResultErrors = calculateErrors(model) } });
             }
             model.HasConfig = true;
 
             //check if config have the last version
-            if (!AuxFunctions.CheckXMLIsValid())
+            if (!AuxFunctions.CheckXMLIsValid(configManager))
                 model.ResultErrors = calculateErrors(model);
             else { model.HasValidConfig = true; }
 
@@ -73,7 +72,7 @@ namespace Administration.Controllers
 
             //leitura do configuracaoXML to colocar nas variaveis visiveis ao cliente
             DatabaseType tpConn = dataSystem.GetDatabaseType();
-            model.TpSGBD = dataSystem.Type;
+            model.TpSGBD = tpConn.ToString();
             model.SGBDServer = dataSystem.Server;
             if (!string.IsNullOrEmpty(dataSystem.Service) || !string.IsNullOrEmpty(dataSystem.ServiceName))
             {
@@ -122,6 +121,7 @@ namespace Administration.Controllers
                     model.VersionDb = dbVersionReader.GetDbVersion();
                     model.VersionIdxDb = dbVersionReader.GetDbIndexVersion();
                     model.VersionUpgrIndx = dbVersionReader.GetDbUpgradeVersion();
+					model.CurrentUserSettingsVersion = dbVersionReader.GetDbUserSettingsVersion();
 
                     model.DBSize = AuxFunctions.GetDBSize(CurrentYear, model.DBSchema);
                     sp.closeConnection();
@@ -131,6 +131,7 @@ namespace Administration.Controllers
                     model.VersionDb = 0;
                     model.VersionIdxDb = 0;
                     model.VersionUpgrIndx = 0;
+					model.CurrentUserSettingsVersion = 0;
                 }
 
                 // Check for maintenance Status
@@ -144,6 +145,9 @@ namespace Administration.Controllers
                 model.HasDiffVersion = true;
             if (model.VersionIdxDb != model.VersionIdxDbGen)
                 model.HasDiffIdxVersion = true;
+			// Check if current user settings version is below the latest version
+			if (model.CurrentUserSettingsVersion < model.UserSettingsVersion)
+				model.HasDiffUserSettingsVersion = true;
 
             //Informação do PC
             // >> SO
@@ -183,19 +187,34 @@ namespace Administration.Controllers
         {
             string msg = "";
             if (!model.HasEnvironment)
-                msg += Resources.Resources.NAO_FOI_LOCALIZADO_O50094 + " <b>" + Resources.Resources.PROCEDA_A_UMA_NOVA_C24513 + "</b>";
+                msg = Resources.Resources.NAO_FOI_ENCONTRADO_N28305;
 			else if (!model.HasValidConfig)
-                msg += Resources.Resources.E_NECESSARIO_PROCEDE36325 + "<br />";
+                msg = Resources.Resources.E_NECESSARIO_PROCEDE36325 + "<br />";
             else if (model.HasSGBDVersion)
-                msg += Resources.Resources.ERRO_NO_ACESSO_AO_SE43775 + "<br />";
+                msg = Resources.Resources.ERRO_NO_ACESSO_AO_SE43775 + "<br />";
             else if (model.HasDiffVersion && model.VersionDb == -1)
-                msg += Resources.Resources.NAO_FOI_POSSIVEL_LOC30521 + "<br />";
-            else if(model.HasDiffVersion && model.VersionDb != -1)
-                msg += Resources.Resources.VERSAO_DE_BASE_DE_DA22093 + " <b>" + Resources.Resources.EXECUTE_A_OPERACAO_D01219 + "</b><br />";
+                msg = Resources.Resources.NAO_FOI_POSSIVEL_LOC30521 + "<br />";
+            else if((model.HasDiffVersion || model.HasDiffUserSettingsVersion) && model.VersionDb != -1)
+                msg = Resources.Resources.VERSAO_DE_BASE_DE_DA22093 + " <b>" + Resources.Resources.EXECUTE_A_OPERACAO_D01219 + "</b><br />";
             else if(model.HasDiffIdxVersion && model.VersionIdxDb != 0)
-                msg += Resources.Resources.VERSAO_DE_INDICES_IN26316 + " <b>" + Resources.Resources.EXECUTE_A_OPERACAO_D01219 + "</b><br />";
+                msg = Resources.Resources.VERSAO_DE_INDICES_IN26316 + " <b>" + Resources.Resources.EXECUTE_A_OPERACAO_D01219 + "</b><br />";
 
             return msg;
+        }
+
+        [HttpPost]
+        public JsonResult CreateConfiguration()
+        {
+            try
+            {
+                configManager.CreateNewConfig();                
+                Configuration.Reload();
+                return Json(new { Success = true });
+            }
+            catch (Exception e)
+            {  
+                return Json(new { Success = false, Message = e.Message }) ;
+            }
         }
 
         [HttpPost]

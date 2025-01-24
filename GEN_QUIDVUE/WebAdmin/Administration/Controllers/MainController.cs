@@ -35,7 +35,12 @@ namespace Administration.Controllers
                 defaultSystem = CSGenio.framework.Configuration.DefaultYear;
                 Years = CSGenio.framework.Configuration.Years;
             }
-            catch { /* Catch erro related with "file not found" */ }
+            catch { 
+                /* Catch erro related with "file not found"
+                Set "0" because it's the most common and Vue doesn't accept empty
+                 */ 
+                defaultSystem = "0";    
+            }
 
             return Ok(new
             {

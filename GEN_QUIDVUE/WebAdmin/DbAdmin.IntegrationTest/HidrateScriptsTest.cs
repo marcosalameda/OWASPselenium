@@ -28,7 +28,8 @@ namespace DbAdmin.IntegrationTest
         [SetUp]
         public void Setup()
         {
-            PersistenceFactoryExtension.Use();
+            CSGenio.GenioDIDefault.UseLog();
+            CSGenio.GenioDIDefault.UseDatabase();
             _globalFunctions = new GlobalFunctions(_user, "TST");
             readerMock = new Mock<IVersionReader>();
         }

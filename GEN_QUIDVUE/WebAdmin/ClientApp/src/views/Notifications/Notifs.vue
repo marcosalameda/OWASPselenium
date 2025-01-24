@@ -23,12 +23,12 @@
               </q-button-group>
             </template>
             <template #sendsEmail="props">
-              <span v-if="props.row.SendsEmail" class='glyphicons glyphicons-check' />
-              <span v-else class='glyphicons glyphicons-unchecked' />
+              <span v-if="props.row.SendsEmail" class='glyphicons glyphicons-ok' />
+              <span v-else class='glyphicons glyphicons-remove' />
             </template>
             <template #sendsToDatabase="props">
-              <span v-if="props.row.SendsToDatabase" class='glyphicons glyphicons-check' />
-              <span v-else class='glyphicons glyphicons-unchecked' />
+              <span v-if="props.row.SendsToDatabase" class='glyphicons glyphicons-ok' />
+              <span v-else class='glyphicons glyphicons-remove' />
             </template>
         </qtable>
     </row>
@@ -95,10 +95,7 @@
                 name: "NumMessagesConfig",
                 sort: true
             }],
-            config: {
-              table_title: () => vm.$t('NOTIFICACOES03935')
-            }
-        }
+                                            }
       };
     },
     methods: {

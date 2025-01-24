@@ -2,6 +2,8 @@ using CSGenio.framework;
 using System.ComponentModel.DataAnnotations;
 using System.Xml.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using CSGenio.config;
+using IConfigurationManager = CSGenio.config.IConfigurationManager;
 
 namespace Administration.AuxClass
 {
@@ -9,9 +11,9 @@ namespace Administration.AuxClass
     {
 
 
-        public static double GetDBSize(string year, string Schema)
+        public static decimal GetDBSize(string year, string Schema)
         {
-            double sizeIdxDb = 0;
+            decimal sizeIdxDb = 0;
             try
             {
                 var sp = CSGenio.persistence.PersistentSupport.getPersistentSupport(year);
@@ -27,11 +29,10 @@ namespace Administration.AuxClass
                 }
                 else
                 {
-                    qs = "SELECT (size * 8) / 1024 SizeMB FROM sys.master_files WHERE Name = '" + Schema + "'";
+                    qs = "SELECT (size * 8) / 1024 SizeMB FROM sys.master_files WHERE database_id = DB_ID('" + Schema + "')";
                 }
 
-                double val = CSGenio.persistence.DBConversion.ToNumeric(sp.executeScalar(qs));
-                sizeIdxDb = val;
+                sizeIdxDb = CSGenio.persistence.DBConversion.ToNumeric(sp.executeScalar(qs));
 
                 sp.closeConnection();
             }
@@ -43,21 +44,12 @@ namespace Administration.AuxClass
             return sizeIdxDb;
         }	
 
-		public static int GetConfigVersion()
+		public static int GetConfigVersion(IConfigurationManager configManager)
         {
             try
             {
-                string pathConfig = Configuration.GetConfigPath();
-                pathConfig = Path.Combine(pathConfig, "Configuracoes.xml");
-
-                //read configuration document
-                XDocument xmlConfig = XDocument.Load(pathConfig);
-                XAttribute version = xmlConfig.Descendants().Attributes("configVersion").FirstOrDefault();
-                if (version == null)
-                    return 0;
-
-                //parse configuration verion
-                return Int32.Parse(version.Value);
+                var config = configManager.GetExistingConfig();
+                return int.Parse(config.ConfigVersion);
             }
             catch (Exception)
             {
@@ -65,26 +57,23 @@ namespace Administration.AuxClass
             }
         }
         
-        public static bool CheckXMLIsValid()
+        public static bool CheckXMLIsValid(IConfigurationManager configManager)
         {
-            string pathConfig = Configuration.GetConfigPath();
-            pathConfig = Path.Combine(pathConfig, "Configuracoes.xml");
-            
+
             //check if file exists
-            if (!System.IO.File.Exists(pathConfig))
+            if (!configManager.Exists())
                 return false;
 
-            int version = GetConfigVersion();
+            int version = GetConfigVersion(configManager);
             if (version == -1 || version != GenioServer.framework.ConfigXMLMigration.CurConfigurationVerion)
                 return false;
 
             return true;
         }
 		
-		public static CSGenio.persistence.PersistentSupport GetPersistentSupport(string year)
+		public static CSGenio.persistence.PersistentSupport GetPersistentSupport(IConfigurationManager configManager, string year)
         {
-            string pathConfig = Configuration.GetConfigPath();
-            CSGenio.ConfigurationXML conf = CSGenio.ConfigurationXML.readXML(pathConfig + Path.DirectorySeparatorChar + "Configuracoes.xml");
+            var conf = configManager.GetExistingConfig();
             var dataSystem = conf.DataSystems.FirstOrDefault(ds => ds.Name == year);
             return CSGenio.persistence.PersistentSupport.getPersistentSupport(dataSystem.Name);
         }
@@ -98,16 +87,24 @@ namespace Administration.AuxClass
             return da == null ? res : da.GetName();
         }
 
-        public static IEnumerable<SelectListItem> ToSelectList<TEnum>(object selected = null)
-        {
-            return Enum.GetValues(typeof(TEnum)).Cast<IFormattable>().Select(v =>
-            new SelectListItem()
-            {
-                Text = GetEnumDisplayName<TEnum>(v),
-                Value = v.ToString("d", null),
-                Selected = selected == null ? false : (v.ToString() == selected.ToString())
-            });
-        }
+        public class SelectlistElement
+		{
+			public SelectlistElement() { }
+			public string Text { get; set; }
+			public object Value { get; set; }
+			public bool Selected { get; set; }
+		}
+
+		public static IEnumerable<SelectlistElement> ToSelectList<TEnum>(object selected = null)
+		{
+			return Enum.GetValues(typeof(TEnum)).Cast<IFormattable>().Select(v =>
+			new SelectlistElement()
+			{
+				Text = GetEnumDisplayName<TEnum>(v),
+				Value = Convert.ToInt32(v.ToString("d", null)),
+				Selected = selected == null ? false : (v.ToString() == selected.ToString())
+			});
+		}
         #endregion
     }
 }

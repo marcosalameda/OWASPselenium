@@ -13,7 +13,7 @@
                         <text-input v-model="Model.queue" :label="Resources.NOME_DA_QUEUE56594" :isReadOnly="true" :size="'xlarge'"></text-input>
                     </row>
                     <row>
-                        <numeric-input v-model="Model.Qyear" :label="Resources.ANO33022" :isReadOnly="true" :size="'xlarge'"></numeric-input>
+                        <text-input v-model="Model.Qyear" :label="Resources.ANO33022" :isReadOnly="true" :size="'xlarge'"></text-input>
                     </row>
 
                     <hr />

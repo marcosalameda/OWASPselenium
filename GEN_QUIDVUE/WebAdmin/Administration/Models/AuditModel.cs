@@ -81,6 +81,7 @@ namespace Administration.Models
 			get
 			{
 				return new Dictionary<string, string>{
+
 					{"asset.assetnum", Resources.Resources.ASSET_NUMBER52372},
 					{"", ""}
 				};

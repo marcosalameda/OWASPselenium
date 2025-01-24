@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Administration.Controllers
 {
-    public class MaintenanceAPIController : ControllerBase
+    public class MaintenanceAPIController(CSGenio.config.IConfigurationManager configManager) : ControllerBase  
     {
         private enum Status
         {
@@ -122,12 +122,10 @@ namespace Administration.Controllers
                     MaintenanceStatus = Status.Reindexing;
                     cancelTknSrc = new CancellationTokenSource();
                     CancellationToken cToken = cancelTknSrc.Token;
-                    dbAdminController = new DbAdminController();
+                    dbAdminController = new DbAdminController(configManager);
 
                     string Year = CurrentYear;
-                    string pathConfig = CSGenio.framework.Configuration.GetConfigPath();
-                    ConfigurationXML conf = ConfigurationXML.readXML(pathConfig + Path.DirectorySeparatorChar + "Configuracoes.xml");
-                    CSGenio.framework.Configuration.ReadConfiguration(conf);
+                    var conf = configManager.GetExistingConfig();
 
                     var dataSystem = conf.DataSystems.FirstOrDefault(ds => ds.Name == Year); // Default == null 
 
@@ -142,7 +140,13 @@ namespace Administration.Controllers
                         }
                     }
 
-                    RdxItem = dbAdminController.startReindexation(model, RdxItem, Year, cToken);     
+                   //Check if something is running
+                    if (RdxItem != null)
+                    {
+                        if (RdxItem.Progress.State == RdxProgressStatus.RUNNING)
+                            return Json(new { Success = true });
+                    }
+                    RdxItem = dbAdminController.startReindexation(model, Year, cToken);    
 
                     if (timer != null)
                         timer.Dispose();

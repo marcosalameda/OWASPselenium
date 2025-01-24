@@ -11,7 +11,7 @@ using DbAdmin;
 
 namespace Administration.Controllers
 {
-    public class UsersController : ControllerBase
+    public class UsersController(CSGenio.config.IConfigurationManager configManager) : ControllerBase
     {
         [HttpGet]
         public IActionResult Index()
@@ -109,31 +109,17 @@ namespace Administration.Controllers
                         .Like(CSGenioApsw.FldNome, searchValue));
                 }
 
-                if (component == "userRoles") {
-                    selQuery = selQuery
-                        .OrderBy(CSGenioApsw.FldNome, sortOrder);
-                    selQuery.noLock = true;
-                } else {
-                    //Set pagesize and offset
-                    selQuery = selQuery
-                        .PageSize(pageSize)
-                        .Page(page)
-                        .OrderBy(CSGenioApsw.FldNome, sortOrder);
-                    selQuery.noLock = true;
-                }
+                //Set pagesize and offset
+                selQuery = selQuery
+                    .PageSize(pageSize)
+                    .Page(page)
+                    .OrderBy(CSGenioApsw.FldNome, sortOrder);
+                selQuery.noLock = true;
 
                 List<object> dataResult = new List<object>();
 
                 // Init Persistent Support
-                string pathConfig = CSGenio.framework.Configuration.GetConfigPath();
-                ConfigurationXML conf = ConfigurationXML.readXML(pathConfig + Path.DirectorySeparatorChar + "Configuracoes.xml");
-
-                var dataSystem = conf.DataSystems.FirstOrDefault(ds => ds.Name == CurrentYear); // Default == null
-
-                if (dataSystem == null)
-                    throw new FrameworkException(Resources.Resources.FICHEIRO_DE_CONFIGUR13972, "UserController -> GetUserList", Resources.Resources.FICHEIRO_DE_CONFIGUR13972);
-
-                var sp = PersistentSupport.getPersistentSupport(dataSystem.Name);
+                var sp = AuxFunctions.GetPersistentSupport(configManager, CurrentYear);
 
                 sp.openConnection();
                 DataMatrix dataSet = sp.Execute(selQuery);
@@ -249,7 +235,7 @@ namespace Administration.Controllers
         public IActionResult ImportUsersFromAD(string dominio)
         {
             User user = SysConfiguration.CreateWebAdminUser();
-            PersistentSupport sp = AuxFunctions.GetPersistentSupport(CurrentYear);
+            PersistentSupport sp = AuxFunctions.GetPersistentSupport(configManager, CurrentYear);
             StatusMessage st =  new GlobalFunctions(user, user.CurrentModule, sp).ImportUsersFromAD(dominio);
             return Json(new { Status = st.Status.ToString(), });
         }
@@ -263,21 +249,28 @@ namespace Administration.Controllers
             model.Modules.Add(new UsersModule("REG", Resources.Resources.REGISTRATION03584));
             model.Modules.Add(new UsersModule("STY", Resources.Resources.STYLE47121));
             model.Modules.Add(new UsersModule("TBS", Resources.Resources.BASE_TABLES04823));
+            model.Modules.Add(new UsersModule("TRN", Resources.Resources.TRAINING_EXERCISES07801));
             model.Modules.Add(new UsersModule("WMS", Resources.Resources.WAREHOUSE_MANAGEMENT10443));
         }
 
         [HttpGet]
-        public HttpResponseMessage ExportToExcel()
+        public IActionResult ExportToExcel()
         {
             User user = SysConfiguration.CreateWebAdminUser();
-            System.IO.File.Delete(AppDomain.CurrentDomain.BaseDirectory + @"\temp\" + "user-list.xlsx"); //Delete any leftovers
+            var filePath = AppDomain.CurrentDomain.BaseDirectory + @"\temp\" + "user-list.xlsx";
+
+            //verify if exist temp file
+            if (System.IO.File.Exists(filePath))
+            {
+                System.IO.File.Delete(filePath); //Delete any leftovers
+            }
 
             /* Build Select Queries */
 
             //Page 1
             SelectQuery p1Query = new SelectQuery()
                     .Select(CSGenioApsw.FldNome, Resources.Resources.NOME_DE_UTILIZADOR58858)
-                    .Select(SqlFunctions.Iif(CriteriaSet.Or().Equal(CSGenioApsw.FldStatus, "1").Equal(CSGenioApsw.FldZzstate, "1"),
+                    .Select(SqlFunctions.Iif(CriteriaSet.Or().NotEqual(CSGenioApsw.FldStatus, "0").NotEqual(CSGenioApsw.FldZzstate, "0"),
                     Resources.Resources.INACTIVE23138, Resources.Resources.ACTIVE03270), Resources.Resources.ESTADO07788)
                     .From(Area.AreaPSW.Table, Area.AreaPSW.Alias)
                     .OrderBy(CSGenioApsw.FldNome, SortOrder.Ascending);
@@ -302,8 +295,7 @@ namespace Administration.Controllers
             /* ------------------- */
 
             /* Fetch configs and initiate sp */
-            string pathConfig = CSGenio.framework.Configuration.GetConfigPath();
-            ConfigurationXML conf = ConfigurationXML.readXML(pathConfig + Path.DirectorySeparatorChar + "Configuracoes.xml");
+            var conf = configManager.GetExistingConfig();
 
             var dataSystem = conf.DataSystems.FirstOrDefault(ds => ds.Name == CurrentYear); // Default == null
             if (dataSystem == null)
@@ -343,17 +335,12 @@ namespace Administration.Controllers
             QueryToExcel toExcel = new QueryToExcel(sp, user);
             toExcel.AddWorksheet(new QueryToExcel.WorksheetQueries(Resources.Resources.NOME_DE_UTILIZADOR58858, new QueryInfo(p1Query)));
             toExcel.AddWorksheet(new QueryToExcel.WorksheetQueries(Resources.Resources.USER_ROLES25359, new QueryInfo(finalData.DbDataSet)));
-            toExcel.Convert(AppDomain.CurrentDomain.BaseDirectory + @"\temp\" + "user-list.xlsx");
+            toExcel.Convert(filePath);
             /* ------------- */
 
-            //Build and return response
-            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-            response.Content = new StreamContent(new FileStream(AppDomain.CurrentDomain.BaseDirectory + @"\temp\" + "user-list.xlsx", FileMode.Open));
-            response.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
-            response.Content.Headers.ContentDisposition.FileName = "user-list.xlsx";
-            response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
-
-            return response;
+            //Build and return file
+            var fileBytes = System.IO.File.ReadAllBytes(filePath);
+            return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "user-list.xlsx");
         }
     }
 }

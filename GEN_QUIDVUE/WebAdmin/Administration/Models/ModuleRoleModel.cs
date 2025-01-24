@@ -43,6 +43,12 @@ namespace Administration.Models
                 Role = "ADMINISTRATOR",
                 Designation = "ADMINISTRATOR54799",
                 Description = "",              
+                Module = "TRN"
+            },
+            new ModuleRoleModel() {
+                Role = "ADMINISTRATOR",
+                Designation = "ADMINISTRATOR54799",
+                Description = "",              
                 Module = "TBS"
             },
             new ModuleRoleModel() {
@@ -62,6 +68,12 @@ namespace Administration.Models
                 Designation = "ADMINISTRATOR54799",
                 Description = "",              
                 Module = "IMO"
+            },
+            new ModuleRoleModel() {
+                Role = "EDIT",
+                Designation = "EDIT07023",
+                Description = "",              
+                Module = "TRN"
             },
             new ModuleRoleModel() {
                 Role = "EDIT",
@@ -85,6 +97,12 @@ namespace Administration.Models
                 Role = "EDIT_PESSO",
                 Designation = "EDITOR_RECURSOS23553",
                 Description = "",              
+                Module = "TRN"
+            },
+            new ModuleRoleModel() {
+                Role = "EDIT_PESSO",
+                Designation = "EDITOR_RECURSOS23553",
+                Description = "",              
                 Module = "PTN"
             },
             new ModuleRoleModel() {
@@ -98,6 +116,12 @@ namespace Administration.Models
                 Designation = "MANAGER18024",
                 Description = "",              
                 Module = "TBS"
+            },
+            new ModuleRoleModel() {
+                Role = "MANAGER",
+                Designation = "MANAGER18024",
+                Description = "",              
+                Module = "TRN"
             },
             new ModuleRoleModel() {
                 Role = "MANAGER",
@@ -134,6 +158,12 @@ namespace Administration.Models
                 Designation = "SYSADMIN53289",
                 Description = "",              
                 Module = "IMO"
+            },
+            new ModuleRoleModel() {
+                Role = "SYSADMIN",
+                Designation = "SYSADMIN53289",
+                Description = "",              
+                Module = "TRN"
             },
             new ModuleRoleModel() {
                 Role = "SYSADMIN",
@@ -160,10 +190,22 @@ namespace Administration.Models
                 Module = "PTN"
             },
             new ModuleRoleModel() {
+                Role = "VIEW_PESSO",
+                Designation = "EDITOR_RECURSOS23553",
+                Description = "",              
+                Module = "TRN"
+            },
+            new ModuleRoleModel() {
                 Role = "1",
                 Designation = "QUERY30986",
                 Description = "",              
                 Module = "REG"
+            },
+            new ModuleRoleModel() {
+                Role = "1",
+                Designation = "QUERY30986",
+                Description = "",              
+                Module = "TRN"
             },
             new ModuleRoleModel() {
                 Role = "1",
@@ -202,6 +244,18 @@ namespace Administration.Models
                 Module = "GQT"
             },
             new ModuleRoleModel() {
+                Role = "3",
+                Designation = "OFFICER20358",
+                Description = "",              
+                Module = "TRN"
+            },
+            new ModuleRoleModel() {
+                Role = "4",
+                Designation = "AGENT00994",
+                Description = "",              
+                Module = "TRN"
+            },
+            new ModuleRoleModel() {
                 Role = "20",
                 Designation = "MANAGER60821",
                 Description = "",              
@@ -230,6 +284,12 @@ namespace Administration.Models
                 Designation = "ADMINISTRATOR27313",
                 Description = "",              
                 Module = "REG"
+            },
+            new ModuleRoleModel() {
+                Role = "99",
+                Designation = "ADMINISTRATOR27313",
+                Description = "",              
+                Module = "TRN"
             },
             new ModuleRoleModel() {
                 Role = "99",

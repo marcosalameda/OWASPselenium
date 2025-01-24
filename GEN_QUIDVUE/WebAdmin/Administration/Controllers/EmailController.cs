@@ -2,29 +2,18 @@ using Administration.Models;
 using CSGenio.business;
 using CSGenio.framework;
 using CSGenio.persistence;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using CSGenio;
 using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
 using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
-using Administration.AuxClass;
 using DbAdmin;
+using IConfigurationManager = CSGenio.config.IConfigurationManager;
 
 namespace Administration.Controllers
 {
-    public class EmailController : ControllerBase
+    public class EmailController(IConfigurationManager configManager) : ControllerBase
     {
         private PersistentSupport _sp;
         private PersistentSupport sp
@@ -82,11 +71,10 @@ namespace Administration.Controllers
         [HttpPost]
         public IActionResult SaveEmail(string userRegistration, string passwordRecovery)
         {
-            string pathConfig = Path.Combine(CSGenio.framework.Configuration.GetConfigPath(), "Configuracoes.xml");
-            var conf = ConfigurationXML.readXML(pathConfig);
+            var conf = configManager.GetExistingConfig();
             conf.UserRegistrationEmail = userRegistration;
             conf.PasswordRecoveryEmail = passwordRecovery;
-            conf.writeXML(pathConfig);
+            configManager.StoreConfig(conf);
 			CSGenio.framework.Configuration.ReadConfiguration(conf);
             var ResultMsg = Resources.Resources.FICHEIRO_DE_CONFIGUR18806;
             return Json(new { ResultMsg });
@@ -184,8 +172,7 @@ namespace Administration.Controllers
             {
                 model = CSGenio.framework.Configuration.NewEmailServer();
             }
-            string pathConfig = Path.Combine(CSGenio.framework.Configuration.GetConfigPath(), "Configuracoes.xml");
-            var conf = ConfigurationXML.readXML(pathConfig);
+            var conf = configManager.GetExistingConfig();
             try
             {
                 //map viewmodel to model
@@ -208,7 +195,7 @@ namespace Administration.Controllers
                 }
 
                 conf.EmailProperties = CSGenio.framework.Configuration.EmailProperties;
-                conf.writeXML(pathConfig);
+                configManager.StoreConfig(conf);
                 return Json(new { Success = true });
             }
             catch (Exception e)

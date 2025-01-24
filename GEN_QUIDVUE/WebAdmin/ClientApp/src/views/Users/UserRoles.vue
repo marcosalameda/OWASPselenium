@@ -1,111 +1,122 @@
 ﻿<template>
     <div id="container">
-        <row>
-          <div class="row">
+        <div class="row">
             <div class="col-6">
-              <card>
-                  <template #header>
-                      {{Resources.DISPONIVEIS47523}}
-                  </template>
-                  <template #body>
-                      <div class="list-group">
-                        <h3>{{Resources.UTILIZADORES39761}}</h3>
+            <q-group-box-container :label="Resources.DISPONIVEIS47523">
+                <div class="list-group">
+                    <h3>{{Resources.UTILIZADORES39761}}</h3>
                         <qtable :rows="Users.rows"
                             :columns="Users.columns"
                             :config="Users.config"
                             @on-change-query="onChangeQuery"
-                            :totalRows="Users.total_rows"
-                                      >
-                          <template #actions="props">
-                            <q-button
-                                borderless
-                                :title="Resources.EDITAR11616"
-                                @click="captureUser(props.row)">
-                                <q-icon icon="arrow-right" />
-                            </q-button>
-                          </template>
-                        </qtable>
-                      </div>
-                    <br>
-                      <hr>
-                        <br>
-                      <div id="roles-list" class="list-group">
-                          <h3>{{Resources.FUNCOES16287}}</h3>
-                        <select id="module-list" class="i-input-group__field input-large" v-model="selectedModule">
-                          <option value="" disabled="" hidden="">{{Resources.SELECCIONAR_MODULO15000}}</option>
-                          <option v-for="module in this.modules" v-bind:value="module.Module" :key="module.Module">{{ module.ModuleName }}</option>
-                        </select>
-                          <qtable :columns="Roles.columns"
-                              :rows="modulesList"
-                              :total_rows="modulesList.length"
-                              :config="Roles.config"
-                              >
-                              <template #actions="props">
-                                  <q-button
+                            :totalRows="Users.total_rows">
+                            <template #actions="props">
+                                <q-button
                                     borderless
                                     :title="Resources.EDITAR11616"
-                                    @click="captureRole(props.row)">
+                                    @click="captureUser(props.row)">
                                     <q-icon icon="arrow-right" />
-                                  </q-button>
-                              </template>
-                              <template #Designation="props">
-                                  <span class="role-tag">{{$t(props.row.Designation)}}</span>
-                              </template>
-                          </qtable>
-                      </div>
-                  </template>
-              </card>
+                                </q-button>
+                            </template>
+                        </qtable>
+                        <br>
+                        <hr>
+                        <br>
+                        <div id="roles-list" class="list-group">
+                            <h3>{{Resources.FUNCOES16287}}</h3>
+                            <select id="module-list" class="i-input-group__field input-large" v-model="selectedModule">
+                            <option value="" disabled="" hidden="">{{Resources.SELECCIONAR_MODULO15000}}</option>
+                            <option v-for="module in this.modules" v-bind:value="module.Module" :key="module.Module">{{ module.ModuleName }}</option>
+                            </select>
+                            <qtable :columns="Roles.columns"
+                                :rows="modulesList"
+                                :total_rows="modulesList.length"
+                                :config="Roles.config"
+                                >
+                                <template #actions="props">
+                                    <q-button
+                                        borderless
+                                        :title="Resources.EDITAR11616"
+                                        @click="captureRole(props.row)">
+                                        <q-icon icon="arrow-right" />
+                                    </q-button>
+                                </template>
+                                <template #Designation="props">
+                                    <span class="role-tag">{{$t(props.row.Designation)}}</span>
+                                </template>
+                            </qtable>
+                        </div>
+                    </div>
+                </q-group-box-container>
             </div>
             <div class="col-6">
-              <card>
-                <template #header="">
-                  {{Resources.SELECIONADOS52011}}
-                </template>
-                <template #body="">
-                  <div class="list-group">
+                <q-group-box-container :label="Resources.SELECIONADOS52011">
+                <div class="list-group">
                     <h3>{{Resources.UTILIZADORES39761}}</h3>
-                    <qtable :columns="UsersSelected.columns"
-                        :rows="selectedUsers"
-                        :totalRows="selectedUsers.length"
-                        :config="Roles.config">
-                      <template #actions="props">
-                        <q-button
-                            borderless
-                            :title="Resources.ELIMINAR21155"
-                            @click="removeUser(props.row)">
-                            <q-icon icon="arrow-left" />
-                        </q-button>
-                      </template>
-                    </qtable>
-                  </div>
-                  <br>
-                    <hr>
-                      <br>
-                  <div class="list-group"> <!-- v-if="selectedRoles.length > 0" -->
-                    <h3>{{Resources.FUNCOES16287}}</h3>
-                    <qtable :columns="RolesSelected.columns"
-                        :rows="selectedRoles"
-                        :total_rows="selectedRoles.length"
-                        :config="Roles.config"
+                        <qtable :columns="UsersSelected.columns"
+                            :rows="selectedUsers"
+                            :totalRows="selectedUsers.length"
+                            :config="Roles.config">
+                            <template #actions="props">
+                                <q-button
+                                    borderless
+                                    :title="Resources.ELIMINAR21155"
+                                    @click="removeUser(props.row)">
+                                    <q-icon icon="arrow-left" />
+                                </q-button>
+                            </template>
+                        </qtable>
+                        <br>
+                        <hr>
+                        <br>
+                        <div id="roles-list" class="list-group">
+                            <h3>{{Resources.FUNCOES16287}}</h3>
+                            <select id="module-list" class="i-input-group__field input-large" v-model="selectedModule">
+                            <option value="" disabled="" hidden="">{{Resources.SELECCIONAR_MODULO15000}}</option>
+                            <option v-for="module in this.modules" v-bind:value="module.Module" :key="module.Module">{{ module.ModuleName }}</option>
+                            </select>
+                            <qtable :columns="Roles.columns"
+                                :rows="modulesList"
+                                :total_rows="modulesList.length"
+                                :config="Roles.config"
                                 >
-                      <template #actions="props">
-                        <q-button
-                            borderless
-                            :title="Resources.ELIMINAR21155"
-                            @click="removeRole(props.row)">
-                            <q-icon icon="arrow-left" />
-                        </q-button>
-                      </template>
-                      <template #Designation="props">
-                        <span class="role-tag">{{$t(props.row.Designation)}}</span>
-                      </template>
-                    </qtable>
-                  </div>
-                </template>
-              </card>
+                                <template #actions="props">
+                                    <q-button
+                                        borderless
+                                        :title="Resources.EDITAR11616"
+                                        @click="captureRole(props.row)">
+                                        <q-icon icon="arrow-right" />
+                                    </q-button>
+                                </template>
+                                <template #Designation="props">
+                                    <span class="role-tag">{{$t(props.row.Designation)}}</span>
+                                </template>
+                            </qtable>
+                        </div>
+                    </div>
+                    <div class="list-group"> <!-- v-if="selectedRoles.length > 0" -->
+                        <h3>{{Resources.FUNCOES16287}}</h3>
+                        <qtable :columns="RolesSelected.columns"
+                            :rows="selectedRoles"
+                            :total_rows="selectedRoles.length"
+                            :config="Roles.config">
+                        <template #actions="props">
+                            <q-button
+                                borderless
+                                :title="Resources.ELIMINAR21155"
+                                @click="removeRole(props.row)">
+                                <q-icon icon="arrow-left" />
+                            </q-button>
+                        </template>
+                        <template #Designation="props">
+                            <span class="role-tag">{{$t(props.row.Designation)}}</span>
+                        </template>
+                        </qtable>
+                    </div>
+                </q-group-box-container>
+            </div>
             </div>
           </div>
-      </row>
         <div class="centerdiv">
             <q-button
                 v-if="selectedRoles.length > 0 || selectedUsers.length > 0"
@@ -118,7 +129,6 @@
                 :label="Resources.REMOVER14367"
                 @click="bindConfigRemove" />
         </div>
-    </div>
 </template>
 
 <script>

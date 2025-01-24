@@ -1,4 +1,3 @@
-CreateDatabase.sql;true
 FuncoesAuxCheckTable.sql;false
 DropFK.sql;false
 tblHardcode.sql;false
@@ -11,7 +10,6 @@ UpdateCfg.sql;false
 ActStoredProcINI.sql;false
 ActStoredProcMAN.sql;false
 ActStoredProcFIM.sql;false
-EliminacaoBDTemp.sql;false
 AddIndex.sql;false
 DeleteLogTriggers.sql;false
 ActualizacaoEstados.sql;false
@@ -19,3 +17,6 @@ Replicas.sql;false
 LimparVlCalculados.sql;false
 GerarFormulas.sql;false
 ReconstrucaoCodInt.sql;false
+CreateLogTriggers.sql;false
+CreateLogViews.sql;false
+DatabaseSeed.sql;false

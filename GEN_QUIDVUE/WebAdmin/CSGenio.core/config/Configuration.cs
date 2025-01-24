@@ -5,6 +5,8 @@ using System.Xml;
 using System.Linq;
 using System.Text;
 using CSGenio.core.persistence;
+using CSGenio.config;
+using CSGenio.core.messaging;
 
 
 namespace CSGenio.framework
@@ -36,30 +38,6 @@ namespace CSGenio.framework
         private static List<DataSystemXml> auxSystems;
 
         /// <summary>
-        /// Dictionary used to pre-load/initialize extra properties
-        /// </summary>
-        public static readonly Dictionary<string, string> initProperties = new Dictionary<string, string>
-        {
-// Specify key-value pairs with the following notation: { "key", "value" },
-// Properties with empty/null value, will NOT be added,
-// but are displayed in the form dropdown for selection.
-// Notice: these properties cannot be deleted on WebAdmin,
-// because they will be recreated from the MANWIN.
-// USE /[MANUAL NOV INITPROPERTIES]/
-// USE /[MANUAL GQT INITPROPERTIES]/
-        };
-
-        /// <summary>
-        /// Check if extra property is initialized from MANWIN.
-        /// </summary>
-        /// <param name="key">Property key to check</param>
-        /// <returns></returns>
-        public static Boolean isInitPropInitialized(string key)
-        {
-            return initProperties.ContainsKey(key) && !String.IsNullOrEmpty(initProperties[key]);
-        }
-
-        /// <summary>
         /// dicionario com as propriedades extra mapeadas por nome
         /// </summary>
         private static SerializableDictionary<string, string> maisPropriedades;
@@ -77,7 +55,7 @@ namespace CSGenio.framework
         /// <summary>
         /// Application version
         /// </summary>
-        public static double Version { get; } = 3510;
+        public static int Version { get; } = 3907;
 
         /// <summary>
         /// System id
@@ -107,27 +85,32 @@ namespace CSGenio.framework
         /// <summary>
         /// Version of the database
         /// </summary>
-        public const double VersionDbGen = 3510;
+        public const int VersionDbGen = 3907;
 
         /// <summary>
         /// Version of the database indexes
         /// </summary>
-        public const int VersionIdxDbGen = 1159;
+        public const int VersionIdxDbGen = 1574;
 
         /// <summary>
         /// Version of the latest upgrade index version
         /// </summary>
-        public const int VersionUpgrIndxGen = 0;
+        public const int VersionUpgrIndxGen = 2;
+		
+		/// <summary>
+		/// Version of the latest user settings format
+		/// </summary>
+		public const int UserSettingsVersion = 2;
 
         /// <summary>
         /// Genio generator version
         /// </summary>
-        public const string GenioVersion = "341.06";
+        public const string GenioVersion = "361.17";
 
         /// <summary>
         /// Solution build version
         /// </summary>
-        public const int BuildVersionGen = 2678;
+        public const int BuildVersionGen = 2888;
         /// <summary>
         /// Solution release version
         /// </summary>
@@ -149,6 +132,11 @@ namespace CSGenio.framework
         /// </summary>
         public static bool Files2Disk { get; private set; } =  false;
         //----------------------------------------------
+        // ChatBot
+        //----------------------------------------------
+        public static string APIEndpoint { get; private set; }
+		
+        //----------------------------------------------
         // System services
         //----------------------------------------------
 
@@ -161,11 +149,6 @@ namespace CSGenio.framework
         /// Security configuration
         /// </summary>
         public static SecurityCfgEl Security { get; private set; } = null;
-
-        /// <summary>
-        /// Administration configuration
-        /// </summary>
-        public static AdminCfgEl Admin { get; private set; } = null;
 
         /// <summary>
         /// Audit configuration
@@ -212,6 +195,14 @@ namespace CSGenio.framework
         /// </summary>
         public static string PathReports { get; private set; }
 		
+        /// <summary>
+        /// Elasticsearch service configuration
+        /// </summary>
+        public static ElasticsearchXml ElasticsearchXml
+        {
+            get { return elasticsearch; }
+        }
+        private static ElasticsearchXml elasticsearch;		
 
         //----------------------------------------------
         // Email configuration
@@ -279,6 +270,16 @@ namespace CSGenio.framework
         /// </summary>
         public static bool EventTracking { get; private set; } = false;
 
+        /// <summary>
+        /// Publisher/Subscriber Messaging
+        /// </summary>
+        public static MessagingXml Messaging { get; private set; } = new MessagingXml();
+
+        /// <summary>
+        /// Scheduler configuration
+        /// </summary>
+        public static SchedulerXml Scheduler { get; private set; } = new SchedulerXml();
+
 
         //-----------------------------------------------
         /// <summary>
@@ -290,7 +291,7 @@ namespace CSGenio.framework
         {
             get
             {
-                return (DatabaseType)Enum.Parse(typeof(DatabaseType), DataSystems[0].Type, true);
+                return DataSystems[0].GetDatabaseType();
             }
         }
         //-----------------------------------------------
@@ -359,6 +360,14 @@ namespace CSGenio.framework
         }
 
         /// <summary>
+        /// Indicates if the configuration was actually loaded from the file or not
+        /// </summary>
+        public static bool Loaded
+        {
+            get; private set;
+        }
+
+        /// <summary>
         /// Static constructor
         /// </summary>
         static Configuration()
@@ -371,46 +380,35 @@ namespace CSGenio.framework
         /// </summary>
         public static void Reload()
         {
-            string path = Path.Combine(GetConfigPath(), "Configuracoes.xml");
-#if DEBUG
-            //Em debug, se não houver ficheiro de configuracao nem de redirecionamento utilizamos o do WebAdmin
-            if (!File.Exists(path))
-            {
-                var directory = Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory);
-                //Procurar a pasta de WebAdmin
-                for (int i = 0; i <= 5 && directory != directory.Root; i++)
-                {
-                    string webAdminDir = Path.Combine(directory.FullName, "WebAdmin");
-                    if (Directory.Exists(webAdminDir))
-                    {
-                        path = Path.Combine(webAdminDir, "Administration", "Configuracoes.xml");
-                        break;
-                    }
-                    directory = directory.Parent;
-                }
-            }
-#endif
-            if (File.Exists(path))
-            {
-                try
-                {
-                    ConfigurationXML readXML = ConfigurationXML.readXML(path);
-                    ReadConfiguration(readXML);
+           var configManager = new FileConfigurationManager(GetConfigPath());
+           string path = configManager.GetFileLocation();
+           if (configManager.Exists())
+           {
+               try
+               {
+                   ConfigurationXML readXML = configManager.GetExistingConfig();
+                   ReadConfiguration(readXML);
 
-                    //Add a file watcher that allows the system to ensure that the application pool is restarted when the configurations are changed
-                    //The change event is configured in the Global.asax file
-                    string directory = Path.GetDirectoryName(path);
-                    ConfigWatcher = new FileSystemWatcher(directory, "Configuracoes.xml");
-                    ConfigWatcher.EnableRaisingEvents = true;
-                }
-                catch (Exception ex)
+                   //Add a file watcher that allows the system to ensure that the application pool is restarted when the configurations are changed
+                   //The change event is configured in the Global.asax file
+
+                   string directory = Path.GetDirectoryName(path);
+                   ConfigWatcher = new FileSystemWatcher(directory, "Configuracoes.xml");
+                   ConfigWatcher.EnableRaisingEvents = true;
+                   Loaded = true;
+               }
+               catch (Exception ex)
                 {
                     throw new FrameworkException("Erro ao ler o ficheiro de configurações:" + ex.Message, "Configuration.Configuration", "Error reading configuration file: " + ex.Message, ex);
                 }
             }
             else
             {
-                throw new FrameworkException("Could not find the configuration path", "Configuration.Configuration", "Could not find the configuration path: " + path);
+                //JGF 2024.04.24 Reviewed this use case to not throw exception,
+                //otherwise WebAdmin will not work while the configuration is not created
+                //and there is no safe way to recover from exceptions in static constructors.
+                //In this case a Configuration object with the default values is created. 
+                Loaded = false;
             }
         }
 
@@ -423,6 +421,8 @@ namespace CSGenio.framework
             var path = readXML.GetPath(Configuration.Application.Id);
             PP_Email = readXML.email_pp;
             PP_Name = readXML.nome_pp;
+            if (readXML.ChatBotConfig != null) 
+                APIEndpoint = readXML.ChatBotConfig.apiURL;
             Log = path.pathApp;
             GoogleMapsKey = readXML.googlemapsKey;
             QAEnvironment = Convert.ToInt16(readXML.qaEnvironment);
@@ -432,14 +432,8 @@ namespace CSGenio.framework
             PathDocuments = path.pathDocuments;
             Domain = readXML.dominio;
             SSRSServer = readXML.ssrsServer;
-            // If the SSRS credentials are defined, converts them back from Base64 to readable text.
-            string encryptedPsw = SSRSServer.Password;
-            string encryptedUser = SSRSServer.Username;
-            if (encryptedPsw != null && encryptedPsw.Length > 0)
-                SSRSServer.Password = Encoding.Unicode.GetString(Convert.FromBase64String(encryptedPsw));
-            if (encryptedUser != null && encryptedUser.Length > 0)
-                SSRSServer.Username = Encoding.Unicode.GetString(Convert.FromBase64String(encryptedUser));
 			
+            elasticsearch = readXML.Elasticsearch;
 
             maisPropriedades = readXML.maisPropriedades;
 
@@ -457,8 +451,7 @@ namespace CSGenio.framework
 			//--------------------------------------------------
 
             MessageQueueing = readXML.MessageQueueing;
-            Admin = readXML.Admin;
-            NumberFormat = readXML.NumberFormat;
+            NumberFormat = readXML.NumberFormat ?? new NumberFormatXml();
             DateFormat = readXML.DateFormat ?? new DateFormatXml();
             //------------------------------------------------
 
@@ -482,6 +475,9 @@ namespace CSGenio.framework
             PasswordRecoveryEmail = readXML.PasswordRecoveryEmail;
 
             EventTracking = readXML.EventTracking;
+
+            Messaging = readXML.Messaging ?? new MessagingXml();
+            Scheduler = readXML.Scheduler ?? new SchedulerXml();
         }
 
 
@@ -534,7 +530,7 @@ namespace CSGenio.framework
         /// </summary>
         public static string DefaultYear
         {
-            get { return DataSystems.Count!=0?DataSystems[0].Name:"0" ; }
+            get { return DataSystems?.Count > 0 ? DataSystems[0].Name : "0"; }
         }
 
         /// <summary>
@@ -581,15 +577,15 @@ namespace CSGenio.framework
         /// <param name="year">Datasystem id to check</param>
         /// <returns>The current database version number</returns>
         /// <remarks>This method will be marked as obsolete. Use the DatabaseVersionReader instead</remarks>
-        public static double GetDbVersion(string year)
+        public static int GetDbVersion(string year)
         {
-            double versionDb;
+            int versionDb;
             try
             {
                 var sp = CSGenio.persistence.PersistentSupport.getPersistentSupport(year);
                 var dvr = new DatabaseVersionReader(sp);
                 sp.openConnection();
-                versionDb = dvr.GetDbVersion();
+                versionDb = (int)dvr.GetDbVersion();
                 sp.closeConnection();
             }
             catch

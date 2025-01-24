@@ -4,12 +4,6 @@ using ExecuteQueryCore;
 using System.Globalization;
 using CSGenio.persistence;
 using CSGenio.business;
-using System.IO;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Linq;
-using System;
 using CSGenio.core.persistence;
 
 namespace DbAdmin
@@ -54,16 +48,43 @@ namespace DbAdmin
         /// <param name="rdxEvent"></param>
         /// <param name="cToken"></param>
         /// <param name="year"></param>
+        /// <param name="filestreamLocation">Folder for Filestream used during database creation</param>
         /// <returns></returns>
-        public RdxParamUpgradeSchema StartReindexation(string dbUser, string dbPassword, string singleScript, List<string> multiScript, string category, bool fullReindex, ChangedEventHandler rdxEvent = null, CancellationToken cToken = new CancellationToken(), string year = "", int timeout = 300)
+        public RdxParamUpgradeSchema StartReindexation(string dbUser, string dbPassword, string singleScript, List<string> multiScript, string category, bool fullReindex, ChangedEventHandler rdxEvent = null, CancellationToken cToken = new CancellationToken(), string year = "", int timeout = 300, string filestreamLocation = "")
+        {
+            RdxParamUpgradeSchema RdxItem = new RdxParamUpgradeSchema();
+
+            if (string.IsNullOrEmpty(year))
+                year = Configuration.DefaultYear;
+
+            //Load data into Reindex Item
+            RdxItem.Year = year;
+            RdxItem.Username = dbUser;
+            RdxItem.Password = dbPassword;
+            RdxItem.Zero = fullReindex;
+            RdxItem.Origin = "Database Maintenance";
+            RdxItem.DirFilestream = filestreamLocation;
+
+            StartReindexation(RdxItem, singleScript, multiScript, category, rdxEvent, cToken, timeout);
+            return RdxItem;
+        }
+
+
+        /// <summary>
+        /// Starts the database maintenance from an object with parameters. The current state will be stored in the received RdxItem.
+        /// </summary>
+        /// <param name="RdxItem">An object with reindexation parameters. Order2Exec should not be filledx</param>
+        /// <param name="singleScript">Run only the specified script. Invalidates multiscript parameter if this is filled.</param>
+        /// <param name="multiScript">Run multiple scripts</param>
+        /// <param name="category"></param>
+        /// <param name="rdxEvent"></param>
+        /// <param name="cToken"></param>
+        /// <param name="timeout"></param>
+        public void StartReindexation(RdxParamUpgradeSchema RdxItem, string singleScript, List<string> multiScript, string category, ChangedEventHandler rdxEvent = null, CancellationToken cToken = new CancellationToken(), int timeout = 300)
         {
             //Make sure the log file is created, since reindexation is expecting it
             CreateLogFile();
-
-            if(string.IsNullOrEmpty(year))
-                year = Configuration.DefaultYear;
-
-            RdxParamUpgradeSchema RdxItem = new RdxParamUpgradeSchema();
+            string dataSystemId = RdxItem.Year;
             
             ReindexOrder reindexMenu = GetReindexScripts();
 
@@ -71,7 +92,7 @@ namespace DbAdmin
             reindexMenu.timeout = timeout;
 
             if (Configuration.DataSystems.Count == 0)
-                return null;
+                return;
 
             if (!string.IsNullOrEmpty(singleScript)) //Run single script
             {
@@ -106,26 +127,20 @@ namespace DbAdmin
             reindexMenu.CalculateOrder();
 
             //Create User
-            User user = SysConfiguration.CreateWebAdminUser(year);
+            User user = SysConfiguration.CreateWebAdminUser(dataSystemId);
 
             //Load scripts order of execution
             GlobalFunctions gblFunctions = new GlobalFunctions(user, user.CurrentModule);
-            PersistentSupport sp = PersistentSupport.getPersistentSupport(year);
+            PersistentSupport sp = PersistentSupport.getPersistentSupport(dataSystemId);
             DatabaseVersionReader versionReader = new DatabaseVersionReader(sp);
-            List<RdxScript> order2exec = gblFunctions.HidrateScripts(reindexMenu.GetOrderToExecute(), versionReader, fullReindex);
-
-            //Load data into Reindex Item
-            RdxItem.Year = year;
-            RdxItem.Username = dbUser;
-            RdxItem.Password = dbPassword;
-            RdxItem.OrderExec = order2exec;
-            RdxItem.Path = GetReindexPath();
-            RdxItem.Zero = fullReindex;
-            RdxItem.Origin = "Database Maintenance";
+            List<RdxScript> order2exec = gblFunctions.HidrateScripts(reindexMenu.GetOrderToExecute(), versionReader, RdxItem.Zero);
 
             //If there are no scripts to run, simply finish the reindexation
             if (order2exec == null || order2exec.Count == 0)
-                return null;
+                return;
+
+            RdxItem.OrderExec = order2exec;
+            RdxItem.Path = GetReindexPath();
 
             /* Set Reindex default event that updates RdxItem
              * This event should not be triggered if a custom one is passed, as it can
@@ -167,11 +182,10 @@ namespace DbAdmin
                 {
                     RdxItem.Progress.Message = Translations.Get(e.Message, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper());
                 }
-            });
-
-            return RdxItem;
+            });  
         }
-    
+
+
         /// <summary>
         /// Get the reindex path from a base path to DBAdmin
         /// </summary>
@@ -219,36 +233,33 @@ namespace DbAdmin
             }
         }
 
-        public string BackupDatabase(string username, string password, string saveLocation = "", string year = "")
+        public static string BackupDatabase(string year, string username, string password, string saveLocation = "")
         {
-            //Use default year if none is given
-            if(string.IsNullOrEmpty(year)) 
+            // Use default year if none is given
+            if (string.IsNullOrEmpty(year)) 
                 year = Configuration.DefaultYear;
             
-            //TODO:acrescentar controlo de text to associar um file de text a cada file de backup
-            ConfigurationXML conf = ConfigurationXML.readXML(Configuration.GetConfigPath() + Path.DirectorySeparatorChar + "Configuracoes.xml");
-
-            if (conf.DataSystems.Count == 0)
+            if (Configuration.DataSystems.Count == 0)
                 throw new BusinessException("There are no DataSystems configured!", "DBMaintenance.BackupDatabase", "There are no DataSystems configured!");
 
-            var dataSystem = conf.DataSystems.FirstOrDefault(ds => ds.Name == year);
-
-            PersistentSupport.Backup(year, username, password, saveLocation);
-            string filename = dataSystem.Schemas[0].Schema + "_" +
-                                DateTime.Today.Year.ToString() + "_" +
-                                DateTime.Today.Month.ToString("D2") + "_" +
-                                DateTime.Today.Day.ToString("D2") + "_" +
-                                DateTime.Now.Hour.ToString("D2") + DateTime.Now.Minute.ToString("D2") + ".bak";
-
-            return Path.Combine(saveLocation, filename);
+            return PersistentSupport.Backup(year, username, password, saveLocation);
         }
 
-        public void RestoreDatabase(string username, string password, string filename, string location, string year = "")
+        /// <summary>
+        /// Restores a database from a specified backup file.
+        /// </summary>
+        /// <param name="year">The year of the target database to be restored.</param>
+        /// <param name="username">The username used for authenticating the database connection.</param>
+        /// <param name="password">The password used for authenticating the database connection.</param>
+        /// <param name="backupsRoot">The root directory where backup files are stored.</param>
+        /// <param name="filename">The name of the backup file to be restored.</param>
+        public static void RestoreDatabase(string year, string username, string password, string backupsRoot, string filename)
         {
-            PersistentSupport.Restore(year, username, password, Path.Combine(location, filename));
+            string backupPath = Path.Combine(backupsRoot, filename);
+            PersistentSupport.Restore(year, username, password, backupPath);
         }
 
-        public void DeleteBackup(string path)
+        public static void DeleteBackup(string path)
         {
             if (File.Exists(path))
                 File.Delete(path);

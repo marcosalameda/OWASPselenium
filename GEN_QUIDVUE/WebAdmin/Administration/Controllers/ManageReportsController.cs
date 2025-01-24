@@ -14,10 +14,11 @@ using Quidgest.Persistence.GenericQuery;
 using CSGenio.persistence;
 using DbAdmin;
 using SortOrder = Quidgest.Persistence.GenericQuery.SortOrder;
+using IConfigurationManager = CSGenio.config.IConfigurationManager;
 
 namespace Administration.Controllers
 {
-    public class ManageReportsController : ControllerBase
+    public class ManageReportsController(IConfigurationManager configManager) : ControllerBase
     {	
 	    private PersistentSupport _sp;
         private PersistentSupport sp
@@ -48,8 +49,7 @@ namespace Administration.Controllers
         {
             var model = new ManageReportsModel();
 
-            string pathConfig = CSGenio.framework.Configuration.GetConfigPath();
-            ConfigurationXML conf = ConfigurationXML.readXML(pathConfig + Path.DirectorySeparatorChar + "Configuracoes.xml");
+            var conf = configManager.GetExistingConfig();
             if (Directory.Exists(conf.pathReports))
             {
                 model.ReportList = CheckReportStatus(conf);
@@ -143,6 +143,10 @@ namespace Administration.Controllers
             var dynamic = reportForm.Dynamic;
             var delete = reportForm.Delete;
 
+            // This cannot be placed inside a task otherwise it will cause
+            // issues when getting the data from the route params
+            string currentYear = CurrentYear;
+
             task_completed = false;
             task_numScript = 0;
             task_totalScript = 0;
@@ -153,10 +157,9 @@ namespace Administration.Controllers
                 try
                 {
                     //read app configuration
-                    string pathConfig = CSGenio.framework.Configuration.GetConfigPath();
-                    ConfigurationXML conf = ConfigurationXML.readXML(Path.Combine(pathConfig, "Configuracoes.xml"));
+                    var conf = configManager.GetExistingConfig();
 
-                    var dataSystem = conf.DataSystems.FirstOrDefault(ds => ds.Name == CurrentYear);
+                    var dataSystem = conf.DataSystems.FirstOrDefault(ds => ds.Name == currentYear);
 
                     if (dataSystem == null)
                         throw new BusinessException("Could not find a valid dataSystem with the curresponding year.", "ManageReportsController.StartDeploy",
@@ -179,7 +182,7 @@ namespace Administration.Controllers
                     ReportingService2010SoapClient rs = new ReportingService2010SoapClient(rsBinding, rsEndpointAddress);
 
                     if (conf.ssrsServer.ContainsCredentials())
-                        rs.ClientCredentials.Windows.ClientCredential = new System.Net.NetworkCredential(Encoding.Unicode.GetString(Convert.FromBase64String(conf.ssrsServer.Username)), Encoding.Unicode.GetString(Convert.FromBase64String(conf.ssrsServer.Password)), conf.ssrsServer.Domain);
+                        rs.ClientCredentials.Windows.ClientCredential = new System.Net.NetworkCredential(conf.ssrsServer.UsernameDecode, conf.ssrsServer.PasswordDecode, conf.ssrsServer.Domain);
                     else
                         rs.ClientCredentials.Windows.ClientCredential = (System.Net.NetworkCredential)System.Net.CredentialCache.DefaultCredentials;
 
@@ -324,7 +327,7 @@ namespace Administration.Controllers
             var sp = PersistentSupport.getPersistentSupport(CSGenio.framework.Configuration.DefaultYear);
 
             System.Data.SqlClient.SqlConnectionStringBuilder builder = new System.Data.SqlClient.SqlConnectionStringBuilder(sp.Connection.ConnectionString);
-            builder.DataSource = server + (port == "" ? "" : ", " + port);
+            builder.DataSource = server + (String.IsNullOrEmpty(port) ? "" : ", " + port);
             if(database == null)
                 builder.InitialCatalog = "<toReplace>";
             builder.ApplicationIntent = System.Data.SqlClient.ApplicationIntent.ReadOnly;
@@ -346,7 +349,7 @@ namespace Administration.Controllers
 
             if (isDynamic)
             {
-				string conn = "=\"" + getConn(server, port) + "\"";
+				string conn = "=\"" + getConn(server, port).Replace("\"","\"\"") + "\"";
                 conn = conn.Replace("<toReplace>", "\"+Parameters!Database.Value+\"");
                 //Replace only if "Parameters!Database.Value" are the last value
                 conn = conn.Replace("+\"\"", "");

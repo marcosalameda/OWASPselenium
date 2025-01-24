@@ -129,58 +129,10 @@ namespace Administration.Controllers
 				PersistentSupport sp = data.logDatabase ? PersistentSupport.getPersistentSupportLog(CurrentYear, "") : PersistentSupport.getPersistentSupport(CurrentYear);
 
 				// Process simple search filters
-				CriteriaSet searchFilters = null;
-				if (!string.IsNullOrEmpty(data.param.global_search))
-				{
-					string viewName;
-					if (model.LogTable == Models.AuditModel.LogTables.logGQTall)
-					{
-						viewName = model.LogTable.ToString();
-					}
-					else
-					{
-						viewName = Models.AuditModel.LogTables.logGQTall.ToString() + "_" + model.LogTable.ToString() + "_VIEW";
-					}
-
-					string searchValue = "%" + data.param.global_search + "%"; 
-
-					searchFilters = CriteriaSet.Or();
-					searchFilters.Like(viewName, "who", searchValue);
-					searchFilters.Like(viewName, "cod", searchValue);
-
-					if (model.LogTable == Models.AuditModel.LogTables.logGQTall)
-					{
-						searchFilters.Like(viewName, "logtable", searchValue);
-						searchFilters.Like(viewName, "logfield", searchValue);
-						searchFilters.Like(viewName, "val", searchValue);
-						
-					}
-					else
-					{
-						AreaInfo table = CSGenio.business.Area.GetInfoArea(model.LogTable.ToString().ToLower());
-						if (table != null)
-						{
-							foreach (var field in table.DBFieldsList.Where(field => field.CriaLog))
-							{
-								searchFilters.Like(viewName, string.Format("{0}.{1}", field.Alias, field.Name), searchValue);
-							}
-						}
-					}
-				}
+				CriteriaSet searchFilters = GetSearchFilters(data.param.global_search, model);
 
 				// Process column sort
-				List<ColumnSort> sortColumns = null;
-				if (data.param.sort != null)
-				{
-					sortColumns = new List<ColumnSort>();
-
-					foreach (Models.DTOrder orderColumn in data.param.sort)
-					{
-						int.TryParse(orderColumn.name, out int columnIndex);
-						SortOrder columnSort = orderColumn.order == "asc" ? SortOrder.Ascending : SortOrder.Descending;
-						sortColumns.Add(new ColumnSort(columnIndex + 1, columnSort));
-					}
-				}
+				List<ColumnSort> sortColumns = GetSortColumns(data.param.sort);
 
 				// Get result
 				model.Where(sp, data.param.page-1, data.param.per_page, searchFilters, sortColumns, data.export, CurrentYear);
@@ -188,26 +140,7 @@ namespace Administration.Controllers
 
 				if (data.export)
 				{
-					string file = "LogGQT_" + DateTime.Now.ToString("ddMMyyyyhhmmss") + "." + data.exportType;
-					var user = new User("LogExport", new Guid().ToString(), CSGenio.framework.Configuration.DefaultYear);
-					var exportar = new Exports(user);
-
-					string title = Resources.Resources.AUDITORIA_DO_SISTEMA08460;
-					if (model.LogTable == Models.AuditModel.LogTables.logGQTall)
-						title += " - " + DateTime.Now.ToString(CultureInfo.CurrentCulture);
-					else
-						title += ": " +
-								 ((System.ComponentModel.DataAnnotations.DisplayAttribute)
-									 (typeof (Models.AuditModel.LogTables).GetField(model.LogTable.ToString())
-										 .GetCustomAttributes(typeof (System.ComponentModel.DataAnnotations.DisplayAttribute), false)
-										 .First())).GetName() + " - " +
-								 DateTime.Now.ToString(CultureInfo.CurrentCulture);
-
-					List<Exports.QColumn> columns = model.getColumnDefs();
-
-					var fileBytes = exportar.ExportList(model.Result.RawData, columns, data.exportType, file, title);
-					QCache.Instance.ExportFiles.Put("webadmin_exportfile_" + file, fileBytes);
-					return Json(new { Success = true, fileId = file });
+					return ExportLogData(data.exportType, model);
 				}
 			}
 			catch (Exception e)
@@ -222,6 +155,114 @@ namespace Administration.Controllers
 			return Json(model);
 		}
 		
+		/// <summary>
+		/// Retrieve the search filters for the log data
+		/// </summary>
+		/// <param name="textFilter">Text filters</param>
+		/// <param name="model">Audit model</param>
+		/// <returns>
+		/// CriteriaSet containing search filters
+		/// </returns>
+		private CriteriaSet GetSearchFilters(string textFilter, Models.AuditModel model)
+		{
+			CriteriaSet searchFilters = null;
+			if (!string.IsNullOrEmpty(textFilter))
+			{
+				string viewName;
+				if (model.LogTable == Models.AuditModel.LogTables.logGQTall)
+				{
+					viewName = model.LogTable.ToString();
+				}
+				else
+				{
+					viewName = Models.AuditModel.LogTables.logGQTall.ToString() + "_" + model.LogTable.ToString() + "_VIEW";
+				}
+
+				string searchValue = "%" + textFilter + "%"; 
+
+				searchFilters = CriteriaSet.Or();
+				searchFilters.Like(viewName, "who", searchValue);
+				searchFilters.Like(viewName, "cod", searchValue);
+
+				if (model.LogTable == Models.AuditModel.LogTables.logGQTall)
+				{
+					searchFilters.Like(viewName, "logtable", searchValue);
+					searchFilters.Like(viewName, "logfield", searchValue);
+					searchFilters.Like(viewName, "val", searchValue);
+					
+				}
+				else
+				{
+					AreaInfo table = CSGenio.business.Area.GetInfoArea(model.LogTable.ToString().ToLower());
+					if (table != null)
+					{
+						foreach (var field in table.DBFieldsList.Where(field => field.CriaLog))
+						{
+							searchFilters.Like(viewName, string.Format("{0}.{1}", field.Alias, field.Name), searchValue);
+						}
+					}
+				}
+			}
+			return searchFilters; 
+		}
+
+		/// <summary>
+		/// Retrieve the sort columns for the log data
+		/// </summary>
+		/// <param name="columns">Sort columns</param>
+		/// <returns>
+		/// List containing the sort columns
+		/// </returns>
+		private List<ColumnSort> GetSortColumns(IEnumerable<Models.DTOrder> columns)
+		{
+			List<ColumnSort> sortColumns = null;
+			if (columns != null)
+			{
+				sortColumns = new List<ColumnSort>();
+
+				foreach (Models.DTOrder orderColumn in columns)
+				{
+					int.TryParse(orderColumn.name, out int columnIndex);
+					SortOrder columnSort = orderColumn.order == "asc" ? SortOrder.Ascending : SortOrder.Descending;
+					sortColumns.Add(new ColumnSort(columnIndex + 1, columnSort));
+				}
+			}
+			return sortColumns;
+		}
+
+
+		/// <summary>
+		/// Exports the log data
+		/// </summary>
+		/// <param name="exportType">Type of Export</param>
+		/// <param name="model">Audit Model</param>
+		/// <returns>
+		/// Json object with the identifier of the file that contains the results
+		/// </returns>
+		private IActionResult ExportLogData(string exportType, Models.AuditModel model)
+		{
+			string file = "LogGQT_" + DateTime.Now.ToString("ddMMyyyyhhmmss") + "." + exportType;
+			var user = new User("LogExport", new Guid().ToString(), CSGenio.framework.Configuration.DefaultYear);
+			var exportar = new Exports(user);
+
+			string title = Resources.Resources.AUDITORIA_DO_SISTEMA08460;
+			if (model.LogTable == Models.AuditModel.LogTables.logGQTall)
+				title += " - " + DateTime.Now.ToString(CultureInfo.CurrentCulture);
+			else
+				title += ": " +
+							((System.ComponentModel.DataAnnotations.DisplayAttribute)
+								(typeof (Models.AuditModel.LogTables).GetField(model.LogTable.ToString())
+									.GetCustomAttributes(typeof (System.ComponentModel.DataAnnotations.DisplayAttribute), false)
+									.First())).GetName() + " - " +
+							DateTime.Now.ToString(CultureInfo.CurrentCulture);
+
+			List<Exports.QColumn> columns = model.getColumnDefs();
+
+			var fileBytes = exportar.ExportList(model.Result.RawData, columns, exportType, file, title);
+			QCache.Instance.ExportFiles.Put("webadmin_exportfile_" + file, fileBytes);
+			return Json(new { Success = true, fileId = file });
+		}
+
 		/// <summary>
 		/// Transfer log rows from the system database to the system log database.
 		/// </summary>

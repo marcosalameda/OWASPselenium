@@ -14,17 +14,20 @@ namespace Administration.Models
         public bool HasDiffVersion { get; set; }
         public bool HasDiffIdxVersion { get; set; }
 		public bool HasSGBDVersion { get; set; }
+		public bool HasDiffUserSettingsVersion { get; set; }
         public string TpSGBD { get; set; }
         public string SGBDVersion { get; set; }
         public string SGBDServer { get; set; }
         public string DBSchema { get; set; }
-        public double DBSize { get; set; }		
-        public double VersionDb { get; set; }
-        public double VersionIdxDb { get; set; }
-        public double VersionDbGen { get; set; }
-        public double VersionIdxDbGen { get; set; }
+        public decimal DBSize { get; set; }		
+        public int VersionDb { get; set; }
+        public int VersionIdxDb { get; set; }
+        public int VersionDbGen { get; set; }
+        public int VersionIdxDbGen { get; set; }
         public int VersionUpgrIndx { get; set; }
         public int VersionUpgrIndxGen { get; set; }
+		public int UserSettingsVersion { get; set; }
+		public int CurrentUserSettingsVersion { get; set; }
         public string SODesc { get; set; }
         public string PCDesc { get; set; }
         public string HardwProcDesc { get; set; }

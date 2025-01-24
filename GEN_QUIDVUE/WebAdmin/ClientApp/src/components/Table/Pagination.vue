@@ -1,72 +1,60 @@
 ﻿<template>
     <div>
-        <nav aria-label="Page navigation example">
-            <ul class="pagination">
-                <li :class="{'disabled' : disablePreviousButton}" class="page-item" @click.prevent="pageHandler(page-1)">
-                    <a class="page-link" href="" aria-label="Previous">
-                        <span aria-hidden="true">
-                            <slot name="vbt-paginataion-previous-button">
-
-                            </slot>
-                        </span>
-                    </a>
-                </li>
-                <template v-if="!isEmpty">
-                    <li class="page-item" v-if="start > 3" @click.prevent="pageHandler(1)">
-                        <a class="page-link" href=""> 1 </a>
-                    </li>
-                    <li class="page-item disabled" v-if="start > 3">
-                        <a class="page-link" href="">…</a>
-                    </li>
-                    <li class="page-item" v-for="index in range" :key="index" v-bind:class="{ active:  (index == page)}" @click.prevent="pageHandler(index)">
-                        <a class="page-link" href="">{{index}}</a>
-                    </li>
-                    <li class="page-item disabled" v-if="end < totalPages - 2">
-                        <a class="page-link" href="">…</a>
-                    </li>
-                    <li class="page-item" v-if="end < totalPages - 2" @click.prevent="pageHandler(totalPages)">
-                        <a class="page-link" href=""> {{totalPages}} </a>
-                    </li>
+        <nav id="pagination">
+            <q-button-group>
+                <!-- BEGIN: Page navigation buttons -->
+                <!-- BEGIN: First page button -->
+                <q-button aria-label="First"
+                    b-style="secondary"
+                    :disabled="!prevButtonEnabled"
+                    @click="pageHandler(1)">
+                    <span class="mdi mdi-chevron-double-left"></span>
+                </q-button>
+                <!-- END: First page button -->
+                <!-- BEGIN: Previous page button -->
+                <q-button aria-label="Previous"
+                    b-style="secondary"
+                    :disabled="!prevButtonEnabled"
+                    @click="pageHandler(page - 1)">
+                    <span class="mdi mdi-chevron-left"></span>
+                </q-button>
+                <!-- END: Previous page button -->
+                <!-- BEGIN: Visible page number buttons -->
+                <template v-if="totalPages">
+                    <q-button v-for="index in range"
+                        b-style="secondary"
+                        :key="index"
+                        :label="index"
+                        :active="index === page"
+                        :disabled="disabled"
+                        :class="pageButtonClass(index, page)"
+                        @click="pageHandler(index)">
+                    </q-button>
                 </template>
-
-                <template v-else>
-                    <li class="page-item disabled">
-                        <a class="page-link" href="">…</a>
-                    </li>
-                </template>
-                <li :class="{'disabled' : disableNextButton}" class="page-item" @click.prevent="pageHandler(page+1)">
-                    <a class="page-link" href="" aria-label="Next">
-                        <span aria-hidden="true">
-                            <slot name="vbt-paginataion-next-button">
-
-                            </slot>
-                        </span>
-                    </a>
-                </li>
-                <!-- Number of rows per page starts here -->
-                <div class="dropdown show vbt-per-page-dropdown">
-                    <a class="btn dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{per_page}}
-                    </a>
-
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                        <a v-for="(option, key, index) in per_page_options" :key="index" class="dropdown-item" href="" @click.prevent="perPageHandler(option)" v-bind:class="{ active:  (option == per_page)}">
-                            {{option}}
-                        </a>
-                    </div>
-                </div>
-                <!-- Number of rows per page ends here -->
-
-                <div class="input-group col-sm-2">
-                    <input type="number" class="form-control" min="1" step="1" :max="totalPages" placeholder="Go to page" @keyup.enter="gotoPage" v-model.number="go_to_page">
-                </div>
-            </ul>
+                <!-- END: Visible page number buttons -->
+                <!-- BEGIN: Next page button -->
+                <q-button aria-label="Next"
+                    b-style="secondary"
+                    :disabled="!nextButtonEnabled"
+                    @click="pageHandler(page + 1)">
+                    <span class="mdi mdi-chevron-right"></span>
+                </q-button>
+                <!-- END: Next page button -->
+                <!-- BEGIN: Last page button -->
+                <q-button aria-label="Last"
+                    b-style="secondary"
+                    :disabled="!nextButtonEnabled"
+                    @click="pageHandler(totalPages)">
+                    <span class="mdi mdi-chevron-double-right"></span>
+                </q-button>
+                <!-- END: Last page button -->
+                <!-- END: Page navigation buttons -->
+            </q-button-group>
         </nav>
     </div>
 </template>
 
 <script>
-
 import {
 range,
 includes,
@@ -92,32 +80,24 @@ includes,
                 type: [String, Number],
                 default: 7
             },
-            per_page_options: {
-                type: Array,
-                default: function() {
-                    return [5,10,15]
-                }
-            }
+            /**
+			 * Whether the pagination is disabled.
+			 */
+			disabled: {
+				type: Boolean,
+				default: false
+			},
         },
-        data: function() {
+        data() {
             return {
                 start: (this.page + 0),
-                end: 0,
-                go_to_page: ""
+                end: 0
             }
         },
         mounted() {
             this.calculatePageRange(true);
         },
         methods: {
-            gotoPage() {
-                if (this.go_to_page === "" || !this.isPositiveInteger(this.go_to_page)) {
-                    return;
-                }
-
-                //Handle the new page
-                this.pageHandler(this.go_to_page)
-            },
             pageHandler(index) {
                 if (index >= 1 && index <= this.totalPages) {
                     this.$emit('update:page', index);
@@ -165,9 +145,26 @@ includes,
             },
             isPositiveInteger(str) {
                 return /^\+?(0|[1-9]\d*)$/.test(str);
+            },
+            /**
+             * Get the class for the paging button
+             * @param index {Number} Index of the button
+             * @param page {Number} Active page number
+             * @returns String
+             */
+            pageButtonClass(index, page) {
+                // Difference between the index and active page number
+                const diff = Math.abs(index - page)
+
+                // Index is the active page
+                if (diff === 0)
+                    return null
+                // Index is next to the active page
+                else if (diff === 1)
+                    return 'btn-page-adjacent'
+                // Index is farther from the active page
+                return 'btn-page-other'
             }
-        },
-        components: {
         },
         computed: {
             totalPages() {
@@ -184,8 +181,13 @@ includes,
             },
             isEmpty() {
                 return this.total == 0;
+            },
+            prevButtonEnabled() {
+                return this.totalPages > 1 && this.page !== 1 && !this.disabled
+            },
+            nextButtonEnabled() {
+                return this.totalPages > 1 && this.page < this.totalPages && !this.disabled
             }
-
         },
         watch: {
             page(newVal, oldVal) {

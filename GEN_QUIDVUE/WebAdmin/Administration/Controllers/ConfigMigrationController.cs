@@ -9,17 +9,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Administration.Controllers
 {
-    public class ConfigMigrationController : ControllerBase
+    public class ConfigMigrationController(CSGenio.config.IConfigurationManager configManager) : ControllerBase
     {
         private IActionResult startPage(Models.ConfigMigrationModel model, bool redirect)
         {
-            model.ConfigVersion = AuxFunctions.GetConfigVersion();
 
-            if (!AuxFunctions.CheckXMLIsValid())
+            if (!AuxFunctions.CheckXMLIsValid(configManager))
             {
                 model.ResultMsg = Resources.Resources.E_NECESSARIO_PROCEDE36325;
                 redirect = false;
             }
+            model.ConfigVersion = AuxFunctions.GetConfigVersion(configManager);
 
             return Json(new { model, redirect });
         }
@@ -34,13 +34,11 @@ namespace Administration.Controllers
         [HttpPost]
         public IActionResult MigrateConfig([FromBody] Models.ConfigMigrationModel model)
         {
-            ConfigXMLMigration.Migration(AuxFunctions.GetConfigVersion());
+            var configVersion = AuxFunctions.GetConfigVersion(configManager);
+            ConfigXMLMigration.Migration(configManager, configVersion);
 
-            //reload configuration file
-            string pathConfig = CSGenio.framework.Configuration.GetConfigPath();
-            pathConfig = Path.Combine(pathConfig, "Configuracoes.xml");
-            ConfigurationXML conf = ConfigurationXML.readXML(pathConfig);
-            CSGenio.framework.Configuration.ReadConfiguration(conf);
+            //reload configuration file         
+            Configuration.Reload();
 
             return startPage(model, true);
         }

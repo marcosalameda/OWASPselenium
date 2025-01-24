@@ -1,0 +1,243 @@
+﻿using quidgest.uitests.pages.forms.core;
+
+#nullable enable
+
+namespace quidgest.uitests.pages.forms;
+
+[System.CodeDom.Compiler.GeneratedCode("Genio", "")]
+public class FieldhlpForm : Form
+{
+	/// <summary>
+	/// Text inputs
+	/// </summary>
+	public CollapsibleZoneControl PseudNovogr02 => new CollapsibleZoneControl(driver, ContainerLocator, "#FIELDHLPPSEUDNOVOGR02-container");
+
+	/// <summary>
+	/// Show record
+	/// </summary>
+	public CheckboxInputControl FldsShwrc => new CheckboxInputControl(driver, ContainerLocator, "#container-FIELDHLPFLDS_SHWRC___");
+
+	/// <summary>
+	/// Text Field
+	/// </summary>
+	public BaseInputControl FldsTxtfield => new BaseInputControl(driver, ContainerLocator, "#FIELDHLPFLDS_TXTFIELD");
+
+	/// <summary>
+	/// Multine Text
+	/// </summary>
+	public BaseInputControl FldsDescrip => new BaseInputControl(driver, ContainerLocator, "#FIELDHLPFLDS_DESCRIP_");
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public CollapsibleZoneControl PseudNovogr06 => new CollapsibleZoneControl(driver, ContainerLocator, "#FIELDHLPPSEUDNOVOGR06-container");
+
+	/// <summary>
+	/// Logical
+	/// </summary>
+	public CheckboxInputControl FldsPrimviag => new CheckboxInputControl(driver, ContainerLocator, "#container-FIELDHLPFLDS_PRIMVIAG");
+
+	/// <summary>
+	/// Yes or no
+	/// </summary>
+	public EnumControl FldsLogicenu => new EnumControl(driver, ContainerLocator, "container-FIELDHLPFLDS_LOGICENU");
+
+	/// <summary>
+	/// Numeric Enumeration
+	/// </summary>
+	public EnumControl FldsClassnum => new EnumControl(driver, ContainerLocator, "container-FIELDHLPFLDS_CLASSNUM");
+
+	/// <summary>
+	/// Radio Btn
+	/// </summary>
+	public RadiobuttonControl FldsRadiob => new RadiobuttonControl(driver, ContainerLocator, "container-FIELDHLPFLDS_RADIOB__");
+
+	/// <summary>
+	/// Static Text 
+	/// </summary>
+	public IWebElement PseudField002 => throw new NotImplementedException();
+
+	/// <summary>
+	/// Static Image
+	/// </summary>
+	public IWebElement PseudField003 => throw new NotImplementedException();
+
+	/// <summary>
+	/// Manual filling field
+	/// </summary>
+	public IWebElement PseudField001 => throw new NotImplementedException();
+
+	/// <summary>
+	/// Date/Time Inputs
+	/// </summary>
+	public CollapsibleZoneControl PseudNovogr01 => new CollapsibleZoneControl(driver, ContainerLocator, "#FIELDHLPPSEUDNOVOGR01-container");
+
+	/// <summary>
+	/// Year
+	/// </summary>
+	public BaseInputControl FldsYear => new BaseInputControl(driver, ContainerLocator, "#FIELDHLPFLDS_YEAR____");
+
+	/// <summary>
+	/// Time
+	/// </summary>
+	public BaseInputControl FldsTime => new BaseInputControl(driver, ContainerLocator, "#FIELDHLPFLDS_TIME____");
+
+	/// <summary>
+	/// Date
+	/// </summary>
+	public DateInputControl FldsDate => new DateInputControl(driver, ContainerLocator, "#FIELDHLPFLDS_DATE____");
+
+	/// <summary>
+	/// Date time
+	/// </summary>
+	public DateInputControl FldsDatetime => new DateInputControl(driver, ContainerLocator, "#FIELDHLPFLDS_DATETIME", "dd/MM/yyyy HH:mm");
+
+	/// <summary>
+	/// Date second
+	/// </summary>
+	public DateInputControl FldsDateseco => new DateInputControl(driver, ContainerLocator, "#FIELDHLPFLDS_DATESECO", "dd/MM/yyyy HH:mm:ss");
+
+	/// <summary>
+	/// Numeric Inputs
+	/// </summary>
+	public CollapsibleZoneControl PseudNovogr03 => new CollapsibleZoneControl(driver, ContainerLocator, "#FIELDHLPPSEUDNOVOGR03-container");
+
+	/// <summary>
+	/// Numeric decimal
+	/// </summary>
+	public BaseInputControl FldsDuration => new BaseInputControl(driver, ContainerLocator, "#FIELDHLPFLDS_DURATION");
+
+	/// <summary>
+	/// Numeric
+	/// </summary>
+	public BaseInputControl FldsNpassage => new BaseInputControl(driver, ContainerLocator, "#FIELDHLPFLDS_NPASSAGE");
+
+	/// <summary>
+	/// Currency Decimal
+	/// </summary>
+	public BaseInputControl FldsPrecobil => new BaseInputControl(driver, ContainerLocator, "#FIELDHLPFLDS_PRECOBIL");
+
+	/// <summary>
+	/// Currency
+	/// </summary>
+	public BaseInputControl FldsPrice => new BaseInputControl(driver, ContainerLocator, "#FIELDHLPFLDS_PRICE___");
+
+	/// <summary>
+	/// Inputs with Masks
+	/// </summary>
+	public CollapsibleZoneControl PseudNovogr04 => new CollapsibleZoneControl(driver, ContainerLocator, "#FIELDHLPPSEUDNOVOGR04-container");
+
+	/// <summary>
+	/// Social Security No
+	/// </summary>
+	public BaseInputControl FldsSsnumber => new BaseInputControl(driver, ContainerLocator, "#FIELDHLPFLDS_SSNUMBER");
+
+	/// <summary>
+	/// Zipcode
+	/// </summary>
+	public BaseInputControl FldsZipfield => new BaseInputControl(driver, ContainerLocator, "#FIELDHLPFLDS_ZIPFIELD");
+
+	/// <summary>
+	/// VAT Number
+	/// </summary>
+	public BaseInputControl FldsVatnumbr => new BaseInputControl(driver, ContainerLocator, "#FIELDHLPFLDS_VATNUMBR");
+
+	/// <summary>
+	/// Licence plate
+	/// </summary>
+	public BaseInputControl FldsLicplate => new BaseInputControl(driver, ContainerLocator, "#FIELDHLPFLDS_LICPLATE");
+
+	/// <summary>
+	/// Banking Account Number
+	/// </summary>
+	public BaseInputControl FldsBanknmbr => new BaseInputControl(driver, ContainerLocator, "#FIELDHLPFLDS_BANKNMBR");
+
+	/// <summary>
+	/// Email
+	/// </summary>
+	public BaseInputControl FldsEmailfld => new BaseInputControl(driver, ContainerLocator, "#FIELDHLPFLDS_EMAILFLD");
+
+	/// <summary>
+	/// IBAN
+	/// </summary>
+	public BaseInputControl FldsIbanfiel => new BaseInputControl(driver, ContainerLocator, "#FIELDHLPFLDS_IBANFIEL");
+
+	/// <summary>
+	/// Uppercase
+	/// </summary>
+	public BaseInputControl FldsUpprtext => new BaseInputControl(driver, ContainerLocator, "#FIELDHLPFLDS_UPPRTEXT");
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public CollapsibleZoneControl PseudNovogr05 => new CollapsibleZoneControl(driver, ContainerLocator, "#FIELDHLPPSEUDNOVOGR05-container");
+
+	/// <summary>
+	/// Password
+	/// </summary>
+	public BaseInputControl FldsPassfld => new BaseInputControl(driver, ContainerLocator, "#FIELDHLPFLDS_PASSFLD_");
+
+	/// <summary>
+	/// Colorpicker
+	/// </summary>
+	public BaseInputControl FldsClrpicke => new BaseInputControl(driver, ContainerLocator, "#FIELDHLPFLDS_CLRPICKE");
+
+	/// <summary>
+	/// Documents
+	/// </summary>
+	public CollapsibleZoneControl PseudNovogr07 => new CollapsibleZoneControl(driver, ContainerLocator, "#FIELDHLPPSEUDNOVOGR07-container");
+
+	/// <summary>
+	/// Logo (External File Image)
+	/// </summary>
+	public BaseInputControl FldsLogoexte => new BaseInputControl(driver, ContainerLocator, "#FIELDHLPFLDS_LOGOEXTE");
+
+	/// <summary>
+	/// Logo
+	/// </summary>
+	public BaseInputControl FldsLogo => new BaseInputControl(driver, ContainerLocator, "#FIELDHLPFLDS_LOGO____");
+
+	/// <summary>
+	/// Document
+	/// </summary>
+	public DocumentControl FldsAttach => new DocumentControl(driver, ContainerLocator, "container-FIELDHLPFLDS_ATTACH__");
+
+	/// <summary>
+	/// Day
+	/// </summary>
+	public BaseInputControl FldsCreatdat => new BaseInputControl(driver, ContainerLocator, "#FIELDHLPFLDS_CREATDAT");
+
+	/// <summary>
+	/// Created by
+	/// </summary>
+	public BaseInputControl FldsCreatuse => new BaseInputControl(driver, ContainerLocator, "#FIELDHLPFLDS_CREATUSE");
+
+	/// <summary>
+	/// Complete Date
+	/// </summary>
+	public BaseInputControl FldsCreatins => new BaseInputControl(driver, ContainerLocator, "#FIELDHLPFLDS_CREATINS");
+
+	/// <summary>
+	/// Hour
+	/// </summary>
+	public BaseInputControl FldsCreathou => new BaseInputControl(driver, ContainerLocator, "#FIELDHLPFLDS_CREATHOU");
+
+	/// <summary>
+	/// Airline name
+	/// </summary>
+	public LookupControl AeroName => new LookupControl(driver, ContainerLocator, "container-FIELDHLPAERO_NAME____");
+	public SeeMorePage AeroNameSeeMorePage => new SeeMorePage(driver, "FIELDHLP", "FIELDHLPAERO_NAME____");
+
+	/// <summary>
+	/// Conditional
+	/// </summary>
+	public BaseInputControl FldsConditio => new BaseInputControl(driver, ContainerLocator, "#FIELDHLPFLDS_CONDITIO");
+
+	/// <summary>
+	/// Text Enumeration
+	/// </summary>
+	public EnumControl FldsClass => new EnumControl(driver, ContainerLocator, "container-FIELDHLPFLDS_CLASS___");
+
+	public FieldhlpForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "FIELDHLP", containerLocator: containerLocator) { }
+}

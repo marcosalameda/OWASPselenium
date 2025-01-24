@@ -24,7 +24,7 @@ using DbAdmin;
 
 namespace Administration.Controllers
 {
-    public class DbAdminController : ControllerBase
+    public class DbAdminController(CSGenio.config.IConfigurationManager configManager) : ControllerBase
     {
         private static RdxParamUpgradeSchema RdxItem = null;
         private static CancellationTokenSource reindexCTknSrc = null;
@@ -33,6 +33,7 @@ namespace Administration.Controllers
         {
 
             ResultMsg = "",
+            AlertType = AlertTypeEnum.info,
             Indexes = new List<IndexModel>()
             {
                 new IndexModel()
@@ -83,7 +84,7 @@ namespace Administration.Controllers
             LastUpdate = DateTime.MinValue,
                     IncoherentRelations = new List<IncoherentRelationItem>(),
                     IncoherenceType = "IncoherentRelation",
-                    IncoherenceTitle = "INCOERENCIA_DE_RELAC22815",
+                    IncoherenceTitle = "INCOERENCIA_DE_RELAC38138",
                     RelationMode=HardCodedLists.RelationsMode.AMBAS,
                     ViewsIsChecked = false,
                     NullsIsChecked = true,
@@ -106,7 +107,7 @@ namespace Administration.Controllers
                     RelationMode = HardCodedLists.RelationsMode.DIRETAS,
                     OrphanRelations = new List<OrphanRelation>(),
                     IncoherenceType = "OrphanRelation",
-                    IncoherenceTitle = "REGISTOS_ORFAOS__CHA00668",
+                    IncoherenceTitle = "REGISTOS_ORFAOS26691",
                     ViewsIsChecked = false,
                     RelationModeImageSource = new Dictionary<HardCodedLists.RelationsMode, string>(){
                         { HardCodedLists.RelationsMode.DIRETAS, "/Images/rel_inc_o.gif" }
@@ -128,7 +129,7 @@ namespace Administration.Controllers
             //3- Column Qversion may not exist
             //4- Column value may be null
 
-            //***********************************            
+            //***********************************
 
             DbAdminModel model = new DbAdminModel();
 
@@ -142,23 +143,27 @@ namespace Administration.Controllers
                 return model;
             }
 
+            model.DSName = dataSystem.Name;
+
             var scriptLog = RdxOperationLog.readAggregateXML(PersistentSupport.LogReindexPath());
             var lastLog = scriptLog.Count > 0 ? scriptLog.Last() : null;
 
             foreach (ReIndexFunction item in model.reindexMenu.ReIndexItems)
             {
-                ReindexFunctionItem obj = new ReindexFunctionItem();
-                obj.Description = item.Name;
-                obj.Id = item.Id;
-                obj.Value = item.Selected;
-                //obj.Type = item.Type;
-                obj.Duration = 0;
-                obj.Result = "";
-                obj.LastRun = DateTime.MinValue;
-                obj.Origin = lastLog != null ? lastLog.Origin : "";
-                obj.Details = new List<RdxScriptLog>();
-                obj.Selectable = item.Selectable;
+                ReindexFunctionItem obj = new ReindexFunctionItem(){
+                    Description = item.Name,
+                    Id = item.Id,
+                    Value = item.Selected,
+                    Duration = 0,
+                    Result = "",
+                    LastRun = DateTime.MinValue,
+                    Origin = lastLog != null ? lastLog.Origin : "",
+                    Details = new List<RdxScriptLog>(),
+                    Selectable = item.Selectable
+                };
+
                 if (lastLog != null)
+                {
                     foreach (var script in item.Scripts)
                     {
                         var l = lastLog.ScriptDetails.Find(x => x.ScriptId == script.Name);
@@ -171,10 +176,24 @@ namespace Administration.Controllers
                             obj.Details.Add(l);
                         }
                     }
+                }
 
                 // Log database options only appear if the log database is configured
                 if (item.Connection != ConnectionType.Log || (dataSystem.DataSystemLog != null && dataSystem.DataSystemLog.Schemas.Count != 0))
                     model.Items.Add(obj);
+            }
+
+            // Gather the essential information of the latest reindex operation, if there is one
+            if (lastLog != null)
+            {
+                model.LastLogInfo = new RdxOperationInfo
+                {
+                    Database = lastLog.Database,
+                    Duration = lastLog.Duration,
+                    StartTime = lastLog.StartTime.ToString(CultureInfo.CurrentCulture),
+                    Origin = lastLog.Origin,
+                    Success = model.Items.All(item => item.Result.Length == 0)
+                };
             }
 
             // read upgrade scripts version
@@ -185,7 +204,7 @@ namespace Administration.Controllers
             {
                 // read DB version
                 model.VersionDb = CSGenio.framework.Configuration.GetDbVersion(year);
-                //read DB Size                
+                //read DB Size
                 model.DBSize = AuxFunctions.GetDBSize(year, model.DBSchema);
                 // read upgrade index version
                 model.VersionUpgrIndx = CSGenio.framework.Configuration.GetDbUpgrIndx(year);
@@ -199,29 +218,27 @@ namespace Administration.Controllers
             model.Timeout = model.reindexMenu.timeout * mult;
 
             string reindexIndexPath = dbMaintenance.GetIndexReindexPath();
-            bool reindexExists = true;
-            // read reindex version
-            model.VersionReIdx = readReIndexVersion(model, reindexIndexPath, reindexExists);
 
+            // read reindex version
+            model.VersionReIdx = readReIndexVersion(model, reindexIndexPath, out bool reindexExists);
 
             // check if the reindex directory exists for the correct version of the site
             model.UpgradeIsAvailable = false;
 
             // the available version should also be larger than the DB version
-            if (model.VersionApp > model.VersionDb)
+            if (model.VersionApp > model.VersionDb && reindexExists)
             {
-                if (reindexExists)
-                    if ((model.VersionApp == model.VersionReIdx))
-                        model.UpgradeIsAvailable = true;
-                    else if (model.VersionApp < model.VersionReIdx)
-                        // ReIndex bigger than AppVersion
-                        model.ResultMsg = Resources.Resources.A_VERSAO_DOS_FICHEIR33338;
-                    else
-                        // ReIndex smaller than AppVersion
-                        model.ResultMsg = Resources.Resources.A_VERSAO_DOS_FICHEIR26494;
+                if (model.VersionApp == model.VersionReIdx)
+                    model.UpgradeIsAvailable = true;
+                else if (model.VersionApp < model.VersionReIdx)
+                    // ReIndex bigger than AppVersion
+                    model.ResultMsg = Resources.Resources.A_VERSAO_DOS_FICHEIR33338;
+                else
+                    // ReIndex smaller than AppVersion
+                    model.ResultMsg = Resources.Resources.A_VERSAO_DOS_FICHEIR26494;
             }
 
-            //if version save on cfg is major than templates DB schema, than force a full reindex
+            // if version save in cfg is higher than templates DB schema, then force a full reindex
             if (model.VersionDb > model.VersionApp)
                 model.Zero = true;
 
@@ -233,89 +250,100 @@ namespace Administration.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            if (!AuxFunctions.CheckXMLIsValid())
+            if (!AuxFunctions.CheckXMLIsValid(configManager))
                 return Json(new { redirect = "config_migration" });
-                
-            var Year = CurrentYear;
-            string pathConfig = CSGenio.framework.Configuration.GetConfigPath();
-            ConfigurationXML conf = ConfigurationXML.readXML(pathConfig + Path.DirectorySeparatorChar + "Configuracoes.xml");
-            CSGenio.framework.Configuration.ReadConfiguration(conf);
 
-            var dataSystem = conf.DataSystems.FirstOrDefault(ds => ds.Name == Year); // Default == null           
+            ConfigurationXML conf = configManager.GetExistingConfig();
 
-            DbAdminModel model = initDbModel(dataSystem, conf, Year);
+            List<DbAdminModel> maintenanceModels = [];
+            conf.DataSystems.ForEach(ds => maintenanceModels.Add(initDbModel(ds, conf, ds.Name)));
 
-            return Json(model);
+            return Json(maintenanceModels);
         }
 
-        private double readReIndexVersion(DbAdminModel model, string path, bool reindexExists)
+        private int readReIndexVersion(DbAdminModel model, string path, out bool reindexExists)
         {
 
-            double reIdxVersion = 0;
-            //parse the info xml to ensure the upgrade version is the correct one
+            int reIdxVersion = 0;
+
+            // Parse the info xml to ensure the upgrade version is the correct one
             if (System.IO.File.Exists(path))
             {
+                reindexExists = true;
                 var doc = new System.Xml.XmlDocument();
                 doc.Load(path);
                 var xe = doc.DocumentElement;
                 xe = xe.GetElementsByTagName("Definicoes")[0] as System.Xml.XmlElement;
                 xe = xe.GetElementsByTagName("Versao")[0] as System.Xml.XmlElement;
-                reIdxVersion = double.Parse(xe.InnerText, CultureInfo.InvariantCulture);
+                reIdxVersion = int.Parse(xe.InnerText, CultureInfo.InvariantCulture);
             }
             else
             {
                 reindexExists = false;
-                //model.ResultMsg = path + " does not exist. No database upgrade will be available while reindex scripts are not installed.";
+                model.AlertType = AlertTypeEnum.danger;
                 model.ResultMsg = String.Format(Resources.Resources._0__NAO_EXISTE__A_AT23585, path);
             }
+
             return reIdxVersion;
         }
 
-        public RdxParamUpgradeSchema startReindexation(DbAdminModel model, RdxParamUpgradeSchema RdxItem, string Year)
-        {
-            return startReindexation(model, RdxItem, Year, new CancellationToken());
-        }
 
-        public RdxParamUpgradeSchema startReindexation(DbAdminModel model, RdxParamUpgradeSchema RdxItem, string Year, CancellationToken cToken)
+        public RdxParamUpgradeSchema startReindexation(DbAdminModel model, string Year, CancellationToken cToken)
         {
-            if (RdxItem != null)
-                if (RdxItem.Progress.State == RdxProgressStatus.RUNNING) return RdxItem;
-                else RdxItem = null;
+            RdxParamUpgradeSchema rdxParam = new RdxParamUpgradeSchema()
+            {
+                Username = model.DbUser,
+                Password = model.DbPsw,
+                Year = Year,
+                DirFilestream = model.DirFilestream,
+                Zero = model.Zero,
+                Origin = "Database Maintenace Interface"
+            };
 
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) {
+                model.AlertType = AlertTypeEnum.danger;
                 throw new BusinessException(Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860, "DbAdminController.reindex", Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860);
+            }
 
-            List<ReindexFunctionItem> rdxFunctions = model.Items.Where(x => x.Value == true).ToList(); //Get all the selected items
+            List<ReindexFunctionItem> rdxFunctions = GetSelectedReindexFunctionItems(model.Items);
             List<string> allSelectedItems = rdxFunctions.Select(x => x.Id).ToList(); //Get the ids
 
             //If no scripts were selected
             if(rdxFunctions.Where(x => x.Selectable == true).Count() == 0)
             {
-                RdxItem = new RdxParamUpgradeSchema();
+                rdxParam = new RdxParamUpgradeSchema();
 
-                RdxItem.Progress.Message = Resources.Resources.NAO_FORAM_SELECIONAD28047;
-                RdxItem.Progress.State = RdxProgressStatus.SUCCESS;
+                rdxParam.Progress.Message = Resources.Resources.NAO_FORAM_SELECIONAD28047;
+                rdxParam.Progress.State = RdxProgressStatus.SUCCESS;
 
-                return RdxItem;
+                return rdxParam;
             }
 
             DBMaintenance dbMaintenance = new DBMaintenance(AppDomain.CurrentDomain.BaseDirectory);
-            RdxItem = dbMaintenance.StartReindexation(model.DbUser, model.DbPsw, null, 
-                allSelectedItems, 
-                null, 
-                model.Zero, //Full Reindexation
-
+            dbMaintenance.StartReindexation(rdxParam, null,
+                allSelectedItems,
+                null,
                 //We use this event to replace the message that it is displayed to the user
                 (sender, eventArgs, status) =>
                 {
-                    RdxItem.Progress = status.Clone();
-                    if(status.State == RdxProgressStatus.SUCCESS)
-                        RdxItem.Progress.Message = Resources.Resources.A_OPERACAO_FOI_CONCL36721;                        
+                    rdxParam.Progress = status.Clone();
+                    if(status.State == RdxProgressStatus.SUCCESS) {
+                        model.AlertType = AlertTypeEnum.success;
+                        rdxParam.Progress.Message = Resources.Resources.A_OPERACAO_FOI_CONCL36721;
+                    }
                 },
+                cToken, model.Timeout);
 
-                cToken, Year, model.Timeout);
+            return rdxParam;
+        }
 
-            return RdxItem;
+        private static List<ReindexFunctionItem> GetSelectedReindexFunctionItems(List<ReindexFunctionItem> reindexFunctionItems)
+        {
+            bool upgradeVersionChecked = reindexFunctionItems.First(item => item.Id == "UPGRADECLIENTS").Value;
+            reindexFunctionItems.First(item => item.Id == "UPGRADECLIENT1").Value = upgradeVersionChecked;
+            reindexFunctionItems.First(item => item.Id == "UPGRADECLIENT2").Value = upgradeVersionChecked;
+
+            return reindexFunctionItems.Where(x => x.Value == true).ToList(); //Get all the selected items
         }
 
         [HttpPost]
@@ -327,8 +355,14 @@ namespace Administration.Controllers
                 reindexCTknSrc = new CancellationTokenSource();
                 CancellationToken cToken = reindexCTknSrc.Token;
 
+                //Check if something is running
+                if (RdxItem != null)
+                {
+                    if (RdxItem.Progress.State == RdxProgressStatus.RUNNING)
+                        return Json(new { Success = true });
+                }
                 //Start reindex
-                RdxItem = startReindexation(model, RdxItem, CurrentYear, cToken);                
+                RdxItem = startReindexation(model, CurrentYear, cToken);
             }
             catch (GenioException e)
             {
@@ -336,19 +370,21 @@ namespace Administration.Controllers
                     RdxItem = new RdxParamUpgradeSchema();
 
                 RdxItem.Progress.Message = Translations.Get(e.UserMessage, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper());
+                model.AlertType = AlertTypeEnum.danger;
                 RdxItem.Progress.State = RdxProgressStatus.ERROR;
             }
             catch (Exception e)
             {
                 if(RdxItem == null)
                     RdxItem = new RdxParamUpgradeSchema();
-                    
+
                 RdxItem.Progress.Message = Translations.Get(e.Message, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper());
                 RdxItem.Progress.State = RdxProgressStatus.ERROR;
+                model.AlertType = AlertTypeEnum.danger;
             }
-            
-            if (RdxItem.Progress.State == RdxProgressStatus.ERROR) return Json(new { Success = false, Message = RdxItem.Progress.Message });
-            else return Json(new { Success = true });
+
+            if (RdxItem.Progress.State == RdxProgressStatus.ERROR) return Json(new { Success = false, Message = RdxItem.Progress.Message, AlertType = AlertTypeEnum.danger });
+            else return Json(new { Success = true, AlertType = AlertTypeEnum.success });
         }
 
         [HttpGet]
@@ -377,30 +413,26 @@ namespace Administration.Controllers
         [HttpGet]
         public IActionResult CancelReindex(){
             if(reindexCTknSrc == null){
-                return Json(new { Sucess = false, Message = Resources.Resources.THE_REINDEX_TASK_IS_22139 });
+                return Json(new { Sucess = false, Message = Resources.Resources.THE_REINDEX_TASK_IS_22139, AlertType = AlertTypeEnum.info });
             }
 
             try
             {
                 reindexCTknSrc.Cancel();
-                return Json(new { Success = true });
+                return Json(new { Success = true, AlertType = AlertTypeEnum.info });
             }
             catch(Exception e)
             {
-                return Json(new { Success = false, Message = e.Message });
+                return Json(new { Success = false, Message = e.Message, AlertType = AlertTypeEnum.danger });
             }
         }
-
 
         [HttpGet]
         public IActionResult Backup()
         {
             var model = new DbBackupModel();
 
-            //string pathConfig = CSGenio.framework.Configuration.GetConfigPath();
-            //ConfigurationXML conf = ConfigurationXML.readXML(pathConfig + Path.DirectorySeparatorChar + "Configuracoes.xml");
-
-            model.Load(MapPath(@"~\dbs\backup"));
+            model.Load(PersistentSupport.GetDefaultBackupsLocation());
 
             return Json(model);
         }
@@ -412,23 +444,27 @@ namespace Administration.Controllers
             try
             {
                 model.ResultMsg = string.Empty;
-                
-                if (!ModelState.IsValid)
-                    throw new BusinessException(Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860, "DbAdminController.Backup", Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860);
 
-                model.ResultMsg = String.Format(Resources.Resources.BACKUP_DA_BASE_DE_DA01918, 
-                    new DBMaintenance(AppDomain.CurrentDomain.BaseDirectory).BackupDatabase(model.DbUser, model.DbPsw, "", CurrentYear));
+                if (!ModelState.IsValid) {
+                    model.AlertType = AlertTypeEnum.danger;
+                    throw new BusinessException(Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860, "DbAdminController.Backup", Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860);
+                }
+                model.AlertType = AlertTypeEnum.success;
+                model.ResultMsg = String.Format(Resources.Resources.BACKUP_DA_BASE_DE_DA01918,
+                DBMaintenance.BackupDatabase(CurrentYear, model.DbUser, model.DbPsw));
             }
             catch (GenioException e)
             {
+                model.AlertType = AlertTypeEnum.danger;
                 model.ResultMsg = Translations.Get(e.UserMessage, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper()) + " : " + e.Message;
             }
             catch (Exception e)
             {
+                model.AlertType = AlertTypeEnum.danger;
                 model.ResultMsg = Translations.Get(e.Message, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper());
             }
 
-            model.Load(MapPath(@"~\dbs\backup"));
+            model.Load(PersistentSupport.GetDefaultBackupsLocation());
             return Json(model);
         }
 
@@ -437,17 +473,19 @@ namespace Administration.Controllers
         public IActionResult DeleteBackup([FromBody] DbBackupModel model)
         {
             model.ResultMsg = string.Empty;
-            model.Load(MapPath(@"~\dbs\backup"));
+            model.Load(PersistentSupport.GetDefaultBackupsLocation());
 
             //validate input
             var backup = model.BackupFiles.Find(x => x.Filename == model.BackupItem);
             if (backup != null)
             {
-                new DBMaintenance(AppDomain.CurrentDomain.BaseDirectory).DeleteBackup(Path.Combine(MapPath(@"~\dbs\backup"), model.BackupItem));
+                DBMaintenance.DeleteBackup(Path.Combine(PersistentSupport.GetDefaultBackupsLocation(), model.BackupItem));
                 model.BackupFiles.Remove(backup);
             }
-            else
+            else{
+                model.AlertType = AlertTypeEnum.danger;
                 model.ResultMsg = Resources.Resources.O_FICHEIRO_INDICADO_18158;
+            }
 
             return Json(model);
         }
@@ -457,27 +495,34 @@ namespace Administration.Controllers
         public IActionResult Restore([FromBody] DbBackupModel model)
         {
             model.ResultMsg = string.Empty;
-            model.Load(MapPath(@"~\dbs\backup"));
+            model.Load(PersistentSupport.GetDefaultBackupsLocation());
 
-            if (model.BackupItem == null || model.BackupItem.Length == 0)
+            if (model.BackupItem == null || model.BackupItem.Length == 0) {
+                model.AlertType = AlertTypeEnum.danger;
                 model.ResultMsg = Resources.Resources.NENHUM_FICHEIRO_DE_B40914;
+            }
             else
             {
                 try
                 {
-                    if (!ModelState.IsValid)
+                    if (!ModelState.IsValid) {
+                        model.AlertType = AlertTypeEnum.danger;
                         throw new BusinessException(Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860, "DbAdminController.Restore", Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860);
+                    }
+                    string backupsRoot = PersistentSupport.GetDefaultBackupsLocation();
+                    DBMaintenance.RestoreDatabase(CurrentYear, model.DbUser, model.DbPsw, backupsRoot, model.BackupItem);
 
-                    new DBMaintenance(AppDomain.CurrentDomain.BaseDirectory).RestoreDatabase(model.DbUser, model.DbPsw, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "dbs", "backup"), model.BackupItem, CurrentYear);
-                    
+                    model.AlertType = AlertTypeEnum.success;
                     model.ResultMsg = Resources.Resources.BASE_DE_DADOS_RESTAU48748;
                 }
                 catch (GenioException e)
                 {
+                    model.AlertType = AlertTypeEnum.danger;
                     model.ResultMsg = Translations.Get(e.UserMessage, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper()) + " : " + e.Message;
                 }
                 catch (Exception e)
                 {
+                    model.AlertType = AlertTypeEnum.danger;
                     model.ResultMsg = Translations.Get(e.Message, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper());
                 }
             }
@@ -547,10 +592,12 @@ namespace Administration.Controllers
                     }
                     catch (GenioException e)
                     {
+                        model.AlertType = AlertTypeEnum.danger;
                         DqItem.ResultMsg = Translations.Get(e.UserMessage, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper()) + ": " + e.Message;
                     }
                     catch (Exception e)
                     {
+                        model.AlertType = AlertTypeEnum.danger;
                         DqItem.ResultMsg = Translations.Get(e.Message, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper());
                     }
                     Active_IndexItem.LastUpdate = DateTime.Now;
@@ -566,14 +613,11 @@ namespace Administration.Controllers
         {
             List<UnusedIndexItem> res = new List<UnusedIndexItem>();
 
-            string pathConfig = CSGenio.framework.Configuration.GetConfigPath();
-            ConfigurationXML conf = ConfigurationXML.readXML(pathConfig + Path.DirectorySeparatorChar + "Configuracoes.xml");
-
             try
             {
                 var sp = CSGenio.persistence.PersistentSupport.getPersistentSupport(year);
 
-                if (sp.DatabaseType != DatabaseType.SQLSERVER2000 && sp.DatabaseType != DatabaseType.SQLSERVER2005 && sp.DatabaseType != DatabaseType.SQLSERVER2008)
+                if (sp.DatabaseType != DatabaseType.SQLSERVER && sp.DatabaseType != DatabaseType.SQLSERVERCOMPAT)
                     throw new FrameworkException("Not supported database type", "Indexes", "Not supported database type");
 
             //TODO: support for multiple Dbms types
@@ -614,7 +658,7 @@ namespace Administration.Controllers
 
                 var dataMatrix = sp.executeQuery(sql);
 
-              
+
                 for (int i = 0; i < dataMatrix.NumRows; i++)
                 {
                     UnusedIndexItem item = new UnusedIndexItem()
@@ -648,25 +692,22 @@ namespace Administration.Controllers
             }
 
             return res;
-          
+
         }
         private static List<RecommendedIndexItem> FindRecommendedIndexes(Action<string, int> OnProgress, string year)
         {
             List<RecommendedIndexItem> res = new List<RecommendedIndexItem>();
 
-            string pathConfig = CSGenio.framework.Configuration.GetConfigPath();
-            ConfigurationXML conf = ConfigurationXML.readXML(pathConfig + Path.DirectorySeparatorChar + "Configuracoes.xml");
-
             try
                     {
                 var sp = CSGenio.persistence.PersistentSupport.getPersistentSupport(year);
 
-                if (sp.DatabaseType != DatabaseType.SQLSERVER2000 && sp.DatabaseType != DatabaseType.SQLSERVER2005 && sp.DatabaseType != DatabaseType.SQLSERVER2008)
+                if (sp.DatabaseType != DatabaseType.SQLSERVER && sp.DatabaseType != DatabaseType.SQLSERVERCOMPAT)
                     throw new FrameworkException("Not supported database type", "Indexes", "Not supported database type");
 
                 //TODO: support for multiple Dbms types
                 string sql = @"SELECT
-                            CAST((dm_migs.avg_user_impact*(dm_migs.user_seeks+dm_migs.user_scans)) AS decimal(15,2)) OrderCol,                            
+                            CAST((dm_migs.avg_user_impact*(dm_migs.user_seeks+dm_migs.user_scans)) AS decimal(15,2)) OrderCol,
                             object_name(dm_mid.object_id,dm_mid.database_id) AS [TableName],
                             dm_mid.equality_columns as EqualityColumns,
                             dm_mid.inequality_columns as InequalityColumns,
@@ -674,8 +715,8 @@ namespace Administration.Controllers
                             dm_migs.last_user_seek AS Last_User_Seek,
                             dm_migs.user_seeks as UserSeeks,
                             dm_migs.user_scans as UserScans,
-                            CAST(dm_migs.avg_user_impact AS decimal (5,2)) Avg_User_Impact,  
-                            CAST((dm_migs.avg_user_impact*(dm_migs.user_seeks+dm_migs.user_scans)) AS decimal (15,2)) Avg_Estimated_Impact,     
+                            CAST(dm_migs.avg_user_impact AS decimal (5,2)) Avg_User_Impact,
+                            CAST((dm_migs.avg_user_impact*(dm_migs.user_seeks+dm_migs.user_scans)) AS decimal (15,2)) Avg_Estimated_Impact,
                             'CREATE INDEX [AUTODETECTED_IX_' + object_name(dm_mid.object_id,dm_mid.database_id) + '_'
                             + REPLACE(REPLACE(REPLACE(ISNULL(dm_mid.equality_columns,''),', ','_'),'[',''),']','') +
                             CASE WHEN dm_mid.equality_columns IS NOT NULL AND dm_mid.inequality_columns IS NOT NULL THEN '_' ELSE '' END
@@ -822,7 +863,7 @@ namespace Administration.Controllers
                                         List<Relation> Relation_path_list = new List<Relation>();
                                         //Falta verificar e acrescentar que relações intermédias existem para chegar da área base à outra área que tem relação com o destino
                                         Relation_path_list.AddRange(GetRelationListBetweenAreas(rbase.AliasSourceTab, routra.AliasSourceTab));
-                                        
+
 
                                         areaPathways.Relation_path_list = Relation_path_list;
                                         _relacoesCoerentes.AreaPathwaysList.Add(areaPathways);
@@ -872,7 +913,7 @@ namespace Administration.Controllers
                 Active_DqItem.ProgressMessage = "";
                 Active_DqItem.Completed = false;
                 Active_DqItem.Year = CurrentYear;
-                
+
                 Active_DqItem.RelationMode = model.RelationMode;
                 Active_DqItem.NullsIsChecked = model.NullsIsChecked;
                 Active_DqItem.ViewsIsChecked = model.ViewsIsChecked;
@@ -915,10 +956,12 @@ namespace Administration.Controllers
                     }
                     catch (GenioException e)
                     {
+                        model.AlertType = AlertTypeEnum.danger;
                         DqItem.ResultMsg = Translations.Get(e.UserMessage, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper()) + ": " + e.Message;
                     }
                     catch (Exception e)
                     {
+                        model.AlertType = AlertTypeEnum.danger;
                         DqItem.ResultMsg = Translations.Get(e.Message, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper());
                     }
                     Active_DqItem.LastUpdate = DateTime.Now;
@@ -990,7 +1033,7 @@ namespace Administration.Controllers
             sp.Timeout = 300;
             int ix = 0;
             int total = 0;
-             
+
             foreach (var dualRelation in dualRelations.AreaPathwaysList)
             {
                 switch (ModeRelations)
@@ -1037,7 +1080,7 @@ namespace Administration.Controllers
                     .Select(area_table1.Alias, area_table1.PrimaryKeyName)
                     .Select(area_table1.Alias, table1_destnfield)
 
-                    //a partir da tabela de origem                    
+                    //a partir da tabela de origem
                     .From(area_table1.QSystem, area_table1.TableName, area_table1.Alias);
                     //passando OBRIGATORIAMENTE (INNER JOIN) pelas tabelas intermédias alternativas à relação direta calculada
                     for (int i = 0; i < dualRelation.Relation_path_list.Count; i++)
@@ -1059,26 +1102,30 @@ namespace Administration.Controllers
                     sql_details.Select(area_table2.Alias, table2_destn.SourceRelField);
                     //não necessita disto, já tem os dados necessários: sql_details.Join(area_destn.TableName, area_destn.Alias, TableJoinType.Left).On(CriteriaSet.And().Equal(table2_destn.AliasSourceTab, table2_destn.SourceRelField, table2_destn.AliasTargetTab, table2_destn.TargetRelField));
 
-                    //onde as chaves de ligação ao destino sejam diferentes. Com uso de chaves a null permitirá que uma das chaves seja nula (mas a outra não). 
+                    //onde as chaves de ligação ao destino sejam diferentes. Com uso de chaves a null permitirá que uma das chaves seja nula (mas a outra não).
                     if (UseNulls)
-                        sql_details.Where(CriteriaSet.Or().NotEqual(table1_destn.AliasSourceTab, table1_destn.SourceRelField, area_table2.Alias, table2_destn.SourceRelField)
-                                                      .SubSet(
-                                                        CriteriaSet.Or()
-                                                        .SubSet(
-                                                            CriteriaSet.And()
-                                                            .Equal(area_table1.Alias, table1_destn.SourceRelField, null)
-                                                            .NotEqual(area_table2.Alias, table2_destn.SourceRelField, null)
-                                                        )
-                                                        .SubSet(
-                                                            CriteriaSet.And()
-                                                            .Equal(area_table2.Alias, table2_destn.SourceRelField, null)
-                                                            .NotEqual(area_table1.Alias, table1_destn.SourceRelField, null)
-                                                        )
-                        )
-                    );
+                    {
+                        sql_details.Where(
+                            CriteriaSet.Or().NotEqual(table1_destn.AliasSourceTab, table1_destn.SourceRelField, area_table2.Alias, table2_destn.SourceRelField)
+                                .SubSet(
+                                    CriteriaSet.Or()
+                                    .SubSet(
+                                        CriteriaSet.And()
+                                        .Equal(area_table1.Alias, table1_destn.SourceRelField, null)
+                                        .NotEqual(area_table2.Alias, table2_destn.SourceRelField, null)
+                                    )
+                                    .SubSet(
+                                        CriteriaSet.And()
+                                        .Equal(area_table2.Alias, table2_destn.SourceRelField, null)
+                                        .NotEqual(area_table1.Alias, table1_destn.SourceRelField, null)
+                                    )
+                            )
+                        );
+                    }
                     else
-                    sql_details.Where(CriteriaSet.Or().NotEqual(table1_destn.AliasSourceTab, table1_destn.SourceRelField, area_table2.Alias, table2_destn.SourceRelField));
-
+                    {
+                        sql_details.Where(CriteriaSet.Or().NotEqual(table1_destn.AliasSourceTab, table1_destn.SourceRelField, area_table2.Alias, table2_destn.SourceRelField));
+                    }
 
                     sql_details.noLock = true;
 
@@ -1178,7 +1225,7 @@ namespace Administration.Controllers
                         .Select(area_table1.Alias, area_table1.PrimaryKeyName)
                         .Select(area_table1.Alias, table1_destnfield)
 
-                        //a partir da tabela de origem                    
+                        //a partir da tabela de origem
                         .From(area_table1.QSystem, area_table1.TableName, area_table1.Alias)
                         .Join(area_destn.QSystem, area_destn.TableName, area_destn.Alias, TableJoinType.Left)
                             .On(CriteriaSet.And().Equal(area_destn.Alias, table1_destn.TargetRelField, area_table1.Alias, table1_destnfield))
@@ -1212,7 +1259,7 @@ namespace Administration.Controllers
                                 OnProgress(msg, ix * 100 / Area.ListaAreas.Count);
                             }
                         }
-                        
+
                         if (CountIR > 0)
                         {
                             var item = new OrphanRelation()
@@ -1274,8 +1321,7 @@ namespace Administration.Controllers
             #region Innicialização das variaveis
             var model = new ChangeYearModel();
 
-            var pathConfig = CSGenio.framework.Configuration.GetConfigPath();
-            var conf = ConfigurationXML.readXML(pathConfig + Path.DirectorySeparatorChar + "Configuracoes.xml");
+            var conf = configManager.GetExistingConfig();
 
             model.Year = (DateTime.Now.Year + 1).ToString();
             model.Years = CSGenio.framework.Configuration.Years.Select(y => new SelectListItem() { Text = y, Value = y, Selected = (y == conf.anoDefault) });
@@ -1284,7 +1330,7 @@ namespace Administration.Controllers
             if (conf.DataSystems.Count == 0)
             {
                 ModelState.AddModelError("DbAdminController.ChangeYear", Resources.Resources.FICHEIRO_DE_CONFIGUR13972);
-                return Json(new { Model = model, Errors = GetModelStateErrors() });
+                return Json(new { Model = model, Errors = GetModelStateErrors(), AlertType = AlertTypeEnum.danger });
             }
 
             DataSystemXml dataSystem = null;
@@ -1297,14 +1343,14 @@ namespace Administration.Controllers
             if (dataSystem == null)
             {
                 ModelState.AddModelError("GET DbAdminController.ChangeYear", Resources.Resources.FICHEIRO_DE_CONFIGUR13972);
-                return Json(new { Model = model, Errors = GetModelStateErrors() });
+                return Json(new { Model = model, Errors = GetModelStateErrors(), AlertType = AlertTypeEnum.danger });
             }
             #endregion
 
             if (conf.DataSystems.Count == 0)
             {
                 ModelState.AddModelError("DbAdminController.ChangeYear", Resources.Resources.FICHEIRO_DE_CONFIGUR13972);
-                return Json(new { Model = model, Errors = GetModelStateErrors() });
+                return Json(new { Model = model, Errors = GetModelStateErrors(), AlertType = AlertTypeEnum.danger });
             }
 
             model.NewDBSchema = string.Format("{0}{1}", CSGenio.framework.Configuration.Program, model.Year);
@@ -1316,15 +1362,13 @@ namespace Administration.Controllers
             model.Timeout = 300 * mult;
             model.CriarBD = true;
 
-            return Json(new { Model = model, Errors = GetModelStateErrors() });
+            return Json(new { Model = model, Errors = GetModelStateErrors(), AlertType = AlertTypeEnum.danger });
         }
 
         [HttpPost]
         public IActionResult ChangeYear([FromBody] ChangeYearModel model)
         {
-            var pathConfig = CSGenio.framework.Configuration.GetConfigPath();
-            var pathConfigFile = Path.Combine(pathConfig, "Configuracoes.xml");
-            var conf = ConfigurationXML.readXML(pathConfigFile);
+            var conf = configManager.GetExistingConfig();
 
             model.Years = CSGenio.framework.Configuration.Years.Select(y => new SelectListItem() { Text = y, Value = y, Selected = (y == conf.anoDefault) });// Voltar inicializar o array to não ter erros de renderização.
             if (!ModelState.IsValid || ChangeYearProgressBar.InProcess)
@@ -1351,13 +1395,13 @@ namespace Administration.Controllers
             {
                 ModelState.AddModelError("DbAdminController.ChangeYear", Resources.Resources.FICHEIRO_DE_CONFIGUR13972);
                 ChangeYearProgressBar.InProcess = false;
-                return Json(new { Model = model, Errors = GetModelStateErrors() });
+                return Json(new { Model = model, Errors = GetModelStateErrors(), AlertType = AlertTypeEnum.danger });
             }// Validate se já exists configuração to o Qyear / schema
             else if (model.CriarBD && conf.DataSystems.Any(ds => ds.Name == model.Year || ds.Schemas.Any(s => s.Schema == model.NewDBSchema)))
             {
                 ModelState.AddModelError("DbAdminController.ChangeYear", Resources.Resources.JA_EXISTE_A_BASE_DE_59437);
                 ChangeYearProgressBar.InProcess = false;
-                return Json(new { Model = model, Errors = GetModelStateErrors() });
+                return Json(new { Model = model, Errors = GetModelStateErrors(), AlertType = AlertTypeEnum.danger });
             }
 
             DataSystemXml curDataSystem = conf.DataSystems.FirstOrDefault(ds => ds.Name == model.SrcYear);
@@ -1383,12 +1427,32 @@ namespace Administration.Controllers
                     Name = model.Year
                 };
 
+                if(!string.IsNullOrEmpty(model.NewAuditDBSchema))
+                {
+                    dataSystem.DataSystemLog = new DataSystemXml()
+                    {
+                        Type = curDataSystem.Type,
+                        Server = curDataSystem.Server,
+                        Login = curDataSystem.Login,
+                        Password = curDataSystem.Password,
+                        Schemas = new List<DataXml>()
+                        {
+                            new DataXml()
+                            {
+                                Id = string.Format("LOG_{0}", curDataSchema.Id),
+                                Schema = model.NewAuditDBSchema
+                            }
+                        },
+                        Name = string.Format("LOG_{0}", model.Year)
+                    };
+                }
+
                 // Adicionar o novo DataSystems
                 conf.DataSystems.Add(dataSystem);
-                conf.writeXML(pathConfigFile);
+                configManager.StoreConfig(conf);
             }
 
-            // Reload Configuration static instance in server with the new Configuracoes.xml data
+            // Reload Configuration static instance in server with the new configuration data
             CSGenio.framework.Configuration.ReadConfiguration(conf);
             var dbMaintenance = new DBMaintenance(AppDomain.CurrentDomain.BaseDirectory);
             var reindexOrder = new DBMaintenance(AppDomain.CurrentDomain.BaseDirectory).GetReindexScripts();
@@ -1428,6 +1492,29 @@ namespace Administration.Controllers
                             else
                             {
                                 ChangeYearProgressBar.Text = string.Format("Creating Schema: {0}", status.ActualScript);
+                                ChangeYearProgressBar.Percent = Convert.ToInt32(status.Percentage() * 0.2);
+                            }
+                        };
+                        RdxUpgradeSchema.ChangedExecutionScript += changedExecutionScript;
+                        PersistentSupport.upgradeSchema(RdxUpgradeSchema, dataSystem);
+                        RdxUpgradeSchema.ChangedExecutionScript -= changedExecutionScript;
+                    }
+                    else {
+                        // Delete log triggers
+                        reindexOrder.ReIndexItems.ForEach(rdxf => rdxf.Selected = rdxf.Id == "DELETELOGTRIGGERS");
+                        reindexOrder.timeout = model.Timeout;
+                        reindexOrder.CalculateOrder();
+                        RdxUpgradeSchema.OrderExec = reindexOrder.GetOrderToExecute();
+                        changedExecutionScript += (sender, eventArgs, status) =>
+                        {
+                            if (status.State == RdxProgressStatus.SUCCESS)
+                            {
+                                ChangeYearProgressBar.Text = "";
+                                ChangeYearProgressBar.Percent = 20;
+                            }
+                            else
+                            {
+                                ChangeYearProgressBar.Text = string.Format("Delete log triggers: {0}", status.ActualScript);
                                 ChangeYearProgressBar.Percent = Convert.ToInt32(status.Percentage() * 0.2);
                             }
                         };
@@ -1477,23 +1564,52 @@ namespace Administration.Controllers
                     AfterChangeYear(curDataSystem, dataSystem);
                     ChangeYearProgressBar.Percent = 95;
 
+                    // 5) Criar os log triggers
+                    var loggingScripts = dataSystem.DataSystemLog != null && dataSystem.DataSystemLog.Schemas.Count != 0 ? // Se estiver definido, cria a base de dados de auditoría
+                        new List<string>() { "CREATEDBLOG", "CREATESCHEMALOG", "CREATELOGVIEWSLOG", "DELETELOGTRIGGERS", "CREATELOGTRIGGERS", "CREATELOGVIEWS" } :
+                        new List<string>() { "DELETELOGTRIGGERS", "CREATELOGTRIGGERS", "CREATELOGVIEWS" };
+                    reindexOrder.ReIndexItems.ForEach(rdxf => rdxf.Selected = loggingScripts.Contains(rdxf.Id));
+                    reindexOrder.timeout = model.Timeout;
+                    reindexOrder.CalculateOrder();
+                    RdxUpgradeSchema.OrderExec = reindexOrder.GetOrderToExecute();
+                    changedExecutionScript = null;
+                    changedExecutionScript += (sender, eventArgs, status) =>
+                    {
+                        if (status.State == RdxProgressStatus.SUCCESS)
+                        {
+                            ChangeYearProgressBar.Text = "";
+                            ChangeYearProgressBar.Percent = 97;
+                        }
+                        else
+                        {
+                            ChangeYearProgressBar.Text = string.Format("Creating logs: {0}", status.ActualScript);
+                            ChangeYearProgressBar.Percent += Convert.ToInt32(status.Percentage() * 0.2);
+                        }
+                    };
+                    RdxUpgradeSchema.ChangedExecutionScript += changedExecutionScript;
+                    PersistentSupport.upgradeSchema(RdxUpgradeSchema, dataSystem);
+                    RdxUpgradeSchema.ChangedExecutionScript -= changedExecutionScript;
+                    ChangeYearProgressBar.Percent = 97;
 
+                    model.AlertType = AlertTypeEnum.success;
                     ChangeYearProgressBar.Text = ChangeYearProgressBar.EndMsg = Resources.Resources.MUDANCA_DE_ANO_CONCL59631;
                     ChangeYearProgressBar.Percent = 100;
                 }
                 catch (GenioException e)
                 {
+                    model.AlertType = AlertTypeEnum.danger;
                     ChangeYearProgressBar.EndMsg = string.Format("Error. {0}", Translations.Get(e.UserMessage, currentCulture) + ": " + e.Message);
                 }
                 catch (Exception e)
                 {
+                    model.AlertType = AlertTypeEnum.danger;
                     ChangeYearProgressBar.EndMsg = string.Format("Error. {0}", Translations.Get(e.Message, currentCulture));
                 }
                 ChangeYearProgressBar.InProcess = false;
             });
             #endregion
 
-            return Json(new { Model = model, Errors = GetModelStateErrors() });
+            return Json(new { Model = model, Errors = GetModelStateErrors(), AlertType = AlertTypeEnum.danger });
         }
 
         private void BeforeChangeYear(DataSystemXml srcDataSystem, DataSystemXml destDataSystem)
@@ -1505,7 +1621,7 @@ namespace Administration.Controllers
         {
             // USE [MANUAL GQT MANADMCS AFTER_MDANO]
         }
-		
+
         [HttpGet]
         public IActionResult Security()
         {
@@ -1518,7 +1634,7 @@ namespace Administration.Controllers
         [HttpPost]
         public IActionResult SaveTDE([FromBody] DbSecurityModel model)
         {
-            model.ResultMsg = ""; 
+            model.ResultMsg = "";
 
             try
             {
@@ -1535,6 +1651,7 @@ namespace Administration.Controllers
                 {
                     if (model.MasterPsw == null || model.MasterPsw.Trim() == "")
                     {
+                        model.AlertType = AlertTypeEnum.danger;
                         model.ResultMsg = Resources.Resources.E_OBRIGATORIO_O_PREE06980;
                         return Json(model);
                     }
@@ -1559,12 +1676,14 @@ namespace Administration.Controllers
             }
             catch (GenioException ex)
             {
+                model.AlertType = AlertTypeEnum.danger;
                 model.ResultMsg = ex.Message;
             }
 
-            if (model.ResultMsg == null || model.ResultMsg == "")
+            if (model.ResultMsg == null || model.ResultMsg == "") {
+                model.AlertType = AlertTypeEnum.success;
                 model.ResultMsg = Resources.Resources.BASE_DE_DADOS_COM_EN26288;
-
+            }
             return Json(model);
         }
 
@@ -1574,17 +1693,18 @@ namespace Administration.Controllers
             model.ResultMsg = string.Empty;
             if (String.IsNullOrEmpty(model.DbUser))
             {
+                model.AlertType = AlertTypeEnum.danger;
                 model.ResultMsg = Resources.Resources.O_USERNAME_NAO_PODE_14383;
                 return Json(model);
             }
             else if (String.IsNullOrEmpty(model.DbPsw))
             {
+                model.AlertType = AlertTypeEnum.danger;
                 model.ResultMsg = Resources.Resources.A_PASSWORD_NAO_PODE_51074;
                 return Json(model);
             }
 
-            string pathConfig = CSGenio.framework.Configuration.GetConfigPath();
-            ConfigurationXML conf = ConfigurationXML.readXML(pathConfig + Path.DirectorySeparatorChar + "Configuracoes.xml");
+            var conf = configManager.GetExistingConfig();
 
             try
             {
@@ -1599,6 +1719,7 @@ namespace Administration.Controllers
                 sql = @"USE MASTER; SELECT NAME FROM sys.symmetric_keys WHERE symmetric_key_id = 101;";
                 if (CSGenio.persistence.DBConversion.ToString(sp.executeScalar(sql)) == "")
                 {
+                    model.AlertType = AlertTypeEnum.danger;
                     model.ResultMsg = Resources.Resources.NAO_ESTA_CRIADA_A_CH54248;
                     sp.closeConnection();
                     return Json(model);
@@ -1610,6 +1731,7 @@ namespace Administration.Controllers
                 sql = String.Format(@"USE MASTER; SELECT db.is_encrypted FROM sys.databases db LEFT OUTER JOIN sys.dm_database_encryption_keys dm ON db.database_id = dm.database_id WHERE db.name = '{0}';", conf.DataSystems[0].Schemas[0].Schema);
                 if (CSGenio.persistence.DBConversion.ToInteger(sp.executeScalar(sql)) == 0)
                 {
+                    model.AlertType = AlertTypeEnum.danger;
                     model.ResultMsg = Resources.Resources.A_BASE_DE_DADOS_NAO_03552;
                     sp.closeConnection();
                     return Json(model);
@@ -1618,9 +1740,10 @@ namespace Administration.Controllers
             }
             catch (GenioException ex)
             {
+                model.AlertType = AlertTypeEnum.danger;
                 model.ResultMsg = ex.Message;
             }
-
+            model.AlertType = AlertTypeEnum.success;
             model.ResultMsg = Resources.Resources.BASE_DE_DADOS_COM_EN26288;
 
             return Json(model);

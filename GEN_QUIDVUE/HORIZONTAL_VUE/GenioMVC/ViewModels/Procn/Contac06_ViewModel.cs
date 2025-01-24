@@ -1,0 +1,663 @@
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections;
+using System.Collections.Concurrent;
+using System.Collections.Specialized;
+using System.ComponentModel.DataAnnotations;
+using System.Data;
+using System.Globalization;
+
+using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
+
+namespace GenioMVC.ViewModels.Procn
+{
+	public class Contac06_ViewModel : FormViewModel<Models.Procn>, IPreparableForSerialization
+	{
+		[JsonIgnore]
+		public override bool HasWriteConditions { get => false; }
+
+		/// <summary>
+		/// Reference for the Models MsqActive property
+		/// </summary>
+		[JsonIgnore]
+		public bool MsqActive { get; set; } = false;
+
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Title" | Type: "CE"
+		/// </summary>
+		public string ValCodprope { get; set; }
+
+		#endregion
+		/// <summary>
+		/// Title: "Name" | Type: "C"
+		/// </summary>
+		public string ValName { get; set; }
+		/// <summary>
+		/// Title: "Email" | Type: "C"
+		/// </summary>
+		public string ValEmail { get; set; }
+		/// <summary>
+		/// Title: "Telephone" | Type: "C"
+		/// </summary>
+		public string ValTelephon { get; set; }
+		/// <summary>
+		/// Title: "Description" | Type: "MO"
+		/// </summary>
+		public string ValDescript { get; set; }
+		/// <summary>
+		/// Title: "Date" | Type: "D"
+		/// </summary>
+		[ValidateSetAccess]
+		public DateTime? ValDate { get; set; }
+		/// <summary>
+		/// Title: "Title" | Type: "C"
+		/// </summary>
+		[ValidateSetAccess]
+		public TableDBEdit<GenioMVC.Models.Prope> TablePropeTitle { get; set; }
+
+		#region Navigations
+		#endregion
+
+		#region Auxiliar Keys for Image controls
+
+
+
+		#endregion
+
+		#region Extra database fields
+
+
+
+		#endregion
+
+		#region Fields for formulas
+
+
+		#endregion
+
+		public string ValCodprocn { get; set; }
+
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// A call to Init() needs to be manually invoked after this constructor
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public Contac06_ViewModel() : base(null!) { }
+
+		public Contac06_ViewModel(UserContext userContext, bool nestedForm = false) : base(userContext, "FCONTAC06", nestedForm) { }
+
+		public Contac06_ViewModel(UserContext userContext, Models.Procn row, bool nestedForm = false) : base(userContext, "FCONTAC06", row, nestedForm) { }
+
+		public Contac06_ViewModel(UserContext userContext, string id, bool nestedForm = false, string[]? fieldsToLoad = null) : this(userContext, nestedForm)
+		{
+			this.Navigation.SetValue("procn", id);
+			Model = Models.Procn.Find(id, userContext, "FCONTAC06", fieldsToQuery: fieldsToLoad);
+			if (Model == null)
+				throw new ModelNotFoundException("Model not found");
+			InitModel();
+		}
+
+		protected override void InitLevels()
+		{
+			this.RoleToShow = CSGenio.framework.Role.AUTHORIZED;
+			this.RoleToEdit = CSGenio.framework.Role.AUTHORIZED;
+		}
+
+		#region Form conditions
+
+		public override StatusMessage InsertConditions()
+		{
+			return InsertConditions(m_userContext);
+		}
+
+		public static StatusMessage InsertConditions(UserContext userContext)
+		{
+			var m_userContext = userContext;
+			StatusMessage result = new StatusMessage(Status.OK, "");
+			Models.Procn model = new Models.Procn(userContext) { Identifier = "FCONTAC06" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FCONTAC06");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
+			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
+			result.MergeStatusMessage(tableResult);
+			return result;
+		}
+
+		public override StatusMessage UpdateConditions()
+		{
+			StatusMessage result = new StatusMessage(Status.OK, "");
+			var model = Model;
+
+			var tableResult = model.EvaluateTableConditions(ConditionType.UPDATE);
+			result.MergeStatusMessage(tableResult);
+			return result;
+		}
+
+		public override StatusMessage DeleteConditions()
+		{
+			StatusMessage result = new StatusMessage(Status.OK, "");
+			var model = Model;
+
+			var tableResult = model.EvaluateTableConditions(ConditionType.DELETE);
+			result.MergeStatusMessage(tableResult);
+			return result;
+		}
+
+		public override StatusMessage ViewConditions()
+		{
+			var model = Model;
+			StatusMessage result = model.EvaluateTableConditions(ConditionType.VIEW);
+			var tableResult = model.EvaluateTableConditions(ConditionType.VIEW);
+			result.MergeStatusMessage(tableResult);
+			return result;
+		}
+
+		protected override StatusMessage EvaluateWriteConditions(bool isApply)
+		{
+			Models.Procn model = Model;
+			StatusMessage result = new StatusMessage(Status.OK, "");
+			return result;
+		}
+
+		public StatusMessage EvaluateTableConditions(ConditionType type)
+		{
+			return Model.EvaluateTableConditions(type);
+		}
+
+		#endregion
+
+		#region Mapper
+
+		public override void MapFromModel(Models.Procn m)
+		{
+			if (m == null)
+			{
+				CSGenio.framework.Log.Error("Map Model (Procn) to ViewModel (Contac06) - Model is a null reference");
+				throw new ModelNotFoundException("Model not found");
+			}
+
+			try
+			{
+				ValCodprope = ViewModelConversion.ToString(m.ValCodprope);
+				ValName = ViewModelConversion.ToString(m.ValName);
+				ValEmail = ViewModelConversion.ToString(m.ValEmail);
+				ValTelephon = ViewModelConversion.ToString(m.ValTelephon);
+				ValDescript = ViewModelConversion.ToString(m.ValDescript);
+				ValDate = ViewModelConversion.ToDateTime(m.ValDate);
+				ValCodprocn = ViewModelConversion.ToString(m.ValCodprocn);
+			}
+			catch (Exception)
+			{
+				CSGenio.framework.Log.Error("Map Model (Procn) to ViewModel (Contac06) - Error during mapping");
+				throw;
+			}
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel(Models.Procn m)
+		{
+			if (m == null)
+			{
+				CSGenio.framework.Log.Error("Map ViewModel (Contac06) to Model (Procn) - Model is a null reference");
+				throw new ModelNotFoundException("Model not found");
+			}
+
+			try
+			{
+				m.ValCodprope = ViewModelConversion.ToString(ValCodprope);
+				m.ValName = ViewModelConversion.ToString(ValName);
+				m.ValEmail = ViewModelConversion.ToString(ValEmail);
+				m.ValTelephon = ViewModelConversion.ToString(ValTelephon);
+				m.ValDescript = ViewModelConversion.ToString(ValDescript);
+				m.ValCodprocn = ViewModelConversion.ToString(ValCodprocn);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
+				m.ValDate = ViewModelConversion.ToDateTime(ValDate);
+			}
+			catch (Exception)
+			{
+				CSGenio.framework.Log.Error($"Map ViewModel (Contac06) to Model (Procn) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
+				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "procn.codprope":
+						this.ValCodprope = ViewModelConversion.ToString(_value);
+						break;
+					case "procn.name":
+						this.ValName = ViewModelConversion.ToString(_value);
+						break;
+					case "procn.email":
+						this.ValEmail = ViewModelConversion.ToString(_value);
+						break;
+					case "procn.telephon":
+						this.ValTelephon = ViewModelConversion.ToString(_value);
+						break;
+					case "procn.descript":
+						this.ValDescript = ViewModelConversion.ToString(_value);
+						break;
+					case "procn.codprocn":
+						this.ValCodprocn = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Contac06) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Contac06)", "Unexpected error", ex);
+			}
+		}
+
+		#endregion
+
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Procn.Find(id ?? Navigation.GetStrValue("procn"), m_userContext, "FCONTAC06"); }
+			finally { Model ??= new Models.Procn(m_userContext) { Identifier = "FCONTAC06" }; }
+
+			base.LoadModel();
+		}
+
+		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
+		{
+			this.editable = editable;
+			CSGenio.business.Area oldvalues = null;
+
+			// TODO: Deve ser substituido por search do CSGenioA
+			try
+			{
+				Model = Models.Procn.Find(Navigation.GetStrValue("procn"), m_userContext, "FCONTAC06");
+			}
+			finally
+			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
+				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
+					LoadDefaultValues();
+				else
+					oldvalues = Model.klass;
+			}
+
+			Model.Identifier = "FCONTAC06";
+			InitModel(qs, lazyLoad);
+
+			if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Edit || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
+			{
+				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
+				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
+				MapToModel(Model);
+				// Preencher operações internas
+				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
+				MapFromModel(Model);
+			}
+
+			// Load just the selected row primary keys for checklists.
+			// Needed for submitting forms incase checklists are in collapsible zones that have not been expanded to load the checklist data.
+			LoadChecklistsSelectedIDs();
+		}
+
+		protected override void FillExtraProperties()
+		{
+		}
+
+		protected override void LoadDocumentsProperties(Models.Procn row)
+		{
+		}
+
+		/// <summary>
+		/// Load Partial
+		/// </summary>
+		/// <param name="lazyLoad">Lazy loading of dropdown items</param>
+		public override void LoadPartial(NameValueCollection qs, bool lazyLoad = false)
+		{
+			// MH [bugfix] - Quando o POST da ficha falha, ao recaregar a view os documentos na BD perdem alguma informação (ex: name do file)
+			if (Model == null)
+			{
+				// Precisamos fazer o Find to obter as chaves dos documentos que já foram anexados
+				// TODO: Conseguir passar estas chaves no POST to poder retirar o Find.
+				Model = Models.Procn.Find(Navigation.GetStrValue("procn"), m_userContext, "FCONTAC06");
+				if (Model == null)
+				{
+					Model = new Models.Procn(m_userContext) { Identifier = "FCONTAC06" };
+					Model.klass.QPrimaryKey = Navigation.GetStrValue("procn");
+				}
+				MapToModel(Model);
+				LoadDocumentsProperties(Model);
+			}
+			// Add characteristics
+			Characs = new List<string>();
+
+			Load_Contac06propetitle___(qs, lazyLoad);
+// USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL CONTAC06]/
+		}
+
+// USE /[MANUAL GQT VIEWMODEL_NEW CONTAC06]/
+
+		// Preencher Qvalues default dos fields do form
+		protected override void LoadDefaultValues()
+		{
+		}
+
+		public override CrudViewModelValidationResult Validate()
+		{
+			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
+
+			validator.StringLength("ValName", Resources.Resources.NAME31974, ValName, 50);
+			validator.StringLength("ValEmail", Resources.Resources.EMAIL25170, ValEmail, 50);
+			validator.StringLength("ValTelephon", Resources.Resources.TELEPHONE28697, ValTelephon, 50);
+
+
+			return validator.GetResult();
+		}
+
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
+// USE /[MANUAL GQT VIEWMODEL_SAVE CONTAC06]/
+		public override void Save()
+		{
+
+
+			base.Save();
+		}
+
+// USE /[MANUAL GQT VIEWMODEL_APPLY CONTAC06]/
+
+// USE /[MANUAL GQT VIEWMODEL_DUPLICATE CONTAC06]/
+
+// USE /[MANUAL GQT VIEWMODEL_DESTROY CONTAC06]/
+		public override void Destroy(string id)
+		{
+			Model = Models.Procn.Find(id, m_userContext, "FCONTAC06");
+			if (Model == null)
+				throw new ModelNotFoundException("Model not found");
+			this.flashMessage = Model.Destroy();
+		}
+
+		/// <summary>
+		/// Load selected row primary keys for all checklists
+		/// </summary>
+		public void LoadChecklistsSelectedIDs()
+		{
+		}
+
+		/// <summary>
+		/// TablePropeTitle -> (DB)
+		/// </summary>
+		/// <param name="qs"></param>
+		/// <param name="lazyLoad">Lazy loading of dropdown items</param>
+		public void Load_Contac06propetitle___(NameValueCollection qs, bool lazyLoad = false)
+		{
+			bool contac06propetitle___DoLoad = true;
+			CriteriaSet contac06propetitle___Conds = CriteriaSet.And();
+			{
+				object hValue = Navigation.GetValue("prope", true);
+				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
+				{
+					contac06propetitle___Conds.Equal(CSGenioAprope.FldCodprope, hValue);
+					this.ValCodprope = DBConversion.ToString(hValue);
+				}
+			}
+
+			TablePropeTitle = new TableDBEdit<Models.Prope>
+			{
+				IsLazyLoad = lazyLoad
+			};
+
+			if (lazyLoad)
+			{
+				if (Navigation.CurrentLevel.GetEntry("RETURN_prope") != null)
+				{
+					this.ValCodprope = Navigation.GetStrValue("RETURN_prope");
+					Navigation.CurrentLevel.SetEntry("RETURN_prope", null);
+				}
+				FillDependant_Contac06TablePropeTitle(lazyLoad);
+				return;
+			}
+
+			if (contac06propetitle___DoLoad)
+			{
+				List<ColumnSort> sorts = new List<ColumnSort>();
+				ColumnSort requestedSort = GetRequestSort(TablePropeTitle, "sTablePropeTitle", "dTablePropeTitle", qs, "prope");
+				if (requestedSort != null)
+					sorts.Add(requestedSort);
+				sorts.Add(new ColumnSort(new ColumnReference(CSGenioAprope.FldTitle), SortOrder.Ascending));
+
+				string query = "";
+				if (!string.IsNullOrEmpty(qs["TablePropeTitle_tableFilters"]))
+					TablePropeTitle.TableFilters = bool.Parse(qs["TablePropeTitle_tableFilters"]);
+				else
+					TablePropeTitle.TableFilters = false;
+
+				query = qs["qTablePropeTitle"];
+
+				//RS 26.07.2016 O preenchimento da lista de ajuda dos Dbedits passa a basear-se apenas no campo do próprio DbEdit
+				// O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
+				//  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
+				CriteriaSet search_filters = CriteriaSet.And();
+				if (!string.IsNullOrEmpty(query))
+				{
+					search_filters.Like(CSGenioAprope.FldTitle, query + "%");
+				}
+				contac06propetitle___Conds.SubSet(search_filters);
+
+				string tryParsePage = qs["pTablePropeTitle"] != null ? qs["pTablePropeTitle"].ToString() : "1";
+				int page = !string.IsNullOrEmpty(tryParsePage) ? int.Parse(tryParsePage) : 1;
+				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
+				int offset = (page - 1) * numberItems;
+
+				FieldRef[] fields = new FieldRef[] { CSGenioAprope.FldCodprope, CSGenioAprope.FldTitle, CSGenioAprope.FldZzstate };
+
+// USE /[MANUAL GQT OVERRQ CONTAC06_PROPETITLE]/
+
+				// Limitation by Zzstate
+				/*
+					Records that are currently being inserted or duplicated will also be included.
+					Client-side persistence will try to fill the "text" value of that option.
+				*/
+				if (Navigation.checkFormMode("prope", FormMode.New) || Navigation.checkFormMode("prope", FormMode.Duplicate))
+					contac06propetitle___Conds.SubSet(CriteriaSet.Or()
+						.Equal(CSGenioAprope.FldZzstate, 0)
+						.Equal(CSGenioAprope.FldCodprope, Navigation.GetStrValue("prope")));
+				else
+					contac06propetitle___Conds.Criterias.Add(new Criteria(new ColumnReference(CSGenioAprope.FldZzstate), CriteriaOperator.Equal, 0));
+
+				FieldRef firstVisibleColumn = new FieldRef("prope", "title");
+				ListingMVC<CSGenioAprope> listing = Models.ModelBase.Where<CSGenioAprope>(m_userContext, false, contac06propetitle___Conds, fields, offset, numberItems, sorts, "LED_CONTAC06PROPETITLE___", true, false, firstVisibleColumn: firstVisibleColumn);
+
+				TablePropeTitle.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
+				TablePropeTitle.Query = query;
+				TablePropeTitle.Elements = listing.RowsForViewModel<GenioMVC.Models.Prope>((r) => new GenioMVC.Models.Prope(m_userContext, r, true, _fieldsToSerialize_CONTAC06PROPETITLE___));
+
+				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
+				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
+				if (Navigation.CurrentLevel.GetEntry("RETURN_prope") != null)
+				{
+					this.ValCodprope = Navigation.GetStrValue("RETURN_prope");
+					Navigation.CurrentLevel.SetEntry("RETURN_prope", null);
+				}
+
+				TablePropeTitle.List = new SelectList(TablePropeTitle.Elements.ToSelectList(x => x.ValTitle, x => x.ValCodprope,  x => x.ValCodprope == this.ValCodprope), "Value", "Text", this.ValCodprope);
+				FillDependant_Contac06TablePropeTitle();
+			}
+		}
+
+		/// <summary>
+		/// Get Dependant fields values -> TablePropeTitle (DB)
+		/// </summary>
+		/// <param name="PKey">Primary Key of Prope</param>
+		public ConcurrentDictionary<string, object> GetDependant_Contac06TablePropeTitle(string PKey)
+		{
+			FieldRef[] refDependantFields = [CSGenioAprope.FldCodprope, CSGenioAprope.FldTitle];
+
+			var returnEmptyDependants = false;
+			CriteriaSet wherecodition = CriteriaSet.And();
+
+			// Return default values
+			if (GlobalFunctions.emptyG(PKey) == 1)
+				returnEmptyDependants = true;
+
+			// Check if the limit(s) is filled if exists
+			// - - - - - - - - - - - - - - - - - - - - -
+
+			if (returnEmptyDependants)
+				return GetViewModelFieldValues(refDependantFields);
+
+			PersistentSupport sp = m_userContext.PersistentSupport;
+			User u = m_userContext.User;
+
+			CSGenioAprope tempArea = new(u);
+
+			// Fields to select
+			SelectQuery querySelect = new();
+			querySelect.PageSize(1);
+			foreach (FieldRef field in refDependantFields)
+				querySelect.Select(field);
+
+			querySelect.From(tempArea.QSystem, tempArea.TableName, tempArea.Alias)
+				.Where(wherecodition.Equal(CSGenioAprope.FldCodprope, PKey));
+
+			string[] dependantFields = refDependantFields.Select(f => f.FullName).ToArray();
+			QueryUtils.SetInnerJoins(dependantFields, null, tempArea, querySelect);
+
+			ArrayList values = sp.executeReaderOneRow(querySelect);
+			bool useDefaults = values.Count == 0;
+
+			if (useDefaults)
+				return GetViewModelFieldValues(refDependantFields);
+			return GetViewModelFieldValues(refDependantFields, values);
+		}
+
+		/// <summary>
+		/// Fill Dependant fields values -> TablePropeTitle (DB)
+		/// </summary>
+		/// <param name="lazyLoad">Lazy loading of dropdown items</param>
+		public void FillDependant_Contac06TablePropeTitle(bool lazyLoad = false)
+		{
+			var row = GetDependant_Contac06TablePropeTitle(this.ValCodprope);
+			try
+			{
+
+				// Fill List fields
+				this.ValCodprope = ViewModelConversion.ToString(row["prope.codprope"]);
+				TablePropeTitle.Value = (string)row["prope.title"];
+				if (GlobalFunctions.emptyG(this.ValCodprope) == 1)
+				{
+					this.ValCodprope = "";
+					TablePropeTitle.Value = "";
+					Navigation.ClearValue("prope");
+				}
+				else if (lazyLoad)
+				{
+					TablePropeTitle.SetPagination(1, 0, false, false, 1);
+					TablePropeTitle.List = new SelectList(new List<SelectListItem>()
+					{
+						new SelectListItem
+						{
+							Value = Convert.ToString(this.ValCodprope),
+							Text = Convert.ToString(TablePropeTitle.Value),
+							Selected = true
+						}
+					}, "Value", "Text", this.ValCodprope);
+				}
+
+				TablePropeTitle.Selected = this.ValCodprope;
+			}
+			catch (Exception ex)
+			{
+				CSGenio.framework.Log.Error(string.Format("FillDependant_Error (TablePropeTitle): {0}; {1}", ex.Message, ex.InnerException != null ? ex.InnerException.Message : ""));
+			}
+		}
+
+		private readonly string[] _fieldsToSerialize_CONTAC06PROPETITLE___ = ["Prope", "Prope.ValCodprope", "Prope.ValZzstate", "Prope.ValTitle"];
+
+		protected override object GetViewModelValue(string identifier, object modelValue)
+		{
+			return identifier switch
+			{
+				"procn.codprope" => ViewModelConversion.ToString(modelValue),
+				"procn.name" => ViewModelConversion.ToString(modelValue),
+				"procn.email" => ViewModelConversion.ToString(modelValue),
+				"procn.telephon" => ViewModelConversion.ToString(modelValue),
+				"procn.descript" => ViewModelConversion.ToString(modelValue),
+				"procn.date" => ViewModelConversion.ToDateTime(modelValue),
+				"procn.codprocn" => ViewModelConversion.ToString(modelValue),
+				"prope.codprope" => ViewModelConversion.ToString(modelValue),
+				"prope.title" => ViewModelConversion.ToString(modelValue),
+				_ => modelValue
+			};
+		}
+
+
+
+		#region Charts
+
+
+		#endregion
+
+		#region Custom code
+
+// USE /[MANUAL GQT VIEWMODEL_CUSTOM CONTAC06]/
+
+		#endregion
+	}
+}

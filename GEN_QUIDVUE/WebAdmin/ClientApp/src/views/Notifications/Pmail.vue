@@ -24,17 +24,17 @@
                   <q-button
                     :title="Resources.APAGAR04097"
                     @click="ManageProperties(3, props.row)">
-                    <q-icon icon="remove" />
+                    <q-icon icon="bin" />
                   </q-button>
                 </q-button-group>
               </template>
               <template #ValSsl="props">
-                  <span v-if="props.row.ValSsl" class='glyphicons glyphicons-check' />
-                  <span v-else class='glyphicons glyphicons-unchecked' />
+                  <span v-if="props.row.ValSsl" class='glyphicons glyphicons-ok' />
+                  <span v-else class='glyphicons glyphicons-remove' />
               </template>
               <template #ValAuth="props">
-                  <span v-if="props.row.ValAuth" class='glyphicons glyphicons-check' />
-                  <span v-else class='glyphicons glyphicons-unchecked' />
+                  <span v-if="props.row.ValAuth" class='glyphicons glyphicons-ok' />
+                  <span v-else class='glyphicons glyphicons-remove' />
               </template>
               <template #table-footer>
                 <tr>
@@ -116,9 +116,9 @@
                 },
                 {
                     label: () => vm.$t('REQUER_AUTENTICACAO_31938'),
-                    name: "ValAuth",
+                    name: "ValAuthType",
                     sort: true,
-                    slot_name: 'ValAuth'
+                    slot_name: 'ValAuthType'
                 },
                 {
                     label: () => vm.$t('UTILIZADOR52387'),

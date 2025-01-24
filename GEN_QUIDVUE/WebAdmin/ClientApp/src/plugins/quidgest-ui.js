@@ -7,7 +7,25 @@ const framework = createFramework({
 		},
 		QIconFont: {
 			library: 'glyphicons'
-		}
+		},
+		QListItem: {
+			icons: {
+				check: {
+					icon: 'ok'
+				},
+			}
+		},
+		QCheckbox: {
+			icons: {
+				checked: {
+					icon: 'ok'
+				},
+
+				indeterminate: {
+					icon: 'minus'
+				}
+			}
+		},
 	}
 })
 

@@ -8,6 +8,7 @@ using CSGenio.business;
 using CSGenio.persistence;
 using Quidgest.Persistence.GenericQuery;
 using DbAdmin;
+using IConfigurationManager = CSGenio.config.IConfigurationManager;
 
 namespace Administration
 {
@@ -16,6 +17,13 @@ namespace Administration
     /// </summary>
     public class UserManagement : IUserManagementService
     {
+        private readonly IConfigurationManager _configManager;
+
+        public UserManagement(IConfigurationManager configManager)
+        {
+            _configManager = configManager;
+        }
+        
 		/// <summary>
         /// Return a list of all Permitions accept for each user and for each module on application
         /// </summary>
@@ -25,38 +33,48 @@ namespace Administration
             List<ModulesLevel> perm = new List<ModulesLevel>();
             perm.Add(new ModulesLevel("STY", Resources.Resources.STYLE47121, "ADMINISTRATOR", Resources.Resources.ADMINISTRATOR54799));
             perm.Add(new ModulesLevel("GQT", Resources.Resources.GENIO_QUALITY_TESTS30896, "ADMINISTRATOR", Resources.Resources.ADMINISTRATOR54799));
+            perm.Add(new ModulesLevel("TRN", Resources.Resources.TRAINING_EXERCISES07801, "ADMINISTRATOR", Resources.Resources.ADMINISTRATOR54799));
             perm.Add(new ModulesLevel("TBS", Resources.Resources.BASE_TABLES04823, "ADMINISTRATOR", Resources.Resources.ADMINISTRATOR54799));
             perm.Add(new ModulesLevel("PTN", Resources.Resources.PATTERNS16056, "ADMINISTRATOR", Resources.Resources.ADMINISTRATOR54799));
             perm.Add(new ModulesLevel("REG", Resources.Resources.REGISTRATION03584, "ADMINISTRATOR", Resources.Resources.ADMINISTRATOR54799));
             perm.Add(new ModulesLevel("IMO", Resources.Resources.REAL_ESTATE24996, "ADMINISTRATOR", Resources.Resources.ADMINISTRATOR54799));
+            perm.Add(new ModulesLevel("TRN", Resources.Resources.TRAINING_EXERCISES07801, "EDIT", Resources.Resources.EDIT07023));
             perm.Add(new ModulesLevel("STY", Resources.Resources.STYLE47121, "EDIT", Resources.Resources.EDIT07023));
             perm.Add(new ModulesLevel("GQT", Resources.Resources.GENIO_QUALITY_TESTS30896, "EDIT", Resources.Resources.EDIT07023));
             perm.Add(new ModulesLevel("PTN", Resources.Resources.PATTERNS16056, "EDIT", Resources.Resources.EDIT07023));
+            perm.Add(new ModulesLevel("TRN", Resources.Resources.TRAINING_EXERCISES07801, "EDIT_PESSO", Resources.Resources.EDITOR_RECURSOS23553));
             perm.Add(new ModulesLevel("PTN", Resources.Resources.PATTERNS16056, "EDIT_PESSO", Resources.Resources.EDITOR_RECURSOS23553));
             perm.Add(new ModulesLevel("REG", Resources.Resources.REGISTRATION03584, "EMPLOYEE", Resources.Resources.EMPLOYEE08184));
             perm.Add(new ModulesLevel("TBS", Resources.Resources.BASE_TABLES04823, "MANAGER", Resources.Resources.MANAGER18024));
+            perm.Add(new ModulesLevel("TRN", Resources.Resources.TRAINING_EXERCISES07801, "MANAGER", Resources.Resources.MANAGER18024));
             perm.Add(new ModulesLevel("IMO", Resources.Resources.REAL_ESTATE24996, "MANAGER", Resources.Resources.MANAGER18024));
             perm.Add(new ModulesLevel("PTN", Resources.Resources.PATTERNS16056, "MANAGER", Resources.Resources.MANAGER18024));
             perm.Add(new ModulesLevel("TBS", Resources.Resources.BASE_TABLES04823, "SYSADMIN", Resources.Resources.SYSADMIN53289));
             perm.Add(new ModulesLevel("PTN", Resources.Resources.PATTERNS16056, "SYSADMIN", Resources.Resources.SYSADMIN53289));
             perm.Add(new ModulesLevel("GQT", Resources.Resources.GENIO_QUALITY_TESTS30896, "SYSADMIN", Resources.Resources.SYSADMIN53289));
             perm.Add(new ModulesLevel("IMO", Resources.Resources.REAL_ESTATE24996, "SYSADMIN", Resources.Resources.SYSADMIN53289));
+            perm.Add(new ModulesLevel("TRN", Resources.Resources.TRAINING_EXERCISES07801, "SYSADMIN", Resources.Resources.SYSADMIN53289));
             perm.Add(new ModulesLevel("REG", Resources.Resources.REGISTRATION03584, "SYSADMIN", Resources.Resources.SYSADMIN53289));
             perm.Add(new ModulesLevel("STY", Resources.Resources.STYLE47121, "SYSADMIN", Resources.Resources.SYSADMIN53289));
             perm.Add(new ModulesLevel("GQT", Resources.Resources.GENIO_QUALITY_TESTS30896, "VIEW", Resources.Resources.VIEW37934));
             perm.Add(new ModulesLevel("PTN", Resources.Resources.PATTERNS16056, "VIEW_PESSO", Resources.Resources.EDITOR_RECURSOS23553));
+            perm.Add(new ModulesLevel("TRN", Resources.Resources.TRAINING_EXERCISES07801, "VIEW_PESSO", Resources.Resources.EDITOR_RECURSOS23553));
             perm.Add(new ModulesLevel("REG", Resources.Resources.REGISTRATION03584, "1", Resources.Resources.QUERY30986));
+            perm.Add(new ModulesLevel("TRN", Resources.Resources.TRAINING_EXERCISES07801, "1", Resources.Resources.QUERY30986));
             perm.Add(new ModulesLevel("TBS", Resources.Resources.BASE_TABLES04823, "1", Resources.Resources.QUERY30986));
             perm.Add(new ModulesLevel("IMO", Resources.Resources.REAL_ESTATE24996, "1", Resources.Resources.QUERY30986));
             perm.Add(new ModulesLevel("GQT", Resources.Resources.GENIO_QUALITY_TESTS30896, "1", Resources.Resources.QUERY30986));
             perm.Add(new ModulesLevel("PTN", Resources.Resources.PATTERNS16056, "1", Resources.Resources.QUERY30986));
             perm.Add(new ModulesLevel("STY", Resources.Resources.STYLE47121, "1", Resources.Resources.QUERY30986));
             perm.Add(new ModulesLevel("GQT", Resources.Resources.GENIO_QUALITY_TESTS30896, "2", Resources.Resources.VENDEDOR34177));
+            perm.Add(new ModulesLevel("TRN", Resources.Resources.TRAINING_EXERCISES07801, "3", Resources.Resources.OFFICER20358));
+            perm.Add(new ModulesLevel("TRN", Resources.Resources.TRAINING_EXERCISES07801, "4", Resources.Resources.AGENT00994));
             perm.Add(new ModulesLevel("WMS", Resources.Resources.WAREHOUSE_MANAGEMENT10443, "20", Resources.Resources.MANAGER60821));
             perm.Add(new ModulesLevel("IMO", Resources.Resources.REAL_ESTATE24996, "20", Resources.Resources.MANAGER60821));
             perm.Add(new ModulesLevel("GQT", Resources.Resources.GENIO_QUALITY_TESTS30896, "20", Resources.Resources.MANAGER60821));
             perm.Add(new ModulesLevel("IMO", Resources.Resources.REAL_ESTATE24996, "99", Resources.Resources.ADMINISTRATOR27313));
             perm.Add(new ModulesLevel("REG", Resources.Resources.REGISTRATION03584, "99", Resources.Resources.ADMINISTRATOR27313));
+            perm.Add(new ModulesLevel("TRN", Resources.Resources.TRAINING_EXERCISES07801, "99", Resources.Resources.ADMINISTRATOR27313));
             perm.Add(new ModulesLevel("PTN", Resources.Resources.PATTERNS16056, "99", Resources.Resources.ADMINISTRATOR27313));
             perm.Add(new ModulesLevel("TBS", Resources.Resources.BASE_TABLES04823, "99", Resources.Resources.ADMINISTRATOR27313));
             perm.Add(new ModulesLevel("GQT", Resources.Resources.GENIO_QUALITY_TESTS30896, "99", Resources.Resources.ADMINISTRATOR27313));
@@ -66,16 +84,15 @@ namespace Administration
             return perm;
         }
 
-        private CSGenio.persistence.PersistentSupport getSP()
+        private PersistentSupport getSP()
         {
-            string pathConfig = Configuration.GetConfigPath();
-            ConfigurationXML conf = ConfigurationXML.readXML(pathConfig + Path.DirectorySeparatorChar + "Configuracoes.xml");
+            var conf = _configManager.GetExistingConfig();
             var dataSystem = conf.DataSystems.FirstOrDefault(ds => ds.Name == Configuration.DefaultYear); // Default == null
 
             if (dataSystem == null)
                 return null;
 
-            return CSGenio.persistence.PersistentSupport.getPersistentSupport(dataSystem.Name);
+            return PersistentSupport.getPersistentSupport(dataSystem.Name);
         }
 
         /// <summary>

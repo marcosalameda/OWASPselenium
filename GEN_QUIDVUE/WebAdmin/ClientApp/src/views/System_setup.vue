@@ -1,185 +1,331 @@
-<template>
-  <div id="system_setup_container">
-    <h1 class="f-header__title">
-      <q-icon icon="dashboard" />{{ Resources.CONFIGURACAO_DO_SIST39343 }} | <b>GQT</b>
-    </h1>
-    <br />
+﻿<template>
+	<div id="system_setup_container">
+		<div class="q-stack--column">
+			<h1 class="f-header__title">
+				{{ Resources.CONFIGURACAO_DO_SIST39343 }}
+			</h1>
+		</div>
+		<hr />
 
-    <template v-if="!isEmptyObject(Model.ResultMsg)">
-      <div class="alert alert-info">
-        <p>{{ Resources.ESTADO_DA_OPERACAO38065 }}</p>
-        <p><b class="status-message">{{ Model.ResultMsg }}</b></p>
-      </div>
-      <br />
-    </template>
+		<QAlert
+			v-if="alert.isVisible"
+			ref="alertBox"
+            :type="alert.alertType"
+            :text="alert.message"
+            :icon="alert.icon"
+			:title="Resources.ESTADO_DA_OPERACAO38065"
+			:dismissTime="5"
+			@message-dismissed="handleAlertDismissed" />
 
-    <select class="form-control" style="float:right; width: 200px;" v-model="currentApp">
-      <option v-for="app in Model.Applications" v-bind:value="app.Id" :key="app.Id">{{ app.Name }}</option>
-    </select>
-
-
-
-    <div>
-      <ul class="nav nav-tabs c-tab c-tab__divider" id="system_setup_tabs" role="tablist">
-        <li class="nav-item c-tab__item">
-          <a class="nav-link c-tab__item-header active" id="database-tab" data-toggle="tab" data-target="#database" role="tab" aria-controls="database" aria-selected="true">{{ Resources.BASE_DE_DADOS58234 }}</a>
-        </li>
-        <li class="nav-item c-tab__item">
-          <a class="nav-link c-tab__item-header" id="security-tab" data-toggle="tab" data-target="#security" role="tab" aria-controls="security" aria-selected="false">{{ Resources.SEGURANCA53664 }}</a>
-        </li>
-        <li class="nav-item c-tab__item">
-          <a class="nav-link c-tab__item-header" id="audit-tab" data-toggle="tab" data-target="#audit" role="tab" aria-controls="audit" aria-selected="false">Audit</a>
-        </li>
-        <li class="nav-item c-tab__item">
-          <a class="nav-link c-tab__item-header" id="paths-tab" data-toggle="tab" data-target="#paths" role="tab" aria-controls="paths" aria-selected="false">{{ Resources.APLICACAO16322 }}</a>
-        </li>
-        <li class="nav-item c-tab__item">
-          <a class="nav-link c-tab__item-header" id="others-tab" data-toggle="tab" data-target="#others" role="tab" aria-controls="others" aria-selected="false">{{ Resources.MAIS25935 }}</a>
-        </li>
-      </ul>
-      <div class="tab-content c-tab__item-container">
-        <!--BD-->
-        <div class="tab-pane c-tab__item-content active" id="database" ref="database" role="tabpanel" aria-labelledby="database-tab">
-          <database v-if="Model && isActiveTab('database')" :model="Model" @updateModal="setModal"></database>
-        </div>
-        <!--Security-->
-        <div class="tab-pane c-tab__item-content" id="security" ref="security" role="tabpanel" aria-labelledby="security-tab">
-          <security v-if="Model.Security && isActiveTab('security')" :Model="Model.Security" :SelectLists="Model.SelectLists" @updateModal="fetchData" @updateUsers="updateUsers"></security>
-        </div>
-        <!--Audit-->
-        <div class="tab-pane c-tab__item-content" id="audit" ref="audit" role="tabpanel" aria-labelledby="audit-tab">
-          <audit v-if="Model && isActiveTab('audit')" :Model="Model"></audit>
-        </div>
-        <!--Path-->
-        <div class="tab-pane c-tab__item-content" id="paths" ref="paths" role="tabpanel" aria-labelledby="paths-tab">
-          <paths v-if="Paths && isActiveTab('paths')" :Model="Paths"></paths>
-        </div>
-        <!--Others-->
-        <div class="tab-pane c-tab__item-content" id="others" ref="others" role="tabpanel" aria-labelledby="others-tab">
-          <others v-if="Model && isActiveTab('others')" :Model="Model" :Cores="Cores" :SelectLists="Model.SelectLists" @updateModal="fetchData"></others>
-        </div>
-      </div>
-    </div>
-    <br />
-
-  </div>
+		<div>
+			<QTabContainer
+				v-bind="tabGroup"
+				@tab-changed="changeTab('tabGroup', 'selectedTab', $event)">
+				<template #tab-panel>
+					<template
+						v-for="tab in tabGroup.tabsList"
+						:key="tab.id">
+							<div v-if="tabGroup.selectedTab === tab.id" class="tab-pane c-tab__item-content" :id="tab.componentId">
+								<component :is="tab.componentId" v-if="tab.props"  v-bind="tab.props" v-on="tab.events || {}"></component>
+							</div>
+					</template>
+				</template>
+			</QTabContainer>
+		</div>
+	</div>
 </template>
 
 <script>
   // @ is an alias to /src
-  import { reusableMixin } from '@/mixins/mainMixin';
-  import { QUtils } from '@/utils/mainUtils';
-  import { reactive } from 'vue';
-  import database from './System_setup/Database.vue';
-  import security from './System_setup/Security.vue';
-  import audit from './System_setup/Audit.vue';
-  import paths from './System_setup/Paths.vue';
-  import others from './System_setup/Others.vue';
-  
-  export default {
-    name: 'system_setup',
-    mixins: [reusableMixin],
-    components: { database, security, audit, paths, others },
-    data: function () {
-      return {
-        Model: {},
-        activeTab: 'database'
-      };
-    },
-    computed: {
-      Paths: function () {
-        var vm = this;
-        if ($.isEmptyObject(vm.currentApp) || $.isEmptyObject(vm.Model.Paths))
-          return null;
-        vm.Model.Paths[vm.currentApp].app = vm.currentApp;
-        return vm.Model.Paths[vm.currentApp] || null;
-      },
-      Cores: function () {
-        var vm = this;
-        return !$.isEmptyObject(vm.currentApp) && !$.isEmptyObject(vm.Model.Cores) ? (vm.Model.Cores[vm.currentApp] || null) : null;
-      }
-    },
-    methods: {
-      isActiveTab: function (tabName) {
-        return this.activeTab === tabName;
-      },
-      fetchData: function () {
-        var vm = this;
-        QUtils.log("Fetch data - Config", QUtils.apiActionURL('Config', 'Index'));
-        QUtils.FetchData(QUtils.apiActionURL('Config', 'Index')).done(function (data) {
-          QUtils.log("Fetch data - OK (Config)", data);
-          if(data.redirect) {
-            vm.$router.replace({ name: data.redirect, params: { culture: vm.currentLang, system: vm.currentYear } });
-          }
-          else if (data.reload) {
-            vm.currentYear = data.system;
-            vm.fetchData();
-          }
-          else {
-            vm.setModal(data);
-          }
-        });
-      },
-      setModal(data) {
-        var vm = this;
-        $.extend(vm.Model, data);
-        // Select the first exists application
-        if ($.isEmptyObject(vm.currentApp) && !$.isEmptyObject(vm.Model.Applications)) {
-          vm.currentApp = vm.Model.Applications[0].Id;
-        }
-        // Focus on errors div
-        if (!$.isEmptyObject(vm.Model.ResultMsg)) {
-          window.scrollTo(0,0);
-        }
-      },
-      reloadMQueues: function () {
-        var vm = this;
-        QUtils.FetchData(QUtils.apiActionURL('Config', 'ReloadMQueues')).done(function (data) {
-            if (data.Success) {
-                $.each(data.MQueues, function (propName, value) {
-                    if ($.isArray(vm.Model.MQueues[propName])) { vm.Model.MQueues[propName].splice(0); }
-                    $.extend(vm.Model.MQueues[propName], value);
-                });
-            }
-        });
-      },
-      updateUsers: function (eventData) {
-          if ($.isEmptyObject(this.Model.Security[eventData.currentApp].Users))
-              $.extend(this.Model.Security[eventData.currentApp], reactive({ Users: [] }));
-          else
-              this.Model.Security[eventData.currentApp].Users.splice(0);
+	import { reusableMixin } from '@/mixins/mainMixin';
+	import { QUtils } from '@/utils/mainUtils';
+	import { reactive, computed } from 'vue';
+	import database from './System_setup/Database.vue';
+	import audit from './System_setup/Audit.vue';
+	import advanced from './System_setup/Advanced.vue';
+	import display from './System_setup/Display.vue';
+	import reporting from './System_setup/Reporting.vue';
+	import queue from './System_setup/Queue.vue';
+	import messaging from './System_setup/Messaging.vue';
+	import elasticsearch from './System_setup/ElasticSearch.vue';
+	import scheduler from './System_setup/Scheduler.vue';
+	import datasystems from './System_setup/DataSystems.vue';
+	import QAlert from '@/components/QAlert.vue';
 
-          $.extend(this.Model.Security[eventData.currentApp].Users, eventData.users);
-      }
-    },
-    mounted: function () {
-      var vm = this;
-      vm.observer = new MutationObserver(mutations => {
-        for (const m of mutations) {
-          const newValue = m.target.getAttribute(m.attributeName);
-          vm.$nextTick(() => {
-            if (~newValue.indexOf('active')) {
-              vm.activeTab = m.target.id;
-            }
-          });
-        }
-      });
+	export default {
+		name: 'system_setup',
+		mixins: [reusableMixin],
+		components: { QAlert, database, audit, display, reporting, advanced, elasticsearch, messaging, datasystems, scheduler 			,queue
+},
 
-      $.each(vm.$refs, function (ref) {
-        vm.observer.observe(vm.$refs[ref], {
-          attributes: true,
-          attributeFilter: ['class'],
-        });
-      });
-    },
-    created: function () {
-      // Ler dados
-      this.fetchData();
-    },
-    watch: {
-      // call again the method if the route changes
-      '$route': 'fetchData',
-      'currentApp': 'fetchData'
-    }
-  };
+		props: {
+			/**
+			 * An object containing current Tabs that can trigger different actions within the configuration modal.
+			 * These could include showing or hiding the modal, or navigating between different sections of the configuration.
+			 */
+			currentTab: {
+				type: Object,
+				default: () => ({})
+			},
+		},
+		data() {
+			var vm = this
+			return {
+				Model: {},
+				alert: {
+					isVisible: false,
+					alertType: 'info',
+					message: ''
+				},
+
+				tabGroup: {
+					selectedTab: 'database-tab',
+					alignTabs: 'left',
+					iconAlignment: 'left',
+					isVisible: true,
+					tabsList: [
+						{
+							id: 'database-tab',
+							componentId: 'database',
+							name: 'database',
+							label: vm.$t('BASE_DE_DADOS58234'),
+							disabled: false,
+							isVisible: true,
+							props: { model: computed(() => vm.Model) },
+							events: { 'connection-tested': vm.handleConnectionTested, 'updateModal': vm.setModel, 'alertClass': vm.updateAlert }
+						},
+						{
+							id: 'display-tab',
+							componentId: 'display',
+							name: 'display',
+							label: vm.$t('DEFINICOES_DO_ECRA09420'), 
+							disabled: false,
+							isVisible: true,
+							props: { model: computed(() => vm.Model), SelectLists: computed(() => vm.Model?.SelectLists) },
+							events: { 'updateModal': vm.fetchData, 'alertClass': vm.updateAlert }
+						},
+						{
+							id: 'advanced-tab',
+							componentId: 'advanced',
+							name: 'advanced',
+							label: vm.$t('PROPRIEDADES_AVANCAD23972'),
+							disabled: false,
+							isVisible: true,
+							props: { model: computed(() => vm.Model), SelectLists: computed(() => vm.Model?.SelectLists) },
+							events: { 'updateModal': vm.fetchData, 'alertClass': vm.updateAlert }
+						},
+						{
+							id: 'elasticsearch-tab',
+							componentId: 'elasticsearch',
+							name: 'elasticsearch',
+							label: vm.$t('ELASTICSEARCH49143'),
+							disabled: false,
+							isVisible: true,
+							props: { model: computed(() => vm.Model), Cores: computed(() => vm.Cores), SelectLists: computed(() => vm.Model?.SelectLists) },
+							events: { 'updateModal': vm.fetchData, 'alertClass': vm.updateAlert }
+						},
+						{
+							id: 'reporting-tab',
+							componentId: 'reporting',
+							name: 'reporting',
+							label: vm.$t('RELATORIOS37339'),
+							disabled: false,
+							isVisible: true,
+							props: { model: computed(() => vm.Model) },
+							events: { 'updateModal': vm.fetchData, 'alertClass': vm.updateAlert }
+						},
+						{
+							id: 'scheduler-tab',
+							componentId: 'scheduler',
+							name: 'scheduler',
+							label: vm.$t('AGENDADOR40611'),
+							disabled: false,
+							isVisible: true,
+							props: { model: computed(() => vm.Model?.Scheduler),  TaskList: computed(() => vm.Model?.SelectLists.SchedulerTaskList) },
+							events: { 'updateModal': vm.fetchData, 'alertClass': vm.updateAlert }
+						},
+						{
+							id: 'messaging-tab',
+							componentId: 'messaging',
+							name: 'messaging',
+							label: vm.$t('MENSAGENS53948'),
+							disabled: false,
+							isVisible: true,
+							props: { model: computed(() => vm.Model?.Messaging),  Metadata: computed(() => vm.Model?.MessagingMetadata) },
+							events: { 'updateModal': vm.fetchData, 'alertClass': vm.updateAlert }
+						},
+						{
+							id: 'queue-tab',
+							componentId: 'queue',
+							name: 'queue',
+							label: vm.$t('MESSAGE_QUEUEING34227'),
+							disabled: false,
+							isVisible: true,
+							props: {
+								model: computed(() => vm.Model),
+								reloadMQueues: vm.reloadMQueues
+							},
+							events: { 'updateModal': vm.fetchData, 'alertClass': vm.updateAlert }
+						},
+						{
+							id: 'audit-tab',
+							componentId: 'audit',
+							name: 'audit',
+							label: vm.$t('AUDITORIA29703'),
+							disabled: false,
+							isVisible: true,
+							props: { model: computed(() => vm.Model) },
+							events: { 'updateModal': vm.setModel, 'alertClass': vm.updateAlert }
+						},
+						{
+							id: 'datasystems-tab',
+							componentId: 'datasystems',
+							name: 'datasystems',
+							label: vm.$t('SISTEMAS_DE_DADOS45551'),
+							disabled: false,
+							isVisible: true,
+							props: {
+								model: computed(() => vm.Model),
+								texts: computed(() => vm.Resources)
+							},
+							events: { 'changeTab': vm.changeTab, 'alertClass': vm.updateAlert }
+						},
+					]
+				}
+			};
+		},
+		computed: {
+			Paths() {
+				var vm = this;
+				if ($.isEmptyObject(vm.currentApp) || $.isEmptyObject(vm.Model.Paths))
+				return null;
+				vm.Model.Paths[vm.currentApp].app = vm.currentApp;
+				return vm.Model.Paths[vm.currentApp] || null;
+			},
+			Cores() {
+				var vm = this;
+				return !$.isEmptyObject(vm.currentApp) && !$.isEmptyObject(vm.Model.Cores) ? (vm.Model.Cores[vm.currentApp] || null) : null;
+			}
+		},
+		methods: {
+			fetchData() {
+				var vm = this;
+				QUtils.log("Fetch data - Config", QUtils.apiActionURL('Config', 'Index'));
+				QUtils.FetchData(QUtils.apiActionURL('Config', 'Index')).done(function (data) {
+					QUtils.log("Fetch data - OK (Config)", data);
+					if(data.redirect) {
+						vm.$router.replace({ name: data.redirect, params: { culture: vm.currentLang, system: vm.currentYear } });
+					}
+					else if (data.reload) {
+						vm.currentYear = data.system;
+						vm.fetchData();
+					}
+					else {
+						vm.setModel(data);
+					}
+				});
+			},
+			setModel(data) {
+				var vm = this;
+				$.extend(vm.Model, data);
+				// Select the first exists application
+				if ($.isEmptyObject(vm.currentApp) && !$.isEmptyObject(vm.Model.Applications)) {
+					vm.currentApp = vm.Model.Applications[0].Id;
+				}
+				// Focus on errors div
+				if (!$.isEmptyObject(vm.Model.ResultMsg)) {
+					window.scrollTo(0,0);
+					this.updateAlert(data);
+				}
+			},
+			reloadMQueues() {
+				var vm = this;
+				QUtils.FetchData(QUtils.apiActionURL('Config', 'ReloadMQueues')).done(function (data) {
+					if (data.Success) {
+						$.each(data.MQueues, function (propName, value) {
+							if ($.isArray(vm.Model.MQueues[propName])) { vm.Model.MQueues[propName].splice(0); }
+							$.extend(vm.Model.MQueues[propName], value);
+						});
+					}
+				});
+			},
+			updateUsers(eventData) {
+				if ($.isEmptyObject(this.Model.Security[eventData.currentApp].Users))
+					$.extend(this.Model.Security[eventData.currentApp], reactive({ Users: [] }));
+				else
+					this.Model.Security[eventData.currentApp].Users.splice(0);
+
+				$.extend(this.Model.Security[eventData.currentApp].Users, eventData.users);
+			},
+
+			getTab(tab, selectedTab) {
+				return _find(this[tab]['tabsList'], (x) => x.id === selectedTab)
+			},
+
+			changeTab(tab, tabProp, selectedTab) {
+				this[tab][tabProp] = selectedTab
+			},
+			updateAlert(data) {
+				this.Model.ResultMsg = data.ResultMsg;
+				if (data.AlertType) {
+				this.setAlert(data.AlertType, data.ResultMsg);
+				} else {
+					this.setAlert('info', data.ResultMsg);
+				}
+			},
+			handleConnectionTested(result) {
+				if (result.Success) {
+					this.setAlert('success', 'Connection success');
+				} else {
+					this.setAlert('danger', result.message || 'Connection failed');
+				}
+			},
+			setAlert(type, message) {
+				this.alert.isVisible = true;
+				this.alert.alertType = type;
+				this.alert.message = message;
+
+				this.$nextTick(() => {
+					if (this.$refs.alertBox) {
+						this.$refs.alertBox.$el.scrollIntoView({ behavior: 'smooth' });
+					}
+				});
+			},
+			handleAlertDismissed() {
+				this.alert.isVisible = false;
+			}
+		},
+		mounted() {
+			var vm = this;
+			vm.observer = new MutationObserver(mutations => {
+				for (const m of mutations) {
+				const newValue = m.target.getAttribute(m.attributeName);
+				vm.$nextTick(() => {
+					if (newValue.indexOf('active')) {
+					vm.selectedTab = m.target.id;
+					}
+				});
+				}
+			});
+		},
+		created() {
+			// Ler dados
+			this.fetchData();
+			this.$eventHub.on('alertClass', this.updateAlert);
+		},
+		watch: {
+			// call again the method if the route changes
+			'$route': 'fetchData',
+			'currentApp': 'fetchData',
+			currentTab: {
+				handler(newValue) {
+					if (newValue.selectedTab) {
+						this.changeTab('tabGroup', 'selectedTab', newValue.selectedTab)
+					}
+				},
+				deep: true
+			}
+			
+		}
+	};
 </script>

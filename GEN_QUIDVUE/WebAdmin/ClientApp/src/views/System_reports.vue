@@ -1,6 +1,11 @@
 ﻿<template>
   <div id="system_reports_container">
-    <h1 class="f-header__title">{{ Resources.RELATORIO_DO_SISTEMA49744 }}</h1>
+    <div class="q-stack--column">
+			<h1 class="f-header__title">
+			{{ Resources.RELATORIO_DO_SISTEMA49744 }}
+			</h1>
+		</div>
+    <hr>
     
     <row>
       <select class="form-control" style="float:right; width: 200px;" v-model="currentApp">
@@ -15,6 +20,7 @@
       </div>
       <template v-else>
         <row>
+        <!-- TODO: Input group aqui-->
             <div class="input-group i-input-group">
                 <input type="text" v-model="searchError" ref="searchError" class="form-control i-input-group__field" placeholder="Search for..." v-on:keyup="searchErro">
                 <div class="input-group-append i-input-group--right">

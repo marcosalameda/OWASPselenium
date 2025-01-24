@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using CSGenio.config;
 
 namespace Administration.Models
 {
@@ -14,7 +15,7 @@ namespace Administration.Models
     {
 		public ConfigModel()
         {
-            MoreProperties = new List<MorePropertyCfg>();
+            AdvancedProperties = new List<MorePropertyCfg>();
         }
 
         [Display(Name = "NOME_DO_SERVIDOR_DE_38232", ResourceType = typeof(Resources.Resources))]
@@ -67,6 +68,15 @@ namespace Administration.Models
         [Display(Name = "UTILIZADOR_DE_DOMINI41043", ResourceType = typeof(Resources.Resources))]
         public bool Log_ConnWithDomainUser { get; set; }
 
+        [Display(Name = "GQP shared tables")]
+        [Required]
+        public string GQP_Schema { get; set; }
+        
+        [Display(Name = "ENCRIPTAR_LIGACAO12834", ResourceType = typeof(Resources.Resources))]
+        public bool GQP_ConnEncrypt { get; set; }
+
+        [Display(Name = "UTILIZADOR_DE_DOMINI41043", ResourceType = typeof(Resources.Resources))]
+        public bool GQP_ConnWithDomainUser { get; set; }
 
 
         [Display(Name = "O_ANO_DEFAULT_NAO_ES52509", ResourceType = typeof(Resources.Resources))]
@@ -86,9 +96,11 @@ namespace Administration.Models
         [Display(Name = "PALAVRA_PASSE44126", ResourceType = typeof(Resources.Resources))]
         [Required]
         public string DbPsw { get; set; }
+        public bool HasDbPsw { get; set; }
 
         [Display(Name = "PALAVRA_PASSE44126", ResourceType = typeof(Resources.Resources))]
         public string Log_DbPsw { get; set; }
+        public bool Log_HasDbPsw { get; set; }
 
         [Display(Name = "CONFIRMAR_NOVA_PALAV02846", ResourceType = typeof(Resources.Resources))]
         [Required]
@@ -99,6 +111,8 @@ namespace Administration.Models
 
         [Display(Name = "ESTADO_DA_OPERACAO38065", ResourceType = typeof(Resources.Resources))]
         public string ResultMsg { get; set; }
+
+        public string AlertType { get; set; }
 
         [Display(Name = "MESSAGE_QUEUEING34227", ResourceType = typeof(Resources.Resources))]
         public MessageQueue MQueues { get; set; }
@@ -123,6 +137,8 @@ namespace Administration.Models
 
         [Display(Name = "PALAVRA_PASSE44126", ResourceType = typeof(Resources.Resources))]
         public string ssrsServerPassword { get; set; }
+        
+        public bool hasSsrsServerPassword { get; set; }
 
         [Display(Name = "FORMATO_DAS_DATAS11781", ResourceType = typeof(Resources.Resources))]
         public DateFormatCfg DateFormat { get; set; }
@@ -146,7 +162,7 @@ namespace Administration.Models
         public bool AuditInterface { get; set; }
 
 		[Display(Name = "FORNECEDORES_DE_IDEN35608", ResourceType = typeof(Resources.Resources))]
-        public List<MorePropertyCfg> MoreProperties { get; set; }
+        public List<MorePropertyCfg> AdvancedProperties { get; set; }
 
         [BindNever]
         public List<ClientApplication> Applications { get; set; }
@@ -154,8 +170,6 @@ namespace Administration.Models
         public Dictionary<String, SecurityCfg> Security { get; set; }
 
         public Dictionary<string, PathCfg> Paths { get; set; }
-
-        public string UrlSocketBackend { get; set; }
 
         public string UrlAPIBackend { get; set; }
 
@@ -167,6 +181,12 @@ namespace Administration.Models
         /// </summary>
         [Display(Name = "REGISTO_DE_EVENTOS65341", ResourceType = typeof(Resources.Resources))]
         public bool EventTracking { get; set; }
+
+        public MessagingXml Messaging { get; set; }
+
+        public SchedulerXml Scheduler { get; set; }
+
+        public CSGenio.core.messaging.MessageMetadata MessagingMetadata {get; set;}
 
         [BindNever]
         public object SelectLists
@@ -185,9 +205,24 @@ namespace Administration.Models
                     DisplayUserType = AuxFunctions.ToSelectList<DisplayUserType>(),
                     IdentityProviderTypeList = IdentityProviderCfg.TypeList,
                     RoleProviderTypeList = RoleProviderCfg.TypeList,
-                    PropertyList = MorePropertyCfg.PropertyList
+                    PropertyList = MorePropertyCfg.PropertyList,
+                    SchedulerTaskList = ScheduleTaskFactory.GetTaskOptions(),
                 };
             }
+        }
+
+        public DataSystemXml GetDataSystemXml()
+        {
+            return new DataSystemXml
+            {
+                Server = this.Server,
+                Password = this.DbPsw,
+                Login = this.DbUser,
+                Schemas = new List<DataXml>
+                {
+                    new DataXml { Schema = this.Schema }
+                }
+            };
         }
     }
 
@@ -348,6 +383,13 @@ namespace Administration.Models
         {
             get { return obj.Name; }
             set { obj.Name = value; }
+        }
+
+        [Display(Name = "DESCRICAO07528", ResourceType = typeof(Resources.Resources))]
+        public string Description
+        {
+            get { return obj.Description; }
+            set { obj.Description = value; }
         }
 
         [Display(Name = "TIPO55111", ResourceType = typeof(Resources.Resources))]
@@ -539,7 +581,7 @@ namespace Administration.Models
             get
             {
                 List<SelectListItem> res = new List<SelectListItem>();
-                foreach (string t in Configuration.initProperties.Keys.ToList())
+                foreach (string t in ExtraProperties.GetInitialKeys())
                 {
                     res.Add(new SelectListItem() { Value = t, Text = t });
                 }
@@ -638,18 +680,11 @@ namespace Administration.Models
             get { return obj.channelId; }
             set { obj.channelId = value; }
         }
-        /*
-        * We need this to be an integer to deserialize stuff from the front end,
-        * since the year in the form is type numeric
-        * 
-        * This is a temp fix, there should be a way to specify the type it returns from the frontend.
-        * Also years shouldn't even exist anymore, they should be named something else.
-        */
         [Display(Name = "ANO33022", ResourceType = typeof(Resources.Resources))]
-        public int Qyear
+        public string Qyear
         {
-            get { return Convert.ToInt32(obj.Qyear); }
-            set { obj.Qyear = value.ToString(); }
+            get { return obj.Qyear; }
+            set { obj.Qyear = value; }
         }
         [Display(Name = "UNICODE63246", ResourceType = typeof(Resources.Resources))]
         public bool Unicode
@@ -829,6 +864,8 @@ namespace Administration.Models
 
         [Display(Name = "TIME_OUT_DA_SESSAO36825", ResourceType = typeof(Resources.Resources))]
         public int SessionTimeOut { get; set; }
+
+        public bool UsePasswordBlacklist { get; set; }
     }
 
     public class PathCfg

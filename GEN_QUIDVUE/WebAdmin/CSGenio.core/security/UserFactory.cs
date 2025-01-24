@@ -9,6 +9,7 @@ using CSGenio.persistence;
 using Quidgest.Persistence.GenericQuery;
 using System.Threading;
 using CSGenio;
+using CSGenio.core.di;
 using System.Net.Mail;
 
 namespace GenioServer.security
@@ -33,6 +34,7 @@ namespace GenioServer.security
                 "TBS"
                 , "WMS"
                 , "IMO"
+                , "TRN"
                 , "STY"
                 , "PTN"
                 , "REG"
@@ -44,6 +46,7 @@ namespace GenioServer.security
             new Tuple<string,Role>("TBS", Role.UNAUTHORIZED),
             new Tuple<string,Role>("WMS", Role.UNAUTHORIZED),
             new Tuple<string,Role>("IMO", Role.UNAUTHORIZED),
+            new Tuple<string,Role>("TRN", Role.UNAUTHORIZED),
             new Tuple<string,Role>("STY", Role.UNAUTHORIZED),
             new Tuple<string,Role>("PTN", Role.UNAUTHORIZED),
             new Tuple<string,Role>("REG", Role.UNAUTHORIZED),
@@ -51,38 +54,48 @@ namespace GenioServer.security
 
 			new Tuple<string,Role>("STY", Role.ROLE_ADMINISTRATOR),
 			new Tuple<string,Role>("GQT", Role.ROLE_ADMINISTRATOR),
+			new Tuple<string,Role>("TRN", Role.ROLE_ADMINISTRATOR),
 			new Tuple<string,Role>("TBS", Role.ROLE_ADMINISTRATOR),
 			new Tuple<string,Role>("PTN", Role.ROLE_ADMINISTRATOR),
 			new Tuple<string,Role>("REG", Role.ROLE_ADMINISTRATOR),
 			new Tuple<string,Role>("IMO", Role.ROLE_ADMINISTRATOR),
+			new Tuple<string,Role>("TRN", Role.ROLE_EDIT),
 			new Tuple<string,Role>("STY", Role.ROLE_EDIT),
 			new Tuple<string,Role>("GQT", Role.ROLE_EDIT),
 			new Tuple<string,Role>("PTN", Role.ROLE_EDIT),
+			new Tuple<string,Role>("TRN", Role.ROLE_EDIT_PESSO),
 			new Tuple<string,Role>("PTN", Role.ROLE_EDIT_PESSO),
 			new Tuple<string,Role>("REG", Role.ROLE_EMPLOYEE),
 			new Tuple<string,Role>("TBS", Role.ROLE_MANAGER),
+			new Tuple<string,Role>("TRN", Role.ROLE_MANAGER),
 			new Tuple<string,Role>("IMO", Role.ROLE_MANAGER),
 			new Tuple<string,Role>("PTN", Role.ROLE_MANAGER),
 			new Tuple<string,Role>("TBS", Role.ROLE_SYSADMIN),
 			new Tuple<string,Role>("PTN", Role.ROLE_SYSADMIN),
 			new Tuple<string,Role>("GQT", Role.ROLE_SYSADMIN),
 			new Tuple<string,Role>("IMO", Role.ROLE_SYSADMIN),
+			new Tuple<string,Role>("TRN", Role.ROLE_SYSADMIN),
 			new Tuple<string,Role>("REG", Role.ROLE_SYSADMIN),
 			new Tuple<string,Role>("STY", Role.ROLE_SYSADMIN),
 			new Tuple<string,Role>("GQT", Role.ROLE_VIEW),
 			new Tuple<string,Role>("PTN", Role.ROLE_VIEW_PESSO),
+			new Tuple<string,Role>("TRN", Role.ROLE_VIEW_PESSO),
 			new Tuple<string,Role>("REG", Role.ROLE_1),
+			new Tuple<string,Role>("TRN", Role.ROLE_1),
 			new Tuple<string,Role>("TBS", Role.ROLE_1),
 			new Tuple<string,Role>("IMO", Role.ROLE_1),
 			new Tuple<string,Role>("GQT", Role.ROLE_1),
 			new Tuple<string,Role>("PTN", Role.ROLE_1),
 			new Tuple<string,Role>("STY", Role.ROLE_1),
 			new Tuple<string,Role>("GQT", Role.ROLE_2),
+			new Tuple<string,Role>("TRN", Role.ROLE_3),
+			new Tuple<string,Role>("TRN", Role.ROLE_4),
 			new Tuple<string,Role>("WMS", Role.ROLE_20),
 			new Tuple<string,Role>("IMO", Role.ROLE_20),
 			new Tuple<string,Role>("GQT", Role.ROLE_20),
 			new Tuple<string,Role>("IMO", Role.ADMINISTRATION),
 			new Tuple<string,Role>("REG", Role.ADMINISTRATION),
+			new Tuple<string,Role>("TRN", Role.ADMINISTRATION),
 			new Tuple<string,Role>("PTN", Role.ADMINISTRATION),
 			new Tuple<string,Role>("TBS", Role.ADMINISTRATION),
 			new Tuple<string,Role>("GQT", Role.ADMINISTRATION),
@@ -102,6 +115,11 @@ namespace GenioServer.security
 				, "IMO.1"
 				, "IMO.20"
 				, "IMO.99"
+                , "TRN.0"
+				, "TRN.1"
+				, "TRN.3"
+				, "TRN.4"
+				, "TRN.99"
                 , "STY.0"
 				, "STY.1"
 				, "STY.99"
@@ -127,8 +145,6 @@ namespace GenioServer.security
             return anos;
         }
 
-
-        public static IUserBusinessManager BusinessManager { get; set; }
 
 
         /// <summary>
@@ -193,37 +209,125 @@ namespace GenioServer.security
 
             if (password != null && !string.IsNullOrWhiteSpace(password.New))
             {
-                string pswEnc = PasswordFactory.Encrypt(password.New);
-                userPsw.ValPassword = pswEnc; //Neste momento é gravado com o salt to facilitar na transição
-                userPsw.ValSalt = "";
-                userPsw.ValPswtype = Configuration.Security.PasswordAlgorithms.ToString();
-				userPsw.ValDatexp = CalculateExpirationDate();
-                string error = PasswordFactory.CheckValidPassToCreate(userPsw.ValNome, password.New, password.Confirm, user.Language);
+                string error = CheckNewPassword(userPsw.ValNome, password.New, password.Confirm);
                 if (error != "")
                     throw new InvalidPasswordException(error, "UserRegistration.CreateNewUser", error);
+
+                FillPassword(userPsw, password.New);
             }
         }
 
-	    /// <summary>
+        /// <summary>
         /// Changes the password for a psw, checking all necessary security configurations.
         /// </summary>
         /// <param name="userPsw">A psw record</param>
-        /// <param name="password">A password object</param>
+        /// <param name="newPass">A password object</param>
+        /// <param name="confirmPass">Repeat the password object</param>
+        /// <param name="oldPass">Optionally check if the user knows the old password</param>
         /// <returns>The changed psw record. The changes will not be persisted</returns>
-        public CSGenioApsw ChangePassword(CSGenioApsw userPsw, Password password)
+        public void ChangePassword(CSGenioApsw userPsw, string newPass, string confirmPass, string oldPass=null)
         {
-            if (password != null)
+            if (newPass != null)
             {
-                string pswEnc = PasswordFactory.Encrypt(password.New);
-                userPsw.ValPassword = pswEnc; //Neste momento é gravado com o salt to facilitar na transição
-                userPsw.ValSalt = "";
-                userPsw.ValPswtype = Configuration.Security.PasswordAlgorithms.ToString();
-                string error = PasswordFactory.CheckValidPassToCreate(userPsw.ValNome, password.New, password.Confirm, user.Language);
+                string error = CheckChangePassword(userPsw, oldPass, newPass, confirmPass);
                 if (error != "")
                     throw new InvalidPasswordException(error, "UserRegistration.CreateNewUser", error);
+
+                FillPassword(userPsw, newPass);
             }
-            return userPsw;
         }
+
+        private static void FillPassword(CSGenioApsw userPsw, string newPass)
+        {
+            string pswEnc = PasswordFactory.Encrypt(newPass);
+            userPsw.ValPassword = pswEnc; //Neste momento é gravado com o salt to facilitar na transição
+            userPsw.ValSalt = "";
+            userPsw.ValPswtype = Configuration.Security.PasswordAlgorithms.ToString();
+            userPsw.ValDatexp = CalculateExpirationDate();
+            userPsw.ValStatus = 0;
+        }
+
+        private string CheckChangePassword(CSGenioApsw userPsw, string oldPass, string newPass, string confirmPass)
+        {
+            //in some interfaces (like password recovery, the interface allows a password change without supplying the old password)
+            if (oldPass != null)
+            {
+                if (userPsw.ValPassword != "" && !PasswordFactory.IsOK(oldPass, userPsw.ValPassword, userPsw.ValSalt, userPsw.ValPswtype)) //Verificar password antiga é a verdadeira
+                    return Translations.GetByCode("A_PASSWORD_ANTIGA_NA50246", user.Language);
+                if (oldPass == newPass || oldPass == confirmPass)
+                    return Translations.GetByCode("A_NOVA_PALAVRA_PASSE58485", user.Language);
+            }
+
+            return CheckNewPassword(userPsw.ValNome, newPass, confirmPass);
+        }
+
+        private string CheckNewPassword(string username, string pass, string confirm)
+        {
+            if (pass == null) // null password protection
+                pass = "";
+
+            if (pass != confirm)
+                return Translations.GetByCode("A_NOVA_PALAVRA_CHAVE41230", user.Language);
+            if (pass.ToUpper() == username.ToUpper())
+                return Translations.GetByCode("ATENCAO__NAO_PODE_CO49745", user.Language);
+
+            return CheckPasswordRules(pass);
+        }
+
+
+        public string CheckPasswordRules(string pass)
+        {
+            string error = CheckPasswordChars(pass);
+            if (!string.IsNullOrEmpty(error)) return error;
+            error = CheckPasswordStrength(pass);
+            if (!string.IsNullOrEmpty(error)) return error;
+            error = CheckBlacklisted(pass);
+            return error;
+        }
+
+        private string CheckPasswordChars(string pass)
+        {
+            if (Int32.TryParse(Configuration.Security.MinCharacters, out int minChar) && minChar > 0 && pass.Length < minChar)
+                return string.Format(Translations.GetByCode("A_PALAVRA_PASSE_NAO_06382", user.Language) , Configuration.Security.MinCharacters);
+            return "";
+        }
+
+        private string CheckPasswordStrength(string pass)
+        {
+            var configStrength = Configuration.Security.PasswordStrength;
+            if (configStrength == PasswordStrength.Pobre)
+                return "";
+
+            double pswStrength = PasswordFactory.scorePassword(pass);
+            
+            if (!((configStrength == PasswordStrength.Forte && pswStrength > 80) ||
+                (configStrength == PasswordStrength.Bom && pswStrength > 60) ||
+                (configStrength == PasswordStrength.Fraco && pswStrength >= 30)))
+                return string.Format(Translations.GetByCode("A_PALAVRA_PASSE_NAO_59708", user.Language), Configuration.Security.PasswordStrength.ToString());
+            return "";
+        }
+
+        /// <summary>
+        /// Checks if a passord is part of the blacklist
+        /// </summary>
+        /// <param name="pass">the password to check</param>
+        /// <returns>Empty string if everything is ok. An error message if the password is blacklisted.</returns>
+        public string CheckBlacklisted(string pass)
+        {
+            if (!Configuration.Security.UsePasswordBlacklist)
+                return "";
+
+            SelectQuery select = new SelectQuery()
+                .Select(SqlFunctions.Count(1), "COUNT")
+                .From("PswBlacklist")
+                .Where(CriteriaSet.And().Equal("PswBlacklist", "pass", pass.ToLowerInvariant()));
+            var ct = DBConversion.ToInteger(sp.executeScalar(select));
+            if (ct > 0)
+                return Translations.GetByCode("PASSWORD_VULNERAVEL_00083", user.Language);
+            
+            return "";
+        }
+
 
 
         /// <summary>
@@ -494,7 +598,7 @@ namespace GenioServer.security
 
                 user.Name = principal.Identity.Name;
                 user.Codpsw = psw.ValCodpsw;
-                user.Status = psw.ValStatus;
+                user.Status = (int)psw.ValStatus;
                 user.Auth2FA = !(string.IsNullOrEmpty(tpPsw2FA) || tpPsw2FA == GenioServer.security.Auth2FAModes.None.ToString());
                 user.Auth2FATp = user.Auth2FA ? tpPsw2FA: "";
                 bool hasAnyModule = false;
@@ -694,7 +798,12 @@ namespace GenioServer.security
                     foreach (var iephValue in iephCache.EPHValues)
                     {
                         if(!user.hasEph(iephCache.Module, iephValue.Key))
+                        {
+                            if(user.Ephs == null)
+                                user.Ephs = new Hashtable();
+
                             user.Ephs.Add(iephCache.Module + "_" + iephValue.Key, iephValue.Value);
+                        }
                     }
                 }
                 user.RevalidateEPHRuntime();

@@ -1,5 +1,6 @@
 ﻿using CommandLine;
 using CSGenio.persistence;
+using CSGenio.config;
 using DbAdmin;
 using GenioServer.security;
 using System;
@@ -11,7 +12,7 @@ namespace AdminCLI
         private static DBMaintenance dBMaintenance;
         private static SysConfiguration sysConfiguration;
 
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             //Starting procedure for SP
             Init();
@@ -22,7 +23,7 @@ namespace AdminCLI
                 var parsedArgs = CommandLine.Parser.Default.ParseArguments<ReindexOptions, ListReindexScriptsOptions, WriteConfigurationOptions, 
                     ReadConfigurationOptions, BackupOptions, RestoreOptions, RemoveBackupOptions>(args);
 
-                parsedArgs.MapResult(
+                return parsedArgs.MapResult(
                     (ReindexOptions opts) => Reindex(opts),
                     (ListReindexScriptsOptions opts) => ListReindexScripts(opts),
                     (WriteConfigurationOptions opts) => WriteConfiguration(opts),
@@ -34,25 +35,19 @@ namespace AdminCLI
             }
             catch (Exception e) {
                 Console.WriteLine("The following error has ocurred: " + e.Message);
+                return 1;
             }
         }
 
         private static void Init()
         {
-            // Inject SP data 
-            PersistenceFactoryExtension.Use();
-            PersistentSupport.SetControlQueries(
-                GenioServer.persistence.PersistentSupportExtra.ControlQueries,
-                GenioServer.persistence.PersistentSupportExtra.ControlQueriesOverride);
-            
-            GenioServer.framework.OverrideQueryDeclaring.Use();
-            
-            //Dependency injection
-            UserFactory.BusinessManager = new UserBusinessService();
+            //GenioServer services
+            CSGenio.GenioDIDefault.Use();
 
             //Initialize library classes
             dBMaintenance = new DBMaintenance(AppDomain.CurrentDomain.BaseDirectory);
-            sysConfiguration = new SysConfiguration();
+            var fileConfigManager = new FileConfigurationManager(CSGenio.framework.Configuration.GetConfigPath());
+            sysConfiguration = new SysConfiguration(fileConfigManager);
         }
     }
 }

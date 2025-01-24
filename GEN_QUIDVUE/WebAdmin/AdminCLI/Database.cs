@@ -58,11 +58,7 @@ namespace AdminCLI
         {
             try
             {
-                string location = options.Location;
-                if (string.IsNullOrWhiteSpace(location))
-                    location = Path.Combine(Environment.CurrentDirectory, "dbs", "backup");
-
-                string filepath = dBMaintenance.BackupDatabase(options.Username, options.Password, location, options.Year);
+                string filepath = DBMaintenance.BackupDatabase(options.Year, options.Username, options.Password, options.Location);
                 Console.WriteLine("File backed up successfully: " + filepath);
                 
                 return 0;
@@ -84,10 +80,10 @@ namespace AdminCLI
             try
             {
                 string location = options.Location;
-                if(string.IsNullOrWhiteSpace(location))
+                if (string.IsNullOrWhiteSpace(location))
                     location = Path.Combine(Environment.CurrentDirectory, "dbs", "backup");
 
-                dBMaintenance.RestoreDatabase(options.Username, options.Password, options.Filename, location, options.Year);
+                DBMaintenance.RestoreDatabase(options.Year, options.Username, options.Password, location, options.Filename);
                 Console.WriteLine("The desired database backup was restored successfully.");
             }
             catch(Exception e) 
@@ -108,7 +104,7 @@ namespace AdminCLI
         {
             try
             {
-                dBMaintenance.DeleteBackup(options.Path);
+                DBMaintenance.DeleteBackup(options.Path);
                 Console.WriteLine("The desired database backup was deleted successfully.");
             }
             catch (Exception ex)

@@ -65,7 +65,7 @@
 					</dl>
 					<dl class="row">
 						<dt>{{ Resources.VERSAO_DE_SISTEMA07287 }}</dt>
-						<dd>2890</dd>
+						<dd>2891</dd>
 						<dt>{{ Resources.VERSAO_DE_BASE_DE_DA46937 }}</dt>
 						<dd>{{ Model.VersionDbGen }}</dd>
 						<dt>{{ Resources.APP_MIGRATION_VERSIO41495 }}</dt>
